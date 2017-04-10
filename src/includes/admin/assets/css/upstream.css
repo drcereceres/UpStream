@@ -1,0 +1,657 @@
+@font-face {
+    font-family: "upstream";
+    src: url("../font/upstream.eot");
+    src: url("../font/upstream.eot?#iefix") format("embedded-opentype"),
+         url("../font/upstream.woff") format("woff"),
+         url("../font/upstream.ttf") format("truetype"),
+         url("../font/upstream.svg#upstream") format("svg");
+    font-weight: normal;
+    font-style: normal;
+}
+
+@media screen and (-webkit-min-device-pixel-ratio:0) {
+    @font-face {
+        font-family: "upstream";
+        src: url("../font/upstream.svg#upstream") format("svg");
+    }
+}
+
+[class^="upstream-"]:before, [class*=" upstream-"]:before,
+[class^="upstream-"]:after, [class*=" upstream-"]:after,
+#menu-posts-project .dashicons-arrow-up-alt:before,   
+#menu-posts-project .dashicons-arrow-up-alt:after,   
+#toplevel_page_upstream_general .dashicons-arrow-up-alt:before,   
+#toplevel_page_upstream_general .dashicons-arrow-up-alt:after {   
+    font-family: upstream  !important;
+    font-size: 18px;
+    font-style: normal;
+}
+
+#menu-posts-project .dashicons-arrow-up-alt:before,
+#toplevel_page_upstream_general .dashicons-arrow-up-alt:before { 
+    content: "\f100"; 
+    -webkit-transform: rotate(180deg);
+    -moz-transform: rotate(180deg);
+    -ms-transform: rotate(180deg);
+    -o-transform: rotate(180deg);
+    transform: rotate(180deg);
+    font-weight: bold;
+
+}
+
+/*
+ * CMB2 Overrides & General stuff
+ */
+ p.cmb2-metabox-description {
+  font-size: 11px;
+  margin-top: 3px;
+}
+.upstream .cmb-type-group .cmb2-wrap > .cmb-field-list > .cmb-row, .upstream .postbox-container .cmb2-wrap > .cmb-field-list > .cmb-row {
+  padding: 1.2em 0 0;
+}
+.upstream #poststuff .cmb-repeatable-group .cmb-group-title {
+  background-color: #fcfcfc;
+  padding: 14px 14px 12px 40px;
+}
+
+.upstream #poststuff .cmb-group-title .title {
+  display: inline-block;
+  font-size: 15px;
+  font-weight: 600;
+  margin: 0;
+}
+.upstream .cmb2-metabox button.dashicons-before.dashicons-no-alt.cmb-remove-group-row {
+  color: #ccc;
+  padding-left: 10px;
+  top: 13px;
+}
+.upstream .upstream_options .cmb2-metabox button.dashicons-before.dashicons-no-alt.cmb-remove-group-row {
+  padding-left: 7px;
+  top: 6px;
+}
+.upstream .cmb-row.cmb-remove-field-row {
+  padding: 10px 0;
+}
+
+.upstream .cmbhandle-title {
+  cursor: pointer;
+}
+.upstream .title .av-assigned, .upstream .title .av-created {
+  background: #fff none repeat scroll 0 0;
+  display: block;
+  float: left;
+  height: 25px;
+  margin: -3px 6px 0 0;
+  width: 25px;
+  box-shadow: 0 0 1px rgba(0,0,0,0.35) inset;
+}
+.upstream #side-sortables .cmb-th {
+  padding-bottom: 5px;
+}
+.upstream #side-sortables .cmb-th label {
+  padding: 0;
+}
+.upstream #side-sortables .cmb-th label::after {
+  border-bottom: medium none;
+  padding-top: 0;
+}
+.upstream #side-sortables .cmb2-wrap > .cmb-field-list > .cmb-row {
+  padding: 0;
+}
+.upstream #side-sortables .cmb2-wrap > .cmb-field-list > .cmb-row:not(:last-of-type) {
+  border: none;
+}
+.upstream #side-sortables .cmb-td .cmb2_select {
+  width: 100%;
+}
+.upstream .cmb2-wrap input[type="email"] {
+  width: 100%;
+}
+
+.upstream .title .av-assigned {
+  margin-right: 15px;
+}
+.upstream .title .av-assigned img, .upstream .title .av-created img {
+  display: block;
+}
+.upstream #_upstream_project_files .av-assigned {
+  display: none;
+}
+.upstream .cmb-add-row > span {
+  border-left: 3px solid #ffba00;
+  box-shadow: 0 2px 2px rgba(0, 0, 0, 0.17);
+  margin: 0 0 0 20px;
+  padding: 5px 10px 5px 10px;
+}
+
+.upstream h2.hndle .dashicons {
+  color: #429edb;
+  font-size: 22px;
+  margin: -1px 8px 0 0;
+}
+.upstream #delete_message.button {
+  margin: -30px 0 0 0;
+}
+/*
+ * Project Overview
+ */
+ #_upstream_project_overview .cmb2-metabox-title {
+  color: #72777c;
+  font-size: 18px;
+  font-weight: 300;
+}
+#_upstream_project_overview .cmb2-metabox-title > span {
+  background: #429edb none repeat scroll 0 0;
+  color: #fff;
+  font-weight: 700;
+  padding: 0 6px;
+  margin: 0 3px 0 0;
+}
+#_upstream_project_overview .counts h4 {
+  color: #82878c;
+  font-size: 14px;
+  font-weight: 300;
+  margin: 0 20px 0 0;
+  display: inline;
+}
+#_upstream_project_overview .counts h4 .count {
+  color: #444;
+  font-size: 16px;
+  font-weight: 600;
+}
+#_upstream_project_overview .counts h4 .count.mine {
+  background: #d54e21 none repeat scroll 0 0;
+  border-radius: 20px;
+  color: #fff;
+  padding: 0 7px;
+}
+/*
+ * Project Details
+ */
+#_upstream_project_details .select2-container {
+  width: 100% !important;
+}
+#_upstream_project_details .dashicons-email-alt {
+  color: #bbb;
+  font-size: 18px;
+  margin: 0;
+  text-decoration: none;
+}
+.upstream #major-publishing-actions .notice-error {
+  margin: 15px 0 10px !important;
+  padding: 5px 10px;
+}
+.upstream #side-sortables .cmb2-id--upstream-project-client-users .cmb2-metabox-description {
+  padding: 0;
+}
+/*
+ * Project Activity
+ */
+
+.upstream .activity-item {
+  border-bottom: 1px solid #e9e9e9;
+  color: #72777c;
+  font-size: 12px;
+  margin: 0 0 10px;
+  padding: 0 0 10px;
+}
+.upstream .activity-item .item {
+  display: block;
+  padding: 0 0 4px;
+}
+.upstream .activity-item > h4 {
+  color: #444;
+  font-size: 13px;
+  margin: 0;
+}
+.upstream .activity-item .user {
+  color: #999;
+  display: block;
+  font-size: 12px;
+  margin: 0 0 5px;
+}
+.upstream .activity-item .item-name {
+  color: #444;
+  display: block;
+  font-size: 13px;
+  margin: 7px 0 0;
+}
+
+/*
+ * Project Files
+ */
+#_upstream_project_files .cmb-remove-row {
+  padding: 0;
+}
+#_upstream_project_files .cmb-repeat-row {
+  padding: 0;
+}
+
+#_upstream_project_files .cmb-repeat-row > .cmb-td {
+  padding-right: 0px;
+}
+#_upstream_project_files .cmb2-upload-button.button {
+  width: 100%;
+  margin-bottom: 10px;
+}
+#_upstream_project_files .cmb-attach-list li {
+  margin-bottom: 10px;
+}
+/*
+ * Project Tasks, milestones
+ */
+#_upstream_project_tasks .hidden {
+	display: none;
+	visibility: hidden;
+}
+.upstream .cmb2-id--upstream-project-hidden {
+  border: medium none !important;
+  padding: 0 !important;
+  margin: 0;
+}
+.upstream .cmb-repeatable-grouping .dates {
+  color: #72777c;
+  display: inline-block;
+  float: right;
+  font-size: 13px;
+  font-weight: 200;
+  margin: 1px 20px 0;
+}
+
+.upstream .metabox-holder .progress {
+  display: block;
+  font-weight: bold;
+  height: 1px;
+  line-height: 0;
+  margin: 0 -1em 1px; 
+  width: auto;
+}
+.upstream .metabox-holder progress {
+  background-color: #fff;
+  border: medium none;
+  height: 1px;
+  vertical-align: middle;
+  width: 100%;
+}
+.upstream .metabox-holder progress::-webkit-progress-bar {
+  background-color: #fff;
+  vertical-align: middle;
+}
+.upstream .metabox-holder progress::-webkit-progress-value {
+  background: #5CD651;
+}
+.upstream .metabox-holder progress::-moz-progress-bar {
+  background: #5CD651;
+}
+
+
+
+.upstream #_upstream_project_overview .progress {
+  float: right;
+  font-weight: bold;
+  line-height: 18px;
+  margin-right: 0;
+}
+.upstream #_upstream_project_overview progress {
+  background-color: #fff;
+  border: 1px solid #e9e9e9;
+  border-radius: 1px;
+  height: 12px;
+  vertical-align: middle;
+  width: auto;
+}
+.upstream #_upstream_project_overview .progress span {
+  display: inline-block;
+  float: right;
+  min-width: 48px;
+  padding: 1px 0 0 10px;
+  text-align: right;
+}
+
+
+
+.upstream .cmb-repeatable-grouping .cmb2-metabox .cmbhandle::before {
+  padding: 8px 20px 8px 10px;
+}
+.upstream .cmb-repeatable-grouping .dashicons.on-title {
+  color: #e1e1e1;
+  float: none;
+  position: absolute;
+  right: 30px;
+  top: 12px;
+}
+.upstream .cmb2-metabox .cmbhandle {
+  top: 4px;
+  color: #ccc;
+}
+
+
+.upstream .cmb-group-title .status {
+  border-radius: 3px;
+  color: #fff;
+  float: right;
+  font-size: 12px;
+  font-weight: normal;
+  margin: 0 30px 0 0;
+  padding: 2px 8px;
+}
+
+
+/*
+ * Project Bugs
+ */
+#_upstream_project_bugs .cmb-repeatable-group .cmb2-upload-button {
+  float: left;
+  margin: 4px 0 0 0;
+}
+#_upstream_project_bugs .cmb-type-file-list .cmb-attach-list {
+  float: left;
+}
+#_upstream_project_bugs .cmb-type-file-list .cmb-attach-list li {
+  margin-bottom: 10px;
+}
+#_upstream_project_bugs .cmb2-upload-button.button {
+  width: 100%;
+  margin-bottom: 10px;
+}
+#_upstream_project_bugs .cmb-attach-list li {
+  margin-bottom: 10px;
+}
+/*
+ * Project Discussion
+ */
+ #_upstream_project_discussions .cmb2-id--upstream-project-discussion {
+  padding: 5px 0;
+}
+#_upstream_project_discussions .admin-discussion {
+  background: #F9F9F9 none repeat scroll 0 0;
+  border: 1px solid #ddd;
+  padding: 0;
+}
+#_upstream_project_discussions .admin-discussion li {
+  display: block;
+  margin: 0;
+  width: 100%;
+  box-shadow: 0 -1px 0 rgba(0, 0, 0, 0.1) inset;
+  padding: 15px 15px 15px;
+}
+#_upstream_project_discussions .admin-discussion li:nth-child(2n+1) {
+  background: #fff;
+}
+#_upstream_project_discussions .admin-discussion li:last-child {
+  box-shadow: none;
+}
+#_upstream_project_discussions .admin-discussion img {
+  float: left;
+  margin: 0 15px 10px 0;
+}
+#_upstream_project_discussions .admin-discussion .name {
+  display: block;
+  font-weight: bold;
+  margin: 0 0 0 54px;
+  font-size: 13px;
+}
+#_upstream_project_discussions .admin-discussion .date {
+  color: #767676;
+  display: block;
+  margin: 3px 0 0 54px;
+  font-size: 13px;
+}
+#_upstream_project_discussions .admin-discussion .comment {
+  display: block;
+  margin: 8px 0 5px 54px;
+  padding: 0;
+  font-style: italic;
+}
+
+/*
+ * Client Users
+ */
+#_upstream_client_users .cmb2-wrap input.cmb2-text-medium {
+  width: inherit;
+}
+#_upstream_client_users .primary {
+  float: right;
+  font-weight: bold;
+  padding: 12px 5px 0;
+}
+
+
+/*
+ * Project list
+ */
+.post-type-project .start-date, .post-type-project .end-date, .post-type-project .status {
+  display:  inline-block;
+} 
+.post-type-project td .status {
+  background: #fff none repeat scroll 0 0;
+  border: 1px solid #e9e9e9;
+  border-radius: 2px;
+  font-size: 11px;
+  margin: 0 2px 2px 0;
+  padding: 0 7px 0 0;
+  white-space: nowrap;
+}
+.post-type-project td .count {
+  border-radius: 0 0 0 2px;
+  color: #fff;
+  display: inline-block;
+  margin-right: 6px;
+  padding: 0 5px;
+  text-align: center;
+}
+.post-type-project .column-project-status {
+  padding: 0;
+  width: 22px;
+  position: relative;
+}
+
+.post-type-project .messages a {
+  display: inline-block;
+  vertical-align: top;
+}
+.post-type-project .messages a:after {
+  border-right: 5px solid transparent;
+  border-top: 5px solid #72777c;
+  content: "";
+  display: block;
+  height: 0;
+  margin-left: 8px;
+  width: 0;
+}
+.post-type-project .messages span {
+  background-color: #72777c;
+  border-radius: 5px;
+  box-sizing: border-box;
+  color: #fff;
+  display: block;
+  font-size: 11px;
+  height: 2em;
+  line-height: 21px;
+  min-width: 24px;
+  padding: 0 8px;
+  text-align: center;
+}
+
+/*
+ * Tasks/Bugs page 
+ */
+.project_page_tasks .alignleft.actions.bulkactions {
+  padding: 0;
+}
+.upstream .assigned_to .mine {
+  border-left: 3px solid #d54e21;
+  padding: 2px 5px;
+}
+
+
+/*
+ * Options 
+ */
+.upstream_options .postbox.pad > .title {
+  padding: 0;
+}
+.upstream_options .cmb-th {
+  padding: 15px 10px 15px 0;
+}
+.upstream_options .alignleft > p {
+  margin: 1em 0 3px;
+}
+.upstream_options .cmb2-checkbox-list.no-select-all.cmb2-list {
+  margin: 5px 0 0 0;
+}
+.upstream_options .nav-tab-active, .upstream_options .nav-tab-active:focus, .upstream_options .nav-tab-active:focus:active, .upstream_options .nav-tab-active:hover {
+  background: #ffffff none repeat scroll 0 0;
+  border-bottom: 1px solid #ffffff;
+  color: #000;
+}
+.upstream_options .nav-tab {
+  padding: 6px 10px 7px;
+}
+#wpbody-content .upstream_options .metabox-holder {
+  padding-top: 0;
+}
+.upstream_options .postbox.pad {
+  padding: 10px 20px 30px;
+  border-top: 0;
+}
+.upstream_options .cmb2-wrap {
+  padding-bottom: 30px;
+}
+.upstream_options .desc {
+  margin: 0 0 20px;
+}
+.upstream_options .cmb-type-title {
+  margin: 0 0 10px;
+  padding: 0;
+}
+.upstream_options .cmb-type-title .cmb2-metabox-title {
+  font-size: 18px;
+  margin: 0;
+  padding: 5px 0 0;
+}
+.upstream_options .cmb-type-title .cmb2-metabox-description {
+  color: #72777c;
+  font-size: 13px;
+  font-style: normal;
+  margin-bottom: 5px;
+  padding: 5px 0;
+}
+
+
+
+.upstream_options .cmb-group-description .cmb2-metabox-description {
+  font-size: 13px;
+  font-weight: normal;
+  font-style: normal;
+  margin: 0 0 0 12px;
+  padding: 0 !important;
+  color: #444;
+}
+.upstream_options .cmb-repeat-group-wrap {
+  border: 1px solid #e5e5e5;
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04);
+  padding: 0px;
+  margin-bottom: 20px !important;
+}
+
+.upstream_options h2.cmb-group-name {
+  font-size: 15px;
+  margin: 0;
+  padding: 8px 12px 4px;
+}
+.upstream_options .cmb-repeatable-group .cmb-group-title {
+  margin: 0 -1em;
+  padding: 8px 12px 8px 2.2em;
+}
+
+.upstream_options .postbox.cmb-repeatable-grouping {
+  margin: 15px 15px 10px;
+}
+.upstream_options .cmb-repeatable-group {
+  padding-bottom: 5px;
+}
+.upstream_options .cmb-add-row {
+  margin: 1.8em 0 20px 15px;
+}
+
+.upstream_options .inside .cmb-row {
+  padding:  5px 0;
+}
+.upstream_options .inside .cmb-row:not(:last-of-type) {
+  border: none;
+}
+.upstream_options .inside .cmb-th label {
+  display: block;
+  font-weight: 400;
+  padding: 5px 0;
+}
+
+.upstream_options .cmb-type-labels .cmb-th {
+  padding: 10px 10px 20px 0;
+}
+.upstream_options .cmb-type-labels .cmb-td {
+  padding: 0 10px;
+}
+.upstream_options .cmb-type-labels .cmb-td input {
+  margin-right: 15px;
+}
+.upstream_options .cmb-type-labels.cmb2-id-file {
+  margin-bottom: 30px;
+}
+
+.upstream_options .license-active {
+  border-top: 1px solid #46b450;
+  display: block;
+  padding: 5px 10px;
+  width: 95%;
+}
+
+.upstream_options #upstream_extensions .desc {
+  color: #72777c;
+  font-size: 13px;
+  font-style: normal;
+  margin-bottom: 5px;
+  padding: 20px 0;
+}
+.upstream_options #cmb2-metabox-upstream_extensions > div {
+  width: 30%;
+  margin: 0 1.5%;
+  float: left;
+  min-height: 220px;
+}
+.upstream_options #cmb2-metabox-upstream_extensions {
+  background: #f8f8f8 none repeat scroll 0 0;
+  border: 1px solid #ddd;
+  display: inline-block;
+  padding: 0 0 20px;
+  width: 100%;
+}
+.upstream_options #cmb2-metabox-upstream_extensions .cmb-type-text .cmb-td {
+  padding-left: 0;
+}
+.upstream_options #cmb2-metabox-upstream_extensions .wrapper img {
+  width: 100%;
+  background: #efefef;
+  height: auto;
+  max-height: 200px;
+  margin: 10px 0;
+}
+.upstream_options h3.extension {
+  margin: 1em 0 5px;
+}
+
+/*
+ * Hide some stuff
+ */
+.upstream .inline-edit-group {
+  display: none;
+  visibility: hidden;
+}
+.upstream #visibility-radio-password, .upstream #visibility-radio-password + label, .upstream #visibility-radio-password + label + br {
+  display: none;
+  height: 0;
+  line-height: 0;
+  margin: 0;
+  padding: 0;
+}
