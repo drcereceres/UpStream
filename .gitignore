@@ -1,0 +1,23 @@
+# General exclusion of system files #
+#####################################
+.*
+*~
+!.gitignore
+!.htaccess
+
+# Windows Files #
+#################
+Thumbs.db
+ehthumbs.db
+
+# Folder config file #
+######################
+Desktop.ini
+
+# Recycle Bin used on file shares #
+###################################
+$RECYCLE.BIN/
+
+# Misc files #
+##############
+config.codekit
