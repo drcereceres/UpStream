@@ -1,0 +1,151 @@
+/* Colors */
+
+/* main text colors */
+body, table.dataTable.dtr-inline.collapsed > tbody > tr > td:first-child::before, table.dataTable.dtr-inline.collapsed > tbody > tr > th:first-child::before, a:focus, a:hover, .nav.child_menu li li a:hover, .nav.side-menu > li > a:hover, .pagination > .active > a, .pagination > .active > a:focus, .pagination > .active > a:hover, .pagination > .active > span, .pagination > .active > span:focus, .pagination > .active > span:hover, .profile_info p {
+  color: #7D828E; /* light color */
+}
+/* main heading colors */
+table thead, .x_title h2, .profile_info h2, .details-panel p.title, .fn-label, a, .sidebar-footer a, .nav.child_menu > li > a, .nav.side-menu > li > a, .menu_section h3, .navbar-brand, .navbar-nav > li > a, .site_title, .pagination > li > a, .pagination > li > span, .btn-default, .panel_toolbox > li > a:hover {
+  color: #3A4E66; /* dark color */
+}
+.tile-stats .icon {
+  color: #f6f6f6; /* ultra light */
+}
+
+/* highlight color  */
+.nav.side-menu > li.active, .nav.side-menu > li.current-page {
+  border-color: #429edb;
+}
+.nav li li.current-page a, .nav.child_menu li li a.active {
+  color: #429edb; 
+}
+.btn-primary {
+  background: #429edb; 
+}
+.x_title h2 .fa, .main_menu .fa {
+  color: #429edb;
+}
+
+/* green progress color  */
+.progress-bar {
+  background: #45C150; 
+  border-color: #45C150; 
+}
+
+
+/* Backgrounds */
+body, .left_col, .nav_title, .sidebar-footer a:hover { 
+  background: #EDEDED; /* light */
+}
+.nav.side-menu > li.active > a, .sidebar-footer a, .nav-md ul.nav.child_menu li::before, .pagination > .active > a, .pagination > .active > a:focus, .pagination > .active > a:hover, .pagination > .active > span, .pagination > .active > span:focus, .pagination > .active > span:hover, .top_nav .nav .open > a, .top_nav .nav .open > a:focus, .top_nav .nav .open > a:hover, .top_nav .nav > li > a:focus, .top_nav .nav > li > a:hover {
+  box-shadow: 0 0px 0 30px rgba(0, 0, 0, 0.05) inset; /* dark */
+}
+
+.pagination .active a {
+  color:  #fff;
+}
+
+.sidebar-footer {
+  background: none;
+}
+
+td span.btn.btn-xs {
+  color: #fff;
+}
+
+.pagination > .active > a, .pagination > .active > a:focus, .pagination > .active > a:hover, .pagination > .active > span, .pagination > .active > span:focus, .pagination > .active > span:hover {
+  background-color: #ddd;
+  border-color: #ddd;
+}
+
+/* Overrides for media*/
+.files .message .alert {
+  padding: 8px 10px;
+  text-align: center;
+  margin-top: 6px;
+}
+.itemfile {
+  font-size: 20px;
+}
+.file-preview .itemfile {
+  margin-top: 5px;
+}
+
+/* Table overrides */
+table li {
+  list-style: none;
+}
+td .btn {
+  margin-bottom: 0;
+}
+.table-striped > tbody > tr:nth-of-type(2n+1) {
+  background-color: #fdfdfd;
+}
+table.dataTable.dtr-inline.collapsed > tbody > tr > td:first-child, table.dataTable.dtr-inline.collapsed > tbody > tr > th:first-child {
+  padding-left: 24px;
+}
+table.dataTable.dtr-inline.collapsed > tbody > tr > td:first-child::before, table.dataTable.dtr-inline.collapsed > tbody > tr > th:first-child::before {
+  box-shadow: none;
+  content: "\f078";
+  font-family: fontawesome;
+  height: 12px;
+  left: 6px;
+  line-height: 12px;
+  top: 35%;
+  width: 12px;
+  background: none;
+  font-size: 10px;
+  border: none;
+}
+table.dataTable.dtr-inline.collapsed > tbody > tr.parent > td:first-child::before, table.dataTable.dtr-inline.collapsed > tbody > tr.parent > th:first-child::before {
+  content: "\f054";
+  background: none;
+}
+
+/* Overview section */
+.count > small {
+  font-size: 70%;
+}
+.tile-stats > h3 {
+  font-size: 17px;
+  margin: -5px 0 10px 10px;
+}
+.tile-stats:hover .icon i {
+  color: rgba(58, 58, 58, 0.10);
+}
+.count > span {
+  background: #429edb none repeat scroll 0 0;
+  border-radius: 3px;
+  color: #fff;
+  font-weight: 700;
+  padding: 0 9px;
+}
+
+
+/* responsive */
+@media (max-width:600px) {
+  div.dt-buttons {
+    float: left;
+    width: auto;
+  }
+    div.dataTables_wrapper div.dataTables_filter input {
+    width: 70%;
+  }
+  .dataTables_info {
+    text-align: left !important;
+  }
+  .right_col .col-md-12 {
+    float: none;
+  }
+  
+  .nav-sm .nav.side-menu li a {
+    font-size: 12px;
+  }
+  .nav-sm ul.nav.child_menu {
+    background: #e1e1e1;
+    box-shadow: 5px 5px 10px rgba(0,0,0,0.2);
+  }
+  .nav-sm ul.nav.child_menu a {
+    padding: 7px 5px;
+  }
+}
