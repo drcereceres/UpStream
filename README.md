@@ -23,7 +23,7 @@ The `master` branch always reflects a production-ready state while the latest de
 
 Only pull requests to the `development` branch will be reviewed and merged.
 
-### Git
+### Git Settings
 Ensure that your local-git setting `ignorecase` is set to `false`.
 
 To change it localy, run:
