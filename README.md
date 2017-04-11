@@ -3,12 +3,17 @@ Project Management for WordPress that is powerful, extensible & easy to use. Man
 
 ## Table of contents
 - [About](https://github.com/upstreamplugin/UpStream#upstream) 
+- [Requirements](https://github.com/upstreamplugin/UpStream#requirements)
 - [Contributing](https://github.com/upstreamplugin/UpStream#contributing)
    - [Bug Reports](https://github.com/upstreamplugin/UpStream#bug-reports)
    - [Pull Requests](https://github.com/upstreamplugin/UpStream#pull-requests)
    - [Git Settings](https://github.com/upstreamplugin/UpStream#git-settings)
 - [Versioning](https://github.com/upstreamplugin/UpStream#versioning)
 - [License](https://github.com/upstreamplugin/UpStream#license)
+
+## Requirements
+- PHP 5.4+ or newer
+- WordPress 4.0 or newer
 
 ## Contributing
 Hey, thats awesome! Feel free to contribute in any way, submiting bug reports, features requests, forking and sending pull requests.
