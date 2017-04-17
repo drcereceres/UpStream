@@ -540,7 +540,9 @@ class Upstream_Bug_List extends WP_List_Table {
         $this->items = self::output_bugs( $per_page, $current_page );
     }
 
-
+    protected function get_table_classes() {
+        return array( 'widefat', 'striped', $this->_args['plural'] );
+    }
 }
 
 

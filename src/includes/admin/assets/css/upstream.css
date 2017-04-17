@@ -472,6 +472,23 @@
   padding: 0 8px;
   text-align: center;
 }
+th.manage-column.column-tasks {
+  background-color: transparent;
+}
+body.upstream .wp-list-table.fixed.posts {
+  table-layout: auto;
+}
+.wp-list-table .upstream-grid-tags-list {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+.wp-list-table .upstream-grid-tags-list > .status {
+  margin: 0;
+}
+.wp-list-table .upstream-grid-tags-list > .status + .status {
+  margin-top: 2px;
+}
 
 /*
  * Tasks/Bugs page 
