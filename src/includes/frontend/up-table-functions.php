@@ -461,6 +461,10 @@ function upstream_output_table_rows( $id, $table ) {
                 $field_data = '<span class="btn btn-xs" style="background: ' . esc_attr( $color ) . '">' . esc_html( $field_data ) . '</span>'; 
         	}
 
+            if ($setting['type'] === 'date' && !empty($data_value)) {
+                $data_value = upstream_format_date($data_value);
+            }
+
 			$output .= '<td data-name="' . esc_attr( $key ) . '" ' . $order . ' data-value="' . esc_attr( $data_value ) . '" class="' . esc_attr( $setting['row_class'] ) . '">' . $field_data . '</td>';
 
 		}
