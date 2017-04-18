@@ -12,36 +12,36 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  */
 function upstream_get_default_labels() {
 
-	$option = get_option( 'upstream_general' );
+    $option = get_option( 'upstream_general' );
 
-	$defaults = array(
-		'projects' => array(
-	   		'singular' => isset( $option['project']['single'] ) ? $option['project']['single'] : __( 'Project', 'upstream' ),
-	   		'plural'   => isset( $option['project']['plural'] ) ? $option['project']['plural'] : __( 'Projects', 'upstream' ),
-	   	),
-		'clients' => array(
-	   		'singular' => isset( $option['client']['single'] ) ? $option['client']['single'] : __( 'Client', 'upstream' ),
-	   		'plural'   => isset( $option['client']['plural'] ) ? $option['client']['plural'] : __( 'Clients', 'upstream' ),
-	   	),
-	   	'milestones' => array(
-	   		'singular' => isset( $option['milestone']['single'] ) ? $option['milestone']['single'] : __( 'Milestone', 'upstream' ),
-	   		'plural'   => isset( $option['milestone']['plural'] ) ? $option['milestone']['plural'] : __( 'Milestones', 'upstream' ),
-	   	),
-		'tasks' => array(
-	   		'singular' => isset( $option['task']['single'] ) ? $option['task']['single'] : __( 'Task', 'upstream' ),
-	   		'plural'   => isset( $option['task']['plural'] ) ? $option['task']['plural'] : __( 'Tasks', 'upstream' ),
-	   	),
-		'bugs' => array(
-	   		'singular' => isset( $option['bug']['single'] ) ? $option['bug']['single'] : __( 'Bug', 'upstream' ),
-	   		'plural'   => isset( $option['bug']['plural'] ) ? $option['bug']['plural'] : __( 'Bugs', 'upstream' ),
-	   	),
-		'files' => array(
-	   		'singular' => isset( $option['file']['single'] ) ? $option['file']['single'] : __( 'File', 'upstream' ),
-	   		'plural'   => isset( $option['file']['plural'] ) ? $option['file']['plural'] : __( 'Files', 'upstream' ),
-	   	),
+    $defaults = array(
+        'projects' => array(
+            'singular' => isset( $option['project']['single'] ) ? $option['project']['single'] : __( 'Project', 'upstream' ),
+            'plural'   => isset( $option['project']['plural'] ) ? $option['project']['plural'] : __( 'Projects', 'upstream' ),
+        ),
+        'clients' => array(
+            'singular' => isset( $option['client']['single'] ) ? $option['client']['single'] : __( 'Client', 'upstream' ),
+            'plural'   => isset( $option['client']['plural'] ) ? $option['client']['plural'] : __( 'Clients', 'upstream' ),
+        ),
+        'milestones' => array(
+            'singular' => isset( $option['milestone']['single'] ) ? $option['milestone']['single'] : __( 'Milestone', 'upstream' ),
+            'plural'   => isset( $option['milestone']['plural'] ) ? $option['milestone']['plural'] : __( 'Milestones', 'upstream' ),
+        ),
+        'tasks' => array(
+            'singular' => isset( $option['task']['single'] ) ? $option['task']['single'] : __( 'Task', 'upstream' ),
+            'plural'   => isset( $option['task']['plural'] ) ? $option['task']['plural'] : __( 'Tasks', 'upstream' ),
+        ),
+        'bugs' => array(
+            'singular' => isset( $option['bug']['single'] ) ? $option['bug']['single'] : __( 'Bug', 'upstream' ),
+            'plural'   => isset( $option['bug']['plural'] ) ? $option['bug']['plural'] : __( 'Bugs', 'upstream' ),
+        ),
+        'files' => array(
+            'singular' => isset( $option['file']['single'] ) ? $option['file']['single'] : __( 'File', 'upstream' ),
+            'plural'   => isset( $option['file']['plural'] ) ? $option['file']['plural'] : __( 'Files', 'upstream' ),
+        ),
 
-	);
-	return apply_filters( 'upstream_default_labels', $defaults );
+    );
+    return apply_filters( 'upstream_default_labels', $defaults );
 }
 
 /**
@@ -53,12 +53,12 @@ function upstream_get_default_labels() {
  * @return string $defaults['singular'] Singular label
  */
 function upstream_project_label( $lowercase = false ) {
-	$defaults = upstream_get_default_labels();
-	return ( $lowercase ) ? strtolower( $defaults['projects']['singular'] ) : $defaults['projects']['singular'];
+    $defaults = upstream_get_default_labels();
+    return ( $lowercase ) ? strtolower( $defaults['projects']['singular'] ) : $defaults['projects']['singular'];
 }
 function upstream_project_label_plural( $lowercase = false ) {
-	$defaults = upstream_get_default_labels();
-	return ( $lowercase ) ? strtolower( $defaults['projects']['plural'] ) : $defaults['projects']['plural'];
+    $defaults = upstream_get_default_labels();
+    return ( $lowercase ) ? strtolower( $defaults['projects']['plural'] ) : $defaults['projects']['plural'];
 }
 
 /**
@@ -70,12 +70,12 @@ function upstream_project_label_plural( $lowercase = false ) {
  * @return string $defaults['singular'] Singular label
  */
 function upstream_client_label( $lowercase = false ) {
-	$defaults = upstream_get_default_labels();
-	return ( $lowercase ) ? strtolower( $defaults['clients']['singular'] ) : $defaults['clients']['singular'];
+    $defaults = upstream_get_default_labels();
+    return ( $lowercase ) ? strtolower( $defaults['clients']['singular'] ) : $defaults['clients']['singular'];
 }
 function upstream_client_label_plural( $lowercase = false ) {
-	$defaults = upstream_get_default_labels();
-	return ( $lowercase ) ? strtolower( $defaults['clients']['plural'] ) : $defaults['clients']['plural'];
+    $defaults = upstream_get_default_labels();
+    return ( $lowercase ) ? strtolower( $defaults['clients']['plural'] ) : $defaults['clients']['plural'];
 }
 
 /**
@@ -87,12 +87,12 @@ function upstream_client_label_plural( $lowercase = false ) {
  * @return string $defaults['singular'] Singular label
  */
 function upstream_milestone_label( $lowercase = false ) {
-	$defaults = upstream_get_default_labels();
-	return ( $lowercase ) ? strtolower( $defaults['milestones']['singular'] ) : $defaults['milestones']['singular'];
+    $defaults = upstream_get_default_labels();
+    return ( $lowercase ) ? strtolower( $defaults['milestones']['singular'] ) : $defaults['milestones']['singular'];
 }
 function upstream_milestone_label_plural( $lowercase = false ) {
-	$defaults = upstream_get_default_labels();
-	return ( $lowercase ) ? strtolower( $defaults['milestones']['plural'] ) : $defaults['milestones']['plural'];
+    $defaults = upstream_get_default_labels();
+    return ( $lowercase ) ? strtolower( $defaults['milestones']['plural'] ) : $defaults['milestones']['plural'];
 }
 
 /**
@@ -104,12 +104,12 @@ function upstream_milestone_label_plural( $lowercase = false ) {
  * @return string $defaults['singular'] Singular label
  */
 function upstream_task_label( $lowercase = false ) {
-	$defaults = upstream_get_default_labels();
-	return ( $lowercase ) ? strtolower( $defaults['tasks']['singular'] ) : $defaults['tasks']['singular'];
+    $defaults = upstream_get_default_labels();
+    return ( $lowercase ) ? strtolower( $defaults['tasks']['singular'] ) : $defaults['tasks']['singular'];
 }
 function upstream_task_label_plural( $lowercase = false ) {
-	$defaults = upstream_get_default_labels();
-	return ( $lowercase ) ? strtolower( $defaults['tasks']['plural'] ) : $defaults['tasks']['plural'];
+    $defaults = upstream_get_default_labels();
+    return ( $lowercase ) ? strtolower( $defaults['tasks']['plural'] ) : $defaults['tasks']['plural'];
 }
 
 /**
@@ -121,12 +121,12 @@ function upstream_task_label_plural( $lowercase = false ) {
  * @return string $defaults['singular'] Singular label
  */
 function upstream_bug_label( $lowercase = false ) {
-	$defaults = upstream_get_default_labels();
-	return ( $lowercase ) ? strtolower( $defaults['bugs']['singular'] ) : $defaults['bugs']['singular'];
+    $defaults = upstream_get_default_labels();
+    return ( $lowercase ) ? strtolower( $defaults['bugs']['singular'] ) : $defaults['bugs']['singular'];
 }
 function upstream_bug_label_plural( $lowercase = false ) {
-	$defaults = upstream_get_default_labels();
-	return ( $lowercase ) ? strtolower( $defaults['bugs']['plural'] ) : $defaults['bugs']['plural'];
+    $defaults = upstream_get_default_labels();
+    return ( $lowercase ) ? strtolower( $defaults['bugs']['plural'] ) : $defaults['bugs']['plural'];
 }
 
 /**
@@ -138,12 +138,12 @@ function upstream_bug_label_plural( $lowercase = false ) {
  * @return string $defaults['singular'] Singular label
  */
 function upstream_file_label( $lowercase = false ) {
-	$defaults = upstream_get_default_labels();
-	return ( $lowercase ) ? strtolower( $defaults['files']['singular'] ) : $defaults['files']['singular'];
+    $defaults = upstream_get_default_labels();
+    return ( $lowercase ) ? strtolower( $defaults['files']['singular'] ) : $defaults['files']['singular'];
 }
 function upstream_file_label_plural( $lowercase = false ) {
-	$defaults = upstream_get_default_labels();
-	return ( $lowercase ) ? strtolower( $defaults['files']['plural'] ) : $defaults['files']['plural'];
+    $defaults = upstream_get_default_labels();
+    return ( $lowercase ) ? strtolower( $defaults['files']['plural'] ) : $defaults['files']['plural'];
 }
 
 
@@ -157,21 +157,21 @@ function upstream_file_label_plural( $lowercase = false ) {
  */
 function upstream_change_default_title( $title ) {
 
-	 $screen = get_current_screen();
+     $screen = get_current_screen();
 
-	 switch ( $screen->post_type ) {
-	 	case 'project':
-	 		$label = upstream_project_label();
-	 		$title = sprintf( __( 'Enter %s name here', 'upstream' ), $label );
-	 		break;
-	 	case 'client':
-	 		$label = upstream_client_label();
-	 		$title = sprintf( __( 'Enter %s name here', 'upstream' ), $label );
-	 		break;
+     switch ( $screen->post_type ) {
+        case 'project':
+            $label = upstream_project_label();
+            $title = sprintf( __( 'Enter %s name here', 'upstream' ), $label );
+            break;
+        case 'client':
+            $label = upstream_client_label();
+            $title = sprintf( __( 'Enter %s name here', 'upstream' ), $label );
+            break;
 
-	 }
+     }
 
-	 return $title;
+     return $title;
 }
 add_filter( 'enter_title_here', 'upstream_change_default_title' );
 
@@ -184,26 +184,26 @@ add_filter( 'enter_title_here', 'upstream_change_default_title' );
  */
 function upstream_get_taxonomy_labels( $taxonomy = 'project_category' ) {
 
-	$allowed_taxonomies = apply_filters( 'upstream_allowed_project_taxonomies', array( 'project_category' ) );
+    $allowed_taxonomies = apply_filters( 'upstream_allowed_project_taxonomies', array( 'project_category' ) );
 
-	if ( ! in_array( $taxonomy, $allowed_taxonomies ) ) {
-		return false;
-	}
+    if ( ! in_array( $taxonomy, $allowed_taxonomies ) ) {
+        return false;
+    }
 
-	$labels   = array();
-	$taxonomy = get_taxonomy( $taxonomy );
+    $labels   = array();
+    $taxonomy = get_taxonomy( $taxonomy );
 
-	if ( false !== $taxonomy ) {
-		$singular = $taxonomy->labels->singular_name;
-		$name     = $taxonomy->labels->name;
+    if ( false !== $taxonomy ) {
+        $singular = $taxonomy->labels->singular_name;
+        $name     = $taxonomy->labels->name;
 
-		$labels = array(
-			'name'          => $name,
-			'singular_name' => $singular,
-		);
-	}
+        $labels = array(
+            'name'          => $name,
+            'singular_name' => $singular,
+        );
+    }
 
-	return apply_filters( 'upstream_get_taxonomy_labels', $labels, $taxonomy );
+    return apply_filters( 'upstream_get_taxonomy_labels', $labels, $taxonomy );
 
 }
 
@@ -213,43 +213,43 @@ function upstream_get_taxonomy_labels( $taxonomy = 'project_category' ) {
  *
  * Returns an array of with all updated messages.
  *
- * @since 	1.0.0
+ * @since   1.0.0
  *
- * @param 	array $messages Post updated message
- * @return 	array $messages New post updated messages
+ * @param   array $messages Post updated message
+ * @return  array $messages New post updated messages
  */
 function upstream_updated_messages($messages)
 {
-	global $post_ID;
+    global $post_ID;
 
-	$postType = get_post_type();
+    $postType = get_post_type();
 
-	$postURL = get_permalink($post_ID);
-	$anchorTagOpening = '<a href="'. $postURL .'">';
-	$anchorTagClosing = '</a>';
+    $postURL = get_permalink($post_ID);
+    $anchorTagOpening = '<a href="'. $postURL .'" target="_blank" rel="noopener noreferrer">';
+    $anchorTagClosing = '</a>';
 
-	$postTypeLabelProject = upstream_project_label();
-	$postTypeLabelClient = upstream_client_label();
+    $postTypeLabelProject = upstream_project_label();
+    $postTypeLabelClient = upstream_client_label();
 
-	$languageDomain = 'upstream';
+    $languageDomain = 'upstream';
 
-	$messages['project'] = array(
-		1 => sprintf(__('%2$s updated. %1$sView %2$s%3$s.', $languageDomain), $anchorTagOpening, $postTypeLabelProject, $anchorTagClosing),
-		4 => sprintf(__('%2$s updated. %1$sView %2$s%3$s.', $languageDomain), $anchorTagOpening, $postTypeLabelProject, $anchorTagClosing),
-		6 => sprintf(__('%2$s published. %1$sView %2$s%3$s.', $languageDomain), $anchorTagOpening, $postTypeLabelProject, $anchorTagClosing),
-		7 => sprintf(__('%2$s saved. %1$sView %2$s%3$s.', $languageDomain), $anchorTagOpening, $postTypeLabelProject, $anchorTagClosing),
-		8 => sprintf(__('%2$s submitted. %1$sView %2$s%3$s.', $languageDomain), $anchorTagOpening, $postTypeLabelProject, $anchorTagClosing)
-	);
+    $messages['project'] = array(
+        1 => sprintf(__('%2$s updated. %1$sView %2$s%3$s.', $languageDomain), $anchorTagOpening, $postTypeLabelProject, $anchorTagClosing),
+        4 => sprintf(__('%2$s updated. %1$sView %2$s%3$s.', $languageDomain), $anchorTagOpening, $postTypeLabelProject, $anchorTagClosing),
+        6 => sprintf(__('%2$s published. %1$sView %2$s%3$s.', $languageDomain), $anchorTagOpening, $postTypeLabelProject, $anchorTagClosing),
+        7 => sprintf(__('%2$s saved. %1$sView %2$s%3$s.', $languageDomain), $anchorTagOpening, $postTypeLabelProject, $anchorTagClosing),
+        8 => sprintf(__('%2$s submitted. %1$sView %2$s%3$s.', $languageDomain), $anchorTagOpening, $postTypeLabelProject, $anchorTagClosing)
+    );
 
-	$messages['client'] = array(
-		1 => sprintf(__('%1$s updated.', $languageDomain), $postTypeLabelClient),
-		4 => sprintf(__('%1$s updated.', $languageDomain), $postTypeLabelClient),
-		6 => sprintf(__('%1$s published.', $languageDomain), $postTypeLabelClient),
-		7 => sprintf(__('%1$s saved.', $languageDomain), $postTypeLabelClient),
-		8 => sprintf(__('%1$s submitted.', $languageDomain), $postTypeLabelClient)
-	);
+    $messages['client'] = array(
+        1 => sprintf(__('%1$s updated.', $languageDomain), $postTypeLabelClient),
+        4 => sprintf(__('%1$s updated.', $languageDomain), $postTypeLabelClient),
+        6 => sprintf(__('%1$s published.', $languageDomain), $postTypeLabelClient),
+        7 => sprintf(__('%1$s saved.', $languageDomain), $postTypeLabelClient),
+        8 => sprintf(__('%1$s submitted.', $languageDomain), $postTypeLabelClient)
+    );
 
-	return $messages;
+    return $messages;
 }
 add_filter('post_updated_messages', 'upstream_updated_messages');
 
@@ -262,18 +262,18 @@ add_filter('post_updated_messages', 'upstream_updated_messages');
  * @return array $bulk_messages New post updated messages
  */
 function upstream_bulk_updated_messages( $bulk_messages, $bulk_counts ) {
-	
-	$singular = upstream_project_label();
-	$plural   = upstream_project_label_plural();
 
-	$bulk_messages['project'] = array(
-		'updated'   => sprintf( _n( '%1$s %2$s updated.', '%1$s %3$s updated.', $bulk_counts['updated'], 'upstream' ), $bulk_counts['updated'], $singular, $plural ),
-		'locked'    => sprintf( _n( '%1$s %2$s not updated, somebody is editing it.', '%1$s %3$s not updated, somebody is editing them.', $bulk_counts['locked'], 'upstream' ), $bulk_counts['locked'], $singular, $plural ),
-		'deleted'   => sprintf( _n( '%1$s %2$s permanently deleted.', '%1$s %3$s permanently deleted.', $bulk_counts['deleted'], 'upstream' ), $bulk_counts['deleted'], $singular, $plural ),
-		'trashed'   => sprintf( _n( '%1$s %2$s moved to the Trash.', '%1$s %3$s moved to the Trash.', $bulk_counts['trashed'], 'upstream' ), $bulk_counts['trashed'], $singular, $plural ),
-		'untrashed' => sprintf( _n( '%1$s %2$s restored from the Trash.', '%1$s %3$s restored from the Trash.', $bulk_counts['untrashed'], 'upstream' ), $bulk_counts['untrashed'], $singular, $plural )
-	);
+    $singular = upstream_project_label();
+    $plural   = upstream_project_label_plural();
 
-	return $bulk_messages;
+    $bulk_messages['project'] = array(
+        'updated'   => sprintf( _n( '%1$s %2$s updated.', '%1$s %3$s updated.', $bulk_counts['updated'], 'upstream' ), $bulk_counts['updated'], $singular, $plural ),
+        'locked'    => sprintf( _n( '%1$s %2$s not updated, somebody is editing it.', '%1$s %3$s not updated, somebody is editing them.', $bulk_counts['locked'], 'upstream' ), $bulk_counts['locked'], $singular, $plural ),
+        'deleted'   => sprintf( _n( '%1$s %2$s permanently deleted.', '%1$s %3$s permanently deleted.', $bulk_counts['deleted'], 'upstream' ), $bulk_counts['deleted'], $singular, $plural ),
+        'trashed'   => sprintf( _n( '%1$s %2$s moved to the Trash.', '%1$s %3$s moved to the Trash.', $bulk_counts['trashed'], 'upstream' ), $bulk_counts['trashed'], $singular, $plural ),
+        'untrashed' => sprintf( _n( '%1$s %2$s restored from the Trash.', '%1$s %3$s restored from the Trash.', $bulk_counts['untrashed'], 'upstream' ), $bulk_counts['untrashed'], $singular, $plural )
+    );
+
+    return $bulk_messages;
 }
 add_filter( 'bulk_post_updated_messages', 'upstream_bulk_updated_messages', 10, 2 );
