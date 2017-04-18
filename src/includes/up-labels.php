@@ -234,11 +234,11 @@ function upstream_updated_messages($messages)
     $languageDomain = 'upstream';
 
     $messages['project'] = array(
-        1 => sprintf(__('%2$s updated. %1$sView %2$s%3$s.', $languageDomain), $anchorTagOpening, $postTypeLabelProject, $anchorTagClosing),
-        4 => sprintf(__('%2$s updated. %1$sView %2$s%3$s.', $languageDomain), $anchorTagOpening, $postTypeLabelProject, $anchorTagClosing),
-        6 => sprintf(__('%2$s published. %1$sView %2$s%3$s.', $languageDomain), $anchorTagOpening, $postTypeLabelProject, $anchorTagClosing),
-        7 => sprintf(__('%2$s saved. %1$sView %2$s%3$s.', $languageDomain), $anchorTagOpening, $postTypeLabelProject, $anchorTagClosing),
-        8 => sprintf(__('%2$s submitted. %1$sView %2$s%3$s.', $languageDomain), $anchorTagOpening, $postTypeLabelProject, $anchorTagClosing)
+        1 => sprintf(__('%2$s updated. %1$sView %2$s%3$s', $languageDomain), $anchorTagOpening, $postTypeLabelProject, $anchorTagClosing),
+        4 => sprintf(__('%2$s updated. %1$sView %2$s%3$s', $languageDomain), $anchorTagOpening, $postTypeLabelProject, $anchorTagClosing),
+        6 => sprintf(__('%2$s published. %1$sView %2$s%3$s', $languageDomain), $anchorTagOpening, $postTypeLabelProject, $anchorTagClosing),
+        7 => sprintf(__('%2$s saved. %1$sView %2$s%3$s', $languageDomain), $anchorTagOpening, $postTypeLabelProject, $anchorTagClosing),
+        8 => sprintf(__('%2$s submitted. %1$sView %2$s%3$s', $languageDomain), $anchorTagOpening, $postTypeLabelProject, $anchorTagClosing)
     );
 
     $messages['client'] = array(
