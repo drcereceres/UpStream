@@ -8,7 +8,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="robots" content="noindex, nofollow">
 
-    <title><?php wp_title( '|', true, 'right' ); ?></title>
+    <title><?php wp_title( '|', true, 'right' ) . bloginfo( 'name' ); ?></title>
 
     <?php wp_head(); ?>
     <?php do_action('upstream_head'); ?>
