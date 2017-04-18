@@ -262,16 +262,34 @@ add_filter('post_updated_messages', 'upstream_updated_messages');
  * @return array $bulk_messages New post updated messages
  */
 function upstream_bulk_updated_messages( $bulk_messages, $bulk_counts ) {
+    $languageDomain = 'upstream';
 
-    $singular = upstream_project_label();
-    $plural   = upstream_project_label_plural();
+    $itemsUpdatedCount = (int)$bulk_counts['updated'];
+    $itemsLockedCount = (int)$bulk_counts['locked'];
+    $itemsDeletedCount = (int)$bulk_counts['deleted'];
+    $itemsTrashedCount = (int)$bulk_counts['trashed'];
+    $itemsUntrashedCount = (int)$bulk_counts['untrashed'];
+
+    $postTypeClientLabelSingular = upstream_client_label();
+    $postTypeClientLabelPlural = upstream_client_label_plural();
+
+    $postTypeProjectLabelSingular = upstream_project_label();
+    $postTypeProjectLabelPlural = upstream_project_label_plural();
+
+    $bulk_messages['client'] = array(
+        'updated'   => sprintf(_n('%1$s %2$s updated.', '%1$s %3$s updated.', $itemsUpdatedCount, $languageDomain), $itemsUpdatedCount, $postTypeClientLabelSingular, $postTypeClientLabelPlural),
+        'locked'    => sprintf(_n('%1$s %2$s not updated, somebody is editing it.', '%1$s %3$s not updated, somebody is editing them.', $itemsLockedCount, $languageDomain), $itemsLockedCount, $postTypeClientLabelSingular, $postTypeClientLabelPlural),
+        'deleted'   => sprintf(_n('%1$s %2$s permanently deleted.', '%1$s %3$s permanently deleted.', $itemsDeletedCount, $languageDomain), $itemsDeletedCount, $postTypeClientLabelSingular, $postTypeClientLabelPlural),
+        'trashed'   => sprintf(_n('%1$s %2$s moved to the Trash.', '%1$s %3$s moved to the Trash.', $itemsTrashedCount, $languageDomain), $itemsTrashedCount, $postTypeClientLabelSingular, $postTypeClientLabelPlural),
+        'untrashed' => sprintf(_n('%1$s %2$s restored from the Trash.', '%1$s %3$s restored from the Trash.', $itemsUntrashedCount, $languageDomain), $itemsUntrashedCount, $postTypeClientLabelSingular, $postTypeClientLabelPlural)
+    );
 
     $bulk_messages['project'] = array(
-        'updated'   => sprintf( _n( '%1$s %2$s updated.', '%1$s %3$s updated.', $bulk_counts['updated'], 'upstream' ), $bulk_counts['updated'], $singular, $plural ),
-        'locked'    => sprintf( _n( '%1$s %2$s not updated, somebody is editing it.', '%1$s %3$s not updated, somebody is editing them.', $bulk_counts['locked'], 'upstream' ), $bulk_counts['locked'], $singular, $plural ),
-        'deleted'   => sprintf( _n( '%1$s %2$s permanently deleted.', '%1$s %3$s permanently deleted.', $bulk_counts['deleted'], 'upstream' ), $bulk_counts['deleted'], $singular, $plural ),
-        'trashed'   => sprintf( _n( '%1$s %2$s moved to the Trash.', '%1$s %3$s moved to the Trash.', $bulk_counts['trashed'], 'upstream' ), $bulk_counts['trashed'], $singular, $plural ),
-        'untrashed' => sprintf( _n( '%1$s %2$s restored from the Trash.', '%1$s %3$s restored from the Trash.', $bulk_counts['untrashed'], 'upstream' ), $bulk_counts['untrashed'], $singular, $plural )
+        'updated'   => sprintf(_n('%1$s %2$s updated.', '%1$s %3$s updated.', $itemsUpdatedCount, $languageDomain), $itemsUpdatedCount, $postTypeProjectLabelSingular, $postTypeProjectLabelPlural),
+        'locked'    => sprintf(_n('%1$s %2$s not updated, somebody is editing it.', '%1$s %3$s not updated, somebody is editing them.', $itemsLockedCount, $languageDomain), $itemsLockedCount, $postTypeProjectLabelSingular, $postTypeProjectLabelPlural),
+        'deleted'   => sprintf(_n('%1$s %2$s permanently deleted.', '%1$s %3$s permanently deleted.', $itemsDeletedCount, $languageDomain), $itemsDeletedCount, $postTypeProjectLabelSingular, $postTypeProjectLabelPlural),
+        'trashed'   => sprintf(_n('%1$s %2$s moved to the Trash.', '%1$s %3$s moved to the Trash.', $itemsTrashedCount, $languageDomain), $itemsTrashedCount, $postTypeProjectLabelSingular, $postTypeProjectLabelPlural),
+        'untrashed' => sprintf(_n('%1$s %2$s restored from the Trash.', '%1$s %3$s restored from the Trash.', $itemsUntrashedCount, $languageDomain), $itemsUntrashedCount, $postTypeProjectLabelSingular, $postTypeProjectLabelPlural)
     );
 
     return $bulk_messages;
