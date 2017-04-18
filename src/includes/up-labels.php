@@ -222,8 +222,6 @@ function upstream_updated_messages($messages)
 {
     global $post_ID;
 
-    $postType = get_post_type();
-
     $postURL = get_permalink($post_ID);
     $anchorTagOpening = '<a href="'. $postURL .'" target="_blank" rel="noopener noreferrer">';
     $anchorTagClosing = '</a>';
@@ -257,11 +255,13 @@ add_filter('post_updated_messages', 'upstream_updated_messages');
  * Updated bulk messages
  *
  * @since 2.3
- * @param array $bulk_messages Post updated messages
- * @param array $bulk_counts Post counts
- * @return array $bulk_messages New post updated messages
+ *
+ * @param   array $bulk_messages Post updated messages
+ * @param   array $bulk_counts Post counts
+ * @return  array $bulk_messages New post updated messages
  */
-function upstream_bulk_updated_messages( $bulk_messages, $bulk_counts ) {
+function upstream_bulk_updated_messages($bulk_messages, $bulk_counts)
+{
     $languageDomain = 'upstream';
 
     $itemsUpdatedCount = (int)$bulk_counts['updated'];
@@ -294,4 +294,4 @@ function upstream_bulk_updated_messages( $bulk_messages, $bulk_counts ) {
 
     return $bulk_messages;
 }
-add_filter( 'bulk_post_updated_messages', 'upstream_bulk_updated_messages', 10, 2 );
+add_filter('bulk_post_updated_messages', 'upstream_bulk_updated_messages', 10, 2);
