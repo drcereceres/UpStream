@@ -220,17 +220,28 @@ function upstream_get_taxonomy_labels( $taxonomy = 'project_category' ) {
 function upstream_updated_messages( $messages ) {
 	global $post, $post_ID;
 
-	$url1 = '<a href="' . get_permalink( $post_ID ) . '">';
-	$url2 = upstream_project_label();
-	$url3 = '</a>';
+	$postType = get_post_type();
+	if ($postType === 'project' || $postType === 'client') {
+		$url1 = '<a href="' . get_permalink( $post_ID ) . '">';
+		$url2 = ucfirst(get_post_type());
+		$url3 = '</a>';
 
-	$messages['project'] = array(
-		1 => sprintf( __( '%2$s updated. %1$sView %2$s%3$s.', 'upstream' ), $url1, $url2, $url3 ),
-		4 => sprintf( __( '%2$s updated. %1$sView %2$s%3$s.', 'upstream' ), $url1, $url2, $url3 ),
-		6 => sprintf( __( '%2$s published. %1$sView %2$s%3$s.', 'upstream' ), $url1, $url2, $url3 ),
-		7 => sprintf( __( '%2$s saved. %1$sView %2$s%3$s.', 'upstream' ), $url1, $url2, $url3 ),
-		8 => sprintf( __( '%2$s submitted. %1$sView %2$s%3$s.', 'upstream' ), $url1, $url2, $url3 )
-	);
+		$messages['project'] = array(
+			1 => sprintf( __( '%2$s updated. %1$sView %2$s%3$s.', 'upstream' ), $url1, $url2, $url3 ),
+			4 => sprintf( __( '%2$s updated. %1$sView %2$s%3$s.', 'upstream' ), $url1, $url2, $url3 ),
+			6 => sprintf( __( '%2$s published. %1$sView %2$s%3$s.', 'upstream' ), $url1, $url2, $url3 ),
+			7 => sprintf( __( '%2$s saved. %1$sView %2$s%3$s.', 'upstream' ), $url1, $url2, $url3 ),
+			8 => sprintf( __( '%2$s submitted. %1$sView %2$s%3$s.', 'upstream' ), $url1, $url2, $url3 )
+		);
+
+		$messages['client'] = array(
+			1 => sprintf( __( '%1$s updated.', 'upstream' ), $url2),
+			4 => sprintf( __( '%1$s updated.', 'upstream' ), $url2),
+			6 => sprintf( __( '%1$s published.', 'upstream' ), $url2),
+			7 => sprintf( __( '%1$s saved.', 'upstream' ), $url2),
+			8 => sprintf( __( '%1$s submitted.', 'upstream' ), $url2)
+		);
+	}
 
 	return $messages;
 }
