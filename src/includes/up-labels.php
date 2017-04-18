@@ -213,39 +213,45 @@ function upstream_get_taxonomy_labels( $taxonomy = 'project_category' ) {
  *
  * Returns an array of with all updated messages.
  *
- * @since 1.0.0
- * @param array $messages Post updated message
- * @return array $messages New post updated messages
+ * @since 	1.0.0
+ *
+ * @param 	array $messages Post updated message
+ * @return 	array $messages New post updated messages
  */
-function upstream_updated_messages( $messages ) {
-	global $post, $post_ID;
+function upstream_updated_messages($messages)
+{
+	global $post_ID;
 
 	$postType = get_post_type();
-	if ($postType === 'project' || $postType === 'client') {
-		$url1 = '<a href="' . get_permalink( $post_ID ) . '">';
-		$url2 = ucfirst(get_post_type());
-		$url3 = '</a>';
 
-		$messages['project'] = array(
-			1 => sprintf( __( '%2$s updated. %1$sView %2$s%3$s.', 'upstream' ), $url1, $url2, $url3 ),
-			4 => sprintf( __( '%2$s updated. %1$sView %2$s%3$s.', 'upstream' ), $url1, $url2, $url3 ),
-			6 => sprintf( __( '%2$s published. %1$sView %2$s%3$s.', 'upstream' ), $url1, $url2, $url3 ),
-			7 => sprintf( __( '%2$s saved. %1$sView %2$s%3$s.', 'upstream' ), $url1, $url2, $url3 ),
-			8 => sprintf( __( '%2$s submitted. %1$sView %2$s%3$s.', 'upstream' ), $url1, $url2, $url3 )
-		);
+	$postURL = get_permalink($post_ID);
+	$anchorTagOpening = '<a href="'. $postURL .'">';
+	$anchorTagClosing = '</a>';
 
-		$messages['client'] = array(
-			1 => sprintf( __( '%1$s updated.', 'upstream' ), $url2),
-			4 => sprintf( __( '%1$s updated.', 'upstream' ), $url2),
-			6 => sprintf( __( '%1$s published.', 'upstream' ), $url2),
-			7 => sprintf( __( '%1$s saved.', 'upstream' ), $url2),
-			8 => sprintf( __( '%1$s submitted.', 'upstream' ), $url2)
-		);
-	}
+	$postTypeLabelProject = upstream_project_label();
+	$postTypeLabelClient = upstream_client_label();
+
+	$languageDomain = 'upstream';
+
+	$messages['project'] = array(
+		1 => sprintf(__('%2$s updated. %1$sView %2$s%3$s.', $languageDomain), $anchorTagOpening, $postTypeLabelProject, $anchorTagClosing),
+		4 => sprintf(__('%2$s updated. %1$sView %2$s%3$s.', $languageDomain), $anchorTagOpening, $postTypeLabelProject, $anchorTagClosing),
+		6 => sprintf(__('%2$s published. %1$sView %2$s%3$s.', $languageDomain), $anchorTagOpening, $postTypeLabelProject, $anchorTagClosing),
+		7 => sprintf(__('%2$s saved. %1$sView %2$s%3$s.', $languageDomain), $anchorTagOpening, $postTypeLabelProject, $anchorTagClosing),
+		8 => sprintf(__('%2$s submitted. %1$sView %2$s%3$s.', $languageDomain), $anchorTagOpening, $postTypeLabelProject, $anchorTagClosing)
+	);
+
+	$messages['client'] = array(
+		1 => sprintf(__('%1$s updated.', $languageDomain), $postTypeLabelClient),
+		4 => sprintf(__('%1$s updated.', $languageDomain), $postTypeLabelClient),
+		6 => sprintf(__('%1$s published.', $languageDomain), $postTypeLabelClient),
+		7 => sprintf(__('%1$s saved.', $languageDomain), $postTypeLabelClient),
+		8 => sprintf(__('%1$s submitted.', $languageDomain), $postTypeLabelClient)
+	);
 
 	return $messages;
 }
-add_filter( 'post_updated_messages', 'upstream_updated_messages' );
+add_filter('post_updated_messages', 'upstream_updated_messages');
 
 /**
  * Updated bulk messages
