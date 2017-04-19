@@ -31,7 +31,7 @@ class Upstream_Bug_List extends WP_List_Table {
     }
 
     public function get_columns() {
-        return $columns = apply_filters( 'upstream_admin_bug_page_columns', array( 
+        return $columns = apply_filters( 'upstream_admin_bug_page_columns', array(
             'title'         => $this->bug_label,
             'project'       => upstream_project_label(),
             'assigned_to'   => __( 'Assigned To', 'upstream' ),
@@ -61,7 +61,7 @@ class Upstream_Bug_List extends WP_List_Table {
         $all_url        = remove_query_arg( array( 'status', 'view' ) );
         $all_count      = self::count_total();
         $views['all']   = "<a href='" . esc_url( $all_url ) . "' {$all_class} >" . __( 'All', 'upstream' ) . "</a>({$all_count})";
-        
+
         //Mine link
         $mine_class     = ( $current == 'mine' ? ' class="current"' : '' );
         $mine_url       = add_query_arg( array( 'view' => 'mine', 'status' => false ) );
@@ -94,19 +94,19 @@ class Upstream_Bug_List extends WP_List_Table {
     }
 
     public function extra_tablenav( $which ) {
-        
+
         if( $which != 'top' )
             return;
         ?>
 
         <div class="alignleft actions">
-        
+
         <?php
         if ( ! is_singular() ) {
 
         $projects = $this->get_projects_unique();
         if ( ! empty( $projects ) ) { ?>
-            
+
             <select name='project' id='project' class='postform'>
                 <option value=''><?php printf( __( 'Show all %s', 'upstream' ), 'projects' ) ?></option>
                 <?php foreach ( $projects as $project_id => $title ) { ?>
@@ -116,9 +116,9 @@ class Upstream_Bug_List extends WP_List_Table {
 
         <?php }
 
-        $assigned_to = $this->get_assigned_to_unique(); 
+        $assigned_to = $this->get_assigned_to_unique();
         if ( ! empty( $assigned_to ) ) { ?>
-            
+
             <select name='assigned_to' id='assigned_to' class='postform'>
                 <option value=''><?php printf( __( 'Show all %s', 'upstream' ), 'users' ) ?></option>
                 <?php foreach ( $assigned_to as $user_id => $user ) { ?>
@@ -128,9 +128,9 @@ class Upstream_Bug_List extends WP_List_Table {
 
         <?php }
 
-        $status = $this->get_status_unique(); 
+        $status = $this->get_status_unique();
         if ( ! empty( $status ) ) { ?>
-            
+
             <select name='status' id='status' class='postform'>
                 <option value=''><?php printf( __( 'Show all %s', 'upstream' ), 'statuses' ) ?></option>
                 <?php foreach ( $status as $stati ) { ?>
@@ -140,9 +140,9 @@ class Upstream_Bug_List extends WP_List_Table {
 
         <?php }
 
-        $severity = $this->get_severity_unique(); 
+        $severity = $this->get_severity_unique();
         if ( ! empty( $severity ) ) { ?>
-            
+
             <select name='severity' id='severity' class='postform'>
                 <option value=''><?php printf( __( 'Show all %s', 'upstream' ), 'severities' ) ?></option>
                 <?php foreach ( $severity as $severiti ) { ?>
@@ -154,7 +154,7 @@ class Upstream_Bug_List extends WP_List_Table {
 
             submit_button( __( 'Filter' ), 'button', 'filter', false );
         }
- 
+
         ?>
         </div>
         <?php
@@ -187,7 +187,7 @@ class Upstream_Bug_List extends WP_List_Table {
         }
         return $new_items;
     }
-    
+
     private function get_status_unique() {
         $bugs = self::get_bugs();
         if ( empty( $bugs ) )
@@ -221,7 +221,7 @@ class Upstream_Bug_List extends WP_List_Table {
      */
     public function column_default( $item, $column_name ) {
         switch ( $column_name ) {
-            
+
             case 'title':
 
                 $output = '<a class="row-title" href="' . get_edit_post_link( $item['project_id'] ). '">' . $item['title'] . '</a>';
@@ -231,12 +231,12 @@ class Upstream_Bug_List extends WP_List_Table {
             case 'project':
 
                 $owner = upstream_project_owner_name( $item['project_id'] ) ? '(' . upstream_project_owner_name( $item['project_id'] ) . ')' : '';
-                
+
                 $output = '<a href="' . get_edit_post_link( $item['project_id'] ). '">' . $item['project'] . '</a>';
                 $output .= '<br>' . $owner;
 
                 return $output;
-                    
+
             case 'assigned_to':
 
                 $user = upstream_user_data( $item['assigned_to'], true );
@@ -258,7 +258,7 @@ class Upstream_Bug_List extends WP_List_Table {
 
                 $colors = upstream_project_bug_statuses_colors( $item['project_id'] );
                 $color  = isset( $colors[$item['status']] ) ? $colors[$item['status']] : '#aaaaaa';
-                $output = '<span style="border-color:' . esc_attr( $color ) . '" class="status ' . esc_attr( strtolower( $item['status'] ) ) . '"><span class="count" style="background-color:' . esc_attr( $color ) . '">1</span>' . $item['status'] . '</span>'; 
+                $output = '<span style="border-color:' . esc_attr( $color ) . '" class="status ' . esc_attr( strtolower( $item['status'] ) ) . '"><span class="count" style="background-color:' . esc_attr( $color ) . '">1</span>' . $item['status'] . '</span>';
 
                 return $output;
 
@@ -269,7 +269,7 @@ class Upstream_Bug_List extends WP_List_Table {
 
                 $colors = upstream_project_bug_severity_colors( $item['project_id'] );
                 $color  = isset( $colors[$item['severity']] ) ? $colors[$item['severity']] : '#aaaaaa';
-                $output = '<span style="border-color:' . esc_attr( $color ) . '" class="status ' . esc_attr( strtolower( $item['severity'] ) ) . '"><span class="count" style="background-color:' . esc_attr( $color ) . '">1</span>' . $item['severity'] . '</span>'; 
+                $output = '<span style="border-color:' . esc_attr( $color ) . '" class="status ' . esc_attr( strtolower( $item['severity'] ) ) . '"><span class="count" style="background-color:' . esc_attr( $color ) . '">1</span>' . $item['severity'] . '</span>';
 
                 return $output;
 
@@ -303,9 +303,9 @@ class Upstream_Bug_List extends WP_List_Table {
      * @return array
      */
     public static function get_bugs() {
-        
-        $args = array( 
-            'post_type'     => 'project', 
+
+        $args = array(
+            'post_type'     => 'project',
             'post_status'   => 'publish',
             'posts_per_page' => -1,
             'meta_query' => array(
@@ -314,7 +314,7 @@ class Upstream_Bug_List extends WP_List_Table {
                     'compare' => 'EXISTS',
                 )
             ),
-        ); 
+        );
 
         // The Query
         $the_query = new WP_Query( $args );
@@ -324,8 +324,8 @@ class Upstream_Bug_List extends WP_List_Table {
             return;
 
         $bugs = array();
-        while ( $the_query->have_posts() ) : $the_query->the_post(); 
-            
+        while ( $the_query->have_posts() ) : $the_query->the_post();
+
             $post_id    = get_the_ID();
             $meta       = get_post_meta( $post_id, '_upstream_project_bugs', true );
             $owner      = get_post_meta( $post_id, '_upstream_project_owner', true );
@@ -343,7 +343,7 @@ class Upstream_Bug_List extends WP_List_Table {
                     $bug['severity']       = isset( $bug['severity'] ) ? $bug['severity'] : '';
                     $bug['description']    = isset( $bug['description'] ) ? $bug['description'] : '';
                     $bug['project_id']     = $post_id; // add the post id to each bug
-                    
+
                     // check if we can add the bug to the list
                     $user_id    = get_current_user_id();
                     // $option     = get_option( 'upstream_bugs' );
@@ -352,36 +352,36 @@ class Upstream_Bug_List extends WP_List_Table {
                     // // check if user wants to hide completed bugs
                     // if ( $hide == 'on' && self::hide_completed( $bug['status'] ) )
                     //     continue;
-                        
+
                     $bugs[] = $bug;
 
                 }
 
             endif;
 
-        endwhile;    
+        endwhile;
 
         return $bugs;
 
     }
 
     /**
-     * 
+     *
      *
      * @return null|int
      */
     public static function hide_completed( $status ) {
-        
+
         $option     = get_option( 'upstream_bugs' );
         $statuses   = isset( $option['statuses'] ) ? $option['statuses'] : '';
-        
+
         if( ! $statuses )
             return false;
 
         $types = wp_list_pluck( $statuses, 'type', 'name' );
 
         foreach ( $types as $key => $value ) {
-            if( $key == $status && $value == 'open' ) 
+            if( $key == $status && $value == 'open' )
                 return false;
         }
 
@@ -472,13 +472,13 @@ class Upstream_Bug_List extends WP_List_Table {
                 $tmp = Array();
                 foreach($bugs as &$ma)
                     $tmp[] = &$ma[esc_html($_REQUEST['orderby'])];
-                array_multisort($tmp, SORT_ASC, $bugs); 
+                array_multisort($tmp, SORT_ASC, $bugs);
             }
             if( ! empty( $_REQUEST['order'] ) && $_REQUEST['order'] == 'desc' ) {
                 $tmp = Array();
                 foreach($bugs as &$ma)
                     $tmp[] = &$ma[esc_html($_REQUEST['orderby'])];
-                array_multisort($tmp, SORT_DESC, $bugs); 
+                array_multisort($tmp, SORT_DESC, $bugs);
             }
         }
 
@@ -494,7 +494,7 @@ class Upstream_Bug_List extends WP_List_Table {
      * @return array
      */
     public static function count_statuses() {
-        
+
         $bugs = self::get_bugs();
         if( ! $bugs )
             return null;
@@ -525,7 +525,7 @@ class Upstream_Bug_List extends WP_List_Table {
      * Handles data query and filter, sorting, and pagination.
      */
     public function prepare_items() {
-        
+
         $this->_column_headers = $this->get_column_info();
 
         $per_page     = $this->get_items_per_page( 'bugs_per_page', 10 );
@@ -540,7 +540,9 @@ class Upstream_Bug_List extends WP_List_Table {
         $this->items = self::output_bugs( $per_page, $current_page );
     }
 
-
+    protected function get_table_classes() {
+        return array( 'widefat', 'striped', $this->_args['plural'] );
+    }
 }
 
 
@@ -568,7 +570,7 @@ class Upstream_Admin_Bugs_Page {
     }
 
     public function set_screen( $status, $option, $value ) {
-        if ( 'upstream_completed_bugs' == $option ) { 
+        if ( 'upstream_completed_bugs' == $option ) {
             $value = $_POST['upstream_hide_completed'];
         }
         return $value;
@@ -596,12 +598,12 @@ class Upstream_Admin_Bugs_Page {
 
 
     public function plugin_menu() {
-        
-        $hook = add_submenu_page( 
-            'edit.php?post_type=project', 
-            upstream_bug_label_plural(), 
-            upstream_bug_label_plural(), 
-            'edit_projects', 
+
+        $hook = add_submenu_page(
+            'edit.php?post_type=project',
+            upstream_bug_label_plural(),
+            upstream_bug_label_plural(),
+            'edit_projects',
             'bugs',
             array( $this, 'plugin_settings_page' )
         );
@@ -621,7 +623,7 @@ class Upstream_Admin_Bugs_Page {
             }
         }
 
-        
+
     }
 
     /**

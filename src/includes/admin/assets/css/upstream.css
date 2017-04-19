@@ -18,18 +18,18 @@
 
 [class^="upstream-"]:before, [class*=" upstream-"]:before,
 [class^="upstream-"]:after, [class*=" upstream-"]:after,
-#menu-posts-project .dashicons-arrow-up-alt:before,   
-#menu-posts-project .dashicons-arrow-up-alt:after,   
-#toplevel_page_upstream_general .dashicons-arrow-up-alt:before,   
-#toplevel_page_upstream_general .dashicons-arrow-up-alt:after {   
+#menu-posts-project .dashicons-arrow-up-alt:before,
+#menu-posts-project .dashicons-arrow-up-alt:after,
+#toplevel_page_upstream_general .dashicons-arrow-up-alt:before,
+#toplevel_page_upstream_general .dashicons-arrow-up-alt:after {
     font-family: upstream  !important;
     font-size: 18px;
     font-style: normal;
 }
 
 #menu-posts-project .dashicons-arrow-up-alt:before,
-#toplevel_page_upstream_general .dashicons-arrow-up-alt:before { 
-    content: "\f100"; 
+#toplevel_page_upstream_general .dashicons-arrow-up-alt:before {
+    content: "\f100";
     -webkit-transform: rotate(180deg);
     -moz-transform: rotate(180deg);
     -ms-transform: rotate(180deg);
@@ -263,7 +263,7 @@
   font-weight: bold;
   height: 1px;
   line-height: 0;
-  margin: 0 -1em 1px; 
+  margin: 0 -1em 1px;
   width: auto;
 }
 .upstream .metabox-holder progress {
@@ -422,7 +422,7 @@
  */
 .post-type-project .start-date, .post-type-project .end-date, .post-type-project .status {
   display:  inline-block;
-} 
+}
 .post-type-project td .status {
   background: #fff none repeat scroll 0 0;
   border: 1px solid #e9e9e9;
@@ -472,9 +472,26 @@
   padding: 0 8px;
   text-align: center;
 }
+th.manage-column.column-tasks {
+  background-color: transparent;
+}
+body.upstream .wp-list-table.fixed.posts {
+  table-layout: auto;
+}
+.wp-list-table .upstream-grid-tags-list {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+.wp-list-table .upstream-grid-tags-list > .status {
+  margin: 0;
+}
+.wp-list-table .upstream-grid-tags-list > .status + .status {
+  margin-top: 2px;
+}
 
 /*
- * Tasks/Bugs page 
+ * Tasks/Bugs page
  */
 .project_page_tasks .alignleft.actions.bulkactions {
   padding: 0;
@@ -486,7 +503,7 @@
 
 
 /*
- * Options 
+ * Options
  */
 .upstream_options .postbox.pad > .title {
   padding: 0;
