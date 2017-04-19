@@ -16,87 +16,87 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  */
 function upstream_milestone_table_settings() {
 
-	/*
-	 * display | bool | True to show this column in the table
-	 * type | string | The type of data this column has. This ensures we format the data correctly
-	 * heading | string | The text to be displayed as the column heading
-	 * heading_class | string | A custom class for the column heading
-	 * row_class | string | A custom class for the row
-	 */
-	$settings = apply_filters( 'upstream_milestone_table_settings', array( 
-		'id' => array( 
-			'display' 		=> false, 
-			'type' 			=> 'text',
-			'heading' 		=> '',
-			'heading_class' => '',
-			'row_class' 	=> '',
-		), 
-		'created_by' => array( 
-			'display' 		=> false,
-			'type' 			=> 'name',
-			'heading' 		=> '',
-			'heading_class' => '',
-			'row_class' 	=> '',
-		),
-		'created_time' => array( 
-			'display' 		=> false,
-			'type' 			=> 'text',
-			'heading' 		=> '',
-			'heading_class' => '',
-			'row_class' 	=> '',
-		),
-		'milestone' => array( 
-			'display' 		=> true,
-			'type' 			=> 'text',
-			'heading' 		=> upstream_milestone_label(),
-			'heading_class' => '',
-			'row_class' 	=> 'test',
-		), 
-		'assigned_to' => array( 
-			'display' 		=> true,
-			'type' 			=> 'name',
-			'heading' 		=> __( 'Assigned To', 'upstream' ),
-			'heading_class' => '',
-			'row_class' 	=> '',
-		),  
-		'tasks' => array( 
-			'display' 		=> true,
-			'type' 			=> 'tasks',
-			'heading' 		=> upstream_task_label_plural(),
-			'heading_class' => '',
-			'row_class' 	=> '',
-		),
-		'progress' => array( 
-			'display' 		=> true,
-			'type' 			=> 'text',
-			'heading' 		=> __( 'Progress', 'upstream' ),
-			'heading_class' => '',
-			'row_class' 	=> '',
-		), 
-		'start_date' => array( 
-			'display' 		=> true,
-			'type' 			=> 'date',
-			'heading' 		=> __( 'Start Date', 'upstream' ),
-			'heading_class' => '',
-			'row_class' 	=> '',
-		), 
-		'end_date' => array( 
-			'display' 		=> true,
-			'type' 			=> 'date',
-			'heading' 		=> __( 'End Date', 'upstream' ),
-			'heading_class' => '',
-			'row_class' 	=> '',
-		),
-		'notes' => array( 
-			'display' 		=> true,
-			'type' 			=> 'textarea',
-			'heading' 		=> __( 'Notes', 'upstream' ),
-			'heading_class' => 'none',
-			'row_class' 	=> '',
-		), 
-	));
+    /*
+     * display | bool | True to show this column in the table
+     * type | string | The type of data this column has. This ensures we format the data correctly
+     * heading | string | The text to be displayed as the column heading
+     * heading_class | string | A custom class for the column heading
+     * row_class | string | A custom class for the row
+     */
+    $settings = apply_filters( 'upstream_milestone_table_settings', array(
+        'id' => array(
+            'display'       => false,
+            'type'          => 'text',
+            'heading'       => '',
+            'heading_class' => '',
+            'row_class'     => '',
+        ),
+        'created_by' => array(
+            'display'       => false,
+            'type'          => 'name',
+            'heading'       => '',
+            'heading_class' => '',
+            'row_class'     => '',
+        ),
+        'created_time' => array(
+            'display'       => false,
+            'type'          => 'text',
+            'heading'       => '',
+            'heading_class' => '',
+            'row_class'     => '',
+        ),
+        'milestone' => array(
+            'display'       => true,
+            'type'          => 'text',
+            'heading'       => upstream_milestone_label(),
+            'heading_class' => '',
+            'row_class'     => 'test',
+        ),
+        'assigned_to' => array(
+            'display'       => true,
+            'type'          => 'name',
+            'heading'       => __( 'Assigned To', 'upstream' ),
+            'heading_class' => '',
+            'row_class'     => '',
+        ),
+        'tasks' => array(
+            'display'       => true,
+            'type'          => 'tasks',
+            'heading'       => upstream_task_label_plural(),
+            'heading_class' => '',
+            'row_class'     => '',
+        ),
+        'progress' => array(
+            'display'       => true,
+            'type'          => 'text',
+            'heading'       => __( 'Progress', 'upstream' ),
+            'heading_class' => '',
+            'row_class'     => '',
+        ),
+        'start_date' => array(
+            'display'       => true,
+            'type'          => 'date',
+            'heading'       => __( 'Start Date', 'upstream' ),
+            'heading_class' => '',
+            'row_class'     => '',
+        ),
+        'end_date' => array(
+            'display'       => true,
+            'type'          => 'date',
+            'heading'       => __( 'End Date', 'upstream' ),
+            'heading_class' => '',
+            'row_class'     => '',
+        ),
+        'notes' => array(
+            'display'       => true,
+            'type'          => 'textarea',
+            'heading'       => __( 'Notes', 'upstream' ),
+            'heading_class' => 'none',
+            'row_class'     => '',
+        ),
+    ));
 
-	return $settings;
+    return $settings;
 
 }
 
@@ -106,94 +106,94 @@ function upstream_milestone_table_settings() {
  */
 function upstream_task_table_settings() {
 
-	/*
-	 * display | bool | True to show this column in the table
-	 * type | string | The type of data this column has. This ensures we format the data correctly
-	 * heading | string | The text to be displayed as the column heading
-	 * heading_class | string | A custom class for the column heading
-	 * row_class | string | A custom class for the row
-	 */
-	$settings = apply_filters( 'upstream_task_table_settings', array( 
-		'id' => array( 
-			'display' 		=> false,
-			'type' 			=> 'text',
-			'heading' 		=> '',
-			'heading_class' => '',
-			'row_class' 	=> '',
-		), 
-		'created_by' => array( 
-			'display' 		=> false,
-			'type' 			=> 'name',
-			'heading' 		=> '',
-			'heading_class' => '',
-			'row_class' 	=> '',
-		),
-		'created_time' => array( 
-			'display' 		=> false,
-			'type' 			=> 'text',
-			'heading' 		=> '',
-			'heading_class' => '',
-			'row_class' 	=> '',
-		),
-		'title' => array( 
-			'display' 		=> true,
-			'type' 			=> 'text',
-			'heading' 		=> upstream_task_label(),
-			'heading_class' => '',
-			'row_class' 	=> '',
-		), 
-		'assigned_to' => array( 
-			'display' 		=> true,
-			'type' 			=> 'name',
-			'heading' 		=> __( 'Assigned To', 'upstream' ),
-			'heading_class' => '',
-			'row_class' 	=> '',
-		),
-		'status' => array( 
-			'display' 		=> true,
-			'type' 			=> 'text',
-			'heading' 		=> __( 'Status', 'upstream' ),
-			'heading_class' => '',
-			'row_class' 	=> '',
-		),
-		'progress' => array( 
-			'display' 		=> true,
-			'type' 			=> 'text',
-			'heading' 		=> __( 'Progress', 'upstream' ),
-			'heading_class' => '',
-			'row_class' 	=> '',
-		),
-		'milestone' => array( 
-			'display' 		=> true,
-			'type' 			=> 'id',
-			'heading' 		=> upstream_milestone_label(),
-			'heading_class' => '',
-			'row_class' 	=> '',
-		),
-		'start_date' => array( 
-			'display' 		=> true,
-			'type' 			=> 'date',
-			'heading' 		=> __( 'Start Date', 'upstream' ),
-			'heading_class' => '',
-			'row_class' 	=> '',
-		), 
-		'end_date' => array( 
-			'display' 		=> true,
-			'type' 			=> 'date',
-			'heading' 		=> __( 'End Date', 'upstream' ),
-			'heading_class' => '',
-			'row_class' 	=> '',
-		),
-		'notes' => array( 
-			'display' 		=> true,
-			'type' 			=> 'textarea',
-			'heading' 		=> __( 'Notes', 'upstream' ),
-			'heading_class' => 'none',
-			'row_class' 	=> '',
-		), 
-	));
+    /*
+     * display | bool | True to show this column in the table
+     * type | string | The type of data this column has. This ensures we format the data correctly
+     * heading | string | The text to be displayed as the column heading
+     * heading_class | string | A custom class for the column heading
+     * row_class | string | A custom class for the row
+     */
+    $settings = apply_filters( 'upstream_task_table_settings', array(
+        'id' => array(
+            'display'       => false,
+            'type'          => 'text',
+            'heading'       => '',
+            'heading_class' => '',
+            'row_class'     => '',
+        ),
+        'created_by' => array(
+            'display'       => false,
+            'type'          => 'name',
+            'heading'       => '',
+            'heading_class' => '',
+            'row_class'     => '',
+        ),
+        'created_time' => array(
+            'display'       => false,
+            'type'          => 'text',
+            'heading'       => '',
+            'heading_class' => '',
+            'row_class'     => '',
+        ),
+        'title' => array(
+            'display'       => true,
+            'type'          => 'text',
+            'heading'       => upstream_task_label(),
+            'heading_class' => '',
+            'row_class'     => '',
+        ),
+        'assigned_to' => array(
+            'display'       => true,
+            'type'          => 'name',
+            'heading'       => __( 'Assigned To', 'upstream' ),
+            'heading_class' => '',
+            'row_class'     => '',
+        ),
+        'status' => array(
+            'display'       => true,
+            'type'          => 'text',
+            'heading'       => __( 'Status', 'upstream' ),
+            'heading_class' => '',
+            'row_class'     => '',
+        ),
+        'progress' => array(
+            'display'       => true,
+            'type'          => 'text',
+            'heading'       => __( 'Progress', 'upstream' ),
+            'heading_class' => '',
+            'row_class'     => '',
+        ),
+        'milestone' => array(
+            'display'       => true,
+            'type'          => 'id',
+            'heading'       => upstream_milestone_label(),
+            'heading_class' => '',
+            'row_class'     => '',
+        ),
+        'start_date' => array(
+            'display'       => true,
+            'type'          => 'date',
+            'heading'       => __( 'Start Date', 'upstream' ),
+            'heading_class' => '',
+            'row_class'     => '',
+        ),
+        'end_date' => array(
+            'display'       => true,
+            'type'          => 'date',
+            'heading'       => __( 'End Date', 'upstream' ),
+            'heading_class' => '',
+            'row_class'     => '',
+        ),
+        'notes' => array(
+            'display'       => true,
+            'type'          => 'textarea',
+            'heading'       => __( 'Notes', 'upstream' ),
+            'heading_class' => 'none',
+            'row_class'     => '',
+        ),
+    ));
 
-	return $settings;
+    return $settings;
 
 }
 
@@ -203,87 +203,87 @@ function upstream_task_table_settings() {
  */
 function upstream_bug_table_settings() {
 
-	/*
-	 * display | bool | True to show this column in the table
-	 * type | string | The type of data this column has. This ensures we format the data correctly
-	 * heading | string | The text to be displayed as the column heading
-	 * heading_class | string | A custom class for the column heading
-	 * row_class | string | A custom class for the row
-	 */
-	$settings = apply_filters( 'upstream_bug_table_settings', array( 
-		'id' => array( 
-			'display' 		=> false,
-			'type' 			=> 'text',
-			'heading' 		=> '',
-			'heading_class' => '',
-			'row_class' 	=> '',
-		), 
-		'created_by' => array( 
-			'display' 		=> false,
-			'type' 			=> 'name',
-			'heading' 		=> '',
-			'heading_class' => '',
-			'row_class' 	=> '',
-		),
-		'created_time' => array( 
-			'display' 		=> false,
-			'type' 			=> 'text',
-			'heading' 		=> '',
-			'heading_class' => '',
-			'row_class' 	=> '',
-		),
-		'title' => array( 
-			'display' 		=> true,
-			'type' 			=> 'text',
-			'heading' 		=> upstream_bug_label(),
-			'heading_class' => '',
-			'row_class' 	=> '',
-		), 
-		'assigned_to' => array( 
-			'display' 		=> true,
-			'type' 			=> 'name',
-			'heading' 		=> __( 'Assigned To', 'upstream' ),
-			'heading_class' => '',
-			'row_class' 	=> '',
-		),
-		'severity' => array( 
-			'display' 		=> true,
-			'type' 			=> 'text',
-			'heading' 		=> __( 'Severity', 'upstream' ),
-			'heading_class' => '',
-			'row_class' 	=> '',
-		), 
-		'status' => array( 
-			'display' 		=> true,
-			'type' 			=> 'text',
-			'heading' 		=> __( 'Status', 'upstream' ),
-			'heading_class' => '',
-			'row_class' 	=> '',
-		),
-		'due_date' => array( 
-			'display' 		=> true,
-			'type' 			=> 'date',
-			'heading' 		=> __( 'Due Date', 'upstream' ),
-			'heading_class' => '',
-			'row_class' 	=> '',
-		), 
-		'description' => array( 
-			'display' 		=> true,
-			'type' 			=> 'textarea',
-			'heading' 		=> __( 'Description', 'upstream' ),
-			'heading_class' => 'none',
-			'row_class' 	=> '',
-		), 
-		'file' => array( 
-			'display' 		=> true,
-			'type' 			=> 'file',
-			'heading' 		=> __( 'File', 'upstream' ),
-			'heading_class' => '',
-			'row_class' 	=> '',
-		),
-	));
+    /*
+     * display | bool | True to show this column in the table
+     * type | string | The type of data this column has. This ensures we format the data correctly
+     * heading | string | The text to be displayed as the column heading
+     * heading_class | string | A custom class for the column heading
+     * row_class | string | A custom class for the row
+     */
+    $settings = apply_filters( 'upstream_bug_table_settings', array(
+        'id' => array(
+            'display'       => false,
+            'type'          => 'text',
+            'heading'       => '',
+            'heading_class' => '',
+            'row_class'     => '',
+        ),
+        'created_by' => array(
+            'display'       => false,
+            'type'          => 'name',
+            'heading'       => '',
+            'heading_class' => '',
+            'row_class'     => '',
+        ),
+        'created_time' => array(
+            'display'       => false,
+            'type'          => 'text',
+            'heading'       => '',
+            'heading_class' => '',
+            'row_class'     => '',
+        ),
+        'title' => array(
+            'display'       => true,
+            'type'          => 'text',
+            'heading'       => upstream_bug_label(),
+            'heading_class' => '',
+            'row_class'     => '',
+        ),
+        'assigned_to' => array(
+            'display'       => true,
+            'type'          => 'name',
+            'heading'       => __( 'Assigned To', 'upstream' ),
+            'heading_class' => '',
+            'row_class'     => '',
+        ),
+        'severity' => array(
+            'display'       => true,
+            'type'          => 'text',
+            'heading'       => __( 'Severity', 'upstream' ),
+            'heading_class' => '',
+            'row_class'     => '',
+        ),
+        'status' => array(
+            'display'       => true,
+            'type'          => 'text',
+            'heading'       => __( 'Status', 'upstream' ),
+            'heading_class' => '',
+            'row_class'     => '',
+        ),
+        'due_date' => array(
+            'display'       => true,
+            'type'          => 'date',
+            'heading'       => __( 'Due Date', 'upstream' ),
+            'heading_class' => '',
+            'row_class'     => '',
+        ),
+        'description' => array(
+            'display'       => true,
+            'type'          => 'textarea',
+            'heading'       => __( 'Description', 'upstream' ),
+            'heading_class' => 'none',
+            'row_class'     => '',
+        ),
+        'file' => array(
+            'display'       => true,
+            'type'          => 'file',
+            'heading'       => __( 'File', 'upstream' ),
+            'heading_class' => '',
+            'row_class'     => '',
+        ),
+    ));
 
-	return $settings;
+    return $settings;
 
 }
 
@@ -294,59 +294,59 @@ function upstream_bug_table_settings() {
  */
 function upstream_file_table_settings() {
 
-	/*
-	 * display | bool | True to show this column in the table
-	 * type | string | The type of data this column has. This ensures we format the data correctly
-	 * heading | string | The text to be displayed as the column heading
-	 * heading_class | string | A custom class for the column heading
-	 * row_class | string | A custom class for the row
-	 */
-	$settings = apply_filters( 'upstream_file_table_settings', array( 
-		'id' => array( 
-			'display' 		=> false,
-			'type' 			=> 'text',
-			'heading' 		=> '',
-			'heading_class' => '',
-			'row_class' 	=> '',
-		), 
-		'created_by' => array( 
-			'display' 		=> false,
-			'type' 			=> 'name',
-			'heading' 		=> '',
-			'heading_class' => '',
-			'row_class' 	=> '',
-		),
-		'created_time' => array( 
-			'display' 		=> false,
-			'type' 			=> 'text',
-			'heading' 		=> '',
-			'heading_class' => '',
-			'row_class' 	=> '',
-		),
-		'title' => array( 
-			'display' 		=> true,
-			'type' 			=> 'text',
-			'heading' 		=> __( 'Title', 'upstream' ),
-			'heading_class' => '',
-			'row_class' 	=> '',
-		), 
-		'description' => array( 
-			'display' 		=> true,
-			'type' 			=> 'textarea',
-			'heading' 		=> __( 'Description', 'upstream' ),
-			'heading_class' => '',
-			'row_class' 	=> '',
-		), 
-		'file' => array( 
-			'display' 		=> true,
-			'type' 			=> 'file',
-			'heading' 		=> __( 'File', 'upstream' ),
-			'heading_class' => '',
-			'row_class' 	=> '',
-		),
-	));
+    /*
+     * display | bool | True to show this column in the table
+     * type | string | The type of data this column has. This ensures we format the data correctly
+     * heading | string | The text to be displayed as the column heading
+     * heading_class | string | A custom class for the column heading
+     * row_class | string | A custom class for the row
+     */
+    $settings = apply_filters( 'upstream_file_table_settings', array(
+        'id' => array(
+            'display'       => false,
+            'type'          => 'text',
+            'heading'       => '',
+            'heading_class' => '',
+            'row_class'     => '',
+        ),
+        'created_by' => array(
+            'display'       => false,
+            'type'          => 'name',
+            'heading'       => '',
+            'heading_class' => '',
+            'row_class'     => '',
+        ),
+        'created_time' => array(
+            'display'       => false,
+            'type'          => 'text',
+            'heading'       => '',
+            'heading_class' => '',
+            'row_class'     => '',
+        ),
+        'title' => array(
+            'display'       => true,
+            'type'          => 'text',
+            'heading'       => __( 'Title', 'upstream' ),
+            'heading_class' => '',
+            'row_class'     => '',
+        ),
+        'description' => array(
+            'display'       => true,
+            'type'          => 'textarea',
+            'heading'       => __( 'Description', 'upstream' ),
+            'heading_class' => '',
+            'row_class'     => '',
+        ),
+        'file' => array(
+            'display'       => true,
+            'type'          => 'file',
+            'heading'       => __( 'File', 'upstream' ),
+            'heading_class' => '',
+            'row_class'     => '',
+        ),
+    ));
 
-	return $settings;
+    return $settings;
 
 }
 
@@ -357,120 +357,124 @@ function upstream_file_table_settings() {
  */
 function upstream_output_table_header( $table ) {
 
-	$output = null;
+    $output = null;
 
-	switch ( $table ) {
-		case 'milestones':
-			$settings 	= upstream_milestone_table_settings();
-			break;
-		case 'tasks':
-			$settings 	= upstream_task_table_settings();
-			break;
-		case 'bugs':
-			$settings 	= upstream_bug_table_settings();
-			break;
-		case 'files':
-			$settings 	= upstream_file_table_settings();
-			break;
-	}
-	
-	if( isset( $settings ) ) :
+    switch ( $table ) {
+        case 'milestones':
+            $settings   = upstream_milestone_table_settings();
+            break;
+        case 'tasks':
+            $settings   = upstream_task_table_settings();
+            break;
+        case 'bugs':
+            $settings   = upstream_bug_table_settings();
+            break;
+        case 'files':
+            $settings   = upstream_file_table_settings();
+            break;
+    }
 
-		$output .= '<tr>';
-		foreach ($settings as $key => $setting) {
+    if( isset( $settings ) ) :
 
-			if( isset( $setting['display'] ) && ! $setting['display'] ) 
-				continue;
+        $output .= '<tr>';
+        foreach ($settings as $key => $setting) {
 
-			$output .= "<th class='" . esc_attr( $setting['heading_class'] ) . "'>" . esc_html( $setting['heading'] ) . "</th>";
+            if( isset( $setting['display'] ) && ! $setting['display'] )
+                continue;
 
-		}
-		$output .= '</tr>';
+            $output .= "<th class='" . esc_attr( $setting['heading_class'] ) . "'>" . esc_html( $setting['heading'] ) . "</th>";
 
-	endif;
+        }
+        $output .= '</tr>';
 
-	return $output;
+    endif;
 
-} 
+    return $output;
+
+}
 
 function upstream_output_table_rows( $id, $table ) {
 
-	switch ( $table ) {
-		case 'milestones':
-			$data 		= upstream_project_milestones( $id );
-			$settings 	= upstream_milestone_table_settings();
-			break;
-		case 'tasks':
-			$data 		= upstream_project_tasks( $id );
-			$settings 	= upstream_task_table_settings();
-			$status_c 	= upstream_project_task_statuses_colors();
-			break;
-		case 'bugs':
-			$data 		= upstream_project_bugs( $id );
-			$settings 	= upstream_bug_table_settings();
-			$status_c 	= upstream_project_bug_statuses_colors();
-			$severity_c = upstream_project_bug_severity_colors();
-			break;
-		case 'files':
-			$data 		= upstream_project_files( $id );
-			$settings 	= upstream_file_table_settings();
-			break;
-	}
+    switch ( $table ) {
+        case 'milestones':
+            $data       = upstream_project_milestones( $id );
+            $settings   = upstream_milestone_table_settings();
+            break;
+        case 'tasks':
+            $data       = upstream_project_tasks( $id );
+            $settings   = upstream_task_table_settings();
+            $status_c   = upstream_project_task_statuses_colors();
+            break;
+        case 'bugs':
+            $data       = upstream_project_bugs( $id );
+            $settings   = upstream_bug_table_settings();
+            $status_c   = upstream_project_bug_statuses_colors();
+            $severity_c = upstream_project_bug_severity_colors();
+            break;
+        case 'files':
+            $data       = upstream_project_files( $id );
+            $settings   = upstream_file_table_settings();
+            break;
+    }
 
-	if( empty( $data[0] ) )
-		return;
+    if( empty( $data[0] ) )
+        return;
 
-	$data = array_reverse( $data );
-	$output = null;
+    $data = array_reverse( $data );
+    $output = null;
 
-	foreach ( $data as $item ) {
+    foreach ( $data as $item ) {
 
-		$output .= '<tr>';
-		foreach ($settings as $key => $setting) {
+        $output .= '<tr>';
+        foreach ($settings as $key => $setting) {
 
-			if( isset( $setting['display'] ) && ! $setting['display'] ) 
-				continue;
+            if( isset( $setting['display'] ) && ! $setting['display'] )
+                continue;
 
-			if( ! isset( $item[$key] ) ) 
-				$item[$key] = '';
+            if( ! isset( $item[$key] ) )
+                $item[$key] = '';
 
-			$order = null;
+            $order = null;
 
-			// get the raw value before formatting
-			// will be used with the frontend edit plugin for getting actual values via JS
-			$data_value = maybe_serialize( $item[$key] ); 
+            // get the raw value before formatting
+            // will be used with the frontend edit plugin for getting actual values via JS
+            $data_value = maybe_serialize( $item[$key] );
 
-			// if we have a date field, set the data-order attribute to allow proper ordering in the table
-			if( $setting['type'] == 'date' ) {
-				$order = 'data-order="' . esc_attr( $data_value ) . '"';
-			}
-			if( $setting['type'] == 'file' ) {
-				$data_value = '';
-			}
+            // if we have a date field, set the data-order attribute to allow proper ordering in the table
+            if( $setting['type'] == 'date' ) {
+                $order = 'data-order="' . esc_attr( $data_value ) . '"';
+            }
+            if( $setting['type'] == 'file' ) {
+                $data_value = '';
+            }
 
-			// now process and format the data for proper output
-			$field_data = upstream_format_table_data( $item, $key, $setting );
+            // now process and format the data for proper output
+            $field_data = upstream_format_table_data( $item, $key, $setting );
 
-			if( $key == 'status' ) {
+            if( $key == 'status' ) {
                 $color  = isset( $status_c[$field_data] ) ? $status_c[$field_data] : 'transparent';
-                $field_data = '<span class="btn btn-xs" style="background: ' . esc_attr( $color ) . '">' . esc_html( $field_data ) . '</span>'; 
-        	}
+                $field_data = '<span class="btn btn-xs" style="background: ' . esc_attr( $color ) . '">' . esc_html( $field_data ) . '</span>';
+            }
 
-			if( $key == 'severity' ) {
-                $color  	= isset( $severity_c[$field_data] ) ? $severity_c[$field_data] : 'transparent';
-                $field_data = '<span class="btn btn-xs" style="background: ' . esc_attr( $color ) . '">' . esc_html( $field_data ) . '</span>'; 
-        	}
+            if( $key == 'severity' ) {
+                $color      = isset( $severity_c[$field_data] ) ? $severity_c[$field_data] : 'transparent';
+                $field_data = '<span class="btn btn-xs" style="background: ' . esc_attr( $color ) . '">' . esc_html( $field_data ) . '</span>';
+            }
 
-			$output .= '<td data-name="' . esc_attr( $key ) . '" ' . $order . ' data-value="' . esc_attr( $data_value ) . '" class="' . esc_attr( $setting['row_class'] ) . '">' . $field_data . '</td>';
+            if ($setting['type'] === 'date' && !empty($data_value)) {
+                $data_value = upstream_format_date($data_value);
+            }
 
-		}
-		$output .= '</tr>';
-	
-	}
+            $output .= '<td data-name="' . esc_attr( $key ) . '" ' . $order . ' data-value="' . esc_attr( $data_value ) . '" class="' . esc_attr( $setting['row_class'] ) . '">' . $field_data . '</td>';
 
-	return $output;
+        }
+        $output .= '</tr>';
 
-} 
+    }
+
+    return $output;
+
+}
 
 
 
@@ -482,80 +486,80 @@ function upstream_output_table_rows( $id, $table ) {
  * @param  $setting array the table settings for this field
  */
 function upstream_format_table_data( $item, $key, $setting ) {
-	
-	$field_data = isset( $item[$key] ) ? $item[$key] : null;
-	$output 	= '';
 
-	// type: name
-	if( $setting['type'] == 'name' && ! empty( $field_data ) ) {
-		$user = upstream_user_data( $field_data, true );
-		$output = $user['full_name'];
-	} 
+    $field_data = isset( $item[$key] ) ? $item[$key] : null;
+    $output     = '';
 
-	// type: date
-	if( $setting['type'] == 'date' && ! empty( $field_data ) ) {
-		$output = upstream_format_date( $field_data );
-	} 
+    // type: name
+    if( $setting['type'] == 'name' && ! empty( $field_data ) ) {
+        $user = upstream_user_data( $field_data, true );
+        $output = $user['full_name'];
+    }
 
-	// type: text
-	if( $setting['type'] == 'text' && ! empty( $field_data ) ) {
-		$output = esc_html( $field_data );
-	} 
+    // type: date
+    if( $setting['type'] == 'date' && ! empty( $field_data ) ) {
+        $output = upstream_format_date( $field_data );
+    }
 
-	// type: radio
-	if( $setting['type'] == 'radio' && ! empty( $field_data ) ) {
-		$output = esc_html( $field_data );
-	} 
+    // type: text
+    if( $setting['type'] == 'text' && ! empty( $field_data ) ) {
+        $output = esc_html( $field_data );
+    }
 
-	// type: checkbox
-	if( $setting['type'] == 'checkbox' && ! empty( $field_data ) ) {
-		$output = esc_html( $field_data );
-	} 
+    // type: radio
+    if( $setting['type'] == 'radio' && ! empty( $field_data ) ) {
+        $output = esc_html( $field_data );
+    }
 
-	// type: multicheck
-	if( $setting['type'] == 'multicheck' && ! empty( $field_data ) ) {
-		foreach ( $field_data as $key => $value ) {
-			$output .= esc_html( $value ) . '<br>';
-		}
-	} 
+    // type: checkbox
+    if( $setting['type'] == 'checkbox' && ! empty( $field_data ) ) {
+        $output = esc_html( $field_data );
+    }
 
-	// type: textarea
-	if( $setting['type'] == 'textarea' && ! empty( $field_data ) ) {
-		$output = wp_kses_post( $field_data );
-	} 
+    // type: multicheck
+    if( $setting['type'] == 'multicheck' && ! empty( $field_data ) ) {
+        foreach ( $field_data as $key => $value ) {
+            $output .= esc_html( $value ) . '<br>';
+        }
+    }
 
-	// type: id
-	if( $setting['type'] == 'id' && ! empty( $field_data ) ) {
-		$item = upstream_project_item_by_id( upstream_post_id(), $field_data );
-		$output = isset( $item['title'] ) ? $item['title'] :  $item['milestone'];
-	} 
+    // type: textarea
+    if( $setting['type'] == 'textarea' && ! empty( $field_data ) ) {
+        $output = wp_kses_post( $field_data );
+    }
 
-	// type: tasks
-	if( $setting['type'] == 'tasks' ) {
-		$open = isset( $item['task_open'] ) ? $item['task_open'] : '0';
-		$output = sprintf( __( '%d %s / %d Open', 'upstream' ), $item['task_count'], upstream_task_label_plural(), $open );
-	} 
+    // type: id
+    if( $setting['type'] == 'id' && ! empty( $field_data ) ) {
+        $item = upstream_project_item_by_id( upstream_post_id(), $field_data );
+        $output = isset( $item['title'] ) ? $item['title'] :  $item['milestone'];
+    }
 
-	// type: file
-	if( $setting['type'] == 'file' && ! empty( $field_data ) ) {
-		$file_list = null;
-		if( isset( $item['file'] ) && isset( $item['file_id'] ) && $item['file'] != '' ) {
-			$file_list .= upstream_get_file_preview( $item['file_id'], $item['file'] );
-		}
-		$output = $file_list;
-	}
+    // type: tasks
+    if( $setting['type'] == 'tasks' ) {
+        $open = isset( $item['task_open'] ) ? $item['task_open'] : '0';
+        $output = sprintf( __( '%d %s / %d Open', 'upstream' ), $item['task_count'], upstream_task_label_plural(), $open );
+    }
 
-	// type: progress
-	if( $key == 'progress' ) {
-		$output = $field_data == 0 ? '0' : $field_data;
-		$output .= '%';
-	}
+    // type: file
+    if( $setting['type'] == 'file' && ! empty( $field_data ) ) {
+        $file_list = null;
+        if( isset( $item['file'] ) && isset( $item['file_id'] ) && $item['file'] != '' ) {
+            $file_list .= upstream_get_file_preview( $item['file_id'], $item['file'] );
+        }
+        $output = $file_list;
+    }
 
-
-	// allows us to add extra checks for different data and field formatting
-	$output = apply_filters( 'upstream_format_table_data', $output, $item, $key, $setting );
+    // type: progress
+    if( $key == 'progress' ) {
+        $output = $field_data == 0 ? '0' : $field_data;
+        $output .= '%';
+    }
 
 
-	return $output;
+    // allows us to add extra checks for different data and field formatting
+    $output = apply_filters( 'upstream_format_table_data', $output, $item, $key, $setting );
+
+
+    return $output;
 
 }
