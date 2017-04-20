@@ -23,7 +23,7 @@ class UpStream_Admin_Project_Columns {
     public function hooks() {
         add_filter( 'manage_project_posts_columns', array( $this, 'project_columns' ) );
         add_action( 'manage_project_posts_custom_column', array( $this, 'project_data' ), 10, 2 );
-        
+
         // sorting
         add_filter( 'manage_edit-project_sortable_columns', array( $this, 'table_sorting' ) );
         add_filter( 'request', array( $this, 'project_orderby_status' ) );
@@ -44,7 +44,7 @@ class UpStream_Admin_Project_Columns {
 
         $columns    = array();
         $taxonomies = array();
-        
+
         /* Get taxonomies that should appear in the manage posts table. */
         $taxonomies = get_object_taxonomies( $post_type, 'objects');
         $taxonomies = wp_filter_object_list( $taxonomies, array( 'show_admin_column' => true ), 'and', 'name');
@@ -75,14 +75,14 @@ class UpStream_Admin_Project_Columns {
     }
 
     public function project_data( $column_name, $post_id ) {
-        
+
         if ( $column_name == 'project-status' ) {
 
-            $status = upstream_project_status_color( $post_id );            
+            $status = upstream_project_status_color( $post_id );
             if( ! $status['status'] )
                 return;
 
-                echo '<div title="' . esc_attr( $status['status'] ) . '" style="width: 100%; position: absolute; top: 0px; left: 0px; overflow: hidden; height: 100%; border-left: 2px solid ' . esc_attr( $status['color'] ) . '" class="' . esc_attr( strtolower( $status['status'] ) ) . '"></div>'; 
+                echo '<div title="' . esc_attr( $status['status'] ) . '" style="width: 100%; position: absolute; top: 0px; left: 0px; overflow: hidden; height: 100%; border-left: 2px solid ' . esc_attr( $status['color'] ) . '" class="' . esc_attr( strtolower( $status['status'] ) ) . '"></div>';
 
         }
 
@@ -105,33 +105,33 @@ class UpStream_Admin_Project_Columns {
         }
 
         if ( $column_name == 'tasks' ) {
-            
+
             $counts = upstream_project_tasks_counts( $post_id );
             $colors = upstream_project_task_statuses_colors();
 
             if( ! $counts )
                 return;
 
-            foreach ($counts as $status => $count) { 
+            foreach ($counts as $status => $count) {
                 $color = isset( $colors[$status] ) ? $colors[$status] : '#aaaaaa';
-                echo '<span style="border-color:' . esc_attr( $color ) . '" class="status ' . esc_attr( strtolower( $status ) ) . '"><span class="count" style="background-color:' . esc_attr( $color ) . '">' . $count . '</span>' . $status . '</span>'; 
-            } 
-                
+                echo '<span style="border-color:' . esc_attr( $color ) . '" class="status ' . esc_attr( strtolower( $status ) ) . '"><span class="count" style="background-color:' . esc_attr( $color ) . '">' . $count . '</span>' . $status . '</span>';
+            }
+
         }
 
         if ( $column_name == 'bugs' ) {
-            
+
             $counts = upstream_project_bugs_counts( $post_id );
             $colors = upstream_project_bug_statuses_colors( $post_id );
 
             if( ! $counts )
                 return;
 
-            foreach ($counts as $status => $count) { 
+            foreach ($counts as $status => $count) {
                 $color = isset( $colors[$status] ) ? $colors[$status] : '#aaaaaa';
-                echo '<span style="border-color:' . esc_attr( $color ) . '" class="status ' . esc_attr( strtolower( $status ) ) . '"><span class="count" style="background-color:' . esc_attr( $color ) . '">' . $count . '</span>' . $status . '</span>'; 
-            } 
-                
+                echo '<span style="border-color:' . esc_attr( $color ) . '" class="status ' . esc_attr( strtolower( $status ) ) . '"><span class="count" style="background-color:' . esc_attr( $color ) . '">' . $count . '</span>' . $status . '</span>';
+            }
+
         }
 
         if ( $column_name == 'progress' ) {
@@ -145,7 +145,7 @@ class UpStream_Admin_Project_Columns {
             } else {
                 echo '—';
             }
-            
+
         }
 
     }
@@ -205,7 +205,7 @@ class UpStream_Admin_Project_Columns {
 
 
     function table_filtering() {
-        
+
         $type = 'project';
         if (isset($_GET['post_type'])) {
             $type = $_GET['post_type'];

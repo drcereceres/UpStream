@@ -17,10 +17,10 @@ table thead, .x_title h2, .profile_info h2, .details-panel p.title, .fn-label, a
   border-color: #429edb;
 }
 .nav li li.current-page a, .nav.child_menu li li a.active {
-  color: #429edb; 
+  color: #429edb;
 }
 .btn-primary {
-  background: #429edb; 
+  background: #429edb;
 }
 .x_title h2 .fa, .main_menu .fa {
   color: #429edb;
@@ -28,13 +28,13 @@ table thead, .x_title h2, .profile_info h2, .details-panel p.title, .fn-label, a
 
 /* green progress color  */
 .progress-bar {
-  background: #45C150; 
-  border-color: #45C150; 
+  background: #45C150;
+  border-color: #45C150;
 }
 
 
 /* Backgrounds */
-body, .left_col, .nav_title, .sidebar-footer a:hover { 
+body, .left_col, .nav_title, .sidebar-footer a:hover {
   background: #EDEDED; /* light */
 }
 .nav.side-menu > li.active > a, .sidebar-footer a, .nav-md ul.nav.child_menu li::before, .pagination > .active > a, .pagination > .active > a:focus, .pagination > .active > a:hover, .pagination > .active > span, .pagination > .active > span:focus, .pagination > .active > span:hover, .top_nav .nav .open > a, .top_nav .nav .open > a:focus, .top_nav .nav .open > a:hover, .top_nav .nav > li > a:focus, .top_nav .nav > li > a:hover {
@@ -137,7 +137,7 @@ table.dataTable.dtr-inline.collapsed > tbody > tr.parent > td:first-child::befor
   .right_col .col-md-12 {
     float: none;
   }
-  
+
   .nav-sm .nav.side-menu li a {
     font-size: 12px;
   }

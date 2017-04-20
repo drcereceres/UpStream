@@ -22,9 +22,9 @@ var tableFiles      = jQuery('#files').DataTable( tableSetup );
 
 /**
  * Resize function without multiple trigger
- * 
+ *
  * Usage:
- * $(window).smartresize(function(){  
+ * $(window).smartresize(function(){
  *     // code here
  * });
  */
@@ -38,8 +38,8 @@ var tableFiles      = jQuery('#files').DataTable( tableSetup );
             var obj = this, args = arguments;
             function delayed () {
                 if (!execAsap)
-                    func.apply(obj, args); 
-                timeout = null; 
+                    func.apply(obj, args);
+                timeout = null;
             }
 
             if (timeout)
@@ -47,11 +47,11 @@ var tableFiles      = jQuery('#files').DataTable( tableSetup );
             else if (execAsap)
                 func.apply(obj, args);
 
-            timeout = setTimeout(delayed, threshold || 100); 
+            timeout = setTimeout(delayed, threshold || 100);
         };
     };
 
-    // smartresize 
+    // smartresize
     jQuery.fn[sr] = function(fn){  return fn ? this.bind('resize', debounce(fn)) : this.trigger(sr); };
 
 })(jQuery,'smartresize');
@@ -76,7 +76,7 @@ jQuery(document).ready(function($){
     };
 
     $('#sidebar-menu').find('a').on('click', function(ev) {
-        
+
         var $li = $(this).parent();
 
         if ($li.is('.active')) {
@@ -90,7 +90,7 @@ jQuery(document).ready(function($){
                 $('#sidebar-menu').find('li').removeClass('active active-sm');
                 $('#sidebar-menu').find('li ul').slideUp();
             }
-            
+
             $li.addClass('active');
 
             $('ul:first', $li).slideDown(function() {
@@ -124,7 +124,7 @@ jQuery(document).ready(function($){
     }).parent().addClass('active');
 
     // recompute content when resizing
-    $(window).smartresize(function(){  
+    $(window).smartresize(function(){
         setContentHeight();
     });
 
@@ -148,15 +148,15 @@ jQuery(document).ready(function($){
         var $BOX_PANEL = $(this).closest('.x_panel'),
             $ICON = $(this).find('i'),
             $BOX_CONTENT = $BOX_PANEL.find('.x_content');
-        
+
         // fix for some div with hardcoded fix class
         if ($BOX_PANEL.attr('style')) {
             $BOX_CONTENT.slideToggle(200, function(){
                 $BOX_PANEL.removeAttr('style');
             });
         } else {
-            $BOX_CONTENT.slideToggle(200); 
-            $BOX_PANEL.css('height', 'auto');  
+            $BOX_CONTENT.slideToggle(200);
+            $BOX_PANEL.css('height', 'auto');
         }
 
         $ICON.toggleClass('fa-chevron-up fa-chevron-down');

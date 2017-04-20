@@ -24,12 +24,12 @@ class Upstream_Counts {
      * @return array
      */
     public function get_projects( $id ) {
-        $args = array( 
-            'post_type'         => 'project', 
+        $args = array(
+            'post_type'         => 'project',
             'post_status'       => 'publish',
             'posts_per_page'    => -1,
             'include'           => $id,
-        ); 
+        );
         $projects = get_posts( $args );
         if ( $projects )
             return $projects;
@@ -51,8 +51,8 @@ class Upstream_Counts {
                     array_push($items, $value);
                 }
             }
-            
-        };    
+
+        };
         return $items;
     }
 
@@ -76,7 +76,7 @@ class Upstream_Counts {
 
         $option     = get_option( 'upstream_' . $type );
         $statuses   = isset( $option['statuses'] ) ? $option['statuses'] : '';
-        
+
         if( ! $statuses ) {
             if( $type == 'milestones' ) {
                 return $this->total( $type );
@@ -139,7 +139,7 @@ class Upstream_Counts {
 
         $option     = get_option( 'upstream_' . $type );
         $statuses   = isset( $option['statuses'] ) ? $option['statuses'] : '';
-        
+
         if( ! $statuses ) {
             if( $type == 'milestones' ) {
                 return $this->total( $type );

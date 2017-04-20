@@ -12,12 +12,12 @@ function upstream_permissions( $capability = null, $item_id = null ) {
 
     // set the return variable that can be overwritten after all checks
     // set the return variable that can be overwritten after all checks
-    $return         = false; 
+    $return         = false;
     $current_user   = upstream_current_user_id();
 
     // these guys can do whatever they want
-    if( upstream_project_owner_id() == upstream_current_user_id() || 
-        current_user_can( 'upstream_manager' ) || 
+    if( upstream_project_owner_id() == upstream_current_user_id() ||
+        current_user_can( 'upstream_manager' ) ||
         current_user_can( 'administrator' ) )
         $return = true;
 
@@ -38,7 +38,7 @@ function upstream_permissions( $capability = null, $item_id = null ) {
 
     // if capability is set and they have the capability
     if( isset( $capability ) && ! empty( $capability ) ) {
-        
+
         // for WP user - get standard capabilities
         if( is_int( $current_user ) && current_user_can( $capability ) ) {
             $return = true;
@@ -57,13 +57,13 @@ function upstream_permissions( $capability = null, $item_id = null ) {
                     }
                 }
             }
-            
+
         }
     }
 
     // this is for WP user only
     // used to ensure the display of all fields when editing/publishing an item that they have permission for.
-    // Permissions would have already been granted to DISPLAY the edit button for example. 
+    // Permissions would have already been granted to DISPLAY the edit button for example.
     // So if this has already been granted, then we should display all fields
     //if( is_int( $current_user ) && isset( $capability ) ) {
         if ( strpos( $capability, 'field' ) !== false) {
@@ -77,8 +77,8 @@ function upstream_permissions( $capability = null, $item_id = null ) {
     if( isset( $item_id ) ) {
         $item = upstream_project_item_by_id( upstream_post_id(), $item_id );
         $assigned_to  = isset( $item['assigned_to'] ) ? $item['assigned_to'] : null;
-        $created_by   = isset( $item['created_by'] ) ? $item['created_by'] : null; 
-        if( $assigned_to == $current_user || $created_by == $current_user ) 
+        $created_by   = isset( $item['created_by'] ) ? $item['created_by'] : null;
+        if( $assigned_to == $current_user || $created_by == $current_user )
             $return = true;
     }
 
@@ -89,14 +89,14 @@ function upstream_permissions( $capability = null, $item_id = null ) {
         $return = false;
     }
 
-  	return apply_filters( 'upstream_permissions', $return );
+    return apply_filters( 'upstream_permissions', $return );
 
 }
 
 
 
 /* ======================================================================================
-                    ADMIN 
+                    ADMIN
    ====================================================================================== */
 
 
@@ -107,17 +107,17 @@ function upstream_permissions( $capability = null, $item_id = null ) {
  * @param  object|null $field
  */
 function upstream_admin_permissions( $capability = null ) {
-    
+
     /*
      * Set the return variable that can be overwritten after all checks
      */
     $return = false;
-    
+
     /*
      * These guys can do whatever they want
      */
-    if( upstream_project_owner_id() == upstream_current_user_id() || 
-        current_user_can( 'upstream_manager' ) || 
+    if( upstream_project_owner_id() == upstream_current_user_id() ||
+        current_user_can( 'upstream_manager' ) ||
         current_user_can( 'administrator' ) )
         $return = true;
 
@@ -128,11 +128,11 @@ function upstream_admin_permissions( $capability = null ) {
         if( current_user_can( $capability ) )
             $return = true;
     }
-    
+
     /*
      * If project status is closed, block all fields (except for status) from being edited/deleted
      */
-    if( ( isset( $capability ) && $capability != 'project_status_field' ) && 
+    if( ( isset( $capability ) && $capability != 'project_status_field' ) &&
         upstream_project_status_type() == 'closed' ) {
         $return = false;
     }

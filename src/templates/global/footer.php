@@ -1,5 +1,5 @@
-	
-	<?php 
+
+    <?php
     $text = '&copy; ' . get_bloginfo( 'name' ) . ' ' . date('Y');
     $footer_text = apply_filters( 'upstream_footer_text', $text ); ?>
 
@@ -12,6 +12,6 @@
     </div>
 
     <?php wp_footer(); ?>
-    
+
     </body>
 </html>

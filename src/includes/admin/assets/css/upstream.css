@@ -241,8 +241,8 @@
  * Project Tasks, milestones
  */
 #_upstream_project_tasks .hidden {
-	display: none;
-	visibility: hidden;
+  display: none;
+  visibility: hidden;
 }
 .upstream .cmb2-id--upstream-project-hidden {
   border: medium none !important;

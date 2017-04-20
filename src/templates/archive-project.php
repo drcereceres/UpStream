@@ -11,15 +11,15 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit; // Exit if accessed directly
 }
 
-upstream_get_template_part( 'global/header.php' );  
+upstream_get_template_part( 'global/header.php' );
 upstream_get_template_part( 'global/sidebar.php' );
-upstream_get_template_part( 'global/top-nav.php' ); 
+upstream_get_template_part( 'global/top-nav.php' );
 
 $user = upstream_user_data(); ?>
 
 <!-- page content -->
 <div class="right_col" role="main">
-  
+
     <div class="">
 
         <div class="page-title">
@@ -27,18 +27,18 @@ $user = upstream_user_data(); ?>
                 <h3><?php printf( __( 'My %s', 'upstream' ), upstream_project_label_plural() ); ?></h3>
             </div>
         </div>
-            
+
         <div class="clearfix"></div>
 
         <div class="row">
-            
+
             <div class="col-md-12">
-                
+
                 <div class="x_panel">
-                  
+
                     <div class="x_title">
                         <h2><?php echo upstream_project_label_plural(); ?></h2>
-                    
+
                         <ul class="nav navbar-right panel_toolbox">
                             <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a></li>
 
@@ -65,7 +65,7 @@ $user = upstream_user_data(); ?>
                         </thead>
                         <tbody>
 
-                      <?php 
+                      <?php
                       if( $user['projects'] ) :
                           foreach ( $user['projects'] as $key => $id ) { ?>
 
@@ -94,12 +94,12 @@ $user = upstream_user_data(); ?>
                                     <small><?php echo upstream_project_progress( $id ); ?><?php _e( '% Complete', 'upstream' ); ?></small>
                                 </td>
                                 <td>
-                                    <?php 
+                                    <?php
                                         $status = upstream_project_status_color( $id );
                                         if( $status['status'] ) {
                                     ?>
                                         <button type="button" class="btn btn-success btn-xs" style="border: none;background-color:<?php echo esc_attr( $status['color'] ); ?>"><?php echo $status['status'] ?></button>
-                                    <?php } ?>        
+                                    <?php } ?>
                                 </td>
                                 <td>
                                     <a href="<?php echo get_the_permalink( $id ); ?>" class="btn btn-primary btn-xs"><?php _e( 'View', 'upstream' ); ?> <i class="fa fa-chevron-right"></i></a>
@@ -107,7 +107,7 @@ $user = upstream_user_data(); ?>
                             </tr>
 
                         <?php } endif; ?>
-                      
+
                         </tbody>
                     </table>
                     </div>
@@ -121,7 +121,7 @@ $user = upstream_user_data(); ?>
 </div>
 <!-- /page content -->
 
-<?php 
+<?php
 /**
  * upstream_after_project_content hook.
  *

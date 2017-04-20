@@ -6,7 +6,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 
 
 class UpStream_Login{
-    
+
     /**
      * @var bool Login status of user
      */
@@ -104,8 +104,8 @@ class UpStream_Login{
      * Checks if user exits, if so: check if provided password matches the one in the database
      * @return bool User login success status
      */
-    private function checkPasswordCorrectnessAndLogin() {   
-        
+    private function checkPasswordCorrectnessAndLogin() {
+
         global $wpdb;
 
         $user_id = null;
@@ -118,8 +118,8 @@ class UpStream_Login{
 
         // select the client user with the matching email
         $users = $wpdb->get_results (
-            "SELECT * FROM `" . $wpdb->postmeta . 
-            "` WHERE `meta_key` = '_upstream_client_users' AND 
+            "SELECT * FROM `" . $wpdb->postmeta .
+            "` WHERE `meta_key` = '_upstream_client_users' AND
             `meta_value` REGEXP '.*\"email\";s:[0-9]+:\"". esc_html( $email ) ."\".*'"
         );
 
@@ -132,7 +132,7 @@ class UpStream_Login{
                 if( $status != 'publish' )
                     unset( $users[$key] ); // unset any thet aren't published
             }
-            
+
             // if we still have multiple emails, throw the error
             if( isset( $users[1] ) ) {
                 $this->feedback = __( "Looks like there are multiple users with this email.<br>Please contact your administrator.", "upstream" );
@@ -145,7 +145,7 @@ class UpStream_Login{
                     $user_id = $user['id'];
                 }
             }
-            
+
             $client_id = $users[0]->post_id;
             $password = get_post_meta( $client_id, '_upstream_client_password', true );
 

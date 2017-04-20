@@ -41,7 +41,7 @@ class UpStream_Admin_Client_Columns {
 
         $columns    = array();
         $taxonomies = array();
-        
+
         /* Get taxonomies that should appear in the manage posts table. */
         $taxonomies = get_object_taxonomies( $post_type, 'objects');
         $taxonomies = wp_filter_object_list( $taxonomies, array( 'show_admin_column' => true ), 'and', 'name');
@@ -64,7 +64,7 @@ class UpStream_Admin_Client_Columns {
     }
 
     public function client_data( $column_name, $post_id ) {
-        
+
         $client = new UpStream_Client( $post_id );
 
         if ( $column_name == 'logo' ) {
@@ -108,27 +108,27 @@ endif;
  */
 function upstream_client_render_users_column( $value ) {
 
-    if( ! $value ) 
+    if( ! $value )
         return;
     ?>
     <p>
-    	<?php 
+        <?php
 
-		$i = 0;
-		$count = count( $value );
-		foreach ( $value as $key => $user ) { 
-			
-			echo $user['fname'] . ' ' . $user['lname'] . '<br>';
-			
-			 // set limit on number of users to display
-			if (++$i == 2 && $count > 2) : 
-				$more = $count - $i;
-				printf( _n( '+%s more user', '+%s more users', $more, 'upstream'), $more );
-				break;
-			endif;
+        $i = 0;
+        $count = count( $value );
+        foreach ( $value as $key => $user ) {
 
-		}
-    	?>
-    </p>	
+            echo $user['fname'] . ' ' . $user['lname'] . '<br>';
+
+             // set limit on number of users to display
+            if (++$i == 2 && $count > 2) :
+                $more = $count - $i;
+                printf( _n( '+%s more user', '+%s more users', $more, 'upstream'), $more );
+                break;
+            endif;
+
+        }
+        ?>
+    </p>
     <?php
 }
