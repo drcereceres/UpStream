@@ -1,8 +1,9 @@
-# UpStream Plugin
-Project Management for WordPress that is powerful, extensible & easy to use. Manage projects, clients, milestones, tasks, files & more.
+# UpStream
+*UpStream* is a powerful, extensible and easy to use project manager for WordPress. Manage projects, clients, milestones, tasks, files and more.
 
 ## Table of contents
-- [About](https://github.com/upstreamplugin/UpStream#upstream) 
+- [About](https://github.com/upstreamplugin/UpStream#upstream)
+- [Requirements](https://github.com/upstreamplugin/UpStream#requirements)
 - [Contributing](https://github.com/upstreamplugin/UpStream#contributing)
    - [Bug Reports](https://github.com/upstreamplugin/UpStream#bug-reports)
    - [Pull Requests](https://github.com/upstreamplugin/UpStream#pull-requests)
@@ -10,13 +11,19 @@ Project Management for WordPress that is powerful, extensible & easy to use. Man
 - [Versioning](https://github.com/upstreamplugin/UpStream#versioning)
 - [License](https://github.com/upstreamplugin/UpStream#license)
 
+## Requirements
+- PHP 5.4+ or newer
+- WordPress 4.0 or newer
+
 ## Contributing
-Hey, thats awesome! Feel free to contribute in any way, submiting bug reports, features requests, forking and sending pull requests.
+Hey, that's awesome! Feel free to contribute in any way you can, submitting bug reports and features requests, forking and sending pull requests.
 
 ### Bug Reports
-A bug is a demonstrable problem that is caused by the code in the repository. Good bug reports are extremely helpful, and shouldn't leave others needing to chase you up for more information.
+A bug is a demonstrable problem caused by code in the repository.
 
-Please try to be as detailed as possible in your report, like what would you expect to be the outcome, what steps will reproduce the issue, what is your environment like.
+Good bug reports are extremely helpful. They should really clear and contain all the necessary information.
+
+Please try to be as detailed as possible in your report, e.g: what's the expected outcome, steps to reproduce the issue, details about your environment.
 
 ### Pull Requests
 The `master` branch always reflects a production-ready state while the latest development is taking place in the `development` branch.
@@ -26,7 +33,7 @@ Only pull requests to the `development` branch will be reviewed and merged.
 ### Git Settings
 Ensure that your local-git setting `ignorecase` is set to `false`.
 
-To change it localy, run:
+To change it locally, run:
 ```
 $ cd <path-to-your-local-repository>
 $ git config core.ignorecase false
@@ -44,9 +51,9 @@ Alternatively, you can change manually editing git config file, which can be fou
 ```
 
 ## Versioning
-UpStream is maintained by using the [Semantic Versioning Specification (SemVer)](http://semver.org/).
+*UpStream* is maintained using the [Semantic Versioning Specification (SemVer)](http://semver.org/).
 
 ## License
-Released under GPL v3.
+Released under GPLv3.
 
 For more info, see [license file](https://github.com/upstreamplugin/UpStream/blob/master/LICENSE).

@@ -25,7 +25,7 @@
         <!-- sidebar menu -->
         <div id="sidebar-menu" class="main_menu_side hidden-print main_menu">
             <div class="menu_section">
-                
+
                 <h3>&nbsp;</h3>
 
                 <ul class="nav side-menu">
@@ -45,9 +45,9 @@
             <?php if ( is_single() && get_post_type() == 'project' ) { ?>
 
                 <div class="menu_section">
-                    
+
                     <h3><?php echo get_the_title( get_the_ID() ); ?></h3>
-                   
+
                     <ul class="nav side-menu">
                         <?php do_action( 'upstream_sidebar_before_single_menu' ); ?>
                         <li><a href="#milestones"><i class="fa fa-flag"></i> <?php echo upstream_milestone_label_plural(); ?></a></li>

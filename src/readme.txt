@@ -3,7 +3,7 @@ Contributors: upstreamplugin
 Tags: project, manage, management, project management, project manager, wordpress project management, crm, client, client manager, tasks, issue tracker, bug tracker, task manager
 Requires at least: 4.5
 Tested up to: 4.7.3
-Stable tag: 1.5.3
+Stable tag: 1.5.4
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -13,7 +13,7 @@ Project Management for WordPress that is powerful, extensible & easy to use. Man
 
 Project management with WordPress has never been easier. UpStream is a free project management plugin that allows you to easily manage any type of project, right from within your WordPress website. Your clients can track the progress of their project via the frontend project view.
 
-View our [Premium Extensions](https://upstreamplugin.com/extensions/) here 
+View our [Premium Extensions](https://upstreamplugin.com/extensions/) here
 
 View the [Demo](https://demo.upstreamplugin.com/) here
 
@@ -119,77 +119,84 @@ UpStream does not use the existing styling of your theme. The features and the v
 
 == Changelog ==
 
+= 1.5.4 - 2017-04-20 =
+* FIX       - Drop Style Setting page
+* FIX       - Fixed dates format in frontend
+* FIX       - Fixed incomplete projects metadata in frontend
+* FIX       - Fixed UI error in admin
+* FIX       - Fixed feedback messages for clients-related forms
+
 = 1.5.3 - 2017-03-21 =
-* UPDATE 	- Update mobile styles on the frontend
+* UPDATE    - Update mobile styles on the frontend
 
 = 1.5.2 - 2017-03-13 =
-* UPDATE 	- Update Translations
+* UPDATE    - Update Translations
 
 = 1.5.1 - 2017-02-22 =
-* FIX 		- Errors when logged in as subscriber
-* FIX 		- Deleting roles and capabilities on uninstall
+* FIX       - Errors when logged in as subscriber
+* FIX       - Deleting roles and capabilities on uninstall
 
 = 1.5.0 - 2017-02-20 =
-* NEW 		- Add new Style Settings page
-* NEW 		- Add Messages column (showing the count) in projects list screen
-* FIX 		- Issue with internationalized dates not being saved. Reverted to Y-m-d format
+* NEW       - Add new Style Settings page
+* NEW       - Add Messages column (showing the count) in projects list screen
+* FIX       - Issue with internationalized dates not being saved. Reverted to Y-m-d format
 
 = 1.4.3 - 2017-02-17 =
-* UPDATE 	- UI improvements on frontend view
-* UPDATE 	- UI improvements on project edit screen in admin
-* FIX 		- Issue with counts of tasks if nobody assigned to task
+* UPDATE    - UI improvements on frontend view
+* UPDATE    - UI improvements on project edit screen in admin
+* FIX       - Issue with counts of tasks if nobody assigned to task
 
 = 1.4.2 - 2017-02-17 =
-* FIX 		- Issue with Project Activity. Remove post_type check that is not required
+* FIX       - Issue with Project Activity. Remove post_type check that is not required
 
 = 1.4.1 - 2017-02-16 =
-* NEW 		- Admin Edit Project UI. Add Task and Bug end date to title bar
+* NEW       - Admin Edit Project UI. Add Task and Bug end date to title bar
 
 = 1.4.0 - 2017-02-16 =
-* NEW 		- Add Project Activity section
-* NEW 		- Add upstream_user_item() function to get any user item
-* UPDATE 	- Admin Edit Project UI. Move progress bar and add statuses into title bar
-* FIX 		- Bug with checking for client permissions
+* NEW       - Add Project Activity section
+* NEW       - Add upstream_user_item() function to get any user item
+* UPDATE    - Admin Edit Project UI. Move progress bar and add statuses into title bar
+* FIX       - Bug with checking for client permissions
 
 = 1.3.2 - 2017-02-14 =
-* FIX 		- Issue with not loading activity class
+* FIX       - Issue with not loading activity class
 
 = 1.3.1 - 2017-02-14 =
-* FIX 		- Issue with wrong client logo displaying on All Projects page
+* FIX       - Issue with wrong client logo displaying on All Projects page
 
 = 1.3.0 - 2017-02-10 =
-* NEW 		- Add option in settings to completely disable bugs
-* NEW 		- Add help text to Client User email field
-* NEW 		- Add link on frontend sidebar for files
-* UPDATE 	- Minor updates to styling on Client edit screen
-* FIX 		- Add a check for multiple email addresses on client login
+* NEW       - Add option in settings to completely disable bugs
+* NEW       - Add help text to Client User email field
+* NEW       - Add link on frontend sidebar for files
+* UPDATE    - Minor updates to styling on Client edit screen
+* FIX       - Add a check for multiple email addresses on client login
 
 = 1.2.0 - 2017-02-10 =
-* NEW 		- Redirect to settings page after activation
-* NEW 		- Add guided tour for first Project
-* UPDATE 	- Update styling on settings pages
-* UPDATE 	- Update styling on Project edit screen
-* UPDATE 	- Make first Milestone always open when editing or adding project
-* FIX 		- Add various extra code checks such as isset(), is_array() etc throughout plugin
-* FIX 		- Email link on Client Users within project
-* FIX 		- Issue with adding Discussions in admin area
+* NEW       - Redirect to settings page after activation
+* NEW       - Add guided tour for first Project
+* UPDATE    - Update styling on settings pages
+* UPDATE    - Update styling on Project edit screen
+* UPDATE    - Make first Milestone always open when editing or adding project
+* FIX       - Add various extra code checks such as isset(), is_array() etc throughout plugin
+* FIX       - Email link on Client Users within project
+* FIX       - Issue with adding Discussions in admin area
 
 = 1.1.1 - 2017-02-08 =
-* UPDATE 	- Update CSS on Extension settings page
-* NEW 		- Add banners on Extension settings page
-* FIX 		- Typo on Extension settings page
+* UPDATE    - Update CSS on Extension settings page
+* NEW       - Add banners on Extension settings page
+* FIX       - Typo on Extension settings page
 
 = 1.1.0 - 2017-02-07 =
-* UPDATE 	- Include translations for en_AU
-* UPDATE 	- Include translations for en_NZ
+* UPDATE    - Include translations for en_AU
+* UPDATE    - Include translations for en_NZ
 
 = 1.0.2 - 2017-02-07 =
-* UPDATE 	- Modify upstream_count_total() function to return 0 for the id if not found
-* SECURITY 	- Add proper escaping on items within admin Tasks page
+* UPDATE    - Modify upstream_count_total() function to return 0 for the id if not found
+* SECURITY  - Add proper escaping on items within admin Tasks page
 
 = 1.0.1 - 2017-02-03 =
-* UPDATE 	- Update links to documentation from within plugin page
-* FIX 		- Undefined index within upstream_count_total() function
+* UPDATE    - Update links to documentation from within plugin page
+* FIX       - Undefined index within upstream_count_total() function
 
 = 1.0.0 - 2017-01-20 =
-* Release 	- Initial release
+* Release   - Initial release
