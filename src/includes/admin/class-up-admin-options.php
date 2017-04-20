@@ -10,7 +10,7 @@ if ( ! class_exists( 'UpStream_Admin_Options' ) ) :
  * @version 0.1.0
  */
 class UpStream_Admin_Options {
-	
+
 	/**
 	 * Array of metaboxes/fields
 	 * @var array
@@ -40,14 +40,14 @@ class UpStream_Admin_Options {
 	 * @var array
 	 */
 	public $options_pages = array();
-	
+
 	/**
 	 * Holds an instance of the object
 	 *
 	 * @var Myprefix_Admin
 	 **/
 	private static $instance = null;
-	
+
 	/**
 	 * Constructor
 	 * @since 0.1.0
@@ -69,7 +69,7 @@ class UpStream_Admin_Options {
 		}
 		return self::$instance;
 	}
-	
+
 	/**
 	 * Initiate our hooks
 	 * @since 0.1.0
@@ -181,14 +181,11 @@ class UpStream_Admin_Options {
 
 		$task_options = new UpStream_Options_Tasks();
 		$this->option_metabox[] = $task_options->options();
-		
+
 		if( ! upstream_disable_bugs() ) {
 			$bug_options = new UpStream_Options_Bugs();
 			$this->option_metabox[] = $bug_options->options();
 		}
-
-		$style_options = new UpStream_Options_Style();
-		$this->option_metabox[] = $style_options->options();
 
 		$ext_options = new UpStream_Options_Extensions();
 		$this->option_metabox[] = $ext_options->options();
