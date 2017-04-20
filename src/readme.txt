@@ -119,6 +119,13 @@ UpStream does not use the existing styling of your theme. The features and the v
 
 == Changelog ==
 
+= 1.5.4 - 2017-04-20 =
+* FIX       - Drop Style Setting page
+* FIX       - Fixed dates format in frontend
+* FIX       - Fixed incomplete projects metadata in frontend
+* FIX       - Fixed UI error in admin
+* FIX       - Fixed feedback messages for clients-related forms
+
 = 1.5.3 - 2017-03-21 =
 * UPDATE 	- Update mobile styles on the frontend
 
