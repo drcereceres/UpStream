@@ -242,7 +242,12 @@ class UpStream_Metaboxes_Projects {
             'id'                => 'notes',
             'type'              => 'wysiwyg',
             'permissions'       => 'milestone_notes_field',
-            'before'            => 'upstream_add_field_attributes'
+            'before'            => 'upstream_add_field_attributes',
+            'options'           => array(
+                'media_buttons' => false,
+                'textarea_rows' => 5,
+                'teeny'         => true
+            )
         );
 
         // set up the group grid plugin
