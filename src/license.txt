@@ -1,4 +1,4 @@
-UpStream - Project Management for WordPress
+WordPress Project Management by UpStream
 
 Copyright 2017 by the contributors
 
@@ -24,7 +24,7 @@ permission notices:
 
 and
 
-  UpStream - Project Management for WordPress
+  WordPress Project Management by UpStream
 
   UpStream is Copyright (c) 2017 UpStream Project Management
 
