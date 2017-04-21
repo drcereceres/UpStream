@@ -1082,14 +1082,16 @@ class UpStream_Metaboxes_Projects {
             'name'              => __( 'New Message', 'upstream' ),
             'desc'              => __( '', 'upstream' ),
             'id'                => $this->prefix . 'new_message',
-            'type'              => 'textarea_small',
+            'type'              => 'wysiwyg',
             'permissions'       => 'publish_project_discussion',
             'before'            => 'upstream_add_field_attributes',
-            'attributes'        => array(
-                'rows' => 1,
-            ),
             'after_field'       => 'upstream_admin_discussion_button',
             'after_row'         => 'upstream_admin_display_messages',
+            'options'           => array(
+                'media_buttons' => false,
+                'textarea_rows' => 5,
+                'teeny'         => true
+            )
         ) );
 
 
