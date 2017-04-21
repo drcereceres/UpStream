@@ -240,12 +240,9 @@ class UpStream_Metaboxes_Projects {
         $fields[30] = array(
             'name'              => __( "Notes", 'upstream' ),
             'id'                => 'notes',
-            'type'              => 'textarea_small',
+            'type'              => 'wysiwyg',
             'permissions'       => 'milestone_notes_field',
-            'before'            => 'upstream_add_field_attributes',
-            'attributes'        => array(
-                'rows' => 2,
-            )
+            'before'            => 'upstream_add_field_attributes'
         );
 
         // set up the group grid plugin
