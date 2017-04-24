@@ -101,6 +101,9 @@ table.dataTable.dtr-inline.collapsed > tbody > tr.parent > td:first-child::befor
   content: "\f054";
   background: none;
 }
+table.dataTable tr.child td.child {
+  white-space: normal;
+}
 
 /* Overview section */
 .count > small {
