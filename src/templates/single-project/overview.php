@@ -15,7 +15,15 @@ $bug        = upstream_bug_label();
 $b_count    = upstream_count_total( 'bugs', get_the_ID() );
 
 $width = upstream_disable_bugs() ? 'col-lg-6 col-md-6 ' : 'col-lg-4 col-md-4 ';
+
+$projectDescription = upstream_project_description();
 ?>
+
+    <?php if (!empty($projectDescription)): ?>
+    <div class="description col-xs-12">
+        <p><?php echo $projectDescription; ?></p>
+    </div>
+    <?php endif; ?>
 
     <div class="<?php echo esc_attr( $width ); ?> col-xs-12">
         <div class="tile-stats">

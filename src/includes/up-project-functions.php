@@ -98,6 +98,14 @@ function upstream_project_files( $id = 0 ) {
     return apply_filters( 'upstream_project_files', $result, $id );
 }
 
+function upstream_project_description($projectId = 0)
+{
+    $project = new UpStream_Project((int)$projectId);
+    $result = $project->get_meta('description');
+
+    return apply_filters('upstream_project_description', $result, $projectId);
+}
+
 function upstream_project_discussion( $id = 0 ) {
     $project    = new UpStream_Project( $id );
     $result     = $project->get_meta( 'discussion' );
