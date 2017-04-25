@@ -853,6 +853,20 @@ class UpStream_Metaboxes_Projects {
             'show_on_cb'        => 'upstream_show_project_end_date_field',
         );
 
+        $fields[12] = array(
+            'name'              => __( "Description", 'upstream' ),
+            'desc'              => __( '', 'upstream' ),
+            'id'                => $this->prefix . 'description',
+            'type'              => 'textarea_small',
+            'permissions'       => 'project_description',
+            'before'            => 'upstream_add_field_attributes',
+            'options'           => array(
+                'media_buttons' => false,
+                'textarea_rows' => 3,
+                'teeny'         => true
+            )
+        );
+
         // filter the fields & sort numerically
         $fields = apply_filters( 'upstream_details_metabox_fields', $fields );
         ksort( $fields );
