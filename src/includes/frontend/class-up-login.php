@@ -112,6 +112,7 @@ class UpStream_Login{
     {
         global $wpdb;
 
+        $languageDomain = "upstream";
         $userCanLogIn = false;
 
         $postData = array(
@@ -124,7 +125,7 @@ class UpStream_Login{
                 $clientsRowset = $wpdb->get_results (
                     "SELECT * FROM `" . $wpdb->postmeta .
                     "` WHERE `meta_key` = '_upstream_client_users' AND
-                    `meta_value` REGEXP '.*\"email\";s:[0-9]+:\"". esc_html( $postData['email'] ) ."\".*'"
+                    `meta_value` REGEXP '.*\"email\";s:[0-9]+:\"". esc_html($postData['email']) ."\".*'"
                 );
                 $clientsRowsetCount = count($clientsRowset);
 
@@ -155,15 +156,15 @@ class UpStream_Login{
 
                                 $userCanLogIn = true;
                             } else {
-                                $this->feedback = __("Wrong password.", "upstream");
+                                $this->feedback = __("Wrong password.", $languageDomain);
                             }
 
                             unset($projectPwd);
                         } else {
-                            $this->feedback = __("This user does not exist.", "upstream");
+                            $this->feedback = __("This user does not exist.", $languageDomain);
                         }
                     } else {
-                        $this->feedback = __("Looks like there are multiple users with this email.<br>Please contact your administrator.", "upstream");
+                        $this->feedback = __("Looks like there are multiple users with this email.<br>Please contact your administrator.", $languageDomain);
                     }
                 } else {
                     $upstreamUsersQueryParams = array(
@@ -175,7 +176,7 @@ class UpStream_Login{
 
                     $usersFoundCount = count($upstreamUsersQuery->results);
                     if ($usersFoundCount > 1) {
-                        $this->feedback = __("Looks like there are multiple users with this email.<br>Please contact your administrator.", "upstream");
+                        $this->feedback = __("Looks like there are multiple users with this email.<br>Please contact your administrator.", $languageDomain);
                     } else if ($usersFoundCount === 1) {
                         $clientRowset = $wpdb->get_results(
                             'SELECT * '.
@@ -193,23 +194,23 @@ class UpStream_Login{
                                 $user_id = $user->id;
                                 $userCanLogIn = true;
                             } else {
-                                $this->feedback = __("Wrong password.", "upstream");
+                                $this->feedback = __("Wrong password.", $languageDomain);
                             }
 
                             unset($projectPwd);
                         } else {
-                            $this->feedback = __("Looks like something went wrong with the authentication for this project.<br>Please contact your administrator.", "upstream");
+                            $this->feedback = __("Looks like something went wrong with the authentication for this project.<br>Please contact your administrator.", $languageDomain);
                         }
                     } else {
-                        $this->feedback = __("This user does not exist.", "upstream");
+                        $this->feedback = __("This user does not exist.", $languageDomain);
                     }
                 }
             }
             else {
-                $this->feedback = __("Wrong password.", "upstream");
+                $this->feedback = __("Wrong password.", $languageDomain);
             }
         } else {
-            $this->feedback = __("Invalid email", "upstream");
+            $this->feedback = __("Invalid email", $languageDomain);
         }
 
         if ($userCanLogIn && !empty($client_id) && !empty($user_id)) {
