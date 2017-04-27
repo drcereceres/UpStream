@@ -1,7 +1,7 @@
 <?php
 /**
  * Plugin Name: UpStream
- * Description: A project management plugin for WordPress.
+ * Description: A WordPress Project Management plugin by UpStream.
  * Author: UpStream
  * Author URI: https://upstreamplugin.com
  * Version: 1.5.4
