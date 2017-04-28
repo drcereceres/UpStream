@@ -119,6 +119,15 @@ UpStream does not use the existing styling of your theme. The features and the v
 
 == Changelog ==
 
+= 1.6.0 - @todo =
+* FIX       - Fixed some frontend UI bugs
+* FIX       - Fixed bug that was preventing some special users from loggin in via frontend
+* UPDATE    - Rename plugin title
+* UPDATE    - Update vendor libraries
+* UPDATE    - Code tested up to WordPress 4.7.4
+* UPDATE    - Replace some textarea fields with WYSIWYG editors in project form
+* NEW       - Added a Description field to projects
+
 = 1.5.4 - 2017-04-20 =
 * FIX       - Drop Style Setting page
 * FIX       - Fixed dates format in frontend
