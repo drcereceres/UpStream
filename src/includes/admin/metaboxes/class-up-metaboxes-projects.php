@@ -240,11 +240,13 @@ class UpStream_Metaboxes_Projects {
         $fields[30] = array(
             'name'              => __( "Notes", 'upstream' ),
             'id'                => 'notes',
-            'type'              => 'textarea_small',
+            'type'              => 'wysiwyg',
             'permissions'       => 'milestone_notes_field',
             'before'            => 'upstream_add_field_attributes',
-            'attributes'        => array(
-                'rows' => 2,
+            'options'           => array(
+                'media_buttons' => false,
+                'textarea_rows' => 5,
+                'teeny'         => true
             )
         );
 
@@ -643,11 +645,13 @@ class UpStream_Metaboxes_Projects {
         $fields[20] = array(
             'name'              => __( "Description", 'upstream' ),
             'id'                => 'description',
-            'type'              => 'textarea_small',
+            'type'              => 'wysiwyg',
             'permissions'       => 'bug_description_field',
             'before'            => 'upstream_add_field_attributes',
-            'attributes'        => array(
-                'rows' => 2,
+            'options'           => array(
+                'media_buttons' => false,
+                'textarea_rows' => 5,
+                'teeny'         => true
             )
         );
 
@@ -849,6 +853,20 @@ class UpStream_Metaboxes_Projects {
             'show_on_cb'        => 'upstream_show_project_end_date_field',
         );
 
+        $fields[12] = array(
+            'name'              => __( "Description", 'upstream' ),
+            'desc'              => __( '', 'upstream' ),
+            'id'                => $this->prefix . 'description',
+            'type'              => 'wysiwyg',
+            'permissions'       => 'project_description',
+            'before'            => 'upstream_add_field_attributes',
+            'options'           => array(
+                'media_buttons' => false,
+                'textarea_rows' => 3,
+                'teeny'         => true
+            )
+        );
+
         // filter the fields & sort numerically
         $fields = apply_filters( 'upstream_details_metabox_fields', $fields );
         ksort( $fields );
@@ -966,11 +984,13 @@ class UpStream_Metaboxes_Projects {
         $fields[20] = array(
             'name'              => __( "Description", 'upstream' ),
             'id'                => 'description',
-            'type'              => 'textarea_small',
+            'type'              => 'wysiwyg',
             'permissions'       => 'file_description_field',
             'before'            => 'upstream_add_field_attributes',
-            'attributes'        => array(
-                'rows' => 2,
+            'options'           => array(
+                'media_buttons' => false,
+                'textarea_rows' => 3,
+                'teeny'         => true
             )
         );
 
@@ -1085,14 +1105,16 @@ class UpStream_Metaboxes_Projects {
             'name'              => __( 'New Message', 'upstream' ),
             'desc'              => __( '', 'upstream' ),
             'id'                => $this->prefix . 'new_message',
-            'type'              => 'textarea_small',
+            'type'              => 'wysiwyg',
             'permissions'       => 'publish_project_discussion',
             'before'            => 'upstream_add_field_attributes',
-            'attributes'        => array(
-                'rows' => 1,
-            ),
             'after_field'       => 'upstream_admin_discussion_button',
             'after_row'         => 'upstream_admin_display_messages',
+            'options'           => array(
+                'media_buttons' => false,
+                'textarea_rows' => 5,
+                'teeny'         => true
+            )
         ) );
 
 

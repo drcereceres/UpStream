@@ -101,69 +101,128 @@ class UpStream_Login{
     }
 
     /**
-     * Checks if user exits, if so: check if provided password matches the one in the database
-     * @return bool User login success status
+     * Method that attempt to authenticate a user against the open project.
+     *
+     * @since   1.0.0
+     * @access  private
+     *
+     * @return  bool
      */
-    private function checkPasswordCorrectnessAndLogin() {
-
+    private function checkPasswordCorrectnessAndLogin()
+    {
         global $wpdb;
 
-        $user_id = null;
+        $languageDomain = "upstream";
+        $userCanLogIn = false;
 
-        $email = is_email( $_POST['user_email'] ) ? $_POST['user_email'] : false;
-        if( ! $email ) {
-            $this->feedback = __( "Invalid email", "upstream" );
-            return false;
-        }
-
-        // select the client user with the matching email
-        $users = $wpdb->get_results (
-            "SELECT * FROM `" . $wpdb->postmeta .
-            "` WHERE `meta_key` = '_upstream_client_users' AND
-            `meta_value` REGEXP '.*\"email\";s:[0-9]+:\"". esc_html( $email ) ."\".*'"
+        $postData = array(
+            'email'    => isset($_POST['user_email']) && is_email($_POST['user_email']) ? $_POST['user_email'] : false,
+            'password' => isset($_POST['user_password']) ? $_POST['user_password'] : false
         );
 
+        if (!empty($postData['email'])) {
+            if (!empty($postData['password'])) {
+                $clientsRowset = $wpdb->get_results (
+                    "SELECT * FROM `" . $wpdb->postmeta .
+                    "` WHERE `meta_key` = '_upstream_client_users' AND
+                    `meta_value` REGEXP '.*\"email\";s:[0-9]+:\"". esc_html($postData['email']) ."\".*'"
+                );
+                $clientsRowsetCount = count($clientsRowset);
 
-        if ( is_array ( $users ) && count ( $users ) > 0) {
+                if (is_array($clientsRowset) && $clientsRowsetCount > 0)  {
+                    foreach ($clientsRowset as $clientIndex => $client) {
+                        $status = get_post_status($client->post_id);
+                        if ($status !== 'publish') {
+                            unset($clientsRowset[$clientIndex]); // unset any thet aren't published
+                        }
+                    }
 
-            // this is in case we have multiple emails the same
-            foreach ( $users as $key => $client ) {
-                $status = get_post_status( $client->post_id );
-                if( $status != 'publish' )
-                    unset( $users[$key] ); // unset any thet aren't published
-            }
+                    if (!isset($clientsRowset[1])) {
+                        $client = &$clientsRowset[0];
+                        $user_id = null;
 
-            // if we still have multiple emails, throw the error
-            if( isset( $users[1] ) ) {
-                $this->feedback = __( "Looks like there are multiple users with this email.<br>Please contact your administrator.", "upstream" );
-                return false;
-            }
+                        $clientUsers = unserialize($client->meta_value);
+                        foreach ($clientUsers as $clientUser) {
+                            if (isset($clientUser['email']) && $clientUser['email'] === $postData['email']) {
+                                $user_id = $clientUser['id'];
+                                break;
+                            }
+                        }
 
-            $metavalue = unserialize( $users[0]->meta_value );
-            foreach ($metavalue as $key => $user) {
-                if( isset( $user['email'] ) && $user['email'] == $email ) {
-                    $user_id = $user['id'];
+                        if (!empty($user_id)) {
+                            $projectPwd = get_post_meta($client->post_id, '_upstream_client_password', true);
+                            if ($postData['password'] === $projectPwd) {
+                                $client_id = (int)$client->post_id;
+
+                                $userCanLogIn = true;
+                            } else {
+                                $this->feedback = __("Wrong password.", $languageDomain);
+                            }
+
+                            unset($projectPwd);
+                        } else {
+                            $this->feedback = __("This user does not exist.", $languageDomain);
+                        }
+                    } else {
+                        $this->feedback = __("Looks like there are multiple users with this email.<br>Please contact your administrator.", $languageDomain);
+                    }
+                } else {
+                    $upstreamUsersQueryParams = array(
+                        'role__in'       => array('upstream_manager', 'upstream_user'),
+                        'search'         => esc_html($postData['email']),
+                        'search_columns' => array('user_email')
+                    );
+                    $upstreamUsersQuery = new WP_User_Query($upstreamUsersQueryParams);
+
+                    $usersFoundCount = count($upstreamUsersQuery->results);
+                    if ($usersFoundCount > 1) {
+                        $this->feedback = __("Looks like there are multiple users with this email.<br>Please contact your administrator.", $languageDomain);
+                    } else if ($usersFoundCount === 1) {
+                        $clientRowset = $wpdb->get_results(
+                            'SELECT * '.
+                            'FROM `'. $wpdb->postmeta .'` '.
+                            'WHERE `meta_key` = "_upstream_project_client" '.
+                            '  AND `post_id` = '. upstream_post_id()
+                        );
+
+                        if (is_array($clientRowset) && count($clientRowset) === 1) {
+                            $user = &$upstreamUsersQuery->results[0];
+                            $client_id = (int)$clientRowset[0]->meta_value;
+
+                            $projectPwd = get_post_meta($client_id, '_upstream_client_password', true);
+                            if ($postData['password'] === $projectPwd) {
+                                $user_id = $user->id;
+                                $userCanLogIn = true;
+                            } else {
+                                $this->feedback = __("Wrong password.", $languageDomain);
+                            }
+
+                            unset($projectPwd);
+                        } else {
+                            $this->feedback = __("Looks like something went wrong with the authentication for this project.<br>Please contact your administrator.", $languageDomain);
+                        }
+                    } else {
+                        $this->feedback = __("This user does not exist.", $languageDomain);
+                    }
                 }
             }
-
-            $client_id = $users[0]->post_id;
-            $password = get_post_meta( $client_id, '_upstream_client_password', true );
-
-            if ( ! isset( $password ) ||
-                ( isset( $password ) && trim( $password ) == trim( $_POST['user_password'] ) ) ) {
-                // write user data into PHP SESSION [a file on your server]
-                $_SESSION['client_id']  = (int) $client_id;
-                $_SESSION['user_id']    = esc_html( $user_id );
-                $_SESSION['user_is_logged_in'] = true;
-                $this->user_is_logged_in = true;
-                return true;
-            } else {
-                $this->feedback = __( "Wrong password.", "upstream" );
+            else {
+                $this->feedback = __("Wrong password.", $languageDomain);
             }
         } else {
-            $this->feedback = __( "This user does not exist.", "upstream" );
+            $this->feedback = __("Invalid email", $languageDomain);
         }
-        // default return
+
+        if ($userCanLogIn && !empty($client_id) && !empty($user_id)) {
+            $_SESSION['client_id'] = $client_id;
+            $_SESSION['user_id'] = esc_html($user_id);
+            $_SESSION['user_is_logged_in'] = true;
+
+            $this->user_is_logged_in = true;
+
+            return true;
+        }
+
         return false;
     }
 

@@ -359,7 +359,7 @@
         $group
             .on('click', '#new_message', function( evt ) {
                 evt.preventDefault();
-                var content = $group.find('#_upstream_project_new_message').val();
+                var content = window.tinyMCE.editors['_upstream_project_new_message'].getContent();
                 var post_id = $('#post_ID').val();
                 addPost( content, post_id );
             });
@@ -376,7 +376,7 @@
                     post_id: post_id
                 },
                 success: function(response){
-                    $('#_upstream_project_new_message').val('');
+                    window.tinyMCE.editors['_upstream_project_new_message'].setContent('');
                     $(response).hide().prependTo(".admin-discussion").fadeIn("slow");
                 }
             });

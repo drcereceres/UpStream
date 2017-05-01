@@ -1,13 +1,13 @@
-=== Project Manager by UpStream ===
+=== WordPress Project Management by UpStream ===
 Contributors: upstreamplugin
 Tags: project, manage, management, project management, project manager, wordpress project management, crm, client, client manager, tasks, issue tracker, bug tracker, task manager
 Requires at least: 4.5
-Tested up to: 4.7.3
-Stable tag: 1.5.4
+Tested up to: 4.7.4
+Stable tag: 1.6.0
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
-Project Management for WordPress that is powerful, extensible & easy to use. Manage projects, clients, milestones, tasks, files & more.
+WordPress Project Management by UpStream that is powerful, extensible & easy to use. Manage projects, clients, milestones, tasks, files & more.
 
 == Description ==
 
@@ -118,6 +118,16 @@ UpStream does not use the existing styling of your theme. The features and the v
 9. Close up of Project Timeline (premium extension)
 
 == Changelog ==
+
+= 1.6.0 - 2017-05-01 =
+* FIX       - Fixed some frontend UI bugs
+* FIX       - Fixed bug that was preventing some special users from loggin in via frontend
+* UPDATE    - Rename plugin title
+* UPDATE    - Update vendor libraries
+* UPDATE    - Code tested up to WordPress 4.7.4
+* UPDATE    - Replace some textarea fields with WYSIWYG editor instances in project form
+* NEW       - Added a Description field to projects
+* NEW       - New Customizer add-on
 
 = 1.5.4 - 2017-04-20 =
 * FIX       - Drop Style Setting page
