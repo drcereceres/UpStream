@@ -464,11 +464,13 @@ class UpStream_Metaboxes_Projects {
         $fields[40] = array(
             'name'              => __( "Notes", 'upstream' ),
             'id'                => 'notes',
-            'type'              => 'textarea_small',
+            'type'              => 'wysiwyg',
             'permissions'       => 'task_notes_field',
             'before'            => 'upstream_add_field_attributes',
-            'attributes'        => array(
-                'rows' => 2,
+            'options'           => array(
+                'media_buttons' => false,
+                'textarea_rows' => 5,
+                'teeny'         => true
             )
         );
 
