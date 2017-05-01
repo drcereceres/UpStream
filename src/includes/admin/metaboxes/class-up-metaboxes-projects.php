@@ -857,7 +857,7 @@ class UpStream_Metaboxes_Projects {
             'name'              => __( "Description", 'upstream' ),
             'desc'              => __( '', 'upstream' ),
             'id'                => $this->prefix . 'description',
-            'type'              => 'textarea_small',
+            'type'              => 'wysiwyg',
             'permissions'       => 'project_description',
             'before'            => 'upstream_add_field_attributes',
             'options'           => array(
