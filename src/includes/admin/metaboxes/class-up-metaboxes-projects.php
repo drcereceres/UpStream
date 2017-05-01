@@ -984,11 +984,13 @@ class UpStream_Metaboxes_Projects {
         $fields[20] = array(
             'name'              => __( "Description", 'upstream' ),
             'id'                => 'description',
-            'type'              => 'textarea_small',
+            'type'              => 'wysiwyg',
             'permissions'       => 'file_description_field',
             'before'            => 'upstream_add_field_attributes',
-            'attributes'        => array(
-                'rows' => 2,
+            'options'           => array(
+                'media_buttons' => false,
+                'textarea_rows' => 3,
+                'teeny'         => true
             )
         );
 
