@@ -101,7 +101,16 @@ class UpStream_Options_Extensions {
                     ),
                     'after' => 'upstream_extension_markup'
                 ),
-
+                array(
+                    'name'          => __( 'Customizer', 'upstream' ),
+                    'id'            => 'upstream_customizer',
+                    'desc'          => __( 'Adds controls to easily customize the appearance of your projects.', 'upstream' ),
+                    'type'          => 'title',
+                    'attributes'    => array(
+                        'class' => 'extension',
+                    ),
+                    'after' => 'upstream_extension_markup'
+                )
             ) )
         );
 
