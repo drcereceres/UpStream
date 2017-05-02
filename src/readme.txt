@@ -119,6 +119,10 @@ UpStream does not use the existing styling of your theme. The features and the v
 
 == Changelog ==
 
+= 1.6.1 - @todo =
+* FIX       - Fixed UI bug in Project Description editor where all buttons position were messed up in Text Mode
+* UPDATE    - Replaced Tasks Note textarea with a WYSIWYG editor
+
 = 1.6.0 - 2017-05-01 =
 * FIX       - Fixed some frontend UI bugs
 * FIX       - Fixed bug that was preventing some special users from loggin in via frontend
