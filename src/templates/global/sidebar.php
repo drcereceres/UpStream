@@ -57,6 +57,14 @@
                         <?php do_action( 'upstream_sidebar_after_single_menu' ); ?>
                         <?php } ?>
                         <li><a href="#files"><i class="fa fa-file"></i> <?php echo upstream_file_label_plural(); ?></a></li>
+                        <li>
+                            <hr style="border-top-color: rgba(0, 0, 0, 0.2);" />
+                        </li>
+                        <li>
+                            <a href="#my-tasks">
+                                <i class="fa fa-wrench"></i> My <?php echo upstream_task_label_plural(); ?>
+                            </a>
+                        </li>
                     </ul>
 
                 </div>

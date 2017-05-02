@@ -91,6 +91,13 @@ while ( have_posts() ) : the_post(); ?>
                 <?php upstream_get_template_part( 'single-project/files.php' ); ?>
             </div>
 
+            <hr />
+
+            <div class="row">
+                <?php do_action( 'upstream_single_project_before_tasks' ); ?>
+
+                <?php upstream_get_template_part( 'single-project/my-tasks.php' ); ?>
+            </div>
     </div>
 </div>
 
