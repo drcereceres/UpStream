@@ -65,6 +65,11 @@
                                 <i class="fa fa-wrench"></i> My <?php echo upstream_task_label_plural(); ?>
                             </a>
                         </li>
+                        <li>
+                            <a href="#my-bugs">
+                                <i class="fa fa-bug"></i> My <?php echo upstream_bug_label_plural(); ?>
+                            </a>
+                        </li>
                     </ul>
 
                 </div>

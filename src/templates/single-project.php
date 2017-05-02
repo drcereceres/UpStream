@@ -98,6 +98,12 @@ while ( have_posts() ) : the_post(); ?>
 
                 <?php upstream_get_template_part( 'single-project/my-tasks.php' ); ?>
             </div>
+
+            <div class="row">
+                <?php do_action( 'upstream_single_project_before_bugs' ); ?>
+
+                <?php upstream_get_template_part( 'single-project/my-bugs.php' ); ?>
+            </div>
     </div>
 </div>
 
