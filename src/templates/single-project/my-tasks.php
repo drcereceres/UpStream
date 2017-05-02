@@ -1,7 +1,7 @@
 <?php
 if (!defined('ABSPATH')) exit;
 
-$sectionTitle = upstream_task_label_plural() . '<small>'. __(' assigned to me', 'upstream') .'</small>';
+$sectionTitle = upstream_task_label_plural() . ' <span class="small">'. __('assigned to me', 'upstream') .'</span>';
 $projectId = get_the_ID();
 $itemAlias = 'tasks';
 ?>
