@@ -672,3 +672,36 @@ body.upstream .wp-list-table.fixed.posts {
   margin: 0;
   padding: 0;
 }
+
+/*
+ * Bugfix for the Project Description WYSIWYG editor toolbar buttons in Text mode.
+ */
+.wp-core-ui.wp-editor-wrap.html-active #qt__upstream_project_description_toolbar {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: initial;
+  -webkit-justify-content: initial;
+      -ms-flex-pack: initial;
+          justify-content: initial;
+  -webkit-flex-basis: initial;
+      -ms-flex-preferred-size: initial;
+          flex-basis: initial;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+  -webkit-flex-direction: row;
+      -ms-flex-direction: row;
+          flex-direction: row;
+  -webkit-flex-wrap: wrap;
+      -ms-flex-wrap: wrap;
+          flex-wrap: wrap;
+}
+
+.wp-core-ui.wp-editor-wrap.html-active #qt__upstream_project_description_toolbar > input:first-child {
+  margin-top: 1em;
+}
+
+.wp-core-ui.wp-editor-wrap.html-active #qt__upstream_project_description_toolbar > input:last-child {
+  margin-bottom: 1em;
+}

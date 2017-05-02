@@ -3,7 +3,7 @@ Contributors: upstreamplugin
 Tags: project, manage, management, project management, project manager, wordpress project management, crm, client, client manager, tasks, issue tracker, bug tracker, task manager
 Requires at least: 4.5
 Tested up to: 4.7.4
-Stable tag: 1.6.0
+Stable tag: 1.6.1
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -118,6 +118,10 @@ UpStream does not use the existing styling of your theme. The features and the v
 9. Close up of Project Timeline (premium extension)
 
 == Changelog ==
+
+= 1.6.1 - 2017-05-02 =
+* FIX       - Fixed UI bug in Project Description editor where all buttons position were messed up in Text Mode
+* UPDATE    - Replaced Tasks Note textarea with a WYSIWYG editor
 
 = 1.6.0 - 2017-05-01 =
 * FIX       - Fixed some frontend UI bugs
