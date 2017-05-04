@@ -705,3 +705,12 @@ body.upstream .wp-list-table.fixed.posts {
 .wp-core-ui.wp-editor-wrap.html-active #qt__upstream_project_description_toolbar > input:last-child {
   margin-bottom: 1em;
 }
+
+.cmb2-wrap > .cmb2-metabox > .cmb-type-group {
+  width: 100%;
+  max-width: 100%;
+}
+
+.cmb2-wrap .cmb2-metabox .cmb-file-field-image {
+  width: 100%;
+}
