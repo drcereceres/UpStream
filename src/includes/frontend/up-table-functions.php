@@ -393,7 +393,18 @@ function upstream_output_table_header( $table ) {
 
 }
 
-function upstream_output_table_rows( $id, $table ) {
+function upstream_output_table_rows( $id, $table, $filterRowsetByCurrentUser = false ) {
+    // Make sure we're dealing with a bool-typed var.
+    $filterRowsetByCurrentUser = (bool)$filterRowsetByCurrentUser;
+
+    // Check if we should try to filter data by the current logged in user (comparing with `assigned_to` column).
+    if ($filterRowsetByCurrentUser) {
+        $currentUserId = (int)get_current_user_id();
+        // Check if the user was logged via backend or frontend.
+        if ($currentUserId <= 0 && isset($_SESSION['user_id'])) {
+            $currentUserId = (int)$_SESSION['user_id'];
+        }
+    }
 
     switch ( $table ) {
         case 'milestones':
@@ -424,6 +435,11 @@ function upstream_output_table_rows( $id, $table ) {
     $output = null;
 
     foreach ( $data as $item ) {
+
+        // Check if $item should be skipped if we want to filter data by the current logged in user.
+        if ($filterRowsetByCurrentUser && isset($item['assigned_to']) && $currentUserId > 0 && (int)$item['assigned_to'] !== $currentUserId) {
+            continue;
+        }
 
         $output .= '<tr>';
         foreach ($settings as $key => $setting) {

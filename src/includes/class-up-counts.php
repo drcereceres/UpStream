@@ -27,9 +27,13 @@ class Upstream_Counts {
         $args = array(
             'post_type'         => 'project',
             'post_status'       => 'publish',
-            'posts_per_page'    => -1,
-            'include'           => $id,
+            'posts_per_page'    => -1
         );
+
+        if ((int)$id > 0) {
+            $args['include'] = $id;
+        }
+
         $projects = get_posts( $args );
         if ( $projects )
             return $projects;
@@ -100,32 +104,33 @@ class Upstream_Counts {
     }
 
     /**
-     * Get the count of items assigned to current user.
+     * Get the count of items assigned to the current user.
      *
+     * @since   1.0.0
+     *
+     * @param   string  $itemType The item type to be searched. I.e.: tasks, bugs, etc.
+     *
+     * @return  integer
      */
-    public function assigned_to( $type ) {
-        $items = $this->get_items( $type );
-        if( ! $items )
-            return '0';
-
-        $assigned = array();
-        foreach ($items as $key => $value) {
-            $assigned[] = isset( $value['assigned_to'] ) ? $value['assigned_to'] : null;
+    public function assigned_to($itemType)
+    {
+        $rowset = $this->get_items($itemType);
+        if (count($rowset) === 0) {
+            return 0;
         }
-        if( $assigned ) {
-            foreach ($assigned as $key => $value) {
-                $array[$key] = ! empty( $value ) ? $value : 0;
+
+        $currentUserId = (int)$this->user['id'];
+
+        $assignedItemsCount = 0;
+
+        foreach ($rowset as $row) {
+            if (isset($row['assigned_to']) && (int)$row['assigned_to'] === $currentUserId) {
+                $assignedItemsCount++;
             }
         }
-        $assigned = array_count_values( $array );
-        $mine = array_filter( $assigned );
 
-        if( ! isset( $mine[ $this->user['id'] ] ) )
-            return '0';
-
-        return $mine[ $this->user['id'] ];
+        return $assignedItemsCount;
     }
-
 
     /**
      * Returns the count of OPEN tasks for the current user

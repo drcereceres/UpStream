@@ -19,6 +19,9 @@ var tableTasks      = jQuery('#tasks').DataTable( tableSetup );
 var tableBugs       = jQuery('#bugs').DataTable( tableSetup );
 var tableFiles      = jQuery('#files').DataTable( tableSetup );
 
+var tableMyTasks = jQuery('#my-tasks').DataTable(tableSetup);
+var tableMyBugs = jQuery('#my-bugs').DataTable(tableSetup);
+
 
 /**
  * Resize function without multiple trigger

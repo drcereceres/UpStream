@@ -199,7 +199,7 @@ class UpStream_Login{
 
                             unset($projectPwd);
                         } else {
-                            $this->feedback = __("Looks like something went wrong with the authentication for this project.<br>Please contact your administrator.", $languageDomain);
+                            $this->feedback = __("Looks like something went wrong with the authentication.<br>Please contact your administrator.", $languageDomain);
                         }
                     } else {
                         $this->feedback = __("This user does not exist.", $languageDomain);
