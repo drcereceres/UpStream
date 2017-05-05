@@ -119,6 +119,16 @@ UpStream does not use the existing styling of your theme. The features and the v
 
 == Changelog ==
 
+= 1.7.0 - @todo =
+* FIX       - Fixed items count bug in both "Tasks" and "Bugs" pages in /wp-admin
+* FIX       - Fixes bug with "Mine" filter in "Tasks" and  "Bugs" pages in /wp-admin
+* FIX       - A couple of other minor bugs were fixed overall
+* UPDATE    - Dropped "Project Author" metabox
+* UPDATE    - Metaboxes now fills 100% width instead of being fixed
+* NEW       - Added "My Tasks" and "My Bugs" metaboxes in frontend so users might see exactly what was assigned to them
+* NEW       - Projects are now auto-saved after adding a new "Task", "Bug", "Discussion" or "File"
+* NEW       - UpStream now automatically uses users BuddyPress avatars if BuddyPress plugin is active in your WP instance
+
 = 1.6.1 - 2017-05-02 =
 * FIX       - Fixed UI bug in Project Description editor where all buttons position were messed up in Text Mode
 * UPDATE    - Replaced Tasks Note textarea with a WYSIWYG editor
