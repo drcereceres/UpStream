@@ -180,6 +180,12 @@ function upstream_user_data( $data = 0, $ignore_current = false ) {
     $type       = is_email( $data ) ? 'email' : 'id';
     $wp_user    = get_user_by( $type, $data );
 
+    if (!function_exists('is_plugin_active')) {
+        include_once ABSPATH .'wp-admin/includes/plugin.php';
+    }
+
+    $isBuddyPressRunning = is_plugin_active('buddypress/bp-loader.php') && class_exists('BuddyPress') && function_exists('bp_core_fetch_avatar');
+
     if( $wp_user && is_object( $wp_user ) ) {
 
         // get the role
@@ -198,10 +204,19 @@ function upstream_user_data( $data = 0, $ignore_current = false ) {
             'full_name' => $wp_user->first_name . ' ' . $wp_user->last_name,
             'email'     => $wp_user->user_email,
             'phone'     => '',
-            'avatar'    => get_avatar_url( $wp_user->user_email, 96, get_option( 'avatar_default', 'mystery' ) ),
             'projects'  => upstream_get_users_projects( $wp_user->ID ),
             'role'      => $role,
         );
+
+        if ($isBuddyPressRunning) {
+            $user_data['avatar'] = bp_core_fetch_avatar(array(
+                'item_id' => $wp_user->ID,
+                'type'    => 'thumb',
+                'html'    => false
+            ));
+        } else {
+            $user_data['avatar'] = get_avatar_url($wp_user->user_email, 96, get_option('avatar_default', 'mystery'));
+        }
 
     } else {
 
@@ -231,11 +246,19 @@ function upstream_user_data( $data = 0, $ignore_current = false ) {
                     'full_name' => $fname . ' ' . $lname,
                     'email'     => isset( $user['email'] ) ? $user['email'] : '',
                     'phone'     => isset( $user['phone'] ) ? $user['phone'] : '',
-                    'avatar'    => get_avatar_url( $user['email'], 96, get_option( 'avatar_default', 'mystery' ) ),
                     'projects'  => upstream_get_users_projects( $user['id'] ),
                     'role'      => __( 'Client User', 'upstream' ),
                 );
 
+                if ($isBuddyPressRunning) {
+                    $user_data['avatar'] = bp_core_fetch_avatar(array(
+                        'item_id' => $user['id'],
+                        'type'    => 'thumb',
+                        'html'    => false
+                    ));
+                } else {
+                    $user_data['avatar'] = get_avatar_url($user['email'], 96, get_option('avatar_default', 'mystery'));
+                }
             }
 
         }
