@@ -345,7 +345,6 @@
         $row.find( '[data-avatar_created_by]' ).attr( 'data-avatar_created_by', '' );
 
         $group.find( '.cmb-add-row span' ).remove();
-        $group.find( '.cmb-add-row' ).append( ' <span>Be sure to Update project after adding items</span>').fadeIn("slow");
 
     }
 
