@@ -345,8 +345,8 @@
         $row.find( '[data-avatar_created_by]' ).attr( 'data-avatar_created_by', '' );
 
         $group.find( '.cmb-add-row span' ).remove();
-        $group.find( '.cmb-add-row' ).append( ' <span>Be sure to Update project after adding items</span>').fadeIn("slow");
 
+        window.wp.autosave.server.triggerSave();
     }
 
     /*
@@ -378,6 +378,8 @@
                 success: function(response){
                     window.tinyMCE.editors['_upstream_project_new_message'].setContent('');
                     $(response).hide().prependTo(".admin-discussion").fadeIn("slow");
+
+                    window.wp.autosave.server.triggerSave();
                 }
             });
 
@@ -417,6 +419,8 @@
                 success: function(response){
                     var $item = $group.find("[data-id='" + item_id + "']");
                     $item.parents('li').remove();
+
+                    window.wp.autosave.server.triggerSave();
                 }
             });
 
