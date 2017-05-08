@@ -3,7 +3,7 @@ Contributors: upstreamplugin
 Tags: project, manage, management, project management, project manager, wordpress project management, crm, client, client manager, tasks, issue tracker, bug tracker, task manager
 Requires at least: 4.5
 Tested up to: 4.7.4
-Stable tag: 1.6.1
+Stable tag: 1.7.0
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -119,10 +119,11 @@ UpStream does not use the existing styling of your theme. The features and the v
 
 == Changelog ==
 
-= 1.7.0 - @todo =
+= 1.7.0 - 2017-05-08 =
 * FIX       - Fixed items count bug in both "Tasks" and "Bugs" pages in /wp-admin
 * FIX       - Fixes bug with "Mine" filter in "Tasks" and  "Bugs" pages in /wp-admin
 * FIX       - A couple of other minor bugs were fixed overall
+* FIX       - Fixed non-numeric PHP warning
 * UPDATE    - Dropped "Project Author" metabox
 * UPDATE    - Metaboxes now fills 100% width instead of being fixed
 * NEW       - Added "My Tasks" and "My Bugs" metaboxes in frontend so users might see exactly what was assigned to them
