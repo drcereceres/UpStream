@@ -75,12 +75,13 @@ class Upstream_Task_List extends WP_List_Table {
         $counts         = self::count_statuses();
 
         if( $statuses ) {
-            foreach ($statuses as $status) {
+            // check if user wants to hide completed tasks
+            $hide   = get_user_option( 'upstream_completed_tasks', get_current_user_id() );
 
-                // check if user wants to hide completed tasks
-                $hide   = get_user_option( 'upstream_completed_tasks', get_current_user_id() );
-                if ( $hide == 'on' && self::hide_completed( $status['name'] ) )
+            foreach ($statuses as $status) {
+                if ($hide === 'on' && self::hide_completed($status['name'])) {
                     continue;
+                }
 
                 $stati  = strtolower( $status['name'] );
                 $class  = ( $current == $stati ? ' class="current"' : '' );

@@ -5,9 +5,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 
 
 function upstream_hide_meta_boxes() {
-    if ( ! current_user_can( 'edit_project_author' ) ) {
-        remove_meta_box( 'authordiv', 'project', 'normal' );
-    }
+    remove_meta_box( 'authordiv', 'project', 'normal' );
 }
 add_action( 'admin_menu', 'upstream_hide_meta_boxes' );
 

@@ -59,13 +59,13 @@ class Upstream_Bug_List extends WP_List_Table {
         //All link
         $all_class      = ( $current == 'all' ? ' class="current"' : '' );
         $all_url        = remove_query_arg( array( 'status', 'view' ) );
-        $all_count      = self::count_total();
+        $all_count      = upstream_count_total('bugs');
         $views['all']   = "<a href='" . esc_url( $all_url ) . "' {$all_class} >" . __( 'All', 'upstream' ) . "</a>({$all_count})";
 
         //Mine link
         $mine_class     = ( $current == 'mine' ? ' class="current"' : '' );
         $mine_url       = add_query_arg( array( 'view' => 'mine', 'status' => false ) );
-        $mine_count     = self::count_mine() ? self::count_mine() : '0';
+        $mine_count     = upstream_count_assigned_to('bugs');
         $views['mine']  = "<a href='" . esc_url( $mine_url ) . "' {$mine_class} >" . __( 'Mine', 'upstream' ) . "</a>({$mine_count})";
 
         // links for other statuses
@@ -74,12 +74,13 @@ class Upstream_Bug_List extends WP_List_Table {
         $counts         = self::count_statuses();
 
         if( $statuses ) {
-            foreach ($statuses as $status) {
+            // check if user wants to hide completed bugs
+            $hide = get_user_option( 'upstream_completed_bugs', get_current_user_id() );
 
-                // check if user wants to hide completed bugs
-                $hide   = get_user_option( 'upstream_completed_bugs', get_current_user_id() );
-                if ( $hide == 'on' && self::hide_completed( $status['name'] ) )
+            foreach ($statuses as $status) {
+                if ($hide === 'on' && self::hide_completed($status['name'])) {
                     continue;
+                }
 
                 $stati  = strtolower( $status['name'] );
                 $class  = ( $current == $stati ? ' class="current"' : '' );
