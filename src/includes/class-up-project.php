@@ -443,7 +443,7 @@ class UpStream_Project {
                 foreach( $tasks as $task ) {
                     // if a milestone has a task assigned to it
                     if( isset( $task['milestone'] ) && $task['milestone'] === $m['id'] ) { // if it matches
-                        $sum += isset( $task['progress'] ) ? $task['progress'] : 0; // add task progress to get the sum progress of all tasks
+                        $sum += isset( $task['progress'] ) ? (int)$task['progress'] : 0; // add task progress to get the sum progress of all tasks
                         $count++; // count
 
                         // add open tasks count to the milestone
