@@ -112,7 +112,6 @@ class UpStream_Login{
     {
         global $wpdb;
 
-        $languageDomain = "upstream";
         $userCanLogIn = false;
 
         $postData = array(
@@ -156,15 +155,15 @@ class UpStream_Login{
 
                                 $userCanLogIn = true;
                             } else {
-                                $this->feedback = __("Wrong password.", $languageDomain);
+                                $this->feedback = __("Wrong password.", 'upstream');
                             }
 
                             unset($projectPwd);
                         } else {
-                            $this->feedback = __("This user does not exist.", $languageDomain);
+                            $this->feedback = __("This user does not exist.", 'upstream');
                         }
                     } else {
-                        $this->feedback = __("Looks like there are multiple users with this email.<br>Please contact your administrator.", $languageDomain);
+                        $this->feedback = __("Looks like there are multiple users with this email.<br>Please contact your administrator.", 'upstream');
                     }
                 } else {
                     $upstreamUsersQueryParams = array(
@@ -176,7 +175,7 @@ class UpStream_Login{
 
                     $usersFoundCount = count($upstreamUsersQuery->results);
                     if ($usersFoundCount > 1) {
-                        $this->feedback = __("Looks like there are multiple users with this email.<br>Please contact your administrator.", $languageDomain);
+                        $this->feedback = __("Looks like there are multiple users with this email.<br>Please contact your administrator.", 'upstream');
                     } else if ($usersFoundCount === 1) {
                         $clientRowset = $wpdb->get_results(
                             'SELECT * '.
@@ -194,23 +193,23 @@ class UpStream_Login{
                                 $user_id = $user->id;
                                 $userCanLogIn = true;
                             } else {
-                                $this->feedback = __("Wrong password.", $languageDomain);
+                                $this->feedback = __("Wrong password.", 'upstream');
                             }
 
                             unset($projectPwd);
                         } else {
-                            $this->feedback = __("Looks like something went wrong with the authentication.<br>Please contact your administrator.", $languageDomain);
+                            $this->feedback = __("Looks like something went wrong with the authentication.<br>Please contact your administrator.", 'upstream');
                         }
                     } else {
-                        $this->feedback = __("This user does not exist.", $languageDomain);
+                        $this->feedback = __("This user does not exist.", 'upstream');
                     }
                 }
             }
             else {
-                $this->feedback = __("Wrong password.", $languageDomain);
+                $this->feedback = __("Wrong password.", 'upstream');
             }
         } else {
-            $this->feedback = __("Invalid email", $languageDomain);
+            $this->feedback = __("Invalid email", 'upstream');
         }
 
         if ($userCanLogIn && !empty($client_id) && !empty($user_id)) {

@@ -74,7 +74,7 @@ class UpStream_Metaboxes_Clients {
         $group_field_id = $metabox->add_field( array(
             'id'          => $this->prefix . 'users',
             'type'        => 'group',
-            'description' => __( '', 'upstream' ),
+            'description' => '',
             'options'     => array(
                 'group_title'   => __( "User {#}", 'upstream' ),
                 'add_button'    => __( "Add Another User", 'upstream' ),
@@ -214,34 +214,34 @@ class UpStream_Metaboxes_Clients {
 
         $metabox->add_field( array(
             'name'       => __( 'Website', 'upstream' ),
-            'desc'       => __( '', 'upstream' ),
+            'desc'       => '',
             'id'         => $this->prefix . 'website',
             'type'       => 'text_url',
         ) );
         $metabox->add_field( array(
             'name'       => __( 'Phone', 'upstream' ),
-            'desc'       => __( '', 'upstream' ),
+            'desc'       => '',
             'id'         => $this->prefix . 'phone',
             'type'       => 'text',
         ) );
 
         $metabox->add_field( array(
             'name'       => __( 'Address', 'upstream' ),
-            'desc'       => __( '', 'upstream' ),
+            'desc'       => '',
             'id'         => $this->prefix . 'address',
             'type'       => 'textarea_small',
         ) );
 
         $metabox->add_field( array(
             'name'       => __( 'Logo', 'upstream' ),
-            'desc'       => __( '', 'upstream' ),
+            'desc'       => '',
             'id'         => $this->prefix . 'logo',
             'type'       => 'file',
         ) );
 
         $metabox->add_field( array(
             'name'       => __( 'Password', 'upstream' ),
-            'desc'       => __( '', 'upstream' ),
+            'desc'       => '',
             'id'         => $this->prefix . 'password',
             'type'       => 'text',
             //'escape_cb'  => 'escape_greater_than_100',

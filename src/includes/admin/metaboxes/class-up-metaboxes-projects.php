@@ -82,21 +82,21 @@ class UpStream_Metaboxes_Projects {
 
         $grid1 = $metabox->add_field( array(
             'name'              => '<span>' . upstream_count_total( 'milestones', upstream_post_id() ) . '</span> ' . upstream_milestone_label_plural(),
-            'desc'              => __( '', 'upstream' ),
+            'desc'              => '',
             'id'                => $this->prefix . 'milestones',
             'type'              => 'title',
             'after'             => 'upstream_output_overview_counts',
         ) );
         $grid2 = $metabox->add_field( array(
             'name'              => '<span>' . upstream_count_total( 'tasks', upstream_post_id() ) . '</span> ' . upstream_task_label_plural(),
-            'desc'              => __( '', 'upstream' ),
+            'desc'              => '',
             'id'                => $this->prefix . 'tasks',
             'type'              => 'title',
             'after'             => 'upstream_output_overview_counts',
         ) );
         $grid3 = $metabox->add_field( array(
             'name'              => '<span>' . upstream_count_total( 'bugs', upstream_post_id() ) . '</span> ' . upstream_bug_label_plural(),
-            'desc'              => __( '', 'upstream' ),
+            'desc'              => '',
             'id'                => $this->prefix . 'bugs',
             'type'              => 'title',
             'after'             => 'upstream_output_overview_counts',
@@ -148,7 +148,7 @@ class UpStream_Metaboxes_Projects {
         $group_field_id = $metabox->add_field( array(
             'id'                => $this->prefix . 'milestones',
             'type'              => 'group',
-            'description'       => __( '', 'upstream' ),
+            'description'       => '',
             'permissions'       => 'delete_project_milestones', // also set on individual row level
             'options'           => array(
                 'group_title'   => esc_html( $label ) . " {#}",
@@ -349,7 +349,7 @@ class UpStream_Metaboxes_Projects {
         $group_field_id = $metabox->add_field( array(
             'id'                => $this->prefix . 'tasks',
             'type'              => 'group',
-            'description'       => __( '', 'upstream' ),
+            'description'       => '',
             'permissions'       => 'delete_project_tasks', // also set on individual row level
             'options'           => array(
                 'group_title'   => esc_html( $label ) . " {#}",
@@ -586,7 +586,7 @@ class UpStream_Metaboxes_Projects {
         $group_field_id = $metabox->add_field( array(
             'id'                => $this->prefix . 'bugs',
             'type'              => 'group',
-            'description'       => __( '', 'upstream' ),
+            'description'       => '',
             'permissions'       => 'delete_project_bugs', // also set on individual row level
             'options'           => array(
                 'group_title'   => esc_html( $label ) . " {#}",
@@ -672,7 +672,7 @@ class UpStream_Metaboxes_Projects {
             )
         );
         $fields[31] = array(
-            'name'              => '' . __( "Severity", 'upstream' ),
+            'name'              => __( "Severity", 'upstream' ),
             'id'                => 'severity',
             'type'              => 'select',
             'permissions'       => 'bug_severity_field',
@@ -687,7 +687,7 @@ class UpStream_Metaboxes_Projects {
         // start row
         $fields[40] = array(
             'name'              => __( 'Attachments', 'upstream' ),
-            'desc'              => __( '', 'upstream' ),
+            'desc'              => '',
             'id'                => 'file',
             'type'              => 'file',
             'permissions'       => 'bug_files_field',
@@ -793,7 +793,7 @@ class UpStream_Metaboxes_Projects {
 
         $fields[0] = array(
             'name'              => __( 'Status', 'upstream' ),
-            'desc'              => __( '', 'upstream' ),
+            'desc'              => '',
             'id'                => $this->prefix . 'status',
             'type'              => 'select',
             'show_option_none'  => true,
@@ -804,7 +804,7 @@ class UpStream_Metaboxes_Projects {
 
         $fields[1] = array(
             'name'              => __( 'Owner', 'upstream' ),
-            'desc'              => __( '', 'upstream' ),
+            'desc'              => '',
             'id'                => $this->prefix . 'owner',
             'type'              => 'select',
             'show_option_none'  => true,
@@ -814,7 +814,7 @@ class UpStream_Metaboxes_Projects {
         );
         $fields[2] = array(
             'name'              => $client_label,
-            'desc'              => __( '', 'upstream' ),
+            'desc'              => '',
             'id'                => $this->prefix . 'client',
             'type'              => 'select',
             'show_option_none'  => true,
@@ -836,7 +836,7 @@ class UpStream_Metaboxes_Projects {
 
         $fields[10] = array(
             'name'              => __( 'Start Date', 'upstream' ),
-            'desc'              => __( '', 'upstream' ),
+            'desc'              => '',
             'id'                => $this->prefix . 'start',
             'type'              => 'text_date_timestamp',
             'date_format'       => 'Y-m-d',
@@ -846,7 +846,7 @@ class UpStream_Metaboxes_Projects {
         );
         $fields[11] = array(
             'name'              => __( 'End Date', 'upstream' ),
-            'desc'              => __( '', 'upstream' ),
+            'desc'              => '',
             'id'                => $this->prefix . 'end',
             'type'              => 'text_date_timestamp',
             'date_format'       => 'Y-m-d',
@@ -857,7 +857,7 @@ class UpStream_Metaboxes_Projects {
 
         $fields[12] = array(
             'name'              => __( "Description", 'upstream' ),
-            'desc'              => __( '', 'upstream' ),
+            'desc'              => '',
             'id'                => $this->prefix . 'description',
             'type'              => 'wysiwyg',
             'permissions'       => 'project_description',
@@ -929,7 +929,7 @@ class UpStream_Metaboxes_Projects {
         $group_field_id = $metabox->add_field( array(
             'id'                => $this->prefix . 'files',
             'type'              => 'group',
-            'description'       => __( '', 'upstream' ),
+            'description'       => '',
             'permissions'       => 'delete_project_files', // also set on individual row level
             'options'           => array(
                 'group_title'   => esc_html( $label ) . " {#}",
@@ -972,7 +972,7 @@ class UpStream_Metaboxes_Projects {
         );
         $fields[11] = array(
             'name'              => esc_html( $label ),
-            'desc'              => __( '', 'upstream' ),
+            'desc'              => '',
             'id'                => 'file',
             'type'              => 'file',
             'permissions'       => 'file_files_field',
@@ -1105,7 +1105,7 @@ class UpStream_Metaboxes_Projects {
         ) );
         $metabox->add_field( array(
             'name'              => __( 'New Message', 'upstream' ),
-            'desc'              => __( '', 'upstream' ),
+            'desc'              => '',
             'id'                => $this->prefix . 'new_message',
             'type'              => 'wysiwyg',
             'permissions'       => 'publish_project_discussion',

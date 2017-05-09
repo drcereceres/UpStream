@@ -50,7 +50,7 @@ class UpStream_Options_General {
         // Set our title
         $this->title = __( 'General Settings', 'upstream' );
         $this->menu_title = __( 'General Settings', 'upstream' );
-        $this->description = __( '', 'upstream' );
+        $this->description = '';
     }
     /**
      * Returns the running object
