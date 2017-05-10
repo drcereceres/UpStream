@@ -80,13 +80,17 @@ class UpStream_Metaboxes_Projects {
         //Create a default grid
         $cmb2Grid = new \Cmb2Grid\Grid\Cmb2Grid($metabox);
 
-        $grid1 = $metabox->add_field( array(
-            'name'              => '<span>' . upstream_count_total( 'milestones', upstream_post_id() ) . '</span> ' . upstream_milestone_label_plural(),
-            'desc'              => '',
-            'id'                => $this->prefix . 'milestones',
-            'type'              => 'title',
-            'after'             => 'upstream_output_overview_counts',
-        ) );
+        $columnsList = array();
+
+        if (!upstream_are_milestones_disabled()) {
+            array_push($columnsList, $metabox->add_field( array(
+                'name'  => '<span>' . upstream_count_total( 'milestones', upstream_post_id() ) . '</span> ' . upstream_milestone_label_plural(),
+                'id'    => $this->prefix . 'milestones',
+                'type'  => 'title',
+                'after' => 'upstream_output_overview_counts'
+            )));
+        }
+
         $grid2 = $metabox->add_field( array(
             'name'              => '<span>' . upstream_count_total( 'tasks', upstream_post_id() ) . '</span> ' . upstream_task_label_plural(),
             'desc'              => '',
@@ -94,6 +98,8 @@ class UpStream_Metaboxes_Projects {
             'type'              => 'title',
             'after'             => 'upstream_output_overview_counts',
         ) );
+        array_push($columnsList, $grid2);
+
         $grid3 = $metabox->add_field( array(
             'name'              => '<span>' . upstream_count_total( 'bugs', upstream_post_id() ) . '</span> ' . upstream_bug_label_plural(),
             'desc'              => '',
@@ -101,10 +107,11 @@ class UpStream_Metaboxes_Projects {
             'type'              => 'title',
             'after'             => 'upstream_output_overview_counts',
         ) );
+        array_push($columnsList, $grid3);
 
         //Create now a Grid of group fields
         $row = $cmb2Grid->addRow();
-        $row->addColumns(array($grid1, $grid2, $grid3));
+        $row->addColumns($columnsList);
 
 
     }
@@ -118,6 +125,12 @@ class UpStream_Metaboxes_Projects {
      * @since  0.1.0
      */
     public function milestones() {
+        $areMilestonesDisabled = upstream_are_milestones_disabled();
+        $userHasAdminPermissions = upstream_admin_permissions('publish_project_milestones');
+
+        if ($areMilestonesDisabled && !$userHasAdminPermissions) {
+            return;
+        }
 
         $label          = upstream_milestone_label();
         $label_plural   = upstream_milestone_label_plural();
@@ -125,7 +138,7 @@ class UpStream_Metaboxes_Projects {
         $metabox = new_cmb2_box( array(
             'id'            => $this->prefix . 'milestones',
             'title'         => '<span class="dashicons dashicons-flag"></span> ' . esc_html( $label_plural ),
-            'object_types'  => array( $this->type ),
+            'object_types'  => array( $this->type )
         ) );
 
         //Create a default grid
@@ -145,168 +158,173 @@ class UpStream_Metaboxes_Projects {
             ),
         ) );
 
-        $group_field_id = $metabox->add_field( array(
-            'id'                => $this->prefix . 'milestones',
-            'type'              => 'group',
-            'description'       => '',
-            'permissions'       => 'delete_project_milestones', // also set on individual row level
-            'options'           => array(
-                'group_title'   => esc_html( $label ) . " {#}",
-                'add_button'    => sprintf( __( "Add %s", 'upstream' ), esc_html( $label ) ),
-                'remove_button' => sprintf( __( "Delete %s", 'upstream' ), esc_html( $label ) ),
-                'sortable'      => upstream_admin_permissions( 'sort_project_milestones' ),
-            ),
-        ) );
+        if (!$areMilestonesDisabled) {
+            $group_field_id = $metabox->add_field( array(
+                'id'                => $this->prefix . 'milestones',
+                'type'              => 'group',
+                'description'       => '',
+                'permissions'       => 'delete_project_milestones', // also set on individual row level
+                'options'           => array(
+                    'group_title'   => esc_html( $label ) . " {#}",
+                    'add_button'    => sprintf( __( "Add %s", 'upstream' ), esc_html( $label ) ),
+                    'remove_button' => sprintf( __( "Delete %s", 'upstream' ), esc_html( $label ) ),
+                    'sortable'      => upstream_admin_permissions( 'sort_project_milestones' ),
+                )
+            ) );
 
-        $fields = array();
+            $fields = array();
 
-        $fields[0] = array(
-            'id'            => 'id',
-            'type'          => 'text',
-            'before'        => 'upstream_add_field_attributes',
-            'attributes'    => array(
-                'class' => 'hidden',
-            )
-        );
-        $fields[1] = array(
-            'id'            => 'created_by',
-            'type'          => 'text',
-            'attributes'    => array(
-                'class' => 'hidden',
-            )
-        );
-        $fields[2] = array(
-            'id'            => 'created_time',
-            'type'          => 'text',
-            'attributes'    => array(
-                'class' => 'hidden',
-            )
-        );
-
-
-        // start row
-        $fields[10] = array(
-            'name'              => esc_html( $label ),
-            'id'                => 'milestone',
-            'type'              => 'select',
-            //'show_option_none' => true, // ** IMPORTANT - enforce a value in this field.
-            // An row with no value here is considered to be a deleted row.
-            'permissions'       => 'milestone_milestone_field',
-            'before'            => 'upstream_add_field_attributes',
-            'options_cb'        => 'upstream_admin_get_options_milestones',
-            'attributes'        => array(
-                'class' => 'milestone',
-            )
-        );
-
-        $fields[11] = array(
-            'name'              => __( "Assigned To", 'upstream' ),
-            'id'                => 'assigned_to',
-            'type'              => 'select',
-            'permissions'       => 'milestone_assigned_to_field',
-            'before'            => 'upstream_add_field_attributes',
-            'show_option_none'  => true,
-            'options_cb'        => 'upstream_admin_get_all_project_users',
-        );
+            $fields[0] = array(
+                'id'            => 'id',
+                'type'          => 'text',
+                'before'        => 'upstream_add_field_attributes',
+                'attributes'    => array(
+                    'class' => 'hidden',
+                )
+            );
+            $fields[1] = array(
+                'id'            => 'created_by',
+                'type'          => 'text',
+                'attributes'    => array(
+                    'class' => 'hidden',
+                )
+            );
+            $fields[2] = array(
+                'id'            => 'created_time',
+                'type'          => 'text',
+                'attributes'    => array(
+                    'class' => 'hidden',
+                )
+            );
 
 
-        // start row
-        $fields[20] = array(
-            'name'              => __( "Start Date", 'upstream' ),
-            'id'                => 'start_date',
-            'type'              => 'text_date_timestamp',
-            'date_format'       => 'Y-m-d',
-            'permissions'       => 'milestone_start_date_field',
-            'before'            => 'upstream_add_field_attributes',
-            'default'           => time(),
-            'attributes'        => array(
-                //'data-validation'     => 'required',
-            )
-        );
-        $fields[21] = array(
-            'name'              => __( "End Date", 'upstream' ),
-            'id'                => 'end_date',
-            'type'              => 'text_date_timestamp',
-            'date_format'       => 'Y-m-d',
-            'permissions'       => 'milestone_end_date_field',
-            'before'            => 'upstream_add_field_attributes',
-            'default'           => time() + ( 2 * 7 * 24 * 60 * 60 ), // time plus 2 weeks
-            'attributes'        => array(
-                //'data-validation'     => 'required',
-            )
-        );
+            // start row
+            $fields[10] = array(
+                'name'              => esc_html( $label ),
+                'id'                => 'milestone',
+                'type'              => 'select',
+                //'show_option_none' => true, // ** IMPORTANT - enforce a value in this field.
+                // An row with no value here is considered to be a deleted row.
+                'permissions'       => 'milestone_milestone_field',
+                'before'            => 'upstream_add_field_attributes',
+                'options_cb'        => 'upstream_admin_get_options_milestones',
+                'attributes'        => array(
+                    'class' => 'milestone',
+                )
+            );
 
-        // start row
-        $fields[30] = array(
-            'name'              => __( "Notes", 'upstream' ),
-            'id'                => 'notes',
-            'type'              => 'wysiwyg',
-            'permissions'       => 'milestone_notes_field',
-            'before'            => 'upstream_add_field_attributes',
-            'options'           => array(
-                'media_buttons' => false,
-                'textarea_rows' => 5,
-                'teeny'         => true
-            )
-        );
+            $fields[11] = array(
+                'name'              => __( "Assigned To", 'upstream' ),
+                'id'                => 'assigned_to',
+                'type'              => 'select',
+                'permissions'       => 'milestone_assigned_to_field',
+                'before'            => 'upstream_add_field_attributes',
+                'show_option_none'  => true,
+                'options_cb'        => 'upstream_admin_get_all_project_users',
+            );
 
-        // set up the group grid plugin
-        $cmb2GroupGrid = $cmb2Grid->addCmb2GroupGrid( $group_field_id );
 
-        // define nuber of rows
-        $rows = apply_filters( 'upstream_milestone_metabox_rows', 4 );
+            // start row
+            $fields[20] = array(
+                'name'              => __( "Start Date", 'upstream' ),
+                'id'                => 'start_date',
+                'type'              => 'text_date_timestamp',
+                'date_format'       => 'Y-m-d',
+                'permissions'       => 'milestone_start_date_field',
+                'before'            => 'upstream_add_field_attributes',
+                'default'           => time(),
+                'attributes'        => array(
+                    //'data-validation'     => 'required',
+                )
+            );
+            $fields[21] = array(
+                'name'              => __( "End Date", 'upstream' ),
+                'id'                => 'end_date',
+                'type'              => 'text_date_timestamp',
+                'date_format'       => 'Y-m-d',
+                'permissions'       => 'milestone_end_date_field',
+                'before'            => 'upstream_add_field_attributes',
+                'default'           => time() + ( 2 * 7 * 24 * 60 * 60 ), // time plus 2 weeks
+                'attributes'        => array(
+                    //'data-validation'     => 'required',
+                )
+            );
 
-        // filter the fields & sort numerically
-        $fields = apply_filters( 'upstream_milestone_metabox_fields', $fields );
-        ksort( $fields );
+            // start row
+            $fields[30] = array(
+                'name'              => __( "Notes", 'upstream' ),
+                'id'                => 'notes',
+                'type'              => 'wysiwyg',
+                'permissions'       => 'milestone_notes_field',
+                'before'            => 'upstream_add_field_attributes',
+                'options'           => array(
+                    'media_buttons' => false,
+                    'textarea_rows' => 5,
+                    'teeny'         => true
+                )
+            );
 
-        // loop through ordered fields and add them to the group
-        if( $fields ) {
-            foreach ($fields as $key => $value) {
-                $fields[$key] = $metabox->add_group_field( $group_field_id, $value );
+            // set up the group grid plugin
+            $cmb2GroupGrid = $cmb2Grid->addCmb2GroupGrid( $group_field_id );
+
+            // define nuber of rows
+            $rows = apply_filters( 'upstream_milestone_metabox_rows', 4 );
+
+            // filter the fields & sort numerically
+            $fields = apply_filters( 'upstream_milestone_metabox_fields', $fields );
+            ksort( $fields );
+
+            // loop through ordered fields and add them to the group
+            if( $fields ) {
+                foreach ($fields as $key => $value) {
+                    $fields[$key] = $metabox->add_group_field( $group_field_id, $value );
+                }
+            }
+
+            // loop through number of rows
+            for ($i=0; $i < $rows; $i++) {
+
+                // add each row
+                $row[$i] = $cmb2GroupGrid->addRow();
+
+                // this is our hidden row that must remain as is
+                if( $i == 0 ) {
+
+                    $row[0]->addColumns( array( $fields[0], $fields[1], $fields[2] ) );
+
+                } else {
+
+                    // this allows up to 4 columns in each row
+                    $array = array();
+                    if( isset( $fields[$i * 10] ) ) {
+                        $array[] = $fields[$i * 10];
+                    }
+                    if( isset( $fields[$i * 10 + 1] ) ) {
+                        $array[] = $fields[$i * 10 + 1];
+                    }
+                    if( isset( $fields[$i * 10 + 2] ) ) {
+                        $array[] = $fields[$i * 10 + 2];
+                    }
+                    if( isset( $fields[$i * 10 + 3] ) ) {
+                        $array[] = $fields[$i * 10 + 3];
+                    }
+
+                    // add the fields as columns
+                    // probably don't need this to be filterable but will leave it for now
+                    $row[$i]->addColumns(
+                        apply_filters( "upstream_milestone_row_{$i}_columns", $array )
+                    );
+                }
             }
         }
 
-        // loop through number of rows
-        for ($i=0; $i < $rows; $i++) {
-
-            // add each row
-            $row[$i] = $cmb2GroupGrid->addRow();
-
-            // this is our hidden row that must remain as is
-            if( $i == 0 ) {
-
-                $row[0]->addColumns( array( $fields[0], $fields[1], $fields[2] ) );
-
-            } else {
-
-                // this allows up to 4 columns in each row
-                $array = array();
-                if( isset( $fields[$i * 10] ) ) {
-                    $array[] = $fields[$i * 10];
-                }
-                if( isset( $fields[$i * 10 + 1] ) ) {
-                    $array[] = $fields[$i * 10 + 1];
-                }
-                if( isset( $fields[$i * 10 + 2] ) ) {
-                    $array[] = $fields[$i * 10 + 2];
-                }
-                if( isset( $fields[$i * 10 + 3] ) ) {
-                    $array[] = $fields[$i * 10 + 3];
-                }
-
-                // add the fields as columns
-                // probably don't need this to be filterable but will leave it for now
-                $row[$i]->addColumns(
-                    apply_filters( "upstream_milestone_row_{$i}_columns", $array )
-                );
-
-            }
-
+        if ($userHasAdminPermissions) {
+            $metabox->add_field(array(
+                'id'          => $this->prefix .'disable_milestones',
+                'type'        => 'checkbox',
+                'description' => __('Disable Milestones for this project', 'upstream')
+            ));
         }
-
-
-
     }
 
 
