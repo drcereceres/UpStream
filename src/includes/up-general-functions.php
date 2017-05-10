@@ -526,16 +526,23 @@ function upstream_admin_email() {
 
 /**
  * Check if Milestones are disabled for the current open project.
+ * If no ID is passed, this function tries to guess it by checking $_GET/$_POST vars.
  *
  * @since   1.8.0
  *
+ * @param   int     $post_id The project ID to be checked
+ *
  * @return  bool
  */
-function upstream_are_milestones_disabled()
+function upstream_are_milestones_disabled($post_id = 0)
 {
     $areMilestonesDisabled = false;
+    $post_id = (int)$post_id;
 
-    $post_id = (int) upstream_post_id();
+    if ($post_id <= 0) {
+        $post_id = (int)upstream_post_id();
+    }
+
     if ($post_id > 0) {
         $theMeta = get_post_meta($post_id, '_upstream_project_disable_milestones', false);
         $areMilestonesDisabled = !empty($theMeta) && $theMeta[0] === 'on';

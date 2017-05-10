@@ -492,20 +492,22 @@ class UpStream_Metaboxes_Projects {
             )
         );
 
-        $fields[41] = array(
-            'name'              => '<span class="dashicons dashicons-flag"></span> ' . esc_html( upstream_milestone_label() ),
-            'id'                => 'milestone',
-            'desc'              =>
-                __( 'Selecting a milestone will count this task\'s progress toward that milestone as well as overall project progress.', 'upstream' ),
-            'type'              => 'select',
-            'permissions'       => 'task_milestone_field',
-            'before'            => 'upstream_add_field_attributes',
-            'show_option_none'  => true,
-            'options_cb'        => 'upstream_admin_get_project_milestones',
-            'attributes'        => array(
-                'class' => 'task-milestone',
-            )
-        );
+        if (!upstream_are_milestones_disabled()) {
+            $fields[41] = array(
+                'name'              => '<span class="dashicons dashicons-flag"></span> ' . esc_html( upstream_milestone_label() ),
+                'id'                => 'milestone',
+                'desc'              =>
+                    __( 'Selecting a milestone will count this task\'s progress toward that milestone as well as overall project progress.', 'upstream' ),
+                'type'              => 'select',
+                'permissions'       => 'task_milestone_field',
+                'before'            => 'upstream_add_field_attributes',
+                'show_option_none'  => true,
+                'options_cb'        => 'upstream_admin_get_project_milestones',
+                'attributes'        => array(
+                    'class' => 'task-milestone',
+                )
+            );
+        }
 
         // set up the group grid plugin
         $cmb2GroupGrid = $cmb2Grid->addCmb2GroupGrid( $group_field_id );

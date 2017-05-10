@@ -113,7 +113,7 @@ function upstream_task_table_settings() {
      * heading_class | string | A custom class for the column heading
      * row_class | string | A custom class for the row
      */
-    $settings = apply_filters( 'upstream_task_table_settings', array(
+    $tableSettings = array(
         'id' => array(
             'display'       => false,
             'type'          => 'text',
@@ -190,11 +190,16 @@ function upstream_task_table_settings() {
             'heading'       => __( 'Notes', 'upstream' ),
             'heading_class' => 'none',
             'row_class'     => '',
-        ),
-    ));
+        )
+    );
+
+    if (upstream_are_milestones_disabled()) {
+        unset($tableSettings['milestone']);
+    }
+
+    $settings = apply_filters('upstream_task_table_settings', $tableSettings);
 
     return $settings;
-
 }
 
 /*
