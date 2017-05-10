@@ -50,7 +50,15 @@
 
                     <ul class="nav side-menu">
                         <?php do_action( 'upstream_sidebar_before_single_menu' ); ?>
-                        <li><a href="#milestones"><i class="fa fa-flag"></i> <?php echo upstream_milestone_label_plural(); ?></a></li>
+
+                        <?php if (!upstream_are_milestones_disabled()): ?>
+                        <li>
+                            <a href="#milestones">
+                                <i class="fa fa-flag"></i> <?php echo upstream_milestone_label_plural(); ?>
+                            </a>
+                        </li>
+                        <?php endif; ?>
+
                         <li><a href="#tasks"><i class="fa fa-wrench"></i> <?php echo upstream_task_label_plural(); ?></a></li>
                         <?php if( ! upstream_disable_bugs() ) { ?>
                         <li><a href="#bugs"><i class="fa fa-bug"></i> <?php echo upstream_bug_label_plural(); ?></a></li>
