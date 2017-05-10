@@ -523,3 +523,23 @@ function upstream_admin_email() {
     $option = get_option( 'upstream_general' );
     return isset( $option['admin_email'] ) ? $option['admin_email'] : '';
 }
+
+/**
+ * Check if Milestones are disabled for the current open project.
+ *
+ * @since   1.8.0
+ *
+ * @return  bool
+ */
+function upstream_are_milestones_disabled()
+{
+    $areMilestonesDisabled = false;
+
+    $post_id = (int) upstream_post_id();
+    if ($post_id > 0) {
+        $theMeta = get_post_meta($post_id, '_upstream_project_disable_milestones', false);
+        $areMilestonesDisabled = !empty($theMeta) && $theMeta[0] === 'on';
+    }
+
+    return $areMilestonesDisabled;
+ }
