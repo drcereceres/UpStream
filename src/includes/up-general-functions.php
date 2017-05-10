@@ -550,3 +550,30 @@ function upstream_are_milestones_disabled($post_id = 0)
 
     return $areMilestonesDisabled;
  }
+
+/**
+ * Check if Tasks are disabled for the current open project.
+ * If no ID is passed, this function tries to guess it by checking $_GET/$_POST vars.
+ *
+ * @since   1.8.0
+ *
+ * @param   int     $post_id The project ID to be checked
+ *
+ * @return  bool
+ */
+function upstream_are_tasks_disabled($post_id = 0)
+{
+    $areTasksDisabled = false;
+    $post_id = (int)$post_id;
+
+    if ($post_id <= 0) {
+        $post_id = (int)upstream_post_id();
+    }
+
+    if ($post_id > 0) {
+        $theMeta = get_post_meta($post_id, '_upstream_project_disable_tasks', false);
+        $areTasksDisabled = !empty($theMeta) && $theMeta[0] === 'on';
+    }
+
+    return $areTasksDisabled;
+ }
