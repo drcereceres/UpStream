@@ -59,7 +59,14 @@
                         </li>
                         <?php endif; ?>
 
-                        <li><a href="#tasks"><i class="fa fa-wrench"></i> <?php echo upstream_task_label_plural(); ?></a></li>
+                        <?php if (!upstream_are_tasks_disabled()): ?>
+                        <li>
+                            <a href="#tasks">
+                                <i class="fa fa-wrench"></i> <?php echo upstream_task_label_plural(); ?>
+                            </a>
+                        </li>
+                        <?php endif; ?>
+
                         <?php if( ! upstream_disable_bugs() ) { ?>
                         <li><a href="#bugs"><i class="fa fa-bug"></i> <?php echo upstream_bug_label_plural(); ?></a></li>
                         <?php do_action( 'upstream_sidebar_after_single_menu' ); ?>
@@ -68,11 +75,15 @@
                         <li>
                             <hr style="border-top-color: rgba(0, 0, 0, 0.2);" />
                         </li>
+
+                        <?php if (!upstream_are_tasks_disabled()): ?>
                         <li>
                             <a href="#my-tasks">
                                 <i class="fa fa-wrench"></i> My <?php echo upstream_task_label_plural(); ?>
                             </a>
                         </li>
+                        <?php endif; ?>
+
                         <li>
                             <a href="#my-bugs">
                                 <i class="fa fa-bug"></i> My <?php echo upstream_bug_label_plural(); ?>

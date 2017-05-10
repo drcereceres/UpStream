@@ -339,7 +339,11 @@ class Upstream_Task_List extends WP_List_Table {
         $tasks = array();
         while ( $the_query->have_posts() ) : $the_query->the_post();
 
-            $post_id    = get_the_ID();
+            $post_id = get_the_ID();
+            if (upstream_are_tasks_disabled($post_id)) {
+                continue;
+            }
+
             $meta       = get_post_meta( $post_id, '_upstream_project_tasks', true );
             $owner      = get_post_meta( $post_id, '_upstream_project_owner', true );
 

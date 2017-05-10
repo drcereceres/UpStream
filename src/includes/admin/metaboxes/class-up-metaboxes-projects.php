@@ -91,14 +91,16 @@ class UpStream_Metaboxes_Projects {
             )));
         }
 
-        $grid2 = $metabox->add_field( array(
-            'name'              => '<span>' . upstream_count_total( 'tasks', upstream_post_id() ) . '</span> ' . upstream_task_label_plural(),
-            'desc'              => '',
-            'id'                => $this->prefix . 'tasks',
-            'type'              => 'title',
-            'after'             => 'upstream_output_overview_counts',
-        ) );
-        array_push($columnsList, $grid2);
+        if (!upstream_are_tasks_disabled()) {
+            $grid2 = $metabox->add_field( array(
+                'name'              => '<span>' . upstream_count_total( 'tasks', upstream_post_id() ) . '</span> ' . upstream_task_label_plural(),
+                'desc'              => '',
+                'id'                => $this->prefix . 'tasks',
+                'type'              => 'title',
+                'after'             => 'upstream_output_overview_counts',
+            ) );
+            array_push($columnsList, $grid2);
+        }
 
         $grid3 = $metabox->add_field( array(
             'name'              => '<span>' . upstream_count_total( 'bugs', upstream_post_id() ) . '</span> ' . upstream_bug_label_plural(),
@@ -336,6 +338,12 @@ class UpStream_Metaboxes_Projects {
      * @since  0.1.0
      */
     public function tasks() {
+        $areTasksDisabled = upstream_are_tasks_disabled();
+        $userHasAdminPermissions = upstream_admin_permissions('publish_project_tasks');
+
+        if ($areTasksDisabled && !$userHasAdminPermissions) {
+            return;
+        }
 
         $label          = upstream_task_label();
         $label_plural   = upstream_task_label_plural();
@@ -377,194 +385,200 @@ class UpStream_Metaboxes_Projects {
             ),
         ) );
 
-        $fields = array();
+        if (!$areTasksDisabled) {
+            $fields = array();
 
-        $fields[0] = array(
-            'id'                => 'id',
-            'type'              => 'text',
-            'before'            => 'upstream_add_field_attributes',
-            'permissions'       => '',
-            'attributes'        => array(
-                'class' => 'hidden',
-            )
-        );
-        $fields[1] = array(
-            'id'                => 'created_by',
-            'type'              => 'text',
-            'attributes'        => array(
-                'class' => 'hidden',
-            )
-        );
-        $fields[2] = array(
-            'id'                => 'created_time',
-            'type'              => 'text',
-            'attributes'        => array(
-                'class' => 'hidden',
-            )
-        );
-
-        // start row
-        $fields[10] = array(
-            'name'              => __( 'Title', 'upstream' ),
-            'id'                => 'title',
-            'type'              => 'text',
-            'permissions'       => 'task_title_field',
-            'before'            => 'upstream_add_field_attributes',
-            'attributes'        => array(
-                'class'             => 'task-title',
-                //'data-validation'     => 'required',
-            )
-        );
-
-        $fields[11] = array(
-            'name'              => __( "Assigned To", 'upstream' ),
-            'id'                => 'assigned_to',
-            'type'              => 'select',
-            'permissions'       => 'task_assigned_to_field',
-            'before'            => 'upstream_add_field_attributes',
-            'show_option_none'  => true,
-            'options_cb'        => 'upstream_admin_get_all_project_users',
-        );
-
-        // start row
-        $fields[20] = array(
-            'name'              => __( "Status", 'upstream' ),
-            'id'                => 'status',
-            'type'              => 'select',
-            'permissions'       => 'task_status_field',
-            'before'            => 'upstream_add_field_attributes',
-            'show_option_none' => true,  // ** IMPORTANT - do not enforce a value in this field.
-            // An row with no value here is considered to be a deleted row.
-            'options_cb'        => 'upstream_admin_get_task_statuses',
-            'attributes'        => array(
-                'class' => 'task-status',
-            )
-        );
-
-        $fields[21] = array(
-            'name'              => __( "Progress", 'upstream' ),
-            'id'                => 'progress',
-            'type'              => 'select',
-            'permissions'       => 'task_progress_field',
-            'before'            => 'upstream_add_field_attributes',
-            'options_cb'        => 'upstream_get_percentages_for_dropdown',
-            'attributes'        => array(
-                'class' => 'task-progress',
-            )
-        );
-
-        // start row
-        $fields[30] = array(
-            'name'              => __( "Start Date", 'upstream' ),
-            'id'                => 'start_date',
-            'type'              => 'text_date_timestamp',
-            'date_format'       => 'Y-m-d',
-            'permissions'       => 'task_start_date_field',
-            'before'            => 'upstream_add_field_attributes',
-            'default'           => time(),
-            'attributes'        => array(
-                //'data-validation'     => 'required',
-            ),
-        );
-        $fields[31] = array(
-            'name'              => __( "End Date", 'upstream' ),
-            'id'                => 'end_date',
-            'type'              => 'text_date_timestamp',
-            'date_format'       => 'Y-m-d',
-            'permissions'       => 'task_end_date_field',
-            'before'            => 'upstream_add_field_attributes',
-            'default'           => time() + ( 2 * 7 * 24 * 60 * 60 ), // time plus 2 weeks
-            'attributes'        => array(
-                //'data-validation'     => 'required',
-            ),
-        );
-
-        $fields[40] = array(
-            'name'              => __( "Notes", 'upstream' ),
-            'id'                => 'notes',
-            'type'              => 'wysiwyg',
-            'permissions'       => 'task_notes_field',
-            'before'            => 'upstream_add_field_attributes',
-            'options'           => array(
-                'media_buttons' => false,
-                'textarea_rows' => 5,
-                'teeny'         => true
-            )
-        );
-
-        if (!upstream_are_milestones_disabled()) {
-            $fields[41] = array(
-                'name'              => '<span class="dashicons dashicons-flag"></span> ' . esc_html( upstream_milestone_label() ),
-                'id'                => 'milestone',
-                'desc'              =>
-                    __( 'Selecting a milestone will count this task\'s progress toward that milestone as well as overall project progress.', 'upstream' ),
-                'type'              => 'select',
-                'permissions'       => 'task_milestone_field',
+            $fields[0] = array(
+                'id'                => 'id',
+                'type'              => 'text',
                 'before'            => 'upstream_add_field_attributes',
-                'show_option_none'  => true,
-                'options_cb'        => 'upstream_admin_get_project_milestones',
+                'permissions'       => '',
                 'attributes'        => array(
-                    'class' => 'task-milestone',
+                    'class' => 'hidden',
                 )
             );
-        }
+            $fields[1] = array(
+                'id'                => 'created_by',
+                'type'              => 'text',
+                'attributes'        => array(
+                    'class' => 'hidden',
+                )
+            );
+            $fields[2] = array(
+                'id'                => 'created_time',
+                'type'              => 'text',
+                'attributes'        => array(
+                    'class' => 'hidden',
+                )
+            );
 
-        // set up the group grid plugin
-        $cmb2GroupGrid = $cmb2Grid->addCmb2GroupGrid( $group_field_id );
+            // start row
+            $fields[10] = array(
+                'name'              => __( 'Title', 'upstream' ),
+                'id'                => 'title',
+                'type'              => 'text',
+                'permissions'       => 'task_title_field',
+                'before'            => 'upstream_add_field_attributes',
+                'attributes'        => array(
+                    'class'             => 'task-title',
+                    //'data-validation'     => 'required',
+                )
+            );
 
-        // define nuber of rows
-        $rows = apply_filters( 'upstream_task_metabox_rows', 5 );
+            $fields[11] = array(
+                'name'              => __( "Assigned To", 'upstream' ),
+                'id'                => 'assigned_to',
+                'type'              => 'select',
+                'permissions'       => 'task_assigned_to_field',
+                'before'            => 'upstream_add_field_attributes',
+                'show_option_none'  => true,
+                'options_cb'        => 'upstream_admin_get_all_project_users',
+            );
 
-        // filter the fields & sort numerically
-        $fields = apply_filters( 'upstream_task_metabox_fields', $fields );
-        ksort( $fields );
+            // start row
+            $fields[20] = array(
+                'name'              => __( "Status", 'upstream' ),
+                'id'                => 'status',
+                'type'              => 'select',
+                'permissions'       => 'task_status_field',
+                'before'            => 'upstream_add_field_attributes',
+                'show_option_none' => true,  // ** IMPORTANT - do not enforce a value in this field.
+                // An row with no value here is considered to be a deleted row.
+                'options_cb'        => 'upstream_admin_get_task_statuses',
+                'attributes'        => array(
+                    'class' => 'task-status',
+                )
+            );
 
-        // loop through ordered fields and add them to the group
-        if( $fields ) {
-            foreach ($fields as $key => $value) {
-                $fields[$key] = $metabox->add_group_field( $group_field_id, $value );
-            }
-        }
+            $fields[21] = array(
+                'name'              => __( "Progress", 'upstream' ),
+                'id'                => 'progress',
+                'type'              => 'select',
+                'permissions'       => 'task_progress_field',
+                'before'            => 'upstream_add_field_attributes',
+                'options_cb'        => 'upstream_get_percentages_for_dropdown',
+                'attributes'        => array(
+                    'class' => 'task-progress',
+                )
+            );
 
-        // loop through number of rows
-        for ($i=0; $i < $rows; $i++) {
+            // start row
+            $fields[30] = array(
+                'name'              => __( "Start Date", 'upstream' ),
+                'id'                => 'start_date',
+                'type'              => 'text_date_timestamp',
+                'date_format'       => 'Y-m-d',
+                'permissions'       => 'task_start_date_field',
+                'before'            => 'upstream_add_field_attributes',
+                'default'           => time(),
+                'attributes'        => array(
+                    //'data-validation'     => 'required',
+                ),
+            );
+            $fields[31] = array(
+                'name'              => __( "End Date", 'upstream' ),
+                'id'                => 'end_date',
+                'type'              => 'text_date_timestamp',
+                'date_format'       => 'Y-m-d',
+                'permissions'       => 'task_end_date_field',
+                'before'            => 'upstream_add_field_attributes',
+                'default'           => time() + ( 2 * 7 * 24 * 60 * 60 ), // time plus 2 weeks
+                'attributes'        => array(
+                    //'data-validation'     => 'required',
+                ),
+            );
 
-            // add each row
-            $row[$i] = $cmb2GroupGrid->addRow();
+            $fields[40] = array(
+                'name'              => __( "Notes", 'upstream' ),
+                'id'                => 'notes',
+                'type'              => 'wysiwyg',
+                'permissions'       => 'task_notes_field',
+                'before'            => 'upstream_add_field_attributes',
+                'options'           => array(
+                    'media_buttons' => false,
+                    'textarea_rows' => 5,
+                    'teeny'         => true
+                )
+            );
 
-            // this is our hidden row that must remain as is
-            if( $i == 0 ) {
-
-                $row[0]->addColumns( array( $fields[0], $fields[1], $fields[2] ) );
-
-            } else {
-
-                // this allows up to 4 columns in each row
-                $array = array();
-                if( isset( $fields[$i * 10] ) ) {
-                    $array[] = $fields[$i * 10];
-                }
-                if( isset( $fields[$i * 10 + 1] ) ) {
-                    $array[] = $fields[$i * 10 + 1];
-                }
-                if( isset( $fields[$i * 10 + 2] ) ) {
-                    $array[] = $fields[$i * 10 + 2];
-                }
-                if( isset( $fields[$i * 10 + 3] ) ) {
-                    $array[] = $fields[$i * 10 + 3];
-                }
-
-                // add the fields as columns
-                $row[$i]->addColumns(
-                    apply_filters( "upstream_task_row_{$i}_columns", $array )
+            if (!upstream_are_milestones_disabled()) {
+                $fields[41] = array(
+                    'name'              => '<span class="dashicons dashicons-flag"></span> ' . esc_html( upstream_milestone_label() ),
+                    'id'                => 'milestone',
+                    'desc'              =>
+                        __( 'Selecting a milestone will count this task\'s progress toward that milestone as well as overall project progress.', 'upstream' ),
+                    'type'              => 'select',
+                    'permissions'       => 'task_milestone_field',
+                    'before'            => 'upstream_add_field_attributes',
+                    'show_option_none'  => true,
+                    'options_cb'        => 'upstream_admin_get_project_milestones',
+                    'attributes'        => array(
+                        'class' => 'task-milestone',
+                    )
                 );
-
             }
 
+            // set up the group grid plugin
+            $cmb2GroupGrid = $cmb2Grid->addCmb2GroupGrid( $group_field_id );
+
+            // define nuber of rows
+            $rows = apply_filters( 'upstream_task_metabox_rows', 5 );
+
+            // filter the fields & sort numerically
+            $fields = apply_filters( 'upstream_task_metabox_fields', $fields );
+            ksort( $fields );
+
+            // loop through ordered fields and add them to the group
+            if( $fields ) {
+                foreach ($fields as $key => $value) {
+                    $fields[$key] = $metabox->add_group_field( $group_field_id, $value );
+                }
+            }
+
+            // loop through number of rows
+            for ($i=0; $i < $rows; $i++) {
+
+                // add each row
+                $row[$i] = $cmb2GroupGrid->addRow();
+
+                // this is our hidden row that must remain as is
+                if( $i == 0 ) {
+
+                    $row[0]->addColumns( array( $fields[0], $fields[1], $fields[2] ) );
+
+                } else {
+
+                    // this allows up to 4 columns in each row
+                    $array = array();
+                    if( isset( $fields[$i * 10] ) ) {
+                        $array[] = $fields[$i * 10];
+                    }
+                    if( isset( $fields[$i * 10 + 1] ) ) {
+                        $array[] = $fields[$i * 10 + 1];
+                    }
+                    if( isset( $fields[$i * 10 + 2] ) ) {
+                        $array[] = $fields[$i * 10 + 2];
+                    }
+                    if( isset( $fields[$i * 10 + 3] ) ) {
+                        $array[] = $fields[$i * 10 + 3];
+                    }
+
+                    // add the fields as columns
+                    $row[$i]->addColumns(
+                        apply_filters( "upstream_task_row_{$i}_columns", $array )
+                    );
+                }
+            }
         }
 
+        if ($userHasAdminPermissions) {
+            $metabox->add_field(array(
+                'id'          => $this->prefix .'disable_tasks',
+                'type'        => 'checkbox',
+                'description' => __('Disable Tasks for this project', 'upstream')
+            ));
+        }
     }
-
 
 /* ======================================================================================
                                         BUGS

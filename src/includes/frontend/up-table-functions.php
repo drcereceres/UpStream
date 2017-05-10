@@ -413,11 +413,11 @@ function upstream_output_table_rows( $id, $table, $filterRowsetByCurrentUser = f
 
     switch ( $table ) {
         case 'milestones':
-            $data       = upstream_are_milestones_disabled() ? array() : upstream_project_milestones( $id );
+            $data       = upstream_are_milestones_disabled($id) ? array() : upstream_project_milestones( $id );
             $settings   = upstream_milestone_table_settings();
             break;
         case 'tasks':
-            $data       = upstream_project_tasks( $id );
+            $data       = upstream_are_tasks_disabled($id) ? array() : upstream_project_tasks( $id );
             $settings   = upstream_task_table_settings();
             $status_c   = upstream_project_task_statuses_colors();
             break;
