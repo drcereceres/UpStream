@@ -6,7 +6,7 @@ $projectId = get_the_ID();
 $itemAlias = 'bugs';
 ?>
 
-<?php if(!upstream_disable_bugs() && !upstream_are_bugs_disabled()): ?>
+<?php if (!upstream_disable_bugs() && !upstream_are_bugs_disabled()): ?>
 <div class="col-md-12 col-sm-12 col-xs-12">
     <div class="x_panel">
         <div class="x_title">
