@@ -49,7 +49,7 @@ $postID = (int)get_the_ID();
     </div>
     <?php endif; ?>
 
-    <?php if( ! upstream_disable_bugs() ) { ?>
+    <?php if( !upstream_disable_bugs() && !upstream_are_bugs_disabled()) { ?>
     <div class="col-lg-4 col-md-4 col-xs-12">
         <div class="tile-stats">
             <div class="icon"><i class="fa fa-bug"></i>

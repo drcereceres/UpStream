@@ -327,13 +327,17 @@ class Upstream_Bug_List extends WP_List_Table {
         $bugs = array();
         while ( $the_query->have_posts() ) : $the_query->the_post();
 
-            $post_id    = get_the_ID();
-            $meta       = get_post_meta( $post_id, '_upstream_project_bugs', true );
-            $owner      = get_post_meta( $post_id, '_upstream_project_owner', true );
+            $post_id = get_the_ID();
+
+            if (upstream_are_bugs_disabled($post_id)) {
+                continue;
+            }
+
+            $meta = get_post_meta( $post_id, '_upstream_project_bugs', true );
+            $owner = get_post_meta( $post_id, '_upstream_project_owner', true );
 
             if( $meta ) :
                 foreach ( $meta as $meta_val => $bug) {
-
                     // set up the data for each column
                     $bug['title']          = isset( $bug['title'] ) ? $bug['title'] : __( '(no title)', 'upstream' );
                     $bug['project']        = get_the_title( $post_id );
