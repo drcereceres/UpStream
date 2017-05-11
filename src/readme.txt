@@ -13,9 +13,7 @@ WordPress Project Management by UpStream that is powerful, extensible & easy to 
 
 Project management with WordPress has never been easier. UpStream is a free project management plugin that allows you to easily manage any type of project, right from within your WordPress website. Your clients can track the progress of their project via the frontend project view.
 
-View our [Premium Extensions](https://upstreamplugin.com/extensions/) here
-
-View the [Demo](https://demo.upstreamplugin.com/) here
+View our [Premium Extensions](https://upstreamplugin.com/extensions/) here.
 
 = Project Features =
 
