@@ -604,3 +604,30 @@ function upstream_are_bugs_disabled($post_id = 0)
 
     return $areBugsDisabled;
 }
+
+/**
+ * Check if Files are disabled for the current open project.
+ * If no ID is passed, this function tries to guess it by checking $_GET/$_POST vars.
+ *
+ * @since   1.8.0
+ *
+ * @param   int     $post_id The project ID to be checked
+ *
+ * @return  bool
+ */
+function upstream_are_files_disabled($post_id = 0)
+{
+    $areBugsDisabled = false;
+    $post_id = (int)$post_id;
+
+    if ($post_id <= 0) {
+        $post_id = (int)upstream_post_id();
+    }
+
+    if ($post_id > 0) {
+        $theMeta = get_post_meta($post_id, '_upstream_project_disable_files', false);
+        $areBugsDisabled = !empty($theMeta) && $theMeta[0] === 'on';
+    }
+
+    return $areBugsDisabled;
+}
