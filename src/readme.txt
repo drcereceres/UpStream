@@ -45,8 +45,9 @@ View our [Premium Extensions](https://upstreamplugin.com/extensions/) here.
 = Premium Extensions =
 Add even more awesome features through the use of our extensions.
 
-- [Frontend Edit](https://upstreamplugin.com/extensions/frontend-edit/)
-- [Project Timeline](https://upstreamplugin.com/extensions/project-timeline/)
+- [Frontend Edit](https://upstreamplugin.com/extensions/frontend-edit)
+- [Project Timeline](https://upstreamplugin.com/extensions/project-timeline)
+- [Customizer](https://upstreamplugin.com/extensions/customizer)
 
 = Milestones & Tasks =
 
