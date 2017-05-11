@@ -77,11 +77,13 @@
 
                         <?php do_action( 'upstream_sidebar_after_single_menu' );  ?>
 
+                        <?php if (!upstream_are_files_disabled()): ?>
                         <li>
                             <a href="#files">
                                 <i class="fa fa-file"></i> <?php echo upstream_file_label_plural(); ?>
                             </a>
                         </li>
+                        <?php endif; ?>
 
                         <?php if (!upstream_are_tasks_disabled() || (!upstream_disable_bugs() && !upstream_are_bugs_disabled())): ?>
                         <li>

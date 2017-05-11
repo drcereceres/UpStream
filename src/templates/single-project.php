@@ -88,11 +88,13 @@ while ( have_posts() ) : the_post(); ?>
             </div>
             <?php endif; ?>
 
+            <?php if (!upstream_are_files_disabled()): ?>
             <div class="row">
                 <?php do_action( 'upstream_single_project_before_files' ); ?>
 
                 <?php upstream_get_template_part( 'single-project/files.php' ); ?>
             </div>
+            <?php endif; ?>
 
             <hr />
 

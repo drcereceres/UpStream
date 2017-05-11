@@ -947,6 +947,12 @@ class UpStream_Metaboxes_Projects {
      * @since  0.1.0
      */
     public function files() {
+        $areFilesDisabled = upstream_are_files_disabled();
+        $userHasAdminPermissions = upstream_admin_permissions('disable_project_files');
+
+        if ($areFilesDisabled && !$userHasAdminPermissions) {
+            return;
+        }
 
         $label          = upstream_file_label();
         $label_plural   = upstream_file_label_plural();
@@ -989,119 +995,124 @@ class UpStream_Metaboxes_Projects {
             ),
         ) );
 
-        $fields = array();
+        if (!$areFilesDisabled) {
+            $fields = array();
 
-        // start row
-        $fields[0] = array(
-            'id'            => 'id',
-            'type'          => 'text',
-            'before'        => 'upstream_add_field_attributes',
-            'attributes'    => array( 'class' => 'hidden' )
-        );
-        $fields[1] = array(
-            'id'            => 'created_by',
-            'type'          => 'text',
-            'attributes'    => array( 'class' => 'hidden' )
-        );
-        $fields[2] = array(
-            'id'            => 'created_time',
-            'type'          => 'text',
-            'attributes'    => array( 'class' => 'hidden' )
-        );
+            // start row
+            $fields[0] = array(
+                'id'            => 'id',
+                'type'          => 'text',
+                'before'        => 'upstream_add_field_attributes',
+                'attributes'    => array( 'class' => 'hidden' )
+            );
+            $fields[1] = array(
+                'id'            => 'created_by',
+                'type'          => 'text',
+                'attributes'    => array( 'class' => 'hidden' )
+            );
+            $fields[2] = array(
+                'id'            => 'created_time',
+                'type'          => 'text',
+                'attributes'    => array( 'class' => 'hidden' )
+            );
 
-        // start row
-        $fields[10] = array(
-            'name'              => __( 'Title', 'upstream' ),
-            'id'                => 'title',
-            'type'              => 'text',
-            'permissions'       => 'file_title_field',
-            'before'            => 'upstream_add_field_attributes',
-            'attributes'        => array(
-                'class'             => 'file-title',
-            )
-        );
-        $fields[11] = array(
-            'name'              => esc_html( $label ),
-            'desc'              => '',
-            'id'                => 'file',
-            'type'              => 'file',
-            'permissions'       => 'file_files_field',
-            'before'            => 'upstream_add_field_attributes',
-            'options' => array(
-                'url' => false, // Hide the text input for the url
-            ),
-        );
+            // start row
+            $fields[10] = array(
+                'name'              => __( 'Title', 'upstream' ),
+                'id'                => 'title',
+                'type'              => 'text',
+                'permissions'       => 'file_title_field',
+                'before'            => 'upstream_add_field_attributes',
+                'attributes'        => array(
+                    'class'             => 'file-title',
+                )
+            );
+            $fields[11] = array(
+                'name'              => esc_html( $label ),
+                'desc'              => '',
+                'id'                => 'file',
+                'type'              => 'file',
+                'permissions'       => 'file_files_field',
+                'before'            => 'upstream_add_field_attributes',
+                'options' => array(
+                    'url' => false, // Hide the text input for the url
+                ),
+            );
 
-        // start row
-        $fields[20] = array(
-            'name'              => __( "Description", 'upstream' ),
-            'id'                => 'description',
-            'type'              => 'wysiwyg',
-            'permissions'       => 'file_description_field',
-            'before'            => 'upstream_add_field_attributes',
-            'options'           => array(
-                'media_buttons' => false,
-                'textarea_rows' => 3,
-                'teeny'         => true
-            )
-        );
+            // start row
+            $fields[20] = array(
+                'name'              => __( "Description", 'upstream' ),
+                'id'                => 'description',
+                'type'              => 'wysiwyg',
+                'permissions'       => 'file_description_field',
+                'before'            => 'upstream_add_field_attributes',
+                'options'           => array(
+                    'media_buttons' => false,
+                    'textarea_rows' => 3,
+                    'teeny'         => true
+                )
+            );
 
-        // set up the group grid plugin
-        $cmb2GroupGrid = $cmb2Grid->addCmb2GroupGrid( $group_field_id );
+            // set up the group grid plugin
+            $cmb2GroupGrid = $cmb2Grid->addCmb2GroupGrid( $group_field_id );
 
-        // define nuber of rows
-        $rows = apply_filters( 'upstream_file_metabox_rows', 3 );
+            // define nuber of rows
+            $rows = apply_filters( 'upstream_file_metabox_rows', 3 );
 
-        // filter the fields & sort numerically
-        $fields = apply_filters( 'upstream_file_metabox_fields', $fields );
-        ksort( $fields );
+            // filter the fields & sort numerically
+            $fields = apply_filters( 'upstream_file_metabox_fields', $fields );
+            ksort( $fields );
 
-        // loop through ordered fields and add them to the group
-        if( $fields ) {
-            foreach ($fields as $key => $value) {
-                $fields[$key] = $metabox->add_group_field( $group_field_id, $value );
+            // loop through ordered fields and add them to the group
+            if( $fields ) {
+                foreach ($fields as $key => $value) {
+                    $fields[$key] = $metabox->add_group_field( $group_field_id, $value );
+                }
+            }
+
+            // loop through number of rows
+            for ($i=0; $i < $rows; $i++) {
+
+                // add each row
+                $row[$i] = $cmb2GroupGrid->addRow();
+
+                // this is our hidden row that must remain as is
+                if( $i == 0 ) {
+
+                    $row[0]->addColumns( array( $fields[0], $fields[1], $fields[2] ) );
+
+                } else {
+
+                    // this allows up to 4 columns in each row
+                    $array = array();
+                    if( isset( $fields[$i * 10] ) ) {
+                        $array[] = $fields[$i * 10];
+                    }
+                    if( isset( $fields[$i * 10 + 1] ) ) {
+                        $array[] = $fields[$i * 10 + 1];
+                    }
+                    if( isset( $fields[$i * 10 + 2] ) ) {
+                        $array[] = $fields[$i * 10 + 2];
+                    }
+                    if( isset( $fields[$i * 10 + 3] ) ) {
+                        $array[] = $fields[$i * 10 + 3];
+                    }
+
+                    // add the fields as columns
+                    $row[$i]->addColumns(
+                        apply_filters( "upstream_file_row_{$i}_columns", $array )
+                    );
+                }
             }
         }
 
-        // loop through number of rows
-        for ($i=0; $i < $rows; $i++) {
-
-            // add each row
-            $row[$i] = $cmb2GroupGrid->addRow();
-
-            // this is our hidden row that must remain as is
-            if( $i == 0 ) {
-
-                $row[0]->addColumns( array( $fields[0], $fields[1], $fields[2] ) );
-
-            } else {
-
-                // this allows up to 4 columns in each row
-                $array = array();
-                if( isset( $fields[$i * 10] ) ) {
-                    $array[] = $fields[$i * 10];
-                }
-                if( isset( $fields[$i * 10 + 1] ) ) {
-                    $array[] = $fields[$i * 10 + 1];
-                }
-                if( isset( $fields[$i * 10 + 2] ) ) {
-                    $array[] = $fields[$i * 10 + 2];
-                }
-                if( isset( $fields[$i * 10 + 3] ) ) {
-                    $array[] = $fields[$i * 10 + 3];
-                }
-
-                // add the fields as columns
-                $row[$i]->addColumns(
-                    apply_filters( "upstream_file_row_{$i}_columns", $array )
-                );
-
-            }
-
+        if ($userHasAdminPermissions) {
+            $metabox->add_field(array(
+                'id'          => $this->prefix .'disable_files',
+                'type'        => 'checkbox',
+                'description' => __('Disable Files for this project', 'upstream')
+            ));
         }
-
-
-
     }
 
 
