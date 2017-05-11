@@ -30,7 +30,7 @@ class Upstream_Task_List extends WP_List_Table {
     }
 
     function get_columns() {
-        return $columns = apply_filters( 'upstream_admin_task_page_columns', array(
+        $columnsList = array(
             'title'         => $this->task_label,
             'progress'      => __( 'Progress', 'upstream' ),
             'project'       => upstream_project_label(),
@@ -38,7 +38,9 @@ class Upstream_Task_List extends WP_List_Table {
             'assigned_to'   => __( 'Assigned To', 'upstream' ),
             'end_date'      => __( 'End Date', 'upstream' ),
             'status'        => __( 'Status', 'upstream' ),
-        ) );
+        );
+
+        return $columns = apply_filters('upstream_admin_task_page_columns', $columnsList);
     }
 
     /*
@@ -224,6 +226,8 @@ class Upstream_Task_List extends WP_List_Table {
      * @return mixed
      */
     public function column_default( $item, $column_name ) {
+        $output = "";
+
         switch ( $column_name ) {
 
             case 'title':
@@ -240,11 +244,12 @@ class Upstream_Task_List extends WP_List_Table {
                 return $output;
 
             case 'milestone':
+                if (!upstream_are_milestones_disabled($item['project_id'])) {
+                    $milestone = upstream_project_milestone_by_id( $item['project_id'], $item['milestone'] );
+                    $progress = $milestone['progress'] ? $milestone['progress'] : '0';
 
-                $milestone  = upstream_project_milestone_by_id( $item['project_id'], $item['milestone'] );
-                $progress   = $milestone['progress'] ? $milestone['progress'] : '0';
-
-                $output     = $milestone ? esc_html( $milestone['milestone'] ) . '<br>' . esc_html( $progress ) . '% ' . __( 'Complete', 'upstream' ) : '';
+                    $output = $milestone ? esc_html( $milestone['milestone'] ) . '<br>' . esc_html( $progress ) . '% ' . __( 'Complete', 'upstream' ) : '';
+                }
 
                 return $output;
 
@@ -334,7 +339,11 @@ class Upstream_Task_List extends WP_List_Table {
         $tasks = array();
         while ( $the_query->have_posts() ) : $the_query->the_post();
 
-            $post_id    = get_the_ID();
+            $post_id = get_the_ID();
+            if (upstream_are_tasks_disabled($post_id)) {
+                continue;
+            }
+
             $meta       = get_post_meta( $post_id, '_upstream_project_tasks', true );
             $owner      = get_post_meta( $post_id, '_upstream_project_owner', true );
 

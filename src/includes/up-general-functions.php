@@ -523,3 +523,111 @@ function upstream_admin_email() {
     $option = get_option( 'upstream_general' );
     return isset( $option['admin_email'] ) ? $option['admin_email'] : '';
 }
+
+/**
+ * Check if Milestones are disabled for the current open project.
+ * If no ID is passed, this function tries to guess it by checking $_GET/$_POST vars.
+ *
+ * @since   1.8.0
+ *
+ * @param   int     $post_id The project ID to be checked
+ *
+ * @return  bool
+ */
+function upstream_are_milestones_disabled($post_id = 0)
+{
+    $areMilestonesDisabled = false;
+    $post_id = (int)$post_id;
+
+    if ($post_id <= 0) {
+        $post_id = (int)upstream_post_id();
+    }
+
+    if ($post_id > 0) {
+        $theMeta = get_post_meta($post_id, '_upstream_project_disable_milestones', false);
+        $areMilestonesDisabled = !empty($theMeta) && $theMeta[0] === 'on';
+    }
+
+    return $areMilestonesDisabled;
+}
+
+/**
+ * Check if Tasks are disabled for the current open project.
+ * If no ID is passed, this function tries to guess it by checking $_GET/$_POST vars.
+ *
+ * @since   1.8.0
+ *
+ * @param   int     $post_id The project ID to be checked
+ *
+ * @return  bool
+ */
+function upstream_are_tasks_disabled($post_id = 0)
+{
+    $areTasksDisabled = false;
+    $post_id = (int)$post_id;
+
+    if ($post_id <= 0) {
+        $post_id = (int)upstream_post_id();
+    }
+
+    if ($post_id > 0) {
+        $theMeta = get_post_meta($post_id, '_upstream_project_disable_tasks', false);
+        $areTasksDisabled = !empty($theMeta) && $theMeta[0] === 'on';
+    }
+
+    return $areTasksDisabled;
+}
+
+/**
+ * Check if Bugs are disabled for the current open project.
+ * If no ID is passed, this function tries to guess it by checking $_GET/$_POST vars.
+ *
+ * @since   1.8.0
+ *
+ * @param   int     $post_id The project ID to be checked
+ *
+ * @return  bool
+ */
+function upstream_are_bugs_disabled($post_id = 0)
+{
+    $areBugsDisabled = false;
+    $post_id = (int)$post_id;
+
+    if ($post_id <= 0) {
+        $post_id = (int)upstream_post_id();
+    }
+
+    if ($post_id > 0) {
+        $theMeta = get_post_meta($post_id, '_upstream_project_disable_bugs', false);
+        $areBugsDisabled = !empty($theMeta) && $theMeta[0] === 'on';
+    }
+
+    return $areBugsDisabled;
+}
+
+/**
+ * Check if Files are disabled for the current open project.
+ * If no ID is passed, this function tries to guess it by checking $_GET/$_POST vars.
+ *
+ * @since   1.8.0
+ *
+ * @param   int     $post_id The project ID to be checked
+ *
+ * @return  bool
+ */
+function upstream_are_files_disabled($post_id = 0)
+{
+    $areBugsDisabled = false;
+    $post_id = (int)$post_id;
+
+    if ($post_id <= 0) {
+        $post_id = (int)upstream_post_id();
+    }
+
+    if ($post_id > 0) {
+        $theMeta = get_post_meta($post_id, '_upstream_project_disable_files', false);
+        $areBugsDisabled = !empty($theMeta) && $theMeta[0] === 'on';
+    }
+
+    return $areBugsDisabled;
+}

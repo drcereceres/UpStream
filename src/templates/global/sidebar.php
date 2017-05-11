@@ -50,26 +50,62 @@
 
                     <ul class="nav side-menu">
                         <?php do_action( 'upstream_sidebar_before_single_menu' ); ?>
-                        <li><a href="#milestones"><i class="fa fa-flag"></i> <?php echo upstream_milestone_label_plural(); ?></a></li>
-                        <li><a href="#tasks"><i class="fa fa-wrench"></i> <?php echo upstream_task_label_plural(); ?></a></li>
-                        <?php if( ! upstream_disable_bugs() ) { ?>
-                        <li><a href="#bugs"><i class="fa fa-bug"></i> <?php echo upstream_bug_label_plural(); ?></a></li>
-                        <?php do_action( 'upstream_sidebar_after_single_menu' ); ?>
-                        <?php } ?>
-                        <li><a href="#files"><i class="fa fa-file"></i> <?php echo upstream_file_label_plural(); ?></a></li>
+
+                        <?php if (!upstream_are_milestones_disabled()): ?>
+                        <li>
+                            <a href="#milestones">
+                                <i class="fa fa-flag"></i> <?php echo upstream_milestone_label_plural(); ?>
+                            </a>
+                        </li>
+                        <?php endif; ?>
+
+                        <?php if (!upstream_are_tasks_disabled()): ?>
+                        <li>
+                            <a href="#tasks">
+                                <i class="fa fa-wrench"></i> <?php echo upstream_task_label_plural(); ?>
+                            </a>
+                        </li>
+                        <?php endif; ?>
+
+                        <?php if (!upstream_disable_bugs() && !upstream_are_bugs_disabled()): ?>
+                        <li>
+                            <a href="#bugs">
+                                <i class="fa fa-bug"></i> <?php echo upstream_bug_label_plural(); ?>
+                            </a>
+                        </li>
+                        <?php endif; ?>
+
+                        <?php do_action( 'upstream_sidebar_after_single_menu' );  ?>
+
+                        <?php if (!upstream_are_files_disabled()): ?>
+                        <li>
+                            <a href="#files">
+                                <i class="fa fa-file"></i> <?php echo upstream_file_label_plural(); ?>
+                            </a>
+                        </li>
+                        <?php endif; ?>
+
+                        <?php if (!upstream_are_tasks_disabled() || (!upstream_disable_bugs() && !upstream_are_bugs_disabled())): ?>
                         <li>
                             <hr style="border-top-color: rgba(0, 0, 0, 0.2);" />
                         </li>
+                        <?php endif; ?>
+
+                        <?php if (!upstream_are_tasks_disabled()): ?>
                         <li>
                             <a href="#my-tasks">
                                 <i class="fa fa-wrench"></i> My <?php echo upstream_task_label_plural(); ?>
                             </a>
                         </li>
+                        <?php endif; ?>
+
+                        <?php if (!upstream_disable_bugs() && !upstream_are_bugs_disabled()): ?>
                         <li>
                             <a href="#my-bugs">
                                 <i class="fa fa-bug"></i> My <?php echo upstream_bug_label_plural(); ?>
                             </a>
                         </li>
+                        <?php endif; ?>
                     </ul>
 
                 </div>

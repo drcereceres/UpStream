@@ -105,6 +105,9 @@ class UpStream_Admin_Project_Columns {
         }
 
         if ( $column_name == 'tasks' ) {
+            if (upstream_are_tasks_disabled()) {
+                return;
+            }
 
             $counts = upstream_project_tasks_counts( $post_id );
             $colors = upstream_project_task_statuses_colors();
@@ -120,6 +123,9 @@ class UpStream_Admin_Project_Columns {
         }
 
         if ( $column_name == 'bugs' ) {
+            if (upstream_are_bugs_disabled()) {
+                return;
+            }
 
             $counts = upstream_project_bugs_counts( $post_id );
             $colors = upstream_project_bug_statuses_colors( $post_id );

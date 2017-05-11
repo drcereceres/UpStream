@@ -113,7 +113,7 @@ function upstream_task_table_settings() {
      * heading_class | string | A custom class for the column heading
      * row_class | string | A custom class for the row
      */
-    $settings = apply_filters( 'upstream_task_table_settings', array(
+    $tableSettings = array(
         'id' => array(
             'display'       => false,
             'type'          => 'text',
@@ -190,11 +190,16 @@ function upstream_task_table_settings() {
             'heading'       => __( 'Notes', 'upstream' ),
             'heading_class' => 'none',
             'row_class'     => '',
-        ),
-    ));
+        )
+    );
+
+    if (upstream_are_milestones_disabled()) {
+        unset($tableSettings['milestone']);
+    }
+
+    $settings = apply_filters('upstream_task_table_settings', $tableSettings);
 
     return $settings;
-
 }
 
 /*
@@ -408,11 +413,11 @@ function upstream_output_table_rows( $id, $table, $filterRowsetByCurrentUser = f
 
     switch ( $table ) {
         case 'milestones':
-            $data       = upstream_project_milestones( $id );
+            $data       = upstream_are_milestones_disabled($id) ? array() : upstream_project_milestones( $id );
             $settings   = upstream_milestone_table_settings();
             break;
         case 'tasks':
-            $data       = upstream_project_tasks( $id );
+            $data       = upstream_are_tasks_disabled($id) ? array() : upstream_project_tasks( $id );
             $settings   = upstream_task_table_settings();
             $status_c   = upstream_project_task_statuses_colors();
             break;
