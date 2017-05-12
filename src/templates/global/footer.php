@@ -2,7 +2,7 @@
 if (!defined('ABSPATH')) exit;
 
 $text = '&copy; ' . get_bloginfo('name') . ' ' . date('Y');
-$footer_text = apply_filters('upstream_footer_text', $text); ?>
+$footer_text = apply_filters('upstream_footer_text', $text);
 ?>
 
                 <footer>
