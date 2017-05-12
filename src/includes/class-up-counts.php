@@ -162,7 +162,8 @@ class Upstream_Counts {
             if( $item['assigned_to'] != $this->user['id'] )
                 continue;
             $item_status = isset( $item['status'] ) ? $item['status'] : '';
-            if( isset( $types[$item_status] ) && $types[$item_status] == 'open' )
+
+            if( (isset( $types[$item_status] ) && $types[$item_status] == 'open') || $item_status === "" )
                 $count += 1;
         }
 
