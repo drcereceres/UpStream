@@ -118,6 +118,10 @@ UpStream does not use the existing styling of your theme. The features and the v
 
 == Changelog ==
 
+= 1.8.0 - @todo =
+* FIX       - Fixed bug with menu Tasks and Bugs notification counter
+* NEW       - Milestones, Tasks, Bugs and Files can now be enabled/disabled for individual projects
+
 = 1.7.0 - 2017-05-08 =
 * FIX       - Fixed items count bug in both "Tasks" and "Bugs" pages in /wp-admin
 * FIX       - Fixes bug with "Mine" filter in "Tasks" and  "Bugs" pages in /wp-admin
