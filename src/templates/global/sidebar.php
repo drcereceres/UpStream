@@ -88,6 +88,7 @@ $areFilesDisabledForThisProject = upstream_are_files_disabled();
                         <li>
                             <a href="#tasks">
                                 <i class="fa fa-wrench"></i> <?php echo $labelTaskPlural; ?>
+                                <?php do_action( 'upstream_sidebar_after_tasks_menu' ); ?>
                             </a>
                         </li>
                         <?php endif; ?>
@@ -96,6 +97,7 @@ $areFilesDisabledForThisProject = upstream_are_files_disabled();
                         <li>
                             <a href="#bugs">
                                 <i class="fa fa-bug"></i> <?php echo $labelBugPlural; ?>
+                                <?php do_action( 'upstream_sidebar_after_bugs_menu' ); ?>
                             </a>
                         </li>
                         <?php endif; ?>
