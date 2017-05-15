@@ -1,6 +1,11 @@
-<?php global $doctype; ?>
+<?php
+if (!defined('ABSPATH')) exit;
+
+global $doctype;
+?>
+
 <!DOCTYPE html>
-<html <?php language_attributes( $doctype ); ?>>
+<html <?php language_attributes($doctype); ?>>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <meta charset="utf-8">
@@ -8,7 +13,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="robots" content="noindex, nofollow">
 
-        <title><?php wp_title( '|', true, 'right' ) . bloginfo( 'name' ); ?></title>
+        <title><?php wp_title('|', true, 'right') . bloginfo('name'); ?></title>
 
         <?php wp_head(); ?>
         <?php do_action('upstream_head'); ?>

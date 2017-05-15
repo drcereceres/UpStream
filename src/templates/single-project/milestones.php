@@ -1,10 +1,8 @@
 <?php
+if (!defined('ABSPATH')) exit;
+?>
 
-if ( ! defined( 'ABSPATH' ) ) {
-    exit; // Exit if accessed directly
-} ?>
-
-
+<?php if (!upstream_are_milestones_disabled()): ?>
     <div class="col-md-12 col-sm-12 col-xs-12">
         <div class="x_panel">
             <div class="x_title">
@@ -27,3 +25,4 @@ if ( ! defined( 'ABSPATH' ) ) {
             </div>
         </div>
     </div>
+<?php endif; ?>

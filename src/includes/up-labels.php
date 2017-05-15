@@ -229,22 +229,20 @@ function upstream_updated_messages($messages)
     $postTypeLabelProject = upstream_project_label();
     $postTypeLabelClient = upstream_client_label();
 
-    $languageDomain = 'upstream';
-
     $messages['project'] = array(
-        1 => sprintf(__('%2$s updated. %1$sView %2$s%3$s', $languageDomain), $anchorTagOpening, $postTypeLabelProject, $anchorTagClosing),
-        4 => sprintf(__('%2$s updated. %1$sView %2$s%3$s', $languageDomain), $anchorTagOpening, $postTypeLabelProject, $anchorTagClosing),
-        6 => sprintf(__('%2$s published. %1$sView %2$s%3$s', $languageDomain), $anchorTagOpening, $postTypeLabelProject, $anchorTagClosing),
-        7 => sprintf(__('%2$s saved. %1$sView %2$s%3$s', $languageDomain), $anchorTagOpening, $postTypeLabelProject, $anchorTagClosing),
-        8 => sprintf(__('%2$s submitted. %1$sView %2$s%3$s', $languageDomain), $anchorTagOpening, $postTypeLabelProject, $anchorTagClosing)
+        1 => sprintf(__('%2$s updated. %1$sView %2$s%3$s', 'upstream'), $anchorTagOpening, $postTypeLabelProject, $anchorTagClosing),
+        4 => sprintf(__('%2$s updated. %1$sView %2$s%3$s', 'upstream'), $anchorTagOpening, $postTypeLabelProject, $anchorTagClosing),
+        6 => sprintf(__('%2$s published. %1$sView %2$s%3$s', 'upstream'), $anchorTagOpening, $postTypeLabelProject, $anchorTagClosing),
+        7 => sprintf(__('%2$s saved. %1$sView %2$s%3$s', 'upstream'), $anchorTagOpening, $postTypeLabelProject, $anchorTagClosing),
+        8 => sprintf(__('%2$s submitted. %1$sView %2$s%3$s', 'upstream'), $anchorTagOpening, $postTypeLabelProject, $anchorTagClosing)
     );
 
     $messages['client'] = array(
-        1 => sprintf(__('%1$s updated.', $languageDomain), $postTypeLabelClient),
-        4 => sprintf(__('%1$s updated.', $languageDomain), $postTypeLabelClient),
-        6 => sprintf(__('%1$s published.', $languageDomain), $postTypeLabelClient),
-        7 => sprintf(__('%1$s saved.', $languageDomain), $postTypeLabelClient),
-        8 => sprintf(__('%1$s submitted.', $languageDomain), $postTypeLabelClient)
+        1 => sprintf(__('%1$s updated.', 'upstream'), $postTypeLabelClient),
+        4 => sprintf(__('%1$s updated.', 'upstream'), $postTypeLabelClient),
+        6 => sprintf(__('%1$s published.', 'upstream'), $postTypeLabelClient),
+        7 => sprintf(__('%1$s saved.', 'upstream'), $postTypeLabelClient),
+        8 => sprintf(__('%1$s submitted.', 'upstream'), $postTypeLabelClient)
     );
 
     return $messages;
@@ -262,8 +260,6 @@ add_filter('post_updated_messages', 'upstream_updated_messages');
  */
 function upstream_bulk_updated_messages($bulk_messages, $bulk_counts)
 {
-    $languageDomain = 'upstream';
-
     $itemsUpdatedCount = (int)$bulk_counts['updated'];
     $itemsLockedCount = (int)$bulk_counts['locked'];
     $itemsDeletedCount = (int)$bulk_counts['deleted'];
@@ -277,19 +273,19 @@ function upstream_bulk_updated_messages($bulk_messages, $bulk_counts)
     $postTypeProjectLabelPlural = upstream_project_label_plural();
 
     $bulk_messages['client'] = array(
-        'updated'   => sprintf(_n('%1$s %2$s updated.', '%1$s %3$s updated.', $itemsUpdatedCount, $languageDomain), $itemsUpdatedCount, $postTypeClientLabelSingular, $postTypeClientLabelPlural),
-        'locked'    => sprintf(_n('%1$s %2$s not updated, somebody is editing it.', '%1$s %3$s not updated, somebody is editing them.', $itemsLockedCount, $languageDomain), $itemsLockedCount, $postTypeClientLabelSingular, $postTypeClientLabelPlural),
-        'deleted'   => sprintf(_n('%1$s %2$s permanently deleted.', '%1$s %3$s permanently deleted.', $itemsDeletedCount, $languageDomain), $itemsDeletedCount, $postTypeClientLabelSingular, $postTypeClientLabelPlural),
-        'trashed'   => sprintf(_n('%1$s %2$s moved to the Trash.', '%1$s %3$s moved to the Trash.', $itemsTrashedCount, $languageDomain), $itemsTrashedCount, $postTypeClientLabelSingular, $postTypeClientLabelPlural),
-        'untrashed' => sprintf(_n('%1$s %2$s restored from the Trash.', '%1$s %3$s restored from the Trash.', $itemsUntrashedCount, $languageDomain), $itemsUntrashedCount, $postTypeClientLabelSingular, $postTypeClientLabelPlural)
+        'updated'   => sprintf(_n('%1$s %2$s updated.', '%1$s %3$s updated.', $itemsUpdatedCount, 'upstream'), $itemsUpdatedCount, $postTypeClientLabelSingular, $postTypeClientLabelPlural),
+        'locked'    => sprintf(_n('%1$s %2$s not updated, somebody is editing it.', '%1$s %3$s not updated, somebody is editing them.', $itemsLockedCount, 'upstream'), $itemsLockedCount, $postTypeClientLabelSingular, $postTypeClientLabelPlural),
+        'deleted'   => sprintf(_n('%1$s %2$s permanently deleted.', '%1$s %3$s permanently deleted.', $itemsDeletedCount, 'upstream'), $itemsDeletedCount, $postTypeClientLabelSingular, $postTypeClientLabelPlural),
+        'trashed'   => sprintf(_n('%1$s %2$s moved to the Trash.', '%1$s %3$s moved to the Trash.', $itemsTrashedCount, 'upstream'), $itemsTrashedCount, $postTypeClientLabelSingular, $postTypeClientLabelPlural),
+        'untrashed' => sprintf(_n('%1$s %2$s restored from the Trash.', '%1$s %3$s restored from the Trash.', $itemsUntrashedCount, 'upstream'), $itemsUntrashedCount, $postTypeClientLabelSingular, $postTypeClientLabelPlural)
     );
 
     $bulk_messages['project'] = array(
-        'updated'   => sprintf(_n('%1$s %2$s updated.', '%1$s %3$s updated.', $itemsUpdatedCount, $languageDomain), $itemsUpdatedCount, $postTypeProjectLabelSingular, $postTypeProjectLabelPlural),
-        'locked'    => sprintf(_n('%1$s %2$s not updated, somebody is editing it.', '%1$s %3$s not updated, somebody is editing them.', $itemsLockedCount, $languageDomain), $itemsLockedCount, $postTypeProjectLabelSingular, $postTypeProjectLabelPlural),
-        'deleted'   => sprintf(_n('%1$s %2$s permanently deleted.', '%1$s %3$s permanently deleted.', $itemsDeletedCount, $languageDomain), $itemsDeletedCount, $postTypeProjectLabelSingular, $postTypeProjectLabelPlural),
-        'trashed'   => sprintf(_n('%1$s %2$s moved to the Trash.', '%1$s %3$s moved to the Trash.', $itemsTrashedCount, $languageDomain), $itemsTrashedCount, $postTypeProjectLabelSingular, $postTypeProjectLabelPlural),
-        'untrashed' => sprintf(_n('%1$s %2$s restored from the Trash.', '%1$s %3$s restored from the Trash.', $itemsUntrashedCount, $languageDomain), $itemsUntrashedCount, $postTypeProjectLabelSingular, $postTypeProjectLabelPlural)
+        'updated'   => sprintf(_n('%1$s %2$s updated.', '%1$s %3$s updated.', $itemsUpdatedCount, 'upstream'), $itemsUpdatedCount, $postTypeProjectLabelSingular, $postTypeProjectLabelPlural),
+        'locked'    => sprintf(_n('%1$s %2$s not updated, somebody is editing it.', '%1$s %3$s not updated, somebody is editing them.', $itemsLockedCount, 'upstream'), $itemsLockedCount, $postTypeProjectLabelSingular, $postTypeProjectLabelPlural),
+        'deleted'   => sprintf(_n('%1$s %2$s permanently deleted.', '%1$s %3$s permanently deleted.', $itemsDeletedCount, 'upstream'), $itemsDeletedCount, $postTypeProjectLabelSingular, $postTypeProjectLabelPlural),
+        'trashed'   => sprintf(_n('%1$s %2$s moved to the Trash.', '%1$s %3$s moved to the Trash.', $itemsTrashedCount, 'upstream'), $itemsTrashedCount, $postTypeProjectLabelSingular, $postTypeProjectLabelPlural),
+        'untrashed' => sprintf(_n('%1$s %2$s restored from the Trash.', '%1$s %3$s restored from the Trash.', $itemsUntrashedCount, 'upstream'), $itemsUntrashedCount, $postTypeProjectLabelSingular, $postTypeProjectLabelPlural)
     );
 
     return $bulk_messages;

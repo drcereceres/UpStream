@@ -1,17 +1,18 @@
+<?php
+if (!defined('ABSPATH')) exit;
 
-    <?php
-    $text = '&copy; ' . get_bloginfo( 'name' ) . ' ' . date('Y');
-    $footer_text = apply_filters( 'upstream_footer_text', $text ); ?>
+$text = '&copy; ' . get_bloginfo('name') . ' ' . date('Y');
+$footer_text = apply_filters('upstream_footer_text', $text);
+?>
 
-            <footer>
-                <div class="pull-right"><?php echo esc_html( $footer_text ) ?></div>
-                <div class="clearfix"></div>
-            </footer>
-
+                <footer>
+                    <div class="pull-right"><?php echo esc_html($footer_text); ?></div>
+                    <div class="clearfix"></div>
+                </footer>
+            </div>
         </div>
-    </div>
 
-    <?php wp_footer(); ?>
+        <?php wp_footer(); ?>
 
     </body>
 </html>

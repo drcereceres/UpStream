@@ -89,7 +89,7 @@ class UpStream_Options_Projects {
                 array(
                     'id'          => 'statuses',
                     'type'        => 'group',
-                    'name'        => __( '', 'upstream' ),
+                    'name'        => '',
                     'description' => '',
                     'options'     => array(
                         'group_title'   => __( 'Status {#}', 'upstream' ),

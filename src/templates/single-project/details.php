@@ -53,13 +53,14 @@ if ( ! defined( 'ABSPATH' ) ) {
                     <?php upstream_output_project_members(); ?>
 
 
+                    <?php if (!upstream_are_files_disabled()): ?>
                     <div class="files">
                         <p class="title"><?php printf( __( '%s Files', 'upstream' ), upstream_project_label() ); ?></p>
                         <div class="project_files">
                             <?php echo upstream_output_file_list(); ?>
                         </div>
                     </div>
-
+                    <?php endif; ?>
                 </div>
 
             </div>

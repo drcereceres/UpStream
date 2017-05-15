@@ -3,7 +3,7 @@ Contributors: upstreamplugin
 Tags: project, manage, management, project management, project manager, wordpress project management, crm, client, client manager, tasks, issue tracker, bug tracker, task manager
 Requires at least: 4.5
 Tested up to: 4.7.4
-Stable tag: 1.7.0
+Stable tag: 1.8.0
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -13,9 +13,7 @@ WordPress Project Management by UpStream that is powerful, extensible & easy to 
 
 Project management with WordPress has never been easier. UpStream is a free project management plugin that allows you to easily manage any type of project, right from within your WordPress website. Your clients can track the progress of their project via the frontend project view.
 
-View our [Premium Extensions](https://upstreamplugin.com/extensions/) here
-
-View the [Demo](https://demo.upstreamplugin.com/) here
+View our [Premium Extensions](https://upstreamplugin.com/extensions/) here.
 
 = Project Features =
 
@@ -47,8 +45,9 @@ View the [Demo](https://demo.upstreamplugin.com/) here
 = Premium Extensions =
 Add even more awesome features through the use of our extensions.
 
-- [Frontend Edit](https://upstreamplugin.com/extensions/frontend-edit/)
-- [Project Timeline](https://upstreamplugin.com/extensions/project-timeline/)
+- [Frontend Edit](https://upstreamplugin.com/extensions/frontend-edit)
+- [Project Timeline](https://upstreamplugin.com/extensions/project-timeline)
+- [Customizer](https://upstreamplugin.com/extensions/customizer)
 
 = Milestones & Tasks =
 
@@ -118,6 +117,10 @@ UpStream does not use the existing styling of your theme. The features and the v
 9. Close up of Project Timeline (premium extension)
 
 == Changelog ==
+
+= 1.8.0 - 2017-05-15 =
+* FIX       - Fixed bug with menu Tasks and Bugs notification counter
+* NEW       - Milestones, Tasks, Bugs and Files can now be enabled/disabled for individual projects
 
 = 1.7.0 - 2017-05-08 =
 * FIX       - Fixed items count bug in both "Tasks" and "Bugs" pages in /wp-admin

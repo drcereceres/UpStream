@@ -64,46 +64,57 @@ while ( have_posts() ) : the_post(); ?>
                 <?php upstream_get_template_part( 'single-project/details.php' ); ?>
             </div>
 
+            <?php if (!upstream_are_milestones_disabled()): ?>
             <div class="row">
                 <?php do_action( 'upstream_single_project_before_milestones' ); ?>
 
                 <?php upstream_get_template_part( 'single-project/milestones.php' ); ?>
             </div>
+            <?php endif; ?>
 
+            <?php if (!upstream_are_tasks_disabled()): ?>
             <div class="row">
                 <?php do_action( 'upstream_single_project_before_tasks' ); ?>
 
                 <?php upstream_get_template_part( 'single-project/tasks.php' ); ?>
             </div>
+            <?php endif; ?>
 
-            <?php if( ! upstream_disable_bugs() ) { ?>
+            <?php if (!upstream_disable_bugs() && !upstream_are_bugs_disabled()): ?>
             <div class="row">
                 <?php do_action( 'upstream_single_project_before_bugs' ); ?>
 
                 <?php upstream_get_template_part( 'single-project/bugs.php' ); ?>
             </div>
-            <?php } ?>
+            <?php endif; ?>
 
-
+            <?php if (!upstream_are_files_disabled()): ?>
             <div class="row">
                 <?php do_action( 'upstream_single_project_before_files' ); ?>
 
                 <?php upstream_get_template_part( 'single-project/files.php' ); ?>
             </div>
+            <?php endif; ?>
 
+            <?php if (!upstream_are_tasks_disabled() || (!upstream_disable_bugs() && !upstream_are_bugs_disabled())): ?>
             <hr />
+            <?php endif; ?>
 
+            <?php if (!upstream_are_tasks_disabled()): ?>
             <div class="row">
                 <?php do_action( 'upstream_single_project_before_tasks' ); ?>
 
                 <?php upstream_get_template_part( 'single-project/my-tasks.php' ); ?>
             </div>
+            <?php endif; ?>
 
+            <?php if (!upstream_disable_bugs() && !upstream_are_bugs_disabled()): ?>
             <div class="row">
                 <?php do_action( 'upstream_single_project_before_bugs' ); ?>
 
                 <?php upstream_get_template_part( 'single-project/my-bugs.php' ); ?>
             </div>
+            <?php endif; ?>
     </div>
 </div>
 
