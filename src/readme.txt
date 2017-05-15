@@ -3,7 +3,7 @@ Contributors: upstreamplugin
 Tags: project, manage, management, project management, project manager, wordpress project management, crm, client, client manager, tasks, issue tracker, bug tracker, task manager
 Requires at least: 4.5
 Tested up to: 4.7.4
-Stable tag: 1.7.0
+Stable tag: 1.8.0
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -118,7 +118,7 @@ UpStream does not use the existing styling of your theme. The features and the v
 
 == Changelog ==
 
-= 1.8.0 - @todo =
+= 1.8.0 - 2017-05-15 =
 * FIX       - Fixed bug with menu Tasks and Bugs notification counter
 * NEW       - Milestones, Tasks, Bugs and Files can now be enabled/disabled for individual projects
 
