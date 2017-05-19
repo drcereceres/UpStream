@@ -88,6 +88,8 @@ final class UpStream {
     private function init_hooks() {
         add_action( 'init', array( $this, 'init' ), 0 );
         add_filter( 'plugin_row_meta', array( $this, 'plugin_row_meta' ), 10, 2 );
+        add_filter('quicktags_settings', 'upstream_tinymce_teeny_settings');
+        add_filter('teeny_mce_before_init', 'upstream_tinymce_before_init');
     }
 
     /**

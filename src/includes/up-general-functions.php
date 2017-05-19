@@ -631,3 +631,21 @@ function upstream_are_files_disabled($post_id = 0)
 
     return $areBugsDisabled;
 }
+
+function upstream_tinymce_teeny_settings($teenyTinyMCE)
+{
+    if (preg_match('/^(?:_upstream_project_|description|notes|new_message)/i', $teenyTinyMCE['id'])) {
+        $teenyTinyMCE['buttons'] = 'strong,em,link,del,ul,ol,li,close';
+    }
+
+    return $teenyTinyMCE;
+}
+
+function upstream_tinymce_before_init($tinyMCE)
+{
+    if (preg_match('/_upstream_project_|#description|#notes|#new_message/i', $tinyMCE['selector'])) {
+        $tinyMCE['toolbar1'] = 'bold,italic,underline,strikethrough,bullist,numlist,link';
+    }
+
+    return $tinyMCE;
+}
