@@ -747,7 +747,7 @@ function upstream_admin_ajax_get_clients_users() {
 
 function upstream_admin_tinymce_teeny_settings($teenyTinyMCE)
 {
-    if ($teenyTinyMCE['id'] === '_upstream_project_description') {
+    if (preg_match('/_upstream_project_/i', $teenyTinyMCE['id'])) {
         $teenyTinyMCE['buttons'] = 'strong,em,link,del,ul,ol,li,close';
     }
 
@@ -757,7 +757,7 @@ add_filter('quicktags_settings', 'upstream_admin_tinymce_teeny_settings');
 
 function upstream_admin_tinymce_before_init($tinyMCE)
 {
-    if ($tinyMCE['selector'] === '#_upstream_project_description') {
+    if (preg_match('/_upstream_project_/i', $tinyMCE['selector'])) {
         $tinyMCE['toolbar1'] = 'bold,italic,underline,strikethrough,bullist,numlist,link';
     }
 
