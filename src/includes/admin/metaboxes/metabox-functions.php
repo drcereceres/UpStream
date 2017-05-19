@@ -744,3 +744,23 @@ function upstream_admin_ajax_get_clients_users() {
     wp_send_json_error();
 
 }
+
+function upstream_admin_tinymce_teeny_settings($teenyTinyMCE)
+{
+    if ($teenyTinyMCE['id'] === '_upstream_project_description') {
+        $teenyTinyMCE['buttons'] = 'strong,em,link,del,ul,ol,li,close';
+    }
+
+    return $teenyTinyMCE;
+}
+add_filter('quicktags_settings', 'upstream_admin_tinymce_teeny_settings');
+
+function upstream_admin_tinymce_before_init($tinyMCE)
+{
+    if ($tinyMCE['selector'] === '#_upstream_project_description') {
+        $tinyMCE['toolbar1'] = 'bold,italic,underline,strikethrough,bullist,numlist,link';
+    }
+
+    return $tinyMCE;
+}
+add_filter('teeny_mce_before_init', 'upstream_admin_tinymce_before_init');
