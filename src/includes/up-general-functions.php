@@ -649,3 +649,14 @@ function upstream_tinymce_before_init($tinyMCE)
 
     return $tinyMCE;
 }
+
+function upstream_disable_tasks()
+{
+    $options = get_option('upstream_general');
+
+    $disable_tasks = isset($options['disable_tasks']) ? (array)$options['disable_tasks'] : array('no');
+
+    $areTasksDisabled = $disable_tasks[0] === 'yes';
+
+    return $areTasksDisabled;
+}

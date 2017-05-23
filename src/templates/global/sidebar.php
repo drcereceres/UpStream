@@ -8,6 +8,7 @@ $labelTaskPlural = upstream_task_label_plural();
 $labelBugPlural = upstream_bug_label_plural();
 
 $areMilestonesDisabledForThisProject = upstream_are_milestones_disabled();
+$areTasksDisabledAtAll = upstream_disable_tasks();
 $areTasksDisabledForThisProject = upstream_are_tasks_disabled();
 $areBugsDisabledAtAll = upstream_disable_bugs();
 $areBugsDisabledForThisProject = upstream_are_bugs_disabled();
@@ -84,7 +85,7 @@ $areFilesDisabledForThisProject = upstream_are_files_disabled();
                         </li>
                         <?php endif; ?>
 
-                        <?php if (!$areTasksDisabledForThisProject): ?>
+                        <?php if (!$areTasksDisabledForThisProject && !$areTasksDisabledAtAll): ?>
                         <li>
                             <a href="#tasks">
                                 <i class="fa fa-wrench"></i> <?php echo $labelTaskPlural; ?>
@@ -112,13 +113,13 @@ $areFilesDisabledForThisProject = upstream_are_files_disabled();
 
                         <?php do_action( 'upstream_sidebar_after_single_menu' );  ?>
 
-                        <?php if (!$areTasksDisabledForThisProject || (!$areBugsDisabledAtAll && !$areBugsDisabledForThisProject)): ?>
+                        <?php if ((!$areTasksDisabledForThisProject && !$areTasksDisabledAtAll) || (!$areBugsDisabledAtAll && !$areBugsDisabledForThisProject)): ?>
                         <li>
                             <hr style="border-top-color: rgba(0, 0, 0, 0.2);" />
                         </li>
                         <?php endif; ?>
 
-                        <?php if (!$areTasksDisabledForThisProject): ?>
+                        <?php if (!$areTasksDisabledForThisProject && !$areTasksDisabledAtAll): ?>
                         <li>
                             <a href="#my-tasks">
                                 <i class="fa fa-wrench"></i> My <?php echo $labelTaskPlural; ?>

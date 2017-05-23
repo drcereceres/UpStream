@@ -157,6 +157,17 @@ class UpStream_Options_General {
                     'select_all_button' => false
                 ),
                 array(
+                    'name' => __( 'Disable Tasks', 'upstream' ),
+                    'id'   => 'disable_tasks',
+                    'type' => 'multicheck',
+                    'desc' => __( 'Ticking this box will disable the Tasks section on both the frontend and the admin area.', 'upstream' ),
+                    'default' => '',
+                    'options' => array(
+                        'yes' => 'Disable the Tasks section?'
+                    ),
+                    'select_all_button' => false
+                ),
+                array(
                     'name' => __( 'Remove Data', 'upstream' ),
                     'id'   => 'remove_data',
                     'type' => 'multicheck',

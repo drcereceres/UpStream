@@ -48,15 +48,21 @@ class UpStream_Metaboxes_Projects {
             self::$instance = new self();
             self::$instance->overview();
             self::$instance->milestones();
-            self::$instance->tasks();
-            if( ! upstream_disable_bugs() ) {
+
+            if (!upstream_disable_tasks()) {
+                self::$instance->tasks();
+            }
+
+            if(!upstream_disable_bugs()) {
                 self::$instance->bugs();
             }
+
             self::$instance->files();
             self::$instance->details();
             self::$instance->sidebar_low();
             self::$instance->comments();
         }
+
         return self::$instance;
     }
 
@@ -95,15 +101,17 @@ class UpStream_Metaboxes_Projects {
                 )));
             }
 
-            if (!$areTasksDisabled) {
-                $grid2 = $metabox->add_field( array(
-                    'name'              => '<span>' . upstream_count_total( 'tasks', upstream_post_id() ) . '</span> ' . upstream_task_label_plural(),
-                    'desc'              => '',
-                    'id'                => $this->prefix . 'tasks',
-                    'type'              => 'title',
-                    'after'             => 'upstream_output_overview_counts',
-                ) );
-                array_push($columnsList, $grid2);
+            if (!upstream_disable_tasks()) {
+                if (!$areTasksDisabled) {
+                    $grid2 = $metabox->add_field( array(
+                        'name'              => '<span>' . upstream_count_total( 'tasks', upstream_post_id() ) . '</span> ' . upstream_task_label_plural(),
+                        'desc'              => '',
+                        'id'                => $this->prefix . 'tasks',
+                        'type'              => 'title',
+                        'after'             => 'upstream_output_overview_counts',
+                    ) );
+                    array_push($columnsList, $grid2);
+                }
             }
 
             if (!$areBugsDisabled) {
