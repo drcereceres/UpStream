@@ -359,7 +359,7 @@ class UpStream_Metaboxes_Projects {
         $areTasksDisabled = upstream_are_tasks_disabled();
         $userHasAdminPermissions = upstream_admin_permissions('disable_project_tasks');
 
-        if ($areTasksDisabled && !$userHasAdminPermissions) {
+        if (upstream_disable_tasks() || ($areTasksDisabled && !$userHasAdminPermissions)) {
             return;
         }
 
@@ -609,7 +609,7 @@ class UpStream_Metaboxes_Projects {
         $areBugsDisabled = upstream_are_bugs_disabled();
         $userHasAdminPermissions = upstream_admin_permissions('disable_project_bugs');
 
-        if ($areBugsDisabled && !$userHasAdminPermissions) {
+        if (upstream_disable_bugs() || ($areBugsDisabled && !$userHasAdminPermissions)) {
             return;
         }
 
