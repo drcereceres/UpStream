@@ -633,5 +633,9 @@ class Upstream_Admin_Tasks_Page {
 }
 
 add_action( 'plugins_loaded', function () {
+    if (upstream_disable_tasks()) {
+        return;
+    }
+
     Upstream_Admin_Tasks_Page::get_instance();
 } );
