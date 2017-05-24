@@ -62,7 +62,11 @@ class UpStream_Admin_Project_Columns {
         $defaults['client']     = __( 'Client', 'upstream' );
         $defaults['start']      = __( 'Start', 'upstream' );
         $defaults['end']        = __( 'End', 'upstream' );
-        $defaults['tasks']      = upstream_task_label_plural();
+
+        if (!upstream_disable_tasks()) {
+            $defaults['tasks']      = upstream_task_label_plural();
+        }
+
         if( ! upstream_disable_bugs() ) {
             $defaults['bugs']       = upstream_bug_label_plural();
         }
