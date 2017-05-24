@@ -660,3 +660,14 @@ function upstream_disable_tasks()
 
     return $areTasksDisabled;
 }
+
+function upstream_disable_milestones()
+{
+    $options = get_option('upstream_general');
+
+    $disable_milestones = isset($options['disable_milestones']) ? (array)$options['disable_milestones'] : array('no');
+
+    $areMilestonesDisabled = $disable_milestones[0] === 'yes';
+
+    return $areMilestonesDisabled;
+}

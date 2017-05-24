@@ -64,7 +64,7 @@ while ( have_posts() ) : the_post(); ?>
                 <?php upstream_get_template_part( 'single-project/details.php' ); ?>
             </div>
 
-            <?php if (!upstream_are_milestones_disabled()): ?>
+            <?php if (!upstream_are_milestones_disabled() && !upstream_disable_milestones()): ?>
             <div class="row">
                 <?php do_action( 'upstream_single_project_before_milestones' ); ?>
 

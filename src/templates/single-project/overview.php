@@ -27,7 +27,7 @@ $postID = (int)get_the_ID();
     </div>
     <?php endif; ?>
 
-    <?php if (!upstream_are_milestones_disabled($postID)): ?>
+    <?php if (!upstream_are_milestones_disabled($postID) && !upstream_disable_milestones()): ?>
     <div class="<?php echo esc_attr( $width ); ?> col-xs-12">
         <div class="tile-stats">
             <div class="icon"><i class="fa fa-flag"></i>

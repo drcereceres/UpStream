@@ -40,6 +40,10 @@ class Upstream_Task_List extends WP_List_Table {
             'status'        => __( 'Status', 'upstream' ),
         );
 
+        if (upstream_disable_milestones()) {
+            unset($columnsList['milestone']);
+        }
+
         return $columns = apply_filters('upstream_admin_task_page_columns', $columnsList);
     }
 

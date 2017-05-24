@@ -47,7 +47,10 @@ class UpStream_Metaboxes_Projects {
         if( is_null( self::$instance ) ) {
             self::$instance = new self();
             self::$instance->overview();
-            self::$instance->milestones();
+
+            if (!upstream_disable_milestones()) {
+                self::$instance->milestones();
+            }
 
             if (!upstream_disable_tasks()) {
                 self::$instance->tasks();
@@ -76,10 +79,11 @@ class UpStream_Metaboxes_Projects {
      */
     public function overview() {
         $areMilestonesDisabled = upstream_are_milestones_disabled();
+        $areMilestonesDisabledAtAll = upstream_disable_milestones();
         $areTasksDisabled = upstream_are_tasks_disabled();
         $areBugsDisabled = upstream_are_bugs_disabled();
 
-        if (!$areMilestonesDisabled || !$areTasksDisabled || !$areBugsDisabled) {
+        if ((!$areMilestonesDisabled && $areMilestonesDisabledAtAll) || !$areTasksDisabled || !$areBugsDisabled) {
             $metabox = new_cmb2_box( array(
                 'id'            => $this->prefix . 'overview',
                 'title'         => $this->project_label . __( ' Overview', 'upstream' ) .
@@ -92,7 +96,7 @@ class UpStream_Metaboxes_Projects {
 
             $columnsList = array();
 
-            if (!$areMilestonesDisabled) {
+            if (!$areMilestonesDisabled && !$areMilestonesDisabledAtAll) {
                 array_push($columnsList, $metabox->add_field( array(
                     'name'  => '<span>' . upstream_count_total( 'milestones', upstream_post_id() ) . '</span> ' . upstream_milestone_label_plural(),
                     'id'    => $this->prefix . 'milestones',
@@ -141,9 +145,10 @@ class UpStream_Metaboxes_Projects {
      */
     public function milestones() {
         $areMilestonesDisabled = upstream_are_milestones_disabled();
+        $areMilestonesDisabledAtAll = upstream_disable_milestones();
         $userHasAdminPermissions = upstream_admin_permissions('disable_project_milestones');
 
-        if ($areMilestonesDisabled && !$userHasAdminPermissions) {
+        if ($areMilestonesDisabledAtAll || ($areMilestonesDisabled && !$userHasAdminPermissions)) {
             return;
         }
 
@@ -514,7 +519,7 @@ class UpStream_Metaboxes_Projects {
                 )
             );
 
-            if (!upstream_are_milestones_disabled()) {
+            if (!upstream_are_milestones_disabled() && !upstream_disable_milestones()) {
                 $fields[41] = array(
                     'name'              => '<span class="dashicons dashicons-flag"></span> ' . esc_html( upstream_milestone_label() ),
                     'id'                => 'milestone',

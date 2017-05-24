@@ -7,6 +7,7 @@ $labelProjectPlural = upstream_project_label_plural();
 $labelTaskPlural = upstream_task_label_plural();
 $labelBugPlural = upstream_bug_label_plural();
 
+$areMilestonesDisabledAtAll = upstream_disable_milestones();
 $areMilestonesDisabledForThisProject = upstream_are_milestones_disabled();
 $areTasksDisabledAtAll = upstream_disable_tasks();
 $areTasksDisabledForThisProject = upstream_are_tasks_disabled();
@@ -77,7 +78,7 @@ $areFilesDisabledForThisProject = upstream_are_files_disabled();
                     <ul class="nav side-menu">
                         <?php do_action('upstream_sidebar_before_single_menu'); ?>
 
-                        <?php if (!$areMilestonesDisabledForThisProject): ?>
+                        <?php if (!$areMilestonesDisabledForThisProject && !$areMilestonesDisabledAtAll): ?>
                         <li>
                             <a href="#milestones">
                                 <i class="fa fa-flag"></i> <?php echo upstream_milestone_label_plural(); ?>
