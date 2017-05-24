@@ -179,6 +179,17 @@ class UpStream_Options_General {
                     'select_all_button' => false
                 ),
                 array(
+                    'name' => __( 'Disable Files', 'upstream' ),
+                    'id'   => 'disable_files',
+                    'type' => 'multicheck',
+                    'desc' => __( 'Ticking this box will disable the Files section on both the frontend and the admin area.', 'upstream' ),
+                    'default' => '',
+                    'options' => array(
+                        'yes' => 'Disable the Files section?'
+                    ),
+                    'select_all_button' => false
+                ),
+                array(
                     'name' => __( 'Remove Data', 'upstream' ),
                     'id'   => 'remove_data',
                     'type' => 'multicheck',

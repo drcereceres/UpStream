@@ -671,3 +671,14 @@ function upstream_disable_milestones()
 
     return $areMilestonesDisabled;
 }
+
+function upstream_disable_files()
+{
+    $options = get_option('upstream_general');
+
+    $disable_files = isset($options['disable_files']) ? (array)$options['disable_files'] : array('no');
+
+    $areFilesDisabled = $disable_files[0] === 'yes';
+
+    return $areFilesDisabled;
+}

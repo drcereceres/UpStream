@@ -60,7 +60,10 @@ class UpStream_Metaboxes_Projects {
                 self::$instance->bugs();
             }
 
-            self::$instance->files();
+            if (!upstream_disable_files()) {
+                self::$instance->files();
+            }
+
             self::$instance->details();
             self::$instance->sidebar_low();
             self::$instance->comments();
@@ -963,7 +966,7 @@ class UpStream_Metaboxes_Projects {
         $areFilesDisabled = upstream_are_files_disabled();
         $userHasAdminPermissions = upstream_admin_permissions('disable_project_files');
 
-        if ($areFilesDisabled && !$userHasAdminPermissions) {
+        if (upstream_disable_files() || ($areFilesDisabled && !$userHasAdminPermissions)) {
             return;
         }
 

@@ -104,7 +104,7 @@ $areFilesDisabledForThisProject = upstream_are_files_disabled();
                         </li>
                         <?php endif; ?>
 
-                        <?php if (!$areFilesDisabledForThisProject): ?>
+                        <?php if (!$areFilesDisabledForThisProject && !upstream_disable_files()): ?>
                         <li>
                             <a href="#files">
                                 <i class="fa fa-file"></i> <?php echo upstream_file_label_plural(); ?>
