@@ -5,7 +5,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 } ?>
 
 
-
+<?php if (!upstream_disable_discussions()): ?>
     <div class="col-md-9 col-sm-9 col-xs-12 discussion-panel">
         <div class="x_panel">
             <div class="x_title">
@@ -24,3 +24,4 @@ if ( ! defined( 'ABSPATH' ) ) {
             </div>
         </div>
     </div>
+<?php endif; ?>

@@ -66,7 +66,10 @@ class UpStream_Metaboxes_Projects {
 
             self::$instance->details();
             self::$instance->sidebar_low();
-            self::$instance->comments();
+
+            if (!upstream_disable_discussions()) {
+                self::$instance->comments();
+            }
         }
 
         return self::$instance;
@@ -1173,6 +1176,9 @@ class UpStream_Metaboxes_Projects {
      * @since  0.1.0
      */
     public function comments() {
+        if (upstream_disable_discussions()) {
+            return;
+        }
 
         $metabox = new_cmb2_box( array(
             'id'            => $this->prefix . 'discussions',

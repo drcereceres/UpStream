@@ -682,3 +682,14 @@ function upstream_disable_files()
 
     return $areFilesDisabled;
 }
+
+function upstream_disable_discussions()
+{
+    $options = get_option('upstream_general');
+
+    $disable_discussion = isset($options['disable_discussion']) ? (array)$options['disable_discussion'] : array('no');
+
+    $areDiscussionsDisabled = $disable_discussion[0] === 'yes';
+
+    return $areDiscussionsDisabled;
+}

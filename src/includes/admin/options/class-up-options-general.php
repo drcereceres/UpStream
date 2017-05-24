@@ -190,6 +190,17 @@ class UpStream_Options_General {
                     'select_all_button' => false
                 ),
                 array(
+                    'name' => __( 'Disable Discussions', 'upstream' ),
+                    'id'   => 'disable_discussion',
+                    'type' => 'multicheck',
+                    'desc' => __( 'Ticking this box will disable the Discussion section on both the frontend and the admin area.', 'upstream' ),
+                    'default' => '',
+                    'options' => array(
+                        'yes' => 'Disable the Discussion section?'
+                    ),
+                    'select_all_button' => false
+                ),
+                array(
                     'name' => __( 'Remove Data', 'upstream' ),
                     'id'   => 'remove_data',
                     'type' => 'multicheck',
