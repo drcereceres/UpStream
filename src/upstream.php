@@ -18,30 +18,32 @@ if ( ! class_exists( 'UpStream' ) ) :
  * Helper function for quick debugging
  */
 if (!function_exists('pp')) {
-    function pp( $array ) {
+    function pp( $array )
+    {
         echo '<pre style="white-space:pre-wrap;">';
             print_r( $array );
         echo '</pre>';
     }
 }
+
 /**
  * Main UpStream Class.
  *
  * @since 1.0.0
  */
-final class UpStream {
-
+final class UpStream
+{
     /**
      * @var UpStream The one true UpStream
      * @since 1.0.0
      */
     protected static $_instance = null;
 
-
     /**
      * Main UpStream Instance.
      */
-    public static function instance() {
+    public static function instance()
+    {
         if ( is_null( self::$_instance ) ) {
             self::$_instance = new self();
         }
@@ -58,7 +60,8 @@ final class UpStream {
      * @access protected
      * @return void
      */
-    public function __clone() {
+    public function __clone()
+    {
         _doing_it_wrong( __FUNCTION__, __( 'Cheatin&#8217; huh?', 'upstream' ), '1.0.0' );
     }
 
@@ -69,11 +72,13 @@ final class UpStream {
      * @access protected
      * @return void
      */
-    public function __wakeup() {
+    public function __wakeup()
+    {
         _doing_it_wrong( __FUNCTION__, __( 'Cheatin&#8217; huh?', 'upstream' ), '1.0.0' );
     }
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->define_constants();
         $this->includes();
         $this->init_hooks();
@@ -85,7 +90,8 @@ final class UpStream {
      * Hook into actions and filters.
      * @since  1.0.0
      */
-    private function init_hooks() {
+    private function init_hooks()
+    {
         add_action( 'init', array( $this, 'init' ), 0 );
         add_filter( 'plugin_row_meta', array( $this, 'plugin_row_meta' ), 10, 2 );
         add_filter('quicktags_settings', 'upstream_tinymce_teeny_settings');
@@ -96,7 +102,8 @@ final class UpStream {
      * Define Constants.
      * @since  1.0.0
      */
-    private function define_constants() {
+    private function define_constants()
+    {
         $upload_dir = wp_upload_dir();
         $this->define( 'UPSTREAM_PLUGIN_FILE', __FILE__ );
         $this->define( 'UPSTREAM_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
@@ -111,7 +118,8 @@ final class UpStream {
      * @param  string $name
      * @param  string|bool $value
      */
-    private function define( $name, $value ) {
+    private function define( $name, $value )
+    {
         if ( ! defined( $name ) ) {
             define( $name, $value );
         }
@@ -123,7 +131,8 @@ final class UpStream {
      * @since  1.0.0
      * @return bool
      */
-    private function is_request( $type ) {
+    private function is_request( $type )
+    {
         switch ( $type ) {
             case 'admin' :
                 return is_admin();
@@ -136,8 +145,8 @@ final class UpStream {
      * Include required core files used in admin and on the frontend.
      * @since  1.0.0
      */
-    public function includes() {
-
+    public function includes()
+    {
         include_once( 'includes/up-install.php' );
         include_once( 'includes/class-up-autoloader.php' );
         include_once( 'includes/class-up-roles.php' );
@@ -168,14 +177,13 @@ final class UpStream {
         include_once( 'includes/up-project-functions.php' );
         include_once( 'includes/up-client-functions.php' );
         include_once( 'includes/up-permissions-functions.php' );
-
-
     }
 
     /**
      * Init UpStream when WordPress Initialises.
      */
-    public function init() {
+    public function init()
+    {
         // Before init action.
         do_action( 'before_upstream_init' );
         // Set up localisation.
@@ -197,7 +205,8 @@ final class UpStream {
      *      - WP_LANG_DIR/upstream/upstream-LOCALE.mo
      *      - WP_LANG_DIR/plugins/upstream-LOCALE.mo
      */
-    public function load_plugin_textdomain() {
+    public function load_plugin_textdomain()
+    {
         $locale = apply_filters( 'plugin_locale', get_locale(), 'upstream' );
 
         load_textdomain( 'upstream', WP_LANG_DIR . '/upstream/upstream-' . $locale . '.mo' );
@@ -212,10 +221,9 @@ final class UpStream {
      * @param   mixed $file  Plugin Base file
      * @return  array
      */
-    public function plugin_row_meta( $links, $file ) {
-
+    public function plugin_row_meta( $links, $file )
+    {
         if ( $file == UPSTREAM_PLUGIN_BASENAME ) {
-
             $row_meta = array(
                 'docs' => '<a href="' . esc_url( 'http://upstreamplugin.com/documentation' ) . '" title="' . esc_attr( __( 'View Documentation', 'upstream' ) ) . '">' . __( 'Docs', 'upstream' ) . '</a>',
                 'quick-start' => '<a href="' . esc_url( 'http://upstreamplugin.com/quick-start-guide' ) . '" title="' . esc_attr( __( 'View Quick Start Guide', 'upstream' ) ) . '">' . __( 'Quick Start Guide', 'upstream' ) . '</a>',
@@ -226,9 +234,7 @@ final class UpStream {
 
         return (array) $links;
     }
-
 }
-
 endif;
 
 
@@ -240,7 +246,8 @@ endif;
  * @since  1.0.0
  * @return UpStream
  */
-function UpStream() {
+function UpStream()
+{
     return UpStream::instance();
 }
 
