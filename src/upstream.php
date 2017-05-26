@@ -83,6 +83,10 @@ final class UpStream
         $this->includes();
         $this->init_hooks();
 
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
+
         do_action( 'upstream_loaded' );
     }
 
