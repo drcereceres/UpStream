@@ -40,6 +40,10 @@ class UpStream_Template_Loader {
             $file = 'archive-project.php';
         }
 
+        if (isset($_GET['action']) && $_GET['action'] === 'logout' && !isset($_POST['login'])) {
+            UpStream_Login::doDestroySession();
+        }
+
         /*
          * Login page if not logged in
          */

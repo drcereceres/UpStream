@@ -406,8 +406,8 @@ function upstream_output_table_rows( $id, $table, $filterRowsetByCurrentUser = f
     if ($filterRowsetByCurrentUser) {
         $currentUserId = (int)get_current_user_id();
         // Check if the user was logged via backend or frontend.
-        if ($currentUserId <= 0 && isset($_SESSION['user_id'])) {
-            $currentUserId = (int)$_SESSION['user_id'];
+        if ($currentUserId <= 0 && isset($_SESSION['upstream']['user_id'])) {
+            $currentUserId = (int)$_SESSION['upstream']['user_id'];
         }
     }
 

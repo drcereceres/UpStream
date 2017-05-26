@@ -69,29 +69,31 @@ function upstream_admin_set_unique_id() {
 /**
  * Is a user logged in.
  *
+ * @since   1.0.0
  */
-function upstream_is_user_logged_in() {
-    // checks if wordpress user is logged in
-    if( is_user_logged_in() )
+function upstream_is_user_logged_in()
+{
+    // Checks if the user is logged in through WordPress.
+    if (is_user_logged_in()) {
         return true;
+    }
 
-    // checks if client is logged in
-    $login = new UpStream_Login();
-    if ( $login->getUserLoginStatus() )
-        return true;
-
-    return false;
+    return UpStream_Login::userIsLoggedIn();
 }
 
 /**
- * checks if current user is a wordpress user or client
+ * Checks if current user is a wordpress user or client.
  *
+ * @since   1.0.0
  */
-function upstream_current_user_id() {
-    if( is_user_logged_in() ) {
+function upstream_current_user_id()
+{
+    if (is_user_logged_in()) {
         return get_current_user_id();
     } else {
-        return $_SESSION['user_id'];
+        new UpStream_Login();
+
+        return isset($_SESSION['upstream']) && isset($_SESSION['upstream']['user_id']) ? $_SESSION['upstream']['user_id'] : 0;
     }
 }
 
@@ -307,8 +309,12 @@ function upstream_get_email_address( $user = 0 ) {
 
     // this assumes we are a logged in client user looking for our own info
     if( ! $user && upstream_user_type() == 'client' ) {
-        $client_id  = $_SESSION['client_id'];
-        $user_id    = $_SESSION['user_id'];
+        if (!isset($_SESSION['upstream'])) {
+            return null;
+        }
+
+        $client_id  = $_SESSION['upstream']['client_id'];
+        $user_id    = $_SESSION['upstream']['user_id'];
         $users      = get_post_meta( $client_id, '_upstream_client_users', true );
         if ( is_array ($users) && count ($users) > 0 ) :
             foreach ($users as $key => $user) {

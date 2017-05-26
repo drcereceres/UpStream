@@ -1,238 +1,303 @@
 <?php
+if (!defined('ABSPATH')) exit;
 
-
-// Exit if accessed directly
-if ( ! defined( 'ABSPATH' ) ) exit;
-
-
-class UpStream_Login{
-
+final class UpStream_Login
+{
     /**
-     * @var bool Login status of user
-     */
-    private $user_is_logged_in = false;
-
-    /**
-     * @var string System messages, likes errors, notices, etc.
-     */
-    public $feedback = "";
-
-    /**
-     * Does necessary checks for PHP version and PHP password compatibility library and runs the application
-     */
-    public function __construct() {
-        // start the session, always needed!
-        $this->doStartSession();
-        // check for possible user interactions (login with session/post data or logout)
-        $this->performUserLoginAction();
-    }
-
-    /**
-     * Handles the flow of the login/logout process. According to the circumstances, a logout, a login with session
-     * data or a login with post data will be performed
-     */
-    private function performUserLoginAction() {
-        if (isset($_GET["action"]) && $_GET["action"] == "logout" && !isset($_POST["login"]) ) {
-            $this->doLogout();
-        } elseif (!empty($_SESSION['user_id']) && ($_SESSION['user_is_logged_in'])) {
-            $this->doLoginWithSessionData();
-        } elseif (isset($_POST["login"])) {
-            $this->doLoginWithPostData();
-        }
-    }
-
-    /**
-     * Simply starts the session.
-     * It's cleaner to put this into a method than writing it directly into runApplication()
-     */
-    private function doStartSession() {
-        if(session_status() == PHP_SESSION_NONE) session_start();
-    }
-
-    /**
-     * Set a marker (NOTE: is this method necessary ?)
-     */
-    private function doLoginWithSessionData() {
-        $this->user_is_logged_in = true; // ?
-    }
-
-    /**
-     * Process flow of login with POST data
-     */
-    private function doLoginWithPostData() {
-        if ( $this->checkLoginFormDataNotEmpty() ) {
-            $this->checkPasswordCorrectnessAndLogin();
-        }
-    }
-
-    /**
-     * Logs the user out
-     */
-    public function doLogout() {
-        $_SESSION = array();
-        session_destroy();
-        $this->user_is_logged_in = false;
-        $this->feedback = __( "You were just logged out.", "upstream" );
-    }
-
-    /**
-     * Validates the login form data, checks if username and password are provided
-     * @return bool Login form data check success state
-     */
-    private function checkLoginFormDataNotEmpty() {
-
-        if( ! isset( $_POST['upstream_login_nonce'] ) ){
-            return false;
-        }
-
-        if( ! wp_verify_nonce( $_POST['upstream_login_nonce'], 'upstream-login-nonce' ) ) {
-            return false;
-        }
-
-        if ( ! empty( $_POST['user_email'] ) && ! empty( $_POST['user_password'] ) ) {
-            return true;
-        } elseif ( empty( $_POST['user_email'] ) ) {
-            $this->feedback = __( "Username field was empty.", "upstream" );
-        } elseif ( empty( $_POST['user_password'] ) ) {
-            $this->feedback = __( "Password field was empty.", "upstream" );
-        }
-        // default return
-        return false;
-    }
-
-    /**
-     * Method that attempt to authenticate a user against the open project.
+     * Represent the feedback message for the current action.
      *
      * @since   1.0.0
      * @access  private
      *
+     * @var     string  $feedbackMessage
+     */
+    private $feedbackMessage = "";
+
+    /**
+     * Check if there's a feedback message for the current action.
+     *
+     * @since   @todo
+     *
      * @return  bool
      */
-    private function checkPasswordCorrectnessAndLogin()
+    public function hasFeedbackMessage()
     {
-        global $wpdb;
+        $hasFeedbackMessage = !empty($this->feedbackMessage);
 
-        $userCanLogIn = false;
+        return $hasFeedbackMessage;
+    }
 
-        $postData = array(
-            'email'    => isset($_POST['user_email']) && is_email($_POST['user_email']) ? $_POST['user_email'] : false,
-            'password' => isset($_POST['user_password']) ? $_POST['user_password'] : false
-        );
+    /**
+     * Retrieve the feedback message for the current action.
+     *
+     * @since   @todo
+     *
+     * @return  string
+     */
+    public function getFeedbackMessage()
+    {
+        $feedbackMessage = (string) $this->feedbackMessage;
 
-        if (!empty($postData['email'])) {
-            if (!empty($postData['password'])) {
-                $clientsRowset = $wpdb->get_results (
-                    "SELECT * FROM `" . $wpdb->postmeta .
-                    "` WHERE `meta_key` = '_upstream_client_users' AND
-                    `meta_value` REGEXP '.*\"email\";s:[0-9]+:\"". esc_html($postData['email']) ."\".*'"
-                );
-                $clientsRowsetCount = count($clientsRowset);
+        $this->feedbackMessage = "";
 
-                if (is_array($clientsRowset) && $clientsRowsetCount > 0)  {
-                    foreach ($clientsRowset as $clientIndex => $client) {
-                        $status = get_post_status($client->post_id);
-                        if ($status !== 'publish') {
-                            unset($clientsRowset[$clientIndex]); // unset any thet aren't published
-                        }
-                    }
+        return $feedbackMessage;
+    }
 
-                    if (!isset($clientsRowset[1])) {
-                        $client = &$clientsRowset[0];
-                        $user_id = null;
+    /**
+     * Class constructor.
+     *
+     * @since   1.0.0
+     */
+    public function __construct()
+    {
+        $this->performUserLoginAction();
+    }
 
-                        $clientUsers = unserialize($client->meta_value);
-                        foreach ($clientUsers as $clientUser) {
-                            if (isset($clientUser['email']) && $clientUser['email'] === $postData['email']) {
-                                $user_id = $clientUser['id'];
-                                break;
-                            }
-                        }
+    /**
+     * Handles the flow of the login/logout process.
+     *
+     * @since   1.0.0
+     * @access  private
+     */
+    private function performUserLoginAction()
+    {
+        $action = isset($_GET['action']) ? $_GET['action'] : null;
+        $userIsTryingToLogin = isset($_POST['login']);
 
-                        if (!empty($user_id)) {
-                            $projectPwd = get_post_meta($client->post_id, '_upstream_client_password', true);
-                            if ($postData['password'] === $projectPwd) {
-                                $client_id = (int)$client->post_id;
-
-                                $userCanLogIn = true;
-                            } else {
-                                $this->feedback = __("Wrong password.", 'upstream');
-                            }
-
-                            unset($projectPwd);
-                        } else {
-                            $this->feedback = __("This user does not exist.", 'upstream');
-                        }
-                    } else {
-                        $this->feedback = __("Looks like there are multiple users with this email.<br>Please contact your administrator.", 'upstream');
-                    }
-                } else {
-                    $upstreamUsersQueryParams = array(
-                        'role__in'       => array('upstream_manager', 'upstream_user'),
-                        'search'         => esc_html($postData['email']),
-                        'search_columns' => array('user_email')
-                    );
-                    $upstreamUsersQuery = new WP_User_Query($upstreamUsersQueryParams);
-
-                    $usersFoundCount = count($upstreamUsersQuery->results);
-                    if ($usersFoundCount > 1) {
-                        $this->feedback = __("Looks like there are multiple users with this email.<br>Please contact your administrator.", 'upstream');
-                    } else if ($usersFoundCount === 1) {
-                        $clientRowset = $wpdb->get_results(
-                            'SELECT * '.
-                            'FROM `'. $wpdb->postmeta .'` '.
-                            'WHERE `meta_key` = "_upstream_project_client" '.
-                            '  AND `post_id` = '. upstream_post_id()
-                        );
-
-                        if (is_array($clientRowset) && count($clientRowset) === 1) {
-                            $user = &$upstreamUsersQuery->results[0];
-                            $client_id = (int)$clientRowset[0]->meta_value;
-
-                            $projectPwd = get_post_meta($client_id, '_upstream_client_password', true);
-                            if ($postData['password'] === $projectPwd) {
-                                $user_id = $user->id;
-                                $userCanLogIn = true;
-                            } else {
-                                $this->feedback = __("Wrong password.", 'upstream');
-                            }
-
-                            unset($projectPwd);
-                        } else {
-                            $this->feedback = __("Looks like something went wrong with the authentication.<br>Please contact your administrator.", 'upstream');
-                        }
-                    } else {
-                        $this->feedback = __("This user does not exist.", 'upstream');
-                    }
-                }
+        if ($action === "logout" && !$userIsTryingToLogin) {
+            UpStream_Login::doDestroySession();
+        } else if ($userIsTryingToLogin) {
+            $data = $this->validateLogInPostData();
+            if (is_array($data)) {
+                $this->authenticateData($data);
             }
-            else {
-                $this->feedback = __("Wrong password.", 'upstream');
-            }
-        } else {
-            $this->feedback = __("Invalid email", 'upstream');
+        }
+    }
+
+    /**
+     * Destroy user's session data.
+     *
+     * @since   @todo
+     * @static
+     */
+    public static function doDestroySession()
+    {
+        if (session_status() === PHP_SESSION_ACTIVE && isset($_SESSION['upstream'])) {
+            unset($_SESSION['upstream']);
+        }
+    }
+
+    /**
+     * Logs the user out.
+     *
+     * @since   @todo
+     * @access  private
+     */
+    private function doLogOut()
+    {
+        UpStream_Login::doDestroySession();
+
+        $this->feedbackMessage = __("You were just logged out.", 'upstream');
+    }
+
+    /**
+     * Validate the login form data by checking if a username and a password were provided.
+     * If data is valid, an array will be returned. The return will be FALSE otherwise.
+     *
+     * @since   @todo
+     * @access  private
+     *
+     * @return  array | bool
+     */
+    private function validateLogInPostData()
+    {
+        if (!isset($_POST['upstream_login_nonce']) || !wp_verify_nonce($_POST['upstream_login_nonce'], 'upstream-login-nonce')) {
+            return false;
         }
 
-        if ($userCanLogIn && !empty($client_id) && !empty($user_id)) {
-            $_SESSION['client_id'] = $client_id;
-            $_SESSION['user_id'] = esc_html($user_id);
-            $_SESSION['user_is_logged_in'] = true;
+        $postData = array(
+            'username' => isset($_POST['user_email']) ? sanitize_text_field(trim($_POST['user_email'])) : "",
+            'password' => isset($_POST['user_password']) ? $_POST['user_password'] : ""
+        );
 
-            $this->user_is_logged_in = true;
-
-            return true;
+        if (empty($postData['username'])) {
+            $this->feedbackMessage = __("Email address field cannot be empty.", 'upstream');
+        } else if (strlen($postData['username']) < 3 || !is_email($postData['username'])) {
+            $this->feedbackMessage = __("Invalid email address and/or password.", 'upstream');
+        } else {
+            if (empty($postData['password'])) {
+                $this->feedbackMessage = __("Password field cannot be empty.", 'upstream');
+            } else if (strlen($postData['password']) < 5) {
+                $this->feedbackMessage = __("Invalid email address and/or password.", 'upstream');
+            } else {
+                return $postData;
+            }
         }
 
         return false;
     }
 
     /**
-     * Simply returns the current status of the user's login
-     * @return bool User's login status
+     * Method reponsible for verifying if a given password is valid for a given project.
+     *
+     * @since   @todo
+     * @access  private
+     *
+     * @param   string  $subject        The raw password to be tested.
+     * @param   int     $project_id     The project id to be used.
+     *
+     * @return  bool
      */
-    public function getUserLoginStatus() {
-        return $this->user_is_logged_in;
+    private function verifyProjectPassword($subject, $project_id)
+    {
+        if (strlen((string)$subject) < 5 || (int)$project_id <= 0) {
+            return false;
+        }
+
+        $projectPassword = get_post_meta($project_id, '_upstream_client_password', true);
+
+        return $subject === $projectPassword;
     }
 
+    /**
+     * Attempt to authenticate a user against the open project given current email address and password.
+     *
+     * @since   @todo
+     * @access  private
+     *
+     * @param   array   $data   An associative array containing an email (already sanitized) and a raw password.
+     *
+     * @return  bool
+     */
+    private function authenticateData($data)
+    {
+        if (!isset($data['username']) || !isset($data['password'])) {
+            return false;
+        }
 
+        global $wpdb;
 
+        $userCanLogIn = false;
+        $user_id = null;
+        $client_id = null;
+
+        // Tries to match the email address against a project client users.
+        $projectClientsRowset = $wpdb->get_results('
+            SELECT *
+              FROM `'. $wpdb->postmeta .'`
+             WHERE
+                `meta_key` = \'_upstream_client_users\' AND
+                `meta_value` REGEXP \'.*\"email\";s:[0-9]+:\"'. esc_html($data['username']) .'\".*\''
+        );
+
+        if (count($projectClientsRowset) > 0) {
+            // Unset any Project Client User that might be not published.
+            foreach ($projectClientsRowset as $projectClientIndex => $projectClient) {
+                $status = get_post_status((int)$projectClient->post_id);
+                if ($status !== "publish") {
+                    unset($projectClientsRowset[$projectClientIndex]);
+                }
+            }
+
+            if (count($projectClientsRowset) > 1) {
+                $this->feedbackMessage = __("Looks like there are multiple users using this email.<br>Please, contact your administrator as soon as possible.", 'upstream');
+            } else {
+                $client = array_values($projectClientsRowset)[0];
+
+                $clientUsers = unserialize($client->meta_value);
+                foreach ($clientUsers as $clientUser) {
+                    if (isset($clientUser['email']) && $clientUser['email'] === $data['username']) {
+                        $user_id = $clientUser['id'];
+                        break;
+                    }
+                }
+
+                if (empty($user_id)) {
+                    // User does not exist.
+                    $this->feedbackMessage = __("Invalid email address and/or password.", 'upstream');
+                } else {
+                    if ($this->verifyProjectPassword($data['password'], $client->post_id)) {
+                        $client_id = $client->post_id;
+                        $userCanLogIn = true;
+                    } else {
+                        // Invalid password.
+                        $this->feedbackMessage = __("Invalid email address and/or password.", 'upstream');
+                     }
+                }
+            }
+        } else {
+            $queryParams = array(
+                'role__in'       => array('upstream_manager', 'upstream_user'),
+                'search'         => esc_html($data['username']),
+                'search_columns' => array('user_email')
+            );
+
+            $usersQuery = new WP_User_query($queryParams);
+
+            $usersRowsetCount = count($usersQuery->results);
+            if ($usersRowsetCount > 1) {
+                $this->feedbackMessage = __("Looks like there are multiple users using this email.<br>Please, contact your administrator as soon as possible.", 'upstream');
+            } else if ($usersRowsetCount === 0) {
+                // User does not exist.
+                $this->feedbackMessage = __("Invalid email address and/or password.", 'upstream');
+            } else {
+                $clientRowset = $wpdb->get_results('
+                    SELECT *
+                    FROM `'. $wpdb->postmeta .'`
+                    WHERE
+                        `meta_key` = "_upstream_project_client" AND
+                        `post_id`  = "'. esc_html(upstream_post_id()) .'"'
+                );
+
+                if (count($clientRowset) === 1) {
+                    $client_id = $clientRowset[0]->meta_value;
+
+                    if ($this->verifyProjectPassword($data['password'], $client_id)) {
+                        $user_id = $usersQuery->results[0]->ID;
+
+                        $userCanLogIn = true;
+                    } else {
+                        // Invalid password.
+                        $this->feedbackMessage = __("Invalid email address and/or password.", 'upstream');
+                    }
+                } else {
+                    $this->feedbackMessage = __("Invalid project.", 'upstream');
+                }
+            }
+        }
+
+        if ($userCanLogIn && !empty($client_id) && !empty($user_id)) {
+            $_SESSION['upstream'] = array(
+                'client_id' => esc_html($client_id),
+                'user_id'   => esc_html($user_id)
+            );
+
+            wp_redirect(esc_url(get_the_permalink(upstream_post_id())));
+        }
+
+        return $userCanLogIn;
+    }
+
+    /**
+     * Return the current status of the user's login.
+     *
+     * @since   1.0.0
+     * @static
+     *
+     * @return  bool
+     */
+    public static function userIsLoggedIn()
+    {
+        if (session_status() === PHP_SESSION_NONE) {
+            return false;
+        }
+
+        $userIsLoggedIn = (
+            isset($_SESSION['upstream']) &&
+            !empty($_SESSION['upstream']['client_id']) &&
+            !empty($_SESSION['upstream']['user_id'])
+        );
+
+        return $userIsLoggedIn;
+    }
 }

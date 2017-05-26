@@ -35,10 +35,9 @@ upstream_get_template_part( 'global/header.php' ); ?>
 
         </div>
 
-        <?php if ( $login->feedback ) { ?>
+        <?php if ($login->hasFeedbackMessage()): ?>
             <div class="alert alert-danger">
-                <?php echo $login->feedback; ?>
+                <?php echo $login->getFeedbackMessage(); ?>
             </div>
-        <?php } ?>
-
+        <?php endif; ?>
     </div>
