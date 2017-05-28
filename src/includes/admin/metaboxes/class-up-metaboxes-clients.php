@@ -202,8 +202,8 @@ class UpStream_Metaboxes_Clients {
      * Add the metaboxes
      * @since  0.1.0
      */
-    public function sidebar_top() {
-
+    public function sidebar_top()
+    {
         $metabox = new_cmb2_box( array(
             'id'            => $this->prefix . 'info',
             'title'         => '<span class="dashicons dashicons-admin-generic"></span> ' . sprintf( __( "%s Details", 'upstream' ), $this->label ),

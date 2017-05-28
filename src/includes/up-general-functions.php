@@ -91,8 +91,6 @@ function upstream_current_user_id()
     if (is_user_logged_in()) {
         return get_current_user_id();
     } else {
-        new UpStream_Login();
-
         return isset($_SESSION['upstream']) && isset($_SESSION['upstream']['user_id']) ? $_SESSION['upstream']['user_id'] : 0;
     }
 }
