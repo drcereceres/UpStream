@@ -154,9 +154,9 @@ final class UpStream_Login
             return false;
         }
 
-        $projectPassword = get_post_meta($project_id, '_upstream_client_password', true);
+        $passwordHash = get_post_meta($project_id, '_upstream_client_password', true);
 
-        return $subject === $projectPassword;
+        return password_verify($subject, $passwordHash);
     }
 
     /**
