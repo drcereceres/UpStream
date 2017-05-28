@@ -40,6 +40,32 @@ class UpStream_Metaboxes_Clients {
     public function __construct() {
         $this->label = upstream_client_label();
         $this->label_plural = upstream_client_label_plural();
+
+        add_action('cmb2_render_password', array('UpStream_Metaboxes_Clients', 'render_password_field'), 10, 5);
+        add_action('cmb2_sanitize_password', array('UpStream_Metaboxes_Clients', 'sanitize_password_field'), 10, 5);
+    }
+
+    public static function render_password_field($instance, $escapedValue = null, $postId = 0, $objectType = "", $field = null)
+    {
+        if ($objectType === "post") {
+            $inputAttrs = array(
+                'type'    => 'text',
+                'pattern' => '.{5,}',
+                'desc'    => '<p class="cmb2-metabox-description">It must have at least 5 characters.</p>',
+                'value'   => ""
+            );
+
+            echo $field->input($inputAttrs);
+        }
+    }
+
+    public static function sanitize_password_field($valueOverride, $value, $postId = 0, $field, $sanitizer)
+    {
+        if (!empty($value)) {
+            $value = password_hash($value, PASSWORD_BCRYPT);
+        }
+
+        return $value;
     }
 
     /**
@@ -240,17 +266,11 @@ class UpStream_Metaboxes_Clients {
         ) );
 
         $metabox->add_field( array(
-            'name'       => __( 'Password', 'upstream' ),
-            'desc'       => '',
-            'id'         => $this->prefix . 'password',
-            'type'       => 'text',
-            //'escape_cb'  => 'escape_greater_than_100',
-        ) );
-
-
+            'name' => __('Password', 'upstream'),
+            'id'   => $this->prefix . 'password',
+            'type' => 'password'
+        ));
     }
-
-
 }
 
 endif;
