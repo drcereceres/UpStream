@@ -653,3 +653,47 @@ function upstream_tinymce_before_init($tinyMCE)
 
     return $tinyMCE;
 }
+
+function upstream_disable_tasks()
+{
+    $options = get_option('upstream_general');
+
+    $disable_tasks = isset($options['disable_tasks']) ? (array)$options['disable_tasks'] : array('no');
+
+    $areTasksDisabled = $disable_tasks[0] === 'yes';
+
+    return $areTasksDisabled;
+}
+
+function upstream_disable_milestones()
+{
+    $options = get_option('upstream_general');
+
+    $disable_milestones = isset($options['disable_milestones']) ? (array)$options['disable_milestones'] : array('no');
+
+    $areMilestonesDisabled = $disable_milestones[0] === 'yes';
+
+    return $areMilestonesDisabled;
+}
+
+function upstream_disable_files()
+{
+    $options = get_option('upstream_general');
+
+    $disable_files = isset($options['disable_files']) ? (array)$options['disable_files'] : array('no');
+
+    $areFilesDisabled = $disable_files[0] === 'yes';
+
+    return $areFilesDisabled;
+}
+
+function upstream_disable_discussions()
+{
+    $options = get_option('upstream_general');
+
+    $disable_discussion = isset($options['disable_discussion']) ? (array)$options['disable_discussion'] : array('no');
+
+    $areDiscussionsDisabled = $disable_discussion[0] === 'yes';
+
+    return $areDiscussionsDisabled;
+}

@@ -42,7 +42,7 @@ class UpStream_Admin_Projects_Menu {
             if( $submenu['edit.php?post_type=project'] ) {
             $arr = array();
             $arr[] = $submenu['edit.php?post_type=project'][5];
-            $arr[] = $submenu['edit.php?post_type=project'][18];
+            $arr[] = isset( $submenu['edit.php?post_type=project'][18] ) ? $submenu['edit.php?post_type=project'][18] : null;
             $arr[] = isset( $submenu['edit.php?post_type=project'][19] ) ? $submenu['edit.php?post_type=project'][19] : null;
             $arr[] = $submenu['edit.php?post_type=project'][10];
             $arr[] = $submenu['edit.php?post_type=project'][15];

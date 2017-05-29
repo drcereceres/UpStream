@@ -6,7 +6,7 @@ $projectId = get_the_ID();
 $itemAlias = 'tasks';
 ?>
 
-<?php if (!upstream_are_tasks_disabled()): ?>
+<?php if (!upstream_are_tasks_disabled() && !upstream_disable_tasks()): ?>
 <div class="col-md-12 col-sm-12 col-xs-12">
     <div class="x_panel">
         <div class="x_title">

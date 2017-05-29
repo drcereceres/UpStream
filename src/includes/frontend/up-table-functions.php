@@ -23,7 +23,8 @@ function upstream_milestone_table_settings() {
      * heading_class | string | A custom class for the column heading
      * row_class | string | A custom class for the row
      */
-    $settings = apply_filters( 'upstream_milestone_table_settings', array(
+
+    $columnsSchema = array(
         'id' => array(
             'display'       => false,
             'type'          => 'text',
@@ -93,8 +94,14 @@ function upstream_milestone_table_settings() {
             'heading'       => __( 'Notes', 'upstream' ),
             'heading_class' => 'none',
             'row_class'     => '',
-        ),
-    ));
+        )
+    );
+
+    if (upstream_disable_tasks()) {
+        unset($columnsSchema['tasks']);
+    }
+
+    $settings = apply_filters( 'upstream_milestone_table_settings', $columnsSchema);
 
     return $settings;
 
@@ -193,7 +200,7 @@ function upstream_task_table_settings() {
         )
     );
 
-    if (upstream_are_milestones_disabled()) {
+    if (upstream_are_milestones_disabled() || upstream_disable_milestones()) {
         unset($tableSettings['milestone']);
     }
 
@@ -215,7 +222,8 @@ function upstream_bug_table_settings() {
      * heading_class | string | A custom class for the column heading
      * row_class | string | A custom class for the row
      */
-    $settings = apply_filters( 'upstream_bug_table_settings', array(
+
+    $columnsSchema = array(
         'id' => array(
             'display'       => false,
             'type'          => 'text',
@@ -286,7 +294,13 @@ function upstream_bug_table_settings() {
             'heading_class' => '',
             'row_class'     => '',
         ),
-    ));
+    );
+
+    if (upstream_disable_files()) {
+        unset($columnsSchema['file']);
+    }
+
+    $settings = apply_filters( 'upstream_bug_table_settings', $columnsSchema);
 
     return $settings;
 
@@ -413,22 +427,22 @@ function upstream_output_table_rows( $id, $table, $filterRowsetByCurrentUser = f
 
     switch ( $table ) {
         case 'milestones':
-            $data       = upstream_are_milestones_disabled($id) ? array() : upstream_project_milestones( $id );
+            $data       = upstream_are_milestones_disabled($id) || upstream_disable_milestones() ? array() : upstream_project_milestones($id);
             $settings   = upstream_milestone_table_settings();
             break;
         case 'tasks':
-            $data       = upstream_are_tasks_disabled($id) ? array() : upstream_project_tasks( $id );
+            $data       = upstream_are_tasks_disabled($id) || upstream_disable_tasks() ? array() : upstream_project_tasks($id);
             $settings   = upstream_task_table_settings();
             $status_c   = upstream_project_task_statuses_colors();
             break;
         case 'bugs':
-            $data       = upstream_project_bugs( $id );
+            $data       = upstream_are_bugs_disabled($id) || upstream_disable_bugs() ? array() : upstream_project_bugs($id);
             $settings   = upstream_bug_table_settings();
             $status_c   = upstream_project_bug_statuses_colors();
             $severity_c = upstream_project_bug_severity_colors();
             break;
         case 'files':
-            $data       = upstream_project_files( $id );
+            $data       = upstream_disable_files() ? array() : upstream_project_files($id);
             $settings   = upstream_file_table_settings();
             break;
     }

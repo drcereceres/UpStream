@@ -179,8 +179,10 @@ class UpStream_Admin_Options {
         $milestone_options = new UpStream_Options_Milestones();
         $this->option_metabox[] = $milestone_options->options();
 
-        $task_options = new UpStream_Options_Tasks();
-        $this->option_metabox[] = $task_options->options();
+        if (!upstream_disable_tasks()) {
+            $task_options = new UpStream_Options_Tasks();
+            $this->option_metabox[] = $task_options->options();
+        }
 
         if( ! upstream_disable_bugs() ) {
             $bug_options = new UpStream_Options_Bugs();
