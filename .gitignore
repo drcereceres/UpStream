@@ -1,10 +1,12 @@
-# General exclusion of system files #
-#####################################
 .*
 *~
 !.gitignore
 !.htaccess
 !.editorconfig
+node_modules
+
+# General exclusion of system files #
+#####################################
 
 # Windows Files #
 #################
