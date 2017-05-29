@@ -122,6 +122,19 @@ UpStream does not use the existing styling of your theme. The features and the v
 The format is based on [Keep a Changelog](http://keepachangelog.com)
 and this project adheres to [Semantic Versioning](http://semver.org).
 
+= [@todo] - WIP =
+
+Changed:
+* WYSIWYG editors are now teeny TinyMCE instances
+* The whole login workflow was refactored due performance and security purposes
+* Plugin's changelog now follows [Keep a Changelog](http://keepachangelog.com) pattern
+
+Fixed:
+* Make sure there's always a PHP session available for UpStream
+
+Security:
+* Clients project passwords are now hashed and handled properly
+
 = [1.8.0] - 2017-05-15 =
 
 Added:
