@@ -124,7 +124,7 @@ class UpStream_Admin_Options {
         ?>
         <div class="wrap upstream_options">
 
-            <h2><?php esc_html_e( $this->title, 'upstream' ) ?></h2>
+            <h2><?php echo $this->title; ?></h2>
 
             <!-- Options Page Nav Tabs -->
             <h2 class="nav-tab-wrapper">
