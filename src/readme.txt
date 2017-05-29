@@ -124,6 +124,9 @@ and this project adheres to [Semantic Versioning](http://semver.org).
 
 = [@todo] - WIP =
 
+Added:
+* Added options to disable Milestones, Tasks, Bugs, Files and Discussions on all projects
+
 Changed:
 * WYSIWYG editors are now teeny TinyMCE instances
 * The whole login workflow was refactored due performance and security purposes
