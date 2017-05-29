@@ -206,6 +206,7 @@ function upstream_user_data( $data = 0, $ignore_current = false ) {
             'phone'     => '',
             'projects'  => upstream_get_users_projects( $wp_user->ID ),
             'role'      => $role,
+            'avatar'    => ""
         );
 
         if ($isBuddyPressRunning) {
@@ -215,7 +216,37 @@ function upstream_user_data( $data = 0, $ignore_current = false ) {
                 'html'    => false
             ));
         } else {
-            $user_data['avatar'] = get_avatar_url($wp_user->user_email, 96, get_option('avatar_default', 'mystery'));
+            if (is_plugin_active('wp-user-avatar/wp-user-avatar.php') && function_exists('wpua_functions_init')) {
+                global $wp_query;
+
+                // Make sure WP_Query is loaded.
+                if (!($wp_query instanceof \WP_Query)) {
+                    $wp_query = new WP_Query();
+                }
+
+                try {
+                    // Make sure WP User Avatar dependencies are loaded.
+                    require_once ABSPATH . 'wp-settings.php';
+                    require_once ABSPATH . 'wp-includes/pluggable.php';
+                    require_once ABSPATH . 'wp-includes/query.php';
+                    require_once WP_PLUGIN_DIR . '/wp-user-avatar/wp-user-avatar.php';
+
+                    // Load WP User Avatar plugin and its dependencies.
+                    wpua_functions_init();
+
+                    // Retrieve current user id.
+                    $user_id = upstream_current_user_id();
+
+                    // Retrieve the current user avatar URL.
+                    $user_data['avatar'] = get_wp_user_avatar_src($wp_user->ID);
+                } catch (Exception $e) {
+                    // Do nothing.
+                }
+            }
+
+            if (empty($user_data['avatar'])) {
+                $user_data['avatar'] = get_avatar_url($wp_user->user_email, 96, get_option('avatar_default', 'mystery'));
+            }
         }
 
     } else {
