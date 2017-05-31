@@ -36,6 +36,8 @@ class UpStream_Metaboxes_Projects {
 
     public function __construct() {
         $this->project_label = upstream_project_label();
+
+        do_action('upstream_admin_notices_errors');
     }
 
     /**
