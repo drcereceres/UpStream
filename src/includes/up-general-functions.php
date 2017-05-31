@@ -242,6 +242,8 @@ function upstream_user_data( $data = 0, $ignore_current = false ) {
                 } catch (Exception $e) {
                     // Do nothing.
                 }
+            } else if (is_plugin_active('custom-user-profile-photo/3five_cupp.php') && function_exists('get_cupp_meta')) {
+                $user_data['avatar'] = get_cupp_meta($wp_user->ID);
             }
 
             if (empty($user_data['avatar'])) {
