@@ -126,14 +126,18 @@ and this project adheres to [Semantic Versioning](http://semver.org).
 
 Added:
 * Added options to disable Milestones, Tasks, Bugs, Files and Discussions on all projects
+* Added support for user avatars setted by [Custom User Profile Photo](https://wordpress.org/plugins/custom-user-profile-photo) plugin
+* Added support for user avatars setted by [WP User Avatar](https://wordpress.org/plugins/wp-user-avatar) plugin
 
 Changed:
-* WYSIWYG editors are now teeny TinyMCE instances
-* The whole login workflow was refactored due performance and security purposes
+* WYSIWYG editors are now teeny
+* The whole login workflow was refactored due performance and security issues
+* Make "Bugs/Tasks assigned to me" sections title more clearer
 * Plugin's changelog now follows [Keep a Changelog](http://keepachangelog.com) pattern
 
 Fixed:
 * Make sure there's always a PHP session available for UpStream
+* Fixed some users losing their sessions forcing them to log in every page they visit
 
 Security:
 * Clients project passwords are now hashed and handled properly
