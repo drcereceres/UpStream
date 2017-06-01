@@ -295,7 +295,7 @@ add_filter('bulk_post_updated_messages', 'upstream_bulk_updated_messages', 10, 2
 /**
  * Display UpStream notices-errors near the top of admin pages.
  *
- * @since   @todo
+ * @since   1.9.0
  */
 function upstream_admin_notices_errors()
 {

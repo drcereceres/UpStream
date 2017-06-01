@@ -257,7 +257,7 @@ class UpStream_Metaboxes_Clients {
     /**
      * Callback responsible for sanitizing Password type fields.
      *
-     * @since   @todo
+     * @since   1.9.0
      * @static
      *
      * @param   string          $valueOverride  Sanitization override value to return
@@ -279,7 +279,7 @@ class UpStream_Metaboxes_Clients {
     /**
      * Method responsible for render Password typed fields.
      *
-     * @since   @todo
+     * @since   1.9.0
      * @static
      *
      * @param   \CMB2_Field $field              The field object

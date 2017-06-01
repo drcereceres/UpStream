@@ -744,5 +744,3 @@ function upstream_admin_ajax_get_clients_users() {
     wp_send_json_error();
 
 }
-
-

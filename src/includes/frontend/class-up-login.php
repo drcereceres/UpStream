@@ -16,7 +16,7 @@ final class UpStream_Login
     /**
      * Check if there's a feedback message for the current action.
      *
-     * @since   @todo
+     * @since   1.9.0
      *
      * @return  bool
      */
@@ -30,7 +30,7 @@ final class UpStream_Login
     /**
      * Retrieve the feedback message for the current action.
      *
-     * @since   @todo
+     * @since   1.9.0
      *
      * @return  string
      */
@@ -77,7 +77,7 @@ final class UpStream_Login
     /**
      * Destroy user's session data.
      *
-     * @since   @todo
+     * @since   1.9.0
      * @static
      */
     public static function doDestroySession()
@@ -90,7 +90,7 @@ final class UpStream_Login
     /**
      * Logs the user out.
      *
-     * @since   @todo
+     * @since   1.9.0
      * @access  private
      */
     private function doLogOut()
@@ -104,7 +104,7 @@ final class UpStream_Login
      * Validate the login form data by checking if a username and a password were provided.
      * If data is valid, an array will be returned. The return will be FALSE otherwise.
      *
-     * @since   @todo
+     * @since   1.9.0
      * @access  private
      *
      * @return  array | bool
@@ -140,7 +140,7 @@ final class UpStream_Login
     /**
      * Method reponsible for verifying if a given password is valid for a given project.
      *
-     * @since   @todo
+     * @since   1.9.0
      * @access  private
      *
      * @param   string  $subject        The raw password to be tested.
@@ -162,7 +162,7 @@ final class UpStream_Login
     /**
      * Attempt to authenticate a user against the open project given current email address and password.
      *
-     * @since   @todo
+     * @since   1.9.0
      * @access  private
      *
      * @param   array   $data   An associative array containing an email (already sanitized) and a raw password.
