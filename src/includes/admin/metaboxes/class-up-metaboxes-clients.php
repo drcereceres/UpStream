@@ -271,8 +271,6 @@ class UpStream_Metaboxes_Clients {
             $value = password_hash($value, PASSWORD_BCRYPT);
         }
 
-        var_dump($sanitizer); die();
-
         return $value;
     }
 
