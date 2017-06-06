@@ -247,6 +247,10 @@ function upstream_user_data( $data = 0, $ignore_current = false ) {
             }
 
             if (empty($user_data['avatar'])) {
+                if (!function_exists('get_avatar_url')) {
+                    require_once ABSPATH . 'wp-includes/link-template.php';
+                }
+
                 $user_data['avatar'] = get_avatar_url($wp_user->user_email, 96, get_option('avatar_default', 'mystery'));
             }
         }
@@ -290,6 +294,10 @@ function upstream_user_data( $data = 0, $ignore_current = false ) {
                         'html'    => false
                     ));
                 } else {
+                    if (!function_exists('get_avatar_url')) {
+                        require_once ABSPATH . 'wp-includes/link-template.php';
+                    }
+
                     $user_data['avatar'] = get_avatar_url($user['email'], 96, get_option('avatar_default', 'mystery'));
                 }
             }
