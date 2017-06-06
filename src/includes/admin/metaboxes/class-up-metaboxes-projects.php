@@ -871,6 +871,7 @@ class UpStream_Metaboxes_Projects {
             'permissions'       => 'project_status_field',
             'before'            => 'upstream_add_field_attributes',
             'options_cb'        => 'upstream_admin_get_project_statuses',
+            'save_field'        => upstream_admin_permissions('project_status_field')
         );
 
         $fields[1] = array(
@@ -882,6 +883,7 @@ class UpStream_Metaboxes_Projects {
             'permissions'       => 'project_owner_field',
             'before'            => 'upstream_add_field_attributes',
             'options_cb'        => 'upstream_admin_get_all_project_users',
+            'save_field'        => upstream_admin_permissions('project_owner_field')
         );
         $fields[2] = array(
             'name'              => $client_label,
@@ -892,6 +894,7 @@ class UpStream_Metaboxes_Projects {
             'permissions'       => 'project_client_field',
             'before'            => 'upstream_add_field_attributes',
             'options_cb'        => 'upstream_admin_get_all_clients',
+            'save_field'        => upstream_admin_permissions('project_client_field')
         );
 
         $fields[3] = array(
@@ -903,6 +906,7 @@ class UpStream_Metaboxes_Projects {
             'permissions'       => 'project_users_field',
             'before'            => 'upstream_add_field_attributes',
             'options_cb'        => 'upstream_admin_get_all_clients_users',
+            'save_field'        => upstream_admin_permissions('project_users_field')
         );
 
         $fields[10] = array(
@@ -914,6 +918,7 @@ class UpStream_Metaboxes_Projects {
             'permissions'       => 'project_start_date_field',
             'before'            => 'upstream_add_field_attributes',
             'show_on_cb'        => 'upstream_show_project_start_date_field',
+            'save_field'        => upstream_admin_permissions('upstream_start_date_field')
         );
         $fields[11] = array(
             'name'              => __( 'End Date', 'upstream' ),
@@ -924,6 +929,7 @@ class UpStream_Metaboxes_Projects {
             'permissions'       => 'project_end_date_field',
             'before'            => 'upstream_add_field_attributes',
             'show_on_cb'        => 'upstream_show_project_end_date_field',
+            'save_field'        => upstream_admin_permissions('project_end_date_field')
         );
 
         $fields[12] = array(
@@ -937,7 +943,8 @@ class UpStream_Metaboxes_Projects {
                 'media_buttons' => false,
                 'textarea_rows' => 3,
                 'teeny'         => true
-            )
+            ),
+            'save_field'        => upstream_admin_permissions('project_description')
         );
 
         // filter the fields & sort numerically

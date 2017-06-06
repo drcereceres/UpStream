@@ -483,4 +483,19 @@
     deleteDiscussion();
     showClientUsers();
 
+    $('form#post').on('submit', function(e) {
+        var wrapperMilestones = $('#_upstream_project_milestones_repeat, #_upstream_project_tasks_repeat, #_upstream_project_bugs_repeat');
+        if (wrapperMilestones.length) {
+            $('.postbox.cmb-row.cmb-repeatable-grouping .cmb-row *:disabled', wrapperMilestones).filter(function() {
+                var self = $(this);
+                if (['INPUT', 'SELECT', 'TEXTAREA'].indexOf(self.prop('tagName')) >= 0) {
+                    $(this).prop({
+                        'disabled': "",
+                        'data-disabled': "",
+                        'readonly': ""
+                    });
+                }
+            });
+        }
+    });
 })(jQuery);
