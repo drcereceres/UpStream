@@ -4,7 +4,7 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit; // Exit if accessed directly
 } ?>
 
-<?php if (!upstream_are_files_disabled()): ?>
+<?php if (!upstream_are_files_disabled() && !upstream_disable_files()): ?>
     <div class="col-md-12 col-sm-12 col-xs-12">
         <div class="x_panel">
 

@@ -40,6 +40,9 @@ class UpStream_Metaboxes_Clients {
     public function __construct() {
         $this->label = upstream_client_label();
         $this->label_plural = upstream_client_label_plural();
+
+        add_action('cmb2_render_password', array('UpStream_Metaboxes_Clients', 'render_password_field'), 10, 5);
+        add_action('cmb2_sanitize_password', array('UpStream_Metaboxes_Clients', 'sanitize_password_field'), 10, 5);
     }
 
     /**
@@ -202,7 +205,9 @@ class UpStream_Metaboxes_Clients {
      * Add the metaboxes
      * @since  0.1.0
      */
-    public function sidebar_top() {
+    public function sidebar_top()
+    {
+        $client_id = (int) upstream_post_id();
 
         $metabox = new_cmb2_box( array(
             'id'            => $this->prefix . 'info',
@@ -239,18 +244,65 @@ class UpStream_Metaboxes_Clients {
             'type'       => 'file',
         ) );
 
+        $passwordFieldLabelText = $client_id > 0 ? __('New Password', 'upstream') : __('Password', 'upstream');
+
         $metabox->add_field( array(
-            'name'       => __( 'Password', 'upstream' ),
-            'desc'       => '',
-            'id'         => $this->prefix . 'password',
-            'type'       => 'text',
-            //'escape_cb'  => 'escape_greater_than_100',
-        ) );
-
-
+            'name'     => $passwordFieldLabelText,
+            'id'       => $this->prefix . 'password',
+            'type'     => 'password',
+            'required' => $client_id > 0 ? '' : 'required'
+        ));
     }
 
+    /**
+     * Callback responsible for sanitizing Password type fields.
+     *
+     * @since   1.9.0
+     * @static
+     *
+     * @param   string          $valueOverride  Sanitization override value to return
+     * @param   string          $value          The value being passed
+     * @param   int             $postId         The post id
+     * @param   \CMB2_Sanitize  $sanitizer      CMB2 Sanitizer instance
+     */
+    public static function sanitize_password_field($valueOverride, $value, $postId = 0, $field, $sanitizer)
+    {
+        if (!empty($value)) {
+            $value = password_hash($value, PASSWORD_BCRYPT);
+        }
 
+        return $value;
+    }
+
+    /**
+     * Method responsible for render Password typed fields.
+     *
+     * @since   1.9.0
+     * @static
+     *
+     * @param   \CMB2_Field $field              The field object
+     * @param   string      $value              The field value
+     * @param   integer     $postId             The current post id
+     * @param   string      $objectType         The type of object being worked with
+     * @param   \CMB2_Types $fieldTypeInstance  The field type instance
+     */
+    public static function render_password_field($field, $value = "", $postId = 0, $objectType = "", $fieldTypeInstance = null)
+    {
+        if ($objectType === "post") {
+            $inputAttrs = array(
+                'type'    => 'password',
+                'pattern' => '.{5,}',
+                'desc'    => '<p class="cmb2-metabox-description">It must have at least 5 characters.</p>',
+                'value'   => ""
+            );
+
+            if (isset($field->args['required']) && $field->args['required'] === 'required') {
+                $inputAttrs['required'] = 'required';
+            }
+
+            echo $fieldTypeInstance->input($inputAttrs);
+        }
+    }
 }
 
 endif;

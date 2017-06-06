@@ -27,23 +27,27 @@ $postID = (int)get_the_ID();
     </div>
     <?php endif; ?>
 
-    <?php if (!upstream_are_milestones_disabled($postID)): ?>
+    <?php if (!upstream_are_milestones_disabled($postID) && !upstream_disable_milestones()): ?>
     <div class="<?php echo esc_attr( $width ); ?> col-xs-12">
         <div class="tile-stats">
             <div class="icon"><i class="fa fa-flag"></i>
             </div>
-            <div class="count"><?php printf( _n( "<span>%s</span> <small>$milestone</small>", "<span>%s</span> <small>$milestones</small>", $m_count, 'upstream' ), number_format_i18n( $m_count ) ); ?></div>
+            <div class="count">
+                <span><?php echo number_format_i18n($m_count); ?></span> <small><?php echo $m_count === 1 ? $milestone : $milestones; ?></small>
+            </div>
             <h3><?php echo upstream_count_total_open( 'milestones', $postID ); ?> <?php _e( 'Open', 'upstream' ); ?></h3>
         </div>
     </div>
     <?php endif; ?>
 
-    <?php if (!upstream_are_tasks_disabled($postID)): ?>
+    <?php if (!upstream_are_tasks_disabled($postID) && !upstream_disable_tasks()): ?>
     <div class="<?php echo esc_attr( $width ); ?> col-xs-12">
         <div class="tile-stats">
             <div class="icon"><i class="fa fa-wrench"></i>
             </div>
-            <div class="count"><?php printf( _n( "<span>%s</span> <small>$task</small>", "<span>%s</span> <small>$tasks</small>", $t_count, 'upstream' ), number_format_i18n( $t_count ) ); ?></div>
+            <div class="count">
+                <span><?php echo number_format_i18n($t_count); ?></span> <small><?php echo $t_count === 1 ? $task : $tasks; ?></small>
+            </div>
             <h3><?php echo upstream_count_total_open( 'tasks', $postID ); ?> <?php _e( 'Open', 'upstream' ); ?></h3>
         </div>
     </div>
@@ -54,7 +58,9 @@ $postID = (int)get_the_ID();
         <div class="tile-stats">
             <div class="icon"><i class="fa fa-bug"></i>
             </div>
-            <div class="count"><?php printf( _n( "<span>%s</span> <small>$bug</small>", "<span>%s</span> <small>$bugs</small>", $b_count, 'upstream' ), number_format_i18n( $b_count ) ); ?></div>
+            <div class="count">
+                <span><?php echo number_format_i18n($b_count); ?></span> <small><?php echo $b_count === 1 ? $bug : $bugs; ?></small>
+            </div>
             <h3><?php echo upstream_count_total_open( 'bugs', $postID ); ?> <?php _e( 'Open', 'upstream' ); ?></h3>
         </div>
     </div>

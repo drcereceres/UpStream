@@ -3,7 +3,7 @@ Contributors: upstreamplugin
 Tags: project, manage, management, project management, project manager, wordpress project management, crm, client, client manager, tasks, issue tracker, bug tracker, task manager
 Requires at least: 4.5
 Tested up to: 4.7.4
-Stable tag: 1.8.0
+Stable tag: 1.9.0
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -116,115 +116,218 @@ UpStream does not use the existing styling of your theme. The features and the v
 8. Editing a Client
 9. Close up of Project Timeline (premium extension)
 
+
 == Changelog ==
 
-= 1.8.0 - 2017-05-15 =
-* FIX       - Fixed bug with menu Tasks and Bugs notification counter
-* NEW       - Milestones, Tasks, Bugs and Files can now be enabled/disabled for individual projects
+The format is based on [Keep a Changelog](http://keepachangelog.com)
+and this project adheres to [Semantic Versioning](http://semver.org).
 
-= 1.7.0 - 2017-05-08 =
-* FIX       - Fixed items count bug in both "Tasks" and "Bugs" pages in /wp-admin
-* FIX       - Fixes bug with "Mine" filter in "Tasks" and  "Bugs" pages in /wp-admin
-* FIX       - A couple of other minor bugs were fixed overall
-* FIX       - Fixed non-numeric PHP warning
-* UPDATE    - Dropped "Project Author" metabox
-* UPDATE    - Metaboxes now fills 100% width instead of being fixed
-* NEW       - Added "My Tasks" and "My Bugs" metaboxes in frontend so users might see exactly what was assigned to them
-* NEW       - Projects are now auto-saved after adding a new "Task", "Bug", "Discussion" or "File"
-* NEW       - UpStream now automatically uses users BuddyPress avatars if BuddyPress plugin is active in your WP instance
+= [1.9.0] - 2017-06-06 =
 
-= 1.6.1 - 2017-05-02 =
-* FIX       - Fixed UI bug in Project Description editor where all buttons position were messed up in Text Mode
-* UPDATE    - Replaced Tasks Note textarea with a WYSIWYG editor
+Added:
+* Added options to disable Milestones, Tasks, Bugs, Files and Discussions on all projects
+* Added support for user avatars setted by [Custom User Profile Photo](https://wordpress.org/plugins/custom-user-profile-photo) plugin
+* Added support for user avatars setted by [WP User Avatar](https://wordpress.org/plugins/wp-user-avatar) plugin
 
-= 1.6.0 - 2017-05-01 =
-* FIX       - Fixed some frontend UI bugs
-* FIX       - Fixed bug that was preventing some special users from loggin in via frontend
-* UPDATE    - Rename plugin title
-* UPDATE    - Update vendor libraries
-* UPDATE    - Code tested up to WordPress 4.7.4
-* UPDATE    - Replace some textarea fields with WYSIWYG editor instances in project form
-* NEW       - Added a Description field to projects
-* NEW       - New Customizer add-on
+Changed:
+* WYSIWYG editors are now teeny
+* The whole login workflow was refactored due performance and security issues
+* Make "Bugs/Tasks assigned to me" sections title more clearer
+* Plugin's changelog now follows [Keep a Changelog](http://keepachangelog.com) pattern
 
-= 1.5.4 - 2017-04-20 =
-* FIX       - Drop Style Setting page
-* FIX       - Fixed dates format in frontend
-* FIX       - Fixed incomplete projects metadata in frontend
-* FIX       - Fixed UI error in admin
-* FIX       - Fixed feedback messages for clients-related forms
+Fixed:
+* Make sure there's always a PHP session available for UpStream
+* Fixed some users losing their sessions forcing them to log in every page they visit
 
-= 1.5.3 - 2017-03-21 =
-* UPDATE    - Update mobile styles on the frontend
+Security:
+* Clients project passwords are now hashed and handled properly
 
-= 1.5.2 - 2017-03-13 =
-* UPDATE    - Update Translations
+= [1.8.0] - 2017-05-15 =
 
-= 1.5.1 - 2017-02-22 =
-* FIX       - Errors when logged in as subscriber
-* FIX       - Deleting roles and capabilities on uninstall
+Added:
+* Milestones, Tasks, Bugs and Files can now be enabled/disabled for individual projects
 
-= 1.5.0 - 2017-02-20 =
-* NEW       - Add new Style Settings page
-* NEW       - Add Messages column (showing the count) in projects list screen
-* FIX       - Issue with internationalized dates not being saved. Reverted to Y-m-d format
+Fixed:
+* Fixed bug with menu Tasks and Bugs notification counter
 
-= 1.4.3 - 2017-02-17 =
-* UPDATE    - UI improvements on frontend view
-* UPDATE    - UI improvements on project edit screen in admin
-* FIX       - Issue with counts of tasks if nobody assigned to task
+= [1.7.0] - 2017-05-08 =
 
-= 1.4.2 - 2017-02-17 =
-* FIX       - Issue with Project Activity. Remove post_type check that is not required
+Added:
+* Added "My Tasks" and "My Bugs" metaboxes in frontend so users might see exactly what was assigned to them
+* Projects are now auto-saved after adding a new "Task", "Bug", "Discussion" or "File"
+* UpStream now automatically uses users BuddyPress avatars if BuddyPress plugin is active in your WP instance
 
-= 1.4.1 - 2017-02-16 =
-* NEW       - Admin Edit Project UI. Add Task and Bug end date to title bar
+Changed:
+* Dropped "Project Author" metabox
+* Metaboxes now fills 100% width instead of being fixed
 
-= 1.4.0 - 2017-02-16 =
-* NEW       - Add Project Activity section
-* NEW       - Add upstream_user_item() function to get any user item
-* UPDATE    - Admin Edit Project UI. Move progress bar and add statuses into title bar
-* FIX       - Bug with checking for client permissions
+Fixed:
+* Fixed items count bug in both "Tasks" and "Bugs" pages in /wp-admin
+* Fixes bug with "Mine" filter in "Tasks" and  "Bugs" pages in /wp-admin
+* A couple of other minor bugs were fixed overall
+* Fixed non-numeric PHP warning
 
-= 1.3.2 - 2017-02-14 =
-* FIX       - Issue with not loading activity class
+= [1.6.1] - 2017-05-02 =
 
-= 1.3.1 - 2017-02-14 =
-* FIX       - Issue with wrong client logo displaying on All Projects page
+Changed:
+* Replaced Tasks Note textarea with a WYSIWYG editor
 
-= 1.3.0 - 2017-02-10 =
-* NEW       - Add option in settings to completely disable bugs
-* NEW       - Add help text to Client User email field
-* NEW       - Add link on frontend sidebar for files
-* UPDATE    - Minor updates to styling on Client edit screen
-* FIX       - Add a check for multiple email addresses on client login
+Fixed:
+* Fixed UI bug in Project Description editor where all buttons position were messed up in Text Mode
 
-= 1.2.0 - 2017-02-10 =
-* NEW       - Redirect to settings page after activation
-* NEW       - Add guided tour for first Project
-* UPDATE    - Update styling on settings pages
-* UPDATE    - Update styling on Project edit screen
-* UPDATE    - Make first Milestone always open when editing or adding project
-* FIX       - Add various extra code checks such as isset(), is_array() etc throughout plugin
-* FIX       - Email link on Client Users within project
-* FIX       - Issue with adding Discussions in admin area
+= [1.6.0] - 2017-05-01 =
 
-= 1.1.1 - 2017-02-08 =
-* UPDATE    - Update CSS on Extension settings page
-* NEW       - Add banners on Extension settings page
-* FIX       - Typo on Extension settings page
+Added:
+* Added a Description field to projects
+* New Customizer add-on
 
-= 1.1.0 - 2017-02-07 =
-* UPDATE    - Include translations for en_AU
-* UPDATE    - Include translations for en_NZ
+Changed:
+* Rename plugin title
+* Update vendor libraries
+* Code tested up to WordPress 4.7.4
+* Replace some textarea fields with WYSIWYG editor instances in project form
 
-= 1.0.2 - 2017-02-07 =
-* UPDATE    - Modify upstream_count_total() function to return 0 for the id if not found
-* SECURITY  - Add proper escaping on items within admin Tasks page
+Fixed:
+* Fixed some frontend UI bugs
+* Fixed bug that was preventing some special users from loggin in via frontend
 
-= 1.0.1 - 2017-02-03 =
-* UPDATE    - Update links to documentation from within plugin page
-* FIX       - Undefined index within upstream_count_total() function
+= [1.5.4] - 2017-04-20 =
 
-= 1.0.0 - 2017-01-20 =
-* Release   - Initial release
+Fixed:
+* Drop Style Setting page
+* Fixed dates format in frontend
+* Fixed incomplete projects metadata in frontend
+* Fixed UI error in admin
+* Fixed feedback messages for clients-related forms
+
+= [1.5.3] - 2017-03-21 =
+
+Changed:
+* Update mobile styles on the frontend
+
+= [1.5.2] - 2017-03-13 =
+
+Changed:
+* Update Translations
+
+= [1.5.1] - 2017-02-22 =
+
+Fixed:
+* Errors when logged in as subscriber
+* Deleting roles and capabilities on uninstall
+
+= [1.5.0] - 2017-02-20 =
+
+Added:
+* Add new Style Settings page
+* Add Messages column (showing the count) in projects list screen
+
+Fixed:
+* Issue with internationalized dates not being saved. Reverted to Y-m-d format
+
+= [1.4.3] - 2017-02-17 =
+
+Changed:
+* UI improvements on frontend view
+* UI improvements on project edit screen in admin
+
+Fixed:
+* Issue with counts of tasks if nobody assigned to task
+
+= [1.4.2] - 2017-02-17 =
+
+Fixed:
+* Issue with Project Activity. Remove post_type check that is not required
+
+= [1.4.1] - 2017-02-16 =
+
+Added:
+* Admin Edit Project UI. Add Task and Bug end date to title bar
+
+= [1.4.0] - 2017-02-16 =
+
+Added:
+* Add Project Activity section
+* Add upstream_user_item() function to get any user item
+
+Changed:
+* Admin Edit Project UI. Move progress bar and add statuses into title bar
+
+Fixed:
+* Bug with checking for client permissions
+
+= [1.3.2] - 2017-02-14 =
+
+Fixed:
+* Issue with not loading activity class
+
+= [1.3.1] - 2017-02-14 =
+
+Fixed:
+* Issue with wrong client logo displaying on All Projects page
+
+= [1.3.0] - 2017-02-10 =
+
+Added:
+* Add option in settings to completely disable bugs
+* Add help text to Client User email field
+* Add link on frontend sidebar for files
+
+Changed:
+* Minor updates to styling on Client edit screen
+
+Fixed:
+* Add a check for multiple email addresses on client login
+
+= [1.2.0] - 2017-02-10 =
+
+Added:
+* Redirect to settings page after activation
+* Add guided tour for first Project
+
+Changed:
+* Update styling on settings pages
+* Update styling on Project edit screen
+* Make first Milestone always open when editing or adding project
+
+Fixed:
+* Add various extra code checks such as isset(), is_array() etc throughout plugin
+* Email link on Client Users within project
+* Issue with adding Discussions in admin area
+
+= [1.1.1] - 2017-02-08 =
+
+Added:
+* Add banners on Extension settings page
+
+Changed:
+* Update CSS on Extension settings page
+
+Fixed:
+* Typo on Extension settings page
+
+= [1.1.0] - 2017-02-07 =
+
+Added:
+* Included translations for en_AU
+* Included translations for en_NZ
+
+= [1.0.2] - 2017-02-07 =
+
+Changed:
+* Modify upstream_count_total() function to return 0 for the id if not found
+
+Security:
+* Add proper escaping on items within admin Tasks page
+
+= [1.0.1] - 2017-02-03 =
+
+Changed:
+* Update links to documentation from within plugin page
+
+Fixed:
+* Undefined index within upstream_count_total() function
+
+= [1.0.0] - 2017-01-20 =
+
+* Initial release

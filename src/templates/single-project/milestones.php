@@ -2,7 +2,7 @@
 if (!defined('ABSPATH')) exit;
 ?>
 
-<?php if (!upstream_are_milestones_disabled()): ?>
+<?php if (!upstream_are_milestones_disabled() && !upstream_disable_milestones()): ?>
     <div class="col-md-12 col-sm-12 col-xs-12">
         <div class="x_panel">
             <div class="x_title">

@@ -1,7 +1,7 @@
 <?php
 if (!defined('ABSPATH')) exit;
 
-$sectionTitle = upstream_bug_label_plural() . ' <span class="small">'. __('assigned to me', 'upstream') .'</span>';
+$sectionTitle = upstream_bug_label_plural() . ' ' . __('assigned to me', 'upstream');
 $projectId = get_the_ID();
 $itemAlias = 'bugs';
 ?>

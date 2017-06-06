@@ -69,29 +69,29 @@ function upstream_admin_set_unique_id() {
 /**
  * Is a user logged in.
  *
+ * @since   1.0.0
  */
-function upstream_is_user_logged_in() {
-    // checks if wordpress user is logged in
-    if( is_user_logged_in() )
+function upstream_is_user_logged_in()
+{
+    // Checks if the user is logged in through WordPress.
+    if (is_user_logged_in()) {
         return true;
+    }
 
-    // checks if client is logged in
-    $login = new UpStream_Login();
-    if ( $login->getUserLoginStatus() )
-        return true;
-
-    return false;
+    return UpStream_Login::userIsLoggedIn();
 }
 
 /**
- * checks if current user is a wordpress user or client
+ * Checks if current user is a wordpress user or client.
  *
+ * @since   1.0.0
  */
-function upstream_current_user_id() {
-    if( is_user_logged_in() ) {
+function upstream_current_user_id()
+{
+    if (is_user_logged_in()) {
         return get_current_user_id();
     } else {
-        return $_SESSION['user_id'];
+        return isset($_SESSION['upstream']) && isset($_SESSION['upstream']['user_id']) ? $_SESSION['upstream']['user_id'] : 0;
     }
 }
 
@@ -206,6 +206,7 @@ function upstream_user_data( $data = 0, $ignore_current = false ) {
             'phone'     => '',
             'projects'  => upstream_get_users_projects( $wp_user->ID ),
             'role'      => $role,
+            'avatar'    => ""
         );
 
         if ($isBuddyPressRunning) {
@@ -215,7 +216,43 @@ function upstream_user_data( $data = 0, $ignore_current = false ) {
                 'html'    => false
             ));
         } else {
-            $user_data['avatar'] = get_avatar_url($wp_user->user_email, 96, get_option('avatar_default', 'mystery'));
+            if (is_plugin_active('wp-user-avatar/wp-user-avatar.php') && function_exists('wpua_functions_init')) {
+                global $wp_query;
+
+                // Make sure WP_Query is loaded.
+                if (!($wp_query instanceof \WP_Query)) {
+                    $wp_query = new WP_Query();
+                }
+
+                try {
+                    // Make sure WP User Avatar dependencies are loaded.
+                    require_once ABSPATH . 'wp-settings.php';
+                    require_once ABSPATH . 'wp-includes/pluggable.php';
+                    require_once ABSPATH . 'wp-includes/query.php';
+                    require_once WP_PLUGIN_DIR . '/wp-user-avatar/wp-user-avatar.php';
+
+                    // Load WP User Avatar plugin and its dependencies.
+                    wpua_functions_init();
+
+                    // Retrieve current user id.
+                    $user_id = upstream_current_user_id();
+
+                    // Retrieve the current user avatar URL.
+                    $user_data['avatar'] = get_wp_user_avatar_src($wp_user->ID);
+                } catch (Exception $e) {
+                    // Do nothing.
+                }
+            } else if (is_plugin_active('custom-user-profile-photo/3five_cupp.php') && function_exists('get_cupp_meta')) {
+                $user_data['avatar'] = get_cupp_meta($wp_user->ID);
+            }
+
+            if (empty($user_data['avatar'])) {
+                if (!function_exists('get_avatar_url')) {
+                    require_once ABSPATH . 'wp-includes/link-template.php';
+                }
+
+                $user_data['avatar'] = get_avatar_url($wp_user->user_email, 96, get_option('avatar_default', 'mystery'));
+            }
         }
 
     } else {
@@ -257,6 +294,10 @@ function upstream_user_data( $data = 0, $ignore_current = false ) {
                         'html'    => false
                     ));
                 } else {
+                    if (!function_exists('get_avatar_url')) {
+                        require_once ABSPATH . 'wp-includes/link-template.php';
+                    }
+
                     $user_data['avatar'] = get_avatar_url($user['email'], 96, get_option('avatar_default', 'mystery'));
                 }
             }
@@ -307,8 +348,12 @@ function upstream_get_email_address( $user = 0 ) {
 
     // this assumes we are a logged in client user looking for our own info
     if( ! $user && upstream_user_type() == 'client' ) {
-        $client_id  = $_SESSION['client_id'];
-        $user_id    = $_SESSION['user_id'];
+        if (!isset($_SESSION['upstream'])) {
+            return null;
+        }
+
+        $client_id  = $_SESSION['upstream']['client_id'];
+        $user_id    = $_SESSION['upstream']['user_id'];
         $users      = get_post_meta( $client_id, '_upstream_client_users', true );
         if ( is_array ($users) && count ($users) > 0 ) :
             foreach ($users as $key => $user) {
@@ -630,4 +675,66 @@ function upstream_are_files_disabled($post_id = 0)
     }
 
     return $areBugsDisabled;
+}
+
+function upstream_tinymce_teeny_settings($teenyTinyMCE)
+{
+    if (preg_match('/^(?:_upstream_project_|description|notes|new_message)/i', $teenyTinyMCE['id'])) {
+        $teenyTinyMCE['buttons'] = 'strong,em,link,del,ul,ol,li,close';
+    }
+
+    return $teenyTinyMCE;
+}
+
+function upstream_tinymce_before_init($tinyMCE)
+{
+    if (preg_match('/_upstream_project_|#description|#notes|#new_message/i', $tinyMCE['selector'])) {
+        $tinyMCE['toolbar1'] = 'bold,italic,underline,strikethrough,bullist,numlist,link';
+    }
+
+    return $tinyMCE;
+}
+
+function upstream_disable_tasks()
+{
+    $options = get_option('upstream_general');
+
+    $disable_tasks = isset($options['disable_tasks']) ? (array)$options['disable_tasks'] : array('no');
+
+    $areTasksDisabled = $disable_tasks[0] === 'yes';
+
+    return $areTasksDisabled;
+}
+
+function upstream_disable_milestones()
+{
+    $options = get_option('upstream_general');
+
+    $disable_milestones = isset($options['disable_milestones']) ? (array)$options['disable_milestones'] : array('no');
+
+    $areMilestonesDisabled = $disable_milestones[0] === 'yes';
+
+    return $areMilestonesDisabled;
+}
+
+function upstream_disable_files()
+{
+    $options = get_option('upstream_general');
+
+    $disable_files = isset($options['disable_files']) ? (array)$options['disable_files'] : array('no');
+
+    $areFilesDisabled = $disable_files[0] === 'yes';
+
+    return $areFilesDisabled;
+}
+
+function upstream_disable_discussions()
+{
+    $options = get_option('upstream_general');
+
+    $disable_discussion = isset($options['disable_discussion']) ? (array)$options['disable_discussion'] : array('no');
+
+    $areDiscussionsDisabled = $disable_discussion[0] === 'yes';
+
+    return $areDiscussionsDisabled;
 }

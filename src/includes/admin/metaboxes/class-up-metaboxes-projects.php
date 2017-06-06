@@ -36,6 +36,8 @@ class UpStream_Metaboxes_Projects {
 
     public function __construct() {
         $this->project_label = upstream_project_label();
+
+        do_action('upstream_admin_notices_errors');
     }
 
     /**
@@ -47,16 +49,31 @@ class UpStream_Metaboxes_Projects {
         if( is_null( self::$instance ) ) {
             self::$instance = new self();
             self::$instance->overview();
-            self::$instance->milestones();
-            self::$instance->tasks();
-            if( ! upstream_disable_bugs() ) {
+
+            if (!upstream_disable_milestones()) {
+                self::$instance->milestones();
+            }
+
+            if (!upstream_disable_tasks()) {
+                self::$instance->tasks();
+            }
+
+            if(!upstream_disable_bugs()) {
                 self::$instance->bugs();
             }
-            self::$instance->files();
+
+            if (!upstream_disable_files()) {
+                self::$instance->files();
+            }
+
             self::$instance->details();
             self::$instance->sidebar_low();
-            self::$instance->comments();
+
+            if (!upstream_disable_discussions()) {
+                self::$instance->comments();
+            }
         }
+
         return self::$instance;
     }
 
@@ -70,10 +87,11 @@ class UpStream_Metaboxes_Projects {
      */
     public function overview() {
         $areMilestonesDisabled = upstream_are_milestones_disabled();
+        $areMilestonesDisabledAtAll = upstream_disable_milestones();
         $areTasksDisabled = upstream_are_tasks_disabled();
         $areBugsDisabled = upstream_are_bugs_disabled();
 
-        if (!$areMilestonesDisabled || !$areTasksDisabled || !$areBugsDisabled) {
+        if ((!$areMilestonesDisabled && $areMilestonesDisabledAtAll) || !$areTasksDisabled || !$areBugsDisabled) {
             $metabox = new_cmb2_box( array(
                 'id'            => $this->prefix . 'overview',
                 'title'         => $this->project_label . __( ' Overview', 'upstream' ) .
@@ -86,7 +104,7 @@ class UpStream_Metaboxes_Projects {
 
             $columnsList = array();
 
-            if (!$areMilestonesDisabled) {
+            if (!$areMilestonesDisabled && !$areMilestonesDisabledAtAll) {
                 array_push($columnsList, $metabox->add_field( array(
                     'name'  => '<span>' . upstream_count_total( 'milestones', upstream_post_id() ) . '</span> ' . upstream_milestone_label_plural(),
                     'id'    => $this->prefix . 'milestones',
@@ -95,15 +113,17 @@ class UpStream_Metaboxes_Projects {
                 )));
             }
 
-            if (!$areTasksDisabled) {
-                $grid2 = $metabox->add_field( array(
-                    'name'              => '<span>' . upstream_count_total( 'tasks', upstream_post_id() ) . '</span> ' . upstream_task_label_plural(),
-                    'desc'              => '',
-                    'id'                => $this->prefix . 'tasks',
-                    'type'              => 'title',
-                    'after'             => 'upstream_output_overview_counts',
-                ) );
-                array_push($columnsList, $grid2);
+            if (!upstream_disable_tasks()) {
+                if (!$areTasksDisabled) {
+                    $grid2 = $metabox->add_field( array(
+                        'name'              => '<span>' . upstream_count_total( 'tasks', upstream_post_id() ) . '</span> ' . upstream_task_label_plural(),
+                        'desc'              => '',
+                        'id'                => $this->prefix . 'tasks',
+                        'type'              => 'title',
+                        'after'             => 'upstream_output_overview_counts',
+                    ) );
+                    array_push($columnsList, $grid2);
+                }
             }
 
             if (!$areBugsDisabled) {
@@ -133,9 +153,10 @@ class UpStream_Metaboxes_Projects {
      */
     public function milestones() {
         $areMilestonesDisabled = upstream_are_milestones_disabled();
+        $areMilestonesDisabledAtAll = upstream_disable_milestones();
         $userHasAdminPermissions = upstream_admin_permissions('disable_project_milestones');
 
-        if ($areMilestonesDisabled && !$userHasAdminPermissions) {
+        if ($areMilestonesDisabledAtAll || ($areMilestonesDisabled && !$userHasAdminPermissions)) {
             return;
         }
 
@@ -346,7 +367,7 @@ class UpStream_Metaboxes_Projects {
         $areTasksDisabled = upstream_are_tasks_disabled();
         $userHasAdminPermissions = upstream_admin_permissions('disable_project_tasks');
 
-        if ($areTasksDisabled && !$userHasAdminPermissions) {
+        if (upstream_disable_tasks() || ($areTasksDisabled && !$userHasAdminPermissions)) {
             return;
         }
 
@@ -506,7 +527,7 @@ class UpStream_Metaboxes_Projects {
                 )
             );
 
-            if (!upstream_are_milestones_disabled()) {
+            if (!upstream_are_milestones_disabled() && !upstream_disable_milestones()) {
                 $fields[41] = array(
                     'name'              => '<span class="dashicons dashicons-flag"></span> ' . esc_html( upstream_milestone_label() ),
                     'id'                => 'milestone',
@@ -596,7 +617,7 @@ class UpStream_Metaboxes_Projects {
         $areBugsDisabled = upstream_are_bugs_disabled();
         $userHasAdminPermissions = upstream_admin_permissions('disable_project_bugs');
 
-        if ($areBugsDisabled && !$userHasAdminPermissions) {
+        if (upstream_disable_bugs() || ($areBugsDisabled && !$userHasAdminPermissions)) {
             return;
         }
 
@@ -950,7 +971,7 @@ class UpStream_Metaboxes_Projects {
         $areFilesDisabled = upstream_are_files_disabled();
         $userHasAdminPermissions = upstream_admin_permissions('disable_project_files');
 
-        if ($areFilesDisabled && !$userHasAdminPermissions) {
+        if (upstream_disable_files() || ($areFilesDisabled && !$userHasAdminPermissions)) {
             return;
         }
 
@@ -1157,6 +1178,9 @@ class UpStream_Metaboxes_Projects {
      * @since  0.1.0
      */
     public function comments() {
+        if (upstream_disable_discussions()) {
+            return;
+        }
 
         $metabox = new_cmb2_box( array(
             'id'            => $this->prefix . 'discussions',

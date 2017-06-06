@@ -30,6 +30,9 @@ while ( have_posts() ) : the_post(); ?>
 
 <!-- page content -->
 <div class="right_col" role="main">
+    <div class="alerts">
+        <?php do_action('upstream_frontend_projects_messages'); ?>
+    </div>
 
     <div class="">
 
@@ -54,6 +57,7 @@ while ( have_posts() ) : the_post(); ?>
                 <?php upstream_get_template_part( 'single-project/overview.php' ); ?>
             </div>
 
+            <?php if (!upstream_disable_discussions()): ?>
             <div class="row">
                 <?php do_action( 'upstream_single_project_before_discussion' ); ?>
 
@@ -63,8 +67,9 @@ while ( have_posts() ) : the_post(); ?>
 
                 <?php upstream_get_template_part( 'single-project/details.php' ); ?>
             </div>
+            <?php endif; ?>
 
-            <?php if (!upstream_are_milestones_disabled()): ?>
+            <?php if (!upstream_are_milestones_disabled() && !upstream_disable_milestones()): ?>
             <div class="row">
                 <?php do_action( 'upstream_single_project_before_milestones' ); ?>
 
@@ -72,7 +77,7 @@ while ( have_posts() ) : the_post(); ?>
             </div>
             <?php endif; ?>
 
-            <?php if (!upstream_are_tasks_disabled()): ?>
+            <?php if (!upstream_are_tasks_disabled() && !upstream_disable_tasks()): ?>
             <div class="row">
                 <?php do_action( 'upstream_single_project_before_tasks' ); ?>
 
@@ -88,7 +93,7 @@ while ( have_posts() ) : the_post(); ?>
             </div>
             <?php endif; ?>
 
-            <?php if (!upstream_are_files_disabled()): ?>
+            <?php if (!upstream_are_files_disabled() && !upstream_disable_files()): ?>
             <div class="row">
                 <?php do_action( 'upstream_single_project_before_files' ); ?>
 
@@ -96,11 +101,11 @@ while ( have_posts() ) : the_post(); ?>
             </div>
             <?php endif; ?>
 
-            <?php if (!upstream_are_tasks_disabled() || (!upstream_disable_bugs() && !upstream_are_bugs_disabled())): ?>
+            <?php if ((!upstream_are_tasks_disabled() && !upstream_disable_tasks()) || (!upstream_disable_bugs() && !upstream_are_bugs_disabled())): ?>
             <hr />
             <?php endif; ?>
 
-            <?php if (!upstream_are_tasks_disabled()): ?>
+            <?php if (!upstream_are_tasks_disabled() && !upstream_disable_tasks()): ?>
             <div class="row">
                 <?php do_action( 'upstream_single_project_before_tasks' ); ?>
 

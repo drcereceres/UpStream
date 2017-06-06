@@ -291,3 +291,24 @@ function upstream_bulk_updated_messages($bulk_messages, $bulk_counts)
     return $bulk_messages;
 }
 add_filter('bulk_post_updated_messages', 'upstream_bulk_updated_messages', 10, 2);
+
+/**
+ * Display UpStream notices-errors near the top of admin pages.
+ *
+ * @since   1.9.0
+ */
+function upstream_admin_notices_errors()
+{
+    $errors = get_transient('upstream_errors');
+
+    if (!empty($errors)): ?>
+    <div class="notice notice-error is-dismissible">
+        <p>
+            <?php echo $errors; ?>
+        </p>
+    </div>
+    <?php
+    delete_transient('upstream_errors');
+    endif;
+}
+add_filter('admin_notices', 'upstream_admin_notices_errors');

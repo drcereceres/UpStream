@@ -1,12 +1,12 @@
 <?php
 if (!defined('ABSPATH')) exit;
 
-$sectionTitle = upstream_task_label_plural() . ' <span class="small">'. __('assigned to me', 'upstream') .'</span>';
+$sectionTitle = upstream_task_label_plural() . ' ' . __('assigned to me', 'upstream');
 $projectId = get_the_ID();
 $itemAlias = 'tasks';
 ?>
 
-<?php if (!upstream_are_tasks_disabled()): ?>
+<?php if (!upstream_are_tasks_disabled() && !upstream_disable_tasks()): ?>
 <div class="col-md-12 col-sm-12 col-xs-12">
     <div class="x_panel">
         <div class="x_title">

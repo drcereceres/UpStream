@@ -153,7 +153,7 @@ class Upstream_Bug_List extends WP_List_Table {
 
         <?php }
 
-            submit_button( __( 'Filter' ), 'button', 'filter', false );
+            submit_button( __( 'Filter', 'upstream' ), 'button', 'filter', false );
         }
 
         ?>
