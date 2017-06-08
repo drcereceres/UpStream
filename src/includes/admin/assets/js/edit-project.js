@@ -84,7 +84,6 @@
             }
 
         });
-
     }
 
     function resetGroup( $group ) {
@@ -498,4 +497,26 @@
             });
         }
     });
+
+    // Assigned To Filter
+    var filterAssignedToSelect = $('.upstream-filter-assigned_to');
+    if (filterAssignedToSelect.length) {
+        filterAssignedToSelect.on('change', function(e) {
+            var sectionWrapper = $(this).parents('.cmb2-metabox.cmb-field-list');
+            var itemsListWrapper = $('.cmb-row.cmb-repeat-group-wrap.cmb-type-group.cmb-repeat', sectionWrapper);
+
+            var rows = $('.postbox.cmb-row[data-iterator]', itemsListWrapper);
+
+            var newValue = parseInt(this.value);
+            if (newValue > 0) {
+                rows.each(function(itemWrapperIndex, itemWrapper) {
+                    var assignedTo = parseInt($('select[name$="[assigned_to]"]', itemWrapper).val());
+
+                    $(itemWrapper).css('display', assignedTo === newValue ? 'block' : 'none');
+                });
+            } else {
+                rows.css('display', 'block');
+            }
+        });
+    }
 })(jQuery);

@@ -184,6 +184,7 @@ class UpStream_Metaboxes_Projects {
                 'class'             => 'hidden',
                 'data-publish'      => upstream_admin_permissions( 'publish_project_milestones' ),
             ),
+            'before_row'        => $this->getAssignedToFilterHtml()
         ) );
 
         if (!$areMilestonesDisabled) {
@@ -355,6 +356,38 @@ class UpStream_Metaboxes_Projects {
         }
     }
 
+    private function getAssignedToFilterHtml()
+    {
+        $upstreamUsersList = upstream_admin_get_all_project_users();
+        $usersOptionsHtml = '<option>- ' . __('Show Everyone', 'upstream') . ' -</option>';
+        foreach ($upstreamUsersList as $userId => $userName) {
+            $usersOptionsHtml .= sprintf('<option value="%s">%s</option>', $userId, $userName);
+        }
+
+        $html = sprintf('
+            <div class="row upstream-filters-wrapper">
+                <div class="col-md-12">
+                <h3>%s</h3>
+                </div>
+                <div class="col-md-12">
+                    <div>
+                        <label>%s</label>
+                        <select class="cmb-type-select upstream-filter-assigned_to" data-disabled="false" data-owner="true">
+                            %s
+                        </select>
+                    </div>
+                </div>
+                <hr />
+            </div>
+        ',
+            __('Filters', 'upstream'),
+            __('Assigned To', 'upstream'),
+            $usersOptionsHtml
+        );
+
+        return $html;
+    }
+
 
 /* ======================================================================================
                                         TASKS
@@ -396,6 +429,7 @@ class UpStream_Metaboxes_Projects {
                 'data-empty'    => upstream_empty_group( 'tasks' ),
                 'data-publish'  => upstream_admin_permissions( 'publish_project_tasks' ),
             ),
+            'before_row'        => $this->getAssignedToFilterHtml()
         ) );
 
         $group_field_id = $metabox->add_field( array(
@@ -647,6 +681,7 @@ class UpStream_Metaboxes_Projects {
                 'data-empty'    => upstream_empty_group( 'bugs' ),
                 'data-publish'  => upstream_admin_permissions( 'publish_project_bugs' ),
             ),
+            'before_row'    => $this->getAssignedToFilterHtml()
         ) );
 
         $group_field_id = $metabox->add_field( array(
