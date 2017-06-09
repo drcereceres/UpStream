@@ -359,6 +359,14 @@ class UpStream_Metaboxes_Projects {
         }
     }
 
+    /**
+     * Return the Assigned To filter HTML.
+     *
+     * @since   1.0.0
+     * @access  private
+     *
+     * @return  string
+     */
     private function getAssignedToFilterHtml()
     {
         $upstreamUsersList = upstream_admin_get_all_project_users();
@@ -384,6 +392,14 @@ class UpStream_Metaboxes_Projects {
         return $html;
     }
 
+    /**
+     * Return the Status filter HTML.
+     *
+     * @since   1.0.0
+     * @access  private
+     *
+     * @return  string
+     */
     private function getStatusFilterHtml()
     {
         $upstreamStatusList = upstream_admin_get_task_statuses();
@@ -409,6 +425,14 @@ class UpStream_Metaboxes_Projects {
         return $html;
     }
 
+    /**
+     * Return the Severity filter HTML.
+     *
+     * @since   1.0.0
+     * @access  private
+     *
+     * @return  string
+     */
     private function getSeverityFilterHtml()
     {
         $upstreamSeveritiesList = upstream_admin_get_bug_severities();
@@ -434,6 +458,14 @@ class UpStream_Metaboxes_Projects {
         return $html;
     }
 
+    /**
+     * Return the HTML that opens the Filters wrapper.
+     *
+     * @since   1.0.0
+     * @access  private
+     *
+     * @return  string
+     */
     private function getFiltersHeaderHtml()
     {
         $html = sprintf('
@@ -448,6 +480,14 @@ class UpStream_Metaboxes_Projects {
         return $html;
     }
 
+    /**
+     * Return the HTML that closes the Filters wrapper.
+     *
+     * @since   1.0.0
+     * @access  private
+     *
+     * @return  string
+     */
     private function getFiltersFooterHtml()
     {
         $html = '<hr /></div>';
@@ -455,7 +495,15 @@ class UpStream_Metaboxes_Projects {
         return $html;
     }
 
-    private function getMilestoneFilterHtml($displayHeaderTitle = true)
+    /**
+     * Return the Milestone filter HTML.
+     *
+     * @since   1.0.0
+     * @access  private
+     *
+     * @return  string
+     */
+    private function getMilestoneFilterHtml()
     {
         $upstreamMilestonesList = upstream_admin_get_options_milestones();
         $milestonesOptionsHtml = '<option>- ' . __('Show All', 'upstream') . ' -</option>';
