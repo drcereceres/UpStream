@@ -498,53 +498,12 @@
         }
     });
 
-    // Assigned To Filter
-    var filterAssignedToSelect = $('.upstream-filter-assigned_to');
-    if (filterAssignedToSelect.length) {
-        filterAssignedToSelect.on('change', function(e) {
-            var self = $(this);
-            var sectionWrapper = self.parents('.cmb2-metabox.cmb-field-list');
-            var itemsListWrapper = $('.cmb-row.cmb-repeat-group-wrap.cmb-type-group.cmb-repeat', sectionWrapper);
+    $('.upstream-filter').on('change', function onFilterChangeCallback(e) {
+        var self = $(this);
+        var targetColumn = self.data('column');
 
-            $('.no-items', itemsListWrapper).remove();
-
-            var rows = $('.postbox.cmb-row[data-iterator]', itemsListWrapper);
-            if (rows.length) {
-                var newValue = parseInt(this.value);
-                if (newValue > 0) {
-                    var rowsLastRowIndex = rows.length - 1;
-                    var itemsFound = 0;
-                    rows.each(function(itemWrapperIndex, itemWrapper) {
-                        var assignedTo = parseInt($('select[name$="[assigned_to]"]', itemWrapper).val());
-
-                        var displayProp = 'none';
-
-                        if (assignedTo === newValue) {
-                            itemsFound++;
-                            displayProp = 'block';
-                        }
-
-                        $(itemWrapper).css('display', displayProp);
-
-                        if (itemWrapperIndex === rowsLastRowIndex) {
-                            if (itemsFound === 0) {
-                                var noItemsFoundWrapperHtml = $('<div class="postbox cmb-row cmb-repeatable-grouping no-items"><p>'+ self.data('no-items-found-message') +'</p></div>');
-                                noItemsFoundWrapperHtml.insertBefore($('.cmb-row:not(.postbox):last-child', itemsListWrapper));
-                            }
-                        }
-                    });
-                } else {
-                    rows.css('display', 'block');
-                }
-            }
-        });
-    }
-
-    // Milestone Filter
-    var filterMilestoneSelect = $('.upstream-filter-milestone');
-    if (filterMilestoneSelect.length) {
-        filterMilestoneSelect.on('change', function(e) {
-            var self = $(this);
+        var validColumns = ['assigned_to', 'milestone', 'status', 'severity'];
+        if (validColumns.indexOf(targetColumn) >= 0) {
             var sectionWrapper = self.parents('.cmb2-metabox.cmb-field-list');
             var itemsListWrapper = $('.cmb-row.cmb-repeat-group-wrap.cmb-type-group.cmb-repeat', sectionWrapper);
 
@@ -553,14 +512,19 @@
             var rows = $('.postbox.cmb-row[data-iterator]', itemsListWrapper);
             if (rows.length) {
                 var newValue = this.value;
-                if (newValue !== '- Show All -') {
+                if (newValue && newValue !== '- Show All -' && newValue !== '- Show Everyone -') {
                     var rowsLastRowIndex = rows.length - 1;
                     var itemsFound = 0;
                     rows.each(function(itemWrapperIndex, itemWrapper) {
-                        var milestone = $('select[name$="[milestone]"] option:selected', itemWrapper).text();
+                        if (targetColumn === 'milestone') {
+                            var itemValue = $('select[name$="['+ targetColumn +']"] option:selected', itemWrapper).text();
+                        } else {
+                            var itemValue = $('select[name$="['+ targetColumn +']"]', itemWrapper).val();
+                        }
+
                         var displayProp = 'none';
 
-                        if (milestone === newValue) {
+                        if (itemValue === newValue) {
                             itemsFound++;
                             displayProp = 'block';
                         }
@@ -578,90 +542,6 @@
                     rows.css('display', 'block');
                 }
             }
-        });
-    }
-
-    // Status Filter
-    var filterStatusSelect = $('.upstream-filter-status');
-    if (filterStatusSelect.length) {
-        filterStatusSelect.on('change', function(e) {
-            var self = $(this);
-            var sectionWrapper = self.parents('.cmb2-metabox.cmb-field-list');
-            var itemsListWrapper = $('.cmb-row.cmb-repeat-group-wrap.cmb-type-group.cmb-repeat', sectionWrapper);
-
-            $('.no-items', itemsListWrapper).remove();
-
-            var rows = $('.postbox.cmb-row[data-iterator]', itemsListWrapper);
-            if (rows.length) {
-                var newValue = this.value;
-                if (newValue) {
-                    var rowsLastRowIndex = rows.length - 1;
-                    var itemsFound = 0;
-                    rows.each(function(itemWrapperIndex, itemWrapper) {
-                        var assignedTo = $('select[name$="[status]"]', itemWrapper).val();
-
-                        var displayProp = 'none';
-
-                        if (assignedTo === newValue) {
-                            itemsFound++;
-                            displayProp = 'block';
-                        }
-
-                        $(itemWrapper).css('display', displayProp);
-
-                        if (itemWrapperIndex === rowsLastRowIndex) {
-                            if (itemsFound === 0) {
-                                var noItemsFoundWrapperHtml = $('<div class="postbox cmb-row cmb-repeatable-grouping no-items"><p>'+ self.data('no-items-found-message') +'</p></div>');
-                                noItemsFoundWrapperHtml.insertBefore($('.cmb-row:not(.postbox):last-child', itemsListWrapper));
-                            }
-                        }
-                    });
-                } else {
-                    rows.css('display', 'block');
-                }
-            }
-        });
-    }
-
-    // Severity Filter
-    var filterSeveritySelect = $('.upstream-filter-severity');
-    if (filterSeveritySelect.length) {
-        filterSeveritySelect.on('change', function(e) {
-            var self = $(this);
-            var sectionWrapper = self.parents('.cmb2-metabox.cmb-field-list');
-            var itemsListWrapper = $('.cmb-row.cmb-repeat-group-wrap.cmb-type-group.cmb-repeat', sectionWrapper);
-
-            $('.no-items', itemsListWrapper).remove();
-
-            var rows = $('.postbox.cmb-row[data-iterator]', itemsListWrapper);
-            if (rows.length) {
-                var newValue = this.value;
-                if (newValue && newValue !== '- Show All -') {
-                    var rowsLastRowIndex = rows.length - 1;
-                    var itemsFound = 0;
-                    rows.each(function(itemWrapperIndex, itemWrapper) {
-                        var assignedTo = $('select[name$="[severity]"]', itemWrapper).val();
-
-                        var displayProp = 'none';
-
-                        if (assignedTo === newValue) {
-                            itemsFound++;
-                            displayProp = 'block';
-                        }
-
-                        $(itemWrapper).css('display', displayProp);
-
-                        if (itemWrapperIndex === rowsLastRowIndex) {
-                            if (itemsFound === 0) {
-                                var noItemsFoundWrapperHtml = $('<div class="postbox cmb-row cmb-repeatable-grouping no-items"><p>'+ self.data('no-items-found-message') +'</p></div>');
-                                noItemsFoundWrapperHtml.insertBefore($('.cmb-row:not(.postbox):last-child', itemsListWrapper));
-                            }
-                        }
-                    });
-                } else {
-                    rows.css('display', 'block');
-                }
-            }
-        });
-    }
+        }
+    });
 })(jQuery);

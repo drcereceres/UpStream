@@ -371,7 +371,7 @@ class UpStream_Metaboxes_Projects {
             <div class="col-md-4">
                 <div>
                     <label>%s</label>
-                    <select class="cmb-type-select upstream-filter-assigned_to" data-disabled="false" data-owner="true" data-no-items-found-message="%s">
+                    <select class="cmb-type-select upstream-filter upstream-filter-assigned_to" data-disabled="false" data-owner="true" data-no-items-found-message="%s" data-column="assigned_to">
                         %s
                     </select>
                 </div>
@@ -396,7 +396,7 @@ class UpStream_Metaboxes_Projects {
             <div class="col-md-4">
                 <div>
                     <label>%s</label>
-                    <select class="cmb-type-select upstream-filter-status" data-disabled="false" data-owner="true" data-no-items-found-message="%s">
+                    <select class="cmb-type-select upstream-filter upstream-filter-status" data-disabled="false" data-owner="true" data-no-items-found-message="%s" data-column="status">
                         %s
                     </select>
                 </div>
@@ -421,7 +421,7 @@ class UpStream_Metaboxes_Projects {
             <div class="col-md-4">
                 <div>
                     <label>%s</label>
-                    <select class="cmb-type-select upstream-filter-severity" data-disabled="false" data-owner="true" data-no-items-found-message="%s">
+                    <select class="cmb-type-select upstream-filter upstream-filter-severity" data-disabled="false" data-owner="true" data-column="severity" data-no-items-found-message="%s">
                         %s
                     </select>
                 </div>
@@ -467,7 +467,7 @@ class UpStream_Metaboxes_Projects {
             <div class="col-md-4">
                 <div>
                     <label>%s</label>
-                    <select class="cmb-type-select upstream-filter-milestone" data-disabled="false" data-owner="true" data-no-items-found-message="%s">
+                    <select class="cmb-type-select upstream-filter upstream-filter-milestone" data-disabled="false" data-owner="true" data-no-items-found-message="%s" data-column="milestone">
                         %s
                     </select>
                 </div>
