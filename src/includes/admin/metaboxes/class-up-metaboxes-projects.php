@@ -184,7 +184,11 @@ class UpStream_Metaboxes_Projects {
                 'class'             => 'hidden',
                 'data-publish'      => upstream_admin_permissions( 'publish_project_milestones' ),
             ),
-            'before_row'        => $this->getAssignedToFilterHtml()
+            'before_row'        =>
+                $this->getFiltersHeaderHtml() .
+                $this->getAssignedToFilterHtml() .
+                $this->getMilestoneFilterHtml() .
+                $this->getFiltersFooterHtml()
         ) );
 
         if (!$areMilestonesDisabled) {
@@ -365,25 +369,63 @@ class UpStream_Metaboxes_Projects {
         }
 
         $html = sprintf('
-            <div class="row upstream-filters-wrapper">
-                <div class="col-md-12">
-                <h3>%s</h3>
+            <div class="col-md-4">
+                <div>
+                    <label>%s</label>
+                    <select class="cmb-type-select upstream-filter-assigned_to" data-disabled="false" data-owner="true" data-no-items-found-message="%s">
+                        %s
+                    </select>
                 </div>
-                <div class="col-md-12">
-                    <div>
-                        <label>%s</label>
-                        <select class="cmb-type-select upstream-filter-assigned_to" data-disabled="false" data-owner="true" data-no-items-found-message="%s">
-                            %s
-                        </select>
-                    </div>
-                </div>
-                <hr />
-            </div>
-        ',
-            __('Filters', 'upstream'),
+            </div>',
             __('Assigned To', 'upstream'),
             __('No items found.', 'upstream'),
             $usersOptionsHtml
+        );
+
+        return $html;
+    }
+
+    private function getFiltersHeaderHtml()
+    {
+        $html = sprintf('
+            <div class="row upstream-filters-wrapper">
+                <div class="col-md-12">
+                    <h3>%s</h3>
+                </div>
+            ',
+            __('Filters', 'upstream')
+        );
+
+        return $html;
+    }
+
+    private function getFiltersFooterHtml()
+    {
+        $html = '<hr /></div>';
+
+        return $html;
+    }
+
+    private function getMilestoneFilterHtml($displayHeaderTitle = true)
+    {
+        $upstreamMilestonesList = upstream_admin_get_options_milestones();
+        $milestonesOptionsHtml = '<option>- ' . __('Show All', 'upstream') . ' -</option>';
+        foreach ($upstreamMilestonesList as $milestoneId => $milestoneTitle) {
+            $milestonesOptionsHtml .= sprintf('<option value="%s">%s</option>', $milestoneId, $milestoneTitle);
+        }
+
+        $html = sprintf('
+            <div class="col-md-4">
+                <div>
+                    <label>%s</label>
+                    <select class="cmb-type-select upstream-filter-milestone" data-disabled="false" data-owner="true" data-no-items-found-message="%s">
+                        %s
+                    </select>
+                </div>
+            </div>',
+            __('Milestone', 'upstream'),
+            __('No items found.', 'upstream'),
+            $milestonesOptionsHtml
         );
 
         return $html;
@@ -430,7 +472,11 @@ class UpStream_Metaboxes_Projects {
                 'data-empty'    => upstream_empty_group( 'tasks' ),
                 'data-publish'  => upstream_admin_permissions( 'publish_project_tasks' ),
             ),
-            'before_row'        => $this->getAssignedToFilterHtml()
+            'before_row'        =>
+                $this->getFiltersHeaderHtml() .
+                $this->getAssignedToFilterHtml() .
+                $this->getMilestoneFilterHtml() .
+                $this->getFiltersFooterHtml()
         ) );
 
         $group_field_id = $metabox->add_field( array(
@@ -682,7 +728,10 @@ class UpStream_Metaboxes_Projects {
                 'data-empty'    => upstream_empty_group( 'bugs' ),
                 'data-publish'  => upstream_admin_permissions( 'publish_project_bugs' ),
             ),
-            'before_row'    => $this->getAssignedToFilterHtml()
+            'before_row'    =>
+                $this->getFiltersHeaderHtml() .
+                $this->getAssignedToFilterHtml() .
+                $this->getFiltersFooterHtml()
         ) );
 
         $group_field_id = $metabox->add_field( array(
