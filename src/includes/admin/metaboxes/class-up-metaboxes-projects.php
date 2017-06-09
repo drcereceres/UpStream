@@ -409,6 +409,31 @@ class UpStream_Metaboxes_Projects {
         return $html;
     }
 
+    private function getSeverityFilterHtml()
+    {
+        $upstreamSeveritiesList = upstream_admin_get_bug_severities();
+        $statusOptionsHtml = '<option>- ' . __('Show All', 'upstream') . ' -</option>';
+        foreach ($upstreamSeveritiesList as $severityId => $severityTitle) {
+            $statusOptionsHtml .= sprintf('<option value="%s">%s</option>', $severityId, $severityTitle);
+        }
+
+        $html = sprintf('
+            <div class="col-md-4">
+                <div>
+                    <label>%s</label>
+                    <select class="cmb-type-select upstream-filter-severity" data-disabled="false" data-owner="true" data-no-items-found-message="%s">
+                        %s
+                    </select>
+                </div>
+            </div>',
+            __('Severity', 'upstream'),
+            __('No items found.', 'upstream'),
+            $statusOptionsHtml
+        );
+
+        return $html;
+    }
+
     private function getFiltersHeaderHtml()
     {
         $html = sprintf('
@@ -757,6 +782,7 @@ class UpStream_Metaboxes_Projects {
                 $this->getFiltersHeaderHtml() .
                 $this->getAssignedToFilterHtml() .
                 $this->getStatusFilterHtml() .
+                $this->getSeverityFilterHtml() .
                 $this->getFiltersFooterHtml()
         ) );
 
