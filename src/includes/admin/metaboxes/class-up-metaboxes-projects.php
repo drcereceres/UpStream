@@ -187,7 +187,6 @@ class UpStream_Metaboxes_Projects {
             'before_row'        =>
                 $this->getFiltersHeaderHtml() .
                 $this->getAssignedToFilterHtml() .
-                $this->getMilestoneFilterHtml() .
                 $this->getFiltersFooterHtml()
         ) );
 
@@ -385,6 +384,31 @@ class UpStream_Metaboxes_Projects {
         return $html;
     }
 
+    private function getStatusFilterHtml()
+    {
+        $upstreamStatusList = upstream_admin_get_task_statuses();
+        $statusOptionsHtml = '<option>- ' . __('Show All', 'upstream') . ' -</option>';
+        foreach ($upstreamStatusList as $statusId => $statusTitle) {
+            $statusOptionsHtml .= sprintf('<option value="%s">%s</option>', $statusId, $statusTitle);
+        }
+
+        $html = sprintf('
+            <div class="col-md-4">
+                <div>
+                    <label>%s</label>
+                    <select class="cmb-type-select upstream-filter-status" data-disabled="false" data-owner="true" data-no-items-found-message="%s">
+                        %s
+                    </select>
+                </div>
+            </div>',
+            __('Status', 'upstream'),
+            __('No items found.', 'upstream'),
+            $statusOptionsHtml
+        );
+
+        return $html;
+    }
+
     private function getFiltersHeaderHtml()
     {
         $html = sprintf('
@@ -476,6 +500,7 @@ class UpStream_Metaboxes_Projects {
                 $this->getFiltersHeaderHtml() .
                 $this->getAssignedToFilterHtml() .
                 $this->getMilestoneFilterHtml() .
+                $this->getStatusFilterHtml() .
                 $this->getFiltersFooterHtml()
         ) );
 
@@ -731,6 +756,7 @@ class UpStream_Metaboxes_Projects {
             'before_row'    =>
                 $this->getFiltersHeaderHtml() .
                 $this->getAssignedToFilterHtml() .
+                $this->getStatusFilterHtml() .
                 $this->getFiltersFooterHtml()
         ) );
 

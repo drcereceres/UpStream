@@ -580,4 +580,46 @@
             }
         });
     }
+
+    // Status Filter
+    var filterStatusSelect = $('.upstream-filter-status');
+    if (filterStatusSelect.length) {
+        filterStatusSelect.on('change', function(e) {
+            var self = $(this);
+            var sectionWrapper = self.parents('.cmb2-metabox.cmb-field-list');
+            var itemsListWrapper = $('.cmb-row.cmb-repeat-group-wrap.cmb-type-group.cmb-repeat', sectionWrapper);
+
+            $('.no-items', itemsListWrapper).remove();
+
+            var rows = $('.postbox.cmb-row[data-iterator]', itemsListWrapper);
+            if (rows.length) {
+                var newValue = this.value;
+                if (newValue) {
+                    var rowsLastRowIndex = rows.length - 1;
+                    var itemsFound = 0;
+                    rows.each(function(itemWrapperIndex, itemWrapper) {
+                        var assignedTo = $('select[name$="[status]"]', itemWrapper).val();
+
+                        var displayProp = 'none';
+
+                        if (assignedTo === newValue) {
+                            itemsFound++;
+                            displayProp = 'block';
+                        }
+
+                        $(itemWrapper).css('display', displayProp);
+
+                        if (itemWrapperIndex === rowsLastRowIndex) {
+                            if (itemsFound === 0) {
+                                var noItemsFoundWrapperHtml = $('<div class="postbox cmb-row cmb-repeatable-grouping no-items"><p>'+ self.data('no-items-found-message') +'</p></div>');
+                                noItemsFoundWrapperHtml.insertBefore($('.cmb-row:not(.postbox):last-child', itemsListWrapper));
+                            }
+                        }
+                    });
+                } else {
+                    rows.css('display', 'block');
+                }
+            }
+        });
+    }
 })(jQuery);
