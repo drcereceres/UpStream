@@ -502,20 +502,40 @@
     var filterAssignedToSelect = $('.upstream-filter-assigned_to');
     if (filterAssignedToSelect.length) {
         filterAssignedToSelect.on('change', function(e) {
-            var sectionWrapper = $(this).parents('.cmb2-metabox.cmb-field-list');
+            var self = $(this);
+            var sectionWrapper = self.parents('.cmb2-metabox.cmb-field-list');
             var itemsListWrapper = $('.cmb-row.cmb-repeat-group-wrap.cmb-type-group.cmb-repeat', sectionWrapper);
 
+            $('.no-items', itemsListWrapper).remove();
+
             var rows = $('.postbox.cmb-row[data-iterator]', itemsListWrapper);
+            if (rows.length) {
+                var newValue = parseInt(this.value);
+                if (newValue > 0) {
+                    var rowsLastRowIndex = rows.length - 1;
+                    var itemsFound = 0;
+                    rows.each(function(itemWrapperIndex, itemWrapper) {
+                        var assignedTo = parseInt($('select[name$="[assigned_to]"]', itemWrapper).val());
 
-            var newValue = parseInt(this.value);
-            if (newValue > 0) {
-                rows.each(function(itemWrapperIndex, itemWrapper) {
-                    var assignedTo = parseInt($('select[name$="[assigned_to]"]', itemWrapper).val());
+                        var displayProp = 'none';
 
-                    $(itemWrapper).css('display', assignedTo === newValue ? 'block' : 'none');
-                });
-            } else {
-                rows.css('display', 'block');
+                        if (assignedTo === newValue) {
+                            itemsFound++;
+                            displayProp = 'block';
+                        }
+
+                        $(itemWrapper).css('display', displayProp);
+
+                        if (itemWrapperIndex === rowsLastRowIndex) {
+                            if (itemsFound === 0) {
+                                var noItemsFoundWrapperHtml = $('<div class="postbox cmb-row cmb-repeatable-grouping no-items"><p>'+ self.data('no-items-found-message') +'</p></div>');
+                                noItemsFoundWrapperHtml.insertBefore($('.cmb-row:not(.postbox):last-child', itemsListWrapper));
+                            }
+                        }
+                    });
+                } else {
+                    rows.css('display', 'block');
+                }
             }
         });
     }

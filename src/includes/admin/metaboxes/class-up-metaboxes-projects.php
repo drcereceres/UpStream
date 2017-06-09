@@ -372,7 +372,7 @@ class UpStream_Metaboxes_Projects {
                 <div class="col-md-12">
                     <div>
                         <label>%s</label>
-                        <select class="cmb-type-select upstream-filter-assigned_to" data-disabled="false" data-owner="true">
+                        <select class="cmb-type-select upstream-filter-assigned_to" data-disabled="false" data-owner="true" data-no-items-found-message="%s">
                             %s
                         </select>
                     </div>
@@ -382,6 +382,7 @@ class UpStream_Metaboxes_Projects {
         ',
             __('Filters', 'upstream'),
             __('Assigned To', 'upstream'),
+            __('No items found.', 'upstream'),
             $usersOptionsHtml
         );
 
