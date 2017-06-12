@@ -184,6 +184,10 @@ class UpStream_Metaboxes_Projects {
                 'class'             => 'hidden',
                 'data-publish'      => upstream_admin_permissions( 'publish_project_milestones' ),
             ),
+            'before_row'        =>
+                $this->getFiltersHeaderHtml() .
+                $this->getAssignedToFilterHtml() .
+                $this->getFiltersFooterHtml()
         ) );
 
         if (!$areMilestonesDisabled) {
@@ -355,6 +359,175 @@ class UpStream_Metaboxes_Projects {
         }
     }
 
+    /**
+     * Return the Assigned To filter HTML.
+     *
+     * @since   1.0.0
+     * @access  private
+     *
+     * @return  string
+     */
+    private function getAssignedToFilterHtml()
+    {
+        $upstreamUsersList = upstream_admin_get_all_project_users();
+        $usersOptionsHtml = '<option>- ' . __('Show Everyone', 'upstream') . ' -</option>';
+        foreach ($upstreamUsersList as $userId => $userName) {
+            $usersOptionsHtml .= sprintf('<option value="%s">%s</option>', $userId, $userName);
+        }
+
+        $html = sprintf('
+            <div class="col-md-4">
+                <div>
+                    <label>%s</label>
+                    <select class="cmb-type-select upstream-filter upstream-filter-assigned_to" data-disabled="false" data-owner="true" data-no-items-found-message="%s" data-column="assigned_to">
+                        %s
+                    </select>
+                </div>
+            </div>',
+            __('Assigned To', 'upstream'),
+            __('No items found.', 'upstream'),
+            $usersOptionsHtml
+        );
+
+        return $html;
+    }
+
+    /**
+     * Return the Status filter HTML.
+     *
+     * @since   1.0.0
+     * @access  private
+     *
+     * @return  string
+     */
+    private function getStatusFilterHtml()
+    {
+        $upstreamStatusList = upstream_admin_get_task_statuses();
+        $statusOptionsHtml = '<option>- ' . __('Show All', 'upstream') . ' -</option>';
+        foreach ($upstreamStatusList as $statusId => $statusTitle) {
+            $statusOptionsHtml .= sprintf('<option value="%s">%s</option>', $statusId, $statusTitle);
+        }
+
+        $html = sprintf('
+            <div class="col-md-4">
+                <div>
+                    <label>%s</label>
+                    <select class="cmb-type-select upstream-filter upstream-filter-status" data-disabled="false" data-owner="true" data-no-items-found-message="%s" data-column="status">
+                        %s
+                    </select>
+                </div>
+            </div>',
+            __('Status', 'upstream'),
+            __('No items found.', 'upstream'),
+            $statusOptionsHtml
+        );
+
+        return $html;
+    }
+
+    /**
+     * Return the Severity filter HTML.
+     *
+     * @since   1.0.0
+     * @access  private
+     *
+     * @return  string
+     */
+    private function getSeverityFilterHtml()
+    {
+        $upstreamSeveritiesList = upstream_admin_get_bug_severities();
+        $statusOptionsHtml = '<option>- ' . __('Show All', 'upstream') . ' -</option>';
+        foreach ($upstreamSeveritiesList as $severityId => $severityTitle) {
+            $statusOptionsHtml .= sprintf('<option value="%s">%s</option>', $severityId, $severityTitle);
+        }
+
+        $html = sprintf('
+            <div class="col-md-4">
+                <div>
+                    <label>%s</label>
+                    <select class="cmb-type-select upstream-filter upstream-filter-severity" data-disabled="false" data-owner="true" data-column="severity" data-no-items-found-message="%s">
+                        %s
+                    </select>
+                </div>
+            </div>',
+            __('Severity', 'upstream'),
+            __('No items found.', 'upstream'),
+            $statusOptionsHtml
+        );
+
+        return $html;
+    }
+
+    /**
+     * Return the HTML that opens the Filters wrapper.
+     *
+     * @since   1.0.0
+     * @access  private
+     *
+     * @return  string
+     */
+    private function getFiltersHeaderHtml()
+    {
+        $html = sprintf('
+            <div class="row upstream-filters-wrapper">
+                <div class="col-md-12">
+                    <h3>%s</h3>
+                </div>
+            ',
+            __('Filters', 'upstream')
+        );
+
+        return $html;
+    }
+
+    /**
+     * Return the HTML that closes the Filters wrapper.
+     *
+     * @since   1.0.0
+     * @access  private
+     *
+     * @return  string
+     */
+    private function getFiltersFooterHtml()
+    {
+        $html = '</div>';
+
+        return $html;
+    }
+
+    /**
+     * Return the Milestone filter HTML.
+     *
+     * @since   1.0.0
+     * @access  private
+     *
+     * @return  string
+     */
+    private function getMilestoneFilterHtml()
+    {
+        $upstreamMilestonesList = upstream_admin_get_options_milestones();
+        $milestonesOptionsHtml = '<option>- ' . __('Show All', 'upstream') . ' -</option>';
+        foreach ($upstreamMilestonesList as $milestoneId => $milestoneTitle) {
+            $milestonesOptionsHtml .= sprintf('<option value="%s">%s</option>', $milestoneId, $milestoneTitle);
+        }
+
+        $html = sprintf('
+            <div class="col-md-4">
+                <div>
+                    <label>%s</label>
+                    <select class="cmb-type-select upstream-filter upstream-filter-milestone" data-disabled="false" data-owner="true" data-no-items-found-message="%s" data-column="milestone">
+                        %s
+                    </select>
+                </div>
+            </div>',
+            __('Milestone', 'upstream'),
+            __('No items found.', 'upstream'),
+            $milestonesOptionsHtml
+        );
+
+        return $html;
+    }
+
 
 /* ======================================================================================
                                         TASKS
@@ -396,6 +569,12 @@ class UpStream_Metaboxes_Projects {
                 'data-empty'    => upstream_empty_group( 'tasks' ),
                 'data-publish'  => upstream_admin_permissions( 'publish_project_tasks' ),
             ),
+            'before_row'        =>
+                $this->getFiltersHeaderHtml() .
+                $this->getAssignedToFilterHtml() .
+                $this->getMilestoneFilterHtml() .
+                $this->getStatusFilterHtml() .
+                $this->getFiltersFooterHtml()
         ) );
 
         $group_field_id = $metabox->add_field( array(
@@ -647,6 +826,12 @@ class UpStream_Metaboxes_Projects {
                 'data-empty'    => upstream_empty_group( 'bugs' ),
                 'data-publish'  => upstream_admin_permissions( 'publish_project_bugs' ),
             ),
+            'before_row'    =>
+                $this->getFiltersHeaderHtml() .
+                $this->getAssignedToFilterHtml() .
+                $this->getStatusFilterHtml() .
+                $this->getSeverityFilterHtml() .
+                $this->getFiltersFooterHtml()
         ) );
 
         $group_field_id = $metabox->add_field( array(

@@ -714,3 +714,12 @@ body.upstream .wp-list-table.fixed.posts {
 .cmb2-wrap .cmb2-metabox .cmb-file-field-image {
   width: 100%;
 }
+
+.upstream-filters-wrapper label {
+  font-weight: bold;
+  display: block;
+}
+
+.upstream-filters-wrapper + div {
+  margin-bottom: 15px !important;
+}
