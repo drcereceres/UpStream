@@ -293,7 +293,8 @@ class UpStream_Metaboxes_Projects {
                     'media_buttons' => true,
                     'textarea_rows' => 5,
                     'teeny'         => true
-                )
+                ),
+                'escape_cb'         => 'applyOEmbedFiltersToWysiwygEditorContent'
             );
 
             // set up the group grid plugin
@@ -703,7 +704,8 @@ class UpStream_Metaboxes_Projects {
                     'media_buttons' => true,
                     'textarea_rows' => 5,
                     'teeny'         => true
-                )
+                ),
+                'escape_cb'         => 'applyOEmbedFiltersToWysiwygEditorContent'
             );
 
             if (!upstream_are_milestones_disabled() && !upstream_disable_milestones()) {
@@ -906,7 +908,8 @@ class UpStream_Metaboxes_Projects {
                     'media_buttons' => true,
                     'textarea_rows' => 5,
                     'teeny'         => true
-                )
+                ),
+                'escape_cb'         => 'applyOEmbedFiltersToWysiwygEditorContent'
             );
 
             // start row
@@ -1393,7 +1396,8 @@ class UpStream_Metaboxes_Projects {
                 'media_buttons' => true,
                 'textarea_rows' => 5,
                 'teeny'         => true
-            )
+            ),
+            'escape_cb'         => 'applyOEmbedFiltersToWysiwygEditorContent'
         ) );
 
 

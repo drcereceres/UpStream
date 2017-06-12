@@ -738,3 +738,35 @@ function upstream_disable_discussions()
 
     return $areDiscussionsDisabled;
 }
+
+/**
+ * Apply OEmbed filters to a given string in an attempt to render potential embeddable content.
+ * This function is called as a callback from CMB2 field method 'escape_cb'.
+ *
+ * @since   @todo
+ *
+ * @see     https://github.com/CMB2/CMB2/wiki/Field-Parameters#escape_cb
+ *
+ * @uses    $wp_embed
+ *
+ * @param   mixed       $content    The unescaped content to be analyzed.
+ * @param   array       $field_args Array of field arguments.
+ * @param   \CMB2_Field $field      The field instance.
+ *
+ * @return  mixed                   Escaped value to be displayed.
+ */
+function applyOEmbedFiltersToWysiwygEditorContent($content, $field_args, $field)
+{
+    global $wp_embed;
+
+    $content = (string)$content;
+
+    if (strlen($content) > 0) {
+        $content = $wp_embed->autoembed($content);
+        $content = $wp_embed->run_shortcode($content);
+        $content = wpautop($content);
+        $content = do_shortcode($content);
+    }
+
+    return $content;
+}
