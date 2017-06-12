@@ -381,7 +381,7 @@
 #_upstream_project_discussions .admin-discussion li:last-child {
   box-shadow: none;
 }
-#_upstream_project_discussions .admin-discussion img {
+#_upstream_project_discussions .admin-discussion > li > img {
   float: left;
   margin: 0 15px 10px 0;
 }
