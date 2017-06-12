@@ -516,10 +516,11 @@
                     var rowsLastRowIndex = rows.length - 1;
                     var itemsFound = 0;
                     rows.each(function(itemWrapperIndex, itemWrapper) {
+                        var itemValue;
                         if (targetColumn === 'milestone') {
-                            var itemValue = $('select[name$="['+ targetColumn +']"] option:selected', itemWrapper).text();
+                            itemValue = $('select[name$="['+ targetColumn +']"] option:selected', itemWrapper).text();
                         } else {
-                            var itemValue = $('select[name$="['+ targetColumn +']"]', itemWrapper).val();
+                            itemValue = $('select[name$="['+ targetColumn +']"]', itemWrapper).val();
                         }
 
                         var displayProp = 'none';

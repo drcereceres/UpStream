@@ -490,7 +490,7 @@ class UpStream_Metaboxes_Projects {
      */
     private function getFiltersFooterHtml()
     {
-        $html = '<hr /></div>';
+        $html = '</div>';
 
         return $html;
     }

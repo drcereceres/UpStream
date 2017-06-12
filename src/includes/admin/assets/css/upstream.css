@@ -719,3 +719,7 @@ body.upstream .wp-list-table.fixed.posts {
   font-weight: bold;
   display: block;
 }
+
+.upstream-filters-wrapper + div {
+  margin-bottom: 15px !important;
+}
