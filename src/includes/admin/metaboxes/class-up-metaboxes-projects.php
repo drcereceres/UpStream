@@ -290,7 +290,7 @@ class UpStream_Metaboxes_Projects {
                 'permissions'       => 'milestone_notes_field',
                 'before'            => 'upstream_add_field_attributes',
                 'options'           => array(
-                    'media_buttons' => false,
+                    'media_buttons' => true,
                     'textarea_rows' => 5,
                     'teeny'         => true
                 )
@@ -700,7 +700,7 @@ class UpStream_Metaboxes_Projects {
                 'permissions'       => 'task_notes_field',
                 'before'            => 'upstream_add_field_attributes',
                 'options'           => array(
-                    'media_buttons' => false,
+                    'media_buttons' => true,
                     'textarea_rows' => 5,
                     'teeny'         => true
                 )
@@ -903,7 +903,7 @@ class UpStream_Metaboxes_Projects {
                 'permissions'       => 'bug_description_field',
                 'before'            => 'upstream_add_field_attributes',
                 'options'           => array(
-                    'media_buttons' => false,
+                    'media_buttons' => true,
                     'textarea_rows' => 5,
                     'teeny'         => true
                 )
@@ -1390,7 +1390,7 @@ class UpStream_Metaboxes_Projects {
             'after_field'       => 'upstream_admin_discussion_button',
             'after_row'         => 'upstream_admin_display_messages',
             'options'           => array(
-                'media_buttons' => false,
+                'media_buttons' => true,
                 'textarea_rows' => 5,
                 'teeny'         => true
             )
