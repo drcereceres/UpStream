@@ -418,6 +418,8 @@ function upstream_admin_display_message_item( $post_id, $comment ) {
     if( ! $post_id )
         return;
 
+    global $wp_embed;
+
     $user       = upstream_user_data( $comment['created_by'] );
     $time       = date_i18n( get_option( 'time_format' ), $comment['created_time'] ) . ' ' . upstream_format_date( $comment['created_time'] );
     $time_ago   = sprintf( _x( '%s ago', '%s = human-readable time difference', 'upstream' ), human_time_diff( $comment['created_time'], current_time( 'timestamp', false ) ) );
@@ -428,7 +430,7 @@ function upstream_admin_display_message_item( $post_id, $comment ) {
         <img width="36" height="36" src="<?php echo $user['avatar']; ?>" />
         <span class="name"><?php echo esc_html( $user['full_name'] ); ?></span>
         <span class="date"><?php echo esc_html( $time_ago ); ?> <small>(<?php echo esc_html( $time ); ?>)</small></span>
-        <span class="comment"><?php echo wpautop( $comment['comment'] ); ?></span>
+        <span class="comment"><?php echo $wp_embed->autoembed(wpautop($comment['comment'])); ?></span>
         <a data-id="<?php echo esc_attr( $comment['id'] ); ?>" class="button cmb-remove-group-row alignright" id="delete_message"><?php _e( 'Delete', 'upstream' ) ?></a>
     </li>
 
