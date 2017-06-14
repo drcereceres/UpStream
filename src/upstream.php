@@ -98,8 +98,10 @@ final class UpStream
     {
         add_action( 'init', array( $this, 'init' ), 0 );
         add_filter( 'plugin_row_meta', array( $this, 'plugin_row_meta' ), 10, 2 );
-        add_filter('quicktags_settings', 'upstream_tinymce_teeny_settings');
-        add_filter('teeny_mce_before_init', 'upstream_tinymce_before_init');
+        add_filter('quicktags_settings', 'upstream_tinymce_quicktags_settings');
+        add_filter('tiny_mce_before_init', 'upstream_tinymce_before_init_setup_toolbar');
+        add_filter('tiny_mce_before_init', 'upstream_tinymce_before_init');
+        add_filter('teeny_mce_before_init', 'upstream_tinymce_before_init_setup_toolbar');
     }
 
     /**

@@ -291,8 +291,7 @@ class UpStream_Metaboxes_Projects {
                 'before'            => 'upstream_add_field_attributes',
                 'options'           => array(
                     'media_buttons' => true,
-                    'textarea_rows' => 5,
-                    'teeny'         => true
+                    'textarea_rows' => 5
                 ),
                 'escape_cb'         => 'applyOEmbedFiltersToWysiwygEditorContent'
             );
@@ -702,8 +701,7 @@ class UpStream_Metaboxes_Projects {
                 'before'            => 'upstream_add_field_attributes',
                 'options'           => array(
                     'media_buttons' => true,
-                    'textarea_rows' => 5,
-                    'teeny'         => true
+                    'textarea_rows' => 5
                 ),
                 'escape_cb'         => 'applyOEmbedFiltersToWysiwygEditorContent'
             );
@@ -906,8 +904,7 @@ class UpStream_Metaboxes_Projects {
                 'before'            => 'upstream_add_field_attributes',
                 'options'           => array(
                     'media_buttons' => true,
-                    'textarea_rows' => 5,
-                    'teeny'         => true
+                    'textarea_rows' => 5
                 ),
                 'escape_cb'         => 'applyOEmbedFiltersToWysiwygEditorContent'
             );
@@ -1383,6 +1380,7 @@ class UpStream_Metaboxes_Projects {
             'object_types'  => array( $this->type ),
             'priority'      => 'low',
         ) );
+
         $metabox->add_field( array(
             'name'              => __( 'New Message', 'upstream' ),
             'desc'              => '',
@@ -1394,16 +1392,11 @@ class UpStream_Metaboxes_Projects {
             'after_row'         => 'upstream_admin_display_messages',
             'options'           => array(
                 'media_buttons' => true,
-                'textarea_rows' => 5,
-                'teeny'         => true
+                'textarea_rows' => 5
             ),
             'escape_cb'         => 'applyOEmbedFiltersToWysiwygEditorContent'
         ) );
-
-
-
     }
-
 }
 
 endif;
