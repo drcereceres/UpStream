@@ -690,6 +690,9 @@ function upstream_tinymce_before_init_setup_toolbar($tinyMCE)
 {
     if (preg_match('/_upstream_project_|#description|#notes|#new_message/i', $tinyMCE['selector'])) {
         $tinyMCE['toolbar1'] = 'bold,italic,underline,strikethrough,bullist,numlist,link';
+        $tinyMCE['toolbar2'] = '';
+        $tinyMCE['toolbar3'] = '';
+        $tinyMCE['toolbar4'] = '';
     }
 
     return $tinyMCE;
