@@ -1260,9 +1260,8 @@ class UpStream_Metaboxes_Projects {
                 'permissions'       => 'file_description_field',
                 'before'            => 'upstream_add_field_attributes',
                 'options'           => array(
-                    'media_buttons' => false,
-                    'textarea_rows' => 3,
-                    'teeny'         => true
+                    'media_buttons' => true,
+                    'textarea_rows' => 3
                 )
             );
 
