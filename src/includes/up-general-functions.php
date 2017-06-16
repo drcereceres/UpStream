@@ -714,8 +714,7 @@ function upstream_tinymce_before_init($tinyMCE)
                 'wpgallery',
                 'wpdialogs',
                 'wptextpattern',
-                'wpview',
-                'wpembed'
+                'wpview'
             );
 
             $pluginsList = explode(',', $tinyMCE['plugins']);
