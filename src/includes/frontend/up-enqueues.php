@@ -66,7 +66,6 @@ function upstream_enqueue_styles_scripts(){
      */
     $js_dir = 'templates/assets/js/';
 
-    wp_enqueue_script( 'up-bootstrap', $up_url . $js_dir . 'bootstrap.min.js', array( 'jquery' ), $up_ver, true );
     wp_enqueue_script( 'up-fastclick', $up_url . $js_dir . 'fastclick.js', array( 'jquery' ), $up_ver, true );
     wp_enqueue_script( 'up-nprogress', $up_url . $js_dir . 'nprogress.js', array( 'jquery' ), $up_ver, true );
     wp_enqueue_script( 'up-progressbar', $up_url . $js_dir . 'progressbar.min.js', array( 'jquery' ), $up_ver, true );

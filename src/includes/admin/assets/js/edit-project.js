@@ -1,5 +1,4 @@
 (function($){
-
     function initProject() {
         var $box = $( document.getElementById( 'post-body' ) );
 

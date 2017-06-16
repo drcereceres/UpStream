@@ -173,14 +173,6 @@ jQuery(document).ready(function($){
 });
 // /Panel toolbox
 
-// Tooltip
-jQuery(document).ready(function($){
-    $('[data-toggle="tooltip"]').tooltip({
-        container: 'body'
-    });
-});
-// /Tooltip
-
 // Progressbar
 jQuery(document).ready(function($){
 if (jQuery(".progress .progress-bar")[0]) {

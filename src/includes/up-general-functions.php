@@ -677,19 +677,51 @@ function upstream_are_files_disabled($post_id = 0)
     return $areBugsDisabled;
 }
 
-function upstream_tinymce_teeny_settings($teenyTinyMCE)
+function upstream_tinymce_quicktags_settings($tinyMCE)
 {
-    if (preg_match('/^(?:_upstream_project_|description|notes|new_message)/i', $teenyTinyMCE['id'])) {
-        $teenyTinyMCE['buttons'] = 'strong,em,link,del,ul,ol,li,close';
+    if (preg_match('/^(?:_upstream_project_|description|notes|new_message)/i', $tinyMCE['id'])) {
+        $tinyMCE['buttons'] = 'strong,em,link,del,ul,ol,li,close';
     }
 
-    return $teenyTinyMCE;
+    return $tinyMCE;
+}
+
+function upstream_tinymce_before_init_setup_toolbar($tinyMCE)
+{
+    if (preg_match('/_upstream_project_|#description|#notes|#new_message/i', $tinyMCE['selector'])) {
+        $tinyMCE['toolbar1'] = 'bold,italic,underline,strikethrough,bullist,numlist,link';
+        $tinyMCE['toolbar2'] = '';
+        $tinyMCE['toolbar3'] = '';
+        $tinyMCE['toolbar4'] = '';
+    }
+
+    return $tinyMCE;
 }
 
 function upstream_tinymce_before_init($tinyMCE)
 {
     if (preg_match('/_upstream_project_|#description|#notes|#new_message/i', $tinyMCE['selector'])) {
-        $tinyMCE['toolbar1'] = 'bold,italic,underline,strikethrough,bullist,numlist,link';
+        if (isset($tinyMCE['plugins'])) {
+            $pluginsToBeAdded = array(
+                'charmap',
+                'hr',
+                'media',
+                'paste',
+                'tabfocus',
+                'textcolor',
+                'wpautoresize',
+                'wpemoji',
+                'wpgallery',
+                'wpdialogs',
+                'wptextpattern',
+                'wpview'
+            );
+
+            $pluginsList = explode(',', $tinyMCE['plugins']);
+            $pluginsListUnique = array_unique(array_merge($pluginsList, $pluginsToBeAdded));
+
+            $tinyMCE['plugins'] = implode(',', $pluginsListUnique);
+        }
     }
 
     return $tinyMCE;
