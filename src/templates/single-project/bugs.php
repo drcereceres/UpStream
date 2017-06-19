@@ -19,7 +19,7 @@ if (!defined('ABSPATH')) exit;
 
         <div class="x_content">
 
-            <table id="bugs" class="table table-striped table-bordered dt-responsive nowrap" cellspacing="0" width="100%" data-order="[[ 4, &quot;asc&quot; ]]">
+            <table id="bugs" class="table table-striped table-bordered dt-responsive nowrap" cellspacing="0" width="100%" data-order="[[ 4, &quot;asc&quot; ]]" data-type="bug">
                 <thead>
                     <?php echo upstream_output_table_header( 'bugs' ); ?>
                 </thead>
