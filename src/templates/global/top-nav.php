@@ -27,7 +27,7 @@ $clientLogo = upstream_client_logo($clientId);
                     </a>
                     <ul class="dropdown-menu dropdown-usermenu pull-right">
                         <li>
-                            <a href="<?php echo esc_url(get_bloginfo('url') . '/projects/'); ?>">
+                            <a href="<?php echo get_post_type_archive_link('project'); ?>">
                                 <i class="fa fa-home pull-right"></i><?php printf(__('My %s', 'upstream'), upstream_project_label_plural()); ?>
                             </a>
                         </li>
