@@ -775,7 +775,7 @@ function upstream_disable_discussions()
  * Apply OEmbed filters to a given string in an attempt to render potential embeddable content.
  * This function is called as a callback from CMB2 field method 'escape_cb'.
  *
- * @since   @todo
+ * @since   1.10.0
  *
  * @see     https://github.com/CMB2/CMB2/wiki/Field-Parameters#escape_cb
  *

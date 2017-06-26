@@ -4,7 +4,7 @@ Tags: project, manage, management, project management, project manager, wordpres
 Requires at least: 4.5
 Tested up to: 4.8
 Stable tag: 1.9.1
-License: GPLv3
+License: GPL-3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
 WordPress Project Management by UpStream that is powerful, extensible & easy to use. Manage projects, clients, milestones, tasks, files & more.
@@ -121,6 +121,23 @@ UpStream does not use the existing styling of your theme. The features and the v
 
 The format is based on [Keep a Changelog](http://keepachangelog.com)
 and this project adheres to [Semantic Versioning](http://semver.org).
+
+= [1.10.0] - @todo =
+
+Added:
+* Added filters on metaboxes on admin
+* Added support to embeds on several TinyMCE instances
+* Added support to the Email Notifications plugin
+
+Changed:
+* Code optimizations
+* Readded Add Media button on several TinyMCE instances
+* UpStream no longer use Bootstrap modals
+
+Fixed:
+* Fixed text overflowing from the Project Ativity section
+* Fixed bug with some fields on frontend
+* Fixed URLs references on frontend when WP was using non-default Permalink settings
 
 = [1.9.1] - 2017-06-06 =
 
