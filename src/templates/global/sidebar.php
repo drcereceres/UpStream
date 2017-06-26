@@ -3,6 +3,8 @@ if (!defined('ABSPATH')) exit;
 
 $blogInfoUrl = get_bloginfo('url');
 
+$projectsListURL = get_post_type_archive_link('project');
+
 $labelProjectPlural = upstream_project_label_plural();
 $labelTaskPlural = upstream_task_label_plural();
 $labelBugPlural = upstream_bug_label_plural();
@@ -54,7 +56,7 @@ $areFilesDisabledForThisProject = upstream_are_files_disabled();
                         </a>
                         <ul class="nav child_menu">
                             <li>
-                                <a href="<?php echo $blogInfoUrl; ?>/projects/">
+                                <a href="<?php echo $projectsListURL; ?>">
                                     <?php printf(__('All %s', 'upstream'), $labelProjectPlural); ?>
                                 </a>
                             </li>
@@ -143,7 +145,7 @@ $areFilesDisabledForThisProject = upstream_are_files_disabled();
 
         <!-- /menu footer buttons -->
         <div class="sidebar-footer hidden-small">
-            <a href="<?php echo esc_url($blogInfoUrl . '/projects/'); ?>" data-toggle="tooltip" data-placement="top" title="<?php printf(__('My %s', 'upstream'), $labelProjectPlural); ?>">
+            <a href="<?php echo $projectsListURL; ?>" data-toggle="tooltip" data-placement="top" title="<?php printf(__('My %s', 'upstream'), $labelProjectPlural); ?>">
                 <i class="fa fa-home"></i>
             </a>
             <a href="<?php echo esc_url('mailto:' . upstream_admin_email()); ?>" data-toggle="tooltip" data-placement="top" title="<?php _e('Send email to Admin', 'upstream'); ?>">

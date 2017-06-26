@@ -4,7 +4,7 @@
  * Description: A WordPress Project Management plugin by UpStream.
  * Author: UpStream
  * Author URI: https://upstreamplugin.com
- * Version: 1.9.1
+ * Version: 1.10.0b1
  * Text Domain: upstream
  * Domain Path: languages
  */
@@ -98,8 +98,10 @@ final class UpStream
     {
         add_action( 'init', array( $this, 'init' ), 0 );
         add_filter( 'plugin_row_meta', array( $this, 'plugin_row_meta' ), 10, 2 );
-        add_filter('quicktags_settings', 'upstream_tinymce_teeny_settings');
-        add_filter('teeny_mce_before_init', 'upstream_tinymce_before_init');
+        add_filter('quicktags_settings', 'upstream_tinymce_quicktags_settings');
+        add_filter('tiny_mce_before_init', 'upstream_tinymce_before_init_setup_toolbar');
+        add_filter('tiny_mce_before_init', 'upstream_tinymce_before_init');
+        add_filter('teeny_mce_before_init', 'upstream_tinymce_before_init_setup_toolbar');
     }
 
     /**
@@ -113,7 +115,7 @@ final class UpStream
         $this->define( 'UPSTREAM_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
         $this->define( 'UPSTREAM_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
         $this->define( 'UPSTREAM_PLUGIN_BASENAME', plugin_basename( __FILE__ ) );
-        $this->define( 'UPSTREAM_VERSION', '1.9.1' );
+        $this->define( 'UPSTREAM_VERSION', '1.10.0b1' );
     }
 
     /**

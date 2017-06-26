@@ -23,7 +23,7 @@ $itemAlias = 'bugs';
             <div class="clearfix"></div>
         </div>
         <div class="x_content">
-            <table id="my-bugs" class="datatable table table-striped table-bordered dt-responsive nowrap" cellspacing="0" width="100%" data-order="[[ 5, &quot;asc&quot; ]]">
+            <table id="my-bugs" class="datatable table table-striped table-bordered dt-responsive nowrap" cellspacing="0" width="100%" data-order="[[ 5, &quot;asc&quot; ]]" data-type="bug">
                 <thead>
                     <?php echo upstream_output_table_header($itemAlias); ?>
                 </thead>

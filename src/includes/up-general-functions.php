@@ -677,19 +677,51 @@ function upstream_are_files_disabled($post_id = 0)
     return $areBugsDisabled;
 }
 
-function upstream_tinymce_teeny_settings($teenyTinyMCE)
+function upstream_tinymce_quicktags_settings($tinyMCE)
 {
-    if (preg_match('/^(?:_upstream_project_|description|notes|new_message)/i', $teenyTinyMCE['id'])) {
-        $teenyTinyMCE['buttons'] = 'strong,em,link,del,ul,ol,li,close';
+    if (preg_match('/^(?:_upstream_project_|description|notes|new_message)/i', $tinyMCE['id'])) {
+        $tinyMCE['buttons'] = 'strong,em,link,del,ul,ol,li,close';
     }
 
-    return $teenyTinyMCE;
+    return $tinyMCE;
+}
+
+function upstream_tinymce_before_init_setup_toolbar($tinyMCE)
+{
+    if (preg_match('/_upstream_project_|#description|#notes|#new_message|#upstream/i', $tinyMCE['selector'])) {
+        $tinyMCE['toolbar1'] = 'bold,italic,underline,strikethrough,bullist,numlist,link';
+        $tinyMCE['toolbar2'] = '';
+        $tinyMCE['toolbar3'] = '';
+        $tinyMCE['toolbar4'] = '';
+    }
+
+    return $tinyMCE;
 }
 
 function upstream_tinymce_before_init($tinyMCE)
 {
-    if (preg_match('/_upstream_project_|#description|#notes|#new_message/i', $tinyMCE['selector'])) {
-        $tinyMCE['toolbar1'] = 'bold,italic,underline,strikethrough,bullist,numlist,link';
+    if (preg_match('/_upstream_project_|#description|#notes|#new_message|#upstream/i', $tinyMCE['selector'])) {
+        if (isset($tinyMCE['plugins'])) {
+            $pluginsToBeAdded = array(
+                'charmap',
+                'hr',
+                'media',
+                'paste',
+                'tabfocus',
+                'textcolor',
+                'wpautoresize',
+                'wpemoji',
+                'wpgallery',
+                'wpdialogs',
+                'wptextpattern',
+                'wpview'
+            );
+
+            $pluginsList = explode(',', $tinyMCE['plugins']);
+            $pluginsListUnique = array_unique(array_merge($pluginsList, $pluginsToBeAdded));
+
+            $tinyMCE['plugins'] = implode(',', $pluginsListUnique);
+        }
     }
 
     return $tinyMCE;
@@ -737,4 +769,36 @@ function upstream_disable_discussions()
     $areDiscussionsDisabled = $disable_discussion[0] === 'yes';
 
     return $areDiscussionsDisabled;
+}
+
+/**
+ * Apply OEmbed filters to a given string in an attempt to render potential embeddable content.
+ * This function is called as a callback from CMB2 field method 'escape_cb'.
+ *
+ * @since   1.10.0
+ *
+ * @see     https://github.com/CMB2/CMB2/wiki/Field-Parameters#escape_cb
+ *
+ * @uses    $wp_embed
+ *
+ * @param   mixed       $content    The unescaped content to be analyzed.
+ * @param   array       $field_args Array of field arguments.
+ * @param   \CMB2_Field $field      The field instance.
+ *
+ * @return  mixed                   Escaped value to be displayed.
+ */
+function applyOEmbedFiltersToWysiwygEditorContent($content, $field_args, $field)
+{
+    global $wp_embed;
+
+    $content = (string)$content;
+
+    if (strlen($content) > 0) {
+        $content = $wp_embed->autoembed($content);
+        $content = $wp_embed->run_shortcode($content);
+        $content = wpautop($content);
+        $content = do_shortcode($content);
+    }
+
+    return $content;
 }

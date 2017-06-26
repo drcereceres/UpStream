@@ -401,7 +401,7 @@ class UpStream_Project_Activity {
                                     continue;
                                 }
 
-                                $title = isset( $item['title'] ) ? $item['title'] : $item['milestone'];
+                                $title = isset( $item['title'] ) ? $item['title'] : (isset($item['milestone']) ? $item['milestone'] : "");
                                 $item_removed .= '<span class="item">' . sprintf( __( 'Deleted: %s', 'upstream' ), '<span class="highlight">' . $title . '</span>' ) . '</span>';
                             }
 
@@ -423,7 +423,7 @@ class UpStream_Project_Activity {
                                     continue;
                                 }
 
-                                $title = isset( $item['title'] ) ? $item['title'] : $item['milestone'];
+                                $title = isset( $item['title'] ) ? $item['title'] : (isset($item['milestone']) ? $item['milestone'] : "");
                                 $item_added .= '<span class="item">' . sprintf( __( 'New Item: %s', 'upstream' ), '<span class="highlight">' . $title . '</span>' ) . '</span>';
                             }
 

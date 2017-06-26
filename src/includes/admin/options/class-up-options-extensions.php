@@ -110,7 +110,17 @@ class UpStream_Options_Extensions {
                         'class' => 'extension',
                     ),
                     'after' => 'upstream_extension_markup'
-                )
+                ),
+                array(
+                    'name'          => __( 'Email Notifications', 'upstream' ),
+                    'id'            => 'upstream_email_notifications',
+                    'desc'          => __( '@todo', 'upstream' ),
+                    'type'          => 'title',
+                    'attributes'    => array(
+                        'class' => 'extension',
+                    ),
+                    'after' => 'upstream_extension_markup'
+                ),
             ) )
         );
 

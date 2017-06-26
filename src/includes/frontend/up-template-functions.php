@@ -167,6 +167,8 @@ function upstream_output_comments( $id ) {
     $comments = upstream_project_discussion( $id );
 
     if( $comments ) {
+        global $wp_embed;
+
         $comments = array_reverse( $comments );
         foreach ($comments as $comment) {
 
@@ -188,7 +190,7 @@ function upstream_output_comments( $id ) {
 
                     <?php do_action( 'upstream_before_single_message', $id, $comment ); ?>
 
-                    <blockquote class="message"><?php echo wpautop( $comment['comment'] ); ?></blockquote>
+                    <blockquote class="message"><?php echo $wp_embed->autoembed(wpautop($comment['comment'])); ?></blockquote>
 
                     <?php do_action( 'upstream_after_single_message', $id, $comment ); ?>
 

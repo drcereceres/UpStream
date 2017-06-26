@@ -1,5 +1,4 @@
 (function($){
-
     function initProject() {
         var $box = $( document.getElementById( 'post-body' ) );
 
@@ -84,7 +83,6 @@
             }
 
         });
-
     }
 
     function resetGroup( $group ) {
@@ -496,6 +494,54 @@
                     });
                 }
             });
+        }
+    });
+
+    $('.upstream-filter').on('change', function onFilterChangeCallback(e) {
+        var self = $(this);
+        var targetColumn = self.data('column');
+
+        var validColumns = ['assigned_to', 'milestone', 'status', 'severity'];
+        if (validColumns.indexOf(targetColumn) >= 0) {
+            var sectionWrapper = self.parents('.cmb2-metabox.cmb-field-list');
+            var itemsListWrapper = $('.cmb-row.cmb-repeat-group-wrap.cmb-type-group.cmb-repeat', sectionWrapper);
+
+            $('.no-items', itemsListWrapper).remove();
+
+            var rows = $('.postbox.cmb-row[data-iterator]', itemsListWrapper);
+            if (rows.length) {
+                var newValue = this.value;
+                if (newValue && newValue !== '- Show All -' && newValue !== '- Show Everyone -') {
+                    var rowsLastRowIndex = rows.length - 1;
+                    var itemsFound = 0;
+                    rows.each(function(itemWrapperIndex, itemWrapper) {
+                        var itemValue;
+                        if (targetColumn === 'milestone') {
+                            itemValue = $('select[name$="['+ targetColumn +']"] option:selected', itemWrapper).text();
+                        } else {
+                            itemValue = $('select[name$="['+ targetColumn +']"]', itemWrapper).val();
+                        }
+
+                        var displayProp = 'none';
+
+                        if (itemValue === newValue) {
+                            itemsFound++;
+                            displayProp = 'block';
+                        }
+
+                        $(itemWrapper).css('display', displayProp);
+
+                        if (itemWrapperIndex === rowsLastRowIndex) {
+                            if (itemsFound === 0) {
+                                var noItemsFoundWrapperHtml = $('<div class="postbox cmb-row cmb-repeatable-grouping no-items"><p>'+ self.data('no-items-found-message') +'</p></div>');
+                                noItemsFoundWrapperHtml.insertBefore($('.cmb-row:not(.postbox):last-child', itemsListWrapper));
+                            }
+                        }
+                    });
+                } else {
+                    rows.css('display', 'block');
+                }
+            }
         }
     });
 })(jQuery);
