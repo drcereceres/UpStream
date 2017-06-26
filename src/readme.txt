@@ -48,6 +48,7 @@ Add even more awesome features through the use of our extensions.
 - [Frontend Edit](https://upstreamplugin.com/extensions/frontend-edit)
 - [Project Timeline](https://upstreamplugin.com/extensions/project-timeline)
 - [Customizer](https://upstreamplugin.com/extensions/customizer)
+- [Email Notifications](https://upstreamplugin.com/extensions/email-notifications)
 
 = Milestones & Tasks =
 
