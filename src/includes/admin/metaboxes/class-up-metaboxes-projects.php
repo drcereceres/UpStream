@@ -72,6 +72,8 @@ class UpStream_Metaboxes_Projects {
             if (!upstream_disable_discussions()) {
                 self::$instance->comments();
             }
+
+            do_action('upstream_details_metaboxes');
         }
 
         return self::$instance;
