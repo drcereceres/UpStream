@@ -114,7 +114,7 @@ class UpStream_Options_Extensions {
                 array(
                     'name'          => __( 'Email Notifications', 'upstream' ),
                     'id'            => 'upstream_email_notifications',
-                    'desc'          => __( '@todo', 'upstream' ),
+                    'desc'          => __( 'Allow you to email project updates to people working on your projects.', 'upstream' ),
                     'type'          => 'title',
                     'attributes'    => array(
                         'class' => 'extension',
