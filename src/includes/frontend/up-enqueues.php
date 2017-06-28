@@ -67,11 +67,9 @@ function upstream_enqueue_styles_scripts(){
     $js_dir = 'templates/assets/js/';
 
     wp_enqueue_script( 'up-bootstrap', $up_url . $js_dir . 'bootstrap.min.js', array( 'jquery' ), $up_ver, true );
-
     wp_enqueue_script( 'up-fastclick', $up_url . $js_dir . 'fastclick.js', array( 'jquery' ), $up_ver, true );
     wp_enqueue_script( 'up-nprogress', $up_url . $js_dir . 'nprogress.js', array( 'jquery' ), $up_ver, true );
     wp_enqueue_script( 'up-progressbar', $up_url . $js_dir . 'progressbar.min.js', array( 'jquery' ), $up_ver, true );
-
     wp_enqueue_script( 'up-datatables', $up_url . $js_dir . 'datatables/dataTables.min.js', array( 'jquery' ), $up_ver, true );
     wp_enqueue_script( 'dt-bootstrap', $up_url . $js_dir . 'datatables/dataTables.bootstrap.min.js', array( 'jquery' ), $up_ver, true );
     wp_enqueue_script( 'dt-buttons', $up_url . $js_dir . 'datatables/dataTables.buttons.min.js', array( 'jquery' ), $up_ver, true );
@@ -84,6 +82,5 @@ function upstream_enqueue_styles_scripts(){
         'security'          => wp_create_nonce( 'upstream-nonce' ),
         'js_date_format'    => upstream_php_to_js_dateformat(),
     )));
-
 }
 add_action( 'wp_enqueue_scripts', 'upstream_enqueue_styles_scripts', 1000 ); // Hook this late enough so all stylesheets / scripts has been added (to be further dequeued by this action)
