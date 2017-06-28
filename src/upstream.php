@@ -201,7 +201,6 @@ final class UpStream
         do_action( 'upstream_init' );
     }
 
-
     /**
      * Load Localisation files.
      *
