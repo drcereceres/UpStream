@@ -20,8 +20,53 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  * @return void
  */
 
+/**
+ * Check UpStream minimum requirements: PHP and WordPress versions.
+ * This function calls wp_die() if any of the minimum requirements is not satisfied.
+ *
+ * @since   1.10.1
+ *
+ * @uses    wp_die()
+ */
+function upstream_check_min_requirements()
+{
+    global $wp_version;
+
+    $minWPVersionRequired = "4.5";
+    $minPHPVersionRequired = "5.4";
+
+    // Check PHP version.
+    if (version_compare(PHP_VERSION, $minPHPVersionRequired, '<')) {
+        $errorMessage = sprintf(
+            '<p>' . __('It seems you are running an outdated version of PHP: <code>%s</code>.', 'upstream') . '</p>' .
+            '<p>' . __('For security reasons, UpStream requires at least PHP version <code>%s</code> to run.', 'upstream') . '</p>' .
+            '<p>' . __('Please, consider upgrading your PHP version.', 'upstream') . '</p><br /><br />',
+            PHP_VERSION,
+            $minPHPVersionRequired
+        );
+    }
+    // Check WordPress version.
+    else if (version_compare($wp_version, $minWPVersionRequired, '<')) {
+        $errorMessage = sprintf(
+            '<p>' . __('It seems you are running an outdated version of WordPress: <code>%s</code>.', 'upstream') . '</p>' .
+            '<p>' . __('For security reasons, UpStream requires at least version <code>%s</code> to run.', 'upstream') . '</p>' .
+            '<p>' . __('Please, consider upgrading your WordPress.', 'upstream') . '</p><br /><br />',
+            $wp_version,
+            $minWPVersionRequired
+        );
+    }
+
+    if (isset($errorMessage)) {
+        $errorMessage .= '<a class="button" href="javascript:history.back();">' . __('Go Back', 'upstream') . '</a>';
+
+        wp_die($errorMessage);
+    }
+}
+
 function upstream_install( $network_wide = false ) {
     global $wpdb;
+
+    upstream_check_min_requirements();
 
     if ( is_multisite() && $network_wide ) {
 
