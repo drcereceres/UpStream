@@ -48,7 +48,10 @@ class UpStream_Metaboxes_Projects {
     public static function get_instance() {
         if( is_null( self::$instance ) ) {
             self::$instance = new self();
-            self::$instance->overview();
+
+            if (upstream_post_id() > 0) {
+                self::$instance->overview();
+            }
 
             if (!upstream_disable_milestones()) {
                 self::$instance->milestones();
