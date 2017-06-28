@@ -84,3 +84,6 @@ function upstream_enqueue_styles_scripts(){
     )));
 }
 add_action( 'wp_enqueue_scripts', 'upstream_enqueue_styles_scripts', 1000 ); // Hook this late enough so all stylesheets / scripts has been added (to be further dequeued by this action)
+
+// Removes the "next"/"prev" <link rel /> tags. This prevents links to another projects appearing on the HTML code.
+remove_action('wp_head', 'adjacent_posts_rel_link_wp_head');
