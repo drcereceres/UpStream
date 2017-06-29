@@ -4,7 +4,7 @@
  * Description: A WordPress Project Management plugin by UpStream.
  * Author: UpStream
  * Author URI: https://upstreamplugin.com
- * Version: 1.10.0
+ * Version: 1.10.1
  * Text Domain: upstream
  * Domain Path: languages
  */
@@ -115,7 +115,7 @@ final class UpStream
         $this->define( 'UPSTREAM_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
         $this->define( 'UPSTREAM_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
         $this->define( 'UPSTREAM_PLUGIN_BASENAME', plugin_basename( __FILE__ ) );
-        $this->define( 'UPSTREAM_VERSION', '1.10.0' );
+        $this->define( 'UPSTREAM_VERSION', '1.10.1' );
     }
 
     /**
@@ -197,10 +197,15 @@ final class UpStream
         // Load class instances.
         $this->project = new UpStream_Project();
         $this->project_activity = new UpStream_Project_Activity();
+
+        // If PHP < 5.5, loads a library intended to provide forward compatibility with the password_* functions that ship with PHP 5.5.
+        if (version_compare(PHP_VERSION, '5.5', '<')) {
+            require_once UPSTREAM_PLUGIN_DIR . 'includes/libraries/password_compat-1.0.4/lib/password.php';
+        }
+
         // Init action.
         do_action( 'upstream_init' );
     }
-
 
     /**
      * Load Localisation files.

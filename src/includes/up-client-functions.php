@@ -4,10 +4,40 @@
 if ( ! defined( 'ABSPATH' ) ) exit;
 
 
-function upstream_client_logo( $id = 0 ) {
-    $client = new UpStream_Client( $id );
-    $result = $client->get_meta( 'logo' );
-    return apply_filters( 'upstream_client_logo', $result, $id );
+function upstream_get_client_id()
+{
+    $client_id = (int) upstream_project_client_id();
+
+    if ($client_id === 0) {
+        $user_id = upstream_current_user_id();
+        $client_id = (int) upstream_get_users_client_id($user_id);
+    }
+
+    return $client_id > 0 ? $client_id : null;
+}
+
+function upstream_client_logo($client_id = 0)
+{
+    $logoURL = "";
+
+    if ((int)$client_id === 0) {
+        $client_id = upstream_get_client_id();
+    }
+
+    if ($client_id > 0) {
+        global $wpdb, $table_prefix;
+
+        $logoURL = $wpdb->get_var(sprintf('
+            SELECT `meta_value`
+            FROM `%s`
+            WHERE `post_id` = "%s"
+                AND `meta_key` = "_upstream_client_logo"',
+            $table_prefix . 'postmeta',
+            $client_id
+        ));
+    }
+
+    return apply_filters('upstream_client_logo', $logoURL, $client_id);
 }
 
 /**
