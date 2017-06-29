@@ -645,8 +645,7 @@ function upstream_admin_get_all_project_users() {
         'role__in' => array(
             'upstream_manager',
             'upstream_user',
-            'administrator',
-            'developer'
+            'administrator'
         ),
     ) );
     $users = get_users( $args );

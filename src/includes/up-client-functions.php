@@ -4,18 +4,24 @@
 if ( ! defined( 'ABSPATH' ) ) exit;
 
 
-function upstream_client_logo($client_id = 0)
+function upstream_get_client_id()
 {
-    $logoURL = "";
-    $client_id = (int) $client_id;
-
-    if ($client_id === 0) {
-        $client_id = (int) upstream_project_client_id();
-    }
+    $client_id = (int) upstream_project_client_id();
 
     if ($client_id === 0) {
         $user_id = upstream_current_user_id();
         $client_id = (int) upstream_get_users_client_id($user_id);
+    }
+
+    return $client_id > 0 ? $client_id : null;
+}
+
+function upstream_client_logo($client_id = 0)
+{
+    $logoURL = "";
+
+    if ((int)$client_id === 0) {
+        $client_id = upstream_get_client_id();
     }
 
     if ($client_id > 0) {
