@@ -123,6 +123,20 @@ UpStream does not use the existing styling of your theme. The features and the v
 The format is based on [Keep a Changelog](http://keepachangelog.com)
 and this project adheres to [Semantic Versioning](http://semver.org).
 
+= [1.10.1] - @todo =
+
+Added:
+* UpStream now verifies if the environment where it is been installed on satisfies a set of minimum requirements
+* Added two new options to UpStream's settings: Login Page Client Logo and Login Page Project Name
+
+Changed:
+* Project overview section is now hidden during adding new projects
+* Code enhancements
+
+Fixed:
+* Fixed potential issues breaking some JS after the latest update
+* Fixed password related functions errors on PHP versions prior to 5.5
+
 = [1.10.0] - 2017-06-26 =
 
 Added:
