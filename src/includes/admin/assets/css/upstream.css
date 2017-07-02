@@ -724,3 +724,20 @@ body.upstream .wp-list-table.fixed.posts {
 .upstream-filters-wrapper + div {
   margin-bottom: 15px !important;
 }
+
+.cmb-row.cmb-repeat-group-wrap.cmb-type-group.cmb-repeat button.cmb-add-group-row,
+#new_message {
+  background: #0085BA;
+  border-color: #0073AA #006799 #006799;
+  color: #FFF;
+  box-shadow: 0 1px 0 #006799;
+  text-shadow: 0 -1px 1px #006799, 1px 0 1px #006799, 0 1px 1px #006799, -1px 0 1px #006799;
+}
+
+.cmb-row.cmb-repeat-group-wrap.cmb-type-group.cmb-repeat button.cmb-add-group-row:focus,
+.cmb-row.cmb-repeat-group-wrap.cmb-type-group.cmb-repeat button.cmb-add-group-row:hover,
+#new_message:focus,
+#new_message:hover {
+  background: #008EC2;
+  border-color: #006799;
+}
