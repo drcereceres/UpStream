@@ -144,7 +144,7 @@ class UpStream_Options_General {
                     'id'      => 'login_client_logo',
                     'type'    => 'radio_inline',
                     'desc'    => __( 'Choose whether Client\'s Logo should be displayed on login page if available.', 'upstream' ),
-                    'default' => '0',
+                    'default' => '1',
                     'options' => array(
                         0 => __('No', 'upstream'),
                         1 => __('Yes', 'upstream')
@@ -155,7 +155,7 @@ class UpStream_Options_General {
                     'id'      => 'login_project_name',
                     'type'    => 'radio_inline',
                     'desc'    => __( 'Choose whether Project\'s name should be displayed on login page.', 'upstream' ),
-                    'default' => '0',
+                    'default' => '1',
                     'options' => array(
                         0 => __('No', 'upstream'),
                         1 => __('Yes', 'upstream')
