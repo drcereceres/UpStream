@@ -472,14 +472,7 @@ class UpStream_Metaboxes_Projects {
      */
     private function getFiltersHeaderHtml()
     {
-        $html = sprintf('
-            <div class="row upstream-filters-wrapper">
-                <div class="col-md-12">
-                    <h3>%s</h3>
-                </div>
-            ',
-            __('Filters', 'upstream')
-        );
+        $html = '<div class="row upstream-filters-wrapper">';
 
         return $html;
     }
