@@ -6,7 +6,7 @@
  * Author URI: https://upstreamplugin.com
  * Version: 1.10.2
  * Text Domain: upstream
- * Domain Path: languages
+ * Domain Path: /languages
  */
 
 
