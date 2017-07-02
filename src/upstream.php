@@ -4,9 +4,9 @@
  * Description: A WordPress Project Management plugin by UpStream.
  * Author: UpStream
  * Author URI: https://upstreamplugin.com
- * Version: 1.10.1
+ * Version: 1.10.2
  * Text Domain: upstream
- * Domain Path: languages
+ * Domain Path: /languages
  */
 
 
@@ -56,25 +56,31 @@ final class UpStream
      * The whole idea of the singleton design pattern is that there is a single
      * object therefore, we don't want the object to be cloned.
      *
-     * @since 1.0.0
-     * @access protected
-     * @return void
+     * @since   1.0.0
      */
     public function __clone()
     {
-        _doing_it_wrong( __FUNCTION__, __( 'Cheatin&#8217; huh?', 'upstream' ), '1.0.0' );
+        _doing_it_wrong(__FUNCTION__, __('You\'re not supposed to clone this class.', 'upstream'), UPSTREAM_VERSION);
     }
 
     /**
      * Disable unserializing of the class.
      *
-     * @since 1.0.0
-     * @access protected
-     * @return void
+     * @since   1.0.0
      */
     public function __wakeup()
     {
-        _doing_it_wrong( __FUNCTION__, __( 'Cheatin&#8217; huh?', 'upstream' ), '1.0.0' );
+        _doing_it_wrong(__FUNCTION__, __('You\'re not supposed to unserialize this class.', 'upstream'), UPSTREAM_VERSION);
+    }
+
+    /**
+     * Prevent the class instance being serialized.
+     *
+     * @since   1.10.2
+     */
+    public function __sleep()
+    {
+        _doing_it_wrong(__FUNCTION__, __('You\'re not supposed to serialize this class.', 'upstream'), UPSTREAM_VERSION);
     }
 
     public function __construct()
@@ -115,7 +121,7 @@ final class UpStream
         $this->define( 'UPSTREAM_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
         $this->define( 'UPSTREAM_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
         $this->define( 'UPSTREAM_PLUGIN_BASENAME', plugin_basename( __FILE__ ) );
-        $this->define( 'UPSTREAM_VERSION', '1.10.1' );
+        $this->define( 'UPSTREAM_VERSION', '1.10.2' );
     }
 
     /**
