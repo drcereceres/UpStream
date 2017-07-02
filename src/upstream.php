@@ -56,25 +56,22 @@ final class UpStream
      * The whole idea of the singleton design pattern is that there is a single
      * object therefore, we don't want the object to be cloned.
      *
-     * @since 1.0.0
-     * @access protected
-     * @return void
+     * @since   1.0.0
      */
     public function __clone()
     {
-        _doing_it_wrong( __FUNCTION__, __( 'Cheatin&#8217; huh?', 'upstream' ), '1.0.0' );
+        _doing_it_wrong(__FUNCTION__, __('You\'re not supposed to clone this class.', 'upstream'), UPSTREAM_VERSION);
     }
 
     /**
      * Disable unserializing of the class.
      *
-     * @since 1.0.0
-     * @access protected
-     * @return void
+     * @since   1.0.0
      */
     public function __wakeup()
     {
-        _doing_it_wrong( __FUNCTION__, __( 'Cheatin&#8217; huh?', 'upstream' ), '1.0.0' );
+        _doing_it_wrong(__FUNCTION__, __('You\'re not supposed to unserialize this class.', 'upstream'), UPSTREAM_VERSION);
+    }
 
     /**
      * Prevent the class instance being serialized.
