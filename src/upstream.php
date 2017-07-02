@@ -75,6 +75,15 @@ final class UpStream
     public function __wakeup()
     {
         _doing_it_wrong( __FUNCTION__, __( 'Cheatin&#8217; huh?', 'upstream' ), '1.0.0' );
+
+    /**
+     * Prevent the class instance being serialized.
+     *
+     * @since   @todo
+     */
+    public function __sleep()
+    {
+        _doing_it_wrong(__FUNCTION__, __('You\'re not supposed to serialize this class.', 'upstream'), UPSTREAM_VERSION);
     }
 
     public function __construct()
