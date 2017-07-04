@@ -27,7 +27,8 @@ function upstream_load_admin_scripts( $hook ) {
     }
 
     if( $post_type == 'client' ) {
-        wp_enqueue_script( 'up-client-ajf', $js_dir . 'edit-client.js', $admin_deps, UPSTREAM_VERSION . mt_rand(1, 99999), false );
+        // @todo: fix version
+        wp_enqueue_script( 'up-metabox-client', $js_dir . 'metabox-client.js', $admin_deps, UPSTREAM_VERSION . mt_rand(1, 99999), false );
         // wp_enqueue_script( 'upstream-client' );
     }
 

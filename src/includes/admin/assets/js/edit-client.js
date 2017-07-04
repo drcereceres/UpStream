@@ -1,4 +1,5 @@
 /*
+@todo: remove this file?
 (function($){
 client_user = {
 
