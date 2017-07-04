@@ -741,3 +741,11 @@ body.upstream .wp-list-table.fixed.posts {
   background: #008EC2;
   border-color: #006799;
 }
+
+input[name^="_upstream_"].has-error {
+  border-color: red;
+}
+
+input[type="email"][name^="_upstream_"].validating {
+  cursor: disabled;
+}
