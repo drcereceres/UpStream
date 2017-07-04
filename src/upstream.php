@@ -166,6 +166,7 @@ final class UpStream
         include_once( 'includes/class-up-project-activity.php' );
         include_once( 'includes/up-post-types.php' );
         include_once( 'includes/up-labels.php' );
+        include_once( 'includes/trait-up-singleton.php' );
 
 
         if ( $this->is_request( 'admin' ) ) {
