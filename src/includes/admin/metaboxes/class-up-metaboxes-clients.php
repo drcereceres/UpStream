@@ -54,20 +54,26 @@ class UpStream_Metaboxes_Clients
         add_action('add_meta_boxes', array($namespace, 'createUsersMetabox'));
     }
 
-    private static function getUsers($client_id)
+    private static function getUsersFromClient($client_id)
     {
+        // @todo
+    }
 
+    private static function getUnassignedUsersFromClient($client_id)
+    {
+        // @todo
     }
 
     public static function renderUsersMetabox()
     {
         $client_id = get_the_id();
 
-        $usersList = self::getUsers($client_id);
+        $usersList = self::getUsersFromClient($client_id);
         ?>
 
         <? // @todo: create js/css to make Thickbox responsive. ?>
         <a name="Add New User" href="#TB_inline?width=600&height=300&inlineId=modal-add-new-user" class="thickbox">Add New User</a>
+        <a name="Add Existent User" href="#TB_inline?width=600&height=300&inlineId=modal-add-existent-user" class="thickbox">Add Existent User</a>
 
         <table>
             <thead>
@@ -133,6 +139,46 @@ class UpStream_Metaboxes_Clients
                 </div>
                 <button type="button">Add New User</button>
             </form>
+        </div>
+        <?php
+
+        $unassignedUsers = self::getUnassignedUsersFromClient($client_id);
+        ?>
+        <div id="modal-add-existent-user" style="display: none;">
+            <p>@todo: info message</p>
+            <table>
+                <thead>
+                    <tr>
+                        <th>
+                            <input type="checkbox" value="1" />
+                        </th>
+                        <th>Name</th>
+                        <th>Username</th>
+                        <th>Email</th>
+                        <th>Current Roles</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php if (count($unassignedUsers) > 0): ?>
+                    <?php foreach ($unassignedUsers as $user): ?>
+                        <tr data-id="<?php echo $user->id; ?>">
+                            <td>
+                                <input type="checkbox" value="1" />
+                            </td>
+                            <td><?php echo $user->name; ?></td>
+                            <td><?php echo $user->username; ?></td>
+                            <td><?php echo $user->email; ?></td>
+                            <td><?php echo count($user->roles) > 0 ? implode(', ', $user->roles) : "<i>none</i>"; ?></td>
+                        </tr>
+                    <?php endforeach; ?>
+                    <?php else: ?>
+                    <tr>
+                        <td colspan="5">All users seems to be assigned to this client.</td>
+                    </tr>
+                    <?php endif; ?>
+                </tbody>
+            </table>
+            <button type="button">Add X user(s)</button>
         </div>
         <?php
     }
