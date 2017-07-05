@@ -38,8 +38,109 @@ class UpStream_Metaboxes_Clients
         self::$postTypeLabelSingular = upstream_client_label();
         self::$postTypeLabelPlural = upstream_client_label_plural();
 
+        $a = get_class(self::$instance);
+        add_action('add_meta_boxes', array($a, 'createUsersMetabox'));
+
         self::renderDetailsMetabox();
         self::renderLogoMetabox();
+        //self::renderUsersMetabox();
+    }
+
+    private static function getUsers($client_id)
+    {
+
+    }
+
+    public static function renderUsersMetabox()
+    {
+        $client_id = get_the_id();
+
+        $usersList = self::getUsers($client_id);
+
+        add_thickbox();
+        ?>
+
+        <? // @todo: create js/css to make Thickbox responsive. ?>
+        <a name="Add New User" href="#TB_inline?width=600&height=300&inlineId=modal-add-new-user" class="thickbox">Add New User</a>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Username</th>
+                    <th>Email</th>
+                    <th>Role</th>
+                    <th>Assigned at</th>
+                    <th>Assigned by</th>
+                    <th>Remove?</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php if (count($usersList) > 0): ?>
+                <?php foreach ($usersList as $user): ?>
+                <tr data-id="<?php echo $user->id; ?>">
+                    <td><?php echo $user->name; ?></td>
+                    <td><?php echo $user->username; ?></td>
+                    <td><?php echo $user->email; ?></td>
+                    <td><?php echo $user->role; ?></td>
+                    <td><?php echo $user->assigned_at; ?></td>
+                    <td><?php echo $user->assigned_by; ?></td>
+                    <td><a href="#" onclick="javascript:void(0);">x</a></td>
+                </tr>
+                <?php endforeach; ?>
+                <?php else: ?>
+                <tr>
+                    <td colspan="7">There's no users assigned yet.</td>
+                </tr>
+                <?php endif; ?>
+            </tbody>
+        </table>
+
+        <div id="modal-add-new-user" style="display: none;">
+            <form id="form-add-new-user">
+                <div class="up-form-group">
+                    <label for="new-user-username">Username *</label>
+                    <input type="text" name="username" id="new-user-username" required />
+                </div>
+                <div class="up-form-group">
+                    <label for="new-user-email">Email *</label>
+                    <input type="email" name="email" id="new-user-email" required />
+                </div>
+                <div class="up-form-group">
+                    <label for="new-user-first_name">First Name</label>
+                    <input type="text" name="first_name" id="new-user-first_name" />
+                </div>
+                <div class="up-form-group">
+                    <label for="new-user-last_name">Last Name</label>
+                    <input type="text" name="last_name" id="new-user-last_name" />
+                </div>
+                <div class="up-form-group">
+                    <label>Password</label>
+                    <button type="button">Show Password</button>
+                </div>
+                <div class="up-form-group">
+                    <label>Send User Notification</label>
+                    <label for="new-user-notification">
+                        Send user info via email
+                        <input type="checkbox" name="notification" id="new-user-notification" value="1" checked />
+                    </label>
+                </div>
+                <p>Lorem Ipsum</p>
+                <button type="button">Add New User</button>
+            </form>
+        </div>
+        <?php
+    }
+
+    public static function createUsersMetabox()
+    {
+        add_meta_box(
+            self::$prefix . 'users',
+            '<span class="dashicons dashicons-groups"></span>' . __("Users", 'upstream'),
+            array(get_class(self::$instance), 'renderUsersMetabox'),
+            self::$postType,
+            'normal'
+        );
     }
 
     public static function renderDetailsMetabox()
