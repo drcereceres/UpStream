@@ -38,6 +38,9 @@ class UpStream_Metaboxes_Clients
         self::$postTypeLabelSingular = upstream_client_label();
         self::$postTypeLabelPlural = upstream_client_label_plural();
 
+        $namespace = get_class(self::$instance);
+        add_action('wp_ajax_upstream:client.add_new_user', array($namespace, 'addNewUser'));
+
         // Enqueues the default ThickBox assets.
         add_thickbox();
 
@@ -68,36 +71,59 @@ class UpStream_Metaboxes_Clients
     {
         ?>
         <div id="modal-add-new-user" style="display: none;">
-            <form id="form-add-new-user">
-                <div class="up-form-group">
-                    <label for="new-user-username">Username *</label>
-                    <input type="text" name="username" id="new-user-username" required />
+            <div id="form-add-new-user">
+                <div>
+                    <h3>Credentials</h3>
+                    <div class="up-form-group">
+                        <label for="new-user-email">Email *</label>
+                        <input type="email" name="email" id="new-user-email" required />
+                    </div>
+                    <div class="up-form-group">
+                        <label for="new-user-username">Username *</label>
+                        <input type="text" name="username" id="new-user-username" required />
+                        <p>
+                            Rules:
+                            <ul>
+                                <li>Must be between 3 and 60 characters long;</li>
+                                <li>You may use <code>letters (a-z)</code>, <code>numbers (0-9)</code>, <code>-</code> and <code>_</code> symbols;</li>
+                                <li>The first character must be a <code>letter</code>;</li>
+                                <li>Everything will be lowercased.</li>
+                            </ul>
+                        </p>
+                    </div>
+                    <div class="up-form-group">
+                        <label for="new-user-password">Password *</label>
+                        <input type="password" name="password" id="new-user-password" required />
+                        <p>
+                            @todo: password confirmation?
+                            Rules:
+                            <ul>
+                                <li>Must be at least between 6 characters long.</li>
+                            </ul>
+                        </p>
+                    </div>
                 </div>
-                <div class="up-form-group">
-                    <label for="new-user-email">Email *</label>
-                    <input type="email" name="email" id="new-user-email" required />
+                <hr />
+                <div>
+                    <h3>Details</h3>
+                    <div class="up-form-group">
+                        <label for="new-user-first_name">First Name</label>
+                        <input type="text" name="first_name" id="new-user-first_name" />
+                    </div>
+                    <div class="up-form-group">
+                        <label for="new-user-last_name">Last Name</label>
+                        <input type="text" name="last_name" id="new-user-last_name" />
+                    </div>
+                    <div class="up-form-group">
+                        <label>Send User Notification</label>
+                        <label for="new-user-notification">
+                            Send user info via email
+                            <input type="checkbox" name="notification" id="new-user-notification" value="1" checked />
+                        </label>
+                    </div>
                 </div>
-                <div class="up-form-group">
-                    <label for="new-user-first_name">First Name</label>
-                    <input type="text" name="first_name" id="new-user-first_name" />
-                </div>
-                <div class="up-form-group">
-                    <label for="new-user-last_name">Last Name</label>
-                    <input type="text" name="last_name" id="new-user-last_name" />
-                </div>
-                <div class="up-form-group">
-                    <label>Password</label>
-                    <button type="button">Show Password</button>
-                </div>
-                <div class="up-form-group">
-                    <label>Send User Notification</label>
-                    <label for="new-user-notification">
-                        Send user info via email
-                        <input type="checkbox" name="notification" id="new-user-notification" value="1" checked />
-                    </label>
-                </div>
-                <button type="button">Add New User</button>
-            </form>
+                <button type="submit">Add New User</button>
+            </div>
         </div>
         <?php
     }
@@ -154,16 +180,15 @@ class UpStream_Metaboxes_Clients
         ?>
 
         <?php // @todo: create js/css to make Thickbox responsive. ?>
-        <a name="Add New User" href="#TB_inline?width=600&height=300&inlineId=modal-add-new-user" class="thickbox">Add New User</a>
+        <a name="Add New User" href="#TB_inline?width=600&height=400&inlineId=modal-add-new-user" class="thickbox">Add New User</a>
         <a name="Add Existent User" href="#TB_inline?width=600&height=300&inlineId=modal-add-existent-user" class="thickbox">Add Existent User</a>
 
-        <table>
+        <table id="table-users">
             <thead>
                 <tr>
                     <th>Name</th>
                     <th>Username</th>
                     <th>Email</th>
-                    <th>Role</th>
                     <th>Assigned at</th>
                     <th>Assigned by</th>
                     <th>Remove?</th>
@@ -176,14 +201,13 @@ class UpStream_Metaboxes_Clients
                     <td><?php echo $user->name; ?></td>
                     <td><?php echo $user->username; ?></td>
                     <td><?php echo $user->email; ?></td>
-                    <td><?php echo $user->role; ?></td>
                     <td><?php echo $user->assigned_at; ?></td>
                     <td><?php echo $user->assigned_by; ?></td>
                     <td><a href="#" onclick="javascript:void(0);">x</a></td>
                 </tr>
                 <?php endforeach; ?>
                 <?php else: ?>
-                <tr>
+                <tr data-empty>
                     <td colspan="7">There's no users assigned yet.</td>
                 </tr>
                 <?php endif; ?>
@@ -210,7 +234,7 @@ class UpStream_Metaboxes_Clients
     {
         $metabox = new_cmb2_box(array(
             'id'           => self::$prefix . 'details',
-            'title'        => '<span class="dashicons dashicons-admin-generic"></span>' . __("Details", 'upstream'),
+            'title'        => '<span class="dashicons dashicons-admin-generic"></span>' . __('Details', 'upstream'),
             'object_types' => array(self::$postType),
             'context'      => 'side',
             'priority'     => 'high'
@@ -267,5 +291,124 @@ class UpStream_Metaboxes_Clients
 
         $metaboxGrid = new Cmb2Grid($metabox);
         $metaboxGridRow = $metaboxGrid->addRow(array($logoField));
+    }
+
+    public static function addNewUser()
+    {
+        // @todo : nonce
+        header('Content-Type: application/json');
+
+        global $wpdb;
+
+        $response = array(
+            'success' => false,
+            'data'    => null,
+            'err'     => null
+        );
+
+        try {
+            if (empty($_POST) || !isset($_POST['client'])) {
+                throw new \Exception("@todo");
+            }
+
+            $clientId = (int)$_POST['client'];
+            if ($clientId <= 0) {
+                throw new \Exception("@todo");
+            }
+
+            $data = array(
+                'username'     => strtolower(trim(@$_POST['username'])),
+                'email'        => trim(@$_POST['email']),
+                'password'     => @$_POST['password'],
+                'first_name'   => trim(@$_POST['first_name']),
+                'last_name'    => trim(@$_POST['last_name']),
+                'notification' => isset($_POST['notification']) ? (bool)$_POST['notification'] : false // @todo: should be true?
+            );
+
+            // Validate `password` field.
+            if (strlen($data['password']) < 6) {
+                throw new \Exception("Password must be at least 6 characters long.");
+            }
+
+            // Validate `username` field.
+            $userDataUsername = $data['username'];
+            $userDataUsernameLength = strlen($userDataUsername);
+            if ($userDataUsernameLength < 3 || $userDataUsernameLength > 60) {
+                throw new \Exception("The username must be between 3 and 60 characters long.");
+            } else if (!validate_username($data['username']) || !preg_match('/^[a-z]+[a-z0-9\-\_]+$/i', $userDataUsername)) {
+                throw new \Exception("Invalid username.");
+            } else {
+                $usernameExists = (bool)$wpdb->get_var(sprintf('
+                    SELECT COUNT(`ID`)
+                    FROM `%s`
+                    WHERE `user_login` = "%s"',
+                    $wpdb->prefix . 'users',
+                    $userDataUsername
+                ));
+
+                if ($usernameExists) {
+                    throw new \Exception("This username is not available.");
+                }
+            }
+
+            // Validate the `email` field.
+            if (!filter_var($data['email'], FILTER_VALIDATE_EMAIL) || !is_email($data['email'])) {
+                throw new \Exception("Invalid email.");
+            } else {
+                $emailExists = (bool)$wpdb->get_var(sprintf('
+                    SELECT COUNT(`ID`)
+                    FROM `%s`
+                    WHERE `user_email` = "%s"',
+                    $wpdb->prefix . 'users',
+                    $data['email']
+                ));
+
+                if ($emailExists) {
+                    throw new \Exception("This email address is not available.");
+                }
+            }
+
+            $userData = array(
+                'user_login'    => $userDataUsername,
+                'user_pass'     => $data['password'],
+                'user_nicename' => $userDataUsername,
+                'user_email'    => $data['email'],
+                'display_name'  => $userDataUsername,
+                'nickname'      => $userDataUsername,
+                'first_name'    => $data['first_name'],
+                'last_name'     => $data['last_name'],
+                'role'          => 'upstream_user'
+            );
+
+            $userDataId = wp_insert_user($userData);
+            if (is_wp_error($userDataId)) {
+                throw new \Exception($userDataId->get_error_message());
+            }
+
+            if ($data['notification']) {
+                //wp_new_user_notification($userDataId);
+            }
+
+            // @todo: generate and save `assigned_at` and `assigned_by` data.
+
+            $response['data'] = array(
+                'id'          => $userDataId,
+                'assigned_at' => current_time('Y-m-d H:i:s'), // convert to user's timezone
+                'assigned_by' => '@todo',
+                'name'        => empty($data['first_name'] . ' '. $data['last_name']) ? $data['first_name'] . ' '. $data['last_name'] : $data['username'],
+                'username'    => $userDataUsername,
+                'email'       => $data['email']
+            );
+
+            // @todo : associate new user with the client
+
+            $response['success'] = true;
+        } catch (\Exception $e) {
+            $response['err'] = $e->getMessage();
+        }
+
+        echo wp_json_encode($response);
+
+        wp_die();
     }
 }
