@@ -38,12 +38,20 @@ class UpStream_Metaboxes_Clients
         self::$postTypeLabelSingular = upstream_client_label();
         self::$postTypeLabelPlural = upstream_client_label_plural();
 
-        $a = get_class(self::$instance);
-        add_action('add_meta_boxes', array($a, 'createUsersMetabox'));
+        // Enqueues the default ThickBox assets.
+        add_thickbox();
 
+        self::renderMetaboxes();
+    }
+
+    private static function renderMetaboxes()
+    {
         self::renderDetailsMetabox();
         self::renderLogoMetabox();
-        //self::renderUsersMetabox();
+
+        $namespace = get_class(self::$instance);
+
+        add_action('add_meta_boxes', array($namespace, 'createUsersMetabox'));
     }
 
     private static function getUsers($client_id)
@@ -56,8 +64,6 @@ class UpStream_Metaboxes_Clients
         $client_id = get_the_id();
 
         $usersList = self::getUsers($client_id);
-
-        add_thickbox();
         ?>
 
         <? // @todo: create js/css to make Thickbox responsive. ?>
@@ -125,7 +131,6 @@ class UpStream_Metaboxes_Clients
                         <input type="checkbox" name="notification" id="new-user-notification" value="1" checked />
                     </label>
                 </div>
-                <p>Lorem Ipsum</p>
                 <button type="button">Add New User</button>
             </form>
         </div>
