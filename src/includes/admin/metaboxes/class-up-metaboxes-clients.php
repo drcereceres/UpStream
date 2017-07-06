@@ -40,6 +40,7 @@ class UpStream_Metaboxes_Clients
 
         $namespace = get_class(self::$instance);
         add_action('wp_ajax_upstream:client.add_new_user', array($namespace, 'addNewUser'));
+        add_action('wp_ajax_upstream:client.remove_user', array($namespace, 'removeUser'));
 
         // Enqueues the default ThickBox assets.
         add_thickbox();
@@ -244,7 +245,7 @@ class UpStream_Metaboxes_Clients
                     <td><?php echo $user->email; ?></td>
                     <td><?php echo $user->assigned_at; ?></td>
                     <td><?php echo $user->assigned_by; ?></td>
-                    <td><a href="#" onclick="javascript:void(0);">x</a></td>
+                    <td><a href="#" onclick="javascript:void(0);" data-remove-user>x</a></td>
                 </tr>
                 <?php endforeach; ?>
                 <?php else: ?>
@@ -451,6 +452,55 @@ class UpStream_Metaboxes_Clients
                 'assigned_at' => $response['data']['assigned_at']
             ));
             update_post_meta($clientId, $clientUsersMetaKey, $clientUsersList);
+
+            $response['success'] = true;
+        } catch (\Exception $e) {
+            $response['err'] = $e->getMessage();
+        }
+
+        echo wp_json_encode($response);
+
+        wp_die();
+    }
+
+    public static function removeUser()
+    {
+        header('Content-Type: application/json');
+
+        $response = array(
+            'success' => false,
+            'err'     => null
+        );
+
+        try {
+            if (empty($_POST) || !isset($_POST['client'])) {
+                throw new \Exception("@todo");
+            }
+
+            $clientId = (int)$_POST['client'];
+            if ($clientId <= 0) {
+                throw new \Exception("@todo");
+            }
+
+            $userId = (int)@$_POST['user'];
+            if ($userId <= 0) {
+                throw new \Exception("@todo");
+            }
+
+            $clientUsersMetaKey = '_upstream_new_client_users';
+            $meta = (array)get_post_meta($clientId, $clientUsersMetaKey);
+            if (!empty($meta)) {
+                $newClientUsersList = array();
+                foreach ($meta[0] as $clientUser) {
+                    if (!empty($clientUser) && is_array($clientUser)) {
+                        if ((int)$clientUser['user_id'] !== $userId) {
+                            array_push($newClientUsersList, $clientUser);
+                        }
+                    }
+                }
+
+                update_post_meta($clientId, $clientUsersMetaKey, $newClientUsersList);
+            }
 
             $response['success'] = true;
         } catch (\Exception $e) {

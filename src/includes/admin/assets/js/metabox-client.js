@@ -19,7 +19,42 @@
     $('#title', titlewrap).attr('required', 'required');
   })();
 
+  var removeUserCallback = function(e) {
+    e.preventDefault();
+
+    var row = $(this).parents('tr[data-id]');
+    var tbody = $(row.parent());
+    if (row.length) {
+      $.ajax({
+        type: 'POST',
+        url : ajaxurl,
+        data: {
+          action: 'upstream:client.remove_user',
+          client: $('#post_ID').val(),
+          user  : row.data('id')
+        },
+        beforeSend: function(jqXHR, settings) {},
+        success: function(response, textStatus, jqXHR) {
+          if (!response.success) {
+            alert(response.err);
+          } else {
+            row.remove();
+
+            if ($('tr', tbody).length === 0) {
+              // @todo : lang support
+              tbody.append('<tr data-empty><td colspan="7">There\'s no users assigned yet.</td></tr>');
+            }
+          }
+        },
+        error: function(jqXHR, textStatus, errorThrown) {},
+        complete: function(jqXHR, settings) {}
+      });
+    }
+  };
+
   $(document).ready(function() {
+    $('#table-users').on('click', 'a[data-remove-user]', removeUserCallback);
+
     $('#form-add-new-user button[type="submit"]').on('click', function(e) {
       e.preventDefault();
 
@@ -86,7 +121,7 @@
               tr.append('<td>'+ response.data.email +'</td>');
               tr.append('<td>'+ response.data.assigned_at +'</td>');
               tr.append('<td>'+ response.data.assigned_by +'</td>');
-              tr.append('<td>x</td>');
+              tr.append('<td><a href="#" data-remove-user>x</a></td>');
 
               var table = $('#table-users');
               $('tr[data-empty]', table).remove();
