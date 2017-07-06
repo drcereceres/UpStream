@@ -59,7 +59,48 @@ class UpStream_Metaboxes_Clients
 
     private static function getUsersFromClient($client_id)
     {
-        // @todo
+        if ((int)$client_id <= 0) {
+            return array();
+        }
+
+        // Let's cache all users basic info so we don't have to query each one of them later.
+        global $wpdb;
+        $rowset = $wpdb->get_results(sprintf('
+            SELECT `ID`, `display_name`, `user_login`, `user_email`
+            FROM `%s`',
+            $wpdb->prefix . 'users'
+        ));
+
+        // Create our users hash map.
+        $users = array();
+        foreach ($rowset as $row) {
+            $users[(int)$row->ID] = array(
+                'id'       => (int)$row->ID,
+                'name'     => $row->display_name,
+                'username' => $row->user_login,
+                'email'    => $row->user_email
+            );
+        }
+        unset($rowset);
+
+        $clientUsersList = array();
+
+        // Retrieve all client users.
+        $meta = (array)get_post_meta($client_id, '_upstream_new_client_users');
+        if (!empty($meta)) {
+            foreach ($meta[0] as $clientUser) {
+                if (!empty($clientUser) && is_array($clientUser) && isset($users[$clientUser['user_id']])) {
+                    $user = $users[$clientUser['user_id']];
+
+                    $user['assigned_at'] = $clientUser['assigned_at'];
+                    $user['assigned_by'] = $users[$clientUser['assigned_by']]['name'];
+
+                    array_push($clientUsersList, (object)$user);
+                }
+            }
+        }
+
+        return $clientUsersList;
     }
 
     private static function getUnassignedUsersFromClient($client_id)
