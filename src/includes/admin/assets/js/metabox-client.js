@@ -52,6 +52,50 @@
     }
   };
 
+  var onClickAddExistentUserAnchorCallback = function(e) {
+    $.ajax({
+      type: 'GET',
+      url : ajaxurl,
+      data: {
+        action: 'upstream:client.fetch_unassigned_users',
+        client: $('#post_ID').val()
+      },
+      beforeSend: function(jqXHR, settings) {},
+      success   : function(response, textStatus, jqXHR) {
+        console.log(response);
+        if (!response.success) {
+        } else {
+          var table = $('#table-add-existent-users');
+
+          var tbody = $('tbody', table);
+          tbody.html();
+
+          if (!response.data.length) {
+            tbody.append($('<tr><td colspan="5">No users found.</td></tr>'));
+          } else {
+            response.data.map(function(user) {
+              var tr = $('<tr data-id="'+ user.id +'"></tr>');
+
+              tr.append($('<td><input type="checkbox" value="'+ user.id +'" /></td>'));
+              tr.append($('<td>'+ user.name +'</td>'));
+              tr.append($('<td>'+ user.username +'</td>'));
+              tr.append($('<td>'+ user.email +'</td>'));
+              tr.append($('<td>'+ user.roles +'</td>'));
+
+              tbody.append(tr);
+
+              return user;
+            });
+          }
+        }
+      },
+      error     : function(jqXHR, textStatus, errorThrown) {},
+      complete  : function(jqXHR, textStatus) {}
+    });
+  }
+
+  $('#add-existent-user').on('click', onClickAddExistentUserAnchorCallback);
+
   $(document).ready(function() {
     $('#table-users').on('click', 'a[data-remove-user]', removeUserCallback);
 

@@ -41,6 +41,7 @@ class UpStream_Metaboxes_Clients
         $namespace = get_class(self::$instance);
         add_action('wp_ajax_upstream:client.add_new_user', array($namespace, 'addNewUser'));
         add_action('wp_ajax_upstream:client.remove_user', array($namespace, 'removeUser'));
+        add_action('wp_ajax_upstream:client.fetch_unassigned_users', array($namespace, 'fetchUnassignedUsers'));
 
         // Enqueues the default ThickBox assets.
         add_thickbox();
@@ -177,7 +178,7 @@ class UpStream_Metaboxes_Clients
         ?>
         <div id="modal-add-existent-user" style="display: none;">
             <p>@todo: info message</p>
-            <table>
+            <table id="table-add-existent-users">
                 <thead>
                     <tr>
                         <th>
@@ -223,7 +224,7 @@ class UpStream_Metaboxes_Clients
 
         <?php // @todo: create js/css to make Thickbox responsive. ?>
         <a name="Add New User" href="#TB_inline?width=600&height=400&inlineId=modal-add-new-user" class="thickbox">Add New User</a>
-        <a name="Add Existent User" href="#TB_inline?width=600&height=300&inlineId=modal-add-existent-user" class="thickbox">Add Existent User</a>
+        <a id="add-existent-user" name="Add Existent User" href="#TB_inline?width=600&height=300&inlineId=modal-add-existent-user" class="thickbox">Add Existent User</a>
 
         <table id="table-users">
             <thead>
@@ -465,6 +466,7 @@ class UpStream_Metaboxes_Clients
 
     public static function removeUser()
     {
+        // @todo : nonce and permission checks?
         header('Content-Type: application/json');
 
         $response = array(
@@ -500,6 +502,71 @@ class UpStream_Metaboxes_Clients
                 }
 
                 update_post_meta($clientId, $clientUsersMetaKey, $newClientUsersList);
+            }
+
+            $response['success'] = true;
+        } catch (\Exception $e) {
+            $response['err'] = $e->getMessage();
+        }
+
+        echo wp_json_encode($response);
+
+        wp_die();
+    }
+
+    public static function fetchUnassignedUsers()
+    {
+        // @todo : nonce and permission checks?
+        header('Content-Type: application/json');
+
+        $response = array(
+            'success' => false,
+            'data'    => array(),
+            'err'     => null
+        );
+
+        try {
+            if (empty($_GET) || !isset($_GET['client'])) {
+                throw new \Exception("@todo");
+            }
+
+            $clientId = (int)$_GET['client'];
+            if ($clientId <= 0) {
+                throw new \Exception("@todo");
+            }
+
+            $clientUsers = self::getUsersFromClient($clientId);
+            $excludeTheseIds = array(get_current_user_id());
+            if (count($clientUsers) > 0) {
+                foreach ($clientUsers as $clientUser) {
+                    array_push($excludeTheseIds, $clientUser->id);
+                }
+            }
+
+            $rowset = get_users(array(
+                'exclude'      => $excludeTheseIds,
+                'role__not_in' => array('upstream_manager'),
+                'orderby'      => 'ID'
+            ));
+
+            global $wp_roles;
+
+            foreach ($rowset as $row) {
+                $user = array(
+                    'id'       => $row->ID,
+                    'name'     => $row->display_name,
+                    'username' => $row->user_login,
+                    'email'    => $row->user_email,
+                    'roles'    => array()
+                );
+
+                foreach ((array)$row->roles as $userRole) {
+                    array_push($user['roles'], $wp_roles->roles[$userRole]['name']);
+                }
+
+                $user['roles'] = implode(', ', $user['roles']);
+
+                array_push($response['data'], $user);
             }
 
             $response['success'] = true;
