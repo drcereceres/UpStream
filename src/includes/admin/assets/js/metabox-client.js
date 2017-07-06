@@ -5,6 +5,10 @@
     console.error('UpStream requires jQuery.');
   }
 
+  if (!$('#titlewrap').length) {
+    return;
+  }
+
   // Make the Client Name field required.
   (function() {
     var titleWrap = $('#titlewrap');
