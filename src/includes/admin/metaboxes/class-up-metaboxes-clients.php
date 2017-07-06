@@ -386,21 +386,30 @@ class UpStream_Metaboxes_Clients
             }
 
             if ($data['notification']) {
+                // @todo
                 //wp_new_user_notification($userDataId);
             }
 
-            // @todo: generate and save `assigned_at` and `assigned_by` data.
+            $currentUser = get_userdata(get_current_user_id());
 
             $response['data'] = array(
                 'id'          => $userDataId,
                 'assigned_at' => current_time('Y-m-d H:i:s'), // convert to user's timezone
-                'assigned_by' => '@todo',
-                'name'        => empty($data['first_name'] . ' '. $data['last_name']) ? $data['first_name'] . ' '. $data['last_name'] : $data['username'],
+                'assigned_by' => $currentUser->display_name,
+                'name'        => empty($data['first_name'] . ' '. $data['last_name']) ? $data['first_name'] . ' ' . $data['last_name'] : $data['username'],
                 'username'    => $userDataUsername,
                 'email'       => $data['email']
             );
 
-            // @todo : associate new user with the client
+            // @todo: change the meta-value key
+            $clientUsersMetaKey = '_upstream_new_client_users';
+            $clientUsersList = (array)get_post_meta($clientId, $clientUsersMetaKey, true);
+            array_push($clientUsersList, array(
+                'user_id'     => $userDataId,
+                'assigned_by' => $currentUser->ID,
+                'assigned_at' => $response['data']['assigned_at']
+            ));
+            update_post_meta($clientId, $clientUsersMetaKey, $clientUsersList);
 
             $response['success'] = true;
         } catch (\Exception $e) {
