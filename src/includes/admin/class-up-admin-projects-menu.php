@@ -17,14 +17,31 @@ if ( ! class_exists( 'UpStream_Admin_Projects_Menu' ) ) :
  * UpStream_Admin_Menus Class.
  */
 class UpStream_Admin_Projects_Menu {
+    private static $userIsUpStreamUser = null;
 
     /**
      * Hook in tabs.
      */
     public function __construct() {
+        if (self::$userIsUpStreamUser === null) {
+            $user = wp_get_current_user();
+            self::$userIsUpStreamUser = count(array_intersect($user->roles, array('administrator', 'upstream_manager'))) === 0;
+        }
+
         add_action( 'admin_menu', array( $this, 'projects_menu' ), 9 );
         add_filter( 'custom_menu_order', array( $this, 'submenu_order' ) );
+        add_action('admin_head', array($this, 'hideAddNewProjectButtonIfNeeded'));
+    }
 
+    public function hideAddNewProjectButtonIfNeeded()
+    {
+        if (is_admin()) {
+            global $pagenow;
+
+            if ($pagenow === 'edit.php' && $_GET['post_type'] === 'project' && self::$userIsUpStreamUser) {
+                echo '<style type="text/css">.page-title-action { display: none; }</style>';
+            }
+        }
     }
 
     /**
