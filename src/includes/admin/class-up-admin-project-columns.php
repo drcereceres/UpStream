@@ -271,6 +271,11 @@ class UpStream_Admin_Project_Columns {
                         wp_redirect(admin_url('/edit.php?post_type=project'));
                         exit;
                     }
+                } else if ($pagenow === 'post-new.php') {
+                    // Redirect the user to the projects list page.
+                    $pagenow = 'edit.php';
+                    wp_redirect(admin_url('/edit.php?post_type=project'));
+                    exit;
                 }
             }
 
