@@ -82,8 +82,14 @@ final class UpStream_Login
      */
     public static function doDestroySession()
     {
+        wp_logout();
+
         if (session_status() === PHP_SESSION_ACTIVE && isset($_SESSION['upstream'])) {
             unset($_SESSION['upstream']);
+        }
+
+        if (!empty($_GET) && isset($_GET['action']) && $_GET['action'] === 'logout') {
+            unset($_GET['action']);
         }
     }
 
