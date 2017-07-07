@@ -235,9 +235,14 @@ final class UpStream_Login
                 if (count(array_intersect((array)$user->roles, array('administrator', 'upstream_manager', 'upstream_user'))) === 0) {
                     $this->feedbackMessage = __("You don't have enough permissions to log in.", 'upstream');
                 } else {
-                    // Validate user's password.
-                    if (!wp_check_password($data['password'], $user->user_pass, $user->ID)) {
-                        $this->feedbackMessage = __("Invalid email address and/or password.", 'upstream');
+                    $user = wp_signon(array(
+                        'user_login'    => $data['username'],
+                        'user_password' => $data['password'],
+                        'remember'      => false
+                    ));
+
+                    if (is_wp_error($user)) {
+                        $this->feedbackMessage = $user->get_error_message();
                     } else {
                         // Let's identify the client_id based on the current project.
                         $clientRowset = $wpdb->get_results('
