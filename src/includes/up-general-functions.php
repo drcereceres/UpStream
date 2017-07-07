@@ -38,7 +38,7 @@ function upstream_post_id() {
 // Url for logging out, depending on client or WP user
 function upstream_logout_url() {
     if( is_user_logged_in() ) {
-        return wp_logout_url();
+        return wp_logout_url() . '&redirect_to=' . urlencode(home_url() . '/projects');
     } else {
         return '?action=logout';
     }
