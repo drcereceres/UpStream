@@ -125,7 +125,16 @@ and this project adheres to [Semantic Versioning](http://semver.org).
 
 = [1.10.3] - @todo =
 
-@todo
+Changed:
+* Users are now capable of logging in via /projects page
+* UpStream Users no longer can log in in a project using the client's password
+
+Fixed:
+* Fixed random logo appearing in /projects page
+* Fixed bug giving some users a hard time logging in a project
+* Fixed uncommon redirection bug after logging off on frontend
+* Fixed bug causing some usernames to be blank in several places
+* UpStream Users no longer can access projects in which they're not involved in
 
 = [1.10.2] - 2017-07-02 =
 
