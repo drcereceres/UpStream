@@ -203,6 +203,7 @@ function upstream_user_data( $data = 0, $ignore_current = false ) {
             'lname'     => $wp_user->last_name,
             'full_name' => $wp_user->first_name . ' ' . $wp_user->last_name,
             'email'     => $wp_user->user_email,
+            'display_name' => $wp_user->display_name,
             'phone'     => '',
             'projects'  => upstream_get_users_projects( $wp_user->ID ),
             'role'      => $role,

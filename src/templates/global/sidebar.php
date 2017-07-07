@@ -36,7 +36,7 @@ $areFilesDisabledForThisProject = upstream_are_files_disabled();
                 <img src="<?php echo upstream_current_user('avatar'); ?>" alt="" class="img-circle profile_img">
             </div>
             <div class="profile_info">
-                <h2><?php echo esc_html(upstream_current_user('fname')); ?></h2>
+                <h2><?php echo esc_html(upstream_current_user('display_name')); ?></h2>
                 <p><?php echo esc_html(upstream_current_user('role')); ?></p>
             </div>
         </div>
