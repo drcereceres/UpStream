@@ -1,6 +1,13 @@
 <?php
 if (!defined('ABSPATH')) exit;
 
+if (is_archive() && (empty($_SESSION) || empty($_SESSION['upstream']) || empty($_SESSION['upstream']['user_id'])) && !is_user_logged_in()) {
+    $homeURL = home_url();
+    $redirectTo = $homeURL . '/wp-login.php?redirect_to=' . urlencode($homeURL . '/projects');
+    wp_redirect($redirectTo);
+    exit;
+}
+
 $headerText = upstream_login_heading();
 
 $pluginOptions = get_option('upstream_general');
@@ -16,6 +23,8 @@ if ($shouldDisplayProjectName) {
 }
 
 $login = new UpStream_Login();
+
+var_dump(is_archive());
 ?>
 
 <?php upstream_get_template_part('global/header.php'); ?>
