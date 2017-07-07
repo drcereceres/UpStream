@@ -23,8 +23,6 @@ if ($shouldDisplayProjectName) {
 }
 
 $login = new UpStream_Login();
-
-var_dump(is_archive());
 ?>
 
 <?php upstream_get_template_part('global/header.php'); ?>
