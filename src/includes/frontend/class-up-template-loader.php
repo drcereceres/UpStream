@@ -41,7 +41,7 @@ class UpStream_Template_Loader {
             if (
                 preg_match('/^\/projects/i', $_SERVER['REQUEST_URI']) &&
                 (
-                    (empty($_SESSION) || empty($_SESSION['user_id'])) &&
+                    (empty($_SESSION) || empty($_SESSION['upstream']) || empty($_SESSION['upstream']['user_id'])) &&
                     !is_user_logged_in()
                 )
             ) {

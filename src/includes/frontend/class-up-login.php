@@ -226,42 +226,39 @@ final class UpStream_Login
                 }
             }
         } else {
-            $queryParams = array(
-                'role__in'       => array('upstream_manager', 'upstream_user'),
-                'search'         => esc_html($data['username']),
-                'search_columns' => array('user_email')
-            );
-
-            $usersQuery = new WP_User_query($queryParams);
-
-            $usersRowsetCount = count($usersQuery->results);
-            if ($usersRowsetCount > 1) {
-                $this->feedbackMessage = __("Looks like there are multiple users using this email.<br>Please, contact your administrator as soon as possible.", 'upstream');
-            } else if ($usersRowsetCount === 0) {
-                // User does not exist.
+            $user = get_user_by('email', $data['username']);
+            if (empty($user)) {
                 $this->feedbackMessage = __("Invalid email address and/or password.", 'upstream');
             } else {
-                $clientRowset = $wpdb->get_results('
-                    SELECT *
-                    FROM `'. $wpdb->postmeta .'`
-                    WHERE
-                        `meta_key` = "_upstream_project_client" AND
-                        `post_id`  = "'. esc_html(upstream_post_id()) .'"'
-                );
-
-                if (count($clientRowset) === 1) {
-                    $client_id = $clientRowset[0]->meta_value;
-
-                    if ($this->verifyProjectPassword($data['password'], $client_id)) {
-                        $user_id = $usersQuery->results[0]->ID;
-
-                        $userCanLogIn = true;
-                    } else {
-                        // Invalid password.
-                        $this->feedbackMessage = __("Invalid email address and/or password.", 'upstream');
-                    }
+                if (count(array_intersect((array)$user->roles, array('administrator', 'upstream_manager', 'upstream_user'))) === 0) {
+                    $this->feedbackMessage = __("You don't have enough permissions to access this project.", 'upstream');
                 } else {
-                    $this->feedbackMessage = __("Invalid project.", 'upstream');
+                    $user_id = (int)$user->ID;
+                    $pwdIsValid = wp_check_password($data['password'], $user->user_pass, $user_id);
+
+                    $clientRowset = $wpdb->get_results('
+                        SELECT *
+                        FROM `'. $wpdb->postmeta .'`
+                        WHERE
+                            `meta_key` = "_upstream_project_client" AND
+                            `post_id`  = "'. esc_html(upstream_post_id()) .'"'
+                    );
+
+                    if (count($clientRowset) === 1) {
+                        $client_id = $clientRowset[0]->meta_value;
+
+                        if ($pwdIsValid) {
+                            $userCanLogIn = true;
+                        } else {
+                            $userCanLogIn = $this->verifyProjectPassword($data['password'], $client_id);
+                        }
+
+                        if (!$userCanLogIn) {
+                            $this->feedbackMessage = __("Invalid email address and/or password.", 'upstream');
+                        }
+                    } else {
+                        $this->feedbackMessage = __("Invalid project.", 'upstream');
+                    }
                 }
             }
         }
