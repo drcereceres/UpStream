@@ -53,21 +53,29 @@ class UpStream_Admin_Projects_Menu {
     }
 
 
-    public function submenu_order( $menu_ord ) {
-
+    public function submenu_order($menu)
+    {
         global $submenu;
-            if( $submenu['edit.php?post_type=project'] ) {
+
+        $subMenuIdentifier = 'edit.php?post_type=project';
+        if ($submenu[$subMenuIdentifier]) {
             $arr = array();
-            $arr[] = $submenu['edit.php?post_type=project'][5];
-            $arr[] = isset( $submenu['edit.php?post_type=project'][18] ) ? $submenu['edit.php?post_type=project'][18] : null;
-            $arr[] = isset( $submenu['edit.php?post_type=project'][19] ) ? $submenu['edit.php?post_type=project'][19] : null;
-            $arr[] = $submenu['edit.php?post_type=project'][10];
-            $arr[] = $submenu['edit.php?post_type=project'][15];
-            $arr[] = $submenu['edit.php?post_type=project'][16];
-            $arr[] = $submenu['edit.php?post_type=project'][17];
-            $submenu['edit.php?post_type=project'] = $arr;
+            $arr[] = $submenu[$subMenuIdentifier][5];
+            $arr[] = isset($submenu[$subMenuIdentifier][18]) ? $submenu[$subMenuIdentifier][18] : null;
+            $arr[] = isset($submenu[$subMenuIdentifier][19]) ? $submenu[$subMenuIdentifier][19] : null;
+
+
+            if (!self::$userIsUpStreamUser) {
+                $arr[] = $submenu[$subMenuIdentifier][10];
+                $arr[] = $submenu[$subMenuIdentifier][15];
+                $arr[] = $submenu[$subMenuIdentifier][16];
+                $arr[] = $submenu[$subMenuIdentifier][17];
+            }
+
+            $submenu[$subMenuIdentifier] = $arr;
         }
-        return $menu_ord;
+
+        return $menu;
     }
 
 }
