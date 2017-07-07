@@ -262,20 +262,6 @@ class UpStream_Admin_Project_Columns {
                             )
                         )
                     ));
-                } else if ($pagenow === 'post.php') {
-                    $projectMembersList = get_post_meta((int)$_GET['post'], '_upstream_project_members');
-                    // Since he's not and Administrator nor an UpStream Manager, we need to check if he's participating in the project.
-                    if (!in_array($user->ID, $projectMembersList[0])) {
-                        // Redirect the user to the projects list page.
-                        $pagenow = 'edit.php';
-                        wp_redirect(admin_url('/edit.php?post_type=project'));
-                        exit;
-                    }
-                } else if ($pagenow === 'post-new.php') {
-                    // Redirect the user to the projects list page.
-                    $pagenow = 'edit.php';
-                    wp_redirect(admin_url('/edit.php?post_type=project'));
-                    exit;
                 }
             }
 
