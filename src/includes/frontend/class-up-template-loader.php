@@ -38,24 +38,21 @@ class UpStream_Template_Loader {
         }
 
         if (is_archive()) {
-            if (
-                preg_match('/^\/projects/i', $_SERVER['REQUEST_URI']) &&
-                (
-                    (empty($_SESSION) || empty($_SESSION['upstream']) || empty($_SESSION['upstream']['user_id'])) &&
-                    !is_user_logged_in()
-                )
-            ) {
-                $homeURL = home_url();
-                $redirectTo = $homeURL . '/wp-login.php?redirect_to=' . urlencode($homeURL . '/projects');
-                wp_redirect($redirectTo);
-                exit;
-            } else {
-                $file = 'archive-project.php';
-            }
+            $file = 'archive-project.php';
         }
 
         if (isset($_GET['action']) && $_GET['action'] === 'logout' && !isset($_POST['login'])) {
             UpStream_Login::doDestroySession();
+
+            if (preg_match('/^\/projects/i', $_SERVER['REQUEST_URI'])) {
+                $homeURL = home_url();
+                $redirectTo = $homeURL . '/wp-login.php?redirect_to=' . urlencode($homeURL . '/projects');
+            } else {
+                $redirectTo = get_permalink();
+            }
+
+            wp_redirect($redirectTo);
+            exit;
         }
 
         /*
