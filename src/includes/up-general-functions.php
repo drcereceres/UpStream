@@ -275,18 +275,21 @@ function upstream_user_data( $data = 0, $ignore_current = false ) {
             // get the matching user
             if( in_array( $data, array( $user['id'], $user['email'] ) ) ) {
 
-                $fname = isset( $user['fname'] ) ? $user['fname'] : '';
-                $lname = isset( $user['lname'] ) ? $user['lname'] : '';
+                $fname = isset( $user['fname'] ) ? trim($user['fname']) : '';
+                $lname = isset( $user['lname'] ) ? trim($user['lname']) : '';
                 $user_data = array(
                     'id'        => $user['id'],
                     'fname'     => $fname,
                     'lname'     => $lname,
-                    'full_name' => $fname . ' ' . $lname,
+                    'full_name' => trim($fname . ' ' . $lname),
                     'email'     => isset( $user['email'] ) ? $user['email'] : '',
                     'phone'     => isset( $user['phone'] ) ? $user['phone'] : '',
                     'projects'  => upstream_get_users_projects( $user['id'] ),
                     'role'      => __( 'Client User', 'upstream' ),
                 );
+
+                $displayName = !empty($user_data['full_name']) ? $user_data['full_name'] : $user_data['email'];
+                $user_data['display_name'] = $displayName;
 
                 if ($isBuddyPressRunning) {
                     $user_data['avatar'] = bp_core_fetch_avatar(array(
