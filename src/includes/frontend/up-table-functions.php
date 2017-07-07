@@ -526,9 +526,13 @@ function upstream_format_table_data( $item, $key, $setting ) {
     $output     = '';
 
     // type: name
-    if( $setting['type'] == 'name' && ! empty( $field_data ) ) {
-        $user = upstream_user_data( $field_data, true );
-        $output = $user['full_name'];
+    if ($setting['type'] === 'name') {
+        if (empty($field_data)) {
+            $output = '<i>' . __('none', 'upstream') . '</i>';
+        } else {
+            $user = upstream_user_data( $field_data, true );
+            $output = $user['display_name'];
+        }
     }
 
     // type: date
