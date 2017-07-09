@@ -196,6 +196,9 @@ function upstream_user_data( $data = 0, $ignore_current = false ) {
         if( in_array( 'upstream_manager', $wp_user->roles ) ) {
             $role = sprintf( __( '%s Manager', 'upstream' ), upstream_project_label() );
         }
+        if( in_array( 'upstream_client_user', $wp_user->roles ) ) {
+            $role = sprintf( __( '%s Client User', 'upstream' ), upstream_project_label() );
+        }
 
         $user_data = array(
             'id'        => $wp_user->ID,
