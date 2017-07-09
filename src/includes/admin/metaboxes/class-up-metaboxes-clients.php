@@ -545,7 +545,7 @@ class UpStream_Metaboxes_Clients
 
             $rowset = get_users(array(
                 'exclude'      => $excludeTheseIds,
-                'role__not_in' => array('upstream_manager'),
+                'role__in' => array('upstream_client_user'),
                 'orderby'      => 'ID'
             ));
 

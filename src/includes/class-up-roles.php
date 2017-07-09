@@ -64,6 +64,7 @@ class UpStream_Roles {
             'upload_files'           => true,
         ) );
 
+        self::addClientUsersRole();
     }
 
     /**
@@ -296,5 +297,20 @@ class UpStream_Roles {
 
         }
 
+    }
+
+    // @todo
+    public static function addClientUsersRole()
+    {
+        global $wp_roles;
+
+        $theRoleIndetifier = 'upstream_client_user';
+
+        if (!$wp_roles->is_role($theRoleIndetifier)) {
+            add_role($theRoleIndetifier, __('UpStream Client User', 'upstream'), array(
+                'read'         => true,
+                'upload_files' => true
+            ));
+        }
     }
 }
