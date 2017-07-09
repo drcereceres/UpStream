@@ -777,3 +777,32 @@ input[type="email"][name^="_upstream_"].validating {
 .upstream-table a[data-remove-user]:focus {
   color: #DC3232;
 }
+
+.up-form-group {
+  margin-bottom: .5em;
+}
+
+.up-form-group label {
+  text-align: right;
+  display: inline-block;
+  vertical-align: middle;
+  width: 6em;
+  margin: 0 1em 0 0;
+  font-weight: bold;
+}
+
+.up-form-group input {
+  padding: .5em .6em;
+  display: inline-block;
+  border: 1px solid #ccc;
+  box-shadow: inset 0 1px 3px #ddd;
+  border-radius: 4px;
+  vertical-align: middle;
+  box-sizing: border-box;
+}
+
+.up-form-group .up-help-block {
+  display: block;
+  color: #666;
+  font-size: .875em;
+}

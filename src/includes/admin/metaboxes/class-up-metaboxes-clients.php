@@ -125,26 +125,23 @@ class UpStream_Metaboxes_Clients
                     <div class="up-form-group">
                         <label for="new-user-username">Username *</label>
                         <input type="text" name="username" id="new-user-username" required />
-                        <p>
-                            Rules:
+                        <div class="up-help-block">
                             <ul>
                                 <li>Must be between 3 and 60 characters long;</li>
                                 <li>You may use <code>letters (a-z)</code>, <code>numbers (0-9)</code>, <code>-</code> and <code>_</code> symbols;</li>
                                 <li>The first character must be a <code>letter</code>;</li>
                                 <li>Everything will be lowercased.</li>
                             </ul>
-                        </p>
+                        </div>
                     </div>
                     <div class="up-form-group">
                         <label for="new-user-password">Password *</label>
                         <input type="password" name="password" id="new-user-password" required />
-                        <p>
-                            @todo: password confirmation?
-                            Rules:
+                        <div class="up-help-block">
                             <ul>
                                 <li>Must be at least between 6 characters long.</li>
                             </ul>
-                        </p>
+                        </div>
                     </div>
                 </div>
                 <hr />
