@@ -54,7 +54,7 @@
 
   function updateAddExistentUserButtonLabel() {
     var table = $('#table-add-existent-users');
-    var wrapper = $(table.parent());
+    var wrapper = $(table.parent().parent());
     var button = $('[data-type="submit"]', wrapper);
 
     var selectedItemsCount = $('tbody tr[data-id] td input[type="checkbox"]:checked', table).length;
@@ -81,7 +81,7 @@
 
   var onClickAddExistentUserAnchorCallback = function(e) {
     var table = $('#table-add-existent-users');
-    var wrapper = $(table.parent());
+    var wrapper = $(table.parent().parent());
     var tbody = $('tbody', table);
 
     $('[data-type="submit"]', wrapper).remove();
@@ -122,9 +122,9 @@
                 tr.append('<td>'+ user.name +'</td>');
                 tr.append('<td>'+ user.username +'</td>');
                 tr.append('<td>'+ user.email +'</td>');
-                tr.append('<td>'+ user.assigned_at +'</td>');
+                tr.append('<td class="text-center">'+ user.assigned_at +'</td>');
                 tr.append('<td>'+ user.assigned_by +'</td>');
-                tr.append('<td><a href="#" data-remove-user>x</a></td>');
+                tr.append('<td class="text-center"><a href="#" data-remove-user><span class="dashicons dashicons-trash"></span></a></td>');
 
                 $('tbody', table).append(tr);
               }
@@ -156,14 +156,15 @@
           if (!response.data.length) {
             tbody.append($('<tr><td colspan="4">No users found.</td></tr>'));
           } else {
-            table.after($('<button type="button" data-type="submit" disabled="disabled">No user selected</button>'));
+            var wrapper = $($('#table-add-existent-users').parent().parent());
+            $('div.submit', wrapper).append($('<button type="button" data-type="submit" disabled="disabled" class="button button-primary">No user selected</button>'));
 
-            $('[data-type="submit"]', table.parent()).on('click', addSelectedUsers);
+            $('[data-type="submit"]', $('div.submit', wrapper)).on('click', addSelectedUsers);
 
             response.data.map(function(user) {
               var tr = $('<tr data-id="'+ user.id +'"></tr>');
 
-              tr.append($('<td><input type="checkbox" value="'+ user.id +'" /></td>'));
+              tr.append($('<td class="text-center"><input type="checkbox" value="'+ user.id +'" /></td>'));
               tr.append($('<td>'+ user.name +'</td>'));
               tr.append($('<td>'+ user.username +'</td>'));
               tr.append($('<td>'+ user.email +'</td>'));
@@ -254,7 +255,7 @@
               tr.append('<td>'+ response.data.email +'</td>');
               tr.append('<td>'+ response.data.assigned_at +'</td>');
               tr.append('<td>'+ response.data.assigned_by +'</td>');
-              tr.append('<td><a href="#" data-remove-user>x</a></td>');
+              tr.append('<td class="text-center"><a href="#" data-remove-user><span class="dashicons dashicons-trash"></span></a></td>');
 
               var table = $('#table-users');
               $('tr[data-empty]', table).remove();

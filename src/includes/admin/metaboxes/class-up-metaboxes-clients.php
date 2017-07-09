@@ -166,7 +166,7 @@ class UpStream_Metaboxes_Clients
                         </label>
                     </div>
                 </div>
-                <button type="submit">Add New User</button>
+                <button type="submit" class="button button-primary">Add New User</button>
             </div>
         </div>
         <?php
@@ -178,37 +178,42 @@ class UpStream_Metaboxes_Clients
         $unassignedUsers = self::getUnassignedUsersFromClient($client_id);
         ?>
         <div id="modal-add-existent-user" style="display: none;">
-            <p>@todo: info message</p>
-            <table id="table-add-existent-users">
-                <thead>
-                    <tr>
-                        <th>
-                            <input type="checkbox" />
-                        </th>
-                        <th>Name</th>
-                        <th>Username</th>
-                        <th>Email</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php if (count($unassignedUsers) > 0): ?>
-                    <?php foreach ($unassignedUsers as $user): ?>
-                        <tr data-id="<?php echo $user->id; ?>">
-                            <td>
-                                <input type="checkbox" value="1" />
-                            </td>
-                            <td><?php echo $user->name; ?></td>
-                            <td><?php echo $user->username; ?></td>
-                            <td><?php echo $user->email; ?></td>
+            <div class="upstream-row">
+                <p><?php echo sprintf(__('These are all the users assigned with the role <code>%s</code> and not related to this client yet.', 'upstream'), sprintf(__('%s Client User', 'upstream'), upstream_project_label())); ?></p>
+            </div>
+            <div class="upstream-row">
+                <table id="table-add-existent-users" class="wp-list-table widefat fixed striped posts upstream-table">
+                    <thead>
+                        <tr>
+                            <th class="text-center">
+                                <input type="checkbox" />
+                            </th>
+                            <th>Name</th>
+                            <th>Username</th>
+                            <th>Email</th>
                         </tr>
-                    <?php endforeach; ?>
-                    <?php else: ?>
-                    <tr>
-                        <td colspan="5">All users seems to be assigned to this client.</td>
-                    </tr>
-                    <?php endif; ?>
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                        <?php if (count($unassignedUsers) > 0): ?>
+                        <?php foreach ($unassignedUsers as $user): ?>
+                            <tr data-id="<?php echo $user->id; ?>">
+                                <td class="text-center">
+                                    <input type="checkbox" value="1" />
+                                </td>
+                                <td><?php echo $user->name; ?></td>
+                                <td><?php echo $user->username; ?></td>
+                                <td><?php echo $user->email; ?></td>
+                            </tr>
+                        <?php endforeach; ?>
+                        <?php else: ?>
+                        <tr>
+                            <td colspan="4">All users seems to be assigned to this client.</td>
+                        </tr>
+                        <?php endif; ?>
+                    </tbody>
+                </table>
+            </div>
+            <div class="upstream-row submit"></div>
         </div>
         <?php
     }
@@ -221,18 +226,20 @@ class UpStream_Metaboxes_Clients
         ?>
 
         <?php // @todo: create js/css to make Thickbox responsive. ?>
-        <a name="Add New User" href="#TB_inline?width=600&height=400&inlineId=modal-add-new-user" class="thickbox">Add New User</a>
-        <a id="add-existent-user" name="Add Existent User" href="#TB_inline?width=600&height=300&inlineId=modal-add-existent-user" class="thickbox">Add Existent User</a>
-
-        <table id="table-users">
+        <div class="upstream-row">
+            <a name="Add New User" href="#TB_inline?width=600&height=400&inlineId=modal-add-new-user" class="thickbox button">Add New User</a>
+            <a id="add-existent-user" name="Add Existent User" href="#TB_inline?width=600&height=300&inlineId=modal-add-existent-user" class="thickbox button">Add Existent User</a>
+        </div>
+        <div class="upstream-row">
+        <table id="table-users" class="wp-list-table widefat fixed striped posts upstream-table">
             <thead>
                 <tr>
                     <th>Name</th>
                     <th>Username</th>
                     <th>Email</th>
-                    <th>Assigned at</th>
+                    <th class="text-center">Assigned at</th>
                     <th>Assigned by</th>
-                    <th>Remove?</th>
+                    <th class="text-center">Remove?</th>
                 </tr>
             </thead>
             <tbody>
@@ -242,9 +249,13 @@ class UpStream_Metaboxes_Clients
                     <td><?php echo $user->name; ?></td>
                     <td><?php echo $user->username; ?></td>
                     <td><?php echo $user->email; ?></td>
-                    <td><?php echo $user->assigned_at; ?></td>
+                    <td class="text-center"><?php echo $user->assigned_at; ?></td>
                     <td><?php echo $user->assigned_by; ?></td>
-                    <td><a href="#" onclick="javascript:void(0);" data-remove-user>x</a></td>
+                    <td class="text-center">
+                        <a href="#" onclick="javascript:void(0);" data-remove-user>
+                            <span class="dashicons dashicons-trash"></span>
+                        </a>
+                    </td>
                 </tr>
                 <?php endforeach; ?>
                 <?php else: ?>
@@ -254,7 +265,7 @@ class UpStream_Metaboxes_Clients
                 <?php endif; ?>
             </tbody>
         </table>
-
+        </div>
         <?php
         self::renderAddNewUserModal();
         self::renderAddExistentUserModal();

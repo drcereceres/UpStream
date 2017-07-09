@@ -749,3 +749,31 @@ input[name^="_upstream_"].has-error {
 input[type="email"][name^="_upstream_"].validating {
   cursor: disabled;
 }
+
+.upstream-row + .upstream-row {
+  margin-top: 15px;
+}
+
+.upstream-table input[type="checkbox"] {
+  margin: 0;
+}
+
+.upstream-table th.text-center,
+.upstream-table td.text-center {
+  text-align: center;
+}
+
+.upstream-table thead tr th {
+  font-weight: bold;
+}
+
+.upstream-table a[data-remove-user],
+.upstream-table a[data-remove-user]:visited,
+.upstream-table a[data-remove-user]:active {
+  color: #A00;
+}
+
+.upstream-table a[data-remove-user]:hover,
+.upstream-table a[data-remove-user]:focus {
+  color: #DC3232;
+}
