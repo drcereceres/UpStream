@@ -144,26 +144,17 @@ class UpStream_Metaboxes_Clients
                         </div>
                     </div>
                 </div>
-                <hr />
                 <div>
-                    <h3>Details</h3>
-                    <div class="up-form-group">
-                        <label for="new-user-first_name">First Name</label>
-                        <input type="text" name="first_name" id="new-user-first_name" />
-                    </div>
-                    <div class="up-form-group">
-                        <label for="new-user-last_name">Last Name</label>
-                        <input type="text" name="last_name" id="new-user-last_name" />
-                    </div>
-                    <div class="up-form-group">
-                        <label>Send User Notification</label>
-                        <label for="new-user-notification">
-                            Send user info via email
+                    <div class="up-form-group label-default">
+                        <label>
                             <input type="checkbox" name="notification" id="new-user-notification" value="1" checked />
+                            <span>Send user info via email</span>
                         </label>
                     </div>
+                    <div class="up-form-group">
+                        <button type="submit" class="button button-primary">Add New User</button>
+                    </div>
                 </div>
-                <button type="submit" class="button button-primary">Add New User</button>
             </div>
         </div>
         <?php
