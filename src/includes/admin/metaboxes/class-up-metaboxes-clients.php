@@ -42,6 +42,7 @@ class UpStream_Metaboxes_Clients
         add_action('wp_ajax_upstream:client.add_new_user', array($namespace, 'addNewUser'));
         add_action('wp_ajax_upstream:client.remove_user', array($namespace, 'removeUser'));
         add_action('wp_ajax_upstream:client.fetch_unassigned_users', array($namespace, 'fetchUnassignedUsers'));
+        add_action('wp_ajax_upstream:client.add_existent_users', array($namespace, 'addExistentUsers'));
 
         // Enqueues the default ThickBox assets.
         add_thickbox();
@@ -182,12 +183,11 @@ class UpStream_Metaboxes_Clients
                 <thead>
                     <tr>
                         <th>
-                            <input type="checkbox" value="1" />
+                            <input type="checkbox" />
                         </th>
                         <th>Name</th>
                         <th>Username</th>
                         <th>Email</th>
-                        <th>Current Roles</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -200,7 +200,6 @@ class UpStream_Metaboxes_Clients
                             <td><?php echo $user->name; ?></td>
                             <td><?php echo $user->username; ?></td>
                             <td><?php echo $user->email; ?></td>
-                            <td><?php echo count($user->roles) > 0 ? implode(', ', $user->roles) : "<i>none</i>"; ?></td>
                         </tr>
                     <?php endforeach; ?>
                     <?php else: ?>
@@ -210,7 +209,6 @@ class UpStream_Metaboxes_Clients
                     <?php endif; ?>
                 </tbody>
             </table>
-            <button type="button">Add X user(s)</button>
         </div>
         <?php
     }
@@ -420,7 +418,7 @@ class UpStream_Metaboxes_Clients
                 'nickname'      => $userDataUsername,
                 'first_name'    => $data['first_name'],
                 'last_name'     => $data['last_name'],
-                'role'          => 'upstream_user'
+                'role'          => 'upstream_client_user' // @todo : script to create the role when updating UpStream?
             );
 
             $userDataId = wp_insert_user($userData);
@@ -439,7 +437,7 @@ class UpStream_Metaboxes_Clients
                 'id'          => $userDataId,
                 'assigned_at' => current_time('Y-m-d H:i:s'), // convert to user's timezone
                 'assigned_by' => $currentUser->display_name,
-                'name'        => empty($data['first_name'] . ' '. $data['last_name']) ? $data['first_name'] . ' ' . $data['last_name'] : $data['username'],
+                'name'        => empty($data['first_name'] . ' ' . $data['last_name']) ? $data['first_name'] . ' ' . $data['last_name'] : $data['username'],
                 'username'    => $userDataUsername,
                 'email'       => $data['email']
             );
@@ -556,17 +554,95 @@ class UpStream_Metaboxes_Clients
                     'id'       => $row->ID,
                     'name'     => $row->display_name,
                     'username' => $row->user_login,
-                    'email'    => $row->user_email,
-                    'roles'    => array()
+                    'email'    => $row->user_email
                 );
 
-                foreach ((array)$row->roles as $userRole) {
-                    array_push($user['roles'], $wp_roles->roles[$userRole]['name']);
-                }
-
-                $user['roles'] = implode(', ', $user['roles']);
-
                 array_push($response['data'], $user);
+            }
+
+            $response['success'] = true;
+        } catch (\Exception $e) {
+            $response['err'] = $e->getMessage();
+        }
+
+        echo wp_json_encode($response);
+
+        wp_die();
+    }
+
+    public static function addExistentUsers()
+    {
+        // @todo : nonce
+        header('Content-Type: application/json');
+
+        $response = array(
+            'success' => false,
+            'data'    => array(),
+            'err'     => null
+        );
+
+        try {
+            if (empty($_POST) || !isset($_POST['client'])) {
+                throw new \Exception("@todo");
+            }
+
+            $clientId = (int)$_POST['client'];
+            if ($clientId <= 0) {
+                throw new \Exception("@todo");
+            }
+
+            if (!isset($_POST['users']) && empty($_POST['users'])) {
+                throw new \Exception("@todo");
+            }
+
+            $currentUser = get_userdata(get_current_user_id());
+            $now = current_time('Y-m-d H:i:s');
+
+            $clientUsersMetaKey = '_upstream_new_client_users';
+            $clientUsersList = (array)get_post_meta($clientId, $clientUsersMetaKey, true);
+            $clientNewUsersList = array();
+
+            $usersIdsList = (array)$_POST['users'];
+            foreach ($usersIdsList as $user_id) {
+                $user_id = (int)$user_id;
+                if ($user_id > 0) {
+                    array_push($clientUsersList, array(
+                        'user_id'     => $user_id,
+                        'assigned_by' => $currentUser->ID,
+                        'assigned_at' => $now
+                    ));
+                }
+            }
+
+            foreach ($clientUsersList as $clientUser) {
+                $clientUser = (array)$clientUser;
+                $clientUser['user_id'] = (int)$clientUser['user_id'];
+
+                if (!isset($clientNewUsersList[$clientUser['user_id']])) {
+                    $clientNewUsersList[$clientUser['user_id']] = $clientUser;
+                }
+            }
+            update_post_meta($clientId, $clientUsersMetaKey, array_values($clientNewUsersList));
+
+            global $wpdb;
+
+            $rowset = (array)$wpdb->get_results(sprintf('
+                SELECT `ID`, `display_name`, `user_login`, `user_email`
+                FROM `%s`
+                WHERE `ID` IN ("%s")',
+                $wpdb->prefix . 'users',
+                implode('", "', $usersIdsList)
+            ));
+
+            foreach ($rowset as $user) {
+                array_push($response['data'], array(
+                    'id'          => (int)$user->ID,
+                    'name'        => $user->display_name,
+                    'email'       => $user->user_email,
+                    'username'    => $user->user_login,
+                    'assigned_by' => $currentUser->display_name,
+                    'assigned_at' => $now
+                ));
             }
 
             $response['success'] = true;

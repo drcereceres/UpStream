@@ -52,7 +52,92 @@
     }
   };
 
+  function updateAddExistentUserButtonLabel() {
+    var table = $('#table-add-existent-users');
+    var wrapper = $(table.parent());
+    var button = $('[data-type="submit"]', wrapper);
+
+    var selectedItemsCount = $('tbody tr[data-id] td input[type="checkbox"]:checked', table).length;
+    if (selectedItemsCount > 0) {
+      button.attr('disabled', null);
+      button.text('Add '+ selectedItemsCount +' user'+ (selectedItemsCount > 1 ? 's' : ''));
+    } else {
+      button.attr('disabled', 'disabled');
+      button.text('No user selected');
+
+      $('thead input[type="checkbox"]', table).prop('checked', false);
+    }
+  }
+
+  $('#table-add-existent-users thead input[type="checkbox"]').on('click', function(e) {
+    var wrapper = $($(this).parents('table'));
+
+    $('tbody tr[data-id] td input[type="checkbox"]', wrapper).prop('checked', this.checked);
+
+    updateAddExistentUserButtonLabel();
+  });
+
+  $('#table-add-existent-users').on('click', 'tbody tr[data-id] td input[type="checkbox"]', updateAddExistentUserButtonLabel);
+
   var onClickAddExistentUserAnchorCallback = function(e) {
+    var table = $('#table-add-existent-users');
+    var wrapper = $(table.parent());
+    var tbody = $('tbody', table);
+
+    $('[data-type="submit"]', wrapper).remove();
+
+    var addSelectedUsers = function(e) {
+      e.preventDefault();
+
+      var table = $('#table-add-existent-users');
+      var usersIdsList = [];
+      var selectedCheckboxes = $('tbody input[type="checkbox"]:checked', table);
+      if (selectedCheckboxes.length > 0) {
+        for (var i = 0; i < selectedCheckboxes.length; i++) {
+          usersIdsList.push(selectedCheckboxes.get(i).value);
+        }
+
+        $.ajax({
+          type: 'POST',
+          url : ajaxurl,
+          data: {
+            action: 'upstream:client.add_existent_users',
+            client: $('#post_ID').val(),
+            users : usersIdsList
+          },
+          beforeSend: function(jqXHR, settings) {},
+          success   : function(response, textStatus, jqXHR) {
+            if (!response.success) {
+
+            } else {
+              $('#TB_closeWindowButton').trigger('click');
+
+              var table = $('#table-users');
+              $('tr[data-empty]', table).remove();
+
+              for (var userIndex = 0; userIndex < response.data.length; userIndex++) {
+                var user = response.data[userIndex];
+
+                var tr = $('<tr data-id="'+ user.id +'"></tr>');
+                tr.append('<td>'+ user.name +'</td>');
+                tr.append('<td>'+ user.username +'</td>');
+                tr.append('<td>'+ user.email +'</td>');
+                tr.append('<td>'+ user.assigned_at +'</td>');
+                tr.append('<td>'+ user.assigned_by +'</td>');
+                tr.append('<td><a href="#" data-remove-user>x</a></td>');
+
+                $('tbody', table).append(tr);
+              }
+            }
+          },
+          error     : function(jqXHR, textStatus, errorThrown) {
+            console.error(errorThrown);
+          },
+          complete  : function(jqXHR, textStatus) {}
+        });
+      }
+    };
+
     $.ajax({
       type: 'GET',
       url : ajaxurl,
@@ -60,19 +145,21 @@
         action: 'upstream:client.fetch_unassigned_users',
         client: $('#post_ID').val()
       },
-      beforeSend: function(jqXHR, settings) {},
+      beforeSend: function(jqXHR, settings) {
+        tbody.html('<tr data-loading><td colspan="4">Fetching users...</td></tr>');
+      },
       success   : function(response, textStatus, jqXHR) {
-        console.log(response);
+        tbody.html('');
+
         if (!response.success) {
         } else {
-          var table = $('#table-add-existent-users');
-
-          var tbody = $('tbody', table);
-          tbody.html();
-
           if (!response.data.length) {
-            tbody.append($('<tr><td colspan="5">No users found.</td></tr>'));
+            tbody.append($('<tr><td colspan="4">No users found.</td></tr>'));
           } else {
+            table.after($('<button type="button" data-type="submit" disabled="disabled">No user selected</button>'));
+
+            $('[data-type="submit"]', table.parent()).on('click', addSelectedUsers);
+
             response.data.map(function(user) {
               var tr = $('<tr data-id="'+ user.id +'"></tr>');
 
@@ -80,7 +167,6 @@
               tr.append($('<td>'+ user.name +'</td>'));
               tr.append($('<td>'+ user.username +'</td>'));
               tr.append($('<td>'+ user.email +'</td>'));
-              tr.append($('<td>'+ user.roles +'</td>'));
 
               tbody.append(tr);
 
@@ -89,7 +175,10 @@
           }
         }
       },
-      error     : function(jqXHR, textStatus, errorThrown) {},
+      error     : function(jqXHR, textStatus, errorThrown) {
+        tbody.html('');
+        console.error(errorThrown);
+      },
       complete  : function(jqXHR, textStatus) {}
     });
   }
