@@ -683,28 +683,38 @@ function upstream_admin_get_all_clients( $field ) {
  * Returns the current saved clients users.
  * For use in dropdowns.
  */
-function upstream_admin_get_all_clients_users( $field ) {
+function upstream_admin_get_all_clients_users($field)
+{
+    // Get the currently selected client id.
+    $client_id = (int)get_post_meta($field->object_id, '_upstream_project_client', true);
+    if ($client_id > 0) {
+        $usersList = array();
+        $clientUsersList = (array)get_post_meta($client_id, '_upstream_new_client_users', true);
 
-    // get the currently selected client id
-    $client_id = get_post_meta( $field->object_id, '_upstream_project_client', true );
-
-    // if we have a client
-    if( $client_id ) {
-
-        $users = get_post_meta( $client_id, '_upstream_client_users', true );
-        $array = array();
-
-        if( $users ) {
-            foreach ($users as $user) {
-
-                $output = upstream_users_name( $user['id'], true );
-
-                $array[$user['id']] = $output;
-            }
+        $clientUsersIdsList = array();
+        foreach ($clientUsersList as $clientUser) {
+            array_push($clientUsersIdsList, $clientUser['user_id']);
         }
-        return $array;
+
+        if (count($clientUsersIdsList) > 0) {
+            global $wpdb;
+            $rowset = $wpdb->get_results(sprintf('
+                SELECT `ID`, `display_name`, `user_email`
+                FROM `%s`
+                WHERE `ID` IN ("%s")',
+                $wpdb->prefix . 'users',
+                implode('", "', $clientUsersIdsList)
+            ));
+
+            foreach ($rowset as $user) {
+                $usersList[(int)$user->ID] = $user->display_name . ' <a href="mailto:' . esc_html($user->user_email) . '" target="_blank"><span class="dashicons dashicons-email-alt"></span></a>';
+            }
+
+            return $usersList;
+        }
     }
 
+    return array();
 }
 
 

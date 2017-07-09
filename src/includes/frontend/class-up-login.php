@@ -186,7 +186,7 @@ final class UpStream_Login
             SELECT *
               FROM `'. $wpdb->postmeta .'`
              WHERE
-                `meta_key` = \'_upstream_client_users\' AND
+                `meta_key` = \'_upstream_new_client_users\' AND
                 `meta_value` REGEXP \'.*\"email\";s:[0-9]+:\"'. esc_html($data['username']) .'\".*\''
         );
 
