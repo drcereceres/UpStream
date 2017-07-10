@@ -299,7 +299,14 @@ class UpStream_Roles {
 
     }
 
-    // @todo
+    /**
+     * Method responsible for creating the 'upstream_client_user' role if it doesn't exist yet.
+     *
+     * @since   @todo
+     * @static
+     *
+     * @global  $wp_roles
+     */
     public static function addClientUsersRole()
     {
         global $wp_roles;
