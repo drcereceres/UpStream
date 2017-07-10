@@ -238,11 +238,11 @@
             notification: $('[name="notification"]', form).is(':checked'),
           },
           beforeSend: function(jqXHR, settings) {
-            $('.error-message', form).remove();
+            $('.error-wrapper', form).remove();
           },
           success   : function(response, textStatus, jqXHR) {
             if (!response.success) {
-              form.prepend($('<p class="error-message">' + response.err + '</p>'));
+              form.prepend($('<div class="error-wrapper notice notice-error"><p>' + response.err + '</p>'));
             } else {
               $('#TB_closeWindowButton').trigger('click');
 
@@ -250,7 +250,7 @@
               tr.append('<td>'+ response.data.name +'</td>');
               tr.append('<td>'+ response.data.username +'</td>');
               tr.append('<td>'+ response.data.email +'</td>');
-              tr.append('<td>'+ response.data.assigned_at +'</td>');
+              tr.append('<td class="text-center">'+ response.data.assigned_at +'</td>');
               tr.append('<td>'+ response.data.assigned_by +'</td>');
               tr.append('<td class="text-center"><a href="#" data-remove-user><span class="dashicons dashicons-trash"></span></a></td>');
 
@@ -258,10 +258,13 @@
               $('tr[data-empty]', table).remove();
 
               $('tbody', table).append(tr);
+
+              $('#form-add-new-user input').val('');
             }
           },
-          error     : function(jqXHR, textStatus, errorThrown) {},
-          complete  : function(jqXHR, textStatus) {}
+          error     : function(jqXHR, textStatus, errorThrown) {
+            console.error(errorThrown);
+          }
         });
       }
     });

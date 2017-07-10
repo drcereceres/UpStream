@@ -426,7 +426,7 @@ class UpStream_Metaboxes_Clients
 
             $response['data'] = array(
                 'id'          => $userDataId,
-                'assigned_at' => current_time('Y-m-d H:i:s'), // @todo : convert to user's timezone
+                'assigned_at' => current_time('Y-m-d H:i:s'),
                 'assigned_by' => $currentUser->display_name,
                 'name'        => empty($data['first_name'] . ' ' . $data['last_name']) ? $data['first_name'] . ' ' . $data['last_name'] : $data['username'],
                 'username'    => $userDataUsername,
