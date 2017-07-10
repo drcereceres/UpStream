@@ -693,7 +693,9 @@ function upstream_admin_get_all_clients_users($field)
 
         $clientUsersIdsList = array();
         foreach ($clientUsersList as $clientUser) {
-            array_push($clientUsersIdsList, $clientUser['user_id']);
+            if (!empty($clientUser)) {
+                array_push($clientUsersIdsList, $clientUser['user_id']);
+            }
         }
 
         if (count($clientUsersIdsList) > 0) {
