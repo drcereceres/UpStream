@@ -128,6 +128,8 @@ and this project adheres to [Semantic Versioning](http://semver.org).
 Changed:
 * Users are now capable of logging in via /projects page
 * UpStream Users no longer can log in in a project using the client's password
+* Metaboxes filters were moved from the top to the bottom of the box
+* Appearance enhancements
 
 Fixed:
 * Fixed random logo appearing in /projects page
