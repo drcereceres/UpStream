@@ -1,8 +1,11 @@
-(function(window, document, $, ajaxurl, undefined) {
+(function(window, document, $, ajaxurl, l, undefined) {
   'use strict';
 
+  console.log(l);
+
   if (!$) {
-    console.error('UpStream requires jQuery.');
+    console.error(l['ERR_JQUERY_NOT_FOUND']);
+    return;
   }
 
   if (!$('#titlewrap').length) {
@@ -41,8 +44,7 @@
             row.remove();
 
             if ($('tr', tbody).length === 0) {
-              // @todo : lang support
-              tbody.append('<tr data-empty><td colspan="7">There\'s no users assigned yet.</td></tr>');
+              tbody.append('<tr data-empty><td colspan="7">'+ l['MSG_NO_ASSIGNED_USERS'] +'</td></tr>');
             }
           }
         },
@@ -60,10 +62,10 @@
     var selectedItemsCount = $('tbody tr[data-id] td input[type="checkbox"]:checked', table).length;
     if (selectedItemsCount > 0) {
       button.attr('disabled', null);
-      button.text('Add '+ selectedItemsCount +' user'+ (selectedItemsCount > 1 ? 's' : ''));
+      button.text(l[selectedItemsCount > 1 ? 'MSG_ADD_MULTIPLE_USERS' : 'MSG_ADD_ONE_USER'].replace('\%d', selectedItemsCount));
     } else {
       button.attr('disabled', 'disabled');
-      button.text('No user selected');
+      button.text(l['MSG_NO_USER_SELECTED']);
 
       $('thead input[type="checkbox"]', table).prop('checked', false);
     }
@@ -154,10 +156,10 @@
         if (!response.success) {
         } else {
           if (!response.data.length) {
-            tbody.append($('<tr><td colspan="4">No users found.</td></tr>'));
+            tbody.append($('<tr><td colspan="4">'+ l['MSG_NO_USERS_FOUND'] +'</td></tr>'));
           } else {
             var wrapper = $($('#table-add-existent-users').parent().parent());
-            $('div.submit', wrapper).append($('<button type="button" data-type="submit" disabled="disabled" class="button button-primary">No user selected</button>'));
+            $('div.submit', wrapper).append($('<button type="button" data-type="submit" disabled="disabled" class="button button-primary">'+ l['MSG_NO_USER_SELECTED'] +'</button>'));
 
             $('[data-type="submit"]', $('div.submit', wrapper)).on('click', addSelectedUsers);
 
@@ -245,9 +247,6 @@
               form.prepend($('<p class="error-message">' + response.err + '</p>'));
             } else {
               $('#TB_closeWindowButton').trigger('click');
-              // @todo: reset form
-              // @todo: close modal
-              // @todo: append user to users-table
 
               var tr = $('<tr data-id="'+ response.data.id +'"></tr>');
               tr.append('<td>'+ response.data.name +'</td>');
@@ -269,4 +268,4 @@
       }
     });
   });
-})(window, window.document, jQuery || null, ajaxurl);
+})(window, window.document, jQuery || null, ajaxurl, upstreamMetaboxClientLangStrings);

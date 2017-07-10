@@ -27,9 +27,15 @@ function upstream_load_admin_scripts( $hook ) {
     }
 
     if( $post_type == 'client' ) {
-        // @todo: fix version
-        wp_enqueue_script( 'up-metabox-client', $js_dir . 'metabox-client.js', $admin_deps, UPSTREAM_VERSION . mt_rand(1, 99999), false );
-        // wp_enqueue_script( 'upstream-client' );
+        wp_enqueue_script( 'up-metabox-client', $js_dir . 'metabox-client.js', $admin_deps, UPSTREAM_VERSION . mt_rand(1, 999999), false );
+        wp_localize_script( 'up-metabox-client', 'upstreamMetaboxClientLangStrings', array(
+            'ERR_JQUERY_NOT_FOUND'    => __('UpStream requires jQuery.', 'upstream'),
+            'MSG_NO_ASSIGNED_USERS'   => __("There's no users assigned yet.", 'upstream'),
+            'MSG_NO_USER_SELECTED'    => __('Please, select at least one user', 'upstream'),
+            'MSG_ADD_ONE_USER'        => __('Add 1 User', 'upstream'),
+            'MSG_ADD_MULTIPLE_USERS'  => __('Add %d Users', 'upstream'),
+            'MSG_NO_USERS_FOUND'      => __('No users found.', 'upstream')
+        ));
     }
 
     /*

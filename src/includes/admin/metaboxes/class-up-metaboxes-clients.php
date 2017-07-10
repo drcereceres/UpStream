@@ -117,29 +117,29 @@ class UpStream_Metaboxes_Clients
         <div id="modal-add-new-user" style="display: none;">
             <div id="form-add-new-user">
                 <div>
-                    <h3>Credentials</h3>
+                    <h3><?php echo __('Credentials', 'upstream'); ?></h3>
                     <div class="up-form-group">
-                        <label for="new-user-email">Email *</label>
+                        <label for="new-user-email"><?php echo __('Email', 'upstream') .' *'; ?></label>
                         <input type="email" name="email" id="new-user-email" required />
                     </div>
                     <div class="up-form-group">
-                        <label for="new-user-username">Username *</label>
+                        <label for="new-user-username"><?php echo __('Username', 'upstream') .' *'; ?></label>
                         <input type="text" name="username" id="new-user-username" required />
                         <div class="up-help-block">
                             <ul>
-                                <li>Must be between 3 and 60 characters long;</li>
-                                <li>You may use <code>letters (a-z)</code>, <code>numbers (0-9)</code>, <code>-</code> and <code>_</code> symbols;</li>
-                                <li>The first character must be a <code>letter</code>;</li>
-                                <li>Everything will be lowercased.</li>
+                                <li><?php echo __('Must be between 3 and 60 characters long;', 'upstream'); ?></li>
+                                <li><?php echo __('You may use <code>letters (a-z)</code>, <code>numbers (0-9)</code>, <code>-</code> and <code>_</code> symbols;', 'upstream'); ?></li>
+                                <li><?php echo __('The first character must be a <code>letter</code>;', 'upstream'); ?></li>
+                                <li><?php echo __('Everything will be lowercased.', 'upstream'); ?></li>
                             </ul>
                         </div>
                     </div>
                     <div class="up-form-group">
-                        <label for="new-user-password">Password *</label>
+                        <label for="new-user-password"><?php echo __('Password', 'upstream') .' *'; ?></label>
                         <input type="password" name="password" id="new-user-password" required />
                         <div class="up-help-block">
                             <ul>
-                                <li>Must be at least between 6 characters long.</li>
+                                <li><?php echo __('Must be at least between 6 characters long.', 'upstream'); ?></li>
                             </ul>
                         </div>
                     </div>
@@ -148,11 +148,11 @@ class UpStream_Metaboxes_Clients
                     <div class="up-form-group label-default">
                         <label>
                             <input type="checkbox" name="notification" id="new-user-notification" value="1" checked />
-                            <span>Send user info via email</span>
+                            <span><?php echo __('Send user info via email', 'upstream'); ?></span>
                         </label>
                     </div>
                     <div class="up-form-group">
-                        <button type="submit" class="button button-primary">Add New User</button>
+                        <button type="submit" class="button button-primary"><?php echo __('Add New User', 'upstream'); ?></button>
                     </div>
                 </div>
             </div>
@@ -176,9 +176,9 @@ class UpStream_Metaboxes_Clients
                             <th class="text-center">
                                 <input type="checkbox" />
                             </th>
-                            <th>Name</th>
-                            <th>Username</th>
-                            <th>Email</th>
+                            <th><?php echo __('Name', 'upstream'); ?></th>
+                            <th><?php echo __('Username', 'upstream'); ?></th>
+                            <th><?php echo __('Email', 'upstream'); ?></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -195,7 +195,7 @@ class UpStream_Metaboxes_Clients
                         <?php endforeach; ?>
                         <?php else: ?>
                         <tr>
-                            <td colspan="4">All users seems to be assigned to this client.</td>
+                            <td colspan="4"><?php echo __('All users seems to be assigned to this client.', 'upstream'); ?></td>
                         </tr>
                         <?php endif; ?>
                     </tbody>
@@ -215,19 +215,19 @@ class UpStream_Metaboxes_Clients
 
         <?php // @todo: create js/css to make Thickbox responsive. ?>
         <div class="upstream-row">
-            <a name="Add New User" href="#TB_inline?width=600&height=400&inlineId=modal-add-new-user" class="thickbox button">Add New User</a>
-            <a id="add-existent-user" name="Add Existent User" href="#TB_inline?width=600&height=300&inlineId=modal-add-existent-user" class="thickbox button">Add Existent User</a>
+            <a name="Add New User" href="#TB_inline?width=600&height=400&inlineId=modal-add-new-user" class="thickbox button"><?php echo __('Add New User', 'upstream'); ?></a>
+            <a id="add-existent-user" name="Add Existent User" href="#TB_inline?width=600&height=300&inlineId=modal-add-existent-user" class="thickbox button"><?php echo __('Add Existent User', 'upstream'); ?></a>
         </div>
         <div class="upstream-row">
         <table id="table-users" class="wp-list-table widefat fixed striped posts upstream-table">
             <thead>
                 <tr>
-                    <th>Name</th>
-                    <th>Username</th>
-                    <th>Email</th>
-                    <th class="text-center">Assigned at</th>
-                    <th>Assigned by</th>
-                    <th class="text-center">Remove?</th>
+                    <th><?php echo __('Name', 'upstream'); ?></th>
+                    <th><?php echo __('Username', 'upstream'); ?></th>
+                    <th><?php echo __('Email', 'upstream'); ?></th>
+                    <th class="text-center"><?php echo __('Assigned at', 'upstream'); ?></th>
+                    <th><?php echo __('Assigned by', 'upstream'); ?></th>
+                    <th class="text-center"><?php echo __('Remove?', 'upstream'); ?></th>
                 </tr>
             </thead>
             <tbody>
@@ -248,7 +248,7 @@ class UpStream_Metaboxes_Clients
                 <?php endforeach; ?>
                 <?php else: ?>
                 <tr data-empty>
-                    <td colspan="7">There's no users assigned yet.</td>
+                    <td colspan="7"><?php echo __("There's no users assigned yet.", 'upstream'); ?></td>
                 </tr>
                 <?php endif; ?>
             </tbody>
@@ -299,17 +299,8 @@ class UpStream_Metaboxes_Clients
             'type' => 'textarea_small'
         ));
 
-        // @todo: description/notes field
-
         $metaboxGrid = new Cmb2Grid($metabox);
         $metaboxGridRow = $metaboxGrid->addRow(array($phoneField, $websiteField, $addressField));
-        /*
-        $metaboxGridRow->addColumns(array(
-            array($phoneField, 'class' => 'col-md-4'),
-            array($websiteField, 'class' => 'col-md-4')
-        ));
-        */
-        //$metaboxGridRow->addColumns(array($phoneField, $websiteField, $addressField));
     }
 
     public static function renderLogoMetabox()
@@ -335,7 +326,8 @@ class UpStream_Metaboxes_Clients
 
     public static function addNewUser()
     {
-        // @todo : nonce
+        // @todo : permission checks?
+
         header('Content-Type: application/json');
 
         global $wpdb;
@@ -434,14 +426,13 @@ class UpStream_Metaboxes_Clients
 
             $response['data'] = array(
                 'id'          => $userDataId,
-                'assigned_at' => current_time('Y-m-d H:i:s'), // convert to user's timezone
+                'assigned_at' => current_time('Y-m-d H:i:s'), // @todo : convert to user's timezone
                 'assigned_by' => $currentUser->display_name,
                 'name'        => empty($data['first_name'] . ' ' . $data['last_name']) ? $data['first_name'] . ' ' . $data['last_name'] : $data['username'],
                 'username'    => $userDataUsername,
                 'email'       => $data['email']
             );
 
-            // @todo: change the meta-value key
             $clientUsersMetaKey = '_upstream_new_client_users';
             $clientUsersList = (array)get_post_meta($clientId, $clientUsersMetaKey, true);
             array_push($clientUsersList, array(
@@ -463,7 +454,7 @@ class UpStream_Metaboxes_Clients
 
     public static function removeUser()
     {
-        // @todo : nonce and permission checks?
+        // @todo : permission checks?
         header('Content-Type: application/json');
 
         $response = array(
@@ -513,7 +504,7 @@ class UpStream_Metaboxes_Clients
 
     public static function fetchUnassignedUsers()
     {
-        // @todo : nonce and permission checks?
+        // @todo : permission checks?
         header('Content-Type: application/json');
 
         $response = array(
@@ -541,9 +532,9 @@ class UpStream_Metaboxes_Clients
             }
 
             $rowset = get_users(array(
-                'exclude'      => $excludeTheseIds,
+                'exclude'  => $excludeTheseIds,
                 'role__in' => array('upstream_client_user'),
-                'orderby'      => 'ID'
+                'orderby'  => 'ID'
             ));
 
             global $wp_roles;
@@ -571,7 +562,7 @@ class UpStream_Metaboxes_Clients
 
     public static function addExistentUsers()
     {
-        // @todo : nonce
+        // @todo : permission checks
         header('Content-Type: application/json');
 
         $response = array(
