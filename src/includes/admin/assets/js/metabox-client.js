@@ -1,8 +1,6 @@
 (function(window, document, $, ajaxurl, l, undefined) {
   'use strict';
 
-  console.log(l);
-
   if (!$) {
     console.error(l['ERR_JQUERY_NOT_FOUND']);
     return;
