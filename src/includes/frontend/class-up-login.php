@@ -222,13 +222,26 @@ final class UpStream_Login
                     // User does not exist.
                     $this->feedbackMessage = __("Invalid email address and/or password.", 'upstream');
                 } else {
-                    if ($this->verifyProjectPassword($data['password'], $client->post_id)) {
-                        $client_id = $client->post_id;
-                        $userCanLogIn = true;
+                    $userIsAMember = false;
+                    // Check if the user is a member of the project.
+                    $projectMembers = (array)get_post_meta(get_the_ID(), '_upstream_project_members', true);
+                    foreach ($projectMembers as $projectMemberId) {
+                        if ((string)$user_id === (string)$projectMemberId) {
+                            $userIsAMember = true;
+                            break;
+                        }
+                    }
+
+                    if (!$userIsAMember) {
+                        $this->feedbackMessage = __("Sorry, you are not allowed to access this project.", 'upstream');
                     } else {
-                        // Invalid password.
-                        $this->feedbackMessage = __("Invalid email address and/or password.", 'upstream');
-                     }
+                        if ($this->verifyProjectPassword($data['password'], $client->post_id)) {
+                            $client_id = $client->post_id;
+                            $userCanLogIn = true;
+                        } else {
+                            $this->feedbackMessage = __("Invalid email address and/or password.", 'upstream');
+                        }
+                    }
                 }
             }
         } else {
