@@ -244,13 +244,15 @@ class UpStream_Metaboxes_Clients {
             'type'       => 'file',
         ) );
 
-        $passwordFieldLabelText = $client_id > 0 ? __('New Password', 'upstream') : __('Password', 'upstream');
+        $clientHasPassword = get_post_meta(get_the_ID(), '_upstream_client_password', true);
+
+        $passwordFieldLabelText = !empty($clientHasPassword) ? __('New Password', 'upstream') : __('Password', 'upstream');
 
         $metabox->add_field( array(
             'name'     => $passwordFieldLabelText,
             'id'       => $this->prefix . 'password',
             'type'     => 'password',
-            'required' => $client_id > 0 ? '' : 'required'
+            'required' => !empty($clientHasPassword) ? '' : 'required'
         ));
     }
 
@@ -269,6 +271,8 @@ class UpStream_Metaboxes_Clients {
     {
         if (!empty($value)) {
             $value = password_hash($value, PASSWORD_BCRYPT);
+        } else {
+            $value = get_post_meta(get_the_ID(), '_upstream_client_password', true);
         }
 
         return $value;
@@ -292,7 +296,10 @@ class UpStream_Metaboxes_Clients {
             $inputAttrs = array(
                 'type'    => 'password',
                 'pattern' => '.{5,}',
-                'desc'    => '<p class="cmb2-metabox-description">It must have at least 5 characters.</p>',
+                'desc'    => sprintf('
+                    <p class="cmb2-metabox-description">%s</p>',
+                    __('It must have at least 5 characters.', 'upstream')
+                ),
                 'value'   => ""
             );
 
