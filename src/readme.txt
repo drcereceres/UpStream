@@ -137,6 +137,7 @@ Fixed:
 * Fixed uncommon redirection bug after logging off on frontend
 * Fixed bug causing some usernames to be blank in several places
 * UpStream Users no longer can access projects in which they're not involved in
+* Fixed some clients losing their password after saving the form
 
 = [1.10.2] - 2017-07-02 =
 
