@@ -190,6 +190,7 @@ final class UpStream
         include_once( 'includes/up-project-functions.php' );
         include_once( 'includes/up-client-functions.php' );
         include_once( 'includes/up-permissions-functions.php' );
+        include_once( 'includes/up-client-users-migration.php' );
     }
 
     /**
@@ -216,6 +217,8 @@ final class UpStream
 
             // @todo: migrate current client users to UpStream Client Users.
         }
+
+        \UpStream\Migrations\ClientUsers::run();
 
         // Init action.
         do_action( 'upstream_init' );
@@ -277,3 +280,5 @@ function UpStream()
 }
 
 UpStream();
+
+// @todo : Drop password field from clients
