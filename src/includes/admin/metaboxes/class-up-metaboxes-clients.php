@@ -244,7 +244,7 @@ class UpStream_Metaboxes_Clients {
             'type'       => 'file',
         ) );
 
-        $clientHasPassword = get_post_meta(get_the_ID(), '_upstream_client_password', true);
+        $clientHasPassword = !empty(get_post_meta(upstream_post_id(), '_upstream_client_password', true));
 
         $passwordFieldLabelText = !empty($clientHasPassword) ? __('New Password', 'upstream') : __('Password', 'upstream');
 
@@ -272,7 +272,7 @@ class UpStream_Metaboxes_Clients {
         if (!empty($value)) {
             $value = password_hash($value, PASSWORD_BCRYPT);
         } else {
-            $value = get_post_meta(get_the_ID(), '_upstream_client_password', true);
+            $value = get_post_meta(upstream_post_id(), '_upstream_client_password', true);
         }
 
         return $value;
