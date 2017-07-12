@@ -17,14 +17,31 @@ if ( ! class_exists( 'UpStream_Admin_Projects_Menu' ) ) :
  * UpStream_Admin_Menus Class.
  */
 class UpStream_Admin_Projects_Menu {
+    private static $userIsUpStreamUser = null;
 
     /**
      * Hook in tabs.
      */
     public function __construct() {
+        if (self::$userIsUpStreamUser === null) {
+            $user = wp_get_current_user();
+            self::$userIsUpStreamUser = count(array_intersect($user->roles, array('administrator', 'upstream_manager'))) === 0;
+        }
+
         add_action( 'admin_menu', array( $this, 'projects_menu' ), 9 );
         add_filter( 'custom_menu_order', array( $this, 'submenu_order' ) );
+        add_action('admin_head', array($this, 'hideAddNewProjectButtonIfNeeded'));
+    }
 
+    public function hideAddNewProjectButtonIfNeeded()
+    {
+        if (is_admin()) {
+            global $pagenow;
+
+            if ($pagenow === 'edit.php' && $_GET['post_type'] === 'project' && self::$userIsUpStreamUser) {
+                echo '<style type="text/css">.page-title-action { display: none; }</style>';
+            }
+        }
     }
 
     /**
@@ -36,21 +53,29 @@ class UpStream_Admin_Projects_Menu {
     }
 
 
-    public function submenu_order( $menu_ord ) {
-
+    public function submenu_order($menu)
+    {
         global $submenu;
-            if( $submenu['edit.php?post_type=project'] ) {
+
+        $subMenuIdentifier = 'edit.php?post_type=project';
+        if ($submenu[$subMenuIdentifier]) {
             $arr = array();
-            $arr[] = $submenu['edit.php?post_type=project'][5];
-            $arr[] = isset( $submenu['edit.php?post_type=project'][18] ) ? $submenu['edit.php?post_type=project'][18] : null;
-            $arr[] = isset( $submenu['edit.php?post_type=project'][19] ) ? $submenu['edit.php?post_type=project'][19] : null;
-            $arr[] = $submenu['edit.php?post_type=project'][10];
-            $arr[] = $submenu['edit.php?post_type=project'][15];
-            $arr[] = $submenu['edit.php?post_type=project'][16];
-            $arr[] = $submenu['edit.php?post_type=project'][17];
-            $submenu['edit.php?post_type=project'] = $arr;
+            $arr[] = $submenu[$subMenuIdentifier][5];
+            $arr[] = isset($submenu[$subMenuIdentifier][18]) ? $submenu[$subMenuIdentifier][18] : null;
+            $arr[] = isset($submenu[$subMenuIdentifier][19]) ? $submenu[$subMenuIdentifier][19] : null;
+
+
+            if (!self::$userIsUpStreamUser) {
+                $arr[] = $submenu[$subMenuIdentifier][10];
+                $arr[] = $submenu[$subMenuIdentifier][15];
+                $arr[] = $submenu[$subMenuIdentifier][16];
+                $arr[] = $submenu[$subMenuIdentifier][17];
+            }
+
+            $submenu[$subMenuIdentifier] = $arr;
         }
-        return $menu_ord;
+
+        return $menu;
     }
 
 }

@@ -1,8 +1,12 @@
 <?php
 if (!defined('ABSPATH')) exit;
 
-$clientId = (int)upstream_project_client_id();
-$clientLogo = upstream_client_logo($clientId);
+if (!is_archive()) {
+    $clientId = (int)upstream_project_client_id();
+    $clientLogo = upstream_client_logo($clientId);
+} else {
+    $clientLogo = null;
+}
 ?>
 
 <?php do_action('upstream_before_top_nav'); ?>
