@@ -26,8 +26,8 @@ function upstream_load_admin_scripts( $hook ) {
         ) ) );
     }
 
-    if( $post_type == 'client' ) {
-        // wp_register_script( 'upstream-client', $js_dir . 'edit-client.js', $admin_deps, UPSTREAM_VERSION, false );
+    if ($post_type === 'client') {
+        wp_enqueue_script('upstream-client', $js_dir . 'edit-client.js', array('jquery'), UPSTREAM_VERSION, false);
         // wp_enqueue_script( 'upstream-client' );
     }
 
