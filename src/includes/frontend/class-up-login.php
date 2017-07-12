@@ -224,7 +224,7 @@ final class UpStream_Login
                 } else {
                     $userIsAMember = false;
                     // Check if the user is a member of the project.
-                    $projectMembers = (array)get_post_meta(get_the_ID(), '_upstream_project_members', true);
+                    $projectMembers = (array)get_post_meta(get_the_ID(), '_upstream_project_client_users', true);
                     foreach ($projectMembers as $projectMemberId) {
                         if ((string)$user_id === (string)$projectMemberId) {
                             $userIsAMember = true;
