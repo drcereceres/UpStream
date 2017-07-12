@@ -157,7 +157,7 @@ function upstream_user_item( $id = 0, $item = null ) {
 }
 
 // get the user avatar with full name in tooltips
-function upstream_user_avatar( $user_id ) {
+function upstream_user_avatar( $user_id, $displayTooltip = true ) {
 
     if( ! $user_id )
         return;
@@ -166,7 +166,13 @@ function upstream_user_avatar( $user_id ) {
     $user_data  = upstream_user_data( $user_id, true );
     $url        = isset( $user_data[ 'avatar' ] ) ? $user_data[ 'avatar' ] : '';
 
-    $return = '<img class="avatar" src="' . esc_attr( $url ) . '" data-toggle="tooltip" data-placement="top" data-original-title="' . esc_attr( $user_data[ 'full_name' ] ) . '" />';
+    $userDisplayName = esc_attr($user_data['display_name']);
+
+    $return = sprintf('
+        <img class="avatar" src="%s" %s />',
+        esc_attr($url),
+        (bool)$displayTooltip ? sprintf('title="%s" data-toggle="tooltip" data-placement="top" data-original-title="%1$s"', $userDisplayName) : ''
+    );
 
     return apply_filters( 'upstream_user_avatar', $return );
 }
