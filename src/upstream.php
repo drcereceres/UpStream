@@ -218,7 +218,7 @@ final class UpStream
             // @todo: migrate current client users to UpStream Client Users.
         }
 
-        \UpStream\Migrations\ClientUsers::run();
+        //\UpStream\Migrations\ClientUsers::run();
 
         // Init action.
         do_action( 'upstream_init' );
