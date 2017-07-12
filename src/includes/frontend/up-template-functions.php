@@ -182,7 +182,7 @@ function upstream_output_comments( $id ) {
                 <?php echo upstream_user_avatar( $comment['created_by'], false ); ?>
                 <div class="message_date">
                     <h3 class="date text-info" title="<?php echo esc_attr( $time ); ?>" <?php echo $tooltip; ?> ><?php echo date_i18n( 'd', $comment['created_time'] ) ?></h3>
-                    <p class="month" title="<?php echo esc_attr( $time ); ?>" <?php echo $tooltip; ?>><?php echo date_i18n( 'M', $comment['created_time'] ) ?></p>
+                    <p class="month" title="<?php echo esc_attr( $time ); ?>"><?php echo date_i18n( 'M', $comment['created_time'] ) ?></p>
                 </div>
                 <div class="message_wrapper">
                     <h4 class="heading"><?php echo esc_html($user['display_name']); ?>
