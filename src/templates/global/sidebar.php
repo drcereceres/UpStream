@@ -16,6 +16,8 @@ $areTasksDisabledForThisProject = upstream_are_tasks_disabled();
 $areBugsDisabledAtAll = upstream_disable_bugs();
 $areBugsDisabledForThisProject = upstream_are_bugs_disabled();
 $areFilesDisabledForThisProject = upstream_are_files_disabled();
+
+$user = upstream_user_data();
 ?>
 
 <?php do_action('upstream_before_sidebar'); ?>
@@ -36,7 +38,7 @@ $areFilesDisabledForThisProject = upstream_are_files_disabled();
                 <img src="<?php echo upstream_current_user('avatar'); ?>" alt="" class="img-circle profile_img">
             </div>
             <div class="profile_info">
-                <h2><?php echo esc_html(upstream_current_user('fname')); ?></h2>
+                <h2><?php echo esc_html(upstream_current_user('display_name')); ?></h2>
                 <p><?php echo esc_html(upstream_current_user('role')); ?></p>
             </div>
         </div>
@@ -122,7 +124,7 @@ $areFilesDisabledForThisProject = upstream_are_files_disabled();
                         </li>
                         <?php endif; ?>
 
-                        <?php if (!$areTasksDisabledForThisProject && !$areTasksDisabledAtAll): ?>
+                        <?php if ($user['role'] !== 'Client User' && !$areTasksDisabledForThisProject && !$areTasksDisabledAtAll): ?>
                         <li>
                             <a href="#my-tasks">
                                 <i class="fa fa-wrench"></i> My <?php echo $labelTaskPlural; ?>
@@ -130,7 +132,7 @@ $areFilesDisabledForThisProject = upstream_are_files_disabled();
                         </li>
                         <?php endif; ?>
 
-                        <?php if (!$areBugsDisabledAtAll && !$areBugsDisabledForThisProject): ?>
+                        <?php if ($user['role'] !== 'Client User' && !$areBugsDisabledAtAll && !$areBugsDisabledForThisProject): ?>
                         <li>
                             <a href="#my-bugs">
                                 <i class="fa fa-bug"></i> My <?php echo $labelBugPlural; ?>

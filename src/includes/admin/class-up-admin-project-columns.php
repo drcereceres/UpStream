@@ -246,13 +246,31 @@ class UpStream_Admin_Project_Columns {
         if (isset($_GET['post_type'])) {
             $type = $_GET['post_type'];
         }
-        if ( 'project' == $type && is_admin() && $pagenow == 'edit.php' && isset( $_GET['project-status'] ) && $_GET['project-status'] != '' ) {
-            $query->query_vars['meta_key'] = '_upstream_project_status';
-            $query->query_vars['meta_value'] = $_GET['project-status'];
+
+        if ($type === 'project' && is_admin()) {
+            $user = wp_get_current_user();
+            $userIsUpStreamUser = count(array_intersect($user->roles, array('administrator', 'upstream_manager'))) === 0;
+            // Check if we need to limit the projects list based on the user's role.
+            if ($userIsUpStreamUser) {
+                if ($pagenow === 'edit.php') {
+                    $query->query_vars = array_merge($query->query_vars, array(
+                        'meta_query' => array(
+                            array(
+                                'key'     => '_upstream_project_members',
+                                'value'   => $user->ID,
+                                'compare' => 'REGEXP',
+                            )
+                        )
+                    ));
+                }
+            }
+
+            if ($pagenow === 'edit.php' && isset($_GET['project-status']) && $_GET['project-status'] !== '') {
+                $query->query_vars['meta_key'] = '_upstream_project_status';
+                $query->query_vars['meta_value'] = $_GET['project-status'];
+            }
         }
     }
-
-
 }
 
 new UpStream_Admin_Project_Columns;

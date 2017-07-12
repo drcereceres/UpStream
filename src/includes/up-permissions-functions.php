@@ -21,7 +21,6 @@ function upstream_permissions( $capability = null, $item_id = null ) {
         current_user_can( 'administrator' ) )
         $return = true;
 
-
     // if they are simply a project member or a client user, this will give them at least READ access to the project
     // and stops them being redirected to the projects archive page
     if( $capability == 'view_project' ) {

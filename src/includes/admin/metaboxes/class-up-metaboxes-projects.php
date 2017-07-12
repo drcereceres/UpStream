@@ -187,11 +187,7 @@ class UpStream_Metaboxes_Projects {
             'attributes'        => array(
                 'class'             => 'hidden',
                 'data-publish'      => upstream_admin_permissions( 'publish_project_milestones' ),
-            ),
-            'before_row'        =>
-                $this->getFiltersHeaderHtml() .
-                $this->getAssignedToFilterHtml() .
-                $this->getFiltersFooterHtml()
+            )
         ) );
 
         if (!$areMilestonesDisabled) {
@@ -205,7 +201,11 @@ class UpStream_Metaboxes_Projects {
                     'add_button'    => sprintf( __( "Add %s", 'upstream' ), esc_html( $label ) ),
                     'remove_button' => sprintf( __( "Delete %s", 'upstream' ), esc_html( $label ) ),
                     'sortable'      => upstream_admin_permissions( 'sort_project_milestones' ),
-                )
+                ),
+                'after_group' =>
+                    $this->getFiltersHeaderHtml() .
+                    $this->getAssignedToFilterHtml() .
+                    $this->getFiltersFooterHtml()
             ) );
 
             $fields = array();
@@ -472,14 +472,7 @@ class UpStream_Metaboxes_Projects {
      */
     private function getFiltersHeaderHtml()
     {
-        $html = sprintf('
-            <div class="row upstream-filters-wrapper">
-                <div class="col-md-12">
-                    <h3>%s</h3>
-                </div>
-            ',
-            __('Filters', 'upstream')
-        );
+        $html = '<div class="row upstream-filters-wrapper">';
 
         return $html;
     }
@@ -572,13 +565,7 @@ class UpStream_Metaboxes_Projects {
                 'class'         => 'hidden',
                 'data-empty'    => upstream_empty_group( 'tasks' ),
                 'data-publish'  => upstream_admin_permissions( 'publish_project_tasks' ),
-            ),
-            'before_row'        =>
-                $this->getFiltersHeaderHtml() .
-                $this->getAssignedToFilterHtml() .
-                $this->getMilestoneFilterHtml() .
-                $this->getStatusFilterHtml() .
-                $this->getFiltersFooterHtml()
+            )
         ) );
 
         $group_field_id = $metabox->add_field( array(
@@ -592,6 +579,12 @@ class UpStream_Metaboxes_Projects {
                 'remove_button' => sprintf( __( "Delete %s", 'upstream' ), esc_html( $label ) ),
                 'sortable'      => upstream_admin_permissions( 'sort_project_tasks' ), // beta
             ),
+            'after_group'       =>
+                $this->getFiltersHeaderHtml() .
+                $this->getAssignedToFilterHtml() .
+                $this->getMilestoneFilterHtml() .
+                $this->getStatusFilterHtml() .
+                $this->getFiltersFooterHtml()
         ) );
 
         if (!$areTasksDisabled) {
@@ -829,13 +822,7 @@ class UpStream_Metaboxes_Projects {
                 'class'         => 'hidden',
                 'data-empty'    => upstream_empty_group( 'bugs' ),
                 'data-publish'  => upstream_admin_permissions( 'publish_project_bugs' ),
-            ),
-            'before_row'    =>
-                $this->getFiltersHeaderHtml() .
-                $this->getAssignedToFilterHtml() .
-                $this->getStatusFilterHtml() .
-                $this->getSeverityFilterHtml() .
-                $this->getFiltersFooterHtml()
+            )
         ) );
 
         $group_field_id = $metabox->add_field( array(
@@ -849,6 +836,12 @@ class UpStream_Metaboxes_Projects {
                 'remove_button' => sprintf( __( "Delete %s", 'upstream' ), esc_html( $label ) ),
                 'sortable'      => upstream_admin_permissions( 'sort_project_bugs' ),
             ),
+            'after_group'       =>
+                $this->getFiltersHeaderHtml() .
+                $this->getAssignedToFilterHtml() .
+                $this->getStatusFilterHtml() .
+                $this->getSeverityFilterHtml() .
+                $this->getFiltersFooterHtml()
         ) );
 
         if (!$areBugsDisabled) {
