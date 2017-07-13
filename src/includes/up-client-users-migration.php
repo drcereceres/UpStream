@@ -90,31 +90,46 @@ final class ClientUsers
             return;
         }
 
+        $clientUsersHavingErrors = array();
+
         foreach (self::$clientUsersMap as $rawClientUser) {
             $rawClientUser = (array)$rawClientUser;
             $client_id = (int)$rawClientUser['client_id'];
 
+            // Check if the client user is potentially valid.
             if (empty($rawClientUser) || !isset($rawClientUser['id']) || empty($rawClientUser['id'])) {
-                // @todo : There's no need to worry about this user id, since he has no valid id.
+                // There's no need to worry about this user since doesn't have an id.
                 continue;
             }
 
-            $clientUserEmail = isset($rawClientUser['email']) ? trim($rawClientUser['email']) : null;
             // Check if user's email address is potentially acceptable.
+            $clientUserEmail = isset($rawClientUser['email']) ? trim($rawClientUser['email']) : null;
             if (empty($clientUserEmail)) {
-                // @todo : user should be flagged so Admin might create the User manually via Users Page or Client form.
-                // err: ERR_EMAIL_EMPTY
+                if (!isset($clientUsersHavingErrors[$client_id])) {
+                    $clientUsersHavingErrors[$client_id] = array();
+                }
+
+                $clientUsersHavingErrors[$client_id][$rawClientUser['id']] = 'ERR_EMPTY_EMAIL';
+
                 continue;
             } else if (!is_email($clientUserEmail) || !filter_var($clientUserEmail, FILTER_VALIDATE_EMAIL)) {
-                // @todo : user should be flagged so Admin might create the User manually via Users Page or Client form.
-                // err: ERR_EMAIL_INVALID
+                if (!isset($clientUsersHavingErrors[$client_id])) {
+                    $clientUsersHavingErrors[$client_id] = array();
+                }
+
+                $clientUsersHavingErrors[$client_id][$rawClientUser['id']] = 'ERR_INVALID_EMAIL';
+
                 continue;
             }
 
             // Check if user's email address is unique.
             if (!self::isUserEmailUnique($clientUserEmail)) {
-                // @todo : user should be flagged so Admin might create the User manually via Users Page or Client form.
-                // err: ERR_EMAIL_NOT_AVAILABLE
+                if (!isset($clientUsersHavingErrors[$client_id])) {
+                    $clientUsersHavingErrors[$client_id] = array();
+                }
+
+                $clientUsersHavingErrors[$client_id][$rawClientUser['id']] = 'ERR_EMAIL_NOT_AVAILABLE';
+
                 continue;
             }
 
@@ -141,13 +156,16 @@ final class ClientUsers
                 'role'          => 'upstream_client_user'
             );
 
-            // @todo : phone
+            // @todo : save client user's phone
 
             $userId = wp_insert_user($userData);
-            //$userId = null;
             if (is_wp_error($userId)) {
-                // @todo : user should be flagged so Admin might create the User manually via Users Page or Client form.
-                // err: $userId->get_error_message()
+                if (!isset($clientUsersHavingErrors[$client_id])) {
+                    $clientUsersHavingErrors[$client_id] = array();
+                }
+
+                $clientUsersHavingErrors[$client_id][$rawClientUser['id']] = $userId->get_error_message();
+
                 continue;
             }
 
@@ -155,9 +173,7 @@ final class ClientUsers
 
             // @todo : migrate user custom capabilities
 
-            echo "<p>\$user_id: <code style=\"color: rgb(204, 0, 0);\">". $rawClientUser['id'] ."</code> -> <code style=\"color: rgb(78, 154, 6);\">". $userId ."</code></p>";
-
-            // Flag all projects that will have their `_upstream_project_members` meta updated.
+            // Convert the user id on projects metas.
             foreach (self::$clientUsersMap[$rawClientUser['id']]['projects'] as $projectId) {
                 $project = self::$projects[$projectId];
 
@@ -165,10 +181,12 @@ final class ClientUsers
                 $project['members'][$memberIndex] = (string)$userId;
 
                 foreach (array('milestones', 'tasks', 'bugs', 'files') as $itemType) {
-                    foreach ($project[$itemType] as $projectItemIndex => $projectItem) {
-                        if ((string)$projectItem['created_by'] === $rawClientUser['id']) {
-                            $projectItem['created_by'] = (string)$userId;
-                            $project[$itemType][$projectItemIndex] = $projectItem;
+                    if (isset($project[$itemType]) && !empty($project[$itemType])) {
+                        foreach ($project[$itemType] as $projectItemIndex => $projectItem) {
+                            if ((string)$projectItem['created_by'] === $rawClientUser['id']) {
+                                $projectItem['created_by'] = (string)$userId;
+                                $project[$itemType][$projectItemIndex] = $projectItem;
+                            }
                         }
                     }
                 }
@@ -179,7 +197,11 @@ final class ClientUsers
             }
         }
 
-        $updatedUsersOldIds = array_keys(self::$newUsersMap);
+        if (count($clientUsersHavingErrors) > 0) {
+            foreach ($clientUsersHavingErrors as $client_id => $flaggedUsers) {
+                update_post_meta($client_id, '_upstream_client_legacy_users_errors', $flaggedUsers);
+            }
+        }
 
         $convertUsersLegacyIdFromHaystack = function(&$haystack) {
             foreach ($haystack as &$needle) {
@@ -188,6 +210,8 @@ final class ClientUsers
                 }
             }
         };
+        die();
+        return;
 
         foreach (self::$projects as $project) {
             if ($project['has_changed']) {
