@@ -431,9 +431,11 @@ class UpStream_Metaboxes_Clients
 
             $currentUser = get_userdata(get_current_user_id());
 
+            $nowTimestamp = time();
+
             $response['data'] = array(
                 'id'          => $userDataId,
-                'assigned_at' => current_time('Y-m-d H:i:s'),
+                'assigned_at' => upstream_convert_UTC_date_to_timezone($nowTimestamp),
                 'assigned_by' => $currentUser->display_name,
                 'name'        => empty($data['first_name'] . ' ' . $data['last_name']) ? $data['first_name'] . ' ' . $data['last_name'] : $data['username'],
                 'username'    => $userDataUsername,
@@ -445,7 +447,7 @@ class UpStream_Metaboxes_Clients
             array_push($clientUsersList, array(
                 'user_id'     => $userDataId,
                 'assigned_by' => $currentUser->ID,
-                'assigned_at' => $response['data']['assigned_at']
+                'assigned_at' => date('Y-m-d H:i:s', $nowTimestamp)
             ));
             update_post_meta($clientId, $clientUsersMetaKey, $clientUsersList);
 
