@@ -23,8 +23,16 @@
   var removeUserCallback = function(e) {
     e.preventDefault();
 
+    var self = $(this);
+    var table = $('#table-users');
+
+    if (table.hasClass('is-removing')) {
+      self.trigger('blur');
+      return;
+    }
+
     var row = $(this).parents('tr[data-id]');
-    var tbody = $(row.parent());
+    var tbody = $('tbody', table);
     if (row.length) {
       $.ajax({
         type: 'POST',
@@ -34,7 +42,14 @@
           client: $('#post_ID').val(),
           user  : row.data('id')
         },
-        beforeSend: function(jqXHR, settings) {},
+        beforeSend: function(jqXHR, settings) {
+          // @todo : convert trash-can to up-spinner
+          self.addClass('up-spinner').html('<div></div>');
+          table.addClass('is-removing');
+          $('#_upstream_client_users a.thickbox').addClass('disabled').addClass('up-u-no-events');
+          $('#publish').addClass('disabled').addClass('up-u-no-events');
+          $('#delete-action a').addClass('disabled').addClass('up-u-no-events');
+        },
         success: function(response, textStatus, jqXHR) {
           if (!response.success) {
             alert(response.err);
@@ -46,8 +61,15 @@
             }
           }
         },
-        error: function(jqXHR, textStatus, errorThrown) {},
-        complete: function(jqXHR, settings) {}
+        error: function(jqXHR, textStatus, errorThrown) {
+          self.removeClass('up-spinner').html('<span class="dashicons dashicons-trash"></span>');
+        },
+        complete: function(jqXHR, settings) {
+          table.removeClass('is-removing');
+          $('#_upstream_client_users a.thickbox').removeClass('disabled').removeClass('up-u-no-events');
+          $('#publish').removeClass('disabled').removeClass('up-u-no-events');
+          $('#delete-action a').removeClass('disabled').removeClass('up-u-no-events');
+        }
       });
     }
   };
@@ -89,6 +111,8 @@
     var addSelectedUsers = function(e) {
       e.preventDefault();
 
+      var self = $(this);
+
       var table = $('#table-add-existent-users');
       var usersIdsList = [];
       var selectedCheckboxes = $('tbody input[type="checkbox"]:checked', table);
@@ -105,7 +129,11 @@
             client: $('#post_ID').val(),
             users : usersIdsList
           },
-          beforeSend: function(jqXHR, settings) {},
+          beforeSend: function(jqXHR, settings) {
+            self.attr('disabled', 'disabled');
+            self.text(l['LB_ADDING_USERS']);
+            $('input', table).attr('disabled', 'disabled');
+          },
           success   : function(response, textStatus, jqXHR) {
             if (!response.success) {
 
@@ -132,8 +160,8 @@
           },
           error     : function(jqXHR, textStatus, errorThrown) {
             console.error(errorThrown);
-          },
-          complete  : function(jqXHR, textStatus) {}
+            $('input', table).attr('disabled', null);
+          }
         });
       }
     };
@@ -281,7 +309,7 @@
           },
           complete  : function() {
             form.removeClass('is-sending');
-            $('input', form).attr('disabled', null);
+            $('input', form).attr('disabled', null).removeClass('has-error');
             self.text(self.attr('data-label'));
             self.attr('disabled', null);
           }

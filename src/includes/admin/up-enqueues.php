@@ -34,7 +34,8 @@ function upstream_load_admin_scripts( $hook ) {
             'MSG_NO_USER_SELECTED'    => __('Please, select at least one user', 'upstream'),
             'MSG_ADD_ONE_USER'        => __('Add 1 User', 'upstream'),
             'MSG_ADD_MULTIPLE_USERS'  => __('Add %d Users', 'upstream'),
-            'MSG_NO_USERS_FOUND'      => __('No users found.', 'upstream')
+            'MSG_NO_USERS_FOUND'      => __('No users found.', 'upstream'),
+            'LB_ADDING_USERS'         => __('Adding...', 'upstream')
         ));
     }
 

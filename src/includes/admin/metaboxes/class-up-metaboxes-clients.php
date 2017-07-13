@@ -261,6 +261,7 @@ class UpStream_Metaboxes_Clients
             </tbody>
         </table>
         </div>
+
         <?php
         self::renderAddNewUserModal();
         self::renderAddExistentUserModal();

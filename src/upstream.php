@@ -168,7 +168,6 @@ final class UpStream
         include_once( 'includes/up-labels.php' );
         include_once( 'includes/trait-up-singleton.php' );
 
-
         if ( $this->is_request( 'admin' ) ) {
             include_once( 'includes/libraries/cmb2/init.php' );
             include_once( 'includes/libraries/cmb2-grid/Cmb2GridPlugin.php' );
