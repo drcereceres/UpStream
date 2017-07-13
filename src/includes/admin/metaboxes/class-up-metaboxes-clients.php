@@ -231,13 +231,20 @@ class UpStream_Metaboxes_Clients
                 </tr>
             </thead>
             <tbody>
-                <?php if (count($usersList) > 0): ?>
-                <?php foreach ($usersList as $user): ?>
+                <?php if (count($usersList) > 0):
+                $instanceTimezone = new DateTimeZone(get_option('timezone_string'));
+                $dateFormat = get_option('date_format') . ' ' . get_option('time_format');
+
+                foreach ($usersList as $user):
+                $assignedAt = new DateTime($user->assigned_at);
+                // Convert the date, which is in UTC, to the instance's timezone.
+                $assignedAt->setTimeZone($instanceTimezone);
+                ?>
                 <tr data-id="<?php echo $user->id; ?>">
                     <td><?php echo $user->name; ?></td>
                     <td><?php echo $user->username; ?></td>
                     <td><?php echo $user->email; ?></td>
-                    <td class="text-center"><?php echo $user->assigned_at; ?></td>
+                    <td class="text-center"><?php echo $assignedAt->format($dateFormat); ?></td>
                     <td><?php echo $user->assigned_by; ?></td>
                     <td class="text-center">
                         <a href="#" onclick="javascript:void(0);" data-remove-user>
@@ -586,7 +593,8 @@ class UpStream_Metaboxes_Clients
             }
 
             $currentUser = get_userdata(get_current_user_id());
-            $now = current_time('Y-m-d H:i:s');
+            $nowTimestamp = time();
+            $now = date('Y-m-d H:i:s', $nowTimestamp);
 
             $clientUsersMetaKey = '_upstream_new_client_users';
             $clientUsersList = (array)get_post_meta($clientId, $clientUsersMetaKey, true);
@@ -624,6 +632,8 @@ class UpStream_Metaboxes_Clients
                 implode('", "', $usersIdsList)
             ));
 
+            $assignedAt = upstream_convert_UTC_date_to_timezone($now);
+
             foreach ($rowset as $user) {
                 array_push($response['data'], array(
                     'id'          => (int)$user->ID,
@@ -631,7 +641,7 @@ class UpStream_Metaboxes_Clients
                     'email'       => $user->user_email,
                     'username'    => $user->user_login,
                     'assigned_by' => $currentUser->display_name,
-                    'assigned_at' => $now
+                    'assigned_at' => $assignedAt
                 ));
             }
 
