@@ -152,7 +152,7 @@ class UpStream_Metaboxes_Clients
                         </label>
                     </div>
                     <div class="up-form-group">
-                        <button type="submit" class="button button-primary"><?php echo __('Add New User', 'upstream'); ?></button>
+                        <button type="submit" class="button button-primary" data-label="<?php echo __('Add New User', 'upstream'); ?>" data-loading-label="<?php echo __('Adding...', 'upstream'); ?>"><?php echo __('Add New User', 'upstream'); ?></button>
                     </div>
                 </div>
             </div>

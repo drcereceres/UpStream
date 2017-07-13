@@ -196,19 +196,12 @@
       var form = $('#form-add-new-user');
       var hasError = false;
 
-      var usernameField = $('[name="username"]', form);
-      var usernameFieldValue = usernameField.val();
-      // Check if username is potentially valid.
-      if (usernameFieldValue.length < 3 || usernameFieldValue.length > 60 || !/^[a-z]+[a-z0-9\-\_]+$/i.test(usernameFieldValue)) {
-        usernameField.focus();
-        return;
-      }
+      $('input.has-error', form).removeClass('has-error');
 
-      var passwordField = $('[name="password"]', form);
-      if (passwordField.val().length < 6) {
-        passwordField.focus();
-        return;
-      }
+      var throwFieldError = function(theField) {
+        theField.addClass('has-error');
+        theField.focus();
+      };
 
       var inputsList = $('input', form);
       for (var inputIndex = 0; inputIndex < inputsList.length; inputIndex++) {
@@ -216,10 +209,27 @@
         if (input.attr('required')) {
           var value = input.val() || "";
           if (value.trim().length === 0) {
-            input.focus();
+            console.log(input);
+            throwFieldError(input);
             hasError = true;
             break;
           }
+        }
+      }
+
+      if (!hasError) {
+        var usernameField = $('[name="username"]', form);
+        var usernameFieldValue = usernameField.val();
+        // Check if username is potentially valid.
+        if (usernameFieldValue.length < 3 || usernameFieldValue.length > 60 || !/^[a-z]+[a-z0-9\-\_]+$/i.test(usernameFieldValue)) {
+          throwFieldError(usernameField);
+          return;
+        }
+
+        var passwordField = $('[name="password"]', form);
+        if (passwordField.val().length < 6) {
+          throwFieldError(passwordField);
+          return;
         }
       }
 
@@ -239,6 +249,10 @@
           },
           beforeSend: function(jqXHR, settings) {
             $('.error-wrapper', form).remove();
+            form.addClass('is-sending');
+            $('input', form).attr('disabled', 'disabled');
+            self.text(self.attr('data-loading-label'));
+            self.attr('disabled', 'disabled');
           },
           success   : function(response, textStatus, jqXHR) {
             if (!response.success) {
@@ -264,6 +278,12 @@
           },
           error     : function(jqXHR, textStatus, errorThrown) {
             console.error(errorThrown);
+          },
+          complete  : function() {
+            form.removeClass('is-sending');
+            $('input', form).attr('disabled', null);
+            self.text(self.attr('data-label'));
+            self.attr('disabled', null);
           }
         });
       }

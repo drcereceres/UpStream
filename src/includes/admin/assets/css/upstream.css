@@ -813,3 +813,17 @@ input[type="email"][name^="_upstream_"].validating {
 .up-form-group button[type="submit"] {
   margin-top: 25px;
 }
+
+.up-form-group input.has-error {
+  border: 1px solid #E74C3C;
+}
+
+.up-form-group input.has-error:focus,
+.up-form-group input.has-error:active {
+  -webkit-box-shadow: 0 0 2px rgba(231, 76, 60, .8);
+  box-shadow: 0 0 2px rgba(231, 76, 60, .8);
+}
+
+.is-sending input {
+
+}
