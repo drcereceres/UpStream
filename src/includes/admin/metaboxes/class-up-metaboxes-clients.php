@@ -139,7 +139,7 @@ class UpStream_Metaboxes_Clients
                         <input type="password" name="password" id="new-user-password" required />
                         <div class="up-help-block">
                             <ul>
-                                <li><?php echo __('Must be at least between 6 characters long.', 'upstream'); ?></li>
+                                <li><?php echo __('Must be at least 6 characters long.', 'upstream'); ?></li>
                             </ul>
                         </div>
                     </div>
