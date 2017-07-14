@@ -4,6 +4,7 @@ if (!defined('ABSPATH')) exit;
 
 use \UpStream\Traits\Singleton;
 use \Cmb2Grid\Grid\Cmb2Grid;
+use \UpStream\Migrations\ClientUsers as ClientUsersMigration;
 
 // @todo
 class UpStream_Metaboxes_Clients
@@ -43,6 +44,7 @@ class UpStream_Metaboxes_Clients
         add_action('wp_ajax_upstream:client.remove_user', array($namespace, 'removeUser'));
         add_action('wp_ajax_upstream:client.fetch_unassigned_users', array($namespace, 'fetchUnassignedUsers'));
         add_action('wp_ajax_upstream:client.add_existent_users', array($namespace, 'addExistentUsers'));
+        add_action('wp_ajax_upstream:client.migrate_user', array($namespace, 'migrateLegacyUser'));
 
         // Enqueues the default ThickBox assets.
         add_thickbox();
@@ -58,6 +60,7 @@ class UpStream_Metaboxes_Clients
         $namespace = get_class(self::$instance);
 
         add_action('add_meta_boxes', array($namespace, 'createUsersMetabox'));
+        add_action('add_meta_boxes', array($namespace, 'createLegacyUsersMetabox'));
     }
 
     private static function getUsersFromClient($client_id)
@@ -206,6 +209,49 @@ class UpStream_Metaboxes_Clients
         <?php
     }
 
+    private static function renderMigrateUserModal()
+    {
+        $client_id = get_the_id();
+        $unassignedUsers = self::getUnassignedUsersFromClient($client_id);
+        ?>
+        <p>@todo: if migrated, his password will be his email</p>
+        <p>@todo: all fields are required</p>
+        <div id="modal-migrate-user" style="display: none;">
+            <div id="form-migrate-user">
+                <div>
+                    <h3><?php echo __('User Data', 'upstream'); ?></h3>
+                    <div class="up-form-group">
+                        <label for="migrate-user-email"><?php echo __('Email', 'upstream') . ' *'; ?></label>
+                        <input type="email" name="email" id="migrate-user-email" required size="35" />
+                    </div>
+                    <div class="up-form-group">
+                        <label for="migrate-user-password"><?php echo __('Password', 'upstream') . ' *'; ?></label>
+                        <input type="password" name="password" id="migrate-user-password" required size="35" />
+                        <div class="up-help-block">
+                            <ul>
+                                <li><?php echo __('Must be at least 6 characters long.', 'upstream'); ?></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="up-form-group">
+                        <label for="migrate-user-fname"><?php echo __('First Name', 'upstream'); ?></label>
+                        <input type="text" name="fname" id="migrate-user-fname" size="35" />
+                    </div>
+                    <div class="up-form-group">
+                        <label for="migrate-user-lname"><?php echo __('Last Name', 'upstream'); ?></label>
+                        <input type="text" name="lname" id="migrate-user-lname" size="35" />
+                    </div>
+                </div>
+                <div>
+                    <div class="up-form-group">
+                        <button type="submit" class="button button-primary" data-label="<?php echo __('Migrate User', 'upstream'); ?>" data-loading-label="<?php echo __('Migrating...', 'upstream'); ?>"><?php echo __('Migrate User', 'upstream'); ?></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <?php
+    }
+
     public static function renderUsersMetabox()
     {
         $client_id = get_the_id();
@@ -276,6 +322,100 @@ class UpStream_Metaboxes_Clients
             self::$postType,
             'normal'
         );
+    }
+
+    public static function createLegacyUsersMetabox()
+    {
+        $client_id = upstream_post_id();
+
+        $legacyUsersErrors = get_post_meta($client_id, '_upstream_client_legacy_users_errors');
+        if (count($legacyUsersErrors) === 0) {
+            return;
+        }
+
+        // @todo check if client has errors
+        add_meta_box(
+            self::$prefix . 'legacy_users',
+            '<span class="dashicons dashicons-groups"></span>' . __("Legacy Users", 'upstream'),
+            array(get_class(self::$instance), 'renderLegacyUsersMetabox'),
+            self::$postType,
+            'normal'
+        );
+    }
+
+    public static function renderLegacyUsersMetabox()
+    {
+        $client_id = upstream_post_id();
+
+        $legacyUsersErrors = get_post_meta($client_id, '_upstream_client_legacy_users_errors')[0];
+
+        $legacyUsersMeta = get_post_meta($client_id, '_upstream_client_users')[0];
+        $legacyUsers = array();
+        foreach ($legacyUsersMeta as $a) {
+            $legacyUsers[$a['id']] = $a;
+        }
+        unset($legacyUsersMeta);
+        ?>
+        <div class="upstream-row">
+            <span class="dashicons dashicons-editor-help"></span> @todo: info about what's going on here
+        </div>
+        <div class="upstream-row">
+            <table id="table-legacy-users" class="wp-list-table widefat fixed striped posts upstream-table">
+                <thead>
+                    <tr>
+                        <th><?php echo __('First Name', 'upstream'); ?></th>
+                        <th><?php echo __('Last Name', 'upstream'); ?></th>
+                        <th><?php echo __('Email', 'upstream'); ?></th>
+                        <th><?php echo __('Phone', 'upstream'); ?></th>
+                        <th class="text-center"><?php echo __('Migrate?', 'upstream'); ?></th>
+                        <th class="text-center"><?php echo __('Discard?', 'upstream'); ?></th>
+                    </tr>
+                </thead>
+                <tbody>
+                <?php foreach ($legacyUsersErrors as $legacyUserId => $legacyUserError):
+                $user = $legacyUsers[$legacyUserId];
+                $userFirstName = isset($user['fname']) ? trim($user['fname']) : '';
+                $userLastName = isset($user['lname']) ? trim($user['lname']) : '';
+                $userEmail = isset($user['email']) ? trim($user['email']) : '';
+                $userPhone = isset($user['phone']) ? trim($user['phone']) : '';
+
+                switch ($legacyUserError) {
+                    case 'ERR_EMAIL_NOT_AVAILABLE':
+                        $errorMessage = __("This email address is already being used by another user.", 'upstream');
+                        break;
+
+                    default:
+                        $errorMessage = $legacyUserError;
+                        break;
+                }
+                ?>
+                    <tr data-id="<?php echo $legacyUserId; ?>">
+                        <td data-column="fname"><?php echo !empty($userFirstName) ? $userFirstName : '<i>empty</i>'; ?></td>
+                        <td data-column="lname"><?php echo !empty($userLastName) ? $userLastName : '<i>empty</i>'; ?></td>
+                        <td data-column="email"><?php echo !empty($userEmail) ? $userEmail : '<i>empty</i>'; ?></td>
+                        <td data-column="phone"><?php echo !empty($userPhone) ? $userPhone : '<i>empty</i>'; ?></td>
+                        <td class="text-center">
+                            <a name="Migrating Client User" href="#TB_inline?width=350&height=400&inlineId=modal-migrate-user" class="thickbox" data-modal-identifier="user-migration">
+                                <span class="dashicons dashicons-plus-alt"></span>
+                            </a>
+                        </td>
+                        <td class="text-center">
+                            <a href="#" onclick="javascript:void(0);">
+                                <span class="dashicons dashicons-trash"></span>
+                            </a>
+                        </td>
+                    </tr>
+                    <tr data-id="<?php echo $legacyUserId; ?>">
+                        <td colspan="7">
+                            <span class="dashicons dashicons-warning"></span>&nbsp;<?php echo $errorMessage; ?>
+                        </td>
+                    </tr>
+                <?php endforeach; ?>
+                </tbody>
+            </table>
+            <?php self::renderMigrateUserModal(); ?>
+        </div>
+        <?php
     }
 
     public static function renderDetailsMetabox()
@@ -657,6 +797,76 @@ class UpStream_Metaboxes_Clients
                     'assigned_by' => $currentUser->display_name,
                     'assigned_at' => $assignedAt
                 ));
+            }
+
+            $response['success'] = true;
+        } catch (\Exception $e) {
+            $response['err'] = $e->getMessage();
+        }
+
+        echo wp_json_encode($response);
+
+        wp_die();
+    }
+
+    public static function migrateLegacyUser()
+    {
+        header('Content-Type: application/json');
+
+        global $wpdb;
+
+        $response = array(
+            'success' => false,
+            'data'    => array(),
+            'err'     => null
+        );
+
+        try {
+            if (!upstream_admin_permissions('edit_clients')) {
+                throw new \Exception(__("You're not allowed to do this.", 'upstream'));
+            }
+
+            if (empty($_POST) || !isset($_POST['client'])) {
+                throw new \Exception(__("Invalid UpStream Client ID.", 'upstream'));
+            }
+
+            $client_id = (int)$_POST['client'];
+
+            $data = array(
+                'id'       => isset($_POST['user_id']) ? $_POST['user_id'] : null,
+                'email'    => isset($_POST['email']) ? $_POST['email'] : null,
+                'password' => isset($_POST['password']) ? $_POST['password'] : null,
+                'fname'    => isset($_POST['first_name']) ? $_POST['first_name'] : null,
+                'lname'    => isset($_POST['last_name']) ? $_POST['last_name'] : null
+            );
+
+            $userData = ClientUsersMigration::insertNewClientUser($data, $client_id);
+            $response['data'] = $userData;
+
+            // Update the '_upstream_client_users' meta.
+            $meta = (array)get_post_meta($client_id, '_upstream_client_users');
+            if (!empty($meta)) {
+                $meta = $meta[0];
+                foreach ($meta as $legacyUserIndex => $legacyUser) {
+                    if (isset($legacyUser['id']) && $legacyUser['id'] === $data['id']) {
+                        unset($meta[$legacyUserIndex]);
+                    }
+                }
+
+                update_post_meta($client_id, '_upstream_client_users', $meta);
+            }
+
+            // Update the '_upstream_client_legacy_users_errors' meta.
+            $meta = (array)get_post_meta($client_id, '_upstream_client_legacy_users_errors');
+            if (!empty($meta)) {
+                $meta = $meta[0];
+                foreach ($meta as $legacyUserId => $legacyUserError) {
+                    if ($legacyUserId === $data['id']) {
+                        unset($meta[$legacyUserId]);
+                    }
+                }
+
+                update_post_meta($client_id, '_upstream_client_legacy_users_errors', $meta);
             }
 
             $response['success'] = true;

@@ -316,5 +316,115 @@
         });
       }
     });
+
+    $('.thickbox[data-modal-identifier="user-migration"]').on('click', function() {
+      var wrapper = $('#form-migrate-user');
+      var tr = $(this).parents('tr[data-id]');
+
+      $('.error-wrapper', wrapper).remove();
+      $('input', wrapper).removeClass('has-error').val('');
+      $('#migrate-user-fname', wrapper).val($('td[data-column="fname"]', tr).text());
+      $('#migrate-user-lname', wrapper).val($('td[data-column="lname"]', tr).text());
+      $('#migrate-user-email', wrapper).val($('td[data-column="email"]', tr).text());
+      $('button[type="submit"]', wrapper).attr('data-id', tr.attr('data-id'));
+    });
+
+    $('#form-migrate-user button[type="submit"]').on('click', function(e) {
+      var self = $(this);
+
+      var throwFieldError = function(theField) {
+        theField.addClass('has-error');
+        theField.focus();
+      };
+
+      var hasError = false;
+
+      var wrapper = $('#form-migrate-user');
+      var inputsList = $('input', wrapper);
+      for (var inputIndex = 0; inputIndex < inputsList.length; inputIndex++) {
+        var input = $(inputsList[inputIndex]);
+        if (input.attr('required')) {
+          var value = input.val() || "";
+          if (value.trim().length === 0) {
+            throwFieldError(input);
+            hasError = true;
+            break;
+          }
+        }
+      }
+
+      var passwordField = $('[name="password"]', wrapper);
+      if (passwordField.val().length < 6) {
+        throwFieldError(passwordField);
+        return;
+      }
+
+      if (!hasError) {
+        $.ajax({
+          type: 'POST',
+          url : ajaxurl,
+          data: {
+            action    : 'upstream:client.migrate_user',
+            client    : $('#post_ID').val(),
+            user_id   : self.attr('data-id'),
+            email     : $('[name="email"]', wrapper).val(),
+            password  : passwordField.val(),
+            first_name: $('[name="fname"]', wrapper).val(),
+            last_name : $('[name="lname"]', wrapper).val()
+          },
+          beforeSend: function(jqXHR, settings) {
+            $('.error-wrapper', wrapper).remove();
+            wrapper.addClass('is-sending');
+            $('input', wrapper).removeClass('has-error').attr('disabled', 'disabled');
+            self.text(self.attr('data-loading-label'));
+            self.attr('disabled', 'disabled');
+          },
+          success   : function(response, textStatus, jqXHR) {
+            console.log(response);
+
+            if (!response.success) {
+              wrapper.prepend($('<div class="error-wrapper notice notice-error"><p>' + response.err + '</p>'));
+            } else {
+              $('#TB_closeWindowButton').trigger('click');
+
+              var legacyUsersTable = $('#table-legacy-users');
+              $('tbody tr[data-id="'+ response.data.legacy_id +'"]', legacyUsersTable).remove();
+
+              if ($('tbody tr', legacyUsersTable).length === 0) {
+                $('tbody', legacyUsersTable).append($('<tr><td colspan="6">'+ l['MSG_NO_USERS_FOUND'] +'</td></tr>'));
+              }
+
+              var tr = $('<tr data-id="'+ response.data.id +'"></tr>');
+              tr.append('<td>'+ response.data.name +'</td>');
+              tr.append('<td></td>');
+              tr.append('<td>'+ response.data.email +'</td>');
+              tr.append('<td class="text-center">'+ response.data.assigned_at +'</td>');
+              tr.append('<td>'+ response.data.assigned_by +'</td>');
+              tr.append('<td class="text-center"><a href="#" data-remove-user><span class="dashicons dashicons-trash"></span></a></td>');
+
+              var table = $('#table-users');
+              $('tr[data-empty]', table).remove();
+
+              $('tbody', table).append(tr);
+
+              $('input', wrapper).val('');
+              self.attr('data-id', null);
+            }
+          },
+          error     : function(jqXHR, textStatus, errorThrown) {
+            console.error(errorThrown);
+          },
+          complete  : function() {
+            wrapper.removeClass('is-sending');
+            $('input', wrapper).attr('disabled', null).removeClass('has-error');
+            self.text(self.attr('data-label'));
+            self.attr('disabled', null);
+          }
+        });
+      } else {
+        e.preventDefault();
+        return false;
+      }
+    });
   });
 })(window, window.document, jQuery || null, ajaxurl, upstreamMetaboxClientLangStrings);

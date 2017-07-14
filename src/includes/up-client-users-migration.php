@@ -366,4 +366,98 @@ final class ClientUsers
             }
         }
     }
+
+    public static function insertNewClientUser($data, $client_id)
+    {
+        $data = json_decode(json_encode($data));
+        $client_id = (int)$client_id;
+
+        if ($client_id <= 0) {
+            throw new \Exception(__("Invalid UpStream Client ID.", 'upstream'));
+        }
+
+        if (empty($data) || empty($data->id)) {
+            throw new \Exception(__("Invalid UpStream Client User.", 'upstream'));
+        }
+
+        $userEmail = isset($data->email) ? trim((string)$data->email) : '';
+        if (empty($userEmail) || !filter_var($userEmail, FILTER_VALIDATE_EMAIL) || !is_email($userEmail)) {
+            throw new \Exception(__("Invalid email address.", 'upstream'));
+        } else {
+            global $wpdb;
+
+            $emailExists = (bool)$wpdb->get_var(sprintf('
+                SELECT COUNT(`ID`)
+                FROM `%s`
+                WHERE `user_email` = "%s"',
+                $wpdb->prefix . 'users',
+                $userEmail
+            ));
+
+            if ($emailExists) {
+                throw new \Exception(__("This email address is not available.", 'upstream'));
+            }
+        }
+
+        $userPassword = isset($data->password) ? (string)$data->password : '';
+        if (strlen($userPassword) < 6) {
+            throw new \Exception(__("Passwords must be at least 6 characters long.", 'upstream'));
+        }
+
+        $userFirstName = isset($data->fname) ? trim((string)$data->fname) : '';
+        $userLastName = isset($data->lname) ? trim((string)$data->lname) : '';
+        $userDisplayName = $userFirstName;
+
+        if (!empty($userDisplayName) && !empty($userLastName)) {
+            $userDisplayName .= ' ' . $userLastName;
+        }
+
+        if (empty($userDisplayName)) {
+            $userDisplayName = $userEmail;
+        }
+
+        $userData = array(
+            'user_login'    => $userEmail,
+            'user_pass'     => $userPassword,
+            'user_nicename' => $userDisplayName,
+            'user_email'    => $userEmail,
+            'display_name'  => $userDisplayName,
+            'nickname'      => $userDisplayName,
+            'first_name'    => $userFirstName,
+            'last_name'     => $userLastName,
+            'role'          => 'upstream_client_user'
+        );
+
+        $user_id = wp_insert_user($userData);
+        if (is_wp_error($user_id)) {
+            throw new \Exception($user_id->get_error_message());
+        }
+
+        $currentUser = get_userdata(get_current_user_id());
+
+        $assignedAt = date('Y-m-d H:i:s', time());
+
+        $clientUsersMetaKey = '_upstream_new_client_users';
+        $clientUsersList = (array)get_post_meta($client_id, $clientUsersMetaKey, true);
+        array_push($clientUsersList, array(
+            'user_id'     => $user_id,
+            'assigned_by' => $currentUser->ID,
+            'assigned_at' => $assignedAt
+        ));
+        update_post_meta($client_id, $clientUsersMetaKey, $clientUsersList);
+
+        $response = array(
+            'legacy_id'      => $data->id,
+            'id'             => $user_id,
+            'name'           => $userDisplayName,
+            'email'          => $userEmail,
+            'assigned_at'    => upstream_convert_UTC_date_to_timezone($assignedAt),
+            'assigned_by_id' => $currentUser->ID,
+            'assigned_by'    => $currentUser->display_name
+        );
+
+        // @todo migrate user_id on projects activities and things
+
+        return $response;
+    }
 }
