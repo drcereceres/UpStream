@@ -334,8 +334,6 @@ class UpStream_Metaboxes_Clients
 
     public static function addNewUser()
     {
-        // @todo : permission checks?
-
         header('Content-Type: application/json');
 
         global $wpdb;
@@ -347,6 +345,10 @@ class UpStream_Metaboxes_Clients
         );
 
         try {
+            if (!upstream_admin_permissions('edit_clients')) {
+                throw new \Exception(__("You're not allowed to do this.", 'upstream'));
+            }
+
             if (empty($_POST) || !isset($_POST['client'])) {
                 throw new \Exception("@todo");
             }
@@ -464,7 +466,6 @@ class UpStream_Metaboxes_Clients
 
     public static function removeUser()
     {
-        // @todo : permission checks?
         header('Content-Type: application/json');
 
         $response = array(
@@ -473,6 +474,10 @@ class UpStream_Metaboxes_Clients
         );
 
         try {
+            if (!upstream_admin_permissions('edit_clients')) {
+                throw new \Exception(__("You're not allowed to do this.", 'upstream'));
+            }
+
             if (empty($_POST) || !isset($_POST['client'])) {
                 throw new \Exception("@todo");
             }
@@ -514,7 +519,6 @@ class UpStream_Metaboxes_Clients
 
     public static function fetchUnassignedUsers()
     {
-        // @todo : permission checks?
         header('Content-Type: application/json');
 
         $response = array(
@@ -524,6 +528,10 @@ class UpStream_Metaboxes_Clients
         );
 
         try {
+            if (!upstream_admin_permissions('edit_clients')) {
+                throw new \Exception(__("You're not allowed to do this.", 'upstream'));
+            }
+
             if (empty($_GET) || !isset($_GET['client'])) {
                 throw new \Exception("@todo");
             }
@@ -572,7 +580,6 @@ class UpStream_Metaboxes_Clients
 
     public static function addExistentUsers()
     {
-        // @todo : permission checks
         header('Content-Type: application/json');
 
         $response = array(
@@ -582,6 +589,10 @@ class UpStream_Metaboxes_Clients
         );
 
         try {
+            if (!upstream_admin_permissions('edit_clients')) {
+                throw new \Exception(__("You're not allowed to do this.", 'upstream'));
+            }
+
             if (empty($_POST) || !isset($_POST['client'])) {
                 throw new \Exception("@todo");
             }
