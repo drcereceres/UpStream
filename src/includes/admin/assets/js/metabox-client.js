@@ -43,7 +43,6 @@
           user  : row.data('id')
         },
         beforeSend: function(jqXHR, settings) {
-          // @todo : convert trash-can to up-spinner
           self.addClass('up-spinner').html('<div></div>');
           table.addClass('is-removing');
           $('#_upstream_client_users a.thickbox').addClass('disabled').addClass('up-u-no-events');
@@ -237,7 +236,6 @@
         if (input.attr('required')) {
           var value = input.val() || "";
           if (value.trim().length === 0) {
-            console.log(input);
             throwFieldError(input);
             hasError = true;
             break;
