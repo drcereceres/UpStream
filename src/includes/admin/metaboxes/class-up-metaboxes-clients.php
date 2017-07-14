@@ -844,6 +844,9 @@ class UpStream_Metaboxes_Clients
             $userData = ClientUsersMigration::insertNewClientUser($data, $client_id);
             $response['data'] = $userData;
 
+            $legacy_user_id = $userData['legacy_id'];
+            $user_id = $userData['id'];
+
             // Update the '_upstream_client_users' meta.
             $meta = (array)get_post_meta($client_id, '_upstream_client_users');
             if (!empty($meta)) {
@@ -868,6 +871,113 @@ class UpStream_Metaboxes_Clients
                 }
 
                 update_post_meta($client_id, '_upstream_client_legacy_users_errors', $meta);
+            }
+
+            $rowset = $wpdb->get_results('
+                SELECT `post_id`, `meta_key`, `meta_value`
+                FROM `' . $wpdb->prefix . 'postmeta`
+                WHERE `meta_key` LIKE "_upstream_project_%"
+                ORDER BY `post_id` ASC'
+            );
+
+            if (count($rowset) > 0) {
+                $convertUsersLegacyIdFromHaystack = function(&$haystack) use ($legacy_user_id, $user_id) {
+                    foreach ($haystack as &$needle) {
+                        if ($needle === $legacy_user_id) {
+                            $needle = $user_id;
+                        }
+                    }
+                };
+
+                foreach ($rowset as $projectMeta) {
+                    $project_id = (int)$projectMeta->post_id;
+
+                    if ($projectMeta->meta_key === '_upstream_project_activity') {
+                        $metaValue = (array)maybe_unserialize($projectMeta->meta_value);
+                        foreach ($metaValue as $activityIndex => $activity) {
+                            if ($activity['user_id'] === $legacy_user_id) {
+                                $activity['user_id'] = $user_id;
+                            }
+
+                            if (isset($activity['fields'])) {
+                                if (isset($activity['fields']['single'])) {
+                                    foreach ($activity['fields']['single'] as $activitySingleIndentifier => $activitySingle) {
+                                        if ($activitySingleIndentifier === '_upstream_project_client_users') {
+                                            if (isset($activitySingle['add'])) {
+                                                if (is_array($activitySingle['add'])) {
+                                                    $convertUsersLegacyIdFromHaystack($activitySingle['add']);
+                                                }
+                                            }
+
+                                            if (isset($activitySingle['from'])) {
+                                                if (is_array($activitySingle['from'])) {
+                                                    $convertUsersLegacyIdFromHaystack($activitySingle['from']);
+                                                }
+                                            }
+
+                                            if (isset($activitySingle['to'])) {
+                                                if (is_array($activitySingle['to'])) {
+                                                    $convertUsersLegacyIdFromHaystack($activitySingle['to']);
+                                                }
+                                            }
+                                        }
+
+                                        $activity['fields']['single'][$activitySingleIndentifier] = $activitySingle;
+                                    }
+                                }
+
+                                if (isset($activity['fields']['group'])) {
+                                    foreach ($activity['fields']['group'] as $groupIdentifier => $groupData) {
+                                        if (isset($groupData['add'])) {
+                                            foreach ($groupData['add'] as $rowIndex => $row) {
+                                                if (isset($row['created_by']) && $row['created_by'] === $legacy_user_id) {
+                                                    $row['created_by'] = $user_id;
+                                                    $groupData['add'][$rowIndex] = $row;
+                                                }
+                                            }
+                                        }
+
+                                        if (isset($groupData['remove'])) {
+                                            foreach ($groupData['remove'] as $rowIndex => $row) {
+                                                if (isset($row['created_by']) && $row['created_by'] === $legacy_user_id) {
+                                                    $row['created_by'] = $user_id;
+                                                    $groupData['remove'][$rowIndex] = $row;
+                                                }
+                                            }
+                                        }
+
+                                        $activity['fields']['group'][$groupIdentifier] = $groupData;
+                                    }
+                                }
+                            }
+
+                            $metaValue[$activityIndex] = $activity;
+                        }
+
+                        update_post_meta($project_id, $projectMeta->meta_key, $metaValue);
+                    } else if ($projectMeta->meta_key === '_upstream_project_discussion') {
+                        $metaValue = (array)maybe_unserialize($projectMeta->meta_value);
+                        foreach ($metaValue as $commentIndex => $comment) {
+                            if ($comment['created_by'] === $legacy_user_id) {
+                                $comment['created_by'] = $user_id;
+                                $metaValue[$commentIndex] = $comment;
+                            }
+                        }
+
+                        update_post_meta($project_id, $projectMeta->meta_key, $metaValue);
+                    } else if (preg_match('/(milestones|tasks|bugs|files)$/i', $projectMeta->meta_key)) {
+                        $metaValue = (array)maybe_unserialize($projectMeta->meta_value);
+                        foreach ($metaValue as $rowIndex => $row) {
+                            if (isset($row['created_by']) && $row['created_by'] === $legacy_user_id) {
+                                $row['created_by'] = $user_id;
+
+                                $metaValue[$rowIndex] = $row;
+                            }
+                        }
+
+                        update_post_meta($project_id, $projectMeta->meta_key, $metaValue);
+                    }
+                }
             }
 
             $response['success'] = true;
@@ -905,19 +1015,6 @@ class UpStream_Metaboxes_Clients
 
             if (empty($user_id)) {
                 throw new \Exception(__("Invalid UpStream Client ID.", 'upstream'));
-            }
-
-            // Update the '_upstream_client_users' meta.
-            $meta = (array)get_post_meta($client_id, '_upstream_client_users');
-            if (!empty($meta)) {
-                $meta = $meta[0];
-                foreach ($meta as $legacyUserIndex => $legacyUser) {
-                    if (isset($legacyUser['id']) && $legacyUser['id'] === $user_id) {
-                        unset($meta[$legacyUserIndex]);
-                    }
-                }
-
-                update_post_meta($client_id, '_upstream_client_users', $meta);
             }
 
             // Update the '_upstream_client_legacy_users_errors' meta.

@@ -210,13 +210,11 @@ final class ClientUsers
                 }
             }
         };
-        die();
-        return;
 
         foreach (self::$projects as $project) {
             if ($project['has_changed']) {
                 foreach (array('members', 'milestones', 'tasks', 'bugs', 'files', 'discussion') as $itemType) {
-                    //@todo update_post_meta($project['id'], '_upstream_project_' . $itemType, $project[$itemType]);
+                    update_post_meta($project['id'], '_upstream_project_' . $itemType, $project[$itemType]);
                 }
 
                 // Update project activity.
@@ -283,7 +281,7 @@ final class ClientUsers
                         $projectActivities[0][$activityIndex] = $activity;
                     }
 
-                    //@todo update_post_meta($project['id'], '_upstream_project_activity', $projectActivities);
+                    update_post_meta($project['id'], '_upstream_project_activity', $projectActivities);
                 }
             }
         }
@@ -369,6 +367,8 @@ final class ClientUsers
 
     public static function insertNewClientUser($data, $client_id)
     {
+        global $wpdb;
+
         $data = json_decode(json_encode($data));
         $client_id = (int)$client_id;
 
@@ -384,8 +384,6 @@ final class ClientUsers
         if (empty($userEmail) || !filter_var($userEmail, FILTER_VALIDATE_EMAIL) || !is_email($userEmail)) {
             throw new \Exception(__("Invalid email address.", 'upstream'));
         } else {
-            global $wpdb;
-
             $emailExists = (bool)$wpdb->get_var(sprintf('
                 SELECT COUNT(`ID`)
                 FROM `%s`
@@ -455,8 +453,6 @@ final class ClientUsers
             'assigned_by_id' => $currentUser->ID,
             'assigned_by'    => $currentUser->display_name
         );
-
-        // @todo migrate user_id on projects activities and things
 
         return $response;
     }

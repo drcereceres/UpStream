@@ -213,10 +213,9 @@ final class UpStream
         // Retrocompatibility: Make sure "UpStream Client Users" role is added.
         if (version_compare(UPSTREAM_VERSION, '1.10.2', '>')) {
             UpStream_Roles::addClientUsersRole();
-
-            // @todo: migrate current client users to UpStream Client Users.
         }
 
+        // @todo: migrate current client users to UpStream Client Users.
         //\UpStream\Migrations\ClientUsers::run();
 
         // Init action.
