@@ -219,47 +219,47 @@ class UpStream_Metaboxes_Clients
             <a id="add-existent-user" name="Add Existent User" href="#TB_inline?width=600&height=300&inlineId=modal-add-existent-user" class="thickbox button"><?php echo __('Add Existent User', 'upstream'); ?></a>
         </div>
         <div class="upstream-row">
-        <table id="table-users" class="wp-list-table widefat fixed striped posts upstream-table">
-            <thead>
-                <tr>
-                    <th><?php echo __('Name', 'upstream'); ?></th>
-                    <th><?php echo __('Username', 'upstream'); ?></th>
-                    <th><?php echo __('Email', 'upstream'); ?></th>
-                    <th class="text-center"><?php echo __('Assigned at', 'upstream'); ?></th>
-                    <th><?php echo __('Assigned by', 'upstream'); ?></th>
-                    <th class="text-center"><?php echo __('Remove?', 'upstream'); ?></th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php if (count($usersList) > 0):
-                $instanceTimezone = new DateTimeZone(get_option('timezone_string'));
-                $dateFormat = get_option('date_format') . ' ' . get_option('time_format');
+            <table id="table-users" class="wp-list-table widefat fixed striped posts upstream-table">
+                <thead>
+                    <tr>
+                        <th><?php echo __('Name', 'upstream'); ?></th>
+                        <th><?php echo __('Username', 'upstream'); ?></th>
+                        <th><?php echo __('Email', 'upstream'); ?></th>
+                        <th class="text-center"><?php echo __('Assigned at', 'upstream'); ?></th>
+                        <th><?php echo __('Assigned by', 'upstream'); ?></th>
+                        <th class="text-center"><?php echo __('Remove?', 'upstream'); ?></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php if (count($usersList) > 0):
+                    $instanceTimezone = new DateTimeZone(get_option('timezone_string'));
+                    $dateFormat = get_option('date_format') . ' ' . get_option('time_format');
 
-                foreach ($usersList as $user):
-                $assignedAt = new DateTime($user->assigned_at);
-                // Convert the date, which is in UTC, to the instance's timezone.
-                $assignedAt->setTimeZone($instanceTimezone);
-                ?>
-                <tr data-id="<?php echo $user->id; ?>">
-                    <td><?php echo $user->name; ?></td>
-                    <td><?php echo $user->username; ?></td>
-                    <td><?php echo $user->email; ?></td>
-                    <td class="text-center"><?php echo $assignedAt->format($dateFormat); ?></td>
-                    <td><?php echo $user->assigned_by; ?></td>
-                    <td class="text-center">
-                        <a href="#" onclick="javascript:void(0);" data-remove-user>
-                            <span class="dashicons dashicons-trash"></span>
-                        </a>
-                    </td>
-                </tr>
-                <?php endforeach; ?>
-                <?php else: ?>
-                <tr data-empty>
-                    <td colspan="7"><?php echo __("There's no users assigned yet.", 'upstream'); ?></td>
-                </tr>
-                <?php endif; ?>
-            </tbody>
-        </table>
+                    foreach ($usersList as $user):
+                    $assignedAt = new DateTime($user->assigned_at);
+                    // Convert the date, which is in UTC, to the instance's timezone.
+                    $assignedAt->setTimeZone($instanceTimezone);
+                    ?>
+                    <tr data-id="<?php echo $user->id; ?>">
+                        <td><?php echo $user->name; ?></td>
+                        <td><?php echo $user->username; ?></td>
+                        <td><?php echo $user->email; ?></td>
+                        <td class="text-center"><?php echo $assignedAt->format($dateFormat); ?></td>
+                        <td><?php echo $user->assigned_by; ?></td>
+                        <td class="text-center">
+                            <a href="#" onclick="javascript:void(0);" data-remove-user>
+                                <span class="dashicons dashicons-trash"></span>
+                            </a>
+                        </td>
+                    </tr>
+                    <?php endforeach; ?>
+                    <?php else: ?>
+                    <tr data-empty>
+                        <td colspan="7"><?php echo __("There's no users assigned yet.", 'upstream'); ?></td>
+                    </tr>
+                    <?php endif; ?>
+                </tbody>
+            </table>
         </div>
 
         <?php
