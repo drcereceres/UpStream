@@ -35,7 +35,8 @@ function upstream_load_admin_scripts( $hook ) {
             'MSG_ADD_ONE_USER'        => __('Add 1 User', 'upstream'),
             'MSG_ADD_MULTIPLE_USERS'  => __('Add %d Users', 'upstream'),
             'MSG_NO_USERS_FOUND'      => __('No users found.', 'upstream'),
-            'LB_ADDING_USERS'         => __('Adding...', 'upstream')
+            'LB_ADDING_USERS'         => __('Adding...', 'upstream'),
+            'MSG_ARE_YOU_SURE'        => __('Are you sure? This action cannot be undone.', 'upstream')
         ));
     }
 

@@ -767,14 +767,14 @@ input[type="email"][name^="_upstream_"].validating {
   font-weight: bold;
 }
 
-.upstream-table a[data-remove-user],
-.upstream-table a[data-remove-user]:visited,
-.upstream-table a[data-remove-user]:active {
+a.up-u-color-red,
+a.up-u-color-red:visited,
+a.up-u-color-red:active {
   color: #A00;
 }
 
-.upstream-table a[data-remove-user]:hover,
-.upstream-table a[data-remove-user]:focus {
+a.up-u-color-red:hover,
+a.up-u-color-red:focus {
   color: #DC3232;
 }
 
@@ -881,11 +881,11 @@ input[type="email"][name^="_upstream_"].validating {
   cursor: progress;
 }
 
-#table-users.is-removing a[data-remove-user]:not(.up-spinner) {
+#table-users.is-removing a:not(.up-spinner) {
   color: #95A5A6;
 }
 
-#table-users.is-removing a[data-remove-user]:not(.up-spinner):hover {
+#table-users.is-removing a:not(.up-spinner):hover {
   cursor: not-allowed !important;
 }
 

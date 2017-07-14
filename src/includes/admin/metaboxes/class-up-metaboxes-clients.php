@@ -44,7 +44,8 @@ class UpStream_Metaboxes_Clients
         add_action('wp_ajax_upstream:client.remove_user', array($namespace, 'removeUser'));
         add_action('wp_ajax_upstream:client.fetch_unassigned_users', array($namespace, 'fetchUnassignedUsers'));
         add_action('wp_ajax_upstream:client.add_existent_users', array($namespace, 'addExistentUsers'));
-        add_action('wp_ajax_upstream:client.migrate_user', array($namespace, 'migrateLegacyUser'));
+        add_action('wp_ajax_upstream:client.migrate_legacy_user', array($namespace, 'migrateLegacyUser'));
+        add_action('wp_ajax_upstream:client.discard_legacy_user', array($namespace, 'discardLegacyUser'));
 
         // Enqueues the default ThickBox assets.
         add_thickbox();
@@ -293,7 +294,7 @@ class UpStream_Metaboxes_Clients
                         <td class="text-center"><?php echo $assignedAt->format($dateFormat); ?></td>
                         <td><?php echo $user->assigned_by; ?></td>
                         <td class="text-center">
-                            <a href="#" onclick="javascript:void(0);" data-remove-user>
+                            <a href="#" onclick="javascript:void(0);" class="up-u-color-red" data-remove-user>
                                 <span class="dashicons dashicons-trash"></span>
                             </a>
                         </td>
@@ -400,7 +401,7 @@ class UpStream_Metaboxes_Clients
                             </a>
                         </td>
                         <td class="text-center">
-                            <a href="#" onclick="javascript:void(0);">
+                            <a href="#" onclick="javascript:void(0);" class="up-u-color-red" data-action="legacyUser:discard">
                                 <span class="dashicons dashicons-trash"></span>
                             </a>
                         </td>
@@ -862,6 +863,69 @@ class UpStream_Metaboxes_Clients
                 $meta = $meta[0];
                 foreach ($meta as $legacyUserId => $legacyUserError) {
                     if ($legacyUserId === $data['id']) {
+                        unset($meta[$legacyUserId]);
+                    }
+                }
+
+                update_post_meta($client_id, '_upstream_client_legacy_users_errors', $meta);
+            }
+
+            $response['success'] = true;
+        } catch (\Exception $e) {
+            $response['err'] = $e->getMessage();
+        }
+
+        echo wp_json_encode($response);
+
+        wp_die();
+    }
+
+    public static function discardLegacyUser()
+    {
+        header('Content-Type: application/json');
+
+        global $wpdb;
+
+        $response = array(
+            'success' => false,
+            'err'     => null
+        );
+
+        try {
+            if (!upstream_admin_permissions('edit_clients')) {
+                throw new \Exception(__("You're not allowed to do this.", 'upstream'));
+            }
+
+            if (empty($_POST) || !isset($_POST['client'])) {
+                throw new \Exception(__("Invalid UpStream Client ID.", 'upstream'));
+            }
+
+            $client_id = (int)$_POST['client'];
+            $user_id = isset($_POST['user_id']) ? trim($_POST['user_id']) : '';
+
+            if (empty($user_id)) {
+                throw new \Exception(__("Invalid UpStream Client ID.", 'upstream'));
+            }
+
+            // Update the '_upstream_client_users' meta.
+            $meta = (array)get_post_meta($client_id, '_upstream_client_users');
+            if (!empty($meta)) {
+                $meta = $meta[0];
+                foreach ($meta as $legacyUserIndex => $legacyUser) {
+                    if (isset($legacyUser['id']) && $legacyUser['id'] === $user_id) {
+                        unset($meta[$legacyUserIndex]);
+                    }
+                }
+
+                update_post_meta($client_id, '_upstream_client_users', $meta);
+            }
+
+            // Update the '_upstream_client_legacy_users_errors' meta.
+            $meta = (array)get_post_meta($client_id, '_upstream_client_legacy_users_errors');
+            if (!empty($meta)) {
+                $meta = $meta[0];
+                foreach ($meta as $legacyUserId => $legacyUserError) {
+                    if ($legacyUserId === $user_id) {
                         unset($meta[$legacyUserId]);
                     }
                 }

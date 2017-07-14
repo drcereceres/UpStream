@@ -362,7 +362,7 @@
           type: 'POST',
           url : ajaxurl,
           data: {
-            action    : 'upstream:client.migrate_user',
+            action    : 'upstream:client.migrate_legacy_user',
             client    : $('#post_ID').val(),
             user_id   : self.attr('data-id'),
             email     : $('[name="email"]', wrapper).val(),
@@ -422,6 +422,53 @@
       } else {
         e.preventDefault();
         return false;
+      }
+    });
+
+    $('#table-legacy-users [data-action="legacyUser:discard"]').on('click', function(e) {
+      e.preventDefault();
+
+      var self = $(this);
+      if (self.hasClass('up-spinner')) {
+        return false;
+      }
+
+      var discardConfirmation = confirm(l['MSG_ARE_YOU_SURE']);
+      if (discardConfirmation) {
+        var table = $('#table-legacy-users');
+        var user_id = self.parents('tr[data-id]').attr('data-id');
+
+        $.ajax({
+          type: 'POST',
+          url : ajaxurl,
+          data: {
+            action : 'upstream:client.discard_legacy_user',
+            client : $('#post_ID').val(),
+            user_id: user_id
+          },
+          beforeSend: function(jqXHR, settings) {
+            self.addClass('up-spinner').html('<div></div>');
+            table.addClass('is-removing');
+          },
+          success   : function(response, textStatus, jqXHR) {
+            if (!response.success) {
+              alert(response.err);
+            } else {
+              $('tr[data-id="'+ user_id +'"]', table).remove();
+
+              if ($('tbody tr[data-id]', table).length === 0) {
+                $('tbody', table).append($('<tr><td colspan="6">'+ l['MSG_NO_USERS_FOUND'] +'</td></tr>'));
+              }
+            }
+          },
+          error     : function(jqXHR, textStatus, errorThrown) {
+            console.error(errorThrown);
+            self.removeClass('up-spinner').html('<span class="dashicons dashicons-trash up-u-color-red"></span>');
+          },
+          complete  : function() {
+            table.removeClass('is-removing');
+          }
+        });
       }
     });
   });
