@@ -210,10 +210,8 @@ final class UpStream
             require_once UPSTREAM_PLUGIN_DIR . 'includes/libraries/password_compat-1.0.4/lib/password.php';
         }
 
-        // Retrocompatibility: Make sure "UpStream Client Users" role is added.
-        if (version_compare(UPSTREAM_VERSION, '1.10.2', '>')) {
-            UpStream_Roles::addClientUsersRole();
-        }
+        // Make sure "UpStream Client Users" role is added in existent instances.
+        UpStream_Roles::addClientUsersRole();
 
         // @todo: migrate current client users to UpStream Client Users.
         //\UpStream\Migrations\ClientUsers::run();
