@@ -213,8 +213,8 @@ final class UpStream
         // Make sure "UpStream Client Users" role is added in existent instances.
         UpStream_Roles::addClientUsersRole();
 
-        // @todo: migrate current client users to UpStream Client Users.
-        //\UpStream\Migrations\ClientUsers::run();
+        // Executes the Legacy Client Users Migration script if needed.
+        \UpStream\Migrations\ClientUsers::run();
 
         // Init action.
         do_action( 'upstream_init' );

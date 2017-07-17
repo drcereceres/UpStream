@@ -79,9 +79,30 @@ final class ClientUsers
         }
     }
 
+    private static function isMigrationNeeded()
+    {
+        global $wpdb;
+
+        $clientsCount = (int)$wpdb->get_var('
+            SELECT COUNT(`ID`) AS qty
+            FROM `' . $wpdb->prefix . 'posts`
+            WHERE `post_type` = "client"'
+        );
+
+        if ($clientsCount === 0) {
+            return false;
+        }
+
+        return (string)get_option('upstream:attemptedToMigrateLegacyClientUsers') !== 'yes';
+    }
+
     public static function run()
     {
-        // @todo : check if we really need to prepare and run the migration.
+        // Check if we really need to run the migration.
+        if (!self::isMigrationNeeded()) {
+            return;
+        }
+
         self::prepareMigration();
 
         $db = &self::$db;
@@ -156,8 +177,6 @@ final class ClientUsers
                 'role'          => 'upstream_client_user'
             );
 
-            // @todo : save client user's phone
-
             $userId = wp_insert_user($userData);
             if (is_wp_error($userId)) {
                 if (!isset($clientUsersHavingErrors[$client_id])) {
@@ -170,6 +189,10 @@ final class ClientUsers
             }
 
             self::$newUsersMap[$rawClientUser['id']] = $userId;
+
+            if (isset($rawClientUser['phone']) && !empty($rawClientUser['phone'])) {
+                add_user_meta($userId, 'phone', trim($rawClientUser['phone']), false);
+            }
 
             $clientUserRoleCapabilities = array('publish_project_tasks', 'publish_project_bugs', 'publish_project_files', 'publish_project_discussion');
             if (isset($rawClientUser['capability'])) {
@@ -298,6 +321,8 @@ final class ClientUsers
                 }
             }
         }
+
+        update_option('upstream:attemptedToMigrateLegacyClientUsers', 'yes');
     }
 
     protected static function isUserUsernameUnique($username)
