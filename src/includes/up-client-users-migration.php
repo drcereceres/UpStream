@@ -171,7 +171,20 @@ final class ClientUsers
 
             self::$newUsersMap[$rawClientUser['id']] = $userId;
 
-            // @todo : migrate user custom capabilities
+            $clientUserRoleCapabilities = array('publish_project_tasks', 'publish_project_bugs', 'publish_project_files', 'publish_project_discussion');
+            if (isset($rawClientUser['capability'])) {
+                $notAllowedCapabilites = (array)array_diff($clientUserRoleCapabilities, $rawClientUser['capability']);
+            } else {
+                $notAllowedCapabilites = $clientUserRoleCapabilities;
+            }
+
+            if (isset($notAllowedCapabilites) && count($notAllowedCapabilites) > 0) {
+                $user = new \WP_User($userId);
+                foreach ($notAllowedCapabilites as $userCapability) {
+                    $user->add_cap($userCapability, false);
+                }
+                unset($user);
+            }
 
             // Convert the user id on projects metas.
             foreach (self::$clientUsersMap[$rawClientUser['id']]['projects'] as $projectId) {
