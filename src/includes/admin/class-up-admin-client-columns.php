@@ -30,8 +30,6 @@ class UpStream_Admin_Client_Columns {
         add_action( 'manage_client_posts_custom_column', array( $this, 'client_data' ), 10, 2 );
     }
 
-
-
     /**
      * Set columns for client
      */

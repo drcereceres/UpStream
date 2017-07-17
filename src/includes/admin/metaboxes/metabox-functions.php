@@ -641,21 +641,24 @@ function upstream_admin_get_project_statuses() {
  * For use in dropdowns.
  */
 function upstream_admin_get_all_project_users() {
-    $args = apply_filters( 'upstream_user_roles_for_projects', array(
+    $args = apply_filters('upstream_user_roles_for_projects', array(
         'role__in' => array(
             'upstream_manager',
             'upstream_user',
             'administrator'
-        ),
-    ) );
-    $users = get_users( $args );
-    //$array = array( '' => __( 'Not Assigned', 'upstream' ) );
-    if( $users ) {
-        foreach ($users as $user) {
-            $array[$user->ID] = $user->first_name . ' ' . $user->last_name;
+        )
+    ));
+
+    $users = array();
+
+    $systemUsers = get_users($args);
+    if (count($systemUsers) > 0) {
+        foreach ($systemUsers as $user) {
+            $users[(int)$user->ID] = $user->display_name;
         }
     }
-    return $array;
+
+    return $users;
 }
 
 /**

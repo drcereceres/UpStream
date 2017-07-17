@@ -1,6 +1,13 @@
 <?php
 if (!defined('ABSPATH')) exit;
 
+if (is_archive() && (empty($_SESSION) || empty($_SESSION['upstream']) || empty($_SESSION['upstream']['user_id'])) && !is_user_logged_in()) {
+    $homeURL = home_url();
+    $redirectTo = $homeURL . '/wp-login.php?redirect_to=' . urlencode($homeURL . '/projects');
+    wp_redirect($redirectTo);
+    exit;
+}
+
 $headerText = upstream_login_heading();
 
 $pluginOptions = get_option('upstream_general');
@@ -16,6 +23,8 @@ if ($shouldDisplayProjectName) {
 }
 
 $login = new UpStream_Login();
+
+$userEmail = !empty($_POST) && isset($_POST['user_email']) ? $_POST['user_email'] : "";
 ?>
 
 <?php upstream_get_template_part('global/header.php'); ?>
@@ -35,8 +44,8 @@ $login = new UpStream_Login();
         <?php do_action('upstream_login_before_form'); ?>
 
         <form class="loginform" action="" method="POST">
-            <input type="text" class="form-control" placeholder="<?php _e('Your Email', 'upstream'); ?>" name="user_email" required autofocus />
-            <input type="password" class="form-control" placeholder="<?php _e('Password', 'upstream'); ?>" name="user_password" required />
+            <input type="text" class="form-control" placeholder="<?php _e('Your Email', 'upstream'); ?>" name="user_email" required value="<?php echo $userEmail; ?>" <?php echo empty($userEmail) ? 'autofocus' : ''; ?> />
+            <input type="password" class="form-control" placeholder="<?php _e('Password', 'upstream'); ?>" name="user_password" required <?php echo !empty($userEmail) ? 'autofocus' : ''; ?> />
 
             <input type="hidden" name="upstream_login_nonce" value="<?php echo wp_create_nonce('upstream-login-nonce'); ?>" />
 

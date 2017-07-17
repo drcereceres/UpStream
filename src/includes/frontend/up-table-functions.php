@@ -526,14 +526,18 @@ function upstream_format_table_data( $item, $key, $setting ) {
     $output     = '';
 
     // type: name
-    if( $setting['type'] == 'name' && ! empty( $field_data ) ) {
-        $user = upstream_user_data( $field_data, true );
-        $output = $user['full_name'];
+    if ($setting['type'] === 'name') {
+        if (empty($field_data)) {
+            $output = '<i>' . __('none', 'upstream') . '</i>';
+        } else {
+            $user = upstream_user_data( $field_data, true );
+            $output = $user['display_name'];
+        }
     }
 
     // type: date
-    if( $setting['type'] == 'date' && ! empty( $field_data ) ) {
-        $output = upstream_format_date( $field_data );
+    if ($setting['type'] === 'date') {
+        $output = empty($field_data) ? '<i>' . __('none', 'upstream') . '</i>' : upstream_format_date($field_data);
     }
 
     // type: text
@@ -564,9 +568,13 @@ function upstream_format_table_data( $item, $key, $setting ) {
     }
 
     // type: id
-    if( $setting['type'] == 'id' && ! empty( $field_data ) ) {
-        $item = upstream_project_item_by_id( upstream_post_id(), $field_data );
-        $output = isset( $item['title'] ) ? $item['title'] :  $item['milestone'];
+    if( $setting['type'] === 'id'){// && ! empty( $field_data ) ) {
+        if (empty($field_data)) {
+            $output = '<i>' . __('none', 'upstream') . '</i>';
+        } else {
+            $item = upstream_project_item_by_id( upstream_post_id(), $field_data );
+            $output = isset( $item['title'] ) ? $item['title'] :  $item['milestone'];
+        }
     }
 
     // type: tasks
@@ -576,12 +584,14 @@ function upstream_format_table_data( $item, $key, $setting ) {
     }
 
     // type: file
-    if( $setting['type'] == 'file' && ! empty( $field_data ) ) {
-        $file_list = null;
-        if( isset( $item['file'] ) && isset( $item['file_id'] ) && $item['file'] != '' ) {
-            $file_list .= upstream_get_file_preview( $item['file_id'], $item['file'] );
+    if ($setting['type'] === 'file') {
+        if (empty($field_data)) {
+            $output = '<i>' . __('none', 'upstream') . '</i>';
+        } else {
+            if( isset( $item['file'] ) && isset( $item['file_id'] ) && $item['file'] != '' ) {
+                $output .= upstream_get_file_preview( $item['file_id'], $item['file'] );
+            }
         }
-        $output = $file_list;
     }
 
     // type: progress

@@ -36,12 +36,23 @@ class UpStream_Template_Loader {
         if ( is_single() ) {
             $file = 'single-project.php';
         }
-        if ( is_archive() ) {
+
+        if (is_archive()) {
             $file = 'archive-project.php';
         }
 
         if (isset($_GET['action']) && $_GET['action'] === 'logout' && !isset($_POST['login'])) {
             UpStream_Login::doDestroySession();
+
+            if (preg_match('/^\/projects/i', $_SERVER['REQUEST_URI'])) {
+                $homeURL = home_url();
+                $redirectTo = $homeURL . '/wp-login.php?redirect_to=' . urlencode($homeURL . '/projects');
+            } else {
+                $redirectTo = get_permalink();
+            }
+
+            wp_redirect($redirectTo);
+            exit;
         }
 
         /*

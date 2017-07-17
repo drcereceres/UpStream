@@ -37,10 +37,13 @@ function upstream_post_id() {
 
 // Url for logging out, depending on client or WP user
 function upstream_logout_url() {
-    if( is_user_logged_in() ) {
-        return wp_logout_url();
-    } else {
+    if (
+        (!empty($_SESSION) && isset($_SESSION['upstream']) && isset($_SESSION['upstream']['user_id'])) ||
+        (!is_user_logged_in())
+    ) {
         return '?action=logout';
+    } else {
+        return wp_logout_url() . '&redirect_to=' . urlencode(home_url() . '/projects');
     }
 }
 
@@ -154,7 +157,7 @@ function upstream_user_item( $id = 0, $item = null ) {
 }
 
 // get the user avatar with full name in tooltips
-function upstream_user_avatar( $user_id ) {
+function upstream_user_avatar( $user_id, $displayTooltip = true ) {
 
     if( ! $user_id )
         return;
@@ -163,7 +166,13 @@ function upstream_user_avatar( $user_id ) {
     $user_data  = upstream_user_data( $user_id, true );
     $url        = isset( $user_data[ 'avatar' ] ) ? $user_data[ 'avatar' ] : '';
 
-    $return = '<img class="avatar" src="' . esc_attr( $url ) . '" data-toggle="tooltip" data-placement="top" data-original-title="' . esc_attr( $user_data[ 'full_name' ] ) . '" />';
+    $userDisplayName = esc_attr($user_data['display_name']);
+
+    $return = sprintf('
+        <img class="avatar" src="%s" %s />',
+        esc_attr($url),
+        (bool)$displayTooltip ? sprintf('title="%s" data-toggle="tooltip" data-placement="top" data-original-title="%1$s"', $userDisplayName) : ''
+    );
 
     return apply_filters( 'upstream_user_avatar', $return );
 }
@@ -206,6 +215,7 @@ function upstream_user_data( $data = 0, $ignore_current = false ) {
             'lname'     => $wp_user->last_name,
             'full_name' => $wp_user->first_name . ' ' . $wp_user->last_name,
             'email'     => $wp_user->user_email,
+            'display_name' => $wp_user->display_name,
             'phone'     => '',
             'projects'  => upstream_get_users_projects( $wp_user->ID ),
             'role'      => $role,
@@ -277,18 +287,21 @@ function upstream_user_data( $data = 0, $ignore_current = false ) {
             // get the matching user
             if( in_array( $data, array( $user['id'], $user['email'] ) ) ) {
 
-                $fname = isset( $user['fname'] ) ? $user['fname'] : '';
-                $lname = isset( $user['lname'] ) ? $user['lname'] : '';
+                $fname = isset( $user['fname'] ) ? trim($user['fname']) : '';
+                $lname = isset( $user['lname'] ) ? trim($user['lname']) : '';
                 $user_data = array(
                     'id'        => $user['id'],
                     'fname'     => $fname,
                     'lname'     => $lname,
-                    'full_name' => $fname . ' ' . $lname,
+                    'full_name' => trim($fname . ' ' . $lname),
                     'email'     => isset( $user['email'] ) ? $user['email'] : '',
                     'phone'     => isset( $user['phone'] ) ? $user['phone'] : '',
                     'projects'  => upstream_get_users_projects( $user['id'] ),
                     'role'      => __( 'Client User', 'upstream' ),
                 );
+
+                $displayName = !empty($user_data['full_name']) ? $user_data['full_name'] : $user_data['email'];
+                $user_data['display_name'] = $displayName;
 
                 if ($isBuddyPressRunning) {
                     $user_data['avatar'] = bp_core_fetch_avatar(array(
