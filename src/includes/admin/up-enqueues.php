@@ -28,7 +28,7 @@ function upstream_load_admin_scripts( $hook ) {
 
     if ($post_type === 'client') {
         // @todo : Remove the mt_rand function.
-        wp_enqueue_script('up-metabox-client', $js_dir . 'metabox-client.js', array('jquery'), UPSTREAM_VERSION . mt_rand(1, 999999), false);
+        wp_enqueue_script('up-metabox-client', $js_dir . 'metabox-client.js', array('jquery'), UPSTREAM_VERSION . mt_rand(1, 999999), true);
         wp_localize_script('up-metabox-client', 'upstreamMetaboxClientLangStrings', array(
             'ERR_JQUERY_NOT_FOUND'    => __('UpStream requires jQuery.', 'upstream'),
             'MSG_NO_ASSIGNED_USERS'   => __("There's no users assigned yet.", 'upstream'),
