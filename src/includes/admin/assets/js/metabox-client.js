@@ -321,9 +321,14 @@
 
       $('.error-wrapper', wrapper).remove();
       $('input', wrapper).removeClass('has-error').val('');
-      $('#migrate-user-fname', wrapper).val($('td[data-column="fname"]', tr).text());
-      $('#migrate-user-lname', wrapper).val($('td[data-column="lname"]', tr).text());
-      $('#migrate-user-email', wrapper).val($('td[data-column="email"]', tr).text());
+
+      var firstName = $('td[data-column="fname"]', tr).text().trim();
+      var lastName = $('td[data-column="lname"]', tr).text().trim();
+      var email = $('td[data-column="email"]', tr).text().trim();
+
+      $('#migrate-user-fname', wrapper).val(firstName.length > 0 && firstName !== "empty" ? firstName : '');
+      $('#migrate-user-lname', wrapper).val(lastName.length > 0 && lastName !== "empty" ? lastName : '');
+      $('#migrate-user-email', wrapper).val(email.length > 0 && email !== "empty" ? email : '');
       $('button[type="submit"]', wrapper).attr('data-id', tr.attr('data-id'));
     });
 
