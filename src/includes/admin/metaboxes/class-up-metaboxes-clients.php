@@ -309,6 +309,10 @@ class UpStream_Metaboxes_Clients
                     <?php endif; ?>
                 </tbody>
             </table>
+
+            <p>
+                <span class="dashicons dashicons-info"></span> <?php echo __('By removing a user it only means that he will no longer be associated with this client. He will not deleted.', 'upstream'); ?>
+            </p>
         </div>
 
         <?php
