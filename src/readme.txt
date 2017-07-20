@@ -123,7 +123,7 @@ UpStream does not use the existing styling of your theme. The features and the v
 The format is based on [Keep a Changelog](http://keepachangelog.com)
 and this project adheres to [Semantic Versioning](http://semver.org).
 
-= [1.10.4] - @todo =
+= [1.10.4] - 2017-07-20 =
 
 Changed:
 * Clearer Project timeframe date-strings
