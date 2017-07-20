@@ -199,7 +199,7 @@ class UpStream_Metaboxes_Clients
                         <?php endforeach; ?>
                         <?php else: ?>
                         <tr>
-                            <td colspan="4"><?php echo __('All users seems to be assigned to this client.', 'upstream'); ?></td>
+                            <td colspan="4"><?php echo __('No users found.', 'upstream'); ?></td>
                         </tr>
                         <?php endif; ?>
                     </tbody>
