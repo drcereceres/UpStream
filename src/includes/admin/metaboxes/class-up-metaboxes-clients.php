@@ -396,6 +396,9 @@ class UpStream_Metaboxes_Clients
                     case 'ERR_EMPTY_EMAIL':
                         $errorMessage = __("Email addresses cannot be empty.", 'upstream');
                         break;
+                    case 'ERR_INVALID_EMAIL':
+                        $errorMessage = __("Invalid email address.", 'upstream');
+                        break;
                     default:
                         $errorMessage = $legacyUserError;
                         break;
@@ -501,12 +504,12 @@ class UpStream_Metaboxes_Clients
             }
 
             if (empty($_POST) || !isset($_POST['client'])) {
-                throw new \Exception("@todo");
+                throw new \Exception(__('Invalid request.', 'upstream'));
             }
 
             $clientId = (int)$_POST['client'];
             if ($clientId <= 0) {
-                throw new \Exception("@todo");
+                throw new \Exception(__('Invalid Client ID.', 'upstream'));
             }
 
             $data = array(
@@ -515,7 +518,7 @@ class UpStream_Metaboxes_Clients
                 'password'     => @$_POST['password'],
                 'first_name'   => trim(@$_POST['first_name']),
                 'last_name'    => trim(@$_POST['last_name']),
-                'notification' => isset($_POST['notification']) ? (bool)$_POST['notification'] : false // @todo: should be true?
+                'notification' => isset($_POST['notification']) ? (bool)$_POST['notification'] : true
             );
 
             // Validate `password` field.
@@ -630,17 +633,17 @@ class UpStream_Metaboxes_Clients
             }
 
             if (empty($_POST) || !isset($_POST['client'])) {
-                throw new \Exception("@todo");
+                throw new \Exception(__('Invalid request.', 'upstream'));
             }
 
             $clientId = (int)$_POST['client'];
             if ($clientId <= 0) {
-                throw new \Exception("@todo");
+                throw new \Exception(__('Invalid Client ID.', 'upstream'));
             }
 
             $userId = (int)@$_POST['user'];
             if ($userId <= 0) {
-                throw new \Exception("@todo");
+                throw new \Exception(__('Invalid User ID.', 'upstream'));
             }
 
             $clientUsersMetaKey = '_upstream_new_client_users';
@@ -684,12 +687,12 @@ class UpStream_Metaboxes_Clients
             }
 
             if (empty($_GET) || !isset($_GET['client'])) {
-                throw new \Exception("@todo");
+                throw new \Exception(__('Invalid request.', 'upstream'));
             }
 
             $clientId = (int)$_GET['client'];
             if ($clientId <= 0) {
-                throw new \Exception("@todo");
+                throw new \Exception(__('Invalid Client ID.', 'upstream'));
             }
 
             $clientUsers = self::getUsersFromClient($clientId);
@@ -745,16 +748,16 @@ class UpStream_Metaboxes_Clients
             }
 
             if (empty($_POST) || !isset($_POST['client'])) {
-                throw new \Exception("@todo");
+                throw new \Exception(__('Invalid request.', 'upstream'));
             }
 
             $clientId = (int)$_POST['client'];
             if ($clientId <= 0) {
-                throw new \Exception("@todo");
+                throw new \Exception(__('Invalid Client ID.', 'upstream'));
             }
 
             if (!isset($_POST['users']) && empty($_POST['users'])) {
-                throw new \Exception("@todo");
+                throw new \Exception(__('Users IDs cannot be empty.', 'upstream'));
             }
 
             $currentUser = get_userdata(get_current_user_id());
