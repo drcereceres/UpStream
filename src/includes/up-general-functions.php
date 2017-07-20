@@ -831,7 +831,9 @@ function applyOEmbedFiltersToWysiwygEditorContent($content, $field_args, $field)
 function upstream_convert_UTC_date_to_timezone($subject)
 {
     try {
-        $instanceTimezone = new DateTimeZone(get_option('timezone_string'));
+        $timezone = get_option('timezone_string');
+        $timezone = !empty($timezone) ? $timezone : 'UTC';
+        $instanceTimezone = new DateTimeZone($timezone);
         $dateFormat = get_option('date_format') . ' ' . get_option('time_format');
 
         if (is_numeric($subject)) {
