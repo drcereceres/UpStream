@@ -340,6 +340,8 @@ final class ClientUsers
             }
         }
 
+        $db->delete($db->prefix . 'postmeta', array('meta_key' => '_upstream_client_password'));
+
         update_option('upstream:attemptedToMigrateLegacyClientUsers', 'yes');
     }
 
