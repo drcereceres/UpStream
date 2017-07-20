@@ -896,3 +896,8 @@ a.up-u-color-red:focus {
 #delete-action a.submitdelete.deletion.disabled {
   color: #95A5A6;
 }
+
+.up-list-disc {
+  padding-left: 15px;
+  list-style-type: disc;
+}

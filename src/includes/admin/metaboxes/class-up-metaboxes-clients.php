@@ -60,6 +60,7 @@ class UpStream_Metaboxes_Clients
 
         $namespace = get_class(self::$instance);
 
+        add_action('add_meta_boxes', array($namespace, 'createDisclaimerMetabox'));
         add_action('add_meta_boxes', array($namespace, 'createUsersMetabox'));
         add_action('add_meta_boxes', array($namespace, 'createLegacyUsersMetabox'));
     }
@@ -215,8 +216,7 @@ class UpStream_Metaboxes_Clients
         $client_id = get_the_id();
         $unassignedUsers = self::getUnassignedUsersFromClient($client_id);
         ?>
-        <p>@todo: if migrated, his password will be his email</p>
-        <p>@todo: all fields are required</p>
+
         <div id="modal-migrate-user" style="display: none;">
             <div id="form-migrate-user">
                 <div>
@@ -316,6 +316,33 @@ class UpStream_Metaboxes_Clients
         self::renderAddExistentUserModal();
     }
 
+    public static function createDisclaimerMetabox()
+    {
+        add_meta_box(
+            self::$prefix . 'warnings',
+            '<span class="dashicons dashicons-warning"></span>' . __("UpStream's Disclaimer", 'upstream'),
+            array(get_class(self::$instance), 'renderDisclaimerMetabox'),
+            self::$postType,
+            'normal'
+        );
+    }
+
+    public static function renderDisclaimerMetabox()
+    {
+        ?>
+        <div class="upstream-row">
+            <p><?php echo __("<code>UpStream Client Users</code> are now <code>WordPress Users</code> as well, meaning they will be able to log in using their own password instead of client's, and manage their very own profile.", 'upstream'); ?></p>
+
+            <ul class="up-list-disc">
+                <li><?php echo __('UpStream attempted to convert them automatically when the plugin was updated.', 'upstream'); ?></li>
+                <li><?php echo __('Client Users that <strong>could not</strong> be automatically converted for some reason will be listed on the <code>Legacy Users</code> metabox on this page. They can be manually either converted/migrated or discarded.', 'upstream'); ?></li>
+                <li><?php echo __("Client Users that were <strong>successfully</strong> converted <u>will have the same permissions they have before</u> and <u>their email address set as their new password</u> by default. It's highly advisable that they change their password after that.", 'upstream'); ?></li>
+                <li><?php echo __('Client passwords are no longer used.', 'upstream'); ?></li>
+            </ul>
+        </div>
+        <?php
+    }
+
     public static function createUsersMetabox()
     {
         add_meta_box(
@@ -360,7 +387,7 @@ class UpStream_Metaboxes_Clients
         unset($legacyUsersMeta);
         ?>
         <div class="upstream-row">
-            <span class="dashicons dashicons-editor-help"></span> @todo: info about what's going on here
+            <p><?php echo __('The users listed below are those old <code>UpStream Client Users</code> that could not be automatically converted/migrated to <code>WordPress Users</code> by UpStream for some reason. More details on the Disclaimer metabox.', 'upstream'); ?></p>
         </div>
         <div class="upstream-row">
             <table id="table-legacy-users" class="wp-list-table widefat fixed striped posts upstream-table">
@@ -418,6 +445,7 @@ class UpStream_Metaboxes_Clients
                 <?php endforeach; ?>
                 </tbody>
             </table>
+
             <?php self::renderMigrateUserModal(); ?>
         </div>
         <?php
