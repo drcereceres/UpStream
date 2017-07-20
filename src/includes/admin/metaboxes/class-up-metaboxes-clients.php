@@ -339,8 +339,9 @@ class UpStream_Metaboxes_Clients
     {
         $client_id = upstream_post_id();
 
-        $legacyUsersErrors = get_post_meta($client_id, '_upstream_client_legacy_users_errors');
-        if (count($legacyUsersErrors) === 0) {
+        $legacyUsersErrors = (array)get_post_meta($client_id, '_upstream_client_legacy_users_errors');
+        if (count($legacyUsersErrors) === 0 || empty($legacyUsersErrors[0])) {
+            delete_post_meta($client_id, '_upstream_client_legacy_users_errors');
             return;
         }
 
