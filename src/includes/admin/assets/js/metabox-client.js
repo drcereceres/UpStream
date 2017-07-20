@@ -151,7 +151,7 @@
                 tr.append('<td>'+ user.email +'</td>');
                 tr.append('<td class="text-center">'+ user.assigned_at +'</td>');
                 tr.append('<td>'+ user.assigned_by +'</td>');
-                tr.append('<td class="text-center"><a href="#" data-remove-user><span class="dashicons dashicons-trash"></span></a></td>');
+                tr.append('<td class="text-center"><a href="#" data-remove-user class="up-u-color-red"><span class="dashicons dashicons-trash"></span></a></td>');
 
                 $('tbody', table).append(tr);
               }
