@@ -58,12 +58,28 @@ $projects = isset($user['projects']) && !empty($user['projects']) ? $user['proje
                                 </tr>
                             </thead>
                             <tbody>
-                                <?php foreach ($projects as $key => $id): ?>
+                                <?php foreach ($projects as $key => $id):
+                                $startDate = (string) upstream_format_date(upstream_project_start_date($id));
+                                $endDate = (string) upstream_format_date(upstream_project_end_date($id));
+
+                                $timeframe = $startDate;
+                                if (!empty($endDate)) {
+                                    if (!empty($timeframe)) {
+                                        $timeframe .= ' - ';
+                                    } else {
+                                        $timeframe = '<i>Ends at</i> ';
+                                    }
+
+                                    $timeframe .= $endDate;
+                                }
+                                ?>
                                 <tr>
                                     <td>
                                         <a href="<?php echo esc_url( get_the_permalink( $id ) ); ?>"><?php esc_html_e( get_the_title( $id ) ); ?></a>
+                                        <?php if (!empty($timeframe)): ?>
                                         <br />
-                                        <small><?php echo upstream_format_date( upstream_project_start_date( $id ) ); ?> - <?php echo upstream_format_date( upstream_project_end_date( $id ) ); ?></small>
+                                        <small><?php echo $timeframe; ?></small>
+                                        <?php endif; ?>
                                     </td>
                                     <td>
                                         <?php esc_html_e( upstream_project_client_name( $id ) ); ?>
