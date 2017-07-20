@@ -79,3 +79,41 @@ function upstream_update_client_meta_values( $post_id, $post, $update ) {
 
 }
 add_action( 'save_post', 'upstream_update_client_meta_values', 99999, 3 );
+
+// @todo
+function upstream_get_client_users($client_id)
+{
+    $client_id = (int)$client_id;
+    if ($client_id <= 0) {
+        return false;
+    }
+
+    $clientUsersList = (array)get_post_meta($client_id, '_upstream_new_client_users');
+    if (empty($clientUsersList) || empty($clientUsersList[0])) {
+        return array();
+    }
+
+    $usersIdsList = array();
+    foreach ($clientUsersList[0] as $clientUser) {
+        array_push($usersIdsList, $clientUser['user_id']);
+    }
+
+    global $wpdb;
+    $rowset = $wpdb->get_results(sprintf('
+        SELECT `ID`, `display_name`
+        FROM `%s`
+        WHERE `ID` IN ("%s")',
+        $wpdb->prefix . 'users',
+        implode('", "', $usersIdsList)
+    ));
+
+    $usersList = array();
+    foreach ($rowset as $row) {
+        $usersList[(int)$row->ID] = array(
+            'id'   => (int)$row->ID,
+            'name' => $row->display_name
+        );
+    }
+
+    return $usersList;
+}
