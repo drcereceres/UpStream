@@ -386,7 +386,9 @@ class UpStream_Metaboxes_Clients
                     case 'ERR_EMAIL_NOT_AVAILABLE':
                         $errorMessage = __("This email address is already being used by another user.", 'upstream');
                         break;
-
+                    case 'ERR_EMPTY_EMAIL':
+                        $errorMessage = __("Email addresses cannot be empty.", 'upstream');
+                        break;
                     default:
                         $errorMessage = $legacyUserError;
                         break;
