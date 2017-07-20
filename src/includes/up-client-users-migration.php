@@ -40,7 +40,7 @@ final class ClientUsers
         $rowset = $db->get_results('
             SELECT `post_id`, `meta_key`, `meta_value`
             FROM `'. $db->prefix .'postmeta`
-            WHERE `meta_key` IN ("_upstream_project_activity", "_upstream_project_discussion", "_upstream_project_members", "_upstream_project_milestones", "_upstream_project_tasks", "_upstream_project_bugs", "_upstream_project_files")'
+            WHERE `meta_key` IN ("_upstream_project_activity", "_upstream_project_discussion", "_upstream_project_members", "_upstream_project_milestones", "_upstream_project_tasks", "_upstream_project_bugs", "_upstream_project_files", "_upstream_project_client_users")'
         );
 
         if (count($rowset) > 0) {
@@ -56,6 +56,7 @@ final class ClientUsers
                         'tasks'      => array(),
                         'bugs'       => array(),
                         'files'      => array(),
+                        'client_users' => array(),
                         'has_changed' => false
                     );
                 }
@@ -64,7 +65,7 @@ final class ClientUsers
 
                 self::$projects[$project_id][$metaKeyType] = maybe_unserialize($row->meta_value);
 
-                if ($metaKeyType === 'members') {
+                if ($metaKeyType === 'members' || $metaKeyType === 'client_users') {
                     foreach (self::$projects[$project_id][$metaKeyType] as $memberIndex => $memberId) {
                         $memberId = (string)$memberId;
 
@@ -112,6 +113,8 @@ final class ClientUsers
         }
 
         $clientUsersHavingErrors = array();
+        $clientUsersMetaKey = '_upstream_new_client_users';
+        $currentUser = get_userdata(get_current_user_id());
 
         foreach (self::$clientUsersMap as $rawClientUser) {
             $rawClientUser = (array)$rawClientUser;
@@ -209,6 +212,14 @@ final class ClientUsers
                 unset($user);
             }
 
+            $clientUsersList = (array)get_post_meta($client_id, $clientUsersMetaKey, true);
+            array_push($clientUsersList, array(
+                'user_id'     => $userId,
+                'assigned_by' => $currentUser->ID,
+                'assigned_at' => date('Y-m-d H:i:s', time())
+            ));
+            update_post_meta($client_id, $clientUsersMetaKey, $clientUsersList);
+
             // Convert the user id on projects metas.
             foreach (self::$clientUsersMap[$rawClientUser['id']]['projects'] as $projectId) {
                 $project = self::$projects[$projectId];
@@ -224,6 +235,13 @@ final class ClientUsers
                                 $project[$itemType][$projectItemIndex] = $projectItem;
                             }
                         }
+                    }
+                }
+
+                if (!empty($project['client_users'])) {
+                    $legacyIdIndex = array_search($rawClientUser['id'], $project['client_users']);
+                    if ($legacyIdIndex !== false) {
+                        $project['client_users'][$legacyIdIndex] = $userId;
                     }
                 }
 
@@ -249,7 +267,7 @@ final class ClientUsers
 
         foreach (self::$projects as $project) {
             if ($project['has_changed']) {
-                foreach (array('members', 'milestones', 'tasks', 'bugs', 'files', 'discussion') as $itemType) {
+                foreach (array('members', 'milestones', 'tasks', 'bugs', 'files', 'discussion', 'client_users') as $itemType) {
                     update_post_meta($project['id'], '_upstream_project_' . $itemType, $project[$itemType]);
                 }
 
