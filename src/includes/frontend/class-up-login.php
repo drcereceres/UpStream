@@ -144,28 +144,6 @@ final class UpStream_Login
     }
 
     /**
-     * Method reponsible for verifying if a given password is valid for a given project.
-     *
-     * @since   1.9.0
-     * @access  private
-     *
-     * @param   string  $subject        The raw password to be tested.
-     * @param   int     $project_id     The project id to be used.
-     *
-     * @return  bool
-     */
-    private function verifyProjectPassword($subject, $project_id)
-    {
-        if (strlen((string)$subject) < 5 || (int)$project_id <= 0) {
-            return false;
-        }
-
-        $passwordHash = get_post_meta($project_id, '_upstream_client_password', true);
-
-        return password_verify($subject, $passwordHash);
-    }
-
-    /**
      * Attempt to authenticate a user against the open project given current email address and password.
      *
      * @since   1.9.0
