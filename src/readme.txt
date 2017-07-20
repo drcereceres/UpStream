@@ -125,7 +125,14 @@ and this project adheres to [Semantic Versioning](http://semver.org).
 
 = [1.10.4] - @todo =
 
-@todo
+Changed:
+* Clearer Project timeframe date-strings
+
+Fixed:
+* Fixed bug that was causing items to lose their dates if edited on localized sites
+* Empty columns on frontend tables now receive "none"
+* Some code redundancies
+* Some columns on frontend tables are no longer orderable
 
 = [1.10.3] - 2017-07-12 =
 
