@@ -48,7 +48,6 @@ $projects = isset($user['projects']) && !empty($user['projects']) ? $user['proje
                         <table class="table table-striped projects">
                             <thead>
                                 <tr>
-                                    <th style="width: 1%">#</th>
                                     <th style="width: 18%"><?php esc_html_e( upstream_project_label() ); ?></th>
                                     <th style="width: 10%"><?php esc_html_e( upstream_client_label() ); ?></th>
                                     <th><?php esc_html_e( sprintf( __( '%s Users', 'upstream' ), upstream_client_label() ) ); ?></th>
@@ -61,9 +60,6 @@ $projects = isset($user['projects']) && !empty($user['projects']) ? $user['proje
                             <tbody>
                                 <?php foreach ($projects as $key => $id): ?>
                                 <tr>
-                                    <td>
-                                        <?php esc_html_e( $id ); ?>
-                                    </td>
                                     <td>
                                         <a href="<?php echo esc_url( get_the_permalink( $id ) ); ?>"><?php esc_html_e( get_the_title( $id ) ); ?></a>
                                         <br />
