@@ -111,11 +111,6 @@ class UpStream_Metaboxes_Clients
         return $clientUsersList;
     }
 
-    private static function getUnassignedUsersFromClient($client_id)
-    {
-        // @todo
-    }
-
     private static function renderAddNewUserModal()
     {
         ?>
@@ -167,8 +162,6 @@ class UpStream_Metaboxes_Clients
 
     private static function renderAddExistentUserModal()
     {
-        $client_id = get_the_id();
-        $unassignedUsers = self::getUnassignedUsersFromClient($client_id);
         ?>
         <div id="modal-add-existent-user" style="display: none;">
             <div class="upstream-row">
@@ -187,22 +180,9 @@ class UpStream_Metaboxes_Clients
                         </tr>
                     </thead>
                     <tbody>
-                        <?php if (count($unassignedUsers) > 0): ?>
-                        <?php foreach ($unassignedUsers as $user): ?>
-                            <tr data-id="<?php echo $user->id; ?>">
-                                <td class="text-center">
-                                    <input type="checkbox" value="1" />
-                                </td>
-                                <td><?php echo $user->name; ?></td>
-                                <td><?php echo $user->username; ?></td>
-                                <td><?php echo $user->email; ?></td>
-                            </tr>
-                        <?php endforeach; ?>
-                        <?php else: ?>
                         <tr>
                             <td colspan="4"><?php echo __('No users found.', 'upstream'); ?></td>
                         </tr>
-                        <?php endif; ?>
                     </tbody>
                 </table>
             </div>
@@ -213,10 +193,7 @@ class UpStream_Metaboxes_Clients
 
     private static function renderMigrateUserModal()
     {
-        $client_id = get_the_id();
-        $unassignedUsers = self::getUnassignedUsersFromClient($client_id);
         ?>
-
         <div id="modal-migrate-user" style="display: none;">
             <div id="form-migrate-user">
                 <div>
