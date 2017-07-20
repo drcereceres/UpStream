@@ -1,27 +1,47 @@
-var tableSetup = {
-    //fixedHeader: true,
-    dom: "Bfrtip",
-    buttons: [
-        {
-            extend: "copy",
-            className: "btn-sm"
-        },
-        {
-            extend: "csv",
-            className: "btn-sm"
-        },
-    ],
-    responsive: true
-}
+(function($) {
+    function getTableDefaultOptions() {
+        return {
+            dom: "Bfrtip",
+            buttons: [
+                {
+                    extend: "copy",
+                    className: "btn-sm"
+                },
+                {
+                    extend: "csv",
+                    className: "btn-sm"
+                },
+            ],
+            responsive: true,
+            paging: false,
+            info: false,
+            columnDefs: [
+                {
+                    orderable: false,
+                    searchable: false
+                }
+            ]
+        };
+    }
 
-var tableMilestones = jQuery('#milestones').DataTable( tableSetup );
-var tableTasks      = jQuery('#tasks').DataTable( tableSetup );
-var tableBugs       = jQuery('#bugs').DataTable( tableSetup );
-var tableFiles      = jQuery('#files').DataTable( tableSetup );
+    var milestonesTableOptions = getTableDefaultOptions();
+    milestonesTableOptions.columnDefs[0].targets = [7];
+    $('#milestones').DataTable(milestonesTableOptions);
 
-var tableMyTasks = jQuery('#my-tasks').DataTable(tableSetup);
-var tableMyBugs = jQuery('#my-bugs').DataTable(tableSetup);
+    var tasksTableOptions = getTableDefaultOptions();
+    tasksTableOptions.columnDefs[0].targets = [8];
+    $('#tasks').DataTable(tasksTableOptions);
+    $('#my-tasks').DataTable(tasksTableOptions);
 
+    var bugsTableOptions = getTableDefaultOptions();
+    bugsTableOptions.columnDefs[0].targets = [6, 7];
+    $('#bugs').DataTable(bugsTableOptions);
+    $('#my-bugs').DataTable(bugsTableOptions);
+
+    var filesTableOptions = getTableDefaultOptions();
+    filesTableOptions.columnDefs[0].targets = [2, 3];
+    $('#files').DataTable(filesTableOptions);
+})(jQuery);
 
 /**
  * Resize function without multiple trigger
