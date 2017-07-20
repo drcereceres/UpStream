@@ -367,7 +367,6 @@ class UpStream_Metaboxes_Clients
             return;
         }
 
-        // @todo check if client has errors
         add_meta_box(
             self::$prefix . 'legacy_users',
             '<span class="dashicons dashicons-groups"></span>' . __("Legacy Users", 'upstream'),
@@ -477,7 +476,6 @@ class UpStream_Metaboxes_Clients
             'type' => 'text_url'
         ));
 
-        // @todo: may we should use tinymce?
         $addressField = $metabox->add_field(array(
             'name' => __('Address', 'upstream'),
             'id'   => self::$prefix . 'address',
@@ -595,7 +593,7 @@ class UpStream_Metaboxes_Clients
                 'nickname'      => $userDataUsername,
                 'first_name'    => $data['first_name'],
                 'last_name'     => $data['last_name'],
-                'role'          => 'upstream_client_user' // @todo : script to create the role when updating UpStream?
+                'role'          => 'upstream_client_user'
             );
 
             $userDataId = wp_insert_user($userData);
