@@ -506,10 +506,6 @@ function upstream_output_table_rows( $id, $table, $filterRowsetByCurrentUser = f
                 }
             }
 
-            if ($setting['type'] === 'date' && !empty($data_value)) {
-                $data_value = upstream_format_date($data_value);
-            }
-
             if ($table === 'files') {
                 if (in_array($key, array('title', 'description')) && empty($data_value)) {
                     $field_data = '<i>' . __('none', 'upstream') . '</i>';
