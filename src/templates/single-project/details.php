@@ -13,7 +13,7 @@ if (!empty($endDate)) {
     if (!empty($timeframe)) {
         $timeframe .= ' - ';
     } else {
-        $timeframe = '<i>Ends at</i> ';
+        $timeframe = '<i>' . __('Ends at', 'upstream') . '</i> ';
     }
 
     $timeframe .= $endDate;

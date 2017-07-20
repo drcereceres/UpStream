@@ -67,7 +67,7 @@ $projects = isset($user['projects']) && !empty($user['projects']) ? $user['proje
                                     if (!empty($timeframe)) {
                                         $timeframe .= ' - ';
                                     } else {
-                                        $timeframe = '<i>Ends at</i> ';
+                                        $timeframe = '<i>' . __('Ends at', 'upstream') . '</i> ';
                                     }
 
                                     $timeframe .= $endDate;
