@@ -495,7 +495,6 @@ class UpStream_Metaboxes_Clients
         ));
 
         $logoField = $metabox->add_field(array(
-            'name' => __('Logo', 'upstream'),
             'id'   => self::$prefix . 'logo',
             'type' => 'file'
         ));
