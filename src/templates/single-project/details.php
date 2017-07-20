@@ -2,7 +2,23 @@
 
 if ( ! defined( 'ABSPATH' ) ) {
     exit; // Exit if accessed directly
-} ?>
+}
+
+$project_id = upstream_post_id();
+$startDate = (string) upstream_format_date(upstream_project_start_date($project_id));
+$endDate = (string) upstream_format_date(upstream_project_end_date($project_id));
+
+$timeframe = $startDate;
+if (!empty($endDate)) {
+    if (!empty($timeframe)) {
+        $timeframe .= ' - ';
+    } else {
+        $timeframe = '<i>Ends at</i> ';
+    }
+
+    $timeframe .= $endDate;
+}
+?>
 
 
     <div class="col-md-3 col-sm-3 col-xs-12 details-panel">
@@ -26,10 +42,8 @@ if ( ! defined( 'ABSPATH' ) ) {
                         <div class="progress-bar bg-green" role="progressbar" data-transitiongoal="<?php echo upstream_project_progress(); ?>"></div>
                     </div>
 
-                    <?php if ( upstream_project_start_date() || upstream_project_end_date() ) { ?>
-                        <p class="title"><?php _e( 'Timeframe', 'upstream' ); ?></p>
-                        <p><?php echo upstream_format_date( upstream_project_start_date() ); ?> - <?php echo upstream_format_date( upstream_project_end_date() ); ?></p>
-                    <?php } ?>
+                    <p class="title"><?php _e( 'Timeframe', 'upstream' ); ?></p>
+                    <p><?php echo (!empty($timeframe) ? $timeframe : '<i>' . __('none', 'upstream') . '</i>'); ?></p>
 
                     <?php if ( upstream_project_client_name() ) { ?>
                         <p class="title"><?php echo upstream_client_label(); ?></p>
