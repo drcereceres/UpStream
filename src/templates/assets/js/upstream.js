@@ -1,47 +1,45 @@
-(function($) {
-    function getTableDefaultOptions() {
-        return {
-            dom: "Bfrtip",
-            buttons: [
-                {
-                    extend: "copy",
-                    className: "btn-sm"
-                },
-                {
-                    extend: "csv",
-                    className: "btn-sm"
-                },
-            ],
-            responsive: true,
-            paging: false,
-            info: false,
-            columnDefs: [
-                {
-                    orderable: false,
-                    searchable: false
-                }
-            ]
-        };
-    }
+function getTableDefaultOptions() {
+    return {
+        dom: "Bfrtip",
+        buttons: [
+            {
+                extend: "copy",
+                className: "btn-sm"
+            },
+            {
+                extend: "csv",
+                className: "btn-sm"
+            },
+        ],
+        responsive: true,
+        paging: false,
+        info: false,
+        columnDefs: [
+            {
+                orderable: false,
+                searchable: false
+            }
+        ]
+    };
+}
 
-    var milestonesTableOptions = getTableDefaultOptions();
-    milestonesTableOptions.columnDefs[0].targets = [7];
-    $('#milestones').DataTable(milestonesTableOptions);
+var milestonesTableOptions = getTableDefaultOptions();
+milestonesTableOptions.columnDefs[0].targets = [7];
+var tableMilestones = jQuery('#milestones').DataTable(milestonesTableOptions);
 
-    var tasksTableOptions = getTableDefaultOptions();
-    tasksTableOptions.columnDefs[0].targets = [8];
-    $('#tasks').DataTable(tasksTableOptions);
-    $('#my-tasks').DataTable(tasksTableOptions);
+var tasksTableOptions = getTableDefaultOptions();
+tasksTableOptions.columnDefs[0].targets = [8];
+var tableTasks = jQuery('#tasks').DataTable(tasksTableOptions);
+var tableMyTasks = jQuery('#my-tasks').DataTable(tasksTableOptions);
 
-    var bugsTableOptions = getTableDefaultOptions();
-    bugsTableOptions.columnDefs[0].targets = [6, 7];
-    $('#bugs').DataTable(bugsTableOptions);
-    $('#my-bugs').DataTable(bugsTableOptions);
+var bugsTableOptions = getTableDefaultOptions();
+bugsTableOptions.columnDefs[0].targets = [6, 7];
+var tableBugs = jQuery('#bugs').DataTable(bugsTableOptions);
+var tableMyBugs = jQuery('#my-bugs').DataTable(bugsTableOptions);
 
-    var filesTableOptions = getTableDefaultOptions();
-    filesTableOptions.columnDefs[0].targets = [2, 3];
-    $('#files').DataTable(filesTableOptions);
-})(jQuery);
+var filesTableOptions = getTableDefaultOptions();
+filesTableOptions.columnDefs[0].targets = [2, 3];
+var tableFiles = jQuery('#files').DataTable(filesTableOptions);
 
 /**
  * Resize function without multiple trigger
