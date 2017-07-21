@@ -383,8 +383,6 @@
             self.attr('disabled', 'disabled');
           },
           success   : function(response, textStatus, jqXHR) {
-            console.log(response);
-
             if (!response.success) {
               wrapper.prepend($('<div class="error-wrapper notice notice-error"><p>' + response.err + '</p>'));
             } else {
@@ -475,6 +473,73 @@
           }
         });
       }
+    });
+
+    $('#table-users').on('click', 'tr[data-id] > td:first-child a', function(e) {
+      var self = $(this);
+      var wrapper = $('#form-user-permissions');
+      var table = $('table', wrapper);
+      var submitButton = $('button[type="submit"]', wrapper);
+
+      $('thead input[type="checkbox"]', table).prop('checked', false);
+
+      table.on('click', 'thead > tr:first-child > th:first-child input[type="checkbox"]', function() {
+        var self = $(this);
+        var shouldCheckAll = self.is(':checked');
+
+        $('tbody input[name="permissions[]"]', table).prop('checked', shouldCheckAll);
+      });
+
+      $.ajax({
+        type: 'GET',
+        url : ajaxurl,
+        data: {
+          action: 'upstream:client.fetch_user_permissions',
+          client: $('#post_ID').val(),
+          user  : self.parents('tr[data-id]').attr('data-id'),
+        },
+        beforeSend: function(jqXHR, settings) {
+          $('tbody', table).html('<tr><td colspan="2">'+ l['MSG_FETCHING_DATA'] +'</td></tr>');
+          submitButton.attr('disabled', 'disabled');
+        },
+        success   : function(response, textStatus, jqXHR) {
+          $('tbody', table).html('');
+
+          if (!response.success) {
+            console.error(response.err);
+          } else {
+            if (!response.data.length) {
+              $('tbody', table).append($('<tr><td colspan="2">'+ l['MSG_NO_DATA_FOUND'] +'</td></tr>'));
+            } else {
+              for (var permissionIndex = 0; permissionIndex < response.data.length; permissionIndex++) {
+                var permission = response.data[permissionIndex];
+
+                var tr = $('<tr></tr>');
+                tr.append($(
+                  '<td>'+
+                    '<input type="checkbox" id="'+ permission.key +'" name="permissions[]" value="' + permission.key + '" '+ (permission.value ? 'checked="checked"' : '') +' />'+
+                  '</td>'
+                ));
+
+                tr.append($(
+                  '<td>'+
+                    '<label for="'+ permission.key +'">'+ permission.title +'</label>' +
+                    (permission.description.length > 0
+                      ? '<p class="description">'+ permission.description +'</p>'
+                      : ''
+                    )+
+                  '</td>'
+                ));
+
+                $('tbody', table).append(tr);
+              }
+            }
+          }
+        },
+        error     : function(jqXHR, textStatus, errorThrown) {
+          console.error(errorThrown);
+        }
+      });
     });
   });
 })(window, window.document, jQuery || null, ajaxurl, upstreamMetaboxClientLangStrings);

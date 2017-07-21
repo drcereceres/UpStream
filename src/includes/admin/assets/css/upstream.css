@@ -901,3 +901,12 @@ a.up-u-color-red:focus {
   padding-left: 15px;
   list-style-type: disc;
 }
+
+#form-user-permissions table tbody label {
+  font-weight: bold;
+}
+
+#form-user-permissions table tbody p {
+  padding: 0;
+  margin: 0;
+}

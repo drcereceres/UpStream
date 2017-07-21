@@ -46,6 +46,7 @@ class UpStream_Metaboxes_Clients
         add_action('wp_ajax_upstream:client.add_existent_users', array($namespace, 'addExistentUsers'));
         add_action('wp_ajax_upstream:client.migrate_legacy_user', array($namespace, 'migrateLegacyUser'));
         add_action('wp_ajax_upstream:client.discard_legacy_user', array($namespace, 'discardLegacyUser'));
+        add_action('wp_ajax_upstream:client.fetch_user_permissions', array($namespace, 'fetchUserPermissions'));
 
         // Enqueues the default ThickBox assets.
         add_thickbox();
@@ -171,7 +172,7 @@ class UpStream_Metaboxes_Clients
                 <table id="table-add-existent-users" class="wp-list-table widefat fixed striped posts upstream-table">
                     <thead>
                         <tr>
-                            <th class="text-center">
+                            <th class="text-center" style="width: 20px;">
                                 <input type="checkbox" />
                             </th>
                             <th><?php echo __('Name', 'upstream'); ?></th>
@@ -267,7 +268,9 @@ class UpStream_Metaboxes_Clients
                     $assignedAt->setTimeZone($instanceTimezone);
                     ?>
                     <tr data-id="<?php echo $user->id; ?>">
-                        <td><?php echo $user->name; ?></td>
+                        <td>
+                            <a title="Managing <?php echo $user->name; ?>'s Permissions" href="#TB_inline?width=600&height=425&inlineId=modal-user-permissions" class="thickbox"><?php echo $user->name; ?></a>
+                        </td>
                         <td><?php echo $user->username; ?></td>
                         <td><?php echo $user->email; ?></td>
                         <td class="text-center"><?php echo $assignedAt->format($dateFormat); ?></td>
@@ -288,11 +291,12 @@ class UpStream_Metaboxes_Clients
             </table>
 
             <p>
-                <span class="dashicons dashicons-info"></span> <?php echo __('By removing a user it only means that he will no longer be associated with this client. He will not deleted.', 'upstream'); ?>
+                <span class="dashicons dashicons-info"></span> <?php echo __('By removing a user it only means that he will no longer be associated with this client. He will not be deleted.', 'upstream'); ?>
             </p>
         </div>
 
         <?php
+        self::renderUserPermissionsModal();
         self::renderAddNewUserModal();
         self::renderAddExistentUserModal();
     }
@@ -1043,6 +1047,87 @@ class UpStream_Metaboxes_Clients
 
                 update_post_meta($client_id, '_upstream_client_legacy_users_errors', $meta);
             }
+
+            $response['success'] = true;
+        } catch (\Exception $e) {
+            $response['err'] = $e->getMessage();
+        }
+
+        echo wp_json_encode($response);
+
+        wp_die();
+    }
+
+    private static function renderUserPermissionsModal()
+    {
+        ?>
+        <div id="modal-user-permissions" style="display: none;">
+            <div id="form-user-permissions">
+                <div>
+                    <h3><?php echo __("UpStream's Custom Permissions", 'upstream'); ?></h3>
+                    <table class="wp-list-table widefat fixed striped posts upstream-table">
+                        <thead>
+                            <tr>
+                                <th class="text-center" style="width: 20px;">
+                                    <input type="checkbox" />
+                                </th>
+                                <th><?php echo __('Permission', 'upstream'); ?></th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+                <div>
+                    <div class="up-form-group">
+                        <button
+                            type="submit"
+                            class="button button-primary"
+                            data-label="<?php echo __('Update Permissions', 'upstream'); ?>"
+                            data-loading-label="<?php echo __('Updating...', 'upstream'); ?>"
+                            disabled
+                        ><?php echo __('Update Permissions', 'upstream'); ?></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <?php
+    }
+
+    public static function fetchUserPermissions()
+    {
+        header('Content-Type: application/json');
+
+        $response = array(
+            'success' => false,
+            'data'    => array(),
+            'err'     => null
+        );
+
+        try {
+            if (!upstream_admin_permissions('edit_clients')) {
+                throw new \Exception(__("You're not allowed to do this.", 'upstream'));
+            }
+
+            if (empty($_GET) || !isset($_GET['client']) || !isset($_GET['user'])) {
+                throw new \Exception(__('Invalid request.', 'upstream'));
+            }
+
+            $client_id = (int)$_GET['client'];
+            if ($client_id <= 0) {
+                throw new \Exception(__('Invalid Client ID.', 'upstream'));
+            }
+
+            $client_user_id = (int)$_GET['user'];
+            if ($client_user_id <= 0) {
+                throw new \Exception(__('Invalid User ID.', 'upstream'));
+            }
+
+            // @todo : make this check in other ajax functions
+            if (!upstream_do_client_user_belongs_to_client($client_user_id, $client_id)) {
+                throw new \Exception(__("This Client User is not associated with this Client.", 'upstream'));
+            }
+
+            $response['data'] = upstream_get_client_user_permissions($client_user_id);
 
             $response['success'] = true;
         } catch (\Exception $e) {

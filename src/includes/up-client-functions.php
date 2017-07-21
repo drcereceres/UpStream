@@ -117,3 +117,57 @@ function upstream_get_client_users($client_id)
 
     return $usersList;
 }
+
+/**
+ * Check if a given user is a Client User associated with a given client.
+ *
+ * @since   @todo
+ *
+ * @param   int         $client_user_id The client user id.
+ * @param   int         $client_id      The client id.
+ *
+ * @return  bool|null   Bool or NULL in case the user is invalid.
+ */
+function upstream_do_client_user_belongs_to_client($client_user_id, $client_id)
+{
+    $client_user_id = (int)$client_user_id;
+    if ($client_user_id <= 0) {
+        return null;
+    }
+
+    $clientUsers = (array)upstream_get_client_users($client_id);
+
+    $clientUserBelongsToClient = isset($clientUsers[$client_user_id]);
+
+    return $clientUserBelongsToClient;
+}
+
+/**
+ * Retrieve all client user permissions.
+ *
+ * @since   @todo
+ *
+ * @param   int         $client_user_id     The client user id.
+ *
+ * @return  array|bool  A permissions array or false if user doesn't exist.
+ */
+function upstream_get_client_user_permissions($client_user_id)
+{
+    $clientUser = new \WP_User((int)$client_user_id);
+    if ($clientUser->ID === 0) {
+        return false;
+    }
+
+    $permissions = apply_filters('upstream:users.permissions', array());
+    foreach ($permissions as $permissionIndex => $permission) {
+        if (isset($clientUser->caps[$permission['key']])) {
+            $permission['value'] = $clientUser->caps[$permission['key']];
+        } else if (isset($clientUser->allcaps[$permission['key']])) {
+            $permission['value'] = $clientUser->allcaps[$permission['key']];
+        }
+
+        $permissions[$permissionIndex] = $permission;
+    }
+
+    return $permissions;
+}
