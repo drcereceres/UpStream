@@ -276,5 +276,3 @@ function UpStream()
 }
 
 UpStream();
-
-// @todo : Drop password field from clients
