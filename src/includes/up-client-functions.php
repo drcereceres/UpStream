@@ -158,7 +158,7 @@ function upstream_get_client_user_permissions($client_user_id)
         return false;
     }
 
-    $permissions = apply_filters('upstream:users.permissions', array());
+    $permissions = upstream_get_client_users_permissions();
     foreach ($permissions as $permissionIndex => $permission) {
         if (isset($clientUser->caps[$permission['key']])) {
             $permission['value'] = $clientUser->caps[$permission['key']];

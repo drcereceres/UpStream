@@ -47,6 +47,7 @@ class UpStream_Metaboxes_Clients
         add_action('wp_ajax_upstream:client.migrate_legacy_user', array($namespace, 'migrateLegacyUser'));
         add_action('wp_ajax_upstream:client.discard_legacy_user', array($namespace, 'discardLegacyUser'));
         add_action('wp_ajax_upstream:client.fetch_user_permissions', array($namespace, 'fetchUserPermissions'));
+        add_action('wp_ajax_upstream:client.update_user_permissions', array($namespace, 'updateUserPermissions'));
 
         // Enqueues the default ThickBox assets.
         add_thickbox();
@@ -1084,7 +1085,6 @@ class UpStream_Metaboxes_Clients
                             class="button button-primary"
                             data-label="<?php echo __('Update Permissions', 'upstream'); ?>"
                             data-loading-label="<?php echo __('Updating...', 'upstream'); ?>"
-                            disabled
                         ><?php echo __('Update Permissions', 'upstream'); ?></button>
                     </div>
                 </div>
@@ -1127,7 +1127,74 @@ class UpStream_Metaboxes_Clients
                 throw new \Exception(__("This Client User is not associated with this Client.", 'upstream'));
             }
 
-            $response['data'] = upstream_get_client_user_permissions($client_user_id);
+            $response['data'] = array_values(upstream_get_client_user_permissions($client_user_id));
+
+            $response['success'] = true;
+        } catch (\Exception $e) {
+            $response['err'] = $e->getMessage();
+        }
+
+        echo wp_json_encode($response);
+
+        wp_die();
+    }
+
+    public static function updateUserPermissions()
+    {
+        header('Content-Type: application/json');
+
+        $response = array(
+            'success' => false,
+            'err'     => null
+        );
+
+        try {
+            if (!upstream_admin_permissions('edit_clients')) {
+                throw new \Exception(__("You're not allowed to do this.", 'upstream'));
+            }
+
+            if (empty($_POST) || !isset($_POST['client'])) {
+                throw new \Exception(__('Invalid request.', 'upstream'));
+            }
+
+            $client_id = (int)$_POST['client'];
+            if ($client_id <= 0) {
+                throw new \Exception(__('Invalid Client ID.', 'upstream'));
+            }
+
+            $client_user_id = isset($_POST['user']) ? (int)$_POST['user'] : 0;
+            if ($client_user_id <= 0) {
+                throw new \Exception(__('Invalid User ID.', 'upstream'));
+            }
+
+            if (!upstream_do_client_user_belongs_to_client($client_user_id, $client_id)) {
+                throw new \Exception(__("This Client User is not associated with this Client.", 'upstream'));
+            }
+
+            $clientUser = new \WP_User($client_user_id);
+            if (array_search('upstream_client_user', $clientUser->roles) === false) {
+                throw new \Exception(__("This user doesn't seem to be a valid Client User.", 'upstream'));
+            }
+
+            if (isset($_POST['permissions']) && !empty($_POST['permissions'])) {
+                $permissions = upstream_get_client_users_permissions();
+                $newPermissions = (array)$_POST['permissions'];
+
+                $deniedPermissions = (array)array_diff(array_keys($permissions), $newPermissions);
+                foreach ($deniedPermissions as $permissionKey) {
+                    // Make sure this is a valid permission.
+                    if (isset($permissions[$permissionKey])) {
+                        $clientUser->add_cap($permissionKey, false);
+                    }
+                }
+
+                foreach ($newPermissions as $permissionKey) {
+                    // Make sure this is a valid permission.
+                    if (isset($permissions[$permissionKey])) {
+                        $clientUser->add_cap($permissionKey, true);
+                    }
+                }
+            }
 
             $response['success'] = true;
         } catch (\Exception $e) {

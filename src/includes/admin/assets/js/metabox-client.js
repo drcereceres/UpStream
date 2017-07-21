@@ -475,13 +475,69 @@
       }
     });
 
+    var permissionsSubmitEventHasBeenAttached = false;
+    function permissionsSubmitEvent(e) {
+      e.preventDefault();
+
+      var self = $(this);
+      var wrapper = $('#form-user-permissions');
+      var table = $('table', wrapper);
+
+      var permissionsIds = [];
+      $('tbody input[type="checkbox"]:checked').each(function() {
+        permissionsIds.push($(this).val());
+      });
+
+      $.ajax({
+        type: 'POST',
+        url : ajaxurl,
+        data: {
+          action     : 'upstream:client.update_user_permissions',
+          client     : $('#post_ID').val(),
+          user       : self.attr('data-id'),
+          permissions: permissionsIds
+        },
+        beforeSend: function(jqXHR, settings) {
+          $('input[type="checkbox"]', table).attr('disabled', 'disabled');
+          self.text(self.attr('data-loading-label'));
+          self.attr('disabled', 'disabled');
+        },
+        success   : function(response, textStatus, jqXHR) {
+          if (!response.success) {
+            self.attr('disabled', null);
+            console.error(response.err);
+          } else {
+            self.attr('data-id', null);
+            $('#TB_closeWindowButton').trigger('click');
+          }
+
+          self.text(self.attr('data-label'));
+          $('input[type="checkbox"]', table).attr('disabled', null);
+        },
+        error     : function(jqXHR, textStatus, errorThrown) {
+          console.error(errorThrown);
+        }
+      });
+
+      return false;
+    };
+
     $('#table-users').on('click', 'tr[data-id] > td:first-child a', function(e) {
       var self = $(this);
       var wrapper = $('#form-user-permissions');
       var table = $('table', wrapper);
       var submitButton = $('button[type="submit"]', wrapper);
+      var user_id = self.parents('tr[data-id]').attr('data-id');
+      submitButton.text(self.attr('data-label'));
+      submitButton.attr('data-id', user_id);
+
+      if (!permissionsSubmitEventHasBeenAttached) {
+        submitButton.on('click', permissionsSubmitEvent);
+        permissionsSubmitEventHasBeenAttached = true;
+      }
 
       $('thead input[type="checkbox"]', table).prop('checked', false);
+      $('input[type="checkbox"]', table).attr('disabled', null);
 
       table.on('click', 'thead > tr:first-child > th:first-child input[type="checkbox"]', function() {
         var self = $(this);
@@ -496,7 +552,7 @@
         data: {
           action: 'upstream:client.fetch_user_permissions',
           client: $('#post_ID').val(),
-          user  : self.parents('tr[data-id]').attr('data-id'),
+          user  : user_id,
         },
         beforeSend: function(jqXHR, settings) {
           $('tbody', table).html('<tr><td colspan="2">'+ l['MSG_FETCHING_DATA'] +'</td></tr>');
@@ -511,6 +567,8 @@
             if (!response.data.length) {
               $('tbody', table).append($('<tr><td colspan="2">'+ l['MSG_NO_DATA_FOUND'] +'</td></tr>'));
             } else {
+              submitButton.attr('disabled', null);
+
               for (var permissionIndex = 0; permissionIndex < response.data.length; permissionIndex++) {
                 var permission = response.data[permissionIndex];
 
