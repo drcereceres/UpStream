@@ -462,7 +462,6 @@ function upstream_output_table_rows( $id, $table, $filterRowsetByCurrentUser = f
 
         $output .= '<tr>';
         foreach ($settings as $key => $setting) {
-
             if( isset( $setting['display'] ) && ! $setting['display'] )
                 continue;
 
@@ -470,6 +469,7 @@ function upstream_output_table_rows( $id, $table, $filterRowsetByCurrentUser = f
                 $item[$key] = '';
 
             $order = null;
+
 
             // get the raw value before formatting
             // will be used with the frontend edit plugin for getting actual values via JS
@@ -488,16 +488,28 @@ function upstream_output_table_rows( $id, $table, $filterRowsetByCurrentUser = f
 
             if( $key == 'status' ) {
                 $color  = isset( $status_c[$field_data] ) ? $status_c[$field_data] : 'transparent';
-                $field_data = '<span class="btn btn-xs" style="background: ' . esc_attr( $color ) . '">' . esc_html( $field_data ) . '</span>';
+
+                if (empty($field_data)) {
+                    $field_data = '<i>' . __('none', 'upstream') . '</i>';
+                } else {
+                    $field_data = '<span class="btn btn-xs" style="background: ' . esc_attr( $color ) . '">' . esc_html( $field_data ) . '</span>';
+                }
             }
 
             if( $key == 'severity' ) {
                 $color      = isset( $severity_c[$field_data] ) ? $severity_c[$field_data] : 'transparent';
-                $field_data = '<span class="btn btn-xs" style="background: ' . esc_attr( $color ) . '">' . esc_html( $field_data ) . '</span>';
+
+                if (empty($field_data)) {
+                    $field_data = '<i>' . __('none', 'upstream') . '</i>';
+                } else {
+                    $field_data = '<span class="btn btn-xs" style="background: ' . esc_attr( $color ) . '">' . esc_html( $field_data ) . '</span>';
+                }
             }
 
-            if ($setting['type'] === 'date' && !empty($data_value)) {
-                $data_value = upstream_format_date($data_value);
+            if ($table === 'files') {
+                if (in_array($key, array('title', 'description')) && empty($data_value)) {
+                    $field_data = '<i>' . __('none', 'upstream') . '</i>';
+                }
             }
 
             $output .= '<td data-name="' . esc_attr( $key ) . '" ' . $order . ' data-value="' . esc_attr( $data_value ) . '" class="' . esc_attr( $setting['row_class'] ) . '">' . $field_data . '</td>';
