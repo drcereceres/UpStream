@@ -80,7 +80,15 @@ function upstream_update_client_meta_values( $post_id, $post, $update ) {
 }
 add_action( 'save_post', 'upstream_update_client_meta_values', 99999, 3 );
 
-// @todo
+/**
+ * Retrieve all Client Users associated with a given client.
+ *
+ * @since   @todo
+ *
+ * @param   int         $client_id  The reference id.
+ *
+ * @return  array|bool  Array in case of success or false in case the client_id is invalid.
+ */
 function upstream_get_client_users($client_id)
 {
     $client_id = (int)$client_id;
