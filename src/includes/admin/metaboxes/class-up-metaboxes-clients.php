@@ -1036,6 +1036,10 @@ class UpStream_Metaboxes_Clients
                 throw new \Exception(__("Invalid UpStream Client ID.", 'upstream'));
             }
 
+            if (!upstream_do_client_user_belongs_to_client($user_id, $client_id)) {
+                throw new \Exception(__("This Client User is not associated with this Client.", 'upstream'));
+            }
+
             // Update the '_upstream_client_legacy_users_errors' meta.
             $meta = (array)get_post_meta($client_id, '_upstream_client_legacy_users_errors');
             if (!empty($meta)) {
@@ -1122,7 +1126,6 @@ class UpStream_Metaboxes_Clients
                 throw new \Exception(__('Invalid User ID.', 'upstream'));
             }
 
-            // @todo : make this check in other ajax functions
             if (!upstream_do_client_user_belongs_to_client($client_user_id, $client_id)) {
                 throw new \Exception(__("This Client User is not associated with this Client.", 'upstream'));
             }
