@@ -6,67 +6,130 @@ use \UpStream\Traits\Singleton;
 use \Cmb2Grid\Grid\Cmb2Grid;
 use \UpStream\Migrations\ClientUsers as ClientUsersMigration;
 
-// @todo
+/**
+ * Clients Metabox Class.
+ *
+ * @package     UpStream
+ * @subpackage  Admin\Metaboxes
+ * @author      UpStream <https://upstreamplugin.com>
+ * @copyright   Copyright (c) 2017 UpStream Project Management
+ * @license     GPL-3
+ * @since       @todo
+ */
+
+// @todo : change this class name
 class UpStream_Metaboxes_Clients
 {
     use Singleton;
 
     /**
-     * @var string
-     * @todo
+     * The post type where this metabox will be used.
+     *
+     * @since   @todo
+     * @access  protected
+     * @static
+     *
+     * @var     string
      */
     protected static $postType = 'client';
 
     /**
-     * @var string
-     * @todo
+     * String that represents the singular form of the post type's name.
+     *
+     * @since   @todo
+     * @access  protected
+     * @static
+     *
+     * @var     string
      */
     protected static $postTypeLabelSingular = null;
 
     /**
-     * @var string
-     * @todo
+     * String that represents the plural form of the post type's name.
+     *
+     * @since   @todo
+     * @access  protected
+     * @static
+     *
+     * @var     string
      */
     protected static $postTypeLabelPlural = null;
 
     /**
-     * @todo
+     * Prefix used on form fields.
+     *
+     * @since   @todo
+     * @access  protected
+     * @static
+     *
+     * @var     string
      */
     protected static $prefix = '_upstream_client_';
 
+    /**
+     * Class constructor.
+     *
+     * @since   @todo
+     */
     public function __construct()
     {
         self::$postTypeLabelSingular = upstream_client_label();
         self::$postTypeLabelPlural = upstream_client_label_plural();
 
+        // Define all ajax endpoints.
+        $ajaxEndpointsSchema = array(
+            'add_new_user'            => 'addNewUser',
+            'remove_user'             => 'removeUser',
+            'fetch_unassigned_users'  => 'fetchUnassignedUsers',
+            'add_existent_users'      => 'addExistentUsers',
+            'migrate_legacy_user'     => 'migrateLegacyUser',
+            'discard_legacy_user'     => 'discardLegacyUser',
+            'fetch_user_permissions'  => 'fetchUserPermissions',
+            'update_user_permissions' => 'updateUserPermissions'
+        );
+
         $namespace = get_class(self::$instance);
-        add_action('wp_ajax_upstream:client.add_new_user', array($namespace, 'addNewUser'));
-        add_action('wp_ajax_upstream:client.remove_user', array($namespace, 'removeUser'));
-        add_action('wp_ajax_upstream:client.fetch_unassigned_users', array($namespace, 'fetchUnassignedUsers'));
-        add_action('wp_ajax_upstream:client.add_existent_users', array($namespace, 'addExistentUsers'));
-        add_action('wp_ajax_upstream:client.migrate_legacy_user', array($namespace, 'migrateLegacyUser'));
-        add_action('wp_ajax_upstream:client.discard_legacy_user', array($namespace, 'discardLegacyUser'));
-        add_action('wp_ajax_upstream:client.fetch_user_permissions', array($namespace, 'fetchUserPermissions'));
-        add_action('wp_ajax_upstream:client.update_user_permissions', array($namespace, 'updateUserPermissions'));
+        foreach ($ajaxEndpointsSchema as $endpoint => $callbackName) {
+            add_action('wp_ajax_upstream:client.' . $endpoint, array($namespace, $callbackName));
+        }
 
         // Enqueues the default ThickBox assets.
         add_thickbox();
 
+        // Render all inner metaboxes.
         self::renderMetaboxes();
     }
 
+    /**
+     * Render all inner-metaboxes.
+     *
+     * @since   @todo
+     * @access  private
+     * @static
+     */
     private static function renderMetaboxes()
     {
         self::renderDetailsMetabox();
         self::renderLogoMetabox();
 
         $namespace = get_class(self::$instance);
-
-        add_action('add_meta_boxes', array($namespace, 'createDisclaimerMetabox'));
-        add_action('add_meta_boxes', array($namespace, 'createUsersMetabox'));
-        add_action('add_meta_boxes', array($namespace, 'createLegacyUsersMetabox'));
+        $metaboxesCallbacksList = array('createDisclaimerMetabox', 'createUsersMetabox', 'createLegacyUsersMetabox');
+        foreach ($metaboxesCallbacksList as $callbackName) {
+            add_action('add_meta_boxes', array($namespace, $callbackName));
+        }
     }
 
+    /**
+     * Retrieve all Client Users associated with a given client.
+     *
+     * @since   @todo
+     * @access  private
+     * @static
+     *
+     * @param   int     $client_id  The reference id.
+     *
+     * @return  array
+     */
     private static function getUsersFromClient($client_id)
     {
         if ((int)$client_id <= 0) {
@@ -113,6 +176,13 @@ class UpStream_Metaboxes_Clients
         return $clientUsersList;
     }
 
+    /**
+     * Renders the modal's html which is used to add new client users.
+     *
+     * @since   @todo
+     * @access  private
+     * @static
+     */
     private static function renderAddNewUserModal()
     {
         ?>
@@ -162,6 +232,13 @@ class UpStream_Metaboxes_Clients
         <?php
     }
 
+    /**
+     * Renders the modal's html which is used to associate existent client users with a client.
+     *
+     * @since   @todo
+     * @access  private
+     * @static
+     */
     private static function renderAddExistentUserModal()
     {
         ?>
@@ -193,6 +270,13 @@ class UpStream_Metaboxes_Clients
         <?php
     }
 
+    /**
+     * Renders the modal's html which is used to migrate legacy client users.
+     *
+     * @since   @todo
+     * @access  private
+     * @static
+     */
     private static function renderMigrateUserModal()
     {
         ?>
@@ -232,16 +316,22 @@ class UpStream_Metaboxes_Clients
         <?php
     }
 
+    /**
+     * Renders the users metabox.
+     * This is where all client users are listed.
+     *
+     * @since   @todo
+     * @static
+     */
     public static function renderUsersMetabox()
     {
         $client_id = get_the_id();
-
         $usersList = self::getUsersFromClient($client_id);
         ?>
 
         <?php // @todo: create js/css to make Thickbox responsive. ?>
         <div class="upstream-row">
-            <a name="Add New User" href="#TB_inline?width=600&height=425&inlineId=modal-add-new-user" class="thickbox button"><?php echo __('Add New User', 'upstream'); ?></a>
+            <a name="<?php echo __('Add New User', 'upstream'); ?>" href="#TB_inline?width=600&height=425&inlineId=modal-add-new-user" class="thickbox button"><?php echo __('Add New User', 'upstream'); ?></a>
             <a id="add-existent-user" name="Add Existent User" href="#TB_inline?width=600&height=300&inlineId=modal-add-existent-user" class="thickbox button"><?php echo __('Add Existent User', 'upstream'); ?></a>
         </div>
         <div class="upstream-row">
@@ -302,6 +392,12 @@ class UpStream_Metaboxes_Clients
         self::renderAddExistentUserModal();
     }
 
+    /**
+     * It defines/register the Disclaimer metabox.
+     *
+     * @since   @todo
+     * @static
+     */
     public static function createDisclaimerMetabox()
     {
         add_meta_box(
@@ -313,6 +409,12 @@ class UpStream_Metaboxes_Clients
         );
     }
 
+    /**
+     * Renders the Disclaimer metabox.
+     *
+     * @since   @todo
+     * @static
+     */
     public static function renderDisclaimerMetabox()
     {
         ?>
@@ -329,6 +431,12 @@ class UpStream_Metaboxes_Clients
         <?php
     }
 
+    /**
+     * It defines the Users metabox.
+     *
+     * @since   @todo
+     * @static
+     */
     public static function createUsersMetabox()
     {
         add_meta_box(
@@ -340,6 +448,16 @@ class UpStream_Metaboxes_Clients
         );
     }
 
+    /**
+     * It defines the Legacy Users metabox.
+     * This metabox lists all legacy client users that couldn't be automatically
+     * migrated for some reason, which is also displayed here.
+     *
+     * If there's no legacy user to be migrated, the box is not shown.
+     *
+     * @since   @todo
+     * @static
+     */
     public static function createLegacyUsersMetabox()
     {
         $client_id = upstream_post_id();
@@ -359,6 +477,12 @@ class UpStream_Metaboxes_Clients
         );
     }
 
+    /**
+     * Renders the Legacy Users metabox.
+     *
+     * @since   @todo
+     * @static
+     */
     public static function renderLegacyUsersMetabox()
     {
         $client_id = upstream_post_id();
@@ -440,6 +564,12 @@ class UpStream_Metaboxes_Clients
         <?php
     }
 
+    /**
+     * Renders the Details metabox using CMB2.
+     *
+     * @since   @todo
+     * @static
+     */
     public static function renderDetailsMetabox()
     {
         $metabox = new_cmb2_box(array(
@@ -472,6 +602,12 @@ class UpStream_Metaboxes_Clients
         $metaboxGridRow = $metaboxGrid->addRow(array($phoneField, $websiteField, $addressField));
     }
 
+    /**
+     * Renders Logo metabox using CMB2.
+     *
+     * @since   @todo
+     * @static
+     */
     public static function renderLogoMetabox()
     {
         $metabox = new_cmb2_box(array(
@@ -487,11 +623,16 @@ class UpStream_Metaboxes_Clients
             'type' => 'file'
         ));
 
-
         $metaboxGrid = new Cmb2Grid($metabox);
         $metaboxGridRow = $metaboxGrid->addRow(array($logoField));
     }
 
+    /**
+     * Ajax endpoint responsible for adding new Client Users to the system and client.
+     *
+     * @since   @todo
+     * @static
+     */
     public static function addNewUser()
     {
         header('Content-Type: application/json');
@@ -588,8 +729,7 @@ class UpStream_Metaboxes_Clients
             }
 
             if ($data['notification']) {
-                // @todo
-                //wp_new_user_notification($userDataId);
+                wp_new_user_notification($userDataId);
             }
 
             $currentUser = get_userdata(get_current_user_id());
@@ -624,6 +764,12 @@ class UpStream_Metaboxes_Clients
         wp_die();
     }
 
+    /**
+     * Ajax endpoint responsible for removing Client Users from a given client.
+     *
+     * @since   @todo
+     * @static
+     */
     public static function removeUser()
     {
         header('Content-Type: application/json');
@@ -677,6 +823,13 @@ class UpStream_Metaboxes_Clients
         wp_die();
     }
 
+    /**
+     * Ajax endpoint responsible for fetching all Client Users that are not related to
+     * the given client.
+     *
+     * @since   @todo
+     * @static
+     */
     public static function fetchUnassignedUsers()
     {
         header('Content-Type: application/json');
@@ -738,6 +891,12 @@ class UpStream_Metaboxes_Clients
         wp_die();
     }
 
+    /**
+     * Ajax endpoint responsible for associating existent Client Users to a given client.
+     *
+     * @since   @todo
+     * @static
+     */
     public static function addExistentUsers()
     {
         header('Content-Type: application/json');
@@ -829,6 +988,12 @@ class UpStream_Metaboxes_Clients
         wp_die();
     }
 
+    /**
+     * Ajax endpoint responsible for migrating a given Legacy Client User.
+     *
+     * @since   @todo
+     * @static
+     */
     public static function migrateLegacyUser()
     {
         header('Content-Type: application/json');
@@ -1009,6 +1174,12 @@ class UpStream_Metaboxes_Clients
         wp_die();
     }
 
+    /**
+     * Ajax endpoint responsible for discard a given Legacy Client User.
+     *
+     * @since   @todo
+     * @static
+     */
     public static function discardLegacyUser()
     {
         header('Content-Type: application/json');
@@ -1063,6 +1234,13 @@ class UpStream_Metaboxes_Clients
         wp_die();
     }
 
+    /**
+     * Renders the modal's html which is used to manage a given Client User's permissions.
+     *
+     * @since   @todo
+     * @access  private
+     * @static
+     */
     private static function renderUserPermissionsModal()
     {
         ?>
@@ -1097,6 +1275,12 @@ class UpStream_Metaboxes_Clients
         <?php
     }
 
+    /**
+     * Ajax endpoint responsible for fetching all permissions a given Client User might have.
+     *
+     * @since   @todo
+     * @static
+     */
     public static function fetchUserPermissions()
     {
         header('Content-Type: application/json');
@@ -1142,6 +1326,12 @@ class UpStream_Metaboxes_Clients
         wp_die();
     }
 
+    /**
+     * Ajax endpoint responsible for updating a given Client User permissions.
+     *
+     * @since   @todo
+     * @static
+     */
     public static function updateUserPermissions()
     {
         header('Content-Type: application/json');
