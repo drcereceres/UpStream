@@ -147,10 +147,9 @@
 
                 var tr = $('<tr data-id="'+ user.id +'"></tr>');
                 tr.append('<td>'+ user.name +'</td>');
-                tr.append('<td>'+ user.username +'</td>');
                 tr.append('<td>'+ user.email +'</td>');
-                tr.append('<td class="text-center">'+ user.assigned_at +'</td>');
                 tr.append('<td>'+ user.assigned_by +'</td>');
+                tr.append('<td class="text-center">'+ user.assigned_at +'</td>');
                 tr.append('<td class="text-center"><a href="#" data-remove-user class="up-u-color-red"><span class="dashicons dashicons-trash"></span></a></td>');
 
                 $('tbody', table).append(tr);
@@ -181,7 +180,7 @@
         if (!response.success) {
         } else {
           if (!response.data.length) {
-            tbody.append($('<tr><td colspan="4">'+ l['MSG_NO_USERS_FOUND'] +'</td></tr>'));
+            tbody.append($('<tr><td colspan="3">'+ l['MSG_NO_USERS_FOUND'] +'</td></tr>'));
           } else {
             var wrapper = $($('#table-add-existent-users').parent().parent());
             $('div.submit', wrapper).append($('<button type="button" data-type="submit" disabled="disabled" class="button button-primary">'+ l['MSG_NO_USER_SELECTED'] +'</button>'));
@@ -193,7 +192,6 @@
 
               tr.append($('<td class="text-center"><input type="checkbox" value="'+ user.id +'" /></td>'));
               tr.append($('<td>'+ user.name +'</td>'));
-              tr.append($('<td>'+ user.username +'</td>'));
               tr.append($('<td>'+ user.email +'</td>'));
 
               tbody.append(tr);
@@ -244,14 +242,6 @@
       }
 
       if (!hasError) {
-        var usernameField = $('[name="username"]', form);
-        var usernameFieldValue = usernameField.val();
-        // Check if username is potentially valid.
-        if (usernameFieldValue.length < 3 || usernameFieldValue.length > 60 || !/^[a-z]+[a-z0-9\-\_]+$/i.test(usernameFieldValue)) {
-          throwFieldError(usernameField);
-          return;
-        }
-
         var passwordField = $('[name="password"]', form);
         if (passwordField.val().length < 6) {
           throwFieldError(passwordField);
@@ -266,7 +256,6 @@
           data: {
             action      : 'upstream:client.add_new_user',
             client      : $('#post_ID').val(),
-            username    : usernameField.val(),
             email       : $('[name="email"]', form).val(),
             password    : passwordField.val(),
             first_name  : $('[name="first_name"]', form).val(),

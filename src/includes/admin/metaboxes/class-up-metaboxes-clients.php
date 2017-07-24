@@ -147,10 +147,9 @@ final class UpStream_Metaboxes_Clients
         $users = array();
         foreach ($rowset as $row) {
             $users[(int)$row->ID] = array(
-                'id'       => (int)$row->ID,
-                'name'     => $row->display_name,
-                'username' => $row->user_login,
-                'email'    => $row->user_email
+                'id'    => (int)$row->ID,
+                'name'  => $row->display_name,
+                'email' => $row->user_email
             );
         }
         unset($rowset);
@@ -194,18 +193,6 @@ final class UpStream_Metaboxes_Clients
                     <div class="up-form-group">
                         <label for="new-user-email"><?php echo __('Email', 'upstream') .' *'; ?></label>
                         <input type="email" name="email" id="new-user-email" required />
-                    </div>
-                    <div class="up-form-group">
-                        <label for="new-user-username"><?php echo __('Username', 'upstream') .' *'; ?></label>
-                        <input type="text" name="username" id="new-user-username" required />
-                        <div class="up-help-block">
-                            <ul>
-                                <li><?php echo __('Must be between 3 and 60 characters long;', 'upstream'); ?></li>
-                                <li><?php echo __('You may use <code>letters (a-z)</code>, <code>numbers (0-9)</code>, <code>-</code> and <code>_</code> symbols;', 'upstream'); ?></li>
-                                <li><?php echo __('The first character must be a <code>letter</code>;', 'upstream'); ?></li>
-                                <li><?php echo __('Everything will be lowercased.', 'upstream'); ?></li>
-                            </ul>
-                        </div>
                     </div>
                     <div class="up-form-group">
                         <label for="new-user-password"><?php echo __('Password', 'upstream') .' *'; ?></label>
@@ -265,13 +252,12 @@ final class UpStream_Metaboxes_Clients
                                 <input type="checkbox" />
                             </th>
                             <th><?php echo __('Name', 'upstream'); ?></th>
-                            <th><?php echo __('Username', 'upstream'); ?></th>
                             <th><?php echo __('Email', 'upstream'); ?></th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr>
-                            <td colspan="4"><?php echo __('No users found.', 'upstream'); ?></td>
+                            <td colspan="3"><?php echo __('No users found.', 'upstream'); ?></td>
                         </tr>
                     </tbody>
                 </table>
@@ -669,9 +655,8 @@ final class UpStream_Metaboxes_Clients
             }
 
             $data = array(
-                'username'     => strtolower(trim(@$_POST['username'])),
-                'email'        => trim(@$_POST['email']),
-                'password'     => @$_POST['password'],
+                'email'        => isset($_POST['email']) ? $_POST['email'] : '',
+                'password'     => isset($_POST['password']) ? $_POST['password'] : '',
                 'first_name'   => trim(@$_POST['first_name']),
                 'last_name'    => trim(@$_POST['last_name']),
                 'notification' => isset($_POST['notification']) ? (bool)$_POST['notification'] : true
@@ -679,33 +664,13 @@ final class UpStream_Metaboxes_Clients
 
             // Validate `password` field.
             if (strlen($data['password']) < 6) {
-                throw new \Exception("Password must be at least 6 characters long.");
-            }
-
-            // Validate `username` field.
-            $userDataUsername = $data['username'];
-            $userDataUsernameLength = strlen($userDataUsername);
-            if ($userDataUsernameLength < 3 || $userDataUsernameLength > 60) {
-                throw new \Exception("The username must be between 3 and 60 characters long.");
-            } else if (!validate_username($data['username']) || !preg_match('/^[a-z]+[a-z0-9\-\_]+$/i', $userDataUsername)) {
-                throw new \Exception("Invalid username.");
-            } else {
-                $usernameExists = (bool)$wpdb->get_var(sprintf('
-                    SELECT COUNT(`ID`)
-                    FROM `%s`
-                    WHERE `user_login` = "%s"',
-                    $wpdb->prefix . 'users',
-                    $userDataUsername
-                ));
-
-                if ($usernameExists) {
-                    throw new \Exception("This username is not available.");
-                }
+                throw new \Exception(__("Password must be at least 6 characters long.", 'upstream'));
             }
 
             // Validate the `email` field.
-            if (!filter_var($data['email'], FILTER_VALIDATE_EMAIL) || !is_email($data['email'])) {
-                throw new \Exception("Invalid email.");
+            $userDataEmail = trim($data['email']);
+            if (!filter_var($userDataEmail, FILTER_VALIDATE_EMAIL) || !is_email($userDataEmail)) {
+                throw new \Exception(__("Invalid email.", 'upstream'));
             } else {
                 $emailExists = (bool)$wpdb->get_var(sprintf('
                     SELECT COUNT(`ID`)
@@ -716,17 +681,20 @@ final class UpStream_Metaboxes_Clients
                 ));
 
                 if ($emailExists) {
-                    throw new \Exception("This email address is not available.");
+                    throw new \Exception(__("This email address is not available.", 'upstream'));
                 }
             }
 
+            $userDataDisplayName = trim($data['first_name'] . ' ' . $data['last_name']);
+            $userDataDisplayName = !empty($userDataDisplayName) ? $userDataDisplayName : $data['email'];
+
             $userData = array(
-                'user_login'    => $userDataUsername,
+                'user_login'    => $userDataDisplayName,
                 'user_pass'     => $data['password'],
-                'user_nicename' => $userDataUsername,
-                'user_email'    => $data['email'],
-                'display_name'  => $userDataUsername,
-                'nickname'      => $userDataUsername,
+                'user_nicename' => $userDataEmail,
+                'user_email'    => $userDataEmail,
+                'display_name'  => $userDataEmail,
+                'nickname'      => $userDataDisplayName,
                 'first_name'    => $data['first_name'],
                 'last_name'     => $data['last_name'],
                 'role'          => 'upstream_client_user'
@@ -745,16 +713,12 @@ final class UpStream_Metaboxes_Clients
 
             $nowTimestamp = time();
 
-            $userDisplayName = trim($data['first_name'] . ' ' . $data['last_name']);
-            $userDisplayName = !empty($userDisplayName) ? $userDisplayName : $data['email'];
-
             $response['data'] = array(
                 'id'          => $userDataId,
                 'assigned_at' => upstream_convert_UTC_date_to_timezone($nowTimestamp),
                 'assigned_by' => $currentUser->display_name,
-                'name'        => $userDisplayName,
-                'username'    => $userDataUsername,
-                'email'       => $data['email']
+                'name'        => $userDataDisplayName,
+                'email'       => $userDataEmail
             );
 
             $clientUsersMetaKey = '_upstream_new_client_users';
@@ -984,7 +948,6 @@ final class UpStream_Metaboxes_Clients
                     'id'          => (int)$user->ID,
                     'name'        => $user->display_name,
                     'email'       => $user->user_email,
-                    'username'    => $user->user_login,
                     'assigned_by' => $currentUser->display_name,
                     'assigned_at' => $assignedAt
                 ));
