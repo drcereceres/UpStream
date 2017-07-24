@@ -15,10 +15,9 @@ use \UpStream\Migrations\ClientUsers as ClientUsersMigration;
  * @copyright   Copyright (c) 2017 UpStream Project Management
  * @license     GPL-3
  * @since       @todo
+ * @final
  */
-
-// @todo : change this class name
-class UpStream_Metaboxes_Clients
+final class UpStream_Metaboxes_Clients
 {
     use Singleton;
 
