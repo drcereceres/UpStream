@@ -216,6 +216,16 @@ final class UpStream_Metaboxes_Clients
                             </ul>
                         </div>
                     </div>
+                    <hr />
+                    <h3><?php echo __('Profile', 'upstream'); ?></h3>
+                    <div class="up-form-group">
+                        <label for="new-user-first_name"><?php echo __('First Name', 'upstream'); ?></label>
+                        <input type="text" name="first_name" id="new-user-first_name" />
+                    </div>
+                    <div class="up-form-group">
+                        <label for="new-user-last_name"><?php echo __('Last Name', 'upstream'); ?></label>
+                        <input type="text" name="last_name" id="new-user-last_name" />
+                    </div>
                 </div>
                 <div>
                     <div class="up-form-group label-default">
@@ -735,11 +745,14 @@ final class UpStream_Metaboxes_Clients
 
             $nowTimestamp = time();
 
+            $userDisplayName = trim($data['first_name'] . ' ' . $data['last_name']);
+            $userDisplayName = !empty($userDisplayName) ? $userDisplayName : $data['email'];
+
             $response['data'] = array(
                 'id'          => $userDataId,
                 'assigned_at' => upstream_convert_UTC_date_to_timezone($nowTimestamp),
                 'assigned_by' => $currentUser->display_name,
-                'name'        => empty($data['first_name'] . ' ' . $data['last_name']) ? $data['first_name'] . ' ' . $data['last_name'] : $data['username'],
+                'name'        => $userDisplayName,
                 'username'    => $userDataUsername,
                 'email'       => $data['email']
             );
