@@ -158,6 +158,8 @@
           },
           error     : function(jqXHR, textStatus, errorThrown) {
             console.error(errorThrown);
+          },
+          complete  : function(jqXHR, textStatus) {
             $('input', table).attr('disabled', null);
           }
         });
