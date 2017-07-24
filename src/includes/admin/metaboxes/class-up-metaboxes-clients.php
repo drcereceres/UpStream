@@ -328,8 +328,17 @@ final class UpStream_Metaboxes_Clients
 
         <?php // @todo: create js/css to make Thickbox responsive. ?>
         <div class="upstream-row">
-            <a name="<?php echo __('Add New User', 'upstream'); ?>" href="#TB_inline?width=600&height=425&inlineId=modal-add-new-user" class="thickbox button"><?php echo __('Add New User', 'upstream'); ?></a>
-            <a id="add-existent-user" name="Add Existent User" href="#TB_inline?width=600&height=300&inlineId=modal-add-existent-user" class="thickbox button"><?php echo __('Add Existent User', 'upstream'); ?></a>
+            <a
+                name="<?php echo __('Add New User', 'upstream'); ?>"
+                href="#TB_inline?width=600&height=425&inlineId=modal-add-new-user"
+                class="thickbox button"
+            ><?php echo __('Add New User', 'upstream'); ?></a>
+            <a
+                id="add-existent-user"
+                name="<?php echo __('Add Existent Users', 'upstream'); ?>"
+                href="#TB_inline?width=600&height=300&inlineId=modal-add-existent-user"
+                class="thickbox button"
+            ><?php echo __('Add Existent Users', 'upstream'); ?></a>
         </div>
         <div class="upstream-row">
             <table id="table-users" class="wp-list-table widefat fixed striped posts upstream-table">
