@@ -111,6 +111,73 @@ final class UpStream
     }
 
     /**
+     * Prevent a Client User from accessing any page other than the profile.
+     *
+     * @since   @todo
+     *
+     * @global  $pagenow
+     */
+    public function limitClientUsersAdminAccess()
+    {
+        global $pagenow;
+
+        $profilePage = 'profile.php';
+
+        if ($pagenow !== $profilePage) {
+            wp_redirect(admin_url($profilePage));
+            exit;
+        }
+    }
+
+    /**
+     * Make sure Client Users can only see the Profile menu item.
+     *
+     * @since   @todo
+     *
+     * @global  $menu
+     */
+    public function limitClientUsersMenu()
+    {
+        global $menu;
+
+        foreach ($menu as $menuIndex => $menuData) {
+            $menuFile = isset($menuData[2]) ? $menuData[2] : null;
+            if ($menuFile !== null) {
+                if ($menuFile === 'profile.php') {
+                    continue;
+                }
+
+                remove_menu_page($menuFile);
+            }
+        }
+    }
+
+    /**
+     * Hide some toolbar items from Client Users.
+     *
+     * @since   @todo
+     *
+     * @param   \WP_Admin_Bar   $wp_admin_bar
+     */
+    public function limitClientUsersToolbarItems($wp_admin_bar)
+    {
+        $user = wp_get_current_user();
+        $userRoles = (array)$user->roles;
+
+        if (count(array_intersect($userRoles, array('administrator', 'upstream_manager'))) === 0 && in_array('upstream_client_user', $userRoles)) {
+            $menuItems = array('about', 'comments', 'new-content');
+
+            if (!is_admin()) {
+                $menuItems = array_merge($menuItems, array('dashboard', 'edit'));
+            }
+
+            foreach ($menuItems as $menuItem) {
+                $wp_admin_bar->remove_menu($menuItem);
+            }
+        }
+    }
+
+    /**
      * Define Constants.
      * @since  1.0.0
      */
@@ -215,6 +282,14 @@ final class UpStream
 
         // Executes the Legacy Client Users Migration script if needed.
         \UpStream\Migrations\ClientUsers::run();
+
+        $user = wp_get_current_user();
+        $userRoles = (array)$user->roles;
+        if (count(array_intersect($userRoles, array('administrator', 'upstream_manager'))) === 0 && in_array('upstream_client_user', $userRoles)) {
+            add_filter('admin_init', array($this, 'limitClientUsersAdminAccess'));
+            add_filter('admin_head', array($this, 'limitClientUsersMenu'));
+            add_action('admin_bar_menu', array($this, 'limitClientUsersToolbarItems'), 999);
+        }
 
         // Init action.
         do_action( 'upstream_init' );
