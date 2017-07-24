@@ -156,18 +156,20 @@ final class UpStream_Metaboxes_Clients
         unset($rowset);
 
         $clientUsersList = array();
+        $clientUsersIdsList = array();
 
         // Retrieve all client users.
         $meta = (array)get_post_meta($client_id, '_upstream_new_client_users');
         if (!empty($meta)) {
             foreach ($meta[0] as $clientUser) {
-                if (!empty($clientUser) && is_array($clientUser) && isset($users[$clientUser['user_id']])) {
+                if (!empty($clientUser) && is_array($clientUser) && isset($users[$clientUser['user_id']]) && !in_array($clientUser['user_id'], $clientUsersIdsList)) {
                     $user = $users[$clientUser['user_id']];
 
                     $user['assigned_at'] = $clientUser['assigned_at'];
                     $user['assigned_by'] = $users[$clientUser['assigned_by']]['name'];
 
                     array_push($clientUsersList, (object)$user);
+                    array_push($clientUsersIdsList, $clientUser['user_id']);
                 }
             }
         }
