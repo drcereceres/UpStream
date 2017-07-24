@@ -245,8 +245,16 @@
 
       if (!hasError) {
         var passwordField = $('[name="password"]', form);
-        if (passwordField.val().length < 6) {
+        var passwordFieldValue = passwordField.val();
+        if (passwordFieldValue.length < 6) {
           throwFieldError(passwordField);
+          return;
+        }
+
+        var confirmPasswordField = $('[name="password_confirmation"]', form);
+        var confirmPasswordFieldValue = confirmPasswordField.val();
+        if (confirmPasswordFieldValue !== passwordFieldValue) {
+          throwFieldError(confirmPasswordField);
           return;
         }
       }
@@ -259,7 +267,8 @@
             action      : 'upstream:client.add_new_user',
             client      : $('#post_ID').val(),
             email       : $('[name="email"]', form).val(),
-            password    : passwordField.val(),
+            password    : passwordFieldValue,
+            password_c  : confirmPasswordField,
             first_name  : $('[name="first_name"]', form).val(),
             last_name   : $('[name="last_name"]', form).val(),
             notification: $('[name="notification"]', form).is(':checked'),

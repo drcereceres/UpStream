@@ -197,11 +197,11 @@ final class UpStream_Metaboxes_Clients
                     <div class="up-form-group">
                         <label for="new-user-password"><?php echo __('Password', 'upstream') .' *'; ?></label>
                         <input type="password" name="password" id="new-user-password" required />
-                        <div class="up-help-block">
-                            <ul>
-                                <li><?php echo __('Must be at least 6 characters long.', 'upstream'); ?></li>
-                            </ul>
-                        </div>
+                        <p class="description up-help-block"><?php echo __('Must be at least 6 characters long.', 'upstream'); ?></p>
+                    </div>
+                    <div class="up-form-group">
+                        <label for="new-user-password_confirmation"><?php echo __('Confirm Password', 'upstream') .' *'; ?></label>
+                        <input type="password" name="password_confirmation" id="new-user-password_confirmation" required />
                     </div>
                     <hr />
                     <h3><?php echo __('Profile', 'upstream'); ?></h3>
@@ -666,6 +666,7 @@ final class UpStream_Metaboxes_Clients
             $data = array(
                 'email'        => isset($_POST['email']) ? $_POST['email'] : '',
                 'password'     => isset($_POST['password']) ? $_POST['password'] : '',
+                'password_c'   => isset($_POST['password_c']) ? $_POST['password_c'] : '',
                 'first_name'   => trim(@$_POST['first_name']),
                 'last_name'    => trim(@$_POST['last_name']),
                 'notification' => isset($_POST['notification']) ? (bool)$_POST['notification'] : true
@@ -674,6 +675,10 @@ final class UpStream_Metaboxes_Clients
             // Validate `password` field.
             if (strlen($data['password']) < 6) {
                 throw new \Exception(__("Password must be at least 6 characters long.", 'upstream'));
+            }
+
+            if (strcmp($data['password'], $data['password_c']) !== 0) {
+                throw new \Exception(__("Passwords don't match.", 'upstream'));
             }
 
             // Validate the `email` field.
