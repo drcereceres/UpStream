@@ -24,21 +24,31 @@ function getTableDefaultOptions() {
 }
 
 var milestonesTableOptions = getTableDefaultOptions();
-milestonesTableOptions.columnDefs[0].targets = [7];
+milestonesTableOptions.columnDefs[0].targets = (function() {
+    return [(jQuery('#milestones thead tr th').length - 1)];
+})();
 var tableMilestones = jQuery('#milestones').DataTable(milestonesTableOptions);
 
 var tasksTableOptions = getTableDefaultOptions();
-tasksTableOptions.columnDefs[0].targets = [8];
+tasksTableOptions.columnDefs[0].targets = (function() {
+    return [(jQuery('#tasks thead tr th').length - 1)];
+})();
 var tableTasks = jQuery('#tasks').DataTable(tasksTableOptions);
 var tableMyTasks = jQuery('#my-tasks').DataTable(tasksTableOptions);
 
 var bugsTableOptions = getTableDefaultOptions();
-bugsTableOptions.columnDefs[0].targets = [6, 7];
+bugsTableOptions.columnDefs[0].targets = (function() {
+    var lastIndex = jQuery('#bugs thead tr th').length;
+    return [lastIndex - 1, lastIndex - 2];
+})();
 var tableBugs = jQuery('#bugs').DataTable(bugsTableOptions);
 var tableMyBugs = jQuery('#my-bugs').DataTable(bugsTableOptions);
 
 var filesTableOptions = getTableDefaultOptions();
-filesTableOptions.columnDefs[0].targets = [2, 3];
+filesTableOptions.columnDefs[0].targets = (function() {
+    var lastIndex = jQuery('#files thead tr th').length;
+    return [lastIndex - 1, lastIndex - 2];
+})();
 var tableFiles = jQuery('#files').DataTable(filesTableOptions);
 
 /**

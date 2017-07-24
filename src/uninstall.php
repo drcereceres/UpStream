@@ -63,7 +63,7 @@ if( $remove[0] == 'yes' ) {
     $roles->remove_caps();
 
     /** Delete the Roles */
-    $upstream_roles = array( 'upstream_manager', 'upstream_user' );
+    $upstream_roles = array( 'upstream_manager', 'upstream_user', 'upstream_client_user' );
     foreach ( $upstream_roles as $role ) {
         remove_role( $role );
     }

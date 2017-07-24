@@ -86,7 +86,7 @@ class UpStream_Admin_Client_Columns {
         }
 
         if ( $column_name == 'users' ) {
-            upstream_client_render_users_column( $client->get_meta( 'users' ) );
+            upstream_client_render_users_column(upstream_get_client_users($post_id));
         }
 
     }
@@ -99,34 +99,29 @@ endif;
 
 
 /**
- * Manually render a field column display.
+ * Renders the client users list column value.
  *
- * @param  array      $field_args Array of field arguments.
- * @param  CMB2_Field $field      The field object
+ * @since   1.0.0
+ *
+ * @param   array   $usersList  Array of client users.
  */
-function upstream_client_render_users_column( $value ) {
+function upstream_client_render_users_column($usersList)
+{
+    $usersList = (array)$usersList;
+    $usersListCount = count($usersList);
 
-    if( ! $value )
-        return;
-    ?>
-    <p>
-        <?php
+    if ($usersListCount === 0) {
+        echo '<i>' . __('none', 'upstream') . '</i>';
+    } else {
+        $userIndex = 0;
+        foreach ($usersList as $user) {
+            echo $user['name'] . '<br/>';
 
-        $i = 0;
-        $count = count( $value );
-        foreach ( $value as $key => $user ) {
-
-            echo $user['fname'] . ' ' . $user['lname'] . '<br>';
-
-             // set limit on number of users to display
-            if (++$i == 2 && $count > 2) :
-                $more = $count - $i;
-                printf( _n( '+%s more user', '+%s more users', $more, 'upstream'), $more );
+            if ($userIndex === 2) {
+                echo sprintf('<i>' . __('+%s more %s', 'upstream') . '</i>', $usersListCount, ($usersListCount > 1 ? __('users', 'upstream') : __('user', 'upstream')));
                 break;
-            endif;
-
+            }
+            $userIndex++;
         }
-        ?>
-    </p>
-    <?php
+    }
 }

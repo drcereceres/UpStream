@@ -205,6 +205,9 @@ function upstream_user_data( $data = 0, $ignore_current = false ) {
         if( in_array( 'upstream_manager', $wp_user->roles ) ) {
             $role = sprintf( __( '%s Manager', 'upstream' ), upstream_project_label() );
         }
+        if( in_array( 'upstream_client_user', $wp_user->roles ) ) {
+            $role = sprintf( __( '%s Client User', 'upstream' ), upstream_project_label() );
+        }
 
         $user_data = array(
             'id'        => $wp_user->ID,
@@ -814,4 +817,36 @@ function applyOEmbedFiltersToWysiwygEditorContent($content, $field_args, $field)
     }
 
     return $content;
+}
+
+/**
+ * Convert a given date (UTC)/timestamp to the instance's timezone.
+ *
+ * @since   @todo
+ *
+ * @param   int|string      $subject    The date to be converted. If int, assume it's a timestamp.
+ *
+ * @return  string|false                The converted string or false in case of failure.
+ */
+function upstream_convert_UTC_date_to_timezone($subject)
+{
+    try {
+        $timezone = get_option('timezone_string');
+        $timezone = !empty($timezone) ? $timezone : 'UTC';
+        $instanceTimezone = new DateTimeZone($timezone);
+        $dateFormat = get_option('date_format') . ' ' . get_option('time_format');
+
+        if (is_numeric($subject)) {
+            $theDate = new DateTime();
+            $theDate->setTimestamp($subject);
+        } else {
+            $theDate = new DateTime($subject);
+        }
+
+        $theDate->setTimeZone($instanceTimezone);
+
+        return $theDate->format($dateFormat);
+    } catch (Exception $e) {
+        return false;
+    }
 }
