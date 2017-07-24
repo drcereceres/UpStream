@@ -30,16 +30,17 @@ function upstream_load_admin_scripts( $hook ) {
         // @todo : Remove the mt_rand function.
         wp_enqueue_script('up-metabox-client', $js_dir . 'metabox-client.js', array('jquery'), UPSTREAM_VERSION . mt_rand(1, 999999), true);
         wp_localize_script('up-metabox-client', 'upstreamMetaboxClientLangStrings', array(
-            'ERR_JQUERY_NOT_FOUND'    => __('UpStream requires jQuery.', 'upstream'),
-            'MSG_NO_ASSIGNED_USERS'   => __("There's no users assigned yet.", 'upstream'),
-            'MSG_NO_USER_SELECTED'    => __('Please, select at least one user', 'upstream'),
-            'MSG_ADD_ONE_USER'        => __('Add 1 User', 'upstream'),
-            'MSG_ADD_MULTIPLE_USERS'  => __('Add %d Users', 'upstream'),
-            'MSG_NO_USERS_FOUND'      => __('No users found.', 'upstream'),
-            'LB_ADDING_USERS'         => __('Adding...', 'upstream'),
-            'MSG_ARE_YOU_SURE'        => __('Are you sure? This action cannot be undone.', 'upstream'),
-            'MSG_FETCHING_DATA'       => __('Fetching data...', 'upstream'),
-            'MSG_NO_DATA_FOUND'       => __('No data found.', 'upstream')
+            'ERR_JQUERY_NOT_FOUND'     => __('UpStream requires jQuery.', 'upstream'),
+            'MSG_NO_ASSIGNED_USERS'    => __("There's no users assigned yet.", 'upstream'),
+            'MSG_NO_USER_SELECTED'     => __('Please, select at least one user', 'upstream'),
+            'MSG_ADD_ONE_USER'         => __('Add 1 User', 'upstream'),
+            'MSG_ADD_MULTIPLE_USERS'   => __('Add %d Users', 'upstream'),
+            'MSG_NO_USERS_FOUND'       => __('No users found.', 'upstream'),
+            'LB_ADDING_USERS'          => __('Adding...', 'upstream'),
+            'MSG_ARE_YOU_SURE'         => __('Are you sure? This action cannot be undone.', 'upstream'),
+            'MSG_FETCHING_DATA'        => __('Fetching data...', 'upstream'),
+            'MSG_NO_DATA_FOUND'        => __('No data found.', 'upstream'),
+            'MSG_MANAGING_PERMISSIONS' => __("Managing %s\'s Permissions", 'upstream')
         ));
     }
 
