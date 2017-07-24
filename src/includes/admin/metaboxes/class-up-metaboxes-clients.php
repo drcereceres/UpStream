@@ -340,10 +340,9 @@ final class UpStream_Metaboxes_Clients
                 <thead>
                     <tr>
                         <th><?php echo __('Name', 'upstream'); ?></th>
-                        <th><?php echo __('Username', 'upstream'); ?></th>
                         <th><?php echo __('Email', 'upstream'); ?></th>
-                        <th class="text-center"><?php echo __('Assigned at', 'upstream'); ?></th>
                         <th><?php echo __('Assigned by', 'upstream'); ?></th>
+                        <th class="text-center"><?php echo __('Assigned at', 'upstream'); ?></th>
                         <th class="text-center"><?php echo __('Remove?', 'upstream'); ?></th>
                     </tr>
                 </thead>
@@ -363,10 +362,9 @@ final class UpStream_Metaboxes_Clients
                         <td>
                             <a title="Managing <?php echo $user->name; ?>'s Permissions" href="#TB_inline?width=600&height=425&inlineId=modal-user-permissions" class="thickbox"><?php echo $user->name; ?></a>
                         </td>
-                        <td><?php echo $user->username; ?></td>
                         <td><?php echo $user->email; ?></td>
-                        <td class="text-center"><?php echo $assignedAt->format($dateFormat); ?></td>
                         <td><?php echo $user->assigned_by; ?></td>
+                        <td class="text-center"><?php echo $assignedAt->format($dateFormat); ?></td>
                         <td class="text-center">
                             <a href="#" onclick="javascript:void(0);" class="up-u-color-red" data-remove-user>
                                 <span class="dashicons dashicons-trash"></span>
@@ -376,7 +374,7 @@ final class UpStream_Metaboxes_Clients
                     <?php endforeach; ?>
                     <?php else: ?>
                     <tr data-empty>
-                        <td colspan="7"><?php echo __("There's no users assigned yet.", 'upstream'); ?></td>
+                        <td colspan="5"><?php echo __("There's no users assigned yet.", 'upstream'); ?></td>
                     </tr>
                     <?php endif; ?>
                 </tbody>

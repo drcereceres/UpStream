@@ -288,10 +288,9 @@
 
               var tr = $('<tr data-id="'+ response.data.id +'"></tr>');
               tr.append('<td><a title="'+ l['MSG_MANAGING_PERMISSIONS'].replace('%s', response.data.name) +'" href="#TB_inline?width=600&height=425&inlineId=modal-user-permissions" class="thickbox">'+ response.data.name +'</a></td>');
-              tr.append('<td>'+ response.data.username +'</td>');
               tr.append('<td>'+ response.data.email +'</td>');
-              tr.append('<td class="text-center">'+ response.data.assigned_at +'</td>');
               tr.append('<td>'+ response.data.assigned_by +'</td>');
+              tr.append('<td class="text-center">'+ response.data.assigned_at +'</td>');
               tr.append('<td class="text-center"><a href="#" class="up-u-color-red" data-remove-user><span class="dashicons dashicons-trash"></span></a></td>');
 
               var table = $('#table-users');
