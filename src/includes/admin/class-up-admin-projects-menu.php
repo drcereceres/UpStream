@@ -58,7 +58,7 @@ class UpStream_Admin_Projects_Menu {
         global $submenu;
 
         $subMenuIdentifier = 'edit.php?post_type=project';
-        if ($submenu[$subMenuIdentifier]) {
+        if (isset($submenu[$subMenuIdentifier]) && $submenu[$subMenuIdentifier]) {
             $arr = array();
             $arr[] = $submenu[$subMenuIdentifier][5];
             $arr[] = isset($submenu[$subMenuIdentifier][18]) ? $submenu[$subMenuIdentifier][18] : null;
