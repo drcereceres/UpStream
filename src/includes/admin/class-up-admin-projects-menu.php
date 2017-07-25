@@ -48,8 +48,7 @@ class UpStream_Admin_Projects_Menu {
      * Add menu item.
      */
     public function projects_menu() {
-        add_submenu_page( 'edit.php?post_type=project', upstream_client_label_plural(),upstream_client_label_plural(), 'edit_clients', 'edit.php?post_type=client' );
-        add_submenu_page( 'edit.php?post_type=project', sprintf( __( 'New %s', 'upstream' ), upstream_client_label() ),sprintf( __( 'New %s', 'upstream' ), upstream_client_label() ), 'edit_clients', 'post-new.php?post_type=client' );
+        add_submenu_page('edit.php?post_type=project', upstream_client_label_plural(), upstream_client_label_plural(), 'edit_clients', 'edit.php?post_type=client');
     }
 
 
@@ -70,6 +69,10 @@ class UpStream_Admin_Projects_Menu {
                 $arr[] = $submenu[$subMenuIdentifier][15];
                 $arr[] = $submenu[$subMenuIdentifier][16];
                 $arr[] = $submenu[$subMenuIdentifier][17];
+            }
+
+            if (isset($arr[3]) && !empty($arr[3])) {
+                $arr[3] = null;
             }
 
             $submenu[$subMenuIdentifier] = $arr;
