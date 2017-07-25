@@ -460,6 +460,11 @@ final class ClientUsers
             throw new \Exception(__("Passwords must be at least 6 characters long.", 'upstream'));
         }
 
+        $userPasswordConfirmation = isset($data->password_c) ? (string)$data->password_c : '';
+        if (strcmp($userPassword, $userPasswordConfirmation) !== 0) {
+            throw new \Exception(__("Passwords don't match.", 'upstream'));
+        }
+
         $userFirstName = isset($data->fname) ? trim((string)$data->fname) : '';
         $userLastName = isset($data->lname) ? trim((string)$data->lname) : '';
         $userDisplayName = $userFirstName;

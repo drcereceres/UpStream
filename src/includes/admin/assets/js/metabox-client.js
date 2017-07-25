@@ -356,8 +356,16 @@
       }
 
       var passwordField = $('[name="password"]', wrapper);
-      if (passwordField.val().length < 6) {
+      var passwordFieldValue = passwordField.val();
+      if (passwordFieldValue.length < 6) {
         throwFieldError(passwordField);
+        return;
+      }
+
+      var passwordCField = $('[name="password_c"]', wrapper);
+      var passwordCFieldValue = passwordCField.val();
+      if (passwordCFieldValue !== passwordFieldValue) {
+        throwFieldError(passwordCField);
         return;
       }
 
@@ -370,7 +378,8 @@
             client    : $('#post_ID').val(),
             user_id   : self.attr('data-id'),
             email     : $('[name="email"]', wrapper).val(),
-            password  : passwordField.val(),
+            password  : passwordFieldValue,
+            password_c: passwordCFieldValue,
             first_name: $('[name="fname"]', wrapper).val(),
             last_name : $('[name="lname"]', wrapper).val()
           },
@@ -395,8 +404,7 @@
               }
 
               var tr = $('<tr data-id="'+ response.data.id +'"></tr>');
-              tr.append('<td>'+ response.data.name +'</td>');
-              tr.append('<td></td>');
+              tr.append('<td><a title="'+ l['MSG_MANAGING_PERMISSIONS'].replace('%s', response.data.name) +'" href="#TB_inline?width=600&height=425&inlineId=modal-user-permissions" class="thickbox">'+ response.data.name +'</a></td>');
               tr.append('<td>'+ response.data.email +'</td>');
               tr.append('<td class="text-center">'+ response.data.assigned_at +'</td>');
               tr.append('<td>'+ response.data.assigned_by +'</td>');

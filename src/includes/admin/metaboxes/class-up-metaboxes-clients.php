@@ -192,26 +192,26 @@ final class UpStream_Metaboxes_Clients
                     <h3><?php echo __('Credentials', 'upstream'); ?></h3>
                     <div class="up-form-group">
                         <label for="new-user-email"><?php echo __('Email', 'upstream') .' *'; ?></label>
-                        <input type="email" name="email" id="new-user-email" required />
+                        <input type="email" name="email" id="new-user-email" required size="35" />
                     </div>
                     <div class="up-form-group">
                         <label for="new-user-password"><?php echo __('Password', 'upstream') .' *'; ?></label>
-                        <input type="password" name="password" id="new-user-password" required />
+                        <input type="password" name="password" id="new-user-password" required size="35" />
                         <p class="description up-help-block"><?php echo __('Must be at least 6 characters long.', 'upstream'); ?></p>
                     </div>
                     <div class="up-form-group">
                         <label for="new-user-password_confirmation"><?php echo __('Confirm Password', 'upstream') .' *'; ?></label>
-                        <input type="password" name="password_confirmation" id="new-user-password_confirmation" required />
+                        <input type="password" name="password_confirmation" id="new-user-password_confirmation" required size="35" />
                     </div>
                     <hr />
                     <h3><?php echo __('Profile', 'upstream'); ?></h3>
                     <div class="up-form-group">
                         <label for="new-user-first_name"><?php echo __('First Name', 'upstream'); ?></label>
-                        <input type="text" name="first_name" id="new-user-first_name" />
+                        <input type="text" name="first_name" id="new-user-first_name" size="35" />
                     </div>
                     <div class="up-form-group">
                         <label for="new-user-last_name"><?php echo __('Last Name', 'upstream'); ?></label>
-                        <input type="text" name="last_name" id="new-user-last_name" />
+                        <input type="text" name="last_name" id="new-user-last_name" size="35" />
                     </div>
                 </div>
                 <div>
@@ -280,7 +280,7 @@ final class UpStream_Metaboxes_Clients
         <div id="modal-migrate-user" style="display: none;">
             <div id="form-migrate-user">
                 <div>
-                    <h3><?php echo __('User Data', 'upstream'); ?></h3>
+                    <h3><?php echo __('Credentials', 'upstream'); ?></h3>
                     <div class="up-form-group">
                         <label for="migrate-user-email"><?php echo __('Email', 'upstream') . ' *'; ?></label>
                         <input type="email" name="email" id="migrate-user-email" required size="35" />
@@ -288,12 +288,14 @@ final class UpStream_Metaboxes_Clients
                     <div class="up-form-group">
                         <label for="migrate-user-password"><?php echo __('Password', 'upstream') . ' *'; ?></label>
                         <input type="password" name="password" id="migrate-user-password" required size="35" />
-                        <div class="up-help-block">
-                            <ul>
-                                <li><?php echo __('Must be at least 6 characters long.', 'upstream'); ?></li>
-                            </ul>
-                        </div>
+                        <p class="description up-help-block"><?php echo __('Must be at least 6 characters long.', 'upstream'); ?></p>
                     </div>
+                    <div class="up-form-group">
+                        <label for="migrate-user-password_c"><?php echo __('Confirm Password', 'upstream') . ' *'; ?></label>
+                        <input type="password" name="password_c" id="migrate-user-password_c" required size="35" />
+                    </div>
+                    <hr />
+                    <h3><?php echo __('Profile', 'upstream'); ?></h3>
                     <div class="up-form-group">
                         <label for="migrate-user-fname"><?php echo __('First Name', 'upstream'); ?></label>
                         <input type="text" name="fname" id="migrate-user-fname" size="35" />
@@ -1007,11 +1009,12 @@ final class UpStream_Metaboxes_Clients
             $client_id = (int)$_POST['client'];
 
             $data = array(
-                'id'       => isset($_POST['user_id']) ? $_POST['user_id'] : null,
-                'email'    => isset($_POST['email']) ? $_POST['email'] : null,
-                'password' => isset($_POST['password']) ? $_POST['password'] : null,
-                'fname'    => isset($_POST['first_name']) ? $_POST['first_name'] : null,
-                'lname'    => isset($_POST['last_name']) ? $_POST['last_name'] : null
+                'id'         => isset($_POST['user_id']) ? $_POST['user_id'] : null,
+                'email'      => isset($_POST['email']) ? $_POST['email'] : null,
+                'password'   => isset($_POST['password']) ? $_POST['password'] : "",
+                'password_c' => isset($_POST['password_c']) ? $_POST['password_c'] : "",
+                'fname'      => isset($_POST['first_name']) ? $_POST['first_name'] : null,
+                'lname'      => isset($_POST['last_name']) ? $_POST['last_name'] : null
             );
 
             $userData = ClientUsersMigration::insertNewClientUser($data, $client_id);
