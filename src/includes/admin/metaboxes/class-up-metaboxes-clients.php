@@ -351,10 +351,10 @@ final class UpStream_Metaboxes_Clients
             ><?php echo __('Add New User', 'upstream'); ?></a>
             <a
                 id="add-existent-user"
-                name="<?php echo __('Add Existent Users', 'upstream'); ?>"
+                name="<?php echo __('Assign Existent Users', 'upstream'); ?>"
                 href="#TB_inline?width=600&height=300&inlineId=modal-add-existent-user"
                 class="thickbox button"
-            ><?php echo __('Add Existent Users', 'upstream'); ?></a>
+            ><?php echo __('Assign Existent Users', 'upstream'); ?></a>
         </div>
         <div class="upstream-row">
             <table id="table-users" class="wp-list-table widefat fixed striped posts upstream-table">
