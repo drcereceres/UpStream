@@ -14,17 +14,6 @@
 if ( ! defined( 'ABSPATH' ) ) exit;
 
 if ( ! class_exists( 'UpStream' ) ) :
-/*
- * Helper function for quick debugging
- */
-if (!function_exists('pp')) {
-    function pp( $array )
-    {
-        echo '<pre style="white-space:pre-wrap;">';
-            print_r( $array );
-        echo '</pre>';
-    }
-}
 
 /**
  * Main UpStream Class.

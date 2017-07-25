@@ -272,7 +272,7 @@ class UpStream_Roles {
             $manager_caps   = $this->get_upstream_manager_caps();
             $manager_role   = get_role( 'upstream_manager' );
             $admin_role     = get_role( 'administrator' );
-            //pp( $manager_role );
+
             foreach ( $manager_caps as $post_type ) {
                 foreach ( $post_type as $index => $cap ) {
                     if( $manager_role ) {

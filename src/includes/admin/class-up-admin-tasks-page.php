@@ -66,7 +66,7 @@ class Upstream_Task_List extends WP_List_Table {
         $all_class      = ( $current == 'all' ? ' class="current"' : '' );
         $all_url        = remove_query_arg( array( 'status', 'view' ) );
         $all_count      = upstream_count_total( 'tasks' );
-        // pp($all_count);
+
         $views['all']   = "<a href='" . esc_url( $all_url ) . "' " . esc_attr( $all_class ) . " >" . __( 'All', 'upstream' ) . "</a>(" . esc_html( $all_count ) . ")";
 
         //Mine link
