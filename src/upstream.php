@@ -102,7 +102,7 @@ final class UpStream
     /**
      * Prevent a Client User from accessing any page other than the profile.
      *
-     * @since   @todo
+     * @since   1.11.0
      *
      * @global  $pagenow
      */
@@ -121,7 +121,7 @@ final class UpStream
     /**
      * Make sure Client Users can only see the Profile menu item.
      *
-     * @since   @todo
+     * @since   1.11.0
      *
      * @global  $menu
      */
@@ -144,7 +144,7 @@ final class UpStream
     /**
      * Hide some toolbar items from Client Users.
      *
-     * @since   @todo
+     * @since   1.11.0
      *
      * @param   \WP_Admin_Bar   $wp_admin_bar
      */

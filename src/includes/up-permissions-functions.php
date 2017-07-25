@@ -143,7 +143,7 @@ function upstream_admin_permissions( $capability = null ) {
 /**
  * Retrieve all Client Users permissions available.
  *
- * @since   @todo
+ * @since   1.11.0
  *
  * @return  array
  */

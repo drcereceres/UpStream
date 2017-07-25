@@ -14,7 +14,7 @@ use \UpStream\Migrations\ClientUsers as ClientUsersMigration;
  * @author      UpStream <https://upstreamplugin.com>
  * @copyright   Copyright (c) 2017 UpStream Project Management
  * @license     GPL-3
- * @since       @todo
+ * @since       1.11.0
  * @final
  */
 final class UpStream_Metaboxes_Clients
@@ -24,7 +24,7 @@ final class UpStream_Metaboxes_Clients
     /**
      * The post type where this metabox will be used.
      *
-     * @since   @todo
+     * @since   1.11.0
      * @access  protected
      * @static
      *
@@ -35,7 +35,7 @@ final class UpStream_Metaboxes_Clients
     /**
      * String that represents the singular form of the post type's name.
      *
-     * @since   @todo
+     * @since   1.11.0
      * @access  protected
      * @static
      *
@@ -46,7 +46,7 @@ final class UpStream_Metaboxes_Clients
     /**
      * String that represents the plural form of the post type's name.
      *
-     * @since   @todo
+     * @since   1.11.0
      * @access  protected
      * @static
      *
@@ -57,7 +57,7 @@ final class UpStream_Metaboxes_Clients
     /**
      * Prefix used on form fields.
      *
-     * @since   @todo
+     * @since   1.11.0
      * @access  protected
      * @static
      *
@@ -68,7 +68,7 @@ final class UpStream_Metaboxes_Clients
     /**
      * Class constructor.
      *
-     * @since   @todo
+     * @since   1.11.0
      */
     public function __construct()
     {
@@ -116,7 +116,7 @@ final class UpStream_Metaboxes_Clients
     /**
      * Render all inner-metaboxes.
      *
-     * @since   @todo
+     * @since   1.11.0
      * @access  private
      * @static
      */
@@ -135,7 +135,7 @@ final class UpStream_Metaboxes_Clients
     /**
      * Retrieve all Client Users associated with a given client.
      *
-     * @since   @todo
+     * @since   1.11.0
      * @access  private
      * @static
      *
@@ -193,7 +193,7 @@ final class UpStream_Metaboxes_Clients
     /**
      * Renders the modal's html which is used to add new client users.
      *
-     * @since   @todo
+     * @since   1.11.0
      * @access  private
      * @static
      */
@@ -247,7 +247,7 @@ final class UpStream_Metaboxes_Clients
     /**
      * Renders the modal's html which is used to associate existent client users with a client.
      *
-     * @since   @todo
+     * @since   1.11.0
      * @access  private
      * @static
      */
@@ -284,7 +284,7 @@ final class UpStream_Metaboxes_Clients
     /**
      * Renders the modal's html which is used to migrate legacy client users.
      *
-     * @since   @todo
+     * @since   1.11.0
      * @access  private
      * @static
      */
@@ -333,7 +333,7 @@ final class UpStream_Metaboxes_Clients
      * Renders the users metabox.
      * This is where all client users are listed.
      *
-     * @since   @todo
+     * @since   1.11.0
      * @static
      */
     public static function renderUsersMetabox()
@@ -342,7 +342,6 @@ final class UpStream_Metaboxes_Clients
         $usersList = self::getUsersFromClient($client_id);
         ?>
 
-        <?php // @todo: create js/css to make Thickbox responsive. ?>
         <div class="upstream-row">
             <a
                 name="<?php echo __('Add New User', 'upstream'); ?>"
@@ -415,7 +414,7 @@ final class UpStream_Metaboxes_Clients
     /**
      * Renders the Disclaimer metabox.
      *
-     * @since   @todo
+     * @since   1.11.0
      * @static
      */
     public static function renderDisclaimerMetabox()
@@ -444,7 +443,7 @@ final class UpStream_Metaboxes_Clients
     /**
      * It defines the Users metabox.
      *
-     * @since   @todo
+     * @since   1.11.0
      * @static
      */
     public static function createUsersMetabox()
@@ -465,7 +464,7 @@ final class UpStream_Metaboxes_Clients
      *
      * If there's no legacy user to be migrated, the box is not shown.
      *
-     * @since   @todo
+     * @since   1.11.0
      * @static
      */
     public static function createLegacyUsersMetabox()
@@ -490,7 +489,7 @@ final class UpStream_Metaboxes_Clients
     /**
      * Renders the Legacy Users metabox.
      *
-     * @since   @todo
+     * @since   1.11.0
      * @static
      */
     public static function renderLegacyUsersMetabox()
@@ -577,7 +576,7 @@ final class UpStream_Metaboxes_Clients
     /**
      * Renders the Details metabox using CMB2.
      *
-     * @since   @todo
+     * @since   1.11.0
      * @static
      */
     public static function renderDetailsMetabox()
@@ -615,7 +614,7 @@ final class UpStream_Metaboxes_Clients
     /**
      * Renders Logo metabox using CMB2.
      *
-     * @since   @todo
+     * @since   1.11.0
      * @static
      */
     public static function renderLogoMetabox()
@@ -641,7 +640,7 @@ final class UpStream_Metaboxes_Clients
     /**
      * Ajax endpoint responsible for adding new Client Users to the system and client.
      *
-     * @since   @todo
+     * @since   1.11.0
      * @static
      */
     public static function addNewUser()
@@ -764,7 +763,7 @@ final class UpStream_Metaboxes_Clients
     /**
      * Ajax endpoint responsible for removing Client Users from a given client.
      *
-     * @since   @todo
+     * @since   1.11.0
      * @static
      */
     public static function removeUser()
@@ -824,7 +823,7 @@ final class UpStream_Metaboxes_Clients
      * Ajax endpoint responsible for fetching all Client Users that are not related to
      * the given client.
      *
-     * @since   @todo
+     * @since   1.11.0
      * @static
      */
     public static function fetchUnassignedUsers()
@@ -891,7 +890,7 @@ final class UpStream_Metaboxes_Clients
     /**
      * Ajax endpoint responsible for associating existent Client Users to a given client.
      *
-     * @since   @todo
+     * @since   1.11.0
      * @static
      */
     public static function addExistentUsers()
@@ -987,7 +986,7 @@ final class UpStream_Metaboxes_Clients
     /**
      * Ajax endpoint responsible for migrating a given Legacy Client User.
      *
-     * @since   @todo
+     * @since   1.11.0
      * @static
      */
     public static function migrateLegacyUser()
@@ -1174,7 +1173,7 @@ final class UpStream_Metaboxes_Clients
     /**
      * Ajax endpoint responsible for discard a given Legacy Client User.
      *
-     * @since   @todo
+     * @since   1.11.0
      * @static
      */
     public static function discardLegacyUser()
@@ -1230,7 +1229,7 @@ final class UpStream_Metaboxes_Clients
     /**
      * Renders the modal's html which is used to manage a given Client User's permissions.
      *
-     * @since   @todo
+     * @since   1.11.0
      * @access  private
      * @static
      */
@@ -1271,7 +1270,7 @@ final class UpStream_Metaboxes_Clients
     /**
      * Ajax endpoint responsible for fetching all permissions a given Client User might have.
      *
-     * @since   @todo
+     * @since   1.11.0
      * @static
      */
     public static function fetchUserPermissions()
@@ -1322,7 +1321,7 @@ final class UpStream_Metaboxes_Clients
     /**
      * Ajax endpoint responsible for updating a given Client User permissions.
      *
-     * @since   @todo
+     * @since   1.11.0
      * @static
      */
     public static function updateUserPermissions()

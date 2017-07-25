@@ -83,7 +83,7 @@ add_action( 'save_post', 'upstream_update_client_meta_values', 99999, 3 );
 /**
  * Retrieve all Client Users associated with a given client.
  *
- * @since   @todo
+ * @since   1.11.0
  *
  * @param   int         $client_id  The reference id.
  *
@@ -131,7 +131,7 @@ function upstream_get_client_users($client_id)
 /**
  * Check if a given user is a Client User associated with a given client.
  *
- * @since   @todo
+ * @since   1.11.0
  *
  * @param   int         $client_user_id The client user id.
  * @param   int         $client_id      The client id.
@@ -155,7 +155,7 @@ function upstream_do_client_user_belongs_to_client($client_user_id, $client_id)
 /**
  * Retrieve all client user permissions.
  *
- * @since   @todo
+ * @since   1.11.0
  *
  * @param   int         $client_user_id     The client user id.
  *

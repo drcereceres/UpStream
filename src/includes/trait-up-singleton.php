@@ -12,14 +12,14 @@ if (!defined('ABSPATH')) exit;
  * @author      UpStream <https://upstreamplugin.com>
  * @copyright   Copyright (c) 2017 UpStream Project Management
  * @license     GPL-3
- * @since       @todo
+ * @since       1.11.0
  */
 trait Singleton
 {
     /**
      * @var     \ReflectionClass    $instance   The singleton class's instance.
      *
-     * @since   @todo
+     * @since   1.11.0
      * @access  private
      * @static
      */
@@ -28,7 +28,7 @@ trait Singleton
     /**
      * Initializes the singleton if it's not loaded yet.
      *
-     * @since   @todo
+     * @since   1.11.0
      * @static
      * @final
      *
@@ -46,7 +46,7 @@ trait Singleton
      * Retrieve the singleton instance.
      * If the singleton it's not loaded, it will be initialized first.
      *
-     * @since   @todo
+     * @since   1.11.0
      * @static
      *
      * @return  \ReflectionClass
@@ -62,7 +62,7 @@ trait Singleton
     /**
      * Prevent the class instance being serialized.
      *
-     * @since   @todo
+     * @since   1.11.0
      * @access  private
      * @final
      *
@@ -76,7 +76,7 @@ trait Singleton
     /**
      * Prevent the class instance being unserialized.
      *
-     * @since   @todo
+     * @since   1.11.0
      * @access  private
      * @final
      *
@@ -90,7 +90,7 @@ trait Singleton
     /**
      * Prevent the class instance being cloned.
      *
-     * @since   @todo
+     * @since   1.11.0
      * @access  private
      * @final
      */

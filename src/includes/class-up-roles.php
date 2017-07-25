@@ -302,7 +302,7 @@ class UpStream_Roles {
     /**
      * Method responsible for creating the 'upstream_client_user' role if it doesn't exist yet.
      *
-     * @since   @todo
+     * @since   1.11.0
      * @static
      *
      * @global  $wp_roles

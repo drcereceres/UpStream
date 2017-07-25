@@ -822,7 +822,7 @@ function applyOEmbedFiltersToWysiwygEditorContent($content, $field_args, $field)
 /**
  * Convert a given date (UTC)/timestamp to the instance's timezone.
  *
- * @since   @todo
+ * @since   1.11.0
  *
  * @param   int|string      $subject    The date to be converted. If int, assume it's a timestamp.
  *
