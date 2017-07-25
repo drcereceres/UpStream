@@ -101,13 +101,14 @@ final class UpStream_Metaboxes_Clients
         global $pagenow;
         if ($pagenow === 'post.php') {
             $user_id = get_current_user_id();
+            $disclaimerNoticeMetaName = '_upstream_legacy_users_disclaimer_notice';
 
-            $disclaimerNotice = (array)get_user_meta($user_id, '_upstream_legacy_users_disclaimer_notice');
+            $disclaimerNotice = (array)get_user_meta($user_id, $disclaimerNoticeMetaName);
             $disclaimerNotice = !empty($disclaimerNotice) ? (bool)$disclaimerNotice[0] : false;
 
             if (!$disclaimerNotice) {
                 add_action('admin_notices', array($namespace, 'renderDisclaimerMetabox'));
-                update_user_meta($user_id, '_upstream_legacy_users_disclaimer_notice', 1);
+                update_user_meta($user_id, $disclaimerNoticeMetaName, 1);
             }
         }
     }
