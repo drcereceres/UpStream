@@ -910,3 +910,8 @@ a.up-u-color-red:focus {
   padding: 0;
   margin: 0;
 }
+
+body.wp-admin.upstream.post-type-project #visibility,
+body.wp-admin.upstream.post-type-client #visibility {
+  display: none;
+}
