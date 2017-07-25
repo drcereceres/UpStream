@@ -463,6 +463,7 @@
           success   : function(response, textStatus, jqXHR) {
             if (!response.success) {
               alert(response.err);
+              self.removeClass('up-spinner').html('<span class="dashicons dashicons-trash up-u-color-red"></span>');
             } else {
               $('tr[data-id="'+ user_id +'"]', table).remove();
 
