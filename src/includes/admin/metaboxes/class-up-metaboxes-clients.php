@@ -97,6 +97,19 @@ final class UpStream_Metaboxes_Clients
 
         // Render all inner metaboxes.
         self::renderMetaboxes();
+
+        global $pagenow;
+        if ($pagenow === 'post.php') {
+            $user_id = get_current_user_id();
+
+            $disclaimerNotice = (array)get_user_meta($user_id, '_upstream_legacy_users_disclaimer_notice');
+            $disclaimerNotice = !empty($disclaimerNotice) ? (bool)$disclaimerNotice[0] : false;
+
+            if (!$disclaimerNotice) {
+                add_action('admin_notices', array($namespace, 'renderDisclaimerMetabox'));
+                update_user_meta($user_id, '_upstream_legacy_users_disclaimer_notice', 1);
+            }
+        }
     }
 
     /**
@@ -112,7 +125,7 @@ final class UpStream_Metaboxes_Clients
         self::renderLogoMetabox();
 
         $namespace = get_class(self::$instance);
-        $metaboxesCallbacksList = array('createDisclaimerMetabox', 'createUsersMetabox', 'createLegacyUsersMetabox');
+        $metaboxesCallbacksList = array('createUsersMetabox', 'createLegacyUsersMetabox');
         foreach ($metaboxesCallbacksList as $callbackName) {
             add_action('add_meta_boxes', array($namespace, $callbackName));
         }
@@ -399,23 +412,6 @@ final class UpStream_Metaboxes_Clients
     }
 
     /**
-     * It defines/register the Disclaimer metabox.
-     *
-     * @since   @todo
-     * @static
-     */
-    public static function createDisclaimerMetabox()
-    {
-        add_meta_box(
-            self::$prefix . 'warnings',
-            '<span class="dashicons dashicons-warning"></span>' . __("UpStream's Disclaimer", 'upstream'),
-            array(get_class(self::$instance), 'renderDisclaimerMetabox'),
-            self::$postType,
-            'normal'
-        );
-    }
-
-    /**
      * Renders the Disclaimer metabox.
      *
      * @since   @todo
@@ -424,15 +420,22 @@ final class UpStream_Metaboxes_Clients
     public static function renderDisclaimerMetabox()
     {
         ?>
-        <div class="upstream-row">
-            <p><?php echo __("<code>UpStream Client Users</code> are now <code>WordPress Users</code> as well, meaning they will be able to log in using their own password instead of client's, and manage their very own profile.", 'upstream'); ?></p>
+        <div class="notice notice-info is-dismissible">
+            <h3><?php echo __("UpStream's Disclaimer", 'upstream'); ?></h3>
+            <div class="upstream-row">
+                <p><?php echo sprintf(
+                    __("<code>%s</code> are now <code>%s</code> as well, meaning they will be able to log in using their own password instead of client's, and manage their very own profile.", 'upstream'),
+                    __('UpStream Client Users', 'upstream'),
+                    __('WordPress Users', 'upstream')
+                ); ?></p>
 
-            <ul class="up-list-disc">
-                <li><?php echo __('UpStream attempted to convert them automatically when the plugin was updated.', 'upstream'); ?></li>
-                <li><?php echo __('Client Users that <strong>could not</strong> be automatically converted for some reason will be listed on the <code>Legacy Users</code> metabox on this page. They can be manually either converted/migrated or discarded.', 'upstream'); ?></li>
-                <li><?php echo __("Client Users that were <strong>successfully</strong> converted <u>will have the same permissions they have before</u> and <u>their email address set as their new password</u> by default. It's highly advisable that they change their password after that.", 'upstream'); ?></li>
-                <li><?php echo __('Client passwords are no longer used.', 'upstream'); ?></li>
-            </ul>
+                <ul class="up-list-disc">
+                    <li><?php echo __('UpStream attempted to convert them automatically when the plugin was updated.', 'upstream'); ?></li>
+                    <li><?php echo __('Client Users that <strong>could not</strong> be automatically converted for some reason will be listed on the <code>Legacy Users</code> metabox on this page. They can be manually either converted/migrated or discarded.', 'upstream'); ?></li>
+                    <li><?php echo __("Client Users that were <strong>successfully</strong> converted <u>will have the same permissions they have before</u> and <u>their email address set as their new password</u> by default. It's highly advisable that they change their password after that.", 'upstream'); ?></li>
+                    <li><?php echo __('Client passwords are no longer used.', 'upstream'); ?></li>
+                </ul>
+            </div>
         </div>
         <?php
     }
