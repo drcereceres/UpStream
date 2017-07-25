@@ -103,7 +103,9 @@ function upstream_get_client_users($client_id)
 
     $usersIdsList = array();
     foreach ($clientUsersList[0] as $clientUser) {
-        array_push($usersIdsList, $clientUser['user_id']);
+        if (isset($clientUser['user_id'])) {
+            array_push($usersIdsList, $clientUser['user_id']);
+        }
     }
 
     global $wpdb;
