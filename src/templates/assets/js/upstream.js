@@ -3,10 +3,12 @@ function getTableDefaultOptions() {
         dom: "Bfrtip",
         buttons: [
             {
+                text: upstream.langs['LB_COPY'],
                 extend: "copy",
                 className: "btn-sm"
             },
             {
+                text: upstream.langs['LB_CSV'],
                 extend: "csv",
                 className: "btn-sm"
             },
@@ -19,7 +21,11 @@ function getTableDefaultOptions() {
                 orderable: false,
                 searchable: false
             }
-        ]
+        ],
+        language: {
+            emptyTable: upstream.langs['MSG_TABLE_NO_DATA_FOUND'],
+            search: upstream.langs['LB_SEARCH']
+        }
     };
 }
 

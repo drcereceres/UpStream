@@ -81,6 +81,12 @@ function upstream_enqueue_styles_scripts(){
         'upload_url'        => admin_url('async-upload.php'),
         'security'          => wp_create_nonce( 'upstream-nonce' ),
         'js_date_format'    => upstream_php_to_js_dateformat(),
+        'langs'             => array(
+            'LB_COPY'                 => __('Copy', 'upstream'),
+            'LB_CSV'                  => __('CSV', 'upstream'),
+            'LB_SEARCH'               => __('Search:', 'upstream'),
+            'MSG_TABLE_NO_DATA_FOUND' => __('No data available', 'upstream')
+        )
     )));
 }
 add_action( 'wp_enqueue_scripts', 'upstream_enqueue_styles_scripts', 1000 ); // Hook this late enough so all stylesheets / scripts has been added (to be further dequeued by this action)
