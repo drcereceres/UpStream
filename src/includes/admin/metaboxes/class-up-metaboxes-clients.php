@@ -630,7 +630,8 @@ final class UpStream_Metaboxes_Clients
 
         $logoField = $metabox->add_field(array(
             'id'   => self::$prefix . 'logo',
-            'type' => 'file'
+            'type' => 'file',
+            'name' => __('Image URL', 'upstream')
         ));
 
         $metaboxGrid = new Cmb2Grid($metabox);
