@@ -201,9 +201,11 @@ class UpStream_Project {
 
         foreach ($data as $key => $item) {
             if( $item_id == $item['id'] ) {
-                $field_name = $item[$field];
-                if( isset( $field_name ) && ! empty( $field_name ) ) {
-                    return $colors[$field_name];
+                if (isset($item[$field])) {
+                    $field_name = $item[$field];
+                    if( isset( $field_name ) && ! empty( $field_name ) ) {
+                        return $colors[$field_name];
+                    }
                 }
             }
         }
