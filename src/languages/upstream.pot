@@ -4,11 +4,11 @@ msgid ""
 msgstr ""
 "Project-Id-Version: UpStream 1.11.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/upstream\n"
-"POT-Creation-Date: 2017-07-28 13:51+0000\n"
+"POT-Creation-Date: 2017-07-25 20:09+0000\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"PO-Revision-Date: 2017-07-28 13:51+0000\n"
+"PO-Revision-Date: 2017-07-25 20:09+0000\n"
 "Last-Translator: UpStream <info@upstreamplugin.com>\n"
 
 #: ../upstream.php:52
@@ -713,22 +713,6 @@ msgstr ""
 msgid "Sorry, you are not allowed to access this project."
 msgstr ""
 
-#: ../includes/frontend/up-enqueues.php:85
-msgid "Copy"
-msgstr ""
-
-#: ../includes/frontend/up-enqueues.php:86
-msgid "CSV"
-msgstr ""
-
-#: ../includes/frontend/up-enqueues.php:87
-msgid "Search:"
-msgstr ""
-
-#: ../includes/frontend/up-enqueues.php:88
-msgid "No data available"
-msgstr ""
-
 #: ../includes/frontend/up-table-functions.php:80, ../includes/frontend/up-table-functions.php:183, ../includes/admin/metaboxes/class-up-metaboxes-projects.php:265, ../includes/admin/metaboxes/class-up-metaboxes-projects.php:669, ../includes/admin/metaboxes/class-up-metaboxes-projects.php:1095
 msgid "Start Date"
 msgstr ""
@@ -774,7 +758,7 @@ msgstr ""
 msgid "All %s"
 msgstr ""
 
-#: ../templates/global/sidebar.php:130, ../templates/global/sidebar.php:138, ../templates/global/sidebar.php:150, ../templates/global/top-nav.php:35
+#: ../templates/global/sidebar.php:150, ../templates/global/top-nav.php:35
 msgid "My %s"
 msgstr ""
 
@@ -946,11 +930,11 @@ msgstr ""
 msgid "Details"
 msgstr ""
 
-#: ../includes/admin/metaboxes/class-up-metaboxes-clients.php:660, ../includes/admin/metaboxes/class-up-metaboxes-clients.php:780, ../includes/admin/metaboxes/class-up-metaboxes-clients.php:841, ../includes/admin/metaboxes/class-up-metaboxes-clients.php:908, ../includes/admin/metaboxes/class-up-metaboxes-clients.php:1006, ../includes/admin/metaboxes/class-up-metaboxes-clients.php:1192, ../includes/admin/metaboxes/class-up-metaboxes-clients.php:1288, ../includes/admin/metaboxes/class-up-metaboxes-clients.php:1338, ../includes/admin/options/class-up-options-extensions.php:293, ../includes/admin/options/class-up-options-extensions.php:301, ../includes/admin/options/class-up-options-extensions.php:393, ../includes/admin/options/class-up-options-extensions.php:401
+#: ../includes/admin/metaboxes/class-up-metaboxes-clients.php:660, ../includes/admin/metaboxes/class-up-metaboxes-clients.php:780, ../includes/admin/metaboxes/class-up-metaboxes-clients.php:841, ../includes/admin/metaboxes/class-up-metaboxes-clients.php:908, ../includes/admin/metaboxes/class-up-metaboxes-clients.php:1006, ../includes/admin/metaboxes/class-up-metaboxes-clients.php:1192, ../includes/admin/metaboxes/class-up-metaboxes-clients.php:1288, ../includes/admin/metaboxes/class-up-metaboxes-clients.php:1338
 msgid "You're not allowed to do this."
 msgstr ""
 
-#: ../includes/admin/metaboxes/class-up-metaboxes-clients.php:664, ../includes/admin/metaboxes/class-up-metaboxes-clients.php:784, ../includes/admin/metaboxes/class-up-metaboxes-clients.php:845, ../includes/admin/metaboxes/class-up-metaboxes-clients.php:912, ../includes/admin/metaboxes/class-up-metaboxes-clients.php:1292, ../includes/admin/metaboxes/class-up-metaboxes-clients.php:1342, ../includes/admin/options/class-up-options-extensions.php:297, ../includes/admin/options/class-up-options-extensions.php:397
+#: ../includes/admin/metaboxes/class-up-metaboxes-clients.php:664, ../includes/admin/metaboxes/class-up-metaboxes-clients.php:784, ../includes/admin/metaboxes/class-up-metaboxes-clients.php:845, ../includes/admin/metaboxes/class-up-metaboxes-clients.php:912, ../includes/admin/metaboxes/class-up-metaboxes-clients.php:1292, ../includes/admin/metaboxes/class-up-metaboxes-clients.php:1342
 msgid "Invalid request."
 msgstr ""
 
@@ -1134,88 +1118,36 @@ msgstr ""
 msgid "These extensions add extra functionality to the UpStream Project Management plugin."
 msgstr ""
 
-#: ../includes/admin/options/class-up-options-extensions.php:82
-msgid "Adds controls to easily customize the appearance of your projects."
+#: ../includes/admin/options/class-up-options-extensions.php:85
+msgid "Project Timeline"
 msgstr ""
 
-#: ../includes/admin/options/class-up-options-extensions.php:89
-msgid "Allow you to email project updates to people working on your projects."
-msgstr ""
-
-#: ../includes/admin/options/class-up-options-extensions.php:96
-msgid "Allow users to add and edit items on the frontend."
-msgstr ""
-
-#: ../includes/admin/options/class-up-options-extensions.php:103
+#: ../includes/admin/options/class-up-options-extensions.php:87
 msgid "Add a Gantt style chart to visualize your projects."
 msgstr ""
 
-#: ../includes/admin/options/class-up-options-extensions.php:194, ../includes/admin/options/class-up-options-extensions.php:231
-msgid "Activate"
+#: ../includes/admin/options/class-up-options-extensions.php:95
+msgid "Frontend Edit"
 msgstr ""
 
-#: ../includes/admin/options/class-up-options-extensions.php:195, ../includes/admin/options/class-up-options-extensions.php:233
-msgid "Change"
+#: ../includes/admin/options/class-up-options-extensions.php:97
+msgid "Allow users to add and edit items on the frontend."
 msgstr ""
 
-#: ../includes/admin/options/class-up-options-extensions.php:196, ../includes/admin/options/class-up-options-extensions.php:238
-msgid "Deactivate"
+#: ../includes/admin/options/class-up-options-extensions.php:105
+msgid "Customizer"
 msgstr ""
 
-#: ../includes/admin/options/class-up-options-extensions.php:197
-msgid "Deactivating..."
+#: ../includes/admin/options/class-up-options-extensions.php:107
+msgid "Adds controls to easily customize the appearance of your projects."
 msgstr ""
 
-#: ../includes/admin/options/class-up-options-extensions.php:198, ../includes/admin/options/class-up-options-extensions.php:230
-msgid "Enter your License Key"
+#: ../includes/admin/options/class-up-options-extensions.php:115
+msgid "Email Notifications"
 msgstr ""
 
-#: ../includes/admin/options/class-up-options-extensions.php:199, ../includes/admin/options/class-up-options-extensions.php:242
-msgid "Your license is not activated yet."
-msgstr ""
-
-#: ../includes/admin/options/class-up-options-extensions.php:209
-msgid "Installed Extensions"
-msgstr ""
-
-#: ../includes/admin/options/class-up-options-extensions.php:210
-msgid "Browse More Extensions"
-msgstr ""
-
-#: ../includes/admin/options/class-up-options-extensions.php:214
-msgid "No installed extensions yet."
-msgstr ""
-
-#: ../includes/admin/options/class-up-options-extensions.php:233
-msgid "License Key"
-msgstr ""
-
-#: ../includes/admin/options/class-up-options-extensions.php:238, ../includes/admin/options/class-up-options-extensions.php:359
-msgid "Active license key."
-msgstr ""
-
-#: ../includes/admin/options/class-up-options-extensions.php:240, ../includes/admin/options/class-up-options-extensions.php:311, ../includes/admin/options/class-up-options-extensions.php:356
-msgid "Invalid license key."
-msgstr ""
-
-#: ../includes/admin/options/class-up-options-extensions.php:254
-msgid "Looks like you have acquired all of our currently available extensions."
-msgstr ""
-
-#: ../includes/admin/options/class-up-options-extensions.php:255
-msgid "<strong>Thank you</strong> for your support, and stay tunned for more."
-msgstr ""
-
-#: ../includes/admin/options/class-up-options-extensions.php:265
-msgid "Get This Extension"
-msgstr ""
-
-#: ../includes/admin/options/class-up-options-extensions.php:306, ../includes/admin/options/class-up-options-extensions.php:316, ../includes/admin/options/class-up-options-extensions.php:406
-msgid "Invalid extension."
-msgstr ""
-
-#: ../includes/admin/options/class-up-options-extensions.php:354
-msgid "This key is expired and could not be activated."
+#: ../includes/admin/options/class-up-options-extensions.php:117
+msgid "Allow you to email project updates to people working on your projects."
 msgstr ""
 
 #: ../includes/admin/options/class-up-options-general.php:51, ../includes/admin/options/class-up-options-general.php:52
@@ -1360,6 +1292,10 @@ msgstr ""
 
 #: ../includes/admin/options/class-up-options-milestones.php:86
 msgid "Create your %1s and choose their colors. You can create an unlimited number and they can be used across any and all %2s.<br>They will appear in the %3s dropdown within each %4s.<br><strong>Tip:</strong> We think it works best to keep %5s colors to various shades of the one color, to help keep things looking neat and organized."
+msgstr ""
+
+#: ../includes/admin/options/class-up-options-milestones.php:94
+msgid "%s #{#}"
 msgstr ""
 
 #: ../includes/admin/options/class-up-options-milestones.php:95
