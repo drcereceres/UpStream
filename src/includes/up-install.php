@@ -307,7 +307,7 @@ function upstream_after_install() {
 
         if( ! isset( $_GET['activate-multi'] ) ) {
             set_transient( '_upstream_redirected', true, 360 );
-            wp_redirect( 'admin.php?page=upstream_general' );
+            wp_redirect(admin_url('post-new.php?post_type=project'));
             exit;
         }
 
