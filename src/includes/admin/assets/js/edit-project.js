@@ -482,6 +482,24 @@
     showClientUsers();
 
     $('form#post').on('submit', function(e) {
+        var tasksWrapper = $('#_upstream_project_tasks_repeat');
+        var tasksTitlesFields = $('input.task-title', tasksWrapper);
+
+        tasksTitlesFields.removeClass('has-error');
+
+        for (var inputIndex = 0; inputIndex < tasksTitlesFields.length; inputIndex++) {
+            var input = $(tasksTitlesFields[inputIndex]);
+            if (input.val().trim().length === 0) {
+                input.addClass('has-error');
+
+                $(input.parents('.postbox.cmb-row.cmb-repeatable-grouping')).removeClass('closed');
+
+                e.preventDefault();
+                e.stopPropagation();
+                return false;
+            }
+        }
+
         var wrapperMilestones = $('#_upstream_project_milestones_repeat, #_upstream_project_tasks_repeat, #_upstream_project_bugs_repeat');
         if (wrapperMilestones.length) {
             $('.postbox.cmb-row.cmb-repeatable-grouping .cmb-row *:disabled', wrapperMilestones).filter(function() {
