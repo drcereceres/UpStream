@@ -84,7 +84,7 @@ class UpStream_Options_Extensions {
                 array(
                     'name'          => __( 'Project Timeline', 'upstream' ),
                     'id'            => 'upstream_project_timeline',
-                    'desc'          => __( 'Add a Gantt style chart to visualize your projects.', 'upstream' ),
+                    'desc'          => __( 'Add a Gantt style chart to visualize your progress.', 'upstream' ),
                     'type'          => 'title',
                     'attributes'    => array(
                         'class' => 'extension',
@@ -104,7 +104,7 @@ class UpStream_Options_Extensions {
                 array(
                     'name'          => __( 'Customizer', 'upstream' ),
                     'id'            => 'upstream_customizer',
-                    'desc'          => __( 'Adds controls to easily customize the appearance of your projects.', 'upstream' ),
+                    'desc'          => __( 'Easily customize the appearance of your projects.', 'upstream' ),
                     'type'          => 'title',
                     'attributes'    => array(
                         'class' => 'extension',
@@ -114,7 +114,7 @@ class UpStream_Options_Extensions {
                 array(
                     'name'          => __( 'Email Notifications', 'upstream' ),
                     'id'            => 'upstream_email_notifications',
-                    'desc'          => __( 'Allow you to email project updates to people working on your projects.', 'upstream' ),
+                    'desc'          => __( 'Email project updates to people working on your projects.', 'upstream' ),
                     'type'          => 'title',
                     'attributes'    => array(
                         'class' => 'extension',
