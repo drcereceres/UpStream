@@ -4,24 +4,13 @@ msgid ""
 msgstr ""
 "Project-Id-Version: UpStream 1.11.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/upstream\n"
-"POT-Creation-Date: 2017-07-25 20:09+0000\n"
+"POT-Creation-Date: 2017-07-31 00:00+0000\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"PO-Revision-Date: 2017-07-25 20:09+0000\n"
+"PO-Revision-Date: 2017-07-31 00:00+0000\n"
 "Last-Translator: UpStream <info@upstreamplugin.com>\n"
-
-#: ../upstream.php:52
-msgid "You're not supposed to clone this class."
-msgstr ""
-
-#: ../upstream.php:62
-msgid "You're not supposed to unserialize this class."
-msgstr ""
-
-#: ../upstream.php:72
-msgid "You're not supposed to serialize this class."
-msgstr ""
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: ../upstream.php:316
 msgid "View Documentation"
@@ -79,7 +68,7 @@ msgstr ""
 msgid "UpStream Client User"
 msgstr ""
 
-#: ../includes/up-client-users-migration.php:434, ../includes/admin/metaboxes/class-up-metaboxes-clients.php:1010, ../includes/admin/metaboxes/class-up-metaboxes-clients.php:1196, ../includes/admin/metaboxes/class-up-metaboxes-clients.php:1203
+#: ../includes/up-client-users-migration.php:434, ../includes/admin/metaboxes/class-up-metaboxes-clients.php:1008, ../includes/admin/metaboxes/class-up-metaboxes-clients.php:1194, ../includes/admin/metaboxes/class-up-metaboxes-clients.php:1201
 msgid "Invalid UpStream Client ID."
 msgstr ""
 
@@ -87,11 +76,11 @@ msgstr ""
 msgid "Invalid UpStream Client User."
 msgstr ""
 
-#: ../includes/up-client-users-migration.php:443, ../includes/admin/metaboxes/class-up-metaboxes-clients.php:539
+#: ../includes/up-client-users-migration.php:443, ../includes/admin/metaboxes/class-up-metaboxes-clients.php:535
 msgid "Invalid email address."
 msgstr ""
 
-#: ../includes/up-client-users-migration.php:454, ../includes/admin/metaboxes/class-up-metaboxes-clients.php:704
+#: ../includes/up-client-users-migration.php:454, ../includes/admin/metaboxes/class-up-metaboxes-clients.php:702
 msgid "This email address is not available."
 msgstr ""
 
@@ -99,7 +88,7 @@ msgstr ""
 msgid "Passwords must be at least 6 characters long."
 msgstr ""
 
-#: ../includes/up-client-users-migration.php:465, ../includes/admin/metaboxes/class-up-metaboxes-clients.php:687
+#: ../includes/up-client-users-migration.php:465, ../includes/admin/metaboxes/class-up-metaboxes-clients.php:685
 msgid "Passwords don't match."
 msgstr ""
 
@@ -111,7 +100,7 @@ msgstr ""
 msgid "%s Manager"
 msgstr ""
 
-#: ../includes/up-general-functions.php:209, ../includes/admin/metaboxes/class-up-metaboxes-clients.php:259
+#: ../includes/up-general-functions.php:209, ../includes/admin/metaboxes/class-up-metaboxes-clients.php:256
 msgid "%s Client User"
 msgstr ""
 
@@ -434,7 +423,7 @@ msgstr ""
 msgid "Your Email"
 msgstr ""
 
-#: ../templates/login.php:48, ../includes/admin/metaboxes/class-up-metaboxes-clients.php:212, ../includes/admin/metaboxes/class-up-metaboxes-clients.php:303
+#: ../templates/login.php:48, ../includes/admin/metaboxes/class-up-metaboxes-clients.php:211, ../includes/admin/metaboxes/class-up-metaboxes-clients.php:300
 msgid "Password"
 msgstr ""
 
@@ -478,7 +467,7 @@ msgstr ""
 msgid "No %s avaliable."
 msgstr ""
 
-#: ../includes/admin/class-up-admin-client-columns.php:56, ../includes/admin/metaboxes/class-up-metaboxes-clients.php:624
+#: ../includes/admin/class-up-admin-client-columns.php:56, ../includes/admin/metaboxes/class-up-metaboxes-clients.php:622
 msgid "Logo"
 msgstr ""
 
@@ -486,7 +475,7 @@ msgstr ""
 msgid "Website"
 msgstr ""
 
-#: ../includes/admin/class-up-admin-client-columns.php:58, ../includes/admin/metaboxes/class-up-metaboxes-clients.php:518
+#: ../includes/admin/class-up-admin-client-columns.php:58, ../includes/admin/metaboxes/class-up-metaboxes-clients.php:514
 msgid "Phone"
 msgstr ""
 
@@ -494,23 +483,23 @@ msgstr ""
 msgid "Address"
 msgstr ""
 
-#: ../includes/admin/class-up-admin-client-columns.php:60, ../includes/admin/metaboxes/class-up-metaboxes-clients.php:453
+#: ../includes/admin/class-up-admin-client-columns.php:60, ../includes/admin/metaboxes/class-up-metaboxes-clients.php:449
 msgid "Users"
 msgstr ""
 
-#: ../includes/admin/class-up-admin-client-columns.php:114, ../includes/frontend/up-table-functions.php:493, ../includes/frontend/up-table-functions.php:503, ../includes/frontend/up-table-functions.php:511, ../includes/frontend/up-table-functions.php:543, ../includes/frontend/up-table-functions.php:552, ../includes/frontend/up-table-functions.php:585, ../includes/frontend/up-table-functions.php:601, ../templates/single-project/details.php:46
+#: ../includes/admin/class-up-admin-client-columns.php:120, ../includes/frontend/up-table-functions.php:493, ../includes/frontend/up-table-functions.php:503, ../includes/frontend/up-table-functions.php:511, ../includes/frontend/up-table-functions.php:543, ../includes/frontend/up-table-functions.php:552, ../includes/frontend/up-table-functions.php:585, ../includes/frontend/up-table-functions.php:601, ../templates/single-project/details.php:46
 msgid "none"
 msgstr ""
 
-#: ../includes/admin/class-up-admin-client-columns.php:121
+#: ../includes/admin/class-up-admin-client-columns.php:127
 msgid "+%s more %s"
 msgstr ""
 
-#: ../includes/admin/class-up-admin-client-columns.php:121
+#: ../includes/admin/class-up-admin-client-columns.php:127
 msgid "users"
 msgstr ""
 
-#: ../includes/admin/class-up-admin-client-columns.php:121
+#: ../includes/admin/class-up-admin-client-columns.php:127
 msgid "user"
 msgstr ""
 
@@ -649,7 +638,7 @@ msgstr ""
 msgid "UpStream requires jQuery."
 msgstr ""
 
-#: ../includes/admin/up-enqueues.php:33, ../includes/admin/metaboxes/class-up-metaboxes-clients.php:397
+#: ../includes/admin/up-enqueues.php:33
 msgid "There's no users assigned yet."
 msgstr ""
 
@@ -665,11 +654,11 @@ msgstr ""
 msgid "Add %d Users"
 msgstr ""
 
-#: ../includes/admin/up-enqueues.php:37, ../includes/admin/metaboxes/class-up-metaboxes-clients.php:274
+#: ../includes/admin/up-enqueues.php:37, ../includes/admin/metaboxes/class-up-metaboxes-clients.php:271
 msgid "No users found."
 msgstr ""
 
-#: ../includes/admin/up-enqueues.php:38, ../includes/admin/metaboxes/class-up-metaboxes-clients.php:239
+#: ../includes/admin/up-enqueues.php:38, ../includes/admin/metaboxes/class-up-metaboxes-clients.php:236
 msgid "Adding..."
 msgstr ""
 
@@ -711,6 +700,22 @@ msgstr ""
 
 #: ../includes/frontend/class-up-login.php:197
 msgid "Sorry, you are not allowed to access this project."
+msgstr ""
+
+#: ../includes/frontend/up-enqueues.php:85
+msgid "Copy"
+msgstr ""
+
+#: ../includes/frontend/up-enqueues.php:86
+msgid "CSV"
+msgstr ""
+
+#: ../includes/frontend/up-enqueues.php:87
+msgid "Search:"
+msgstr ""
+
+#: ../includes/frontend/up-enqueues.php:88
+msgid "No data available"
 msgstr ""
 
 #: ../includes/frontend/up-table-functions.php:80, ../includes/frontend/up-table-functions.php:183, ../includes/admin/metaboxes/class-up-metaboxes-projects.php:265, ../includes/admin/metaboxes/class-up-metaboxes-projects.php:669, ../includes/admin/metaboxes/class-up-metaboxes-projects.php:1095
@@ -758,7 +763,7 @@ msgstr ""
 msgid "All %s"
 msgstr ""
 
-#: ../templates/global/sidebar.php:150, ../templates/global/top-nav.php:35
+#: ../templates/global/sidebar.php:130, ../templates/global/sidebar.php:138, ../templates/global/sidebar.php:150, ../templates/global/top-nav.php:35
 msgid "My %s"
 msgstr ""
 
@@ -798,187 +803,195 @@ msgstr ""
 msgid "Open"
 msgstr ""
 
-#: ../includes/admin/metaboxes/class-up-metaboxes-clients.php:206, ../includes/admin/metaboxes/class-up-metaboxes-clients.php:297
-msgid "Credentials"
-msgstr ""
-
-#: ../includes/admin/metaboxes/class-up-metaboxes-clients.php:208, ../includes/admin/metaboxes/class-up-metaboxes-clients.php:269, ../includes/admin/metaboxes/class-up-metaboxes-clients.php:299, ../includes/admin/metaboxes/class-up-metaboxes-clients.php:363, ../includes/admin/metaboxes/class-up-metaboxes-clients.php:517
+#: ../includes/admin/metaboxes/class-up-metaboxes-clients.php:207, ../includes/admin/metaboxes/class-up-metaboxes-clients.php:266, ../includes/admin/metaboxes/class-up-metaboxes-clients.php:296, ../includes/admin/metaboxes/class-up-metaboxes-clients.php:360, ../includes/admin/metaboxes/class-up-metaboxes-clients.php:513
 msgid "Email"
 msgstr ""
 
-#: ../includes/admin/metaboxes/class-up-metaboxes-clients.php:214, ../includes/admin/metaboxes/class-up-metaboxes-clients.php:305
+#: ../includes/admin/metaboxes/class-up-metaboxes-clients.php:213, ../includes/admin/metaboxes/class-up-metaboxes-clients.php:302
 msgid "Must be at least 6 characters long."
 msgstr ""
 
-#: ../includes/admin/metaboxes/class-up-metaboxes-clients.php:217, ../includes/admin/metaboxes/class-up-metaboxes-clients.php:308
+#: ../includes/admin/metaboxes/class-up-metaboxes-clients.php:216, ../includes/admin/metaboxes/class-up-metaboxes-clients.php:305
 msgid "Confirm Password"
 msgstr ""
 
-#: ../includes/admin/metaboxes/class-up-metaboxes-clients.php:221, ../includes/admin/metaboxes/class-up-metaboxes-clients.php:312
-msgid "Profile"
-msgstr ""
-
-#: ../includes/admin/metaboxes/class-up-metaboxes-clients.php:223, ../includes/admin/metaboxes/class-up-metaboxes-clients.php:314, ../includes/admin/metaboxes/class-up-metaboxes-clients.php:515
+#: ../includes/admin/metaboxes/class-up-metaboxes-clients.php:220, ../includes/admin/metaboxes/class-up-metaboxes-clients.php:311, ../includes/admin/metaboxes/class-up-metaboxes-clients.php:511
 msgid "First Name"
 msgstr ""
 
-#: ../includes/admin/metaboxes/class-up-metaboxes-clients.php:227, ../includes/admin/metaboxes/class-up-metaboxes-clients.php:318, ../includes/admin/metaboxes/class-up-metaboxes-clients.php:516
+#: ../includes/admin/metaboxes/class-up-metaboxes-clients.php:224, ../includes/admin/metaboxes/class-up-metaboxes-clients.php:315, ../includes/admin/metaboxes/class-up-metaboxes-clients.php:512
 msgid "Last Name"
 msgstr ""
 
-#: ../includes/admin/metaboxes/class-up-metaboxes-clients.php:235
+#: ../includes/admin/metaboxes/class-up-metaboxes-clients.php:232
 msgid "Send user info via email"
 msgstr ""
 
-#: ../includes/admin/metaboxes/class-up-metaboxes-clients.php:239, ../includes/admin/metaboxes/class-up-metaboxes-clients.php:239, ../includes/admin/metaboxes/class-up-metaboxes-clients.php:347, ../includes/admin/metaboxes/class-up-metaboxes-clients.php:350
+#: ../includes/admin/metaboxes/class-up-metaboxes-clients.php:236, ../includes/admin/metaboxes/class-up-metaboxes-clients.php:236, ../includes/admin/metaboxes/class-up-metaboxes-clients.php:344, ../includes/admin/metaboxes/class-up-metaboxes-clients.php:347
 msgid "Add New User"
 msgstr ""
 
-#: ../includes/admin/metaboxes/class-up-metaboxes-clients.php:259
+#: ../includes/admin/metaboxes/class-up-metaboxes-clients.php:256
 msgid "These are all the users assigned with the role <code>%s</code> and not related to this client yet."
 msgstr ""
 
-#: ../includes/admin/metaboxes/class-up-metaboxes-clients.php:268, ../includes/admin/metaboxes/class-up-metaboxes-clients.php:362
+#: ../includes/admin/metaboxes/class-up-metaboxes-clients.php:265, ../includes/admin/metaboxes/class-up-metaboxes-clients.php:359
 msgid "Name"
 msgstr ""
 
-#: ../includes/admin/metaboxes/class-up-metaboxes-clients.php:324, ../includes/admin/metaboxes/class-up-metaboxes-clients.php:324
+#: ../includes/admin/metaboxes/class-up-metaboxes-clients.php:294
+msgid "Credentials"
+msgstr ""
+
+#: ../includes/admin/metaboxes/class-up-metaboxes-clients.php:309
+msgid "Profile"
+msgstr ""
+
+#: ../includes/admin/metaboxes/class-up-metaboxes-clients.php:321, ../includes/admin/metaboxes/class-up-metaboxes-clients.php:321
 msgid "Migrate User"
 msgstr ""
 
-#: ../includes/admin/metaboxes/class-up-metaboxes-clients.php:324
+#: ../includes/admin/metaboxes/class-up-metaboxes-clients.php:321
 msgid "Migrating..."
 msgstr ""
 
-#: ../includes/admin/metaboxes/class-up-metaboxes-clients.php:353, ../includes/admin/metaboxes/class-up-metaboxes-clients.php:356
-msgid "Assign Existent Users"
+#: ../includes/admin/metaboxes/class-up-metaboxes-clients.php:350, ../includes/admin/metaboxes/class-up-metaboxes-clients.php:353
+msgid "Add Existing Users"
 msgstr ""
 
-#: ../includes/admin/metaboxes/class-up-metaboxes-clients.php:364
+#: ../includes/admin/metaboxes/class-up-metaboxes-clients.php:361
 msgid "Assigned by"
 msgstr ""
 
-#: ../includes/admin/metaboxes/class-up-metaboxes-clients.php:365
+#: ../includes/admin/metaboxes/class-up-metaboxes-clients.php:362
 msgid "Assigned at"
 msgstr ""
 
-#: ../includes/admin/metaboxes/class-up-metaboxes-clients.php:366
+#: ../includes/admin/metaboxes/class-up-metaboxes-clients.php:363
 msgid "Remove?"
 msgstr ""
 
-#: ../includes/admin/metaboxes/class-up-metaboxes-clients.php:404
-msgid "By removing a user it only means that he will no longer be associated with this client. He will not be deleted."
+#: ../includes/admin/metaboxes/class-up-metaboxes-clients.php:394
+msgid "There are no users assigned yet."
+msgstr ""
+
+#: ../includes/admin/metaboxes/class-up-metaboxes-clients.php:401
+msgid "Removing a user only means that they will no longer be associated with this client. Their WordPress account will not be deleted."
+msgstr ""
+
+#: ../includes/admin/metaboxes/class-up-metaboxes-clients.php:421
+msgid "Please note: we made an important change to UpStream"
 msgstr ""
 
 #: ../includes/admin/metaboxes/class-up-metaboxes-clients.php:424
-msgid "UpStream's Disclaimer"
+msgid "<code>%s</code> are now <code>%s</code>. Clients will be able to log in using their own password and manage their very own profile."
 msgstr ""
 
-#: ../includes/admin/metaboxes/class-up-metaboxes-clients.php:427
-msgid "<code>%s</code> are now <code>%s</code> as well, meaning they will be able to log in using their own password instead of client's, and manage their very own profile."
-msgstr ""
-
-#: ../includes/admin/metaboxes/class-up-metaboxes-clients.php:428
+#: ../includes/admin/metaboxes/class-up-metaboxes-clients.php:425
 msgid "UpStream Client Users"
 msgstr ""
 
-#: ../includes/admin/metaboxes/class-up-metaboxes-clients.php:429
+#: ../includes/admin/metaboxes/class-up-metaboxes-clients.php:426
 msgid "WordPress Users"
 msgstr ""
 
-#: ../includes/admin/metaboxes/class-up-metaboxes-clients.php:433
+#: ../includes/admin/metaboxes/class-up-metaboxes-clients.php:430
 msgid "UpStream attempted to convert them automatically when the plugin was updated."
 msgstr ""
 
-#: ../includes/admin/metaboxes/class-up-metaboxes-clients.php:434
-msgid "Client Users that <strong>could not</strong> be automatically converted for some reason will be listed on the <code>Legacy Users</code> metabox on this page. They can be manually either converted/migrated or discarded."
+#: ../includes/admin/metaboxes/class-up-metaboxes-clients.php:431
+msgid "Client Users that <strong>could not</strong> be automatically converted for some reason will be listed in the <code>Legacy Users</code> box on this page. They can be manually either converted/migrated or discarded."
 msgstr ""
 
-#: ../includes/admin/metaboxes/class-up-metaboxes-clients.php:435
-msgid "Client Users that were <strong>successfully</strong> converted <u>will have the same permissions they have before</u> and <u>their email address set as their new password</u> by default. It's highly advisable that they change their password after that."
+#: ../includes/admin/metaboxes/class-up-metaboxes-clients.php:432
+msgid "Client Users that were <strong>successfully</strong> converted will have the same permissions they have before and their email address is now their new password. Please make sure that they change their password."
 msgstr ""
 
-#: ../includes/admin/metaboxes/class-up-metaboxes-clients.php:436
-msgid "Client passwords are no longer used."
-msgstr ""
-
-#: ../includes/admin/metaboxes/class-up-metaboxes-clients.php:482
+#: ../includes/admin/metaboxes/class-up-metaboxes-clients.php:478
 msgid "Legacy Users"
 msgstr ""
 
-#: ../includes/admin/metaboxes/class-up-metaboxes-clients.php:509
+#: ../includes/admin/metaboxes/class-up-metaboxes-clients.php:505
 msgid "The users listed below are those old <code>UpStream Client Users</code> that could not be automatically converted/migrated to <code>WordPress Users</code> by UpStream for some reason. More details on the Disclaimer metabox."
 msgstr ""
 
-#: ../includes/admin/metaboxes/class-up-metaboxes-clients.php:519
+#: ../includes/admin/metaboxes/class-up-metaboxes-clients.php:515
 msgid "Migrate?"
 msgstr ""
 
-#: ../includes/admin/metaboxes/class-up-metaboxes-clients.php:520
+#: ../includes/admin/metaboxes/class-up-metaboxes-clients.php:516
 msgid "Discard?"
 msgstr ""
 
-#: ../includes/admin/metaboxes/class-up-metaboxes-clients.php:533
+#: ../includes/admin/metaboxes/class-up-metaboxes-clients.php:529
 msgid "This email address is already being used by another user."
 msgstr ""
 
-#: ../includes/admin/metaboxes/class-up-metaboxes-clients.php:536
+#: ../includes/admin/metaboxes/class-up-metaboxes-clients.php:532
 msgid "Email addresses cannot be empty."
 msgstr ""
 
-#: ../includes/admin/metaboxes/class-up-metaboxes-clients.php:586
+#: ../includes/admin/metaboxes/class-up-metaboxes-clients.php:542
+msgid "empty"
+msgstr ""
+
+#: ../includes/admin/metaboxes/class-up-metaboxes-clients.php:550
+msgid "Migrating Client User"
+msgstr ""
+
+#: ../includes/admin/metaboxes/class-up-metaboxes-clients.php:584
 msgid "Details"
 msgstr ""
 
-#: ../includes/admin/metaboxes/class-up-metaboxes-clients.php:660, ../includes/admin/metaboxes/class-up-metaboxes-clients.php:780, ../includes/admin/metaboxes/class-up-metaboxes-clients.php:841, ../includes/admin/metaboxes/class-up-metaboxes-clients.php:908, ../includes/admin/metaboxes/class-up-metaboxes-clients.php:1006, ../includes/admin/metaboxes/class-up-metaboxes-clients.php:1192, ../includes/admin/metaboxes/class-up-metaboxes-clients.php:1288, ../includes/admin/metaboxes/class-up-metaboxes-clients.php:1338
+#: ../includes/admin/metaboxes/class-up-metaboxes-clients.php:658, ../includes/admin/metaboxes/class-up-metaboxes-clients.php:778, ../includes/admin/metaboxes/class-up-metaboxes-clients.php:839, ../includes/admin/metaboxes/class-up-metaboxes-clients.php:906, ../includes/admin/metaboxes/class-up-metaboxes-clients.php:1004, ../includes/admin/metaboxes/class-up-metaboxes-clients.php:1190, ../includes/admin/metaboxes/class-up-metaboxes-clients.php:1286, ../includes/admin/metaboxes/class-up-metaboxes-clients.php:1336, ../includes/admin/options/class-up-options-extensions.php:293, ../includes/admin/options/class-up-options-extensions.php:301, ../includes/admin/options/class-up-options-extensions.php:393, ../includes/admin/options/class-up-options-extensions.php:401
 msgid "You're not allowed to do this."
 msgstr ""
 
-#: ../includes/admin/metaboxes/class-up-metaboxes-clients.php:664, ../includes/admin/metaboxes/class-up-metaboxes-clients.php:784, ../includes/admin/metaboxes/class-up-metaboxes-clients.php:845, ../includes/admin/metaboxes/class-up-metaboxes-clients.php:912, ../includes/admin/metaboxes/class-up-metaboxes-clients.php:1292, ../includes/admin/metaboxes/class-up-metaboxes-clients.php:1342
+#: ../includes/admin/metaboxes/class-up-metaboxes-clients.php:662, ../includes/admin/metaboxes/class-up-metaboxes-clients.php:782, ../includes/admin/metaboxes/class-up-metaboxes-clients.php:843, ../includes/admin/metaboxes/class-up-metaboxes-clients.php:910, ../includes/admin/metaboxes/class-up-metaboxes-clients.php:1290, ../includes/admin/metaboxes/class-up-metaboxes-clients.php:1340, ../includes/admin/options/class-up-options-extensions.php:297, ../includes/admin/options/class-up-options-extensions.php:397
 msgid "Invalid request."
 msgstr ""
 
-#: ../includes/admin/metaboxes/class-up-metaboxes-clients.php:669, ../includes/admin/metaboxes/class-up-metaboxes-clients.php:789, ../includes/admin/metaboxes/class-up-metaboxes-clients.php:850, ../includes/admin/metaboxes/class-up-metaboxes-clients.php:917, ../includes/admin/metaboxes/class-up-metaboxes-clients.php:1297, ../includes/admin/metaboxes/class-up-metaboxes-clients.php:1347
+#: ../includes/admin/metaboxes/class-up-metaboxes-clients.php:667, ../includes/admin/metaboxes/class-up-metaboxes-clients.php:787, ../includes/admin/metaboxes/class-up-metaboxes-clients.php:848, ../includes/admin/metaboxes/class-up-metaboxes-clients.php:915, ../includes/admin/metaboxes/class-up-metaboxes-clients.php:1295, ../includes/admin/metaboxes/class-up-metaboxes-clients.php:1345
 msgid "Invalid Client ID."
 msgstr ""
 
-#: ../includes/admin/metaboxes/class-up-metaboxes-clients.php:683
+#: ../includes/admin/metaboxes/class-up-metaboxes-clients.php:681
 msgid "Password must be at least 6 characters long."
 msgstr ""
 
-#: ../includes/admin/metaboxes/class-up-metaboxes-clients.php:693
+#: ../includes/admin/metaboxes/class-up-metaboxes-clients.php:691
 msgid "Invalid email."
 msgstr ""
 
-#: ../includes/admin/metaboxes/class-up-metaboxes-clients.php:794, ../includes/admin/metaboxes/class-up-metaboxes-clients.php:1302, ../includes/admin/metaboxes/class-up-metaboxes-clients.php:1352
+#: ../includes/admin/metaboxes/class-up-metaboxes-clients.php:792, ../includes/admin/metaboxes/class-up-metaboxes-clients.php:1300, ../includes/admin/metaboxes/class-up-metaboxes-clients.php:1350
 msgid "Invalid User ID."
 msgstr ""
 
-#: ../includes/admin/metaboxes/class-up-metaboxes-clients.php:921
+#: ../includes/admin/metaboxes/class-up-metaboxes-clients.php:919
 msgid "Users IDs cannot be empty."
 msgstr ""
 
-#: ../includes/admin/metaboxes/class-up-metaboxes-clients.php:1242
+#: ../includes/admin/metaboxes/class-up-metaboxes-clients.php:1240
 msgid "UpStream's Custom Permissions"
 msgstr ""
 
-#: ../includes/admin/metaboxes/class-up-metaboxes-clients.php:1249
+#: ../includes/admin/metaboxes/class-up-metaboxes-clients.php:1247
 msgid "Permission"
 msgstr ""
 
-#: ../includes/admin/metaboxes/class-up-metaboxes-clients.php:1260, ../includes/admin/metaboxes/class-up-metaboxes-clients.php:1262
+#: ../includes/admin/metaboxes/class-up-metaboxes-clients.php:1258, ../includes/admin/metaboxes/class-up-metaboxes-clients.php:1260
 msgid "Update Permissions"
 msgstr ""
 
-#: ../includes/admin/metaboxes/class-up-metaboxes-clients.php:1261
+#: ../includes/admin/metaboxes/class-up-metaboxes-clients.php:1259
 msgid "Updating..."
 msgstr ""
 
-#: ../includes/admin/metaboxes/class-up-metaboxes-clients.php:1306, ../includes/admin/metaboxes/class-up-metaboxes-clients.php:1356
+#: ../includes/admin/metaboxes/class-up-metaboxes-clients.php:1304, ../includes/admin/metaboxes/class-up-metaboxes-clients.php:1354
 msgid "This Client User is not associated with this Client."
 msgstr ""
 
-#: ../includes/admin/metaboxes/class-up-metaboxes-clients.php:1361
+#: ../includes/admin/metaboxes/class-up-metaboxes-clients.php:1359
 msgid "This user doesn't seem to be a valid Client User."
 msgstr ""
 
@@ -1118,36 +1131,88 @@ msgstr ""
 msgid "These extensions add extra functionality to the UpStream Project Management plugin."
 msgstr ""
 
-#: ../includes/admin/options/class-up-options-extensions.php:85
-msgid "Project Timeline"
-msgstr ""
-
-#: ../includes/admin/options/class-up-options-extensions.php:87
-msgid "Add a Gantt style chart to visualize your projects."
-msgstr ""
-
-#: ../includes/admin/options/class-up-options-extensions.php:95
-msgid "Frontend Edit"
-msgstr ""
-
-#: ../includes/admin/options/class-up-options-extensions.php:97
-msgid "Allow users to add and edit items on the frontend."
-msgstr ""
-
-#: ../includes/admin/options/class-up-options-extensions.php:105
-msgid "Customizer"
-msgstr ""
-
-#: ../includes/admin/options/class-up-options-extensions.php:107
+#: ../includes/admin/options/class-up-options-extensions.php:82
 msgid "Adds controls to easily customize the appearance of your projects."
 msgstr ""
 
-#: ../includes/admin/options/class-up-options-extensions.php:115
-msgid "Email Notifications"
+#: ../includes/admin/options/class-up-options-extensions.php:89
+msgid "Allow you to email project updates to people working on your projects."
 msgstr ""
 
-#: ../includes/admin/options/class-up-options-extensions.php:117
-msgid "Allow you to email project updates to people working on your projects."
+#: ../includes/admin/options/class-up-options-extensions.php:96
+msgid "Allow users to add and edit items on the frontend."
+msgstr ""
+
+#: ../includes/admin/options/class-up-options-extensions.php:103
+msgid "Add a Gantt style chart to visualize your projects."
+msgstr ""
+
+#: ../includes/admin/options/class-up-options-extensions.php:194, ../includes/admin/options/class-up-options-extensions.php:231
+msgid "Activate"
+msgstr ""
+
+#: ../includes/admin/options/class-up-options-extensions.php:195, ../includes/admin/options/class-up-options-extensions.php:233
+msgid "Change"
+msgstr ""
+
+#: ../includes/admin/options/class-up-options-extensions.php:196, ../includes/admin/options/class-up-options-extensions.php:238
+msgid "Deactivate"
+msgstr ""
+
+#: ../includes/admin/options/class-up-options-extensions.php:197
+msgid "Deactivating..."
+msgstr ""
+
+#: ../includes/admin/options/class-up-options-extensions.php:198, ../includes/admin/options/class-up-options-extensions.php:230
+msgid "Enter your License Key"
+msgstr ""
+
+#: ../includes/admin/options/class-up-options-extensions.php:199, ../includes/admin/options/class-up-options-extensions.php:242
+msgid "Your license is not activated yet."
+msgstr ""
+
+#: ../includes/admin/options/class-up-options-extensions.php:209
+msgid "Installed Extensions"
+msgstr ""
+
+#: ../includes/admin/options/class-up-options-extensions.php:210
+msgid "Browse More Extensions"
+msgstr ""
+
+#: ../includes/admin/options/class-up-options-extensions.php:214
+msgid "No installed extensions yet."
+msgstr ""
+
+#: ../includes/admin/options/class-up-options-extensions.php:233
+msgid "License Key"
+msgstr ""
+
+#: ../includes/admin/options/class-up-options-extensions.php:238, ../includes/admin/options/class-up-options-extensions.php:359
+msgid "Active license key."
+msgstr ""
+
+#: ../includes/admin/options/class-up-options-extensions.php:240, ../includes/admin/options/class-up-options-extensions.php:311, ../includes/admin/options/class-up-options-extensions.php:356
+msgid "Invalid license key."
+msgstr ""
+
+#: ../includes/admin/options/class-up-options-extensions.php:254
+msgid "Looks like you have acquired all of our currently available extensions."
+msgstr ""
+
+#: ../includes/admin/options/class-up-options-extensions.php:255
+msgid "<strong>Thank you</strong> for your support, and stay tunned for more."
+msgstr ""
+
+#: ../includes/admin/options/class-up-options-extensions.php:265
+msgid "Get This Extension"
+msgstr ""
+
+#: ../includes/admin/options/class-up-options-extensions.php:306, ../includes/admin/options/class-up-options-extensions.php:316, ../includes/admin/options/class-up-options-extensions.php:406
+msgid "Invalid extension."
+msgstr ""
+
+#: ../includes/admin/options/class-up-options-extensions.php:354
+msgid "This key is expired and could not be activated."
 msgstr ""
 
 #: ../includes/admin/options/class-up-options-general.php:51, ../includes/admin/options/class-up-options-general.php:52
@@ -1292,10 +1357,6 @@ msgstr ""
 
 #: ../includes/admin/options/class-up-options-milestones.php:86
 msgid "Create your %1s and choose their colors. You can create an unlimited number and they can be used across any and all %2s.<br>They will appear in the %3s dropdown within each %4s.<br><strong>Tip:</strong> We think it works best to keep %5s colors to various shades of the one color, to help keep things looking neat and organized."
-msgstr ""
-
-#: ../includes/admin/options/class-up-options-milestones.php:94
-msgid "%s #{#}"
 msgstr ""
 
 #: ../includes/admin/options/class-up-options-milestones.php:95
