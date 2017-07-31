@@ -221,7 +221,6 @@
 
       var self = $(this);
       var form = $('#form-add-new-user');
-      var hasError = false;
 
       $('input.has-error', form).removeClass('has-error');
 
@@ -230,88 +229,78 @@
         theField.focus();
       };
 
-      var inputsList = $('input', form);
-      for (var inputIndex = 0; inputIndex < inputsList.length; inputIndex++) {
-        var input = $(inputsList[inputIndex]);
-        if (input.attr('required')) {
-          var value = input.val() || "";
-          if (value.trim().length === 0) {
-            throwFieldError(input);
-            hasError = true;
-            break;
+      var emailField = $('[name="email"]', form);
+      var emailFieldValue = (emailField.val() + '').trim();
+      if (emailFieldValue.length === 0) {
+        throwFieldError(emailField);
+        return;
+      }
+
+      var passwordField = $('[name="password"]', form);
+      var passwordFieldValue = passwordField.val();
+      if (passwordFieldValue.length < 6) {
+        throwFieldError(passwordField);
+        return;
+      }
+
+      var confirmPasswordField = $('[name="password_confirmation"]', form);
+      var confirmPasswordFieldValue = confirmPasswordField.val();
+      if (confirmPasswordFieldValue !== passwordFieldValue) {
+        throwFieldError(confirmPasswordField);
+        return;
+      }
+
+      $.ajax({
+        type: 'POST',
+        url : ajaxurl,
+        data: {
+          action      : 'upstream:client.add_new_user',
+          client      : $('#post_ID').val(),
+          email       : emailFieldValue,
+          password    : passwordFieldValue,
+          password_c  : confirmPasswordFieldValue,
+          first_name  : $('[name="first_name"]', form).val(),
+          last_name   : $('[name="last_name"]', form).val(),
+          notification: $('[name="notification"]', form).is(':checked')
+        },
+        beforeSend: function(jqXHR, settings) {
+          $('.error-wrapper', form).remove();
+          form.addClass('is-sending');
+          $('input', form).attr('disabled', 'disabled');
+          self.text(self.attr('data-loading-label'));
+          self.attr('disabled', 'disabled');
+        },
+        success   : function(response, textStatus, jqXHR) {
+          if (!response.success) {
+            form.prepend($('<div class="error-wrapper notice notice-error"><p>' + response.err + '</p>'));
+          } else {
+            $('#TB_closeWindowButton').trigger('click');
+
+            var tr = $('<tr data-id="'+ response.data.id +'"></tr>');
+            tr.append('<td><a title="'+ l['MSG_MANAGING_PERMISSIONS'].replace('%s', response.data.name) +'" href="#TB_inline?width=600&height=425&inlineId=modal-user-permissions" class="thickbox">'+ response.data.name +'</a></td>');
+            tr.append('<td>'+ response.data.email +'</td>');
+            tr.append('<td>'+ response.data.assigned_by +'</td>');
+            tr.append('<td class="text-center">'+ response.data.assigned_at +'</td>');
+            tr.append('<td class="text-center"><a href="#" class="up-u-color-red" data-remove-user><span class="dashicons dashicons-trash"></span></a></td>');
+
+            var table = $('#table-users');
+            $('tr[data-empty]', table).remove();
+
+            $('tbody', table).append(tr);
+
+            $('#form-add-new-user input').val('');
           }
+        },
+        error     : function(jqXHR, textStatus, errorThrown) {
+          console.error(errorThrown);
+        },
+        complete  : function() {
+          form.removeClass('is-sending');
+          $('input', form).attr('disabled', null).removeClass('has-error');
+          self.text(self.attr('data-label'));
+          self.attr('disabled', null);
         }
-      }
-
-      if (!hasError) {
-        var passwordField = $('[name="password"]', form);
-        var passwordFieldValue = passwordField.val();
-        if (passwordFieldValue.length < 6) {
-          throwFieldError(passwordField);
-          return;
-        }
-
-        var confirmPasswordField = $('[name="password_confirmation"]', form);
-        var confirmPasswordFieldValue = confirmPasswordField.val();
-        if (confirmPasswordFieldValue !== passwordFieldValue) {
-          throwFieldError(confirmPasswordField);
-          return;
-        }
-      }
-
-      if (!hasError) {
-        $.ajax({
-          type: 'POST',
-          url : ajaxurl,
-          data: {
-            action      : 'upstream:client.add_new_user',
-            client      : $('#post_ID').val(),
-            email       : $('[name="email"]', form).val(),
-            password    : passwordFieldValue,
-            password_c  : confirmPasswordField,
-            first_name  : $('[name="first_name"]', form).val(),
-            last_name   : $('[name="last_name"]', form).val(),
-            notification: $('[name="notification"]', form).is(':checked'),
-          },
-          beforeSend: function(jqXHR, settings) {
-            $('.error-wrapper', form).remove();
-            form.addClass('is-sending');
-            $('input', form).attr('disabled', 'disabled');
-            self.text(self.attr('data-loading-label'));
-            self.attr('disabled', 'disabled');
-          },
-          success   : function(response, textStatus, jqXHR) {
-            if (!response.success) {
-              form.prepend($('<div class="error-wrapper notice notice-error"><p>' + response.err + '</p>'));
-            } else {
-              $('#TB_closeWindowButton').trigger('click');
-
-              var tr = $('<tr data-id="'+ response.data.id +'"></tr>');
-              tr.append('<td><a title="'+ l['MSG_MANAGING_PERMISSIONS'].replace('%s', response.data.name) +'" href="#TB_inline?width=600&height=425&inlineId=modal-user-permissions" class="thickbox">'+ response.data.name +'</a></td>');
-              tr.append('<td>'+ response.data.email +'</td>');
-              tr.append('<td>'+ response.data.assigned_by +'</td>');
-              tr.append('<td class="text-center">'+ response.data.assigned_at +'</td>');
-              tr.append('<td class="text-center"><a href="#" class="up-u-color-red" data-remove-user><span class="dashicons dashicons-trash"></span></a></td>');
-
-              var table = $('#table-users');
-              $('tr[data-empty]', table).remove();
-
-              $('tbody', table).append(tr);
-
-              $('#form-add-new-user input').val('');
-            }
-          },
-          error     : function(jqXHR, textStatus, errorThrown) {
-            console.error(errorThrown);
-          },
-          complete  : function() {
-            form.removeClass('is-sending');
-            $('input', form).attr('disabled', null).removeClass('has-error');
-            self.text(self.attr('data-label'));
-            self.attr('disabled', null);
-          }
-        });
-      }
+      });
     });
 
     $('.thickbox[data-modal-identifier="user-migration"]').on('click', function() {
