@@ -790,7 +790,7 @@ a.up-u-color-red:focus {
 }
 
 .up-form-group:not(.label-default) label {
-  width: 6em;
+  width: 12em;
   margin: 0 1em 0 0;
 }
 
@@ -1076,4 +1076,12 @@ body.upstream_page_upstream_extensions #upstream_extensions input[type="submit"]
     -webkit-transform: rotate(360deg);
     transform: rotate(360deg);
   }
+}
+
+#form-add-new-user {
+  margin-top: 10px;
+}
+
+#form-add-new-user .description {
+  margin-left: 15.2em
 }

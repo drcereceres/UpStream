@@ -203,7 +203,6 @@ final class UpStream_Metaboxes_Clients
         <div id="modal-add-new-user" style="display: none;">
             <div id="form-add-new-user">
                 <div>
-                    <h3><?php echo __('Credentials', 'upstream'); ?></h3>
                     <div class="up-form-group">
                         <label for="new-user-email"><?php echo __('Email', 'upstream') .' *'; ?></label>
                         <input type="email" name="email" id="new-user-email" size="35" />
@@ -217,8 +216,6 @@ final class UpStream_Metaboxes_Clients
                         <label for="new-user-password_confirmation"><?php echo __('Confirm Password', 'upstream') .' *'; ?></label>
                         <input type="password" name="password_confirmation" id="new-user-password_confirmation" size="35" />
                     </div>
-                    <hr />
-                    <h3><?php echo __('Profile', 'upstream'); ?></h3>
                     <div class="up-form-group">
                         <label for="new-user-first_name"><?php echo __('First Name', 'upstream'); ?></label>
                         <input type="text" name="first_name" id="new-user-first_name" size="35" />
@@ -230,7 +227,7 @@ final class UpStream_Metaboxes_Clients
                 </div>
                 <div>
                     <div class="up-form-group label-default">
-                        <label>
+                        <label style="margin-left: 13.5em;">
                             <input type="checkbox" name="notification" id="new-user-notification" value="1" checked />
                             <span><?php echo __('Send user info via email', 'upstream'); ?></span>
                         </label>
@@ -345,7 +342,7 @@ final class UpStream_Metaboxes_Clients
         <div class="upstream-row">
             <a
                 name="<?php echo __('Add New User', 'upstream'); ?>"
-                href="#TB_inline?width=600&height=425&inlineId=modal-add-new-user"
+                href="#TB_inline?width=600&height=360&inlineId=modal-add-new-user"
                 class="thickbox button"
             ><?php echo __('Add New User', 'upstream'); ?></a>
             <a
