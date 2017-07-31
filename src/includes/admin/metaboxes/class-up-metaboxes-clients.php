@@ -206,16 +206,16 @@ final class UpStream_Metaboxes_Clients
                     <h3><?php echo __('Credentials', 'upstream'); ?></h3>
                     <div class="up-form-group">
                         <label for="new-user-email"><?php echo __('Email', 'upstream') .' *'; ?></label>
-                        <input type="email" name="email" id="new-user-email" required size="35" />
+                        <input type="email" name="email" id="new-user-email" size="35" />
                     </div>
                     <div class="up-form-group">
                         <label for="new-user-password"><?php echo __('Password', 'upstream') .' *'; ?></label>
-                        <input type="password" name="password" id="new-user-password" required size="35" />
+                        <input type="password" name="password" id="new-user-password" size="35" />
                         <p class="description up-help-block"><?php echo __('Must be at least 6 characters long.', 'upstream'); ?></p>
                     </div>
                     <div class="up-form-group">
                         <label for="new-user-password_confirmation"><?php echo __('Confirm Password', 'upstream') .' *'; ?></label>
-                        <input type="password" name="password_confirmation" id="new-user-password_confirmation" required size="35" />
+                        <input type="password" name="password_confirmation" id="new-user-password_confirmation" size="35" />
                     </div>
                     <hr />
                     <h3><?php echo __('Profile', 'upstream'); ?></h3>
