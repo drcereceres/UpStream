@@ -49,7 +49,7 @@ final class UpStream
      */
     public function __clone()
     {
-        _doing_it_wrong(__FUNCTION__, __('You\'re not supposed to clone this class.', 'upstream'), UPSTREAM_VERSION);
+        _doing_it_wrong(__FUNCTION__, 'You\'re not supposed to clone this class.', UPSTREAM_VERSION);
     }
 
     /**
@@ -59,7 +59,7 @@ final class UpStream
      */
     public function __wakeup()
     {
-        _doing_it_wrong(__FUNCTION__, __('You\'re not supposed to unserialize this class.', 'upstream'), UPSTREAM_VERSION);
+        _doing_it_wrong(__FUNCTION__, 'You\'re not supposed to unserialize this class.', UPSTREAM_VERSION);
     }
 
     /**
@@ -69,7 +69,7 @@ final class UpStream
      */
     public function __sleep()
     {
-        _doing_it_wrong(__FUNCTION__, __('You\'re not supposed to serialize this class.', 'upstream'), UPSTREAM_VERSION);
+        _doing_it_wrong(__FUNCTION__, 'You\'re not supposed to serialize this class.', UPSTREAM_VERSION);
     }
 
     public function __construct()

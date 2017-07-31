@@ -347,10 +347,10 @@ final class UpStream_Metaboxes_Clients
             ><?php echo __('Add New User', 'upstream'); ?></a>
             <a
                 id="add-existent-user"
-                name="<?php echo __('Assign Existent Users', 'upstream'); ?>"
+                name="<?php echo __('Add Existing Users', 'upstream'); ?>"
                 href="#TB_inline?width=600&height=300&inlineId=modal-add-existent-user"
                 class="thickbox button"
-            ><?php echo __('Assign Existent Users', 'upstream'); ?></a>
+            ><?php echo __('Add Existing Users', 'upstream'); ?></a>
         </div>
         <div class="upstream-row">
             <table id="table-users" class="wp-list-table widefat fixed striped posts upstream-table">
@@ -377,7 +377,7 @@ final class UpStream_Metaboxes_Clients
                     ?>
                     <tr data-id="<?php echo $user->id; ?>">
                         <td>
-                            <a title="Managing <?php echo $user->name; ?>'s Permissions" href="#TB_inline?width=600&height=425&inlineId=modal-user-permissions" class="thickbox"><?php echo $user->name; ?></a>
+                            <a title="<?php echo sprintf(__("Managing %s's Permissions"), $user->name); ?>" href="#TB_inline?width=600&height=425&inlineId=modal-user-permissions" class="thickbox"><?php echo $user->name; ?></a>
                         </td>
                         <td><?php echo $user->email; ?></td>
                         <td><?php echo $user->assigned_by; ?></td>
@@ -391,14 +391,14 @@ final class UpStream_Metaboxes_Clients
                     <?php endforeach; ?>
                     <?php else: ?>
                     <tr data-empty>
-                        <td colspan="5"><?php echo __("There's no users assigned yet.", 'upstream'); ?></td>
+                        <td colspan="5"><?php echo __("There are no users assigned yet.", 'upstream'); ?></td>
                     </tr>
                     <?php endif; ?>
                 </tbody>
             </table>
 
             <p>
-                <span class="dashicons dashicons-info"></span> <?php echo __('By removing a user it only means that he will no longer be associated with this client. He will not be deleted.', 'upstream'); ?>
+                <span class="dashicons dashicons-info"></span> <?php echo __('Removing a user only means that they will no longer be associated with this client. Their WordPress account will not be deleted.', 'upstream'); ?>
             </p>
         </div>
 
@@ -418,19 +418,18 @@ final class UpStream_Metaboxes_Clients
     {
         ?>
         <div class="notice notice-info is-dismissible">
-            <h3><?php echo __("UpStream's Disclaimer", 'upstream'); ?></h3>
+            <h3><?php echo __("Please note: we made an important change to UpStream", 'upstream'); ?></h3>
             <div class="upstream-row">
                 <p><?php echo sprintf(
-                    __("<code>%s</code> are now <code>%s</code> as well, meaning they will be able to log in using their own password instead of client's, and manage their very own profile.", 'upstream'),
+                    __("<code>%s</code> are now <code>%s</code>. Clients will be able to log in using their own password and manage their very own profile.", 'upstream'),
                     __('UpStream Client Users', 'upstream'),
                     __('WordPress Users', 'upstream')
                 ); ?></p>
 
                 <ul class="up-list-disc">
                     <li><?php echo __('UpStream attempted to convert them automatically when the plugin was updated.', 'upstream'); ?></li>
-                    <li><?php echo __('Client Users that <strong>could not</strong> be automatically converted for some reason will be listed on the <code>Legacy Users</code> metabox on this page. They can be manually either converted/migrated or discarded.', 'upstream'); ?></li>
-                    <li><?php echo __("Client Users that were <strong>successfully</strong> converted <u>will have the same permissions they have before</u> and <u>their email address set as their new password</u> by default. It's highly advisable that they change their password after that.", 'upstream'); ?></li>
-                    <li><?php echo __('Client passwords are no longer used.', 'upstream'); ?></li>
+                    <li><?php echo __('Client Users that <strong>could not</strong> be automatically converted for some reason will be listed in the <code>Legacy Users</code> box on this page. They can be manually either converted/migrated or discarded.', 'upstream'); ?></li>
+                    <li><?php echo __("Client Users that were <strong>successfully</strong> converted will have the same permissions they have before and their email address is now their new password. Please make sure that they change their password.", 'upstream'); ?></li>
                 </ul>
             </div>
         </div>
@@ -539,14 +538,16 @@ final class UpStream_Metaboxes_Clients
                         $errorMessage = $legacyUserError;
                         break;
                 }
+
+                $emptyValueString = '<i>' . __('empty', 'upstream') .'</i>';
                 ?>
                     <tr data-id="<?php echo $legacyUserId; ?>">
-                        <td data-column="fname"><?php echo !empty($userFirstName) ? $userFirstName : '<i>empty</i>'; ?></td>
-                        <td data-column="lname"><?php echo !empty($userLastName) ? $userLastName : '<i>empty</i>'; ?></td>
-                        <td data-column="email"><?php echo !empty($userEmail) ? $userEmail : '<i>empty</i>'; ?></td>
-                        <td data-column="phone"><?php echo !empty($userPhone) ? $userPhone : '<i>empty</i>'; ?></td>
+                        <td data-column="fname"><?php echo !empty($userFirstName) ? $userFirstName : $emptyValueString; ?></td>
+                        <td data-column="lname"><?php echo !empty($userLastName) ? $userLastName : $emptyValueString; ?></td>
+                        <td data-column="email"><?php echo !empty($userEmail) ? $userEmail : $emptyValueString; ?></td>
+                        <td data-column="phone"><?php echo !empty($userPhone) ? $userPhone : $emptyValueString; ?></td>
                         <td class="text-center">
-                            <a name="Migrating Client User" href="#TB_inline?width=350&height=400&inlineId=modal-migrate-user" class="thickbox" data-modal-identifier="user-migration">
+                            <a name="<?php echo __('Migrating Client User', 'upstream'); ?>" href="#TB_inline?width=350&height=400&inlineId=modal-migrate-user" class="thickbox" data-modal-identifier="user-migration">
                                 <span class="dashicons dashicons-plus-alt"></span>
                             </a>
                         </td>
