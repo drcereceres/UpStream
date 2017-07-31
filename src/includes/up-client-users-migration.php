@@ -335,7 +335,7 @@ final class ClientUsers
                         $projectActivities[0][$activityIndex] = $activity;
                     }
 
-                    update_post_meta($project['id'], '_upstream_project_activity', $projectActivities);
+                    update_post_meta($project['id'], '_upstream_project_activity', $projectActivities[0]);
                 }
             }
         }
