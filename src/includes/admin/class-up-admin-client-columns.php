@@ -61,34 +61,40 @@ class UpStream_Admin_Client_Columns {
         return $defaults;
     }
 
-    public function client_data( $column_name, $post_id ) {
+    public function client_data($column_name, $post_id)
+    {
+        $client = new UpStream_Client($post_id);
 
-        $client = new UpStream_Client( $post_id );
+        $columnValue = null;
 
-        if ( $column_name == 'logo' ) {
-            $img = wp_get_attachment_image_src( $client->get_meta( 'logo_id' ) );
-            echo '<img height="50" src="' . $img[0] . '" />';
-        }
+        if ($column_name === 'logo') {
+            $logoID = $client->get_meta('logo_id');
+            if (!empty($logoID)) {
+                $logoImgURL = wp_get_attachment_image_src($logoID);
 
-        if ( $column_name == 'website' ) {
-            $website = $client->get_meta( 'website' );
-            if( $website ) {
-                echo '<a href="' . esc_url( $website ) . '" target="_blank">' . esc_html( $website ) . '</a>';
+                $columnValue = '<img height="50" src="' . $logoImgURL[0] . '" />';
             }
-        }
-
-        if ( $column_name == 'phone' ) {
-            echo $client->get_meta( 'phone' );
-        }
-
-        if ( $column_name == 'address' ) {
-            echo wp_kses_post( wpautop( $client->get_meta( 'address' ) ) );
-        }
-
-        if ( $column_name == 'users' ) {
+        } else if ($column_name === 'website') {
+            $website = $client->get_meta('website');
+            if (!empty($website)) {
+                $columnValue = '<a href="' . esc_url($website) . '" target="_blank" rel="noopener noreferer">' . esc_html($website) . '</a>';
+            }
+        } else if ($column_name === 'phone') {
+            $phone = $client->get_meta('phone');
+            if (!empty($phone)) {
+                $columnValue = $phone;
+            }
+        } else if ($column_name === 'address') {
+            $address = $client->get_meta('address');
+            if (!empty($address)) {
+                $columnValue = wp_kses_post(wpautop($address));
+            }
+        } else if ($column_name === 'users') {
             upstream_client_render_users_column(upstream_get_client_users($post_id));
+            return;
         }
 
+        echo !empty($columnValue) ? $columnValue : '<i>none</i>';
     }
 
 }
