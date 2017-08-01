@@ -91,7 +91,7 @@ class UpStream_Options_Milestones {
                     'name'        => '',
                     'description' => '',
                     'options'     => array(
-                        'group_title'   => sprintf( __( '%s #{#}', 'upstream' ), upstream_milestone_label() ),
+                        'group_title'   => sprintf( '%s #{#}', upstream_milestone_label() ),
                         'add_button'    => sprintf( __( 'Add %s', 'upstream' ), upstream_milestone_label() ),
                         'remove_button' => sprintf( __( 'Remove %s', 'upstream' ), upstream_milestone_label() ),
                         'sortable'      => true, // beta

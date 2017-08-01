@@ -200,11 +200,12 @@ class UpStream_Project {
         $colors = wp_list_pluck( $option[$option_name], 'color', 'name' );
 
         foreach ($data as $key => $item) {
-            //pp( $item );
             if( $item_id == $item['id'] ) {
-                $field_name = $item[$field];
-                if( isset( $field_name ) && ! empty( $field_name ) ) {
-                    return $colors[$field_name];
+                if (isset($item[$field])) {
+                    $field_name = $item[$field];
+                    if( isset( $field_name ) && ! empty( $field_name ) ) {
+                        return $colors[$field_name];
+                    }
                 }
             }
         }
@@ -335,8 +336,6 @@ class UpStream_Project {
             return;
 
         // if( [_wp_http_referer] => /upstreamplugin/wp-admin/post-new.php?post_type=project)
-        // pp( $_POST );
-        // die;
         //[original_post_status] => auto-draft
         // if no posted_data from frontend, set it as $_POST
         if( ! $frontend ) {
@@ -345,12 +344,6 @@ class UpStream_Project {
         } else {
             $data = $this->get_meta( $meta_key );
         }
-    //  if( $meta_key == 'discussion' ) {
-    //  pp( $_POST );
-    //  pp( $this->meta_prefix );
-    //  pp( $data );
-    //  die;
-    // }
 
         $meta_key = $this->meta_prefix . $meta_key;
 
@@ -374,26 +367,21 @@ class UpStream_Project {
                 if( $value ) :
                     foreach ( $value as $key => $v ) {
                         if ( strpos($key, 'date') !== false ) {
-
-                            //pp( $v );
                             if ( isset( $v ) && ! empty( $v ) ) {
-                                //pp( $value );
                                 $data[$i][$key] = upstream_timestamp_from_date( $v );
-                                //pp( $data[$i][$key] );
                             }
                         }
                     }
                 endif;
-
             }
         }
 
-        // // removes the last empty item. So that it can be hidden
-        // // essentially deletes id, created by and created time if they are the only keys
+        // removes the last empty item. So that it can be hidden
+        // essentially deletes id, created by and created time if they are the only keys
         if( $meta_key != '_upstream_project_milestones' ) {
             $data = $this->remove_empty_items( $data );
         }
-        //die;
+
         $updated = update_post_meta( $this->ID, $meta_key, $data );
 
     }

@@ -3,7 +3,7 @@ Contributors: upstreamplugin
 Tags: project, manage, management, project management, project manager, wordpress project management, crm, client, client manager, tasks, issue tracker, bug tracker, task manager
 Requires at least: 4.5
 Tested up to: 4.8
-Stable tag: 1.10.4
+Stable tag: 1.11.0
 License: GPL-3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -122,6 +122,25 @@ UpStream does not use the existing styling of your theme. The features and the v
 
 The format is based on [Keep a Changelog](http://keepachangelog.com)
 and this project adheres to [Semantic Versioning](http://semver.org).
+
+= [1.11.0] - 2017-08-01 =
+
+Changed:
+* Client Users are now fully WordPress Users
+* New layout for the Extensions page
+* Small frontend clean up
+* Clean up admin menu
+* Changed redirect url after install
+* Display Project Name and Logo options are now "checked" by default
+* Removed "Visibility" field in the Publish box for Clients and Projects
+* A lot code enhancements
+
+Fixed:
+* Task's title field is now required
+* Make sure UpStream custom roles are removed on uninstall
+* Enhanced support for internationalization
+* Fix Milestone field being required for Tasks
+* Fixed some typos
 
 = [1.10.4] - 2017-07-20 =
 

@@ -331,8 +331,7 @@ class UpStream_Project_Activity {
 
         // get the activity data
         $activity   = $this->get_meta( '_upstream_project_activity' );
-        // pp( $activity );
-        // die;
+
         if( ! $activity )
             return;
 

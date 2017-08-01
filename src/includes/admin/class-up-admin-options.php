@@ -190,7 +190,7 @@ class UpStream_Admin_Options {
         }
 
         $ext_options = new UpStream_Options_Extensions();
-        $this->option_metabox[] = $ext_options->options();
+        $this->option_metabox[] = $ext_options->getOptions();
 
         return apply_filters( 'upstream_option_metaboxes', $this->option_metabox );
 

@@ -62,7 +62,8 @@ function upstream_project_client_name( $id = 0 ) {
 
 function upstream_project_client_users( $id = 0 ) {
     $project    = new UpStream_Project( $id );
-    $result     = $project->get_meta( 'client_users' );
+    $result     = (array)$project->get_meta( 'client_users' );
+    $result     = !empty($result) ? array_filter($result, 'is_numeric') : '';
     return apply_filters( 'upstream_project_client_users', $result, $id );
 }
 

@@ -1136,7 +1136,6 @@ class UpStream_Metaboxes_Projects {
         // loop through ordered fields and add them to the group
         if( $fields ) {
             foreach ($fields as $key => $value) {
-                //pp( $value );
                 $fields[$key] = $metabox->add_field( $value );
             }
         }
