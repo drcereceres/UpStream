@@ -31,12 +31,8 @@ class UpStream_Admin_Metaboxes {
         $project_metaboxes = new UpStream_Metaboxes_Projects();
         $project_metaboxes->get_instance();
 
-        /**
-         * Load the metaboxes for client post type
-         */
-        $client_metaboxes = new UpStream_Metaboxes_Clients();
-        $client_metaboxes->get_instance();
-
+        // Load all Client metaboxes (post_type="client").
+        UpStream_Metaboxes_Clients::instantiate();
     }
 
 }

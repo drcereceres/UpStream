@@ -4,7 +4,7 @@
  * Description: A WordPress Project Management plugin by UpStream.
  * Author: UpStream
  * Author URI: https://upstreamplugin.com
- * Version: 1.10.4
+ * Version: 1.11.0
  * Text Domain: upstream
  * Domain Path: /languages
  */
@@ -14,17 +14,6 @@
 if ( ! defined( 'ABSPATH' ) ) exit;
 
 if ( ! class_exists( 'UpStream' ) ) :
-/*
- * Helper function for quick debugging
- */
-if (!function_exists('pp')) {
-    function pp( $array )
-    {
-        echo '<pre style="white-space:pre-wrap;">';
-            print_r( $array );
-        echo '</pre>';
-    }
-}
 
 /**
  * Main UpStream Class.
@@ -60,7 +49,7 @@ final class UpStream
      */
     public function __clone()
     {
-        _doing_it_wrong(__FUNCTION__, __('You\'re not supposed to clone this class.', 'upstream'), UPSTREAM_VERSION);
+        _doing_it_wrong(__FUNCTION__, 'You\'re not supposed to clone this class.', UPSTREAM_VERSION);
     }
 
     /**
@@ -70,7 +59,7 @@ final class UpStream
      */
     public function __wakeup()
     {
-        _doing_it_wrong(__FUNCTION__, __('You\'re not supposed to unserialize this class.', 'upstream'), UPSTREAM_VERSION);
+        _doing_it_wrong(__FUNCTION__, 'You\'re not supposed to unserialize this class.', UPSTREAM_VERSION);
     }
 
     /**
@@ -80,7 +69,7 @@ final class UpStream
      */
     public function __sleep()
     {
-        _doing_it_wrong(__FUNCTION__, __('You\'re not supposed to serialize this class.', 'upstream'), UPSTREAM_VERSION);
+        _doing_it_wrong(__FUNCTION__, 'You\'re not supposed to serialize this class.', UPSTREAM_VERSION);
     }
 
     public function __construct()
@@ -111,6 +100,73 @@ final class UpStream
     }
 
     /**
+     * Prevent a Client User from accessing any page other than the profile.
+     *
+     * @since   1.11.0
+     *
+     * @global  $pagenow
+     */
+    public function limitClientUsersAdminAccess()
+    {
+        global $pagenow;
+
+        $profilePage = 'profile.php';
+
+        if ($pagenow !== $profilePage) {
+            wp_redirect(admin_url($profilePage));
+            exit;
+        }
+    }
+
+    /**
+     * Make sure Client Users can only see the Profile menu item.
+     *
+     * @since   1.11.0
+     *
+     * @global  $menu
+     */
+    public function limitClientUsersMenu()
+    {
+        global $menu;
+
+        foreach ($menu as $menuIndex => $menuData) {
+            $menuFile = isset($menuData[2]) ? $menuData[2] : null;
+            if ($menuFile !== null) {
+                if ($menuFile === 'profile.php') {
+                    continue;
+                }
+
+                remove_menu_page($menuFile);
+            }
+        }
+    }
+
+    /**
+     * Hide some toolbar items from Client Users.
+     *
+     * @since   1.11.0
+     *
+     * @param   \WP_Admin_Bar   $wp_admin_bar
+     */
+    public function limitClientUsersToolbarItems($wp_admin_bar)
+    {
+        $user = wp_get_current_user();
+        $userRoles = (array)$user->roles;
+
+        if (count(array_intersect($userRoles, array('administrator', 'upstream_manager'))) === 0 && in_array('upstream_client_user', $userRoles)) {
+            $menuItems = array('about', 'comments', 'new-content');
+
+            if (!is_admin()) {
+                $menuItems = array_merge($menuItems, array('dashboard', 'edit'));
+            }
+
+            foreach ($menuItems as $menuItem) {
+                $wp_admin_bar->remove_menu($menuItem);
+            }
+        }
+    }
+
+    /**
      * Define Constants.
      * @since  1.0.0
      */
@@ -121,7 +177,7 @@ final class UpStream
         $this->define( 'UPSTREAM_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
         $this->define( 'UPSTREAM_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
         $this->define( 'UPSTREAM_PLUGIN_BASENAME', plugin_basename( __FILE__ ) );
-        $this->define( 'UPSTREAM_VERSION', '1.10.4' );
+        $this->define( 'UPSTREAM_VERSION', '1.11.0' );
     }
 
     /**
@@ -166,7 +222,7 @@ final class UpStream
         include_once( 'includes/class-up-project-activity.php' );
         include_once( 'includes/up-post-types.php' );
         include_once( 'includes/up-labels.php' );
-
+        include_once( 'includes/trait-up-singleton.php' );
 
         if ( $this->is_request( 'admin' ) ) {
             include_once( 'includes/libraries/cmb2/init.php' );
@@ -189,6 +245,7 @@ final class UpStream
         include_once( 'includes/up-project-functions.php' );
         include_once( 'includes/up-client-functions.php' );
         include_once( 'includes/up-permissions-functions.php' );
+        include_once( 'includes/up-client-users-migration.php' );
     }
 
     /**
@@ -207,6 +264,20 @@ final class UpStream
         // If PHP < 5.5, loads a library intended to provide forward compatibility with the password_* functions that ship with PHP 5.5.
         if (version_compare(PHP_VERSION, '5.5', '<')) {
             require_once UPSTREAM_PLUGIN_DIR . 'includes/libraries/password_compat-1.0.4/lib/password.php';
+        }
+
+        // Make sure "UpStream Client Users" role is added in existent instances.
+        UpStream_Roles::addClientUsersRole();
+
+        // Executes the Legacy Client Users Migration script if needed.
+        \UpStream\Migrations\ClientUsers::run();
+
+        $user = wp_get_current_user();
+        $userRoles = (array)$user->roles;
+        if (count(array_intersect($userRoles, array('administrator', 'upstream_manager'))) === 0 && in_array('upstream_client_user', $userRoles)) {
+            add_filter('admin_init', array($this, 'limitClientUsersAdminAccess'));
+            add_filter('admin_head', array($this, 'limitClientUsersMenu'));
+            add_action('admin_bar_menu', array($this, 'limitClientUsersToolbarItems'), 999);
         }
 
         // Init action.

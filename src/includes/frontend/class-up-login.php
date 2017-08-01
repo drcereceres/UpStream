@@ -144,28 +144,6 @@ final class UpStream_Login
     }
 
     /**
-     * Method reponsible for verifying if a given password is valid for a given project.
-     *
-     * @since   1.9.0
-     * @access  private
-     *
-     * @param   string  $subject        The raw password to be tested.
-     * @param   int     $project_id     The project id to be used.
-     *
-     * @return  bool
-     */
-    private function verifyProjectPassword($subject, $project_id)
-    {
-        if (strlen((string)$subject) < 5 || (int)$project_id <= 0) {
-            return false;
-        }
-
-        $passwordHash = get_post_meta($project_id, '_upstream_client_password', true);
-
-        return password_verify($subject, $passwordHash);
-    }
-
-    /**
      * Attempt to authenticate a user against the open project given current email address and password.
      *
      * @since   1.9.0
@@ -177,123 +155,81 @@ final class UpStream_Login
      */
     private function authenticateData($data)
     {
-        if (!isset($data['username']) || !isset($data['password'])) {
-            return false;
-        }
-
-        global $wpdb;
-
-        $userCanLogIn = false;
-        $user_id = null;
-        $client_id = null;
-
-        // Tries to match the email address against a project client users.
-        $projectClientsRowset = $wpdb->get_results('
-            SELECT *
-              FROM `'. $wpdb->postmeta .'`
-             WHERE
-                `meta_key` = \'_upstream_client_users\' AND
-                `meta_value` REGEXP \'.*\"email\";s:[0-9]+:\"'. esc_html($data['username']) .'\".*\''
-        );
-
-        if (count($projectClientsRowset) > 0) {
-            // Unset any Project Client User that might be not published.
-            foreach ($projectClientsRowset as $projectClientIndex => $projectClient) {
-                $status = get_post_status((int)$projectClient->post_id);
-                if ($status !== "publish") {
-                    unset($projectClientsRowset[$projectClientIndex]);
-                }
+        try {
+            if (!isset($data['username']) || !isset($data['password'])) {
+                throw new \Exception(__("Invalid email address and/or password.", 'upstream'));
             }
 
-            if (count($projectClientsRowset) > 1) {
-                $this->feedbackMessage = __("Looks like there are multiple users using this email.<br>Please, contact your administrator as soon as possible.", 'upstream');
-            } else {
-                $client = array_values($projectClientsRowset)[0];
-
-                $clientUsers = unserialize($client->meta_value);
-                foreach ($clientUsers as $clientUser) {
-                    if (isset($clientUser['email']) && $clientUser['email'] === $data['username']) {
-                        $user_id = $clientUser['id'];
-                        break;
-                    }
-                }
-
-                if (empty($user_id)) {
-                    // User does not exist.
-                    $this->feedbackMessage = __("Invalid email address and/or password.", 'upstream');
-                } else {
-                    $userIsAMember = false;
-                    // Check if the user is a member of the project.
-                    $projectMembers = (array)get_post_meta(get_the_ID(), '_upstream_project_client_users', true);
-                    foreach ($projectMembers as $projectMemberId) {
-                        if ((string)$user_id === (string)$projectMemberId) {
-                            $userIsAMember = true;
-                            break;
-                        }
-                    }
-
-                    if (!$userIsAMember) {
-                        $this->feedbackMessage = __("Sorry, you are not allowed to access this project.", 'upstream');
-                    } else {
-                        if ($this->verifyProjectPassword($data['password'], $client->post_id)) {
-                            $client_id = $client->post_id;
-                            $userCanLogIn = true;
-                        } else {
-                            $this->feedbackMessage = __("Invalid email address and/or password.", 'upstream');
-                        }
-                    }
-                }
-            }
-        } else {
             // Check if there's a user using that email.
             $user = get_user_by('email', $data['username']);
             if (empty($user)) {
-                $this->feedbackMessage = __("Invalid email address and/or password.", 'upstream');
+                throw new \Exception(__("Invalid email address and/or password.", 'upstream'));
+            }
+
+            $userRoles = (array)$user->roles;
+            // Check if this user has a valid UpStream Role to log in.
+            if (count(array_intersect($userRoles, array('administrator', 'upstream_manager', 'upstream_user', 'upstream_client_user'))) === 0) {
+                throw new \Exception(__("You don't have enough permissions to log in here.", 'upstream'));
+            }
+
+            $project_id = (int)upstream_post_id();
+            $canContinue = false;
+
+            // Make sure he can be authenticated if he's an admin/manager.
+            if (count(array_intersect($userRoles, array('administrator', 'upstream_manager'))) > 0) {
+                $canContinue = true;
             } else {
-                // Check if user has enough permissions to try to login.
-                if (count(array_intersect((array)$user->roles, array('administrator', 'upstream_manager', 'upstream_user'))) === 0) {
-                    $this->feedbackMessage = __("You don't have enough permissions to log in.", 'upstream');
+                // Check if he, as an UpStream User, is a current member of this project.
+                if (in_array('upstream_user', $userRoles)) {
+                    $metaKeyName = '_upstream_project_members';
                 } else {
-                    $user = wp_signon(array(
-                        'user_login'    => $data['username'],
-                        'user_password' => $data['password'],
-                        'remember'      => false
-                    ));
+                    // Check if he, as an UpStream Client User, is allowed to log in in this project.
+                    $metaKeyName = '_upstream_project_client_users';
+                }
 
-                    if (is_wp_error($user)) {
-                        $this->feedbackMessage = $user->get_error_message();
-                    } else {
-                        // Let's identify the client_id based on the current project.
-                        $clientRowset = $wpdb->get_results('
-                            SELECT *
-                            FROM `'. $wpdb->postmeta .'`
-                            WHERE
-                                `meta_key` = "_upstream_project_client" AND
-                                `post_id`  = "'. esc_html(upstream_post_id()) .'"
-                            LIMIT 1'
-                        );
-
-                        // If he exists, we're all set and user will be logged in.
-                        if (!empty($clientRowset)) {
-                            $user_id = $user->ID;
-                            $client_id = $clientRowset[0]->meta_value;
-                            $userCanLogIn = true;
-                        }
-                    }
+                $meta = (array)get_post_meta($project_id, $metaKeyName);
+                if (count($meta) > 0) {
+                    $canContinue = in_array((string)$user->ID, $meta[0]);
                 }
             }
-        }
 
-        if ($userCanLogIn && !empty($client_id) && !empty($user_id)) {
+            if (!$canContinue) {
+                throw new \Exception(__("Sorry, you are not allowed to access this project.", 'upstream'));
+            }
+
+            $user = wp_signon(array(
+                'user_login'    => $data['username'],
+                'user_password' => $data['password'],
+                'remember'      => false
+            ));
+
+            if (is_wp_error($user)) {
+                throw new \Exception(__("Invalid email address and/or password.", 'upstream'));
+            }
+
+            // Retrieve the project's client id.
+            $client_id = (array)get_post_meta($project_id, '_upstream_project_client');
+            if (count($client_id) > 0) {
+                $client_id = (int)$client_id[0];
+            } else {
+                $client_id = 0;
+            }
+
             $_SESSION['upstream'] = array(
-                'client_id' => esc_html($client_id),
-                'user_id'   => esc_html($user_id)
+                'project_id' => $project_id,
+                'client_id'  => $client_id,
+                'user_id'    => $user->ID
             );
 
-            wp_redirect(esc_url(get_the_permalink(upstream_post_id())));
-        }
+            $projectPermalink = get_the_permalink($project_id);
+            wp_redirect(esc_url($projectPermalink));
 
-        return $userCanLogIn;
+            return true;
+        } catch (\Exception $e) {
+            $this->feedbackMessage = $e->getMessage();
+
+            return false;
+        }
     }
 
     /**

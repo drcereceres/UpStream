@@ -64,6 +64,7 @@ class UpStream_Roles {
             'upload_files'           => true,
         ) );
 
+        self::addClientUsersRole();
     }
 
     /**
@@ -271,7 +272,7 @@ class UpStream_Roles {
             $manager_caps   = $this->get_upstream_manager_caps();
             $manager_role   = get_role( 'upstream_manager' );
             $admin_role     = get_role( 'administrator' );
-            //pp( $manager_role );
+
             foreach ( $manager_caps as $post_type ) {
                 foreach ( $post_type as $index => $cap ) {
                     if( $manager_role ) {
@@ -296,5 +297,27 @@ class UpStream_Roles {
 
         }
 
+    }
+
+    /**
+     * Method responsible for creating the 'upstream_client_user' role if it doesn't exist yet.
+     *
+     * @since   1.11.0
+     * @static
+     *
+     * @global  $wp_roles
+     */
+    public static function addClientUsersRole()
+    {
+        global $wp_roles;
+
+        $theRoleIndetifier = 'upstream_client_user';
+
+        if (!$wp_roles->is_role($theRoleIndetifier)) {
+            add_role($theRoleIndetifier, __('UpStream Client User', 'upstream'), array(
+                'read'         => true,
+                'upload_files' => true
+            ));
+        }
     }
 }

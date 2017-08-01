@@ -61,34 +61,40 @@ class UpStream_Admin_Client_Columns {
         return $defaults;
     }
 
-    public function client_data( $column_name, $post_id ) {
+    public function client_data($column_name, $post_id)
+    {
+        $client = new UpStream_Client($post_id);
 
-        $client = new UpStream_Client( $post_id );
+        $columnValue = null;
 
-        if ( $column_name == 'logo' ) {
-            $img = wp_get_attachment_image_src( $client->get_meta( 'logo_id' ) );
-            echo '<img height="50" src="' . $img[0] . '" />';
-        }
+        if ($column_name === 'logo') {
+            $logoID = $client->get_meta('logo_id');
+            if (!empty($logoID)) {
+                $logoImgURL = wp_get_attachment_image_src($logoID);
 
-        if ( $column_name == 'website' ) {
-            $website = $client->get_meta( 'website' );
-            if( $website ) {
-                echo '<a href="' . esc_url( $website ) . '" target="_blank">' . esc_html( $website ) . '</a>';
+                $columnValue = '<img height="50" src="' . $logoImgURL[0] . '" />';
             }
+        } else if ($column_name === 'website') {
+            $website = $client->get_meta('website');
+            if (!empty($website)) {
+                $columnValue = '<a href="' . esc_url($website) . '" target="_blank" rel="noopener noreferer">' . esc_html($website) . '</a>';
+            }
+        } else if ($column_name === 'phone') {
+            $phone = $client->get_meta('phone');
+            if (!empty($phone)) {
+                $columnValue = $phone;
+            }
+        } else if ($column_name === 'address') {
+            $address = $client->get_meta('address');
+            if (!empty($address)) {
+                $columnValue = wp_kses_post(wpautop($address));
+            }
+        } else if ($column_name === 'users') {
+            upstream_client_render_users_column(upstream_get_client_users($post_id));
+            return;
         }
 
-        if ( $column_name == 'phone' ) {
-            echo $client->get_meta( 'phone' );
-        }
-
-        if ( $column_name == 'address' ) {
-            echo wp_kses_post( wpautop( $client->get_meta( 'address' ) ) );
-        }
-
-        if ( $column_name == 'users' ) {
-            upstream_client_render_users_column( $client->get_meta( 'users' ) );
-        }
-
+        echo !empty($columnValue) ? $columnValue : '<i>none</i>';
     }
 
 }
@@ -99,34 +105,29 @@ endif;
 
 
 /**
- * Manually render a field column display.
+ * Renders the client users list column value.
  *
- * @param  array      $field_args Array of field arguments.
- * @param  CMB2_Field $field      The field object
+ * @since   1.0.0
+ *
+ * @param   array   $usersList  Array of client users.
  */
-function upstream_client_render_users_column( $value ) {
+function upstream_client_render_users_column($usersList)
+{
+    $usersList = (array)$usersList;
+    $usersListCount = count($usersList);
 
-    if( ! $value )
-        return;
-    ?>
-    <p>
-        <?php
+    if ($usersListCount === 0) {
+        echo '<i>' . __('none', 'upstream') . '</i>';
+    } else {
+        $userIndex = 0;
+        foreach ($usersList as $user) {
+            echo $user['name'] . '<br/>';
 
-        $i = 0;
-        $count = count( $value );
-        foreach ( $value as $key => $user ) {
-
-            echo $user['fname'] . ' ' . $user['lname'] . '<br>';
-
-             // set limit on number of users to display
-            if (++$i == 2 && $count > 2) :
-                $more = $count - $i;
-                printf( _n( '+%s more user', '+%s more users', $more, 'upstream'), $more );
+            if ($userIndex === 2) {
+                echo sprintf('<i>' . __('+%s more %s', 'upstream') . '</i>', $usersListCount, ($usersListCount > 1 ? __('users', 'upstream') : __('user', 'upstream')));
                 break;
-            endif;
-
+            }
+            $userIndex++;
         }
-        ?>
-    </p>
-    <?php
+    }
 }

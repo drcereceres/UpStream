@@ -139,3 +139,22 @@ function upstream_admin_permissions( $capability = null ) {
     return apply_filters( 'upstream_admin_permissions', $return );
 
 }
+
+/**
+ * Retrieve all Client Users permissions available.
+ *
+ * @since   1.11.0
+ *
+ * @return  array
+ */
+function upstream_get_client_users_permissions()
+{
+    $permissions = array();
+
+    $permissionsList = (array) apply_filters('upstream:users.permissions', array());
+    foreach ($permissionsList as $permission) {
+        $permissions[$permission['key']] = $permission;
+    }
+
+    return $permissions;
+}

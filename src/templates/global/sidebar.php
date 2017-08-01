@@ -127,7 +127,7 @@ $user = upstream_user_data();
                         <?php if ($user['role'] !== 'Client User' && !$areTasksDisabledForThisProject && !$areTasksDisabledAtAll): ?>
                         <li>
                             <a href="#my-tasks">
-                                <i class="fa fa-wrench"></i> My <?php echo $labelTaskPlural; ?>
+                                <i class="fa fa-wrench"></i> <?php echo sprintf(__('My %s', 'upstream'), $labelTaskPlural); ?>
                             </a>
                         </li>
                         <?php endif; ?>
@@ -135,7 +135,7 @@ $user = upstream_user_data();
                         <?php if ($user['role'] !== 'Client User' && !$areBugsDisabledAtAll && !$areBugsDisabledForThisProject): ?>
                         <li>
                             <a href="#my-bugs">
-                                <i class="fa fa-bug"></i> My <?php echo $labelBugPlural; ?>
+                                <i class="fa fa-bug"></i> <?php echo sprintf(__('My %s', 'upstream'), $labelBugPlural); ?>
                             </a>
                         </li>
                         <?php endif; ?>
