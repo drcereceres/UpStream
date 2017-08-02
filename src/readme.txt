@@ -129,7 +129,8 @@ and this project adheres to [Semantic Versioning](http://semver.org).
 Added:
 * Added the new UpStream Copy Project extension
 
-@todo
+Changed:
+* Minor text changes
 
 = [1.11.0] - 2017-08-01 =
 
