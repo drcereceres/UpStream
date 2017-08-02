@@ -49,6 +49,7 @@ Add even more awesome features through the use of our extensions.
 - [Project Timeline](https://upstreamplugin.com/extensions/project-timeline)
 - [Customizer](https://upstreamplugin.com/extensions/customizer)
 - [Email Notifications](https://upstreamplugin.com/extensions/email-notifications)
+- [Copy Project](https://upstreamplugin.com/extensions/copy-project)
 
 = Milestones & Tasks =
 
@@ -124,6 +125,9 @@ The format is based on [Keep a Changelog](http://keepachangelog.com)
 and this project adheres to [Semantic Versioning](http://semver.org).
 
 = [1.11.1] - @todo =
+
+Added:
+* Added the new UpStream Copy Project extension
 
 @todo
 
