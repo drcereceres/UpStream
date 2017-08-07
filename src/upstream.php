@@ -4,7 +4,7 @@
  * Description: A WordPress Project Management plugin by UpStream.
  * Author: UpStream
  * Author URI: https://upstreamplugin.com
- * Version: 1.11.0
+ * Version: 1.11.1
  * Text Domain: upstream
  * Domain Path: /languages
  */
@@ -93,6 +93,8 @@ final class UpStream
     {
         add_action( 'init', array( $this, 'init' ), 0 );
         add_filter( 'plugin_row_meta', array( $this, 'plugin_row_meta' ), 10, 2 );
+        add_filter('plugin_action_links_upstream/upstream.php', array($this, 'handleActionLinks'));
+        add_filter('http_request_host_is_external', array('UpStream', 'allowExternalUpdateHost'), 10, 3);
         add_filter('quicktags_settings', 'upstream_tinymce_quicktags_settings');
         add_filter('tiny_mce_before_init', 'upstream_tinymce_before_init_setup_toolbar');
         add_filter('tiny_mce_before_init', 'upstream_tinymce_before_init');
@@ -177,7 +179,7 @@ final class UpStream
         $this->define( 'UPSTREAM_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
         $this->define( 'UPSTREAM_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
         $this->define( 'UPSTREAM_PLUGIN_BASENAME', plugin_basename( __FILE__ ) );
-        $this->define( 'UPSTREAM_VERSION', '1.11.0' );
+        $this->define( 'UPSTREAM_VERSION', '1.11.1' );
     }
 
     /**
@@ -321,6 +323,49 @@ final class UpStream
         }
 
         return (array) $links;
+    }
+
+    /**
+     * Callback called to setup the links to display on the plugins page, besides active/deactivate links.
+     *
+     * @since   1.11.1
+     * @static
+     *
+     * @param   array   $links  The list of links to be displayed.
+     *
+     * @return  array
+     */
+    public static function handleActionLinks($links)
+    {
+        $links['settings'] = sprintf(
+            '<a href="%s" title="%2$s" aria-label="%2$s">%3$s</a>',
+            admin_url('admin.php?page=upstream_general'),
+            __('Open Settings Page', 'upstream'),
+            __('Settings', 'upstream')
+        );
+
+        return $links;
+    }
+
+    /**
+     * Ensures the plugins update API's host is whitelisted to WordPress external requests.
+     *
+     * @since   1.11.1
+     * @static
+     *
+     * @param   boolean     $isAllowed
+     * @param   string      $host
+     * @param   string      $url
+     *
+     * @return  boolean
+     */
+    public static function allowExternalUpdateHost($isAllowed, $host, $url)
+    {
+        if ($host === 'upstreamplugin.com') {
+            return true;
+        }
+
+        return $isAllowed;
     }
 }
 endif;

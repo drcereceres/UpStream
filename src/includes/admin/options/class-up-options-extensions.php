@@ -103,6 +103,13 @@ class UpStream_Options_Extensions {
                 'description'      => __('Add a Gantt style chart to visualize your projects.', 'upstream'),
                 'product_id'       => 3920,
                 'options_key_slug' => 'project-timeline'
+            ),
+            array(
+                'id'               => 'copy-project',
+                'title'            => 'Copy Project',
+                'description'      => __('Allow you to duplicate an UpStream project including all the content and options.', 'upstream'),
+                'product_id'       => 5471,
+                'options_key_slug' => 'copy-project'
             )
         );
 
@@ -325,7 +332,7 @@ class UpStream_Options_Extensions {
                     );
 
                     $apiResponse = wp_remote_get(
-                        esc_url_raw(add_query_arg($apiData, 'http://local.wp-4.6.1.sbx')),
+                        esc_url_raw(add_query_arg($apiData, 'https://upstreamplugin.com')),
                         array(
                             'timeout'   => 15,
                             'body'      => $apiData,

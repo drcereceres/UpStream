@@ -57,25 +57,34 @@ class UpStream_Admin_Projects_Menu {
         global $submenu;
 
         $subMenuIdentifier = 'edit.php?post_type=project';
-        if (isset($submenu[$subMenuIdentifier]) && $submenu[$subMenuIdentifier]) {
-            $arr = array();
-            $arr[] = $submenu[$subMenuIdentifier][5];
-            $arr[] = isset($submenu[$subMenuIdentifier][18]) ? $submenu[$subMenuIdentifier][18] : null;
-            $arr[] = isset($submenu[$subMenuIdentifier][19]) ? $submenu[$subMenuIdentifier][19] : null;
+        if (isset($submenu[$subMenuIdentifier]) && !empty($submenu[$subMenuIdentifier])) {
+            $ourSubmenu = &$submenu[$subMenuIdentifier];
 
-
+            // Projects
+            $newSubmenu = array($ourSubmenu[5]);
             if (!self::$userIsUpStreamUser) {
-                $arr[] = $submenu[$subMenuIdentifier][10];
-                $arr[] = $submenu[$subMenuIdentifier][15];
-                $arr[] = $submenu[$subMenuIdentifier][16];
-                $arr[] = $submenu[$subMenuIdentifier][17];
+                // Tasks
+                if (isset($ourSubmenu[17])) {
+                    $newSubmenu[] = $ourSubmenu[17];
+                }
+
+                // Bugs
+                if (isset($ourSubmenu[18])) {
+                    $newSubmenu[] = $ourSubmenu[18];
+                }
+
+                // Clients
+                if (isset($ourSubmenu[16])) {
+                    $newSubmenu[] = $ourSubmenu[16];
+                }
+
+                // Categories
+                if (isset($ourSubmenu[15])) {
+                    $newSubmenu[] = $ourSubmenu[15];
+                }
             }
 
-            if (isset($arr[3]) && !empty($arr[3])) {
-                $arr[3] = null;
-            }
-
-            $submenu[$subMenuIdentifier] = $arr;
+            $ourSubmenu = $newSubmenu;
         }
 
         return $menu;
