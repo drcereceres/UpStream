@@ -253,7 +253,7 @@ final class UpStream_Metaboxes_Clients
         ?>
         <div id="modal-add-existent-user" style="display: none;">
             <div class="upstream-row">
-                <p><?php echo sprintf(__('These are all the users assigned with the role <code>%s</code> and not related to this client yet.', 'upstream'), sprintf(__('%s Client User', 'upstream'), upstream_project_label())); ?></p>
+                <p><?php echo sprintf(__('These are all the users assigned with the role <code>%s</code> and not related to this client yet.', 'upstream'), __('UpStream Client User', 'upstream')); ?></p>
             </div>
             <div class="upstream-row">
                 <table id="table-add-existent-users" class="wp-list-table widefat fixed striped posts upstream-table">
