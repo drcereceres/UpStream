@@ -128,6 +128,7 @@ and this project adheres to [Semantic Versioning](http://semver.org).
 
 Added:
 * Added the new UpStream Copy Project extension
+* Added Settings action link on Plugins page
 
 Changed:
 * Minor text changes
