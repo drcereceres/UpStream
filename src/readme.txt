@@ -133,6 +133,9 @@ Changed:
 * Minor text changes
 * Removed outdated text from Project form
 
+Fixed:
+* Fixed update API URL
+
 = [1.11.0] - 2017-08-01 =
 
 Changed:
