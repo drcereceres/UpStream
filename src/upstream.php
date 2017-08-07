@@ -94,6 +94,7 @@ final class UpStream
         add_action( 'init', array( $this, 'init' ), 0 );
         add_filter( 'plugin_row_meta', array( $this, 'plugin_row_meta' ), 10, 2 );
         add_filter('plugin_action_links_upstream/upstream.php', array($this, 'handleActionLinks'));
+        add_filter('http_request_host_is_external', array('UpStream', 'allowExternalUpdateHost'), 10, 3);
         add_filter('quicktags_settings', 'upstream_tinymce_quicktags_settings');
         add_filter('tiny_mce_before_init', 'upstream_tinymce_before_init_setup_toolbar');
         add_filter('tiny_mce_before_init', 'upstream_tinymce_before_init');
@@ -344,6 +345,27 @@ final class UpStream
         );
 
         return $links;
+    }
+
+    /**
+     * Ensures the plugins update API's host is whitelisted to WordPress external requests.
+     *
+     * @since   1.11.1
+     * @static
+     *
+     * @param   boolean     $isAllowed
+     * @param   string      $host
+     * @param   string      $url
+     *
+     * @return  boolean
+     */
+    public static function allowExternalUpdateHost($isAllowed, $host, $url)
+    {
+        if ($host === 'upstreamplugin.com') {
+            return true;
+        }
+
+        return $isAllowed;
     }
 }
 endif;
