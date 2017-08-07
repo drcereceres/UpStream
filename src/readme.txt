@@ -131,6 +131,7 @@ Added:
 
 Changed:
 * Minor text changes
+* Removed outdated text from Project form
 
 = [1.11.0] - 2017-08-01 =
 

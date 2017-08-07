@@ -1081,7 +1081,6 @@ class UpStream_Metaboxes_Projects {
 
         $fields[3] = array(
             'name'              => sprintf( __( '%s Users', 'upstream' ), $client_label ),
-            'desc'              => sprintf( __( 'Selected users can access the project by logging in with their email address & the %s password.', 'upstream' ), $client_label ),
             'id'                => $this->prefix . 'client_users',
             'type'              => 'multicheck',
             'select_all_button' => false,
