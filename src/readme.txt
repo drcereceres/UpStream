@@ -132,6 +132,7 @@ Added:
 Changed:
 * Minor text changes
 * Removed outdated text from Project form
+* Changed admin menu items order
 
 Fixed:
 * Fixed update API URL
