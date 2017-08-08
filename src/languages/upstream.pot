@@ -2,13 +2,13 @@
 # This file is distributed under the same license as the UpStream package.
 msgid ""
 msgstr ""
-"Project-Id-Version: UpStream 1.11.1\n"
+"Project-Id-Version: UpStream 1.11.2\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/upstream\n"
 "POT-Creation-Date: 2017-08-07 19:00+0000\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"PO-Revision-Date: 2017-08-07 19:00+0000\n"
+"PO-Revision-Date: 2017-08-08 12:14+0000\n"
 "Last-Translator: UpStream <info@upstreamplugin.com>\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
