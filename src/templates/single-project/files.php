@@ -21,7 +21,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
             <div class="x_content">
 
-                <table id="files" class="datatable table table-striped table-bordered dt-responsive nowrap" cellspacing="0" width="100%" data-order="[[ 0, &quot;asc&quot; ]]">
+                <table id="files" class="datatable table table-striped table-bordered dt-responsive nowrap" cellspacing="0" width="100%" data-order="[[ 0, &quot;asc&quot; ]]" data-type="file">
                     <thead>
                         <?php echo upstream_output_table_header( 'files' ); ?>
                     </thead>
