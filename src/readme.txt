@@ -83,8 +83,8 @@ Well thought out settings and options, customizable templates, add your own CSS,
 
 = Minimum Requirements =
 
-* WordPress 4.0 or greater
-* PHP version 5.4 or greater
+* WordPress 4.5 or greater
+* PHP version 5.6 or greater
 
 = Setting Up =
 
