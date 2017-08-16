@@ -157,6 +157,7 @@ class Upstream_Counts {
 
         $count = 0;
         foreach ($items as $key => $item) {
+            $item = (array)$item;
             if( ! isset( $item['assigned_to'] ) )
                 continue;
             if( $item['assigned_to'] != $this->user['id'] )
