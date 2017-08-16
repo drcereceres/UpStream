@@ -178,13 +178,16 @@
             $this.find( 'h3 span.title' ).prepend( '<div class="av-created"></div><div class="av-assigned"></div>' );
 
             if( av_created ) {
-                $this.find( '.av-created' ).html( '<img title="Created by: ' + user_created + '" src="' + av_created + '" height="25" width="25" />' );
+                $this.find( '.av-created' ).html( '<img title="Created by: ' + user_created + '" src="' + av_created + '" height="25" width="25" />' ).show();
+            } else {
+                $this.find( '.av-created' ).hide();
             }
 
             if( av_assigned && $this.attr( 'id' ) != '_upstream_project_files' ) {
-                $this.find( '.av-assigned' ).html( '<img title="Assigned to: ' + user_assigned + '" src="' + av_assigned + '" height="25" width="25" />' );
+                $this.find( '.av-assigned' ).html( '<img title="Assigned to: ' + user_assigned + '" src="' + av_assigned + '" height="25" width="25" />' ).show();
+            } else {
+                $this.find( '.av-assigned' ).hide();
             }
-
         });
     };
 
