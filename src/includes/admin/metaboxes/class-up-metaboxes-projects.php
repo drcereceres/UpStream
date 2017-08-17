@@ -268,7 +268,6 @@ class UpStream_Metaboxes_Projects {
                 'date_format'       => 'Y-m-d',
                 'permissions'       => 'milestone_start_date_field',
                 'before'            => 'upstream_add_field_attributes',
-                'default'           => time(),
                 'attributes'        => array(
                     //'data-validation'     => 'required',
                 )
@@ -280,7 +279,6 @@ class UpStream_Metaboxes_Projects {
                 'date_format'       => 'Y-m-d',
                 'permissions'       => 'milestone_end_date_field',
                 'before'            => 'upstream_add_field_attributes',
-                'default'           => time() + ( 2 * 7 * 24 * 60 * 60 ), // time plus 2 weeks
                 'attributes'        => array(
                     //'data-validation'     => 'required',
                 )
