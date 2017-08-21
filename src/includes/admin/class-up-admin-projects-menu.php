@@ -38,7 +38,7 @@ class UpStream_Admin_Projects_Menu {
         if (is_admin()) {
             global $pagenow;
 
-            if ($pagenow === 'edit.php' && $_GET['post_type'] === 'project' && self::$userIsUpStreamUser) {
+            if ($pagenow === 'edit.php' && isset($_GET['post_type']) && $_GET['post_type'] === 'project' && self::$userIsUpStreamUser) {
                 echo '<style type="text/css">.page-title-action { display: none; }</style>';
             }
         }
