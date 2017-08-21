@@ -3,7 +3,7 @@ Contributors: upstreamplugin
 Tags: project, manage, management, project management, project manager, wordpress project management, crm, client, client manager, tasks, issue tracker, bug tracker, task manager
 Requires at least: 4.5
 Tested up to: 4.8
-Stable tag: 1.11.2
+Stable tag: 1.11.3
 License: GPL-3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -14,6 +14,7 @@ UpStream is a free but very powerful project management plugin for WordPress.
 UpStream is a free project management plugin.
 
 UpStream allows you to manage any type of project from inside your WordPress site.
+
 Your clients can track the progress of their project via the frontend project view. Your team can see all the tasks and bugs that are assigned to them.
 
 ***[Click here to try a free demo of UpStream](https://upstreamplugin.com/demo)***
@@ -82,8 +83,8 @@ Well thought out settings and options, customizable templates, add your own CSS,
 
 = Minimum Requirements =
 
-* WordPress 4.0 or greater
-* PHP version 5.4 or greater
+* WordPress 4.5 or greater
+* PHP version 5.6 or greater
 
 = Setting Up =
 
@@ -130,6 +131,19 @@ UpStream does not use the existing styling of your theme. The features and the v
 
 The format is based on [Keep a Changelog](http://keepachangelog.com)
 and this project adheres to [Semantic Versioning](http://semver.org).
+
+= [1.11.3] - 2017-08-21 =
+
+Update:
+* Updated minimum requirements
+* Start and End Dates for new Milestones are not autofilled anymore in admin
+
+Fixed:
+* Fixed xhtml attribute causing minor bug on Frontend Edit extension
+* Fixed sidebar Tasks/Bugs counters taking into account disabled projects in admin
+* Fixed empty avatar boxes bug
+* Fixed Notes field layout on Tasks in admin
+* Fix tasks titles returning to their default value after deleting a row
 
 = [1.11.2] - 2017-08-08 =
 

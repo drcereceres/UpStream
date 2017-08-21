@@ -268,7 +268,6 @@ class UpStream_Metaboxes_Projects {
                 'date_format'       => 'Y-m-d',
                 'permissions'       => 'milestone_start_date_field',
                 'before'            => 'upstream_add_field_attributes',
-                'default'           => time(),
                 'attributes'        => array(
                     //'data-validation'     => 'required',
                 )
@@ -280,7 +279,6 @@ class UpStream_Metaboxes_Projects {
                 'date_format'       => 'Y-m-d',
                 'permissions'       => 'milestone_end_date_field',
                 'before'            => 'upstream_add_field_attributes',
-                'default'           => time() + ( 2 * 7 * 24 * 60 * 60 ), // time plus 2 weeks
                 'attributes'        => array(
                     //'data-validation'     => 'required',
                 )
@@ -718,6 +716,9 @@ class UpStream_Metaboxes_Projects {
                         'class' => 'task-milestone',
                     )
                 );
+            } else {
+                $fields[40]['before_field'] = '<div class="row"><div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">';
+                $fields[40]['after_field'] = '</div><div class="hidden-xs hidden-sm col-md-6 col-lg-6"></div></div>';
             }
 
             // set up the group grid plugin
@@ -1382,13 +1383,14 @@ class UpStream_Metaboxes_Projects {
             'type'              => 'wysiwyg',
             'permissions'       => 'publish_project_discussion',
             'before'            => 'upstream_add_field_attributes',
-            'after_field'       => 'upstream_admin_discussion_button',
+            'after_field'       => '<p><button class="button" id="new_message" type="button">' . __( 'New Message', 'upstream ') . '</button></p></div><div class="col-xs-12 col-sm-12 col-md-6 col-lg-6"></div></div>',
             'after_row'         => 'upstream_admin_display_messages',
             'options'           => array(
                 'media_buttons' => true,
                 'textarea_rows' => 5
             ),
-            'escape_cb'         => 'applyOEmbedFiltersToWysiwygEditorContent'
+            'escape_cb'         => 'applyOEmbedFiltersToWysiwygEditorContent',
+            'before_field'      => '<div class="row"><div class="hidden-xs hidden-sm col-md-6 col-lg-6">'
         ) );
     }
 }

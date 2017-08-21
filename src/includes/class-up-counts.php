@@ -47,8 +47,15 @@ class Upstream_Counts {
     public function get_items( $type ) {
         if( ! $this->projects )
             return;
+
         $items = array();
         foreach ( $this->projects as $i => $project ) {
+            // Check if the items are disabled.
+            $meta = get_post_meta($project->ID, '_upstream_project_disable_' . $type, true);
+            if ($meta === 'on') {
+                continue;
+            }
+
             $meta = get_post_meta( $project->ID, '_upstream_project_' . $type, true );
             if( $meta && is_array( $meta ) ) {
                 foreach ($meta as $key => $value) {
@@ -57,6 +64,7 @@ class Upstream_Counts {
             }
 
         };
+
         return $items;
     }
 
@@ -157,6 +165,7 @@ class Upstream_Counts {
 
         $count = 0;
         foreach ($items as $key => $item) {
+            $item = (array)$item;
             if( ! isset( $item['assigned_to'] ) )
                 continue;
             if( $item['assigned_to'] != $this->user['id'] )

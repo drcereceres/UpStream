@@ -36,6 +36,37 @@
                 .on( 'change cmb2_add_row cmb2_shift_rows_complete', function( evt ) {
                     resetGroup( $group );
                 })
+                .on('click button.cmb-remove-group-row', function(evt) {
+                    if ($(evt.target).hasClass('cmb-remove-group-row')) {
+                        $($group).each(function(i, e) {
+                            var e = $(e);
+                            var e_id = e.attr('id');
+
+                            //resetGroup(e);
+
+                            $(groups).each( function(i, e) {
+                                var $g = $box.find(e);
+
+                                resetGroup($g);
+
+                                if ($g.attr('id') === '_upstream_project_tasks' || $g.attr('id') === '_upstream_project_bugs') {
+                                    displayEndDate($g);
+                                }
+                            });
+
+                            var $m = $('#_upstream_project_milestones');
+                            displayMilestoneProgress($m);
+                            displayMilestoneIcon($m);
+
+                            var $t = $('#_upstream_project_tasks');
+                            displayStatusColor($t);
+                            displayMilestoneIcon($t);
+                            displayProgress($t);
+
+                            displayStatusColor($('#_upstream_project_bugs'));
+                        });
+                    }
+                })
                 .on( 'keyup', titleOnKeyUp );
 
             // milestone specific
@@ -178,13 +209,16 @@
             $this.find( 'h3 span.title' ).prepend( '<div class="av-created"></div><div class="av-assigned"></div>' );
 
             if( av_created ) {
-                $this.find( '.av-created' ).html( '<img title="Created by: ' + user_created + '" src="' + av_created + '" height="25" width="25" />' );
+                $this.find( '.av-created' ).html( '<img title="Created by: ' + user_created + '" src="' + av_created + '" height="25" width="25" />' ).show();
+            } else {
+                $this.find( '.av-created' ).hide();
             }
 
             if( av_assigned && $this.attr( 'id' ) != '_upstream_project_files' ) {
-                $this.find( '.av-assigned' ).html( '<img title="Assigned to: ' + user_assigned + '" src="' + av_assigned + '" height="25" width="25" />' );
+                $this.find( '.av-assigned' ).html( '<img title="Assigned to: ' + user_assigned + '" src="' + av_assigned + '" height="25" width="25" />' ).show();
+            } else {
+                $this.find( '.av-assigned' ).hide();
             }
-
         });
     };
 
@@ -195,7 +229,7 @@
      */
     function replaceTitles( $group ) {
 
-        if( $group.attr( 'id' ) == '_upstream_project_milestones' ) {
+        if( $group && $group.attr( 'id' ) == '_upstream_project_milestones' ) {
 
             $group.find( '.cmb-group-title' ).each( function() {
                 var $this   = $( this );
