@@ -669,11 +669,7 @@ class UpStream_Metaboxes_Projects {
                 'type'              => 'text_date_timestamp',
                 'date_format'       => 'Y-m-d',
                 'permissions'       => 'task_start_date_field',
-                'before'            => 'upstream_add_field_attributes',
-                'default'           => time(),
-                'attributes'        => array(
-                    //'data-validation'     => 'required',
-                ),
+                'before'            => 'upstream_add_field_attributes'
             );
             $fields[31] = array(
                 'name'              => __( "End Date", 'upstream' ),
@@ -681,11 +677,7 @@ class UpStream_Metaboxes_Projects {
                 'type'              => 'text_date_timestamp',
                 'date_format'       => 'Y-m-d',
                 'permissions'       => 'task_end_date_field',
-                'before'            => 'upstream_add_field_attributes',
-                'default'           => time() + ( 2 * 7 * 24 * 60 * 60 ), // time plus 2 weeks
-                'attributes'        => array(
-                    //'data-validation'     => 'required',
-                ),
+                'before'            => 'upstream_add_field_attributes'
             );
 
             $fields[40] = array(
