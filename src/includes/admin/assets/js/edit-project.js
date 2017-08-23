@@ -367,6 +367,15 @@
                 self.on('click', emptyClickEvent);
             }
         });
+
+        $('div[data-groupid]').on('click', 'button.cmb-remove-group-row', function(e) {
+            var self = $(this);
+            var groupWrapper = $(self.parents('div[data-groupid].cmb-nested.cmb-field-list.cmb-repeatable-group'));
+
+            setTimeout(function() {
+                $('.postbox.cmb-row.cmb-repeatable-grouping .cmb-remove-group-row[data-disabled]', groupWrapper).attr('disabled', 'disabled');
+            }, 50);
+        });
     });
 
     /*
