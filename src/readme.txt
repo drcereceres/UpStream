@@ -132,9 +132,11 @@ UpStream does not use the existing styling of your theme. The features and the v
 The format is based on [Keep a Changelog](http://keepachangelog.com)
 and this project adheres to [Semantic Versioning](http://semver.org).
 
-= [1.11.4] - @todo =
+= [1.11.4] - 2017-08-23 =
 
-@todo
+Fixed:
+* Fixed UpStream Users being able to delete tasks that were not assigned to them
+* Fixed remaining bug on Tasks dates always coming back with a value after saving them blank
 
 = [1.11.3] - 2017-08-21 =
 
