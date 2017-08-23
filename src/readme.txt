@@ -3,7 +3,7 @@ Contributors: upstreamplugin
 Tags: project, manage, management, project management, project manager, wordpress project management, crm, client, client manager, tasks, issue tracker, bug tracker, task manager
 Requires at least: 4.5
 Tested up to: 4.8
-Stable tag: 1.11.3
+Stable tag: 1.11.4
 License: GPL-3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -131,6 +131,12 @@ UpStream does not use the existing styling of your theme. The features and the v
 
 The format is based on [Keep a Changelog](http://keepachangelog.com)
 and this project adheres to [Semantic Versioning](http://semver.org).
+
+= [1.11.4] - 2017-08-23 =
+
+Fixed:
+* Fixed UpStream Users being able to delete tasks that were not assigned to them
+* Fixed remaining bug on Tasks dates always coming back with a value after saving them blank
 
 = [1.11.3] - 2017-08-21 =
 
