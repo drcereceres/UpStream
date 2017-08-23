@@ -353,6 +353,22 @@
         });
     };
 
+    var emptyClickEvent = function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+    };
+
+    $(document).ready(function() {
+        $('.postbox.cmb-row.cmb-repeatable-grouping[data-iterator] button.cmb-remove-group-row').each(function() {
+            var self = $(this);
+
+            if (self.attr('disabled') === 'disabled') {
+                self.attr('data-disabled', 'disabled');
+                self.on('click', emptyClickEvent);
+            }
+        });
+    });
+
     /*
      * When adding a new row
      *
@@ -379,6 +395,11 @@
         $group.find( '.cmb-add-row span' ).remove();
 
         window.wp.autosave.server.triggerSave();
+
+        $('.cmb-remove-group-row[data-disabled]', $row).attr('data-disabled', null);
+        $('.cmb-remove-group-row[data-disabled]', $group).each(function() {
+            $(this).attr('disabled', 'disabled');
+        });
     }
 
     /*
