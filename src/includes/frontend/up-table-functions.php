@@ -517,7 +517,7 @@ function upstream_output_table_rows( $id, $table, $filterRowsetByCurrentUser = f
         }
         $tr .= '</tr>';
 
-        $tr = apply_filters('upstream:frontend:renderGridDataRow', $table, $item, $tr);
+        $tr = apply_filters('upstream:frontend:renderGridDataRow', $tr, $item, $table);
 
         $output .= $tr;
 
