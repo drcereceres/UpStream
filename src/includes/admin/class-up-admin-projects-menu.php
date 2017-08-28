@@ -75,7 +75,7 @@ class UpStream_Admin_Projects_Menu {
                     }
 
                     // Clients
-                    if (isset($ourSubmenu[11])) {
+                    if (!is_clients_disabled() && isset($ourSubmenu[11])) {
                         $newSubmenu[] = $ourSubmenu[11];
                     }
                 } else {
@@ -90,7 +90,7 @@ class UpStream_Admin_Projects_Menu {
                     }
 
                     // Clients
-                    if (isset($ourSubmenu[16])) {
+                    if (!is_clients_disabled() && isset($ourSubmenu[16])) {
                         $newSubmenu[] = $ourSubmenu[16];
                     }
 

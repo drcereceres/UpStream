@@ -182,6 +182,17 @@ class UpStream_Options_General {
                     'default' => 'mailto:' . upstream_admin_email()
                 ),
                 array(
+                    'name'    => __( 'Disable Clients and Client Users', 'upstream' ),
+                    'id'      => 'disable_clients',
+                    'type'    => 'radio_inline',
+                    'desc'    => __( 'Choose whether if Clients and Client Users can be added and used on Projects.', 'upstream' ),
+                    'default' => '0',
+                    'options' => array(
+                        0 => __('No', 'upstream'),
+                        1 => __('Yes', 'upstream')
+                    )
+                ),
+                array(
                     'name'    => __( 'Disable Projects Categorization', 'upstream' ),
                     'id'      => 'disable_categories',
                     'type'    => 'radio_inline',

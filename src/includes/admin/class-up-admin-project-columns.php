@@ -59,7 +59,11 @@ class UpStream_Admin_Project_Columns {
         }
 
         $defaults['owner']      = __( 'Owner', 'upstream' );
-        $defaults['client']     = __( 'Client', 'upstream' );
+
+        if (!is_clients_disabled()) {
+            $defaults['client'] = __( 'Client', 'upstream' );
+        }
+
         $defaults['start']      = __( 'Start', 'upstream' );
         $defaults['end']        = __( 'End', 'upstream' );
 

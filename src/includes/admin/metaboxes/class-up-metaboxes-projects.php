@@ -1020,11 +1020,8 @@ class UpStream_Metaboxes_Projects {
      * Add the metaboxes
      * @since  0.1.0
      */
-    public function details() {
-
-        $client_label           = upstream_client_label();
-        $client_label_plural    = upstream_client_label_plural();
-
+    public function details()
+    {
         $metabox = new_cmb2_box( array(
             'id'            => $this->prefix . 'details',
             'title'         => '<span class="dashicons dashicons-admin-generic"></span> ' . sprintf( __( "%s Details", 'upstream' ), $this->project_label ),
@@ -1060,28 +1057,33 @@ class UpStream_Metaboxes_Projects {
             'options_cb'        => 'upstream_admin_get_all_project_users',
             'save_field'        => upstream_admin_permissions('project_owner_field')
         );
-        $fields[2] = array(
-            'name'              => $client_label,
-            'desc'              => '',
-            'id'                => $this->prefix . 'client',
-            'type'              => 'select',
-            'show_option_none'  => true,
-            'permissions'       => 'project_client_field',
-            'before'            => 'upstream_add_field_attributes',
-            'options_cb'        => 'upstream_admin_get_all_clients',
-            'save_field'        => upstream_admin_permissions('project_client_field')
-        );
 
-        $fields[3] = array(
-            'name'              => sprintf( __( '%s Users', 'upstream' ), $client_label ),
-            'id'                => $this->prefix . 'client_users',
-            'type'              => 'multicheck',
-            'select_all_button' => false,
-            'permissions'       => 'project_users_field',
-            'before'            => 'upstream_add_field_attributes',
-            'options_cb'        => 'upstream_admin_get_all_clients_users',
-            'save_field'        => upstream_admin_permissions('project_users_field')
-        );
+        if (!is_clients_disabled()) {
+            $client_label = upstream_client_label();
+
+            $fields[2] = array(
+                'name'              => $client_label,
+                'desc'              => '',
+                'id'                => $this->prefix . 'client',
+                'type'              => 'select',
+                'show_option_none'  => true,
+                'permissions'       => 'project_client_field',
+                'before'            => 'upstream_add_field_attributes',
+                'options_cb'        => 'upstream_admin_get_all_clients',
+                'save_field'        => upstream_admin_permissions('project_client_field')
+            );
+
+            $fields[3] = array(
+                'name'              => sprintf( __( '%s Users', 'upstream' ), $client_label ),
+                'id'                => $this->prefix . 'client_users',
+                'type'              => 'multicheck',
+                'select_all_button' => false,
+                'permissions'       => 'project_users_field',
+                'before'            => 'upstream_add_field_attributes',
+                'options_cb'        => 'upstream_admin_get_all_clients_users',
+                'save_field'        => upstream_admin_permissions('project_users_field')
+            );
+        }
 
         $fields[10] = array(
             'name'              => __( 'Start Date', 'upstream' ),

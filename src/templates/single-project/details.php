@@ -45,14 +45,15 @@ if (!empty($endDate)) {
                     <p class="title"><?php _e( 'Timeframe', 'upstream' ); ?></p>
                     <p><?php echo (!empty($timeframe) ? $timeframe : '<i>' . __('none', 'upstream') . '</i>'); ?></p>
 
-                    <?php if ( upstream_project_client_name() ) { ?>
-                        <p class="title"><?php echo upstream_client_label(); ?></p>
-                        <p><?php echo upstream_project_client_name(); ?></p>
-                    <?php } ?>
+                    <?php if (!is_clients_disabled()): ?>
+                        <?php if ( upstream_project_client_name() ) { ?>
+                            <p class="title"><?php echo upstream_client_label(); ?></p>
+                            <p><?php echo upstream_project_client_name(); ?></p>
+                        <?php } ?>
 
-
-                    <p class="title"><?php printf( __( '%s Users', 'upstream' ), upstream_client_label() ); ?></p>
-                    <?php upstream_output_client_users(); ?>
+                        <p class="title"><?php printf( __( '%s Users', 'upstream' ), upstream_client_label() ); ?></p>
+                        <?php upstream_output_client_users(); ?>
+                    <?php endif; ?>
 
 
                     <?php if ( upstream_project_owner_id() ) { ?>

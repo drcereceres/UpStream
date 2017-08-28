@@ -60,6 +60,9 @@ function upstream_setup_post_types() {
     );
     register_post_type( 'project', apply_filters( 'upstream_project_post_type_args', $project_args ) );
 
+    if (is_clients_disabled()) {
+        return;
+    }
 
     /* Client Post Type */
     $client_labels =  apply_filters( 'upstream_client_labels', array(

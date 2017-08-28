@@ -936,3 +936,19 @@ function is_project_categorization_disabled()
 
     return $isDisabled;
 }
+
+/**
+ * Check if Clients feature is disabled.
+ *
+ * @since   @todo
+ *
+ * @return  bool
+ */
+function is_clients_disabled()
+{
+    $options = get_option('upstream_general');
+
+    $isDisabled = isset($options['disable_clients']) ? (bool)$options['disable_clients'] : false;
+
+    return $isDisabled;
+}
