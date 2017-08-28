@@ -850,3 +850,30 @@ function upstream_convert_UTC_date_to_timezone($subject)
         return false;
     }
 }
+
+/**
+ * Check if Comments/Discussion are disabled for the current open project.
+ * If no ID is passed, this function tries to guess it by checking $_GET/$_POST vars.
+ *
+ * @since   1.8.0
+ *
+ * @param   int     $post_id The project ID to be checked
+ *
+ * @return  bool
+ */
+function upstream_are_comments_disabled($post_id = 0)
+{
+    $areCommentsDisabled = false;
+    $post_id = (int)$post_id;
+
+    if ($post_id <= 0) {
+        $post_id = (int)upstream_post_id();
+    }
+
+    if ($post_id > 0) {
+        $theMeta = get_post_meta($post_id, '_upstream_project_disable_comments', false);
+        $areCommentsDisabled = !empty($theMeta) && $theMeta[0] === 'on';
+    }
+
+    return $areCommentsDisabled;
+}

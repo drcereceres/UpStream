@@ -1357,7 +1357,10 @@ class UpStream_Metaboxes_Projects {
      * @since  0.1.0
      */
     public function comments() {
-        if (upstream_disable_discussions()) {
+        $areCommentsDisabled = upstream_are_comments_disabled();
+        $userHasAdminPermissions = upstream_admin_permissions('disable_project_comments');
+
+        if (upstream_disable_discussions() || ($areCommentsDisabled && !$userHasAdminPermissions)) {
             return;
         }
 
@@ -1368,22 +1371,32 @@ class UpStream_Metaboxes_Projects {
             'priority'      => 'low',
         ) );
 
-        $metabox->add_field( array(
-            'name'              => __( 'New Message', 'upstream' ),
-            'desc'              => '',
-            'id'                => $this->prefix . 'new_message',
-            'type'              => 'wysiwyg',
-            'permissions'       => 'publish_project_discussion',
-            'before'            => 'upstream_add_field_attributes',
-            'after_field'       => '<p><button class="button" id="new_message" type="button">' . __( 'New Message', 'upstream ') . '</button></p></div><div class="col-xs-12 col-sm-12 col-md-6 col-lg-6"></div></div>',
-            'after_row'         => 'upstream_admin_display_messages',
-            'options'           => array(
-                'media_buttons' => true,
-                'textarea_rows' => 5
-            ),
-            'escape_cb'         => 'applyOEmbedFiltersToWysiwygEditorContent',
-            'before_field'      => '<div class="row"><div class="hidden-xs hidden-sm col-md-6 col-lg-6">'
-        ) );
+        if (!$areCommentsDisabled) {
+            $metabox->add_field( array(
+                'name'              => __( 'New Message', 'upstream' ),
+                'desc'              => '',
+                'id'                => $this->prefix . 'new_message',
+                'type'              => 'wysiwyg',
+                'permissions'       => 'publish_project_discussion',
+                'before'            => 'upstream_add_field_attributes',
+                'after_field'       => '<p><button class="button" id="new_message" type="button">' . __( 'New Message', 'upstream ') . '</button></p></div><div class="col-xs-12 col-sm-12 col-md-6 col-lg-6"></div></div>',
+                'after_row'         => 'upstream_admin_display_messages',
+                'options'           => array(
+                    'media_buttons' => true,
+                    'textarea_rows' => 5
+                ),
+                'escape_cb'         => 'applyOEmbedFiltersToWysiwygEditorContent',
+                'before_field'      => '<div class="row"><div class="hidden-xs hidden-sm col-md-6 col-lg-6">'
+            ) );
+        }
+
+        if ($userHasAdminPermissions) {
+            $metabox->add_field(array(
+                'id'          => $this->prefix .'disable_comments',
+                'type'        => 'checkbox',
+                'description' => __('Disable Discussion for this project', 'upstream')
+            ));
+        }
     }
 }
 
