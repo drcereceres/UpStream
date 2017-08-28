@@ -182,6 +182,17 @@ class UpStream_Options_General {
                     'default' => 'mailto:' . upstream_admin_email()
                 ),
                 array(
+                    'name'    => __( 'Disable Projects Categorization', 'upstream' ),
+                    'id'      => 'disable_categories',
+                    'type'    => 'radio_inline',
+                    'desc'    => __( 'Choose whether Projects can be sorted into categories by managers and users.', 'upstream' ),
+                    'default' => '0',
+                    'options' => array(
+                        0 => __('No', 'upstream'),
+                        1 => __('Yes', 'upstream')
+                    )
+                ),
+                array(
                     'name' => __( 'Disable Bugs', 'upstream' ),
                     'id'   => 'disable_bugs',
                     'type' => 'multicheck',

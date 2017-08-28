@@ -115,6 +115,9 @@ add_action( 'init', 'upstream_setup_post_types', 1 );
  * @return void
 */
 function upstream_setup_taxonomies() {
+    if (is_project_categorization_disabled()) {
+        return;
+    }
 
     $slug = defined( 'UPSTREAM_CAT_SLUG' ) ? UPSTREAM_CAT_SLUG : 'projects';
 

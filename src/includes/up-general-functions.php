@@ -920,3 +920,19 @@ function upstream_are_comments_disabled($post_id = 0)
 
     return $areCommentsDisabled;
 }
+
+/**
+ * Check if Projects Categorization is currently disabled.
+ *
+ * @since   @todo
+ *
+ * @return  bool
+ */
+function is_project_categorization_disabled()
+{
+    $options = get_option('upstream_general');
+
+    $isDisabled = isset($options['disable_categories']) ? (bool)$options['disable_categories'] : false;
+
+    return $isDisabled;
+}
