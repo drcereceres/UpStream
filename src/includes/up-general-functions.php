@@ -564,9 +564,6 @@ function upstream_php_to_js_dateformat() {
 function upstream_wrap_escaped_chars( $value ) {
     return "&#39;" . str_replace( '\\', '', $value[0] ) . "&#39;";
 }
-
-
-
 function upstream_logo_url() {
     $option = get_option( 'upstream_general' );
     $logo   = $option['logo'];
@@ -583,6 +580,14 @@ function upstream_login_text() {
 function upstream_admin_email() {
     $option = get_option( 'upstream_general' );
     return isset( $option['admin_email'] ) ? $option['admin_email'] : '';
+}
+function upstream_admin_support() {
+    $option = get_option( 'upstream_general' );
+    if( isset( $option['admin_support_link'] ) ) {
+        return isset( $option['admin_support_link'] ) ? $option['admin_support_link'] : '';
+    } else {
+        return isset( $option['admin_email'] ) ? $option['admin_email'] : '';
+    }
 }
 
 /**
