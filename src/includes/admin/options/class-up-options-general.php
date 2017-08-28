@@ -167,11 +167,19 @@ class UpStream_Options_General {
                     'type' => 'text',
                     'desc' => __( 'The email address that clients can use to contact you.', 'upstream' ),
                 ),
-           	array(
-		    'name' => __( 'Admin Support Link', 'upstream' ),
-                    'id'   => 'admin_support_link',
-                    'type' => 'text',
-                    'desc' => __( 'Link to contact form or knowledgebase to help clients obtain support.', 'upstream' ),
+                array(
+                    'name'    => __( 'Admin Support Link Label', 'upstream' ),
+                    'id'      => 'admin_support_label',
+                    'type'    => 'text',
+                    'desc'    => __( 'Label that describes the Admin Support Link.', 'upstream' ),
+                    'default' => __('Contact Admin', 'upstream')
+                ),
+                array(
+                    'name'    => __( 'Admin Support Link', 'upstream' ),
+                    'id'      => 'admin_support_link',
+                    'type'    => 'text',
+                    'desc'    => __( 'Link to contact form or knowledgebase to help clients obtain support.', 'upstream' ),
+                    'default' => 'mailto:' . upstream_admin_email()
                 ),
                 array(
                     'name' => __( 'Disable Bugs', 'upstream' ),

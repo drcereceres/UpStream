@@ -581,12 +581,50 @@ function upstream_admin_email() {
     $option = get_option( 'upstream_general' );
     return isset( $option['admin_email'] ) ? $option['admin_email'] : '';
 }
-function upstream_admin_support() {
-    $option = get_option( 'upstream_general' );
+
+/**
+ * Retrieve the `admin_support_link` option value.
+ *
+ * @since   @todo
+ *
+ * @see     https://github.com/upstreamplugin/UpStream/issues/81
+ *
+ * @param   array   $option     Array of options. If provided, there's no need to fetch everything again from DB.
+ *
+ * @return  string
+ */
+function upstream_admin_support($option) {
+    if (empty($option)) {
+        $option = get_option( 'upstream_general' );
+    }
+
     if( isset( $option['admin_support_link'] ) ) {
-        return isset( $option['admin_support_link'] ) ? $option['admin_support_link'] : '';
+        return !empty( $option['admin_support_link'] ) ? $option['admin_support_link'] : 'mailto:' . $option['admin_email'];
     } else {
-        return isset( $option['admin_email'] ) ? $option['admin_email'] : '';
+        return isset( $option['admin_email'] ) ? $option['admin_email'] : '#';
+    }
+}
+
+/**
+ * Retrieve the `admin_support_link_label` option value.
+ *
+ * @since   @todo
+ *
+ * @see     https://github.com/upstreamplugin/UpStream/issues/81
+ *
+ * @param   array   $option     Array of options. If provided, there's no need to fetch everything again from DB.
+ *
+ * @return  string
+ */
+function upstream_admin_support_label($option) {
+    if (empty($option)) {
+        $option = get_option( 'upstream_general' );
+    }
+
+    if( isset( $option['admin_support_label'] ) ) {
+        return !empty( $option['admin_support_label'] ) ? $option['admin_support_label'] : '';
+    } else {
+        return __('Contact Admin', 'upstream');
     }
 }
 

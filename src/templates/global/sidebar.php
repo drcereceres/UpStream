@@ -18,6 +18,7 @@ $areBugsDisabledForThisProject = upstream_are_bugs_disabled();
 $areFilesDisabledForThisProject = upstream_are_files_disabled();
 
 $user = upstream_user_data();
+$pluginOptions = get_option('upstream_general');
 ?>
 
 <?php do_action('upstream_before_sidebar'); ?>
@@ -150,8 +151,8 @@ $user = upstream_user_data();
             <a href="<?php echo $projectsListURL; ?>" data-toggle="tooltip" data-placement="top" title="<?php printf(__('My %s', 'upstream'), $labelProjectPlural); ?>">
                 <i class="fa fa-home"></i>
             </a>
-            <a href="<?php echo esc_url( upstream_admin_support() ); ?>" data-toggle="tooltip" data-placement="top" title="<?php _e('Support Link', 'upstream'); ?>"> 
-                <i class="fa fa-envelope-o"></i>
+            <a href="<?php echo esc_url( upstream_admin_support($pluginOptions) ); ?>" data-toggle="tooltip" data-placement="top" title="<?php echo upstream_admin_support_label($pluginOptions) ?>" target="_blank" rel="noreferrer noopener">
+                <i class="fa fa-question-circle"></i>
             </a>
             <a href="<?php echo esc_url(upstream_logout_url()); ?>" data-toggle="tooltip" data-placement="top" title="<?php _e('Log Out', 'upstream'); ?>">
                 <i class="fa fa-sign-out"></i>
