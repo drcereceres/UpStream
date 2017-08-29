@@ -585,7 +585,7 @@ function upstream_admin_email() {
 /**
  * Retrieve the `admin_support_link` option value.
  *
- * @since   @todo
+ * @since   1.12.0
  *
  * @see     https://github.com/upstreamplugin/UpStream/issues/81
  *
@@ -608,7 +608,7 @@ function upstream_admin_support($option) {
 /**
  * Retrieve the `admin_support_link_label` option value.
  *
- * @since   @todo
+ * @since   1.12.0
  *
  * @see     https://github.com/upstreamplugin/UpStream/issues/81
  *
@@ -924,7 +924,7 @@ function upstream_are_comments_disabled($post_id = 0)
 /**
  * Check if Projects Categorization is currently disabled.
  *
- * @since   @todo
+ * @since   1.12.0
  *
  * @return  bool
  */
@@ -940,7 +940,7 @@ function is_project_categorization_disabled()
 /**
  * Check if Clients feature is disabled.
  *
- * @since   @todo
+ * @since   1.12.0
  *
  * @return  bool
  */
