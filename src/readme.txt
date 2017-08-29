@@ -134,7 +134,18 @@ and this project adheres to [Semantic Versioning](http://semver.org).
 
 = [1.12.0] - @todo =
 
-@todo
+Added:
+* Added option to toggle categories for Projects and Clients
+* Added option to toggle Clients/Client Users
+* Added option to disable Discussions on particular Projects
+* Added option to customize support link on frontend
+
+Changed:
+* Increased Discussion field width on admin
+
+Fixed:
+* Fixed Projects breaking search results on frontend
+* Fixed large images breaking the Project Activity tracker
 
 = [1.11.4] - 2017-08-23 =
 
