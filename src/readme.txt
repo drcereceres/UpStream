@@ -137,7 +137,7 @@ and this project adheres to [Semantic Versioning](http://semver.org).
 
 Added:
 * Added Requires PHP rule to readme.txt
-* Added support for due date reminders
+* Added support for due date reminders through Email Notifications extension
 
 = [1.11.4] - 2017-08-23 =
 
