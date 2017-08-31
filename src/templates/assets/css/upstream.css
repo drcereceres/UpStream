@@ -152,3 +152,7 @@ table.dataTable tr.child td.child {
     padding: 7px 5px;
   }
 }
+
+.discussion-panel .x_content {
+  max-height: 265px;
+}

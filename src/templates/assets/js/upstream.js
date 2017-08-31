@@ -230,12 +230,3 @@ if (typeof NProgress != 'undefined') {
     });
 }
 });
-
-// Discussion panel max height
-jQuery(document).ready(function($){
-    var detailsHeight = $('.details-panel').height();
-    $('.discussion-panel').css('max-height', detailsHeight - 10 );
-    $('.discussion-panel .x_content').css('max-height', detailsHeight - 86 );
-});
-
-

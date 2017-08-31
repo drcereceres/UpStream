@@ -1,83 +1,68 @@
 <?php
+// Prevent direct access.
+if (!defined('ABSPATH')) exit;
 
-if ( ! defined( 'ABSPATH' ) ) {
-    exit; // Exit if accessed directly
-}
+$project_id = (int)upstream_post_id();
+$project = getUpStreamProjectDetailsById($project_id);
 
-$project_id = upstream_post_id();
-$startDate = (string) upstream_format_date(upstream_project_start_date($project_id));
-$endDate = (string) upstream_format_date(upstream_project_end_date($project_id));
-
-$timeframe = $startDate;
-if (!empty($endDate)) {
-    if (!empty($timeframe)) {
-        $timeframe .= ' - ';
-    } else {
-        $timeframe = '<i>' . __('Ends at', 'upstream') . '</i> ';
-    }
-
-    $timeframe .= $endDate;
+$projectTimeframe = '<i class="text-muted">(' . __('none', 'upstream') . ')</i>';
+$projectDateStartIsNotEmpty = $project->dateStart > 0;
+$projectDateEndIsNotEmpty = $project->dateEnd > 0;
+if ($projectDateStartIsNotEmpty || $projectDateEndIsNotEmpty) {
+  if (!$projectDateEndIsNotEmpty) {
+    $projectTimeframe = '<i class="text-muted">' . __('Start Date', 'upstream') . ': </i>' . upstream_format_date($project->dateStart);
+  } else if (!$projectDateStartIsNotEmpty) {
+    $projectTimeframe = '<i class="text-muted">' . __('End Date', 'upstream') . ': </i>' . upstream_format_date($project->dateEnd);
+  } else {
+    $projectTimeframe = upstream_format_date($project->dateStart) . ' - ' . upstream_format_date($project->dateEnd);
+  }
 }
 ?>
 
-
-    <div class="col-md-3 col-sm-3 col-xs-12 details-panel">
-
-        <div class="x_panel">
-
-            <div class="x_title">
-                <h2><?php printf( __( '%s Details', 'upstream' ), upstream_project_label() ); ?></h2>
-                <ul class="nav navbar-right panel_toolbox">
-                    <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a></li>
-                </ul>
-                <div class="clearfix"></div>
-            </div>
-
-            <div class="x_content">
-
-                <div class="project_detail">
-
-                    <small><?php echo upstream_project_progress(); ?><?php _e( '% Complete', 'upstream' ); ?></small>
-                    <div class="progress progress_sm">
-                        <div class="progress-bar bg-green" role="progressbar" data-transitiongoal="<?php echo upstream_project_progress(); ?>"></div>
-                    </div>
-
-                    <p class="title"><?php _e( 'Timeframe', 'upstream' ); ?></p>
-                    <p><?php echo (!empty($timeframe) ? $timeframe : '<i>' . __('none', 'upstream') . '</i>'); ?></p>
-
-                    <?php if (!is_clients_disabled()): ?>
-                        <?php if ( upstream_project_client_name() ) { ?>
-                            <p class="title"><?php echo upstream_client_label(); ?></p>
-                            <p><?php echo upstream_project_client_name(); ?></p>
-                        <?php } ?>
-
-                        <p class="title"><?php printf( __( '%s Users', 'upstream' ), upstream_client_label() ); ?></p>
-                        <?php upstream_output_client_users(); ?>
-                    <?php endif; ?>
-
-
-                    <?php if ( upstream_project_owner_id() ) { ?>
-                        <p class="title"><?php printf( __( '%s Owner', 'upstream' ), upstream_project_label() ); ?></p>
-                        <ul class="list-inline">
-                            <li><?php echo upstream_user_avatar( upstream_project_owner_id() ); ?></li>
-                        </ul>
-                    <?php } ?>
-
-
-                    <p class="title"><?php printf( __( '%s Members', 'upstream' ), upstream_project_label() ); ?></p>
-                    <?php upstream_output_project_members(); ?>
-
-
-                    <?php if (!upstream_are_files_disabled()): ?>
-                    <div class="files">
-                        <p class="title"><?php printf( __( '%s Files', 'upstream' ), upstream_project_label() ); ?></p>
-                        <div class="project_files">
-                            <?php echo upstream_output_file_list(); ?>
-                        </div>
-                    </div>
-                    <?php endif; ?>
-                </div>
-
-            </div>
-        </div>
+<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+  <div class="x_panel details-panel">
+    <div class="x_title">
+      <h2><?php printf('<i class="fa fa-info-circle"></i> ' . __('%s Details', 'upstream'), upstream_project_label()); ?></h2>
+      <ul class="nav navbar-right panel_toolbox">
+        <li>
+          <a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+        </li>
+      </ul>
+      <div class="clearfix"></div>
     </div>
+    <div class="x_content">
+      <div class="row">
+        <div class="col-md-4">
+          <p class="title"><?php _e('Timeframe', 'upstream'); ?></p>
+          <span><?php echo $projectTimeframe; ?></span>
+        </div>
+        <div class="col-md-4">
+          <p class="title"><?php _e('Client', 'upstream'); ?></p>
+          <span><?php echo $project->client_id > 0 && !empty($project->clientName) ? $project->clientName : '<i class="text-muted">(' . __('none', 'upstream') . ')</i>' ; ?></span>
+        </div>
+        <div class="col-md-4">
+          <p class="title"><?php _e('Progress', 'upstream'); ?></p>
+          <span><?php echo $project->progress; ?>% <?php _e('complete', 'upstream'); ?></span>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-4">
+          <p class="title"><?php _e('Owner', 'upstream'); ?></p>
+          <span><?php echo $project->owner_id > 0 ? upstream_user_avatar($project->owner_id) : '<i class="text-muted">(' . __('none', 'upstream') . ')</i>'; ?></span>
+        </div>
+        <div class="col-md-4">
+          <p class="title"><?php _e('Client Users', 'upstream'); ?></p>
+          <?php upstream_output_client_users(); ?>
+        </div>
+        <div class="col-md-4">
+          <p class="title"><?php _e('Members', 'upstream'); ?></p>
+          <?php upstream_output_project_members(); ?>
+        </div>
+      </div>
+      <div>
+        <p class="title"><?php _e('Description'); ?></p>
+        <blockquote style="font-size: 1em;"><?php echo $project->description; ?></blockquote>
+      </div>
+    </div>
+  </div>
+</div>
