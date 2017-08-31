@@ -452,7 +452,8 @@ class UpStream_Project_Activity {
                                     $title  = isset( $item['title'] ) ? $item['title'] : $item['milestone'];
                                     $from   = $this->format_fields( $field_id, $field_data['from'] );
                                     $to     = $this->format_fields( $field_id, $field_data['to'] );
-                                    $field_output .= '<span class="item">' . sprintf( __( 'Edit: %s from %s to %s on %s', 'upstream' ), $field_name, $from, $to, '<span class="highlight">' . $title . '</span>' ) . '</span>';
+
+                                    $field_output .= '<span class="item">' . sprintf( __( 'Edit: %s from %s to %s on %s', 'upstream' ), $field_name, is_array($from) ? count($from) : $from, is_array($to) ? count($to) : $to, '<span class="highlight">' . $title . '</span>' ) . '</span>';
                                 }
 
                                 $group_output = $field_output;

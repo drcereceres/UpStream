@@ -98,6 +98,8 @@ final class UpStream_Metaboxes_Clients
         // Render all inner metaboxes.
         self::renderMetaboxes();
 
+        /*
+        // Deactivated on v1.12.0.
         global $pagenow;
         if ($pagenow === 'post.php') {
             $user_id = get_current_user_id();
@@ -111,6 +113,7 @@ final class UpStream_Metaboxes_Clients
                 update_user_meta($user_id, $disclaimerNoticeMetaName, 1);
             }
         }
+        */
     }
 
     /**
@@ -413,6 +416,8 @@ final class UpStream_Metaboxes_Clients
      *
      * @since   1.11.0
      * @static
+     *
+     * @deprecated
      */
     public static function renderDisclaimerMetabox()
     {

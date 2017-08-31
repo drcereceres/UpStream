@@ -63,24 +63,41 @@ class UpStream_Admin_Projects_Menu {
             // Projects
             $newSubmenu = array($ourSubmenu[5]);
             if (!self::$userIsUpStreamUser) {
-                // Tasks
-                if (isset($ourSubmenu[17])) {
-                    $newSubmenu[] = $ourSubmenu[17];
-                }
+                if (is_project_categorization_disabled()) {
+                    // Tasks
+                    if (isset($ourSubmenu[12])) {
+                        $newSubmenu[] = $ourSubmenu[12];
+                    }
 
-                // Bugs
-                if (isset($ourSubmenu[18])) {
-                    $newSubmenu[] = $ourSubmenu[18];
-                }
+                    // Bugs
+                    if (isset($ourSubmenu[13])) {
+                        $newSubmenu[] = $ourSubmenu[13];
+                    }
 
-                // Clients
-                if (isset($ourSubmenu[16])) {
-                    $newSubmenu[] = $ourSubmenu[16];
-                }
+                    // Clients
+                    if (!is_clients_disabled() && isset($ourSubmenu[11])) {
+                        $newSubmenu[] = $ourSubmenu[11];
+                    }
+                } else {
+                    // Tasks
+                    if (isset($ourSubmenu[17])) {
+                        $newSubmenu[] = $ourSubmenu[17];
+                    }
 
-                // Categories
-                if (isset($ourSubmenu[15])) {
-                    $newSubmenu[] = $ourSubmenu[15];
+                    // Bugs
+                    if (isset($ourSubmenu[18])) {
+                        $newSubmenu[] = $ourSubmenu[18];
+                    }
+
+                    // Clients
+                    if (!is_clients_disabled() && isset($ourSubmenu[16])) {
+                        $newSubmenu[] = $ourSubmenu[16];
+                    }
+
+                    // Categories
+                    if (isset($ourSubmenu[15])) {
+                        $newSubmenu[] = $ourSubmenu[15];
+                    }
                 }
             }
 

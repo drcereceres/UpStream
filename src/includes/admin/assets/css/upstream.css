@@ -217,6 +217,9 @@
   font-size: 13px;
   margin: 7px 0 0;
 }
+.upstream .activity-item .item img {
+  max-width: 100%;
+}
 
 /*
  * Project Files

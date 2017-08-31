@@ -564,9 +564,6 @@ function upstream_php_to_js_dateformat() {
 function upstream_wrap_escaped_chars( $value ) {
     return "&#39;" . str_replace( '\\', '', $value[0] ) . "&#39;";
 }
-
-
-
 function upstream_logo_url() {
     $option = get_option( 'upstream_general' );
     $logo   = $option['logo'];
@@ -583,6 +580,52 @@ function upstream_login_text() {
 function upstream_admin_email() {
     $option = get_option( 'upstream_general' );
     return isset( $option['admin_email'] ) ? $option['admin_email'] : '';
+}
+
+/**
+ * Retrieve the `admin_support_link` option value.
+ *
+ * @since   1.12.0
+ *
+ * @see     https://github.com/upstreamplugin/UpStream/issues/81
+ *
+ * @param   array   $option     Array of options. If provided, there's no need to fetch everything again from DB.
+ *
+ * @return  string
+ */
+function upstream_admin_support($option) {
+    if (empty($option)) {
+        $option = get_option( 'upstream_general' );
+    }
+
+    if( isset( $option['admin_support_link'] ) ) {
+        return !empty( $option['admin_support_link'] ) ? $option['admin_support_link'] : 'mailto:' . $option['admin_email'];
+    } else {
+        return isset( $option['admin_email'] ) ? $option['admin_email'] : '#';
+    }
+}
+
+/**
+ * Retrieve the `admin_support_link_label` option value.
+ *
+ * @since   1.12.0
+ *
+ * @see     https://github.com/upstreamplugin/UpStream/issues/81
+ *
+ * @param   array   $option     Array of options. If provided, there's no need to fetch everything again from DB.
+ *
+ * @return  string
+ */
+function upstream_admin_support_label($option) {
+    if (empty($option)) {
+        $option = get_option( 'upstream_general' );
+    }
+
+    if( isset( $option['admin_support_label'] ) ) {
+        return !empty( $option['admin_support_label'] ) ? $option['admin_support_label'] : '';
+    } else {
+        return __('Contact Admin', 'upstream');
+    }
 }
 
 /**
@@ -849,4 +892,63 @@ function upstream_convert_UTC_date_to_timezone($subject)
     } catch (Exception $e) {
         return false;
     }
+}
+
+/**
+ * Check if Comments/Discussion are disabled for the current open project.
+ * If no ID is passed, this function tries to guess it by checking $_GET/$_POST vars.
+ *
+ * @since   1.8.0
+ *
+ * @param   int     $post_id The project ID to be checked
+ *
+ * @return  bool
+ */
+function upstream_are_comments_disabled($post_id = 0)
+{
+    $areCommentsDisabled = false;
+    $post_id = (int)$post_id;
+
+    if ($post_id <= 0) {
+        $post_id = (int)upstream_post_id();
+    }
+
+    if ($post_id > 0) {
+        $theMeta = get_post_meta($post_id, '_upstream_project_disable_comments', false);
+        $areCommentsDisabled = !empty($theMeta) && $theMeta[0] === 'on';
+    }
+
+    return $areCommentsDisabled;
+}
+
+/**
+ * Check if Projects Categorization is currently disabled.
+ *
+ * @since   1.12.0
+ *
+ * @return  bool
+ */
+function is_project_categorization_disabled()
+{
+    $options = get_option('upstream_general');
+
+    $isDisabled = isset($options['disable_categories']) ? (bool)$options['disable_categories'] : false;
+
+    return $isDisabled;
+}
+
+/**
+ * Check if Clients feature is disabled.
+ *
+ * @since   1.12.0
+ *
+ * @return  bool
+ */
+function is_clients_disabled()
+{
+    $options = get_option('upstream_general');
+
+    $isDisabled = isset($options['disable_clients']) ? (bool)$options['disable_clients'] : false;
+
+    return $isDisabled;
 }

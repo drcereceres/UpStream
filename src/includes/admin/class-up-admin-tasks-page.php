@@ -578,7 +578,6 @@ class Upstream_Admin_Tasks_Page {
 
 
     public function plugin_menu() {
-
         $hook = add_submenu_page(
             'edit.php?post_type=project',
             upstream_task_label_plural(),
