@@ -133,7 +133,7 @@ UpStream does not use the existing styling of your theme. The features and the v
 The format is based on [Keep a Changelog](http://keepachangelog.com)
 and this project adheres to [Semantic Versioning](http://semver.org).
 
-= [1.11.5] - @todo =
+= [1.11.5] - 2017-08-31 =
 
 Added:
 * Added Requires PHP rule to readme.txt
