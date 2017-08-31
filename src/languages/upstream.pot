@@ -583,7 +583,7 @@ msgid "Choose the %s of this %s."
 msgstr ""
 
 #: ../includes/admin/class-up-admin-pointers.php:117
-msgid "If there are no %s here, you need to add one first by clicking on <strong>New Client</strong> in the sidebar."
+msgid "If there are no %s here, you need to add one first by clicking on <strong>Clients</strong> in the sidebar."
 msgstr ""
 
 #: ../includes/admin/class-up-admin-pointers.php:132, ../templates/single-project/details.php:54, ../includes/admin/metaboxes/class-up-metaboxes-projects.php:1083
