@@ -460,7 +460,7 @@ function upstream_output_table_rows( $id, $table, $filterRowsetByCurrentUser = f
             continue;
         }
 
-        $output .= '<tr>';
+        $tr = '<tr>';
         foreach ($settings as $key => $setting) {
             if( isset( $setting['display'] ) && ! $setting['display'] )
                 continue;
@@ -512,10 +512,14 @@ function upstream_output_table_rows( $id, $table, $filterRowsetByCurrentUser = f
                 }
             }
 
-            $output .= '<td data-name="' . esc_attr( $key ) . '" ' . $order . ' data-value="' . esc_attr( $data_value ) . '" class="' . esc_attr( $setting['row_class'] ) . '">' . $field_data . '</td>';
+            $tr .= '<td data-name="' . esc_attr( $key ) . '" ' . $order . ' data-value="' . esc_attr( $data_value ) . '" class="' . esc_attr( $setting['row_class'] ) . '">' . $field_data . '</td>';
 
         }
-        $output .= '</tr>';
+        $tr .= '</tr>';
+
+        $tr = apply_filters('upstream:frontend:renderGridDataRow', $tr, $item, $table);
+
+        $output .= $tr;
 
     }
 
