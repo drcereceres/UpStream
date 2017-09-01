@@ -156,3 +156,18 @@ table.dataTable tr.child td.child {
 .discussion-panel .x_content {
   max-height: 265px;
 }
+
+.c-overall-item-card .panel-body {
+  position: relative;
+}
+
+.c-overall-item-card .panel-body i {
+  position: absolute;
+  font-size: 3em;
+  height: 1em;
+  right: 30px;
+  color: #ECF0F1;
+  margin: auto;
+  top: 10px;
+  right: 15px;
+}

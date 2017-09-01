@@ -17,6 +17,8 @@ if ($projectDateStartIsNotEmpty || $projectDateEndIsNotEmpty) {
     $projectTimeframe = upstream_format_date($project->dateStart) . ' - ' . upstream_format_date($project->dateEnd);
   }
 }
+
+$progressValue = upstream_project_progress();
 ?>
 
 <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
@@ -30,7 +32,25 @@ if ($projectDateStartIsNotEmpty || $projectDateEndIsNotEmpty) {
       </ul>
       <div class="clearfix"></div>
     </div>
+
+    <?php include 'details-overall.php'; ?>
+
     <div class="x_content">
+      <div class="row">
+        <div class="col-md-12">
+          <div class="panel panel-default">
+            <div class="panel-body">
+              <h3 style="margin-top: 0;">Progress</h3>
+              <div class="progress" style="margin-bottom: 5px;">
+                <div class="progress-bar" role="progressbar" aria-valuenow="<?php echo $progressValue; ?>" aria-valuemin="0" aria-valuemax="100" style="width: <?php echo $progressValue; ?>%;">
+                  <span class="sr-only"><?php echo $progressValue; ?>%</span>
+                </div>
+              </div>
+              <?php echo sprintf('%s %s', $progressValue . '%', __('complete', 'upstream')); ?>
+            </div>
+          </div>
+        </div>
+      </div>
       <div class="row">
         <div class="col-md-4">
           <p class="title"><?php _e('Timeframe', 'upstream'); ?></p>
