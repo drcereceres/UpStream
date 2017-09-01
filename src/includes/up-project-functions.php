@@ -370,3 +370,23 @@ function getUpStreamProjectDetailsById($project_id)
 
     return false;
 }
+
+function countItemsForUserOnProject($itemType, $user_id, $project_id)
+{
+    $user_id = (int)$user_id;
+    if (!in_array($itemType, array('milestones', 'tasks', 'bugs'))) {
+        return null;
+    }
+
+    $count = 0;
+
+    $metas = (array)get_post_meta((int)$project_id, '_upstream_project_' . $itemType);
+    $metas = count($metas) ? $metas[0] : array();
+    foreach ($metas as $meta) {
+        if (isset($meta['assigned_to']) && (int)$meta['assigned_to'] === $user_id) {
+            $count++;
+        }
+    }
+
+    return $count;
+}

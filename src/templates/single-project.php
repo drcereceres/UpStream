@@ -89,30 +89,6 @@ while ( have_posts() ) : the_post(); ?>
             </div>
             <?php endif; ?>
 
-            <?php if ($user['role'] !== 'Client User' && ((!upstream_are_tasks_disabled() && !upstream_disable_tasks()) || (!upstream_disable_bugs() && !upstream_are_bugs_disabled()))): ?>
-            <hr />
-            <?php endif; ?>
-
-            <?php if ($user['role'] !== 'Client User' && !upstream_are_tasks_disabled() && !upstream_disable_tasks()): ?>
-            <div class="row">
-                <?php do_action( 'upstream_single_project_before_tasks' ); ?>
-
-                <?php upstream_get_template_part( 'single-project/my-tasks.php' ); ?>
-            </div>
-            <?php endif; ?>
-
-            <?php if ($user['role'] !== 'Client User' && !upstream_disable_bugs() && !upstream_are_bugs_disabled()): ?>
-            <div class="row">
-                <?php do_action( 'upstream_single_project_before_bugs' ); ?>
-
-                <?php upstream_get_template_part( 'single-project/my-bugs.php' ); ?>
-            </div>
-            <?php endif; ?>
-
-            <?php if ($user['role'] !== 'Client User' && ((!upstream_are_tasks_disabled() && !upstream_disable_tasks()) || (!upstream_disable_bugs() && !upstream_are_bugs_disabled()))): ?>
-            <hr />
-            <?php endif; ?>
-
             <?php if (!upstream_disable_discussions()): ?>
             <div class="row">
                 <?php do_action( 'upstream_single_project_before_discussion' ); ?>

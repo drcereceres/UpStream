@@ -78,8 +78,9 @@ $pluginOptions = get_option('upstream_general');
             </div>
 
             <?php if (is_single() && get_post_type() === 'project'): ?>
+                <?php $project_id = get_the_ID(); ?>
                 <div class="menu_section">
-                    <h3><?php echo get_the_title(get_the_ID()); ?></h3>
+                    <h3><?php echo get_the_title($project_id); ?></h3>
                     <ul class="nav side-menu">
                         <?php do_action('upstream_sidebar_before_single_menu'); ?>
 
@@ -122,14 +123,6 @@ $pluginOptions = get_option('upstream_general');
                         <?php if ((!$areTasksDisabledForThisProject && !$areTasksDisabledAtAll) || (!$areBugsDisabledAtAll && !$areBugsDisabledForThisProject)): ?>
                         <li>
                             <hr style="border-top-color: rgba(0, 0, 0, 0.2);" />
-                        </li>
-                        <?php endif; ?>
-
-                        <?php if ($user['role'] !== 'Client User' && !$areTasksDisabledForThisProject && !$areTasksDisabledAtAll): ?>
-                        <li>
-                            <a href="#my-tasks">
-                                <i class="fa fa-wrench"></i> <?php echo sprintf(__('My %s', 'upstream'), $labelTaskPlural); ?>
-                            </a>
                         </li>
                         <?php endif; ?>
 
