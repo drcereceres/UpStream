@@ -17,6 +17,9 @@ if ($projectDateStartIsNotEmpty || $projectDateEndIsNotEmpty) {
     $projectTimeframe = upstream_format_date($project->dateStart) . ' - ' . upstream_format_date($project->dateEnd);
   }
 }
+
+$pluginOptions = get_option('upstream_general');
+$collapseDetails = isset($pluginOptions['collapse_project_details']) && (bool)$pluginOptions['collapse_project_details'] === true;
 ?>
 
 <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
@@ -26,12 +29,12 @@ if ($projectDateStartIsNotEmpty || $projectDateEndIsNotEmpty) {
       <h2><?php printf('<i class="fa fa-info-circle"></i> ' . __('%s Details', 'upstream'), upstream_project_label()); ?></h2>
       <ul class="nav navbar-right panel_toolbox">
         <li>
-          <a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+          <a class="collapse-link"><i class="fa fa-chevron-<?php echo $collapseDetails ? 'down' : 'up'; ?>"></i></a>
         </li>
       </ul>
       <div class="clearfix"></div>
     </div>
-    <div class="x_content">
+    <div class="x_content" style="display: <?php echo $collapseDetails ? 'none' : 'block'; ?>;">
       <!--
       <div class="row">
         <div class="col-md-12">
