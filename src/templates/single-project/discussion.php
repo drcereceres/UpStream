@@ -12,7 +12,7 @@ $collapseBox = isset($pluginOptions['collapse_project_discussion']) && (bool)$pl
             <div class="x_title">
                 <h2><i class="fa fa-comments"></i> <?php _e('Discussion', 'upstream'); ?></h2>
                 <ul class="nav navbar-right panel_toolbox">
-                    <li><a class="collapse-link"><i class="fa fa-chevron-<?php echo $collapseDetails ? 'down' : 'up'; ?>"></i></a></li>
+                    <li><a class="collapse-link"><i class="fa fa-chevron-<?php echo $collapseBox ? 'down' : 'up'; ?>"></i></a></li>
                     <?php do_action( 'upstream_project_discussion_top_right' ) ?>
                 </ul>
                 <div class="clearfix"></div>
