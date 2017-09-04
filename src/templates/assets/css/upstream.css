@@ -157,6 +157,14 @@ table.dataTable tr.child td.child {
   max-height: 265px;
 }
 
+.c-overall-item-card h3 {
+  color: #3A4E66;
+}
+
+.c-overall-item-card ul li:not(.text-muted):not(.text-danger) {
+  color: #3A4E66;
+}
+
 .c-overall-item-card .panel-body {
   position: relative;
 }

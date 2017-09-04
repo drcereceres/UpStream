@@ -132,7 +132,7 @@ if ($areBugsEnabled) {
           <?php $milestoneLabelPlural = upstream_milestone_label_plural(); ?>
           <span class="label label-primary" data-toggle="tooltip" title="<?php printf('%s %s', __('Open', 'upstream'), $milestoneLabelPlural); ?>"><?php echo $milestonesCounts['open']; ?></span> <?php echo $milestoneLabelPlural; ?>
         </h3>
-        <ul>
+        <ul class="list-unstyled">
           <li>
             <strong><?php echo $milestonesCounts['mine']; ?></strong> <?php _e('assigned to me', 'upstream'); ?>
           </li>
@@ -159,7 +159,7 @@ if ($areBugsEnabled) {
           <?php $taskLabelPlural = upstream_task_label_plural(); ?>
           <span class="label label-primary" data-toggle="tooltip" title="<?php printf('%s %s', __('Open', 'upstream'), $taskLabelPlural); ?>"><?php echo $tasksCounts['open']; ?></span> <?php echo $taskLabelPlural; ?>
         </h3>
-        <ul>
+        <ul class="list-unstyled">
           <li>
             <strong><?php echo $tasksCounts['mine']; ?></strong> <?php _e('assigned to me', 'upstream'); ?>
           </li>
@@ -186,7 +186,7 @@ if ($areBugsEnabled) {
           <?php $bugLabelPlural = upstream_bug_label_plural(); ?>
           <span class="label label-primary" data-toggle="tooltip" title="<?php printf('%s %s', __('Open', 'upstream'), $bugLabelPlural); ?>"><?php echo $bugsCounts['open']; ?></span> <?php echo $bugLabelPlural; ?>
         </h3>
-        <ul>
+        <ul class="list-unstyled">
           <li>
             <strong><?php echo $bugsCounts['mine']; ?></strong> <?php _e('assigned to me', 'upstream'); ?>
           </li>
