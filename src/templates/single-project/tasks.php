@@ -8,6 +8,9 @@ $user = upstream_user_data();
 $userIsClientUser = $user['role'] === 'Project Client User';
 
 $itemType = 'tasks';
+
+$pluginOptions = get_option('upstream_general');
+$collapseBox = isset($pluginOptions['collapse_project_tasks']) && (bool)$pluginOptions['collapse_project_tasks'] === true;
 ?>
 
 <?php if (!upstream_are_tasks_disabled() && !upstream_disable_tasks()): ?>
@@ -20,14 +23,14 @@ $itemType = 'tasks';
             <ul class="nav navbar-right panel_toolbox">
                 <li>
                     <a class="collapse-link">
-                        <i class="fa fa-chevron-up"></i>
+                        <i class="fa fa-chevron-<?php echo $collapseBox ? 'down' : 'up'; ?>"></i>
                     </a>
                 </li>
                 <?php do_action( 'upstream_project_tasks_top_right' ); ?>
             </ul>
             <div class="clearfix"></div>
         </div>
-        <div class="x_content">
+        <div class="x_content" style="display: <?php echo $collapseBox ? 'none' : 'block'; ?>;">
             <?php if (!$userIsClientUser): ?>
             <div>
                 <ul class="nav nav-tabs" role="tablist">
