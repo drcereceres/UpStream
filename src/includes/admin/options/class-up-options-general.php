@@ -215,6 +215,16 @@ class UpStream_Options_General {
                     )
                 ),
                 array(
+                    'name'    => __( 'Collapse Project Bugs box', 'upstream' ),
+                    'id'      => 'collapse_project_bugs',
+                    'type'    => 'radio_inline',
+                    'desc'    => __( 'Choose whether to collapse the Bugs box automatically when a user opens a project page.', 'upstream' ),
+                    'default' => '0',
+                    'options' => array(
+                        0 => __('No', 'upstream'),
+                        1 => __('Yes', 'upstream')
+                    )
+                ),
                     'name'    => __( 'Disable Clients and Client Users', 'upstream' ),
                     'id'      => 'disable_clients',
                     'type'    => 'radio_inline',
