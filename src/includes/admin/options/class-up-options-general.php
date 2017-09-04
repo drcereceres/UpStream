@@ -194,7 +194,7 @@ class UpStream_Options_General {
                 ),
                 array(
                     'name'    => __( 'Collapse Project Milestones box', 'upstream' ),
-                    'id'      => 'collapse_project_details',
+                    'id'      => 'collapse_project_milestones',
                     'type'    => 'radio_inline',
                     'desc'    => __( 'Choose whether to collapse the Milestones box automatically when a user opens a project page.', 'upstream' ),
                     'default' => '0',
@@ -205,7 +205,7 @@ class UpStream_Options_General {
                 ),
                 array(
                     'name'    => __( 'Collapse Project Tasks box', 'upstream' ),
-                    'id'      => 'collapse_project_details',
+                    'id'      => 'collapse_project_tasks',
                     'type'    => 'radio_inline',
                     'desc'    => __( 'Choose whether to collapse the Tasks box automatically when a user opens a project page.', 'upstream' ),
                     'default' => '0',
