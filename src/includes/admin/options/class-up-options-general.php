@@ -236,6 +236,18 @@ class UpStream_Options_General {
                         1 => __('Yes', 'upstream')
                     )
                 ),
+                array(
+                    'name'    => __( 'Collapse Project Discussion box', 'upstream' ),
+                    'id'      => 'collapse_project_discussion',
+                    'type'    => 'radio_inline',
+                    'desc'    => __( 'Choose whether to collapse the Discussion box automatically when a user opens a project page.', 'upstream' ),
+                    'default' => '0',
+                    'options' => array(
+                        0 => __('No', 'upstream'),
+                        1 => __('Yes', 'upstream')
+                    )
+                ),
+                array(
                     'name'    => __( 'Disable Clients and Client Users', 'upstream' ),
                     'id'      => 'disable_clients',
                     'type'    => 'radio_inline',
