@@ -7,113 +7,124 @@ $project_id = (int)upstream_post_id();
 $progressValue = upstream_project_progress();
 $currentTimestamp = time();
 
-$milestonesCounts = array(
-  'open'     => 0,
-  'mine'     => 0,
-  'overdue'  => 0,
-  'finished' => 0,
-  'total'    => 0
-);
+$areMilestonesEnabled = !upstream_are_milestones_disabled() && !upstream_disable_milestones();
+if ($areMilestonesEnabled) {
+    $milestonesCounts = array(
+      'open'     => 0,
+      'mine'     => 0,
+      'overdue'  => 0,
+      'finished' => 0,
+      'total'    => 0
+    );
 
-$milestones = get_post_meta($project_id, '_upstream_project_milestones');
-$milestones = !empty($milestones) ? $milestones[0] : array();
-$milestonesCounts['total'] = count($milestones);
-foreach ($milestones as $milestone) {
-  if (isset($milestone['assigned_to']) && (int)$milestone['assigned_to'] === $user_id) {
-    $milestonesCounts['mine']++;
-  }
+    $milestones = get_post_meta($project_id, '_upstream_project_milestones');
+    $milestones = !empty($milestones) ? $milestones[0] : array();
+    $milestonesCounts['total'] = count($milestones);
+    foreach ($milestones as $milestone) {
+      if (isset($milestone['assigned_to']) && (int)$milestone['assigned_to'] === $user_id) {
+        $milestonesCounts['mine']++;
+      }
 
-  if (isset($milestone['end_date']) && (int)$milestone['end_date'] > 0 && (int)$milestone['end_date'] < $currentTimestamp) {
-    $milestonesCounts['overdue']++;
-  }
+      if (isset($milestone['end_date']) && (int)$milestone['end_date'] > 0 && (int)$milestone['end_date'] < $currentTimestamp) {
+        $milestonesCounts['overdue']++;
+      }
 
-  if (isset($milestone['progress'])) {
-    if ((float)$milestone['progress'] < 100) {
-      $milestonesCounts['open']++;
-    } else {
-      $milestonesCounts['finished']++;
+      if (isset($milestone['progress'])) {
+        if ((float)$milestone['progress'] < 100) {
+          $milestonesCounts['open']++;
+        } else {
+          $milestonesCounts['finished']++;
+        }
+      }
     }
-  }
 }
 
-$tasksCounts = array(
-  'open'    => 0,
-  'mine'    => 0,
-  'overdue' => 0,
-  'closed'  => 0,
-  'total'   => 0
-);
+$areTasksEnabled = !upstream_are_tasks_disabled() && !upstream_disable_tasks();
+if ($areTasksEnabled) {
+    $tasksCounts = array(
+      'open'    => 0,
+      'mine'    => 0,
+      'overdue' => 0,
+      'closed'  => 0,
+      'total'   => 0
+    );
 
-$tasksOptions = get_option('upstream_tasks');
-$tasksMap = array();
-foreach ($tasksOptions['statuses'] as $task) {
-  $tasksMap[$task['name']] = $task['type'];
-}
-unset($tasksOptions);
-
-$tasks = get_post_meta($project_id, '_upstream_project_tasks');
-$tasks = !empty($tasks) ? $tasks[0] : array();
-$tasksCounts['total'] = count($tasks);
-foreach ($tasks as $task) {
-  if (isset($task['assigned_to']) && (int)$task['assigned_to'] === $user_id) {
-    $tasksCounts['mine']++;
-  }
-
-  if (isset($task['end_date']) && (int)$task['end_date'] > 0 && (int)$task['end_date'] < $currentTimestamp) {
-    $tasksCounts['overdue']++;
-  }
-
-  if (isset($task['status'])) {
-    if (!empty($task['status']) && $tasksMap[$task['status']] === 'closed') {
-      $tasksCounts['closed']++;
-    } else {
-      $tasksCounts['open']++;
+    $tasksOptions = get_option('upstream_tasks');
+    $tasksMap = array();
+    foreach ($tasksOptions['statuses'] as $task) {
+      $tasksMap[$task['name']] = $task['type'];
     }
-  } else {
-    $tasksCounts['open']++;
-  }
-}
+    unset($tasksOptions);
 
-$bugsCounts = array(
-  'open'    => 0,
-  'mine'    => 0,
-  'overdue' => 0,
-  'closed'  => 0,
-  'total'   => 0
-);
+    $tasks = get_post_meta($project_id, '_upstream_project_tasks');
+    $tasks = !empty($tasks) ? $tasks[0] : array();
+    $tasksCounts['total'] = count($tasks);
+    foreach ($tasks as $task) {
+      if (isset($task['assigned_to']) && (int)$task['assigned_to'] === $user_id) {
+        $tasksCounts['mine']++;
+      }
 
-$bugsOptions = get_option('upstream_tasks');
-$bugsMap = array();
-foreach ($bugsOptions['statuses'] as $bug) {
-  $bugsMap[$bug['name']] = $bug['type'];
-}
-unset($bugsOptions);
+      if (isset($task['end_date']) && (int)$task['end_date'] > 0 && (int)$task['end_date'] < $currentTimestamp) {
+        $tasksCounts['overdue']++;
+      }
 
-$bugs = get_post_meta($project_id, '_upstream_project_bugs');
-$bugs = !empty($bugs) ? $bugs[0] : array();
-$bugsCounts['total'] = count($bugs);
-foreach ($bugs as $bug) {
-  if (isset($bug['assigned_to']) && (int)$bug['assigned_to'] === $user_id) {
-    $bugsCounts['mine']++;
-  }
-
-  if (isset($bug['due_date']) && (int)$bug['due_date'] > 0 && (int)$bug['due_date'] < $currentTimestamp) {
-    $bugsCounts['overdue']++;
-  }
-
-  if (isset($bug['status'])) {
-    if (!empty($bug['status']) && $bugsMap[$bug['status']] === 'closed') {
-      $bugsCounts['closed']++;
-    } else {
-      $bugsCounts['open']++;
+      if (isset($task['status'])) {
+        if (!empty($task['status']) && $tasksMap[$task['status']] === 'closed') {
+          $tasksCounts['closed']++;
+        } else {
+          $tasksCounts['open']++;
+        }
+      } else {
+        $tasksCounts['open']++;
+      }
     }
-  } else {
-    $bugsCounts['open']++;
-  }
+}
+
+$areBugsEnabled = !upstream_disable_bugs() && !upstream_are_bugs_disabled();
+if ($areBugsEnabled) {
+    $bugsCounts = array(
+      'open'    => 0,
+      'mine'    => 0,
+      'overdue' => 0,
+      'closed'  => 0,
+      'total'   => 0
+    );
+
+    $bugsOptions = get_option('upstream_tasks');
+    $bugsMap = array();
+    foreach ($bugsOptions['statuses'] as $bug) {
+      $bugsMap[$bug['name']] = $bug['type'];
+    }
+    unset($bugsOptions);
+
+    $bugs = get_post_meta($project_id, '_upstream_project_bugs');
+    $bugs = !empty($bugs) ? $bugs[0] : array();
+    $bugsCounts['total'] = count($bugs);
+    foreach ($bugs as $bug) {
+      if (isset($bug['assigned_to']) && (int)$bug['assigned_to'] === $user_id) {
+        $bugsCounts['mine']++;
+      }
+
+      if (isset($bug['due_date']) && (int)$bug['due_date'] > 0 && (int)$bug['due_date'] < $currentTimestamp) {
+        $bugsCounts['overdue']++;
+      }
+
+      if (isset($bug['status'])) {
+        if (!empty($bug['status']) && $bugsMap[$bug['status']] === 'closed') {
+          $bugsCounts['closed']++;
+        } else {
+          $bugsCounts['open']++;
+        }
+      } else {
+        $bugsCounts['open']++;
+      }
+    }
 }
 ?>
 
+<?php if ($areMilestonesEnabled || $areTasksEnabled || $areBugsEnabled): ?>
 <div class="row">
+  <?php if ($areMilestonesEnabled): ?>
   <div class="col-md-4">
     <div class="panel panel-default c-overall-item-card">
       <div class="panel-body">
@@ -139,6 +150,8 @@ foreach ($bugs as $bug) {
       </div>
     </div>
   </div>
+  <?php endif; ?>
+  <?php if ($areTasksEnabled): ?>
   <div class="col-md-4">
     <div class="panel panel-default c-overall-item-card">
       <div class="panel-body">
@@ -164,6 +177,8 @@ foreach ($bugs as $bug) {
       </div>
     </div>
   </div>
+  <?php endif; ?>
+  <?php if ($areBugsEnabled): ?>
   <div class="col-md-4">
     <div class="panel panel-default c-overall-item-card">
       <div class="panel-body">
@@ -189,4 +204,6 @@ foreach ($bugs as $bug) {
       </div>
     </div>
   </div>
+  <?php endif; ?>
 </div>
+<?php endif; ?>
