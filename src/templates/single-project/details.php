@@ -17,8 +17,6 @@ if ($projectDateStartIsNotEmpty || $projectDateEndIsNotEmpty) {
     $projectTimeframe = upstream_format_date($project->dateStart) . ' - ' . upstream_format_date($project->dateEnd);
   }
 }
-
-$progressValue = upstream_project_progress();
 ?>
 
 <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
