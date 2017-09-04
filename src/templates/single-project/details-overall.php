@@ -5,12 +5,14 @@ if (!defined('ABSPATH')) exit;
 $user_id = (int)get_current_user_id();
 $project_id = (int)upstream_post_id();
 $progressValue = upstream_project_progress();
+$currentTimestamp = time();
 
 $milestonesCounts = array(
-  'mine'        => 0,
-  'in_progress' => 0,
-  'finished'    => 0,
-  'total'       => 0
+  'open'     => 0,
+  'mine'     => 0,
+  'overdue'  => 0,
+  'finished' => 0,
+  'total'    => 0
 );
 
 $milestones = get_post_meta($project_id, '_upstream_project_milestones');
@@ -21,9 +23,13 @@ foreach ($milestones as $milestone) {
     $milestonesCounts['mine']++;
   }
 
+  if (isset($milestone['end_date']) && (int)$milestone['end_date'] > 0 && (int)$milestone['end_date'] < $currentTimestamp) {
+    $milestonesCounts['overdue']++;
+  }
+
   if (isset($milestone['progress'])) {
     if ((float)$milestone['progress'] < 100) {
-      $milestonesCounts['in_progress']++;
+      $milestonesCounts['open']++;
     } else {
       $milestonesCounts['finished']++;
     }
@@ -31,11 +37,19 @@ foreach ($milestones as $milestone) {
 }
 
 $tasksCounts = array(
-  'mine'        => 0,
-  'in_progress' => 0,
-  'finished'    => 0,
-  'total'       => 0
+  'open'    => 0,
+  'mine'    => 0,
+  'overdue' => 0,
+  'closed'  => 0,
+  'total'   => 0
 );
+
+$tasksOptions = get_option('upstream_tasks');
+$tasksMap = array();
+foreach ($tasksOptions['statuses'] as $task) {
+  $tasksMap[$task['name']] = $task['type'];
+}
+unset($tasksOptions);
 
 $tasks = get_post_meta($project_id, '_upstream_project_tasks');
 $tasks = !empty($tasks) ? $tasks[0] : array();
@@ -45,23 +59,35 @@ foreach ($tasks as $task) {
     $tasksCounts['mine']++;
   }
 
+  if (isset($task['end_date']) && (int)$task['end_date'] > 0 && (int)$task['end_date'] < $currentTimestamp) {
+    $tasksCounts['overdue']++;
+  }
+
   if (isset($task['status'])) {
-    if ($task['status'] === 'Completed' || (isset($task['progress']) && (float)$task['progress'] === 100)) {
-      $tasksCounts['finished']++;
+    if (!empty($task['status']) && $tasksMap[$task['status']] === 'closed') {
+      $tasksCounts['closed']++;
     } else {
-      $tasksCounts['in_progress']++;
+      $tasksCounts['open']++;
     }
   } else {
-    $tasksCounts['in_progress']++;
+    $tasksCounts['open']++;
   }
 }
 
 $bugsCounts = array(
-  'mine'        => 0,
-  'in_progress' => 0,
-  'finished'    => 0,
-  'total'       => 0
+  'open'    => 0,
+  'mine'    => 0,
+  'overdue' => 0,
+  'closed'  => 0,
+  'total'   => 0
 );
+
+$bugsOptions = get_option('upstream_tasks');
+$bugsMap = array();
+foreach ($bugsOptions['statuses'] as $bug) {
+  $bugsMap[$bug['name']] = $bug['type'];
+}
+unset($bugsOptions);
 
 $bugs = get_post_meta($project_id, '_upstream_project_bugs');
 $bugs = !empty($bugs) ? $bugs[0] : array();
@@ -71,14 +97,18 @@ foreach ($bugs as $bug) {
     $bugsCounts['mine']++;
   }
 
+  if (isset($bug['due_date']) && (int)$bug['due_date'] > 0 && (int)$bug['due_date'] < $currentTimestamp) {
+    $bugsCounts['overdue']++;
+  }
+
   if (isset($bug['status'])) {
-    if ($bug['status'] === 'Completed') {
-      $bugsCounts['finished']++;
-    } else if ($bug['status'] === 'In Progress' || $bug['status'] === 'Overdue' || empty($bug['status'])) {
-      $bugsCounts['in_progress']++;
+    if (!empty($bug['status']) && $bugsMap[$bug['status']] === 'closed') {
+      $bugsCounts['closed']++;
+    } else {
+      $bugsCounts['open']++;
     }
   } else {
-    $bugsCounts['in_progress']++;
+    $bugsCounts['open']++;
   }
 }
 ?>
@@ -88,17 +118,21 @@ foreach ($bugs as $bug) {
     <div class="panel panel-default c-overall-item-card">
       <div class="panel-body">
         <h3 style="margin-top: 0;">
-          <span class="label label-primary" title="Not completed Milestones"><?php echo $milestonesCounts['in_progress']; ?></span> Milestones
+          <?php $milestoneLabelPlural = upstream_milestone_label_plural(); ?>
+          <span class="label label-primary" data-toggle="tooltip" title="<?php printf('%s %s', __('Open', 'upstream'), $milestoneLabelPlural); ?>"><?php echo $milestonesCounts['open']; ?></span> <?php echo $milestoneLabelPlural; ?>
         </h3>
         <ul>
           <li>
-            <strong><?php echo $milestonesCounts['mine']; ?></strong> assigned to me
+            <strong><?php echo $milestonesCounts['mine']; ?></strong> <?php _e('assigned to me', 'upstream'); ?>
+          </li>
+          <li class="text-danger">
+            <strong><?php echo $milestonesCounts['overdue']; ?></strong> <?php _e('overdue', 'upstream'); ?>
           </li>
           <li>
-            <strong><?php echo $milestonesCounts['finished']; ?></strong> finished
+            <strong><?php echo $milestonesCounts['finished']; ?></strong> <?php _e('finished', 'upstream'); ?>
           </li>
           <li class="text-muted">
-            <strong><?php echo $milestonesCounts['total']; ?></strong> in total
+            <strong><?php echo $milestonesCounts['total']; ?></strong> <?php _e('in total', 'upstream'); ?>
           </li>
         </ul>
         <i class="fa fa-flag"></i>
@@ -109,17 +143,21 @@ foreach ($bugs as $bug) {
     <div class="panel panel-default c-overall-item-card">
       <div class="panel-body">
         <h3 style="margin-top: 0;">
-          <span class="label label-primary" title="Not completed Tasks (OPEN: status none, in progress and overdue)"><?php echo $tasksCounts['in_progress']; ?></span> Tasks
+          <?php $taskLabelPlural = upstream_task_label_plural(); ?>
+          <span class="label label-primary" data-toggle="tooltip" title="<?php printf('%s %s', __('Open', 'upstream'), $taskLabelPlural); ?>"><?php echo $tasksCounts['open']; ?></span> <?php echo $taskLabelPlural; ?>
         </h3>
         <ul>
           <li>
-            <strong><?php echo $tasksCounts['mine']; ?></strong> assigned to me
+            <strong><?php echo $tasksCounts['mine']; ?></strong> <?php _e('assigned to me', 'upstream'); ?>
+          </li>
+          <li class="text-danger">
+            <strong><?php echo $tasksCounts['overdue']; ?></strong> <?php _e('overdue', 'upstream'); ?>
           </li>
           <li>
-            <strong><?php echo $tasksCounts['finished']; ?></strong> finished
+            <strong><?php echo $tasksCounts['closed']; ?></strong> <?php _e('closed', 'upstream'); ?>
           </li>
           <li class="text-muted">
-            <strong><?php echo $tasksCounts['total']; ?></strong> in total
+            <strong><?php echo $tasksCounts['total']; ?></strong> <?php _e('in total', 'upstream'); ?>
           </li>
         </ul>
         <i class="fa fa-wrench"></i>
@@ -130,17 +168,21 @@ foreach ($bugs as $bug) {
     <div class="panel panel-default c-overall-item-card">
       <div class="panel-body">
         <h3 style="margin-top: 0;">
-          <span class="label label-primary" title="Not completed Bugs"><?php echo $bugsCounts['in_progress']; ?></span> Bugs
+          <?php $bugLabelPlural = upstream_bug_label_plural(); ?>
+          <span class="label label-primary" data-toggle="tooltip" title="<?php printf('%s %s', __('Open', 'upstream'), $bugLabelPlural); ?>"><?php echo $bugsCounts['open']; ?></span> <?php echo $bugLabelPlural; ?>
         </h3>
         <ul>
           <li>
-            <strong><?php echo $bugsCounts['mine']; ?></strong> assigned to me
+            <strong><?php echo $bugsCounts['mine']; ?></strong> <?php _e('assigned to me', 'upstream'); ?>
+          </li>
+          <li class="text-danger">
+            <strong><?php echo $bugsCounts['overdue']; ?></strong> <?php _e('overdue', 'upstream'); ?>
           </li>
           <li>
-            <strong><?php echo $bugsCounts['finished']; ?></strong> completed
+            <strong><?php echo $bugsCounts['closed']; ?></strong> <?php _e('closed', 'upstream'); ?>
           </li>
           <li class="text-muted">
-            <strong><?php echo $bugsCounts['total']; ?></strong> in total
+            <strong><?php echo $bugsCounts['total']; ?></strong> <?php _e('in total', 'upstream'); ?>
           </li>
         </ul>
         <i class="fa fa-bug"></i>
