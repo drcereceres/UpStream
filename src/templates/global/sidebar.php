@@ -119,20 +119,6 @@ $pluginOptions = get_option('upstream_general');
                         <?php endif; ?>
 
                         <?php do_action( 'upstream_sidebar_after_single_menu' );  ?>
-
-                        <?php if ((!$areTasksDisabledForThisProject && !$areTasksDisabledAtAll) || (!$areBugsDisabledAtAll && !$areBugsDisabledForThisProject)): ?>
-                        <li>
-                            <hr style="border-top-color: rgba(0, 0, 0, 0.2);" />
-                        </li>
-                        <?php endif; ?>
-
-                        <?php if ($user['role'] !== 'Client User' && !$areBugsDisabledAtAll && !$areBugsDisabledForThisProject): ?>
-                        <li>
-                            <a href="#my-bugs">
-                                <i class="fa fa-bug"></i> <?php echo sprintf(__('My %s', 'upstream'), $labelBugPlural); ?>
-                            </a>
-                        </li>
-                        <?php endif; ?>
                     </ul>
                 </div>
             <?php endif; ?>
