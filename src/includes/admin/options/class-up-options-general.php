@@ -225,6 +225,17 @@ class UpStream_Options_General {
                         1 => __('Yes', 'upstream')
                     )
                 ),
+                array(
+                    'name'    => __( 'Collapse Project Files box', 'upstream' ),
+                    'id'      => 'collapse_project_files',
+                    'type'    => 'radio_inline',
+                    'desc'    => __( 'Choose whether to collapse the Files box automatically when a user opens a project page.', 'upstream' ),
+                    'default' => '0',
+                    'options' => array(
+                        0 => __('No', 'upstream'),
+                        1 => __('Yes', 'upstream')
+                    )
+                ),
                     'name'    => __( 'Disable Clients and Client Users', 'upstream' ),
                     'id'      => 'disable_clients',
                     'type'    => 'radio_inline',
