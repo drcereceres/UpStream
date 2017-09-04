@@ -8,12 +8,12 @@ $user = upstream_user_data();
 $userIsClientUser = $user['role'] === 'Project Client User';
 
 $itemType = 'tasks';
+?>
 
+<?php if (!upstream_are_tasks_disabled() && !upstream_disable_tasks()):
 $pluginOptions = get_option('upstream_general');
 $collapseBox = isset($pluginOptions['collapse_project_tasks']) && (bool)$pluginOptions['collapse_project_tasks'] === true;
 ?>
-
-<?php if (!upstream_are_tasks_disabled() && !upstream_disable_tasks()): ?>
 <div class="col-md-12 col-sm-12 col-xs-12">
     <div class="x_panel">
         <div class="x_title">

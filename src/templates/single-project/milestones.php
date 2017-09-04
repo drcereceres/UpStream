@@ -1,11 +1,11 @@
 <?php
 if (!defined('ABSPATH')) exit;
+?>
 
+<?php if (!upstream_are_milestones_disabled() && !upstream_disable_milestones()):
 $pluginOptions = get_option('upstream_general');
 $collapseBox = isset($pluginOptions['collapse_project_milestones']) && (bool)$pluginOptions['collapse_project_milestones'] === true;
 ?>
-
-<?php if (!upstream_are_milestones_disabled() && !upstream_disable_milestones()): ?>
     <div class="col-md-12 col-sm-12 col-xs-12">
         <div class="x_panel">
             <div class="x_title">

@@ -10,7 +10,10 @@ $userIsClientUser = $user['role'] === 'Project Client User';
 $itemType = 'bugs';
 ?>
 
-<?php if (!upstream_disable_bugs() && !upstream_are_bugs_disabled()): ?>
+<?php if (!upstream_disable_bugs() && !upstream_are_bugs_disabled()):
+$pluginOptions = get_option('upstream_general');
+$collapseBox = isset($pluginOptions['collapse_project_bugs']) && (bool)$pluginOptions['collapse_project_bugs'] === true;
+?>
 <div class="col-md-12 col-sm-12 col-xs-12">
     <div class="x_panel">
 
@@ -18,14 +21,14 @@ $itemType = 'bugs';
             <h2><i class="fa fa-bug"></i> <?php echo upstream_bug_label_plural(); ?></h2>
 
             <ul class="nav navbar-right panel_toolbox">
-                <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a></li>
+                <li><a class="collapse-link"><i class="fa fa-chevron-<?php echo $collapseBox ? 'down' : 'up'; ?>"></i></a></li>
                 <?php do_action( 'upstream_project_bugs_top_right' ) ?>
             </ul>
 
             <div class="clearfix"></div>
         </div>
 
-        <div class="x_content">
+        <div class="x_content" style="display: <?php echo $collapseBox ? 'none' : 'block'; ?>;">
             <?php if (!$userIsClientUser): ?>
                 <div>
                     <ul class="nav nav-tabs" role="tablist">
