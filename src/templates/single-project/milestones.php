@@ -3,7 +3,6 @@ if (!defined('ABSPATH')) exit;
 
 $pluginOptions = get_option('upstream_general');
 $collapseBox = isset($pluginOptions['collapse_project_milestones']) && (bool)$pluginOptions['collapse_project_milestones'] === true;
-$collapseBox = true;
 ?>
 
 <?php if (!upstream_are_milestones_disabled() && !upstream_disable_milestones()): ?>
