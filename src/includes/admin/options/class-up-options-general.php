@@ -193,6 +193,17 @@ class UpStream_Options_General {
                     )
                 ),
                 array(
+                    'name'    => __( 'Collapse Project Milestones box', 'upstream' ),
+                    'id'      => 'collapse_project_details',
+                    'type'    => 'radio_inline',
+                    'desc'    => __( 'Choose whether to collapse the Milestones box automatically when a user opens a project page.', 'upstream' ),
+                    'default' => '0',
+                    'options' => array(
+                        0 => __('No', 'upstream'),
+                        1 => __('Yes', 'upstream')
+                    )
+                ),
+                array(
                     'name'    => __( 'Disable Clients and Client Users', 'upstream' ),
                     'id'      => 'disable_clients',
                     'type'    => 'radio_inline',
