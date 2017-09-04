@@ -952,3 +952,83 @@ function is_clients_disabled()
 
     return $isDisabled;
 }
+
+// @todo
+function getUserAvatarURL($user_id)
+{
+    $user_id = (int)$user_id;
+    if ($user_id <= 0) {
+        return false;
+    }
+
+    // Check if the ID is valid.
+    global $wpdb;
+    $idIsValid = (int)$wpdb->get_var(sprintf('
+        SELECT COUNT(`ID`)
+        FROM `%s`
+        WHERE `ID` = "%s"',
+        $wpdb->prefix . 'users',
+        $user_id
+    ));
+
+    if ($idIsValid !== 1) {
+        return false;
+    }
+
+    if (!function_exists('is_plugin_active')) {
+        include_once ABSPATH .'wp-admin/includes/plugin.php';
+    }
+
+    $avatarURL = "";
+
+    // Check if BuddyPress is running so we can borrow its functions.
+    $isBuddyPressRunning = is_plugin_active('buddypress/bp-loader.php') && class_exists('BuddyPress') && function_exists('bp_core_fetch_avatar');
+    if ($isBuddyPressRunning) {
+        $avatarURL = (string)bp_core_fetch_avatar(array(
+            'item_id' => $user_id,
+            'type'    => "thumb",
+            'html'    => false
+        ));
+    }
+
+    // Check if WP-User-Avatar is running so we can borrow its functions.
+    if (empty($avatarURL) && is_plugin_active('wp-user-avatar/wp-user-avatar.php') && function_exists('wpua_functions_init')) {
+        global $wp_query;
+
+        // Make sure WP_Query is loaded.
+        if (!($wp_query instanceof \WP_Query)) {
+            $wp_query = new WP_Query();
+        }
+
+        try {
+            // Make sure WP User Avatar dependencies are loaded.
+            require_once ABSPATH . 'wp-settings.php';
+            require_once ABSPATH . 'wp-includes/pluggable.php';
+            require_once ABSPATH . 'wp-includes/query.php';
+            require_once WP_PLUGIN_DIR . '/wp-user-avatar/wp-user-avatar.php';
+
+            // Load WP User Avatar plugin and its dependencies.
+            wpua_functions_init();
+
+            // Retrieve the current user avatar URL.
+            $avatarURL = (string)get_wp_user_avatar_src($user_id);
+        } catch (Exception $e) {
+            // Do nothing.
+        }
+    }
+
+    // Check if Custom User Profile Photo is running so we can borrow its functions.
+    if (empty($avatarURL) && is_plugin_active('custom-user-profile-photo/3five_cupp.php') && function_exists('get_cupp_meta')) {
+        $avatarURL = (string)get_cupp_meta($user_id);
+    }
+
+    if (empty($avatarURL)) {
+        if (!function_exists('get_avatar_url')) {
+            require_once ABSPATH . 'wp-includes/link-template.php';
+        }
+
+        $avatarURL = (string)get_avatar_url($user_id, 96, get_option('avatar_default', 'mystery'));
+    }
+
+    return $avatarURL;
+}
