@@ -20,6 +20,7 @@ if ($projectDateStartIsNotEmpty || $projectDateEndIsNotEmpty) {
 ?>
 
 <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+  <?php include 'details-overall.php'; ?>
   <div class="x_panel details-panel">
     <div class="x_title">
       <h2><?php printf('<i class="fa fa-info-circle"></i> ' . __('%s Details', 'upstream'), upstream_project_label()); ?></h2>
@@ -30,10 +31,8 @@ if ($projectDateStartIsNotEmpty || $projectDateEndIsNotEmpty) {
       </ul>
       <div class="clearfix"></div>
     </div>
-
-    <?php include 'details-overall.php'; ?>
-
     <div class="x_content">
+      <!--
       <div class="row">
         <div class="col-md-12">
           <div class="panel panel-default">
@@ -49,6 +48,7 @@ if ($projectDateStartIsNotEmpty || $projectDateEndIsNotEmpty) {
           </div>
         </div>
       </div>
+      -->
       <div class="row">
         <div class="col-md-4">
           <p class="title"><?php _e('Timeframe', 'upstream'); ?></p>

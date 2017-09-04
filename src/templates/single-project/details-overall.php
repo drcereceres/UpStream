@@ -83,7 +83,7 @@ foreach ($bugs as $bug) {
 }
 ?>
 
-<div>
+<div class="row">
   <div class="col-md-4">
     <div class="panel panel-default c-overall-item-card">
       <div class="panel-body">
