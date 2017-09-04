@@ -35,7 +35,7 @@ $itemType = 'tasks';
                         <a href="#tasks-table-wrapper" aria-controls="tasks-table-wrapper" role="tab" data-toggle="tab"><?php printf(__('All %s', 'upstream'), $tasksLabel); ?></a>
                     </li>
                     <li role="presentation">
-                        <a href="#my-tasks-table-wrapper" aria-controls="my-tasks-table-wrapper" role="tab" data-toggle="tab"><?php printf(__('%s assigned to me', 'upstream'), $tasksLabel); ?></a>
+                        <a href="#my-tasks-table-wrapper" aria-controls="my-tasks-table-wrapper" role="tab" data-toggle="tab"><?php _e('Assigned to me only', 'upstream'); ?></a>
                     </li>
                 </ul>
                 <div class="tab-content" style="margin-top: 7px;">

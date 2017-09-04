@@ -33,7 +33,7 @@ $itemType = 'bugs';
                             <a href="#bugs-table-wrapper" aria-controls="bugs-table-wrapper" role="tab" data-toggle="tab"><?php printf(__('All %s', 'upstream'), $bugsLabel); ?></a>
                         </li>
                         <li role="presentation">
-                            <a href="#my-bugs-table-wrapper" aria-controls="my-bugs-table-wrapper" role="tab" data-toggle="tab"><?php printf(__('%s assigned to me', 'upstream'), $bugsLabel); ?></a>
+                            <a href="#my-bugs-table-wrapper" aria-controls="my-bugs-table-wrapper" role="tab" data-toggle="tab"><?php _e('Assigned to me only', 'upstream'); ?></a>
                         </li>
                     </ul>
                     <div class="tab-content" style="margin-top: 7px;">
