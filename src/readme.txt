@@ -143,6 +143,8 @@ Added:
 
 Changed:
 * Increased Discussion field width on admin
+* Moved Project Details box to its own full width box on frontend
+* Tasks and Bugs columns were renamed to Title on frontend
 
 Fixed:
 * Fixed Projects breaking search results on frontend
