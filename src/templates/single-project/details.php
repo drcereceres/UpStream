@@ -23,7 +23,6 @@ $collapseDetails = isset($pluginOptions['collapse_project_details']) && (bool)$p
 ?>
 
 <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-  <?php include 'overview.php'; ?>
   <div class="x_panel details-panel">
     <div class="x_title">
       <h2><?php printf('<i class="fa fa-info-circle"></i> ' . __('%s Details', 'upstream'), upstream_project_label()); ?></h2>
@@ -34,6 +33,7 @@ $collapseDetails = isset($pluginOptions['collapse_project_details']) && (bool)$p
       </ul>
       <div class="clearfix"></div>
     </div>
+    <?php include 'overview.php'; ?>
     <div class="x_content" style="display: <?php echo $collapseDetails ? 'none' : 'block'; ?>;">
       <!--
       <div class="row">
