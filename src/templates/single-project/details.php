@@ -84,10 +84,12 @@ $collapseDetails = isset($pluginOptions['collapse_project_details']) && (bool)$p
           <?php upstream_output_project_members(); ?>
         </div>
       </div>
+      <?php if (!empty($project->description)): ?>
       <div>
         <p class="title"><?php _e('Description'); ?></p>
         <blockquote style="font-size: 1em;"><?php echo $project->description; ?></blockquote>
       </div>
+      <?php endif; ?>
     </div>
   </div>
 </div>
