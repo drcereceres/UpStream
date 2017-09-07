@@ -73,7 +73,11 @@ $collapseDetails = isset($pluginOptions['collapse_project_details']) && (bool)$p
         </div>
         <div class="col-md-4">
           <p class="title"><?php _e('Client Users', 'upstream'); ?></p>
-          <?php upstream_output_client_users(); ?>
+          <?php if (count($project->clientUsers) > 0): ?>
+          <?php upstream_output_client_users() ?>
+          <?php else: ?>
+          <span><i class="text-muted">(<?php _e('none', 'upstream'); ?>)</i></span>
+          <?php endif; ?>
         </div>
         <div class="col-md-4">
           <p class="title"><?php _e('Members', 'upstream'); ?></p>
