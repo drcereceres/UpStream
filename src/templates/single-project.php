@@ -37,16 +37,15 @@ while ( have_posts() ) : the_post(); ?>
     </div>
 
     <div class="">
-        <div class="page-title">
-            <div class="title_left">
-                <h3><?php echo get_the_title( get_the_ID() ); ?>
-                <?php
-                    $status = upstream_project_status_color( $id );
-                    if( $status['status'] ) {
-                ?>
-                    <button type="button" class="btn btn-success btn-xs" style="border: none;background-color:<?php echo esc_attr( $status['color'] ); ?>"><?php echo $status['status'] ?></button>
-                <?php } ?> </h3>
+        <div class="row">
+            <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+                <h3 style="display: inline-block;"><?php echo get_the_title( get_the_ID() ); ?></h3>
+                <?php $status = upstream_project_status_color($id); ?>
+                <?php if (!empty($status['status'])): ?>
+                <button type="button" class="btn btn-success btn-xs" style="border: none;background-color:<?php echo esc_attr( $status['color'] ); ?>"><?php echo $status['status'] ?></button>
+                <?php endif; ?>
             </div>
+            <?php include 'single-project/overview.php'; ?>
         </div>
 
         <div class="clearfix"></div>

@@ -33,7 +33,6 @@ $collapseDetails = isset($pluginOptions['collapse_project_details']) && (bool)$p
       </ul>
       <div class="clearfix"></div>
     </div>
-    <?php include 'overview.php'; ?>
     <div class="x_content" style="display: <?php echo $collapseDetails ? 'none' : 'block'; ?>;">
       <div class="row">
         <div class="col-md-4">

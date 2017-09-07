@@ -123,84 +123,75 @@ if ($areBugsEnabled) {
 ?>
 
 <?php if ($areMilestonesEnabled || $areTasksEnabled || $areBugsEnabled): ?>
-<div class="row">
+<div class="hidden-xs hidden-sm col-md-6 col-lg-6">
   <?php if ($areMilestonesEnabled): ?>
-  <div class="col-md-4">
-    <div class="panel panel-default c-overall-item-card">
-      <div class="panel-body">
-        <h3 style="margin-top: 0;">
-          <?php $milestoneLabelPlural = upstream_milestone_label_plural(); ?>
-          <span class="label label-primary" data-toggle="tooltip" title="<?php printf('%s %s', __('Open', 'upstream'), $milestoneLabelPlural); ?>"><?php echo $milestonesCounts['open']; ?></span> <?php echo $milestoneLabelPlural; ?>
-        </h3>
-        <ul class="list-unstyled">
-          <li>
-            <strong><?php echo $milestonesCounts['mine']; ?></strong> <?php _e('assigned to me', 'upstream'); ?>
-          </li>
-          <li class="text-danger">
-            <strong><?php echo $milestonesCounts['overdue']; ?></strong> <?php _e('overdue', 'upstream'); ?>
-          </li>
-          <li>
-            <strong><?php echo $milestonesCounts['finished']; ?></strong> <?php _e('finished', 'upstream'); ?>
-          </li>
-          <li class="text-muted">
-            <strong><?php echo $milestonesCounts['total']; ?></strong> <?php _e('in total', 'upstream'); ?>
-          </li>
-        </ul>
-        <i class="fa fa-flag"></i>
+  <div class="col-md-4 col-lg-4">
+    <div class="panel panel-default" style="margin-bottom: 10px;">
+      <div class="panel-body" style="display: flex; position: relative;">
+        <div data-toggle="tooltip" title="<?php _e('Open', 'upstream'); ?>">
+          <span class="label label-primary" ><?php echo $milestonesCounts['open']; ?></span>
+        </div>
+        <div data-toggle="tooltip" title="<?php _e('Assigned to me', 'upstream'); ?>">
+          <span class="label label-info"><?php echo $milestonesCounts['mine']; ?></span>
+        </div>
+        <div data-toggle="tooltip" title="<?php _e('Overdue', 'upstream'); ?>">
+          <span class="label label-danger"><?php echo $milestonesCounts['overdue']; ?></span>
+        </div>
+        <div data-toggle="tooltip" title="<?php _e('Finished', 'upstream'); ?>">
+          <span class="label label-success"><?php echo $milestonesCounts['finished']; ?></span>
+        </div>
+        <div data-toggle="tooltip" title="<?php _e('Total', 'upstream'); ?>">
+          <span class="label" style="background-color: #ecf0f1; color: #3A4E66;"><?php echo $milestonesCounts['total']; ?></span>
+        </div>
+        <i class="fa fa-flag fa-2x" data-toggle="tooltip" title="<?php printf('%s %s', upstream_milestone_label_plural(), __('Overview', 'upstream')); ?>" style="position: absolute; color: #ECF0F1; right: 8px; margin-top: -2px"></i>
       </div>
     </div>
   </div>
   <?php endif; ?>
   <?php if ($areTasksEnabled): ?>
-  <div class="col-md-4">
-    <div class="panel panel-default c-overall-item-card">
-      <div class="panel-body">
-        <h3 style="margin-top: 0;">
-          <?php $taskLabelPlural = upstream_task_label_plural(); ?>
-          <span class="label label-primary" data-toggle="tooltip" title="<?php printf('%s %s', __('Open', 'upstream'), $taskLabelPlural); ?>"><?php echo $tasksCounts['open']; ?></span> <?php echo $taskLabelPlural; ?>
-        </h3>
-        <ul class="list-unstyled">
-          <li>
-            <strong><?php echo $tasksCounts['mine']; ?></strong> <?php _e('assigned to me', 'upstream'); ?>
-          </li>
-          <li class="text-danger">
-            <strong><?php echo $tasksCounts['overdue']; ?></strong> <?php _e('overdue', 'upstream'); ?>
-          </li>
-          <li>
-            <strong><?php echo $tasksCounts['closed']; ?></strong> <?php _e('closed', 'upstream'); ?>
-          </li>
-          <li class="text-muted">
-            <strong><?php echo $tasksCounts['total']; ?></strong> <?php _e('in total', 'upstream'); ?>
-          </li>
-        </ul>
-        <i class="fa fa-wrench"></i>
+  <div class="col-md-4 col-lg-4">
+    <div class="panel panel-default" style="margin-bottom: 10px;">
+      <div class="panel-body" style="display: flex; position: relative;">
+        <div data-toggle="tooltip" title="<?php _e('Open', 'upstream'); ?>">
+          <span class="label label-primary" ><?php echo $tasksCounts['open']; ?></span>
+        </div>
+        <div data-toggle="tooltip" title="<?php _e('Assigned to me', 'upstream'); ?>">
+          <span class="label label-info"><?php echo $tasksCounts['mine']; ?></span>
+        </div>
+        <div data-toggle="tooltip" title="<?php _e('Overdue', 'upstream'); ?>">
+          <span class="label label-danger"><?php echo $tasksCounts['overdue']; ?></span>
+        </div>
+        <div data-toggle="tooltip" title="<?php _e('Closed', 'upstream'); ?>">
+          <span class="label label-success"><?php echo $tasksCounts['closed']; ?></span>
+        </div>
+        <div data-toggle="tooltip" title="<?php _e('Total', 'upstream'); ?>">
+          <span class="label" style="background-color: #ecf0f1; color: #3A4E66;"><?php echo $tasksCounts['total']; ?></span>
+        </div>
+        <i class="fa fa-wrench fa-2x" data-toggle="tooltip" title="<?php printf('%s %s', upstream_task_label_plural(), __('Overview', 'upstream')); ?>" style="position: absolute; color: #ECF0F1; right: 8px; margin-top: -2px"></i>
       </div>
     </div>
   </div>
   <?php endif; ?>
   <?php if ($areBugsEnabled): ?>
-  <div class="col-md-4">
-    <div class="panel panel-default c-overall-item-card">
-      <div class="panel-body">
-        <h3 style="margin-top: 0;">
-          <?php $bugLabelPlural = upstream_bug_label_plural(); ?>
-          <span class="label label-primary" data-toggle="tooltip" title="<?php printf('%s %s', __('Open', 'upstream'), $bugLabelPlural); ?>"><?php echo $bugsCounts['open']; ?></span> <?php echo $bugLabelPlural; ?>
-        </h3>
-        <ul class="list-unstyled">
-          <li>
-            <strong><?php echo $bugsCounts['mine']; ?></strong> <?php _e('assigned to me', 'upstream'); ?>
-          </li>
-          <li class="text-danger">
-            <strong><?php echo $bugsCounts['overdue']; ?></strong> <?php _e('overdue', 'upstream'); ?>
-          </li>
-          <li>
-            <strong><?php echo $bugsCounts['closed']; ?></strong> <?php _e('closed', 'upstream'); ?>
-          </li>
-          <li class="text-muted">
-            <strong><?php echo $bugsCounts['total']; ?></strong> <?php _e('in total', 'upstream'); ?>
-          </li>
-        </ul>
-        <i class="fa fa-bug"></i>
+  <div class="col-md-4 col-lg-4">
+    <div class="panel panel-default" style="margin-bottom: 10px;">
+      <div class="panel-body" style="display: flex; position: relative;">
+        <div data-toggle="tooltip" title="<?php _e('Open', 'upstream'); ?>">
+          <span class="label label-primary" ><?php echo $bugsCounts['open']; ?></span>
+        </div>
+        <div data-toggle="tooltip" title="<?php _e('Assigned to me', 'upstream'); ?>">
+          <span class="label label-info"><?php echo $bugsCounts['mine']; ?></span>
+        </div>
+        <div data-toggle="tooltip" title="<?php _e('Overdue', 'upstream'); ?>">
+          <span class="label label-danger"><?php echo $bugsCounts['overdue']; ?></span>
+        </div>
+        <div data-toggle="tooltip" title="<?php _e('Closed', 'upstream'); ?>">
+          <span class="label label-success"><?php echo $bugsCounts['closed']; ?></span>
+        </div>
+        <div data-toggle="tooltip" title="<?php _e('Total', 'upstream'); ?>">
+          <span class="label" style="background-color: #ecf0f1; color: #3A4E66;"><?php echo $bugsCounts['total']; ?></span>
+        </div>
+        <i class="fa fa-bug fa-2x" data-toggle="tooltip" title="<?php printf('%s %s', upstream_bug_label_plural(), __('Overview', 'upstream')); ?>" style="position: absolute; color: #ECF0F1; right: 8px; margin-top: -2px"></i>
       </div>
     </div>
   </div>
