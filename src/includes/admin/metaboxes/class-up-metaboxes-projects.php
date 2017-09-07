@@ -1381,14 +1381,14 @@ class UpStream_Metaboxes_Projects {
                 'type'              => 'wysiwyg',
                 'permissions'       => 'publish_project_discussion',
                 'before'            => 'upstream_add_field_attributes',
-                'after_field'       => '<p><button class="button" id="new_message" type="button">' . __( 'New Message', 'upstream ') . '</button></p></div><div class="col-xs-12 col-sm-12 col-md-4 col-lg-4"></div></div>',
+                'after_field'       => '<p><button class="button" id="new_message" type="button">' . __( 'New Message', 'upstream ') . '</button></p></div></div>',
                 'after_row'         => 'upstream_admin_display_messages',
                 'options'           => array(
                     'media_buttons' => true,
                     'textarea_rows' => 5
                 ),
                 'escape_cb'         => 'applyOEmbedFiltersToWysiwygEditorContent',
-                'before_field'      => '<div class="row"><div class="hidden-xs hidden-sm col-md-8 col-lg-8">'
+                'before_field'      => '<div class="row"><div class="hidden-xs hidden-sm col-md-12 col-lg-12">'
             ) );
         }
 
