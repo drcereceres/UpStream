@@ -35,23 +35,6 @@ $collapseDetails = isset($pluginOptions['collapse_project_details']) && (bool)$p
     </div>
     <?php include 'overview.php'; ?>
     <div class="x_content" style="display: <?php echo $collapseDetails ? 'none' : 'block'; ?>;">
-      <!--
-      <div class="row">
-        <div class="col-md-12">
-          <div class="panel panel-default">
-            <div class="panel-body">
-              <h3 style="margin-top: 0;">Progress</h3>
-              <div class="progress" style="margin-bottom: 5px;">
-                <div class="progress-bar" role="progressbar" aria-valuenow="<?php echo $progressValue; ?>" aria-valuemin="0" aria-valuemax="100" style="width: <?php echo $progressValue; ?>%;">
-                  <span class="sr-only"><?php echo $progressValue; ?>%</span>
-                </div>
-              </div>
-              <?php echo sprintf('%s %s', $progressValue . '%', __('complete', 'upstream')); ?>
-            </div>
-          </div>
-        </div>
-      </div>
-      -->
       <div class="row">
         <div class="col-md-4">
           <p class="title"><?php _e('Timeframe', 'upstream'); ?></p>
