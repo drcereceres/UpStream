@@ -137,24 +137,65 @@ add_action( 'cmb2_after_form', 'upstream_form_do_js_validation', 10, 2 );
  *
  * @return
  */
-function upstream_output_overview_counts( $field_args, $field ) {
+function upstream_output_overview_counts($field_args, $field)
+{
+    $project_id = $field->object_id ? (int)$field->object_id : upstream_post_id();
+    $user_id = (int)get_current_user_id();
+    $itemTypeMetaPrefix = "_upstream_project_";
+    $itemType = str_replace($itemTypeMetaPrefix, "", $field_args['id']);
 
-    $post_id = $field->object_id ? $field->object_id : isset( $_GET['post'] ) ? $_GET['post'] : 'n/a';
-    $type = str_replace("_upstream_project_", "", $field_args['id'] );
-    $total_open = upstream_count_total_open( $type, $post_id );
-    $mine_open  = upstream_count_assigned_to_open( $type, $post_id );
-    $mine_class = $mine_open > 0 && $type != 'milestones' ? 'mine' : '';
+    $isDisabled = (string)get_post_meta($project_id, $itemTypeMetaPrefix . 'disable_' . $itemType, true);
+    if ($isDisabled === "on") {
+        return;
+    }
+
+    $countMine = 0;
+    $countOpen = 0;
+
+    $rowset = get_post_meta($project_id, $itemTypeMetaPrefix . $itemType);
+    $rowset = !empty($rowset) ? $rowset[0] : array();
+
+    if ($itemType === "milestones") {
+        foreach ($rowset as $row) {
+            if (isset($row['assigned_to']) && (int)$row['assigned_to'] === $user_id) {
+                $countMine++;
+            }
+        }
+
+        $countOpen = count($rowset);
+    } else {
+        $options = get_option('upstream_' . $itemType);
+        $statuses = isset($options['statuses']) ? $options['statuses'] : array();
+        $statuses = wp_list_pluck($statuses, 'type', 'name');
+
+        foreach ($rowset as $row) {
+            if (isset($row['assigned_to']) && (int)$row['assigned_to'] === $user_id) {
+                $countMine++;
+            }
+
+            if (
+                !isset($row['status'])
+                || empty($row['status'])
+                || (
+                    isset($statuses[$row['status']]) && $statuses[$row['status']] === "open"
+                )
+            ) {
+                $countOpen++;
+            }
+        }
+    }
     ?>
-    <div class="counts <?php echo esc_attr( $type ); ?>">
-
-        <h4><span class="count open total"><?php echo upstream_count_total_open( $type, $post_id ) ?></span> <?php _e( 'Open', 'upstream' ) ?></h4>
-        <h4><span class="count open <?php echo esc_attr( $mine_class ); ?>"><?php echo (int) $mine_open ?></span> <?php _e( 'Mine', 'upstream' ) ?></h4>
-
+    <div class="counts <?php echo esc_attr($itemType); ?>">
+      <h4>
+        <span class="count open total"><?php echo $countOpen; ?></span> <?php _e('Open', 'upstream'); ?>
+      </h4>
+      <h4>
+        <span class="count open<?php echo esc_attr($countMine > 0 ? ' mine' : ''); ?>"><?php echo (int) $countMine ?></span> <?php _e('Mine', 'upstream'); ?>
+      </h4>
     </div>
-
     <?php
-
 }
+
 /* ======================================================================================
                                         ACTIVITY
    ====================================================================================== */
