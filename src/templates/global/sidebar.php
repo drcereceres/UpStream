@@ -88,6 +88,16 @@ $pluginOptions = get_option('upstream_general');
                         <li>
                             <a href="#milestones">
                                 <i class="fa fa-flag"></i> <?php echo upstream_milestone_label_plural(); ?>
+                                <?php
+                                if (function_exists('countItemsForUserOnProject')) {
+                                    $itemsCount = countItemsForUserOnProject('milestones', get_current_user_id(), upstream_post_id());
+                                } else {
+                                    $itemsCount = (int)upstream_count_assigned_to('milestones');
+                                }
+
+                                if ($itemsCount > 0): ?>
+                                <span class="label label-info pull-right" data-toggle="tooltip" title="<?php _e('Assigned to me', 'upstream'); ?>" style="margin-top: 3px;"><?php echo $itemsCount; ?></span>
+                                <?php endif; ?>
                             </a>
                         </li>
                         <?php endif; ?>
@@ -96,6 +106,16 @@ $pluginOptions = get_option('upstream_general');
                         <li>
                             <a href="#tasks">
                                 <i class="fa fa-wrench"></i> <?php echo $labelTaskPlural; ?>
+                                <?php
+                                if (function_exists('countItemsForUserOnProject')) {
+                                    $itemsCount = countItemsForUserOnProject('tasks', get_current_user_id(), upstream_post_id());
+                                } else {
+                                    $itemsCount = (int)upstream_count_assigned_to('tasks');
+                                }
+
+                                if ($itemsCount > 0): ?>
+                                <span class="label label-info pull-right" data-toggle="tooltip" title="<?php _e('Assigned to me', 'upstream'); ?>" style="margin-top: 3px;"><?php echo $itemsCount; ?></span>
+                                <?php endif; ?>
                                 <?php do_action( 'upstream_sidebar_after_tasks_menu' ); ?>
                             </a>
                         </li>
@@ -105,6 +125,16 @@ $pluginOptions = get_option('upstream_general');
                         <li>
                             <a href="#bugs">
                                 <i class="fa fa-bug"></i> <?php echo $labelBugPlural; ?>
+                                <?php
+                                if (function_exists('countItemsForUserOnProject')) {
+                                    $itemsCount = countItemsForUserOnProject('bugs', get_current_user_id(), upstream_post_id());
+                                } else {
+                                    $itemsCount = (int)upstream_count_assigned_to('bugs');
+                                }
+
+                                if ($itemsCount > 0): ?>
+                                <span class="label label-info pull-right" data-toggle="tooltip" title="<?php _e('Assigned to me', 'upstream'); ?>" style="margin-top: 3px;"><?php echo $itemsCount; ?></span>
+                                <?php endif; ?>
                                 <?php do_action( 'upstream_sidebar_after_bugs_menu' ); ?>
                             </a>
                         </li>
