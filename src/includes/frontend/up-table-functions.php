@@ -454,9 +454,8 @@ function upstream_output_table_rows( $id, $table, $filterRowsetByCurrentUser = f
     $output = null;
 
     foreach ( $data as $item ) {
-
         // Check if $item should be skipped if we want to filter data by the current logged in user.
-        if ($filterRowsetByCurrentUser && isset($item['assigned_to']) && $currentUserId > 0 && (int)$item['assigned_to'] !== $currentUserId) {
+        if ($filterRowsetByCurrentUser && (!isset($item['assigned_to']) || ($currentUserId > 0 && (int)$item['assigned_to'] !== $currentUserId))) {
             continue;
         }
 
