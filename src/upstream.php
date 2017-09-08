@@ -114,7 +114,7 @@ final class UpStream
 
         $profilePage = 'profile.php';
 
-        if ($pagenow !== $profilePage) {
+        if ($pagenow !== $profilePage && !wp_doing_ajax()) {
             wp_redirect(admin_url($profilePage));
             exit;
         }
