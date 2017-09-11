@@ -240,22 +240,30 @@ class Upstream_Bug_List extends WP_List_Table {
 
             case 'assigned_to':
 
-                $user = upstream_user_data( $item['assigned_to'], true );
-                $output = $user['full_name'];
+                $assigned_to = isset( $item['assigned_to'] ) && $item['assigned_to'] ? $item['assigned_to'] : '';
+                if (!empty($assigned_to)) {
+                    $user = upstream_user_data( $assigned_to, true );
+                    $output = $user['display_name'];
 
-                if ( $item['assigned_to'] == get_current_user_id() ){
-                    $output = '<span class="mine">' . esc_html( $output ) . '</span>';
+                    if ( $assigned_to == get_current_user_id() ){
+                        $output = '<span class="mine">' . esc_html( $output ) . '</span>';
+                    }
+                    return $output;
+                } else {
+                    return '<span><i>('. __('none', 'upstream') .')</i></span>';
                 }
-                return $output;
 
             case 'due_date':
-                $output = '<span class="end-date">' . upstream_format_date( $item['due_date'] ) . '</span>';
-                return $output;
+                if (isset($item['due_date']) && (int)$item['due_date'] > 0) {
+                    return '<span class="end-date">' . upstream_format_date($item['due_date']) . '</span>';
+                } else {
+                    return '<span><i>('. __('none', 'upstream') .')</i></span>';
+                }
 
             case 'status':
-
-                if( ! $item['status'] )
-                    return null;
+                if (!isset($item['status']) || empty($item['status'])) {
+                    return '<span><i>('. __('none', 'upstream') .')</i></span>';
+                }
 
                 $colors = upstream_project_bug_statuses_colors( $item['project_id'] );
                 $color  = isset( $colors[$item['status']] ) ? $colors[$item['status']] : '#aaaaaa';
@@ -264,9 +272,9 @@ class Upstream_Bug_List extends WP_List_Table {
                 return $output;
 
             case 'severity':
-
-                if( ! $item['severity'] )
-                    return null;
+                if (!isset($item['severity']) || empty($item['severity'])) {
+                    return '<span><i>('. __('none', 'upstream') .')</i></span>';
+                }
 
                 $colors = upstream_project_bug_severity_colors( $item['project_id'] );
                 $color  = isset( $colors[$item['severity']] ) ? $colors[$item['severity']] : '#aaaaaa';
@@ -406,10 +414,8 @@ class Upstream_Bug_List extends WP_List_Table {
 
         // get the bugs
         $bugs = self::get_bugs();
-
         // sort & filter the bugs
         $bugs = self::sort_filter( $bugs );
-
         // does the paging
         if( ! $bugs ) {
             $output = 0;
@@ -469,10 +475,10 @@ class Upstream_Bug_List extends WP_List_Table {
                     unset( $bugs[$key] );
             }
         }
-        $assigned_to = ( isset( $_REQUEST['assigned_to'] ) ? $_REQUEST['assigned_to'] : '' );
-        if ( ! empty( $bugs ) && ! empty( $assigned_to ) ) {
+        $assigned_to = ( isset( $_REQUEST['assigned_to'] ) ? (int)$_REQUEST['assigned_to'] : 0 );
+        if ( ! empty( $bugs ) && $assigned_to > 0 ) {
             foreach( $bugs as $key => $bug ) {
-                if( $bug['assigned_to'] != $assigned_to )
+                if(!isset($bug['assigned_to']) || (int)$bug['assigned_to'] !== $assigned_to )
                     unset( $bugs[$key] );
             }
         }
