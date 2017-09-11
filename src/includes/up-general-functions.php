@@ -395,7 +395,7 @@ function upstream_users_name( $id = 0, $show_email = false ) {
         return;
 
     // if first name exists, then show name. Else show email.
-    $output = $user['fname'] != '' ? $user['fname'] . ' ' . $user['lname'] : $user['email'];
+    $output = $user['display_name'];
 
     if( $show_email && ! empty( $user['email'] ) ) {
         $output .= " <a target='_blank' href='mailto:" . esc_html( $user['email'] ) . "' title='" . esc_html( $user['email'] ) . "'><span class='dashicons dashicons-email-alt'></span></a>";
