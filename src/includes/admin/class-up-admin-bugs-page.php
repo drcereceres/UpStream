@@ -615,6 +615,10 @@ class Upstream_Admin_Bugs_Page {
 
 
     public function plugin_menu() {
+        $count = (int)upstream_count_assigned_to_open( 'bugs' );
+        if (!isUserEitherManagerOrAdmin() && $count <= 0) {
+            return;
+        }
 
         $hook = add_submenu_page(
             'edit.php?post_type=project',
@@ -629,7 +633,6 @@ class Upstream_Admin_Bugs_Page {
 
         global $submenu;
 
-        $count = upstream_count_assigned_to_open( 'bugs' );
         $proj = isset( $submenu['edit.php?post_type=project'] ) ? $submenu['edit.php?post_type=project'] : '';
         if( $proj ) {
             foreach ($proj as $key => $value) {

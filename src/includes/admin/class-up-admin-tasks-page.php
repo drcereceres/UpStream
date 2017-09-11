@@ -587,6 +587,11 @@ class Upstream_Admin_Tasks_Page {
 
 
     public function plugin_menu() {
+        $count = (int)upstream_count_assigned_to_open( 'tasks' );
+        if (!isUserEitherManagerOrAdmin() && $count <= 0) {
+            return;
+        }
+
         $hook = add_submenu_page(
             'edit.php?post_type=project',
             upstream_task_label_plural(),
@@ -600,7 +605,6 @@ class Upstream_Admin_Tasks_Page {
 
         global $submenu;
 
-        $count = upstream_count_assigned_to_open( 'tasks' );
         $proj = isset( $submenu['edit.php?post_type=project'] ) ? $submenu['edit.php?post_type=project'] : '';
         if( $proj ) {
             foreach ($proj as $key => $value) {

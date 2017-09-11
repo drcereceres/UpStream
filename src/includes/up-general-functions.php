@@ -1032,3 +1032,21 @@ function getUserAvatarURL($user_id)
 
     return $avatarURL;
 }
+
+/**
+ * Check if the current user is either administrator or UpStream Manager.
+ *
+ * @since   1.12.0
+ *
+ * @return  bool
+ */
+function isUserEitherManagerOrAdmin()
+{
+    $user = wp_get_current_user();
+
+    if ($user->ID > 0 && isset($user->roles)) {
+        return count(array_intersect((array)$user->roles, array('administrator', 'upstream_manager'))) > 0;
+    }
+
+    return false;
+}
