@@ -150,6 +150,7 @@ Fixed:
 * Fixed Projects breaking search results on frontend
 * Fixed large images breaking the Project Activity tracker
 * Fixed UpStream Users not being able to access Tasks/Bugs page on admin
+* Fixed more strings missing from translation files
 
 = [1.11.5] - 2017-08-31 =
 

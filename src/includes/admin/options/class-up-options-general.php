@@ -276,7 +276,7 @@ class UpStream_Options_General {
                     'desc' => __( 'Ticking this box will disable the Bugs section on both the frontend and the admin area.', 'upstream' ),
                     'default' => '',
                     'options' => array(
-                        'yes' => 'Disable the Bugs section?'
+                        'yes' => __('Disable the Bugs section?', 'upstream')
                     ),
                     'select_all_button' => false
                 ),
@@ -287,7 +287,7 @@ class UpStream_Options_General {
                     'desc' => __( 'Ticking this box will disable the Tasks section on both the frontend and the admin area.', 'upstream' ),
                     'default' => '',
                     'options' => array(
-                        'yes' => 'Disable the Tasks section?'
+                        'yes' => __('Disable the Tasks section?', 'upstream')
                     ),
                     'select_all_button' => false
                 ),
@@ -298,7 +298,7 @@ class UpStream_Options_General {
                     'desc' => __( 'Ticking this box will disable the Milestones section on both the frontend and the admin area.', 'upstream' ),
                     'default' => '',
                     'options' => array(
-                        'yes' => 'Disable the Milestones section?'
+                        'yes' => __('Disable the Milestones section?', 'upstream')
                     ),
                     'select_all_button' => false
                 ),
@@ -309,7 +309,7 @@ class UpStream_Options_General {
                     'desc' => __( 'Ticking this box will disable the Files section on both the frontend and the admin area.', 'upstream' ),
                     'default' => '',
                     'options' => array(
-                        'yes' => 'Disable the Files section?'
+                        'yes' => __('Disable the Files section?', 'upstream')
                     ),
                     'select_all_button' => false
                 ),
@@ -320,7 +320,7 @@ class UpStream_Options_General {
                     'desc' => __( 'Ticking this box will disable the Discussion section on both the frontend and the admin area.', 'upstream' ),
                     'default' => '',
                     'options' => array(
-                        'yes' => 'Disable the Discussion section?'
+                        'yes' => __('Disable the Discussion section?', 'upstream')
                     ),
                     'select_all_button' => false
                 ),
@@ -331,7 +331,7 @@ class UpStream_Options_General {
                     'desc' => __( 'Ticking this box will delete all UpStream data when plugin is uninstalled.', 'upstream' ),
                     'default' => '',
                     'options' => array(
-                        'yes' => 'Remove all data on uninstall?'
+                        'yes' => __('Remove all data on uninstall?', 'upstream')
                     ),
                     'select_all_button' => false
                 ),
