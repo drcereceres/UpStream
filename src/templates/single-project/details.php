@@ -5,7 +5,7 @@ if (!defined('ABSPATH')) exit;
 $project_id = (int)upstream_post_id();
 $project = getUpStreamProjectDetailsById($project_id);
 
-$projectTimeframe = '<i class="text-muted">(' . __('none', 'upstream') . ')</i>';
+$projectTimeframe = "";
 $projectDateStartIsNotEmpty = $project->dateStart > 0;
 $projectDateEndIsNotEmpty = $project->dateEnd > 0;
 if ($projectDateStartIsNotEmpty || $projectDateEndIsNotEmpty) {
@@ -35,25 +35,33 @@ $collapseDetails = isset($pluginOptions['collapse_project_details']) && (bool)$p
     </div>
     <div class="x_content" style="display: <?php echo $collapseDetails ? 'none' : 'block'; ?>;">
       <div class="row">
-        <div class="col-md-4">
+        <?php if (!empty($projectTimeframe)): ?>
+        <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
           <p class="title"><?php _e('Timeframe', 'upstream'); ?></p>
           <span><?php echo $projectTimeframe; ?></span>
         </div>
-        <div class="col-md-4">
+        <?php endif; ?>
+
+        <?php if ($project->client_id > 0): ?>
+        <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
           <p class="title"><?php _e('Client', 'upstream'); ?></p>
           <span><?php echo $project->client_id > 0 && !empty($project->clientName) ? $project->clientName : '<i class="text-muted">(' . __('none', 'upstream') . ')</i>' ; ?></span>
         </div>
-        <div class="col-md-4">
+        <?php endif; ?>
+
+        <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
           <p class="title"><?php _e('Progress', 'upstream'); ?></p>
           <span><?php echo $project->progress; ?>% <?php _e('complete', 'upstream'); ?></span>
         </div>
-      </div>
-      <div class="row">
-        <div class="col-md-4">
+        <?php if ($project->owner_id > 0): ?>
+        <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
           <p class="title"><?php _e('Owner', 'upstream'); ?></p>
           <span><?php echo $project->owner_id > 0 ? upstream_user_avatar($project->owner_id) : '<i class="text-muted">(' . __('none', 'upstream') . ')</i>'; ?></span>
         </div>
-        <div class="col-md-4">
+        <?php endif; ?>
+
+        <?php if ($project->client_id > 0): ?>
+        <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
           <p class="title"><?php printf(__('%s Users', 'upstream'), upstream_client_label()); ?></p>
           <?php if (count($project->clientUsers) > 0): ?>
           <?php upstream_output_client_users() ?>
@@ -61,7 +69,9 @@ $collapseDetails = isset($pluginOptions['collapse_project_details']) && (bool)$p
           <span><i class="text-muted">(<?php _e('none', 'upstream'); ?>)</i></span>
           <?php endif; ?>
         </div>
-        <div class="col-md-4">
+        <?php endif; ?>
+
+        <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
           <p class="title"><?php _e('Members', 'upstream'); ?></p>
           <?php upstream_output_project_members(); ?>
         </div>

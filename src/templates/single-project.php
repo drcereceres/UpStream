@@ -38,23 +38,27 @@ while ( have_posts() ) : the_post(); ?>
 
     <div class="">
         <div class="row">
-            <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-5">
                 <h3 style="display: inline-block;"><?php echo get_the_title( get_the_ID() ); ?></h3>
                 <?php $status = upstream_project_status_color($id); ?>
                 <?php if (!empty($status['status'])): ?>
                 <button type="button" class="btn btn-success btn-xs" style="border: none;background-color:<?php echo esc_attr( $status['color'] ); ?>"><?php echo $status['status'] ?></button>
                 <?php endif; ?>
             </div>
+
             <?php include 'single-project/overview.php'; ?>
+
+
+            <?php do_action( 'upstream_single_project_before_details' ); ?>
+
+            <?php upstream_get_template_part( 'single-project/details.php' ); ?>
         </div>
 
         <div class="clearfix"></div>
 
-            <div class="row">
-                <?php do_action( 'upstream_single_project_before_details' ); ?>
 
-                <?php upstream_get_template_part( 'single-project/details.php' ); ?>
-            </div>
+
+            <?php do_action('upstream:frontend:renderAfterDetails'); ?>
 
             <?php if (!upstream_are_milestones_disabled() && !upstream_disable_milestones()): ?>
             <div class="row">
