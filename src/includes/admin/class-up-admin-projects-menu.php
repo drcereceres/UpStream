@@ -99,6 +99,24 @@ class UpStream_Admin_Projects_Menu {
                         $newSubmenu[] = $ourSubmenu[15];
                     }
                 }
+            } else {
+                if (is_project_categorization_disabled()) {
+                    if (strpos($ourSubmenu[12][0], 'update-count') !== false) {
+                        $newSubmenu[] = $ourSubmenu[12];
+                    }
+
+                    if (strpos($ourSubmenu[13][0], 'update-count') !== false) {
+                        $newSubmenu[] = $ourSubmenu[13];
+                    }
+                } else {
+                    if (strpos($ourSubmenu[17][0], 'update-count') !== false) {
+                        $newSubmenu[] = $ourSubmenu[17];
+                    }
+
+                    if (strpos($ourSubmenu[18][0], 'update-count') !== false) {
+                        $newSubmenu[] = $ourSubmenu[18];
+                    }
+                }
             }
 
             $ourSubmenu = $newSubmenu;
