@@ -54,7 +54,7 @@ $collapseDetails = isset($pluginOptions['collapse_project_details']) && (bool)$p
           <span><?php echo $project->owner_id > 0 ? upstream_user_avatar($project->owner_id) : '<i class="text-muted">(' . __('none', 'upstream') . ')</i>'; ?></span>
         </div>
         <div class="col-md-4">
-          <p class="title"><?php _e('Client Users', 'upstream'); ?></p>
+          <p class="title"><?php printf(__('%s Users', 'upstream'), upstream_client_label()); ?></p>
           <?php if (count($project->clientUsers) > 0): ?>
           <?php upstream_output_client_users() ?>
           <?php else: ?>
