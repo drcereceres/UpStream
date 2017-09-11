@@ -425,7 +425,13 @@ class Upstream_Bug_List extends WP_List_Table {
 
         // filtering
         $the_bugs = $bugs; // store the bugs array
-        $status = ( isset( $_REQUEST['status']) ? $_REQUEST['status'] : 'all' );
+
+        if (!isset($_REQUEST['status']) || empty($_REQUEST['status'])) {
+            $status = 'all';
+        } else {
+            $status = $_REQUEST['status'];
+        }
+
         if( $status != 'all' ) {
             if ( ! empty( $the_bugs ) ) {
                 $bugs = array(); // reset the bugs array
