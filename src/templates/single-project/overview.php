@@ -187,7 +187,7 @@ if ($areBugsEnabled) {
           <div data-toggle="tooltip" title="<?php _e('Overdue', 'upstream'); ?>">
             <span class="label label-danger"><?php echo $milestonesCounts['overdue']; ?></span>
           </div>
-          <div data-toggle="tooltip" title="<?php _e('Finished', 'upstream'); ?>">
+          <div data-toggle="tooltip" title="<?php _e('Completed', 'upstream'); ?>">
             <span class="label label-success"><?php echo $milestonesCounts['finished']; ?></span>
           </div>
           <div data-toggle="tooltip" title="<?php _e('Total', 'upstream'); ?>">
