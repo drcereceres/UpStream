@@ -484,7 +484,7 @@ function upstream_admin_display_message_item( $post_id, $comment ) {
  * Outputs the post new comment button in the admin.
  */
 function upstream_admin_discussion_button() {
-    echo '<p><button class="button" id="new_message" type="button">' . __( 'New Message', 'upstream ') . '</button></p>';
+    echo '<p><button class="button" id="new_message" type="button">' . __( 'New Message', 'upstream') . '</button></p>';
 }
 
 /**
