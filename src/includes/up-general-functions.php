@@ -953,7 +953,15 @@ function is_clients_disabled()
     return $isDisabled;
 }
 
-// @todo
+/**
+ * Retrieve the avatar URL from a given user.
+ *
+ * @since   1.12.0
+ *
+ * @param   int         $user_id    The user ID.
+ *
+ * @return  string|bool
+ */
 function getUserAvatarURL($user_id)
 {
     $user_id = (int)$user_id;

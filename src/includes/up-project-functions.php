@@ -266,7 +266,15 @@ function upstream_count_assigned_to_open( $type, $id = 0 ) {
     return $count->assigned_to_open( $type );
 }
 
-// @todo
+/**
+ * Retrieve details from a given project.
+ *
+ * @since   1.12.0
+ *
+ * @param   int     $project_id The project ID.
+ *
+ * @return  object
+ */
 function getUpStreamProjectDetailsById($project_id)
 {
     $post = get_post($project_id);
