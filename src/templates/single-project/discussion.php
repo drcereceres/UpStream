@@ -18,10 +18,13 @@ $collapseBox = isset($pluginOptions['collapse_project_discussion']) && (bool)$pl
                 <div class="clearfix"></div>
             </div>
             <div class="x_content" style="display: <?php echo $collapseBox ? 'none' : 'block'; ?>;">
+                <?php /*
                 <ul class="discussion">
                     <?php upstream_output_comments( get_the_ID() ); ?>
                 </ul>
                 <?php do_action( 'upstream_project_discussion_bottom' ); ?>
+                <?php */ ?>
+                <?php include dirname(dirname(__FILE__)) . '/comments.php'; ?>
             </div>
         </div>
     </div>

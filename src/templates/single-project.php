@@ -36,6 +36,13 @@ while ( have_posts() ) : the_post(); ?>
         <?php do_action('upstream_frontend_projects_messages'); ?>
     </div>
 
+    <?php /* <div class="row">
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+            <?php include 'comments.php'; ?>
+        </div>
+    </div>
+    */ ?>
+
     <div class="">
         <div class="row">
             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-5">
