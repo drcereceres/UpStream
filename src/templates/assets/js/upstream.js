@@ -208,34 +208,3 @@ jQuery(document).ready(function($){
     });
 });
 // /Panel toolbox
-
-// Progressbar
-jQuery(document).ready(function($){
-if (jQuery(".progress .progress-bar")[0]) {
-    jQuery('.progress .progress-bar').progressbar();
-}
-});
-// /Progressbar
-
-
-// NProgress
-jQuery(document).ready(function($){
-if (typeof NProgress != 'undefined') {
-    $(document).ready(function () {
-        NProgress.start();
-    });
-
-    $(window).load(function () {
-        NProgress.done();
-    });
-}
-});
-
-// Discussion panel max height
-jQuery(document).ready(function($){
-    var detailsHeight = $('.details-panel').height();
-    $('.discussion-panel').css('max-height', detailsHeight - 10 );
-    $('.discussion-panel .x_content').css('max-height', detailsHeight - 86 );
-});
-
-

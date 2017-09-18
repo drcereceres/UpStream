@@ -4,7 +4,7 @@ Tags: project, manage, management, project management, project manager, wordpres
 Requires at least: 4.5
 Tested up to: 4.8
 Requires PHP: 5.6
-Stable tag: 1.11.5
+Stable tag: 1.12.0
 License: GPL-3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -132,6 +132,25 @@ UpStream does not use the existing styling of your theme. The features and the v
 
 The format is based on [Keep a Changelog](http://keepachangelog.com)
 and this project adheres to [Semantic Versioning](http://semver.org).
+
+= [1.12.0] - 2017-09-18 =
+
+Added:
+* Added option to toggle categories for Projects and Clients
+* Added option to toggle Clients/Client Users
+* Added option to disable Discussions on particular Projects
+* Added option to customize support link on frontend
+
+Changed:
+* Increased Discussion field width on admin
+* Moved Project Details box to its own full width box on frontend
+* Tasks and Bugs column headers were renamed to Title on frontend
+
+Fixed:
+* Fixed Projects breaking search results on frontend
+* Fixed large images breaking the Project Activity tracker
+* Fixed UpStream Users not being able to access Tasks/Bugs page on admin
+* Fixed more strings missing from translation files
 
 = [1.11.5] - 2017-08-31 =
 

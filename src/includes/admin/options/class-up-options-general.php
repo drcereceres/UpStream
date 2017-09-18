@@ -182,6 +182,72 @@ class UpStream_Options_General {
                     'default' => 'mailto:' . upstream_admin_email()
                 ),
                 array(
+                    'name'    => __( 'Collapse Project Details box', 'upstream' ),
+                    'id'      => 'collapse_project_details',
+                    'type'    => 'radio_inline',
+                    'desc'    => __( 'Choose whether to collapse the Project Details box automatically when a user opens a project page.', 'upstream' ),
+                    'default' => '0',
+                    'options' => array(
+                        0 => __('No', 'upstream'),
+                        1 => __('Yes', 'upstream')
+                    )
+                ),
+                array(
+                    'name'    => __( 'Collapse Project Milestones box', 'upstream' ),
+                    'id'      => 'collapse_project_milestones',
+                    'type'    => 'radio_inline',
+                    'desc'    => __( 'Choose whether to collapse the Milestones box automatically when a user opens a project page.', 'upstream' ),
+                    'default' => '0',
+                    'options' => array(
+                        0 => __('No', 'upstream'),
+                        1 => __('Yes', 'upstream')
+                    )
+                ),
+                array(
+                    'name'    => __( 'Collapse Project Tasks box', 'upstream' ),
+                    'id'      => 'collapse_project_tasks',
+                    'type'    => 'radio_inline',
+                    'desc'    => __( 'Choose whether to collapse the Tasks box automatically when a user opens a project page.', 'upstream' ),
+                    'default' => '0',
+                    'options' => array(
+                        0 => __('No', 'upstream'),
+                        1 => __('Yes', 'upstream')
+                    )
+                ),
+                array(
+                    'name'    => __( 'Collapse Project Bugs box', 'upstream' ),
+                    'id'      => 'collapse_project_bugs',
+                    'type'    => 'radio_inline',
+                    'desc'    => __( 'Choose whether to collapse the Bugs box automatically when a user opens a project page.', 'upstream' ),
+                    'default' => '0',
+                    'options' => array(
+                        0 => __('No', 'upstream'),
+                        1 => __('Yes', 'upstream')
+                    )
+                ),
+                array(
+                    'name'    => __( 'Collapse Project Files box', 'upstream' ),
+                    'id'      => 'collapse_project_files',
+                    'type'    => 'radio_inline',
+                    'desc'    => __( 'Choose whether to collapse the Files box automatically when a user opens a project page.', 'upstream' ),
+                    'default' => '0',
+                    'options' => array(
+                        0 => __('No', 'upstream'),
+                        1 => __('Yes', 'upstream')
+                    )
+                ),
+                array(
+                    'name'    => __( 'Collapse Project Discussion box', 'upstream' ),
+                    'id'      => 'collapse_project_discussion',
+                    'type'    => 'radio_inline',
+                    'desc'    => __( 'Choose whether to collapse the Discussion box automatically when a user opens a project page.', 'upstream' ),
+                    'default' => '0',
+                    'options' => array(
+                        0 => __('No', 'upstream'),
+                        1 => __('Yes', 'upstream')
+                    )
+                ),
+                array(
                     'name'    => __( 'Disable Clients and Client Users', 'upstream' ),
                     'id'      => 'disable_clients',
                     'type'    => 'radio_inline',
@@ -210,7 +276,7 @@ class UpStream_Options_General {
                     'desc' => __( 'Ticking this box will disable the Bugs section on both the frontend and the admin area.', 'upstream' ),
                     'default' => '',
                     'options' => array(
-                        'yes' => 'Disable the Bugs section?'
+                        'yes' => __('Disable the Bugs section?', 'upstream')
                     ),
                     'select_all_button' => false
                 ),
@@ -221,7 +287,7 @@ class UpStream_Options_General {
                     'desc' => __( 'Ticking this box will disable the Tasks section on both the frontend and the admin area.', 'upstream' ),
                     'default' => '',
                     'options' => array(
-                        'yes' => 'Disable the Tasks section?'
+                        'yes' => __('Disable the Tasks section?', 'upstream')
                     ),
                     'select_all_button' => false
                 ),
@@ -232,7 +298,7 @@ class UpStream_Options_General {
                     'desc' => __( 'Ticking this box will disable the Milestones section on both the frontend and the admin area.', 'upstream' ),
                     'default' => '',
                     'options' => array(
-                        'yes' => 'Disable the Milestones section?'
+                        'yes' => __('Disable the Milestones section?', 'upstream')
                     ),
                     'select_all_button' => false
                 ),
@@ -243,7 +309,7 @@ class UpStream_Options_General {
                     'desc' => __( 'Ticking this box will disable the Files section on both the frontend and the admin area.', 'upstream' ),
                     'default' => '',
                     'options' => array(
-                        'yes' => 'Disable the Files section?'
+                        'yes' => __('Disable the Files section?', 'upstream')
                     ),
                     'select_all_button' => false
                 ),
@@ -254,7 +320,7 @@ class UpStream_Options_General {
                     'desc' => __( 'Ticking this box will disable the Discussion section on both the frontend and the admin area.', 'upstream' ),
                     'default' => '',
                     'options' => array(
-                        'yes' => 'Disable the Discussion section?'
+                        'yes' => __('Disable the Discussion section?', 'upstream')
                     ),
                     'select_all_button' => false
                 ),
@@ -265,7 +331,7 @@ class UpStream_Options_General {
                     'desc' => __( 'Ticking this box will delete all UpStream data when plugin is uninstalled.', 'upstream' ),
                     'default' => '',
                     'options' => array(
-                        'yes' => 'Remove all data on uninstall?'
+                        'yes' => __('Remove all data on uninstall?', 'upstream')
                     ),
                     'select_all_button' => false
                 ),

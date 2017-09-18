@@ -48,46 +48,39 @@ function upstream_get_template_part( $part ) {
 
 
 // output list of the client users avatars
-function upstream_output_client_users( $id = null  ) {
+function upstream_output_client_users($id = null)
+{
+    $users = upstream_project_client_users($id);
 
-    $users = upstream_project_client_users( $id );
-    if( $users ) :
-    ?>
-
-    <ul class="list-inline">
-        <?php foreach ( $users as $user_id ) { ?>
-            <li>
-                <?php echo upstream_user_avatar( $user_id ); ?>
-            </li>
-        <?php } ?>
-    </ul>
-
-    <?php
-    else :
-        echo '<p>' . __( 'No users', 'upstream' ) . '</p>';
-    endif;
-
+    if (count($users)): ?>
+        <ul class="list-inline">
+            <?php foreach ($users as $user_id): ?>
+                <li>
+                    <?php echo upstream_user_avatar($user_id); ?>
+                </li>
+            <?php endforeach; ?>
+        </ul>
+    <?php else: ?>
+        <span class="text-muted"><i><?php echo '(' . __('none') .')'; ?></i></span>
+    <?php endif;
 }
+
 // output list of the project members avatars
-function upstream_output_project_members( $id = null ) {
+function upstream_output_project_members($id = null)
+{
+    $users = upstream_project_users($id);
 
-    $users = upstream_project_users();
-    if( $users ) :
-    ?>
-
-    <ul class="list-inline">
-        <?php foreach ( $users as $user_id ) { ?>
-            <li>
-                <?php echo upstream_user_avatar( $user_id ); ?>
-            </li>
-        <?php } ?>
-    </ul>
-
-    <?php
-    else :
-        echo '<p>' . __( 'No members', 'upstream' ) . '</p>';
-    endif;
-
+    if (count($users)): ?>
+        <ul class="list-inline">
+            <?php foreach ($users as $user_id): ?>
+                <li>
+                    <?php echo upstream_user_avatar($user_id); ?>
+                </li>
+            <?php endforeach; ?>
+        </ul>
+    <?php else: ?>
+        <span class="text-muted"><i><?php echo '(' . __('none') .')'; ?></i></span>
+    <?php endif;
 }
 
 function upstream_get_file_preview( $attachment_id, $attachment_url ) {

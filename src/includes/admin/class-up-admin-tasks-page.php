@@ -249,33 +249,42 @@ class Upstream_Task_List extends WP_List_Table {
 
             case 'milestone':
                 if (!upstream_are_milestones_disabled($item['project_id'])) {
-                    $milestone = upstream_project_milestone_by_id( $item['project_id'], $item['milestone'] );
-                    $progress = $milestone['progress'] ? $milestone['progress'] : '0';
+                    if (isset($item['milestone']) && !empty($item['milestone'])) {
+                        $milestone = upstream_project_milestone_by_id( $item['project_id'], $item['milestone'] );
+                        $progress = $milestone['progress'] ? $milestone['progress'] : '0';
 
-                    $output = $milestone ? esc_html( $milestone['milestone'] ) . '<br>' . esc_html( $progress ) . '% ' . __( 'Complete', 'upstream' ) : '';
+                        return $milestone ? esc_html( $milestone['milestone'] ) . '<br>' . esc_html( $progress ) . '% ' . __( 'Complete', 'upstream' ) : '';
+                    }
                 }
 
-                return $output;
+                return '<span><i>('. __('none', 'upstream') .')</i></span>';
 
             case 'assigned_to':
 
                 $assigned_to = isset( $item['assigned_to'] ) && $item['assigned_to'] ? $item['assigned_to'] : '';
-                $user = upstream_user_data( $assigned_to, true );
-                $output = $user['full_name'];
+                if (!empty($assigned_to)) {
+                    $user = upstream_user_data( $assigned_to, true );
+                    $output = $user['display_name'];
 
-                if ( $assigned_to == get_current_user_id() ){
-                    $output = '<span class="mine">' . esc_html( $output ) . '</span>';
+                    if ( $assigned_to == get_current_user_id() ){
+                        $output = '<span class="mine">' . esc_html( $output ) . '</span>';
+                    }
+                    return $output;
+                } else {
+                    return '<span><i>('. __('none', 'upstream') .')</i></span>';
                 }
-                return $output;
 
             case 'end_date':
-                $output = '<span class="end-date">' . esc_html( upstream_format_date( $item['end_date'] ) ) . '</span>';
-                return $output;
+                if (isset($item['end_date']) && (int)$item['end_date'] > 0) {
+                    return '<span class="end-date">' . upstream_format_date($item['end_date']) . '</span>';
+                } else {
+                    return '<span><i>('. __('none', 'upstream') .')</i></span>';
+                }
 
             case 'status':
-
-                if( ! $item['status'] )
-                    return null;
+                if (!isset($item['status']) || empty($item['status'])) {
+                    return '<span><i>('. __('none', 'upstream') .')</i></span>';
+                }
 
                 $color  = upstream_project_task_status_color( $item['project_id'], $item['id'] );
                 $output = '<span style="border-color:' . esc_attr( $color ) . '" class="status ' . esc_attr( strtolower( $item['status'] ) ) . '"><span class="count" style="background-color:' . esc_attr( $color ) . '">1</span>' . esc_html( $item['status'] ) . '</span>';
@@ -578,6 +587,11 @@ class Upstream_Admin_Tasks_Page {
 
 
     public function plugin_menu() {
+        $count = (int)upstream_count_assigned_to_open( 'tasks' );
+        if (!isUserEitherManagerOrAdmin() && $count <= 0) {
+            return;
+        }
+
         $hook = add_submenu_page(
             'edit.php?post_type=project',
             upstream_task_label_plural(),
@@ -591,7 +605,6 @@ class Upstream_Admin_Tasks_Page {
 
         global $submenu;
 
-        $count = upstream_count_assigned_to_open( 'tasks' );
         $proj = isset( $submenu['edit.php?post_type=project'] ) ? $submenu['edit.php?post_type=project'] : '';
         if( $proj ) {
             foreach ($proj as $key => $value) {

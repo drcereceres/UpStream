@@ -265,3 +265,136 @@ function upstream_count_assigned_to_open( $type, $id = 0 ) {
     $count = new Upstream_Counts( $id );
     return $count->assigned_to_open( $type );
 }
+
+/**
+ * Retrieve details from a given project.
+ *
+ * @since   1.12.0
+ *
+ * @param   int     $project_id The project ID.
+ *
+ * @return  object
+ */
+function getUpStreamProjectDetailsById($project_id)
+{
+    $post = get_post($project_id);
+    if ($post instanceof \WP_Post) {
+        global $wpdb;
+
+        $project = new stdClass();
+        $project->id = (int)$project_id;
+        $project->title = $post->post_title;
+        $project->description = "";
+        $project->progress = 0;
+        $project->status = null;
+        $project->client_id = 0;
+        $project->clientName = "";
+        $project->owner_id = 0;
+        $project->ownerName = "";
+        $project->dateStart = 0;
+        $project->dateEnd = 0;
+        $project->members = array();
+        $project->clientUsers = array();
+
+        $metas = $wpdb->get_results(sprintf('
+            SELECT `meta_key`, `meta_value`
+            FROM `%s`
+            WHERE `post_id` = "%s"
+              AND `meta_key` LIKE "_upstream_project_%s"',
+            $wpdb->prefix . 'postmeta',
+            $project->id,
+            "%"
+        ));
+
+        foreach ($metas as $meta) {
+            if ($meta->meta_key === '_upstream_project_description') {
+                $project->description = $meta->meta_value;
+            } else if ($meta->meta_key === '_upstream_project_progress') {
+                $project->progress = (int)$meta->meta_value;
+            } else if ($meta->meta_key === '_upstream_project_status') {
+                $project->status = $meta->meta_value;
+            } else if ($meta->meta_key === '_upstream_project_client') {
+                $project->client_id = (int)$meta->meta_value;
+            } else if ($meta->meta_key === '_upstream_project_owner') {
+                $project->owner_id = (int)$meta->meta_value;
+            } else if ($meta->meta_key === '_upstream_project_start') {
+                $project->dateStart = (int)$meta->meta_value;
+            } else if ($meta->meta_key === '_upstream_project_end') {
+                $project->dateEnd = (int)$meta->meta_value;
+            } else if ($meta->meta_key === '_upstream_project_members') {
+                $project->members = (array)maybe_unserialize($meta->meta_value);
+            } else if ($meta->meta_key === '_upstream_project_client_users') {
+                $project->clientUsers = (array)maybe_unserialize($meta->meta_value);
+            }
+        }
+
+        $usersRowset = $wpdb->get_results(sprintf('
+            SELECT `ID`, `display_name`
+              FROM `%s`',
+            $wpdb->prefix . 'users'
+        ));
+
+        $users = array();
+        foreach ($usersRowset as $user) {
+            $users[(int)$user->ID] = (object)array(
+                'id'   => (int)$user->ID,
+                'name' => $user->display_name
+            );
+        }
+
+        if ($project->client_id > 0) {
+            $client = get_post($project->client_id);
+            if ($client instanceof \WP_Post) {
+                if (!empty($client->post_title)) {
+                    $project->clientName = $client->post_title;
+                }
+            }
+        }
+
+        if ($project->owner_id > 0 && isset($users[$project->owner_id])) {
+            $project->ownerName = $users[$project->owner_id]->name;
+        }
+
+        if (count($project->members) > 0) {
+            foreach ($project->members as $memberIndex => $member_id) {
+                $member_id = (int)$member_id;
+                if ($member_id > 0 && isset($users[$member_id])) {
+                    $project->members[$memberIndex] = $users[$member_id];
+                }
+            }
+        }
+
+        if (count($project->clientUsers) > 0) {
+            foreach ($project->clientUsers as $clientUserIndex => $clientUser_id) {
+                $clientUser_id = (int)$clientUser_id;
+                if ($clientUser_id > 0 && isset($users[$clientUser_id])) {
+                    $project->clientUsers[$clientUserIndex] = $users[$clientUser_id];
+                }
+            }
+        }
+
+        return $project;
+    }
+
+    return false;
+}
+
+function countItemsForUserOnProject($itemType, $user_id, $project_id)
+{
+    $user_id = (int)$user_id;
+    if (!in_array($itemType, array('milestones', 'tasks', 'bugs'))) {
+        return null;
+    }
+
+    $count = 0;
+
+    $metas = (array)get_post_meta((int)$project_id, '_upstream_project_' . $itemType);
+    $metas = count($metas) ? $metas[0] : array();
+    foreach ($metas as $meta) {
+        if (isset($meta['assigned_to']) && (int)$meta['assigned_to'] === $user_id) {
+            $count++;
+        }
+    }
+
+    return $count;
+}

@@ -119,7 +119,7 @@ class UpStream_Options_Bugs {
                             'id'   => 'type',
                             'type' => 'radio',
                             'default' => 'open',
-                            'desc' => "A Status Name such as 'In Progress' or 'Overdue' would be considered Open.<br>A Status Name such as 'Complete' or 'Cancelled' would be considered Closed.",
+                            'desc' => __("A Status Name such as 'In Progress' or 'Overdue' would be considered Open.", 'upstream') . '<br>' . __("A Status Name such as 'Complete' or 'Cancelled' would be considered Closed.", 'upstream'),
                             'options' => array (
                                 'open' => __( 'Open', 'upstream' ),
                                 'closed' => __( 'Closed', 'upstream' ),

@@ -37,39 +37,28 @@ while ( have_posts() ) : the_post(); ?>
     </div>
 
     <div class="">
-
-        <div class="page-title">
-            <div class="title_left">
-                <h3><?php echo get_the_title( get_the_ID() ); ?>
-                <?php
-                    $status = upstream_project_status_color( $id );
-                    if( $status['status'] ) {
-                ?>
-                    <button type="button" class="btn btn-success btn-xs" style="border: none;background-color:<?php echo esc_attr( $status['color'] ); ?>"><?php echo $status['status'] ?></button>
-                <?php } ?> </h3>
+        <div class="row">
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-5">
+                <h3 style="display: inline-block;"><?php echo get_the_title( get_the_ID() ); ?></h3>
+                <?php $status = upstream_project_status_color($id); ?>
+                <?php if (!empty($status['status'])): ?>
+                <button type="button" class="btn btn-success btn-xs" style="border: none;background-color:<?php echo esc_attr( $status['color'] ); ?>"><?php echo $status['status'] ?></button>
+                <?php endif; ?>
             </div>
+
+            <?php include 'single-project/overview.php'; ?>
+
+
+            <?php do_action( 'upstream_single_project_before_details' ); ?>
+
+            <?php upstream_get_template_part( 'single-project/details.php' ); ?>
         </div>
 
         <div class="clearfix"></div>
 
 
-            <div class="row">
-                <?php do_action( 'upstream_single_project_before_overview' ); ?>
 
-                <?php upstream_get_template_part( 'single-project/overview.php' ); ?>
-            </div>
-
-            <?php if (!upstream_disable_discussions()): ?>
-            <div class="row">
-                <?php do_action( 'upstream_single_project_before_discussion' ); ?>
-
-                <?php upstream_get_template_part( 'single-project/discussion.php' ); ?>
-
-                <?php do_action( 'upstream_single_project_before_details' ); ?>
-
-                <?php upstream_get_template_part( 'single-project/details.php' ); ?>
-            </div>
-            <?php endif; ?>
+            <?php do_action('upstream:frontend:renderAfterDetails'); ?>
 
             <?php if (!upstream_are_milestones_disabled() && !upstream_disable_milestones()): ?>
             <div class="row">
@@ -103,23 +92,11 @@ while ( have_posts() ) : the_post(); ?>
             </div>
             <?php endif; ?>
 
-            <?php if ($user['role'] !== 'Client User' && ((!upstream_are_tasks_disabled() && !upstream_disable_tasks()) || (!upstream_disable_bugs() && !upstream_are_bugs_disabled()))): ?>
-            <hr />
-            <?php endif; ?>
-
-            <?php if ($user['role'] !== 'Client User' && !upstream_are_tasks_disabled() && !upstream_disable_tasks()): ?>
+            <?php if (!upstream_disable_discussions()): ?>
             <div class="row">
-                <?php do_action( 'upstream_single_project_before_tasks' ); ?>
+                <?php do_action( 'upstream_single_project_before_discussion' ); ?>
 
-                <?php upstream_get_template_part( 'single-project/my-tasks.php' ); ?>
-            </div>
-            <?php endif; ?>
-
-            <?php if ($user['role'] !== 'Client User' && !upstream_disable_bugs() && !upstream_are_bugs_disabled()): ?>
-            <div class="row">
-                <?php do_action( 'upstream_single_project_before_bugs' ); ?>
-
-                <?php upstream_get_template_part( 'single-project/my-bugs.php' ); ?>
+                <?php upstream_get_template_part( 'single-project/discussion.php' ); ?>
             </div>
             <?php endif; ?>
     </div>
