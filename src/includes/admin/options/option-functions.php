@@ -51,7 +51,7 @@ function upstream_render_labels_field_callback( $field, $value, $object_id, $obj
     ) );
 
     ?>
-    <div class="alignleft"><p><label for="<?php echo $field_type->_id( '_single' ); ?>'">Single</label></p>
+    <div class="alignleft"><p><label for="<?php echo $field_type->_id( '_single' ); ?>'"><?php _e('Single', 'upstream'); ?></label></p>
         <?php echo $field_type->input( array(
             'name'      => $field_type->_name( '[single]' ),
             'id'        => $field_type->_id( '_single' ),
@@ -59,7 +59,7 @@ function upstream_render_labels_field_callback( $field, $value, $object_id, $obj
             'desc'      => '',
         ) ); ?>
     </div>
-    <div class="alignleft"><p><label for="<?php echo $field_type->_id( '_plural' ); ?>'">Plural</label></p>
+    <div class="alignleft"><p><label for="<?php echo $field_type->_id( '_plural' ); ?>'"><?php _e('Plural', 'upstream'); ?></label></p>
         <?php echo $field_type->input( array(
             'name'      => $field_type->_name( '[plural]' ),
             'id'        => $field_type->_id( '_plural' ),

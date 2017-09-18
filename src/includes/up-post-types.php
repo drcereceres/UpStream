@@ -44,7 +44,7 @@ function upstream_setup_post_types() {
 
     $project_args = array(
         'labels'             => $project_labels,
-        'public'             => true,
+        'public'             => false,
         'publicly_queryable' => true,
         'show_ui'            => true,
         'show_in_menu'       => true,
@@ -60,6 +60,9 @@ function upstream_setup_post_types() {
     );
     register_post_type( 'project', apply_filters( 'upstream_project_post_type_args', $project_args ) );
 
+    if (is_clients_disabled()) {
+        return;
+    }
 
     /* Client Post Type */
     $client_labels =  apply_filters( 'upstream_client_labels', array(
@@ -115,6 +118,9 @@ add_action( 'init', 'upstream_setup_post_types', 1 );
  * @return void
 */
 function upstream_setup_taxonomies() {
+    if (is_project_categorization_disabled()) {
+        return;
+    }
 
     $slug = defined( 'UPSTREAM_CAT_SLUG' ) ? UPSTREAM_CAT_SLUG : 'projects';
 

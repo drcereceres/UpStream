@@ -1020,11 +1020,8 @@ class UpStream_Metaboxes_Projects {
      * Add the metaboxes
      * @since  0.1.0
      */
-    public function details() {
-
-        $client_label           = upstream_client_label();
-        $client_label_plural    = upstream_client_label_plural();
-
+    public function details()
+    {
         $metabox = new_cmb2_box( array(
             'id'            => $this->prefix . 'details',
             'title'         => '<span class="dashicons dashicons-admin-generic"></span> ' . sprintf( __( "%s Details", 'upstream' ), $this->project_label ),
@@ -1060,28 +1057,33 @@ class UpStream_Metaboxes_Projects {
             'options_cb'        => 'upstream_admin_get_all_project_users',
             'save_field'        => upstream_admin_permissions('project_owner_field')
         );
-        $fields[2] = array(
-            'name'              => $client_label,
-            'desc'              => '',
-            'id'                => $this->prefix . 'client',
-            'type'              => 'select',
-            'show_option_none'  => true,
-            'permissions'       => 'project_client_field',
-            'before'            => 'upstream_add_field_attributes',
-            'options_cb'        => 'upstream_admin_get_all_clients',
-            'save_field'        => upstream_admin_permissions('project_client_field')
-        );
 
-        $fields[3] = array(
-            'name'              => sprintf( __( '%s Users', 'upstream' ), $client_label ),
-            'id'                => $this->prefix . 'client_users',
-            'type'              => 'multicheck',
-            'select_all_button' => false,
-            'permissions'       => 'project_users_field',
-            'before'            => 'upstream_add_field_attributes',
-            'options_cb'        => 'upstream_admin_get_all_clients_users',
-            'save_field'        => upstream_admin_permissions('project_users_field')
-        );
+        if (!is_clients_disabled()) {
+            $client_label = upstream_client_label();
+
+            $fields[2] = array(
+                'name'              => $client_label,
+                'desc'              => '',
+                'id'                => $this->prefix . 'client',
+                'type'              => 'select',
+                'show_option_none'  => true,
+                'permissions'       => 'project_client_field',
+                'before'            => 'upstream_add_field_attributes',
+                'options_cb'        => 'upstream_admin_get_all_clients',
+                'save_field'        => upstream_admin_permissions('project_client_field')
+            );
+
+            $fields[3] = array(
+                'name'              => sprintf( __( '%s Users', 'upstream' ), $client_label ),
+                'id'                => $this->prefix . 'client_users',
+                'type'              => 'multicheck',
+                'select_all_button' => false,
+                'permissions'       => 'project_users_field',
+                'before'            => 'upstream_add_field_attributes',
+                'options_cb'        => 'upstream_admin_get_all_clients_users',
+                'save_field'        => upstream_admin_permissions('project_users_field')
+            );
+        }
 
         $fields[10] = array(
             'name'              => __( 'Start Date', 'upstream' ),
@@ -1357,7 +1359,10 @@ class UpStream_Metaboxes_Projects {
      * @since  0.1.0
      */
     public function comments() {
-        if (upstream_disable_discussions()) {
+        $areCommentsDisabled = upstream_are_comments_disabled();
+        $userHasAdminPermissions = upstream_admin_permissions('disable_project_comments');
+
+        if (upstream_disable_discussions() || ($areCommentsDisabled && !$userHasAdminPermissions)) {
             return;
         }
 
@@ -1368,22 +1373,32 @@ class UpStream_Metaboxes_Projects {
             'priority'      => 'low',
         ) );
 
-        $metabox->add_field( array(
-            'name'              => __( 'New Message', 'upstream' ),
-            'desc'              => '',
-            'id'                => $this->prefix . 'new_message',
-            'type'              => 'wysiwyg',
-            'permissions'       => 'publish_project_discussion',
-            'before'            => 'upstream_add_field_attributes',
-            'after_field'       => '<p><button class="button" id="new_message" type="button">' . __( 'New Message', 'upstream ') . '</button></p></div><div class="col-xs-12 col-sm-12 col-md-6 col-lg-6"></div></div>',
-            'after_row'         => 'upstream_admin_display_messages',
-            'options'           => array(
-                'media_buttons' => true,
-                'textarea_rows' => 5
-            ),
-            'escape_cb'         => 'applyOEmbedFiltersToWysiwygEditorContent',
-            'before_field'      => '<div class="row"><div class="hidden-xs hidden-sm col-md-6 col-lg-6">'
-        ) );
+        if (!$areCommentsDisabled) {
+            $metabox->add_field( array(
+                'name'              => __( 'New Message', 'upstream' ),
+                'desc'              => '',
+                'id'                => $this->prefix . 'new_message',
+                'type'              => 'wysiwyg',
+                'permissions'       => 'publish_project_discussion',
+                'before'            => 'upstream_add_field_attributes',
+                'after_field'       => '<p><button class="button" id="new_message" type="button">' . __( 'Post Message', 'upstream') . '</button></p></div></div>',
+                'after_row'         => 'upstream_admin_display_messages',
+                'options'           => array(
+                    'media_buttons' => true,
+                    'textarea_rows' => 5
+                ),
+                'escape_cb'         => 'applyOEmbedFiltersToWysiwygEditorContent',
+                'before_field'      => '<div class="row"><div class="hidden-xs hidden-sm col-md-12 col-lg-12">'
+            ) );
+        }
+
+        if ($userHasAdminPermissions) {
+            $metabox->add_field(array(
+                'id'          => $this->prefix .'disable_comments',
+                'type'        => 'checkbox',
+                'description' => __('Disable Discussion for this project', 'upstream')
+            ));
+        }
     }
 }
 

@@ -18,11 +18,14 @@ function upstream_load_admin_scripts( $hook ) {
     $post_type  = get_post_type();
 
     if( $post_type == 'project' ) {
+        global $post_type_object;
+
         wp_register_script( 'upstream-project', $js_dir . 'edit-project.js', $admin_deps, UPSTREAM_VERSION, false );
         wp_enqueue_script( 'upstream-project' );
         wp_localize_script( 'upstream-project', 'upstream_project', apply_filters( 'upstream_project_script_vars', array(
             'version'   => UPSTREAM_VERSION,
             'user'      => upstream_current_user_id(),
+            'slugBox'   => !(get_post_status() === "pending" && !current_user_can($post_type_object->cap->publish_posts))
         ) ) );
     }
 

@@ -221,6 +221,7 @@ class UpStream_Roles {
             'publish_project_bugs', // enables the 'Add Bug' button within project
             'publish_project_files', // enables the 'Add Files' button within project
             'publish_project_discussion',
+            'delete_project_discussion',
 
             //'delete_project_milestones',
             //'delete_project_tasks',

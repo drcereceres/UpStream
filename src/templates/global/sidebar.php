@@ -18,6 +18,7 @@ $areBugsDisabledForThisProject = upstream_are_bugs_disabled();
 $areFilesDisabledForThisProject = upstream_are_files_disabled();
 
 $user = upstream_user_data();
+$pluginOptions = get_option('upstream_general');
 ?>
 
 <?php do_action('upstream_before_sidebar'); ?>
@@ -77,8 +78,9 @@ $user = upstream_user_data();
             </div>
 
             <?php if (is_single() && get_post_type() === 'project'): ?>
+                <?php $project_id = get_the_ID(); ?>
                 <div class="menu_section">
-                    <h3><?php echo get_the_title(get_the_ID()); ?></h3>
+                    <h3><?php echo get_the_title($project_id); ?></h3>
                     <ul class="nav side-menu">
                         <?php do_action('upstream_sidebar_before_single_menu'); ?>
 
@@ -86,6 +88,16 @@ $user = upstream_user_data();
                         <li>
                             <a href="#milestones">
                                 <i class="fa fa-flag"></i> <?php echo upstream_milestone_label_plural(); ?>
+                                <?php
+                                if (function_exists('countItemsForUserOnProject')) {
+                                    $itemsCount = countItemsForUserOnProject('milestones', get_current_user_id(), upstream_post_id());
+                                } else {
+                                    $itemsCount = (int)upstream_count_assigned_to('milestones');
+                                }
+
+                                if ($itemsCount > 0): ?>
+                                <span class="label label-info pull-right" data-toggle="tooltip" title="<?php _e('Assigned to me', 'upstream'); ?>" style="margin-top: 3px;"><?php echo $itemsCount; ?></span>
+                                <?php endif; ?>
                             </a>
                         </li>
                         <?php endif; ?>
@@ -94,6 +106,16 @@ $user = upstream_user_data();
                         <li>
                             <a href="#tasks">
                                 <i class="fa fa-wrench"></i> <?php echo $labelTaskPlural; ?>
+                                <?php
+                                if (function_exists('countItemsForUserOnProject')) {
+                                    $itemsCount = countItemsForUserOnProject('tasks', get_current_user_id(), upstream_post_id());
+                                } else {
+                                    $itemsCount = (int)upstream_count_assigned_to('tasks');
+                                }
+
+                                if ($itemsCount > 0): ?>
+                                <span class="label label-info pull-right" data-toggle="tooltip" title="<?php _e('Assigned to me', 'upstream'); ?>" style="margin-top: 3px;"><?php echo $itemsCount; ?></span>
+                                <?php endif; ?>
                                 <?php do_action( 'upstream_sidebar_after_tasks_menu' ); ?>
                             </a>
                         </li>
@@ -103,6 +125,16 @@ $user = upstream_user_data();
                         <li>
                             <a href="#bugs">
                                 <i class="fa fa-bug"></i> <?php echo $labelBugPlural; ?>
+                                <?php
+                                if (function_exists('countItemsForUserOnProject')) {
+                                    $itemsCount = countItemsForUserOnProject('bugs', get_current_user_id(), upstream_post_id());
+                                } else {
+                                    $itemsCount = (int)upstream_count_assigned_to('bugs');
+                                }
+
+                                if ($itemsCount > 0): ?>
+                                <span class="label label-info pull-right" data-toggle="tooltip" title="<?php _e('Assigned to me', 'upstream'); ?>" style="margin-top: 3px;"><?php echo $itemsCount; ?></span>
+                                <?php endif; ?>
                                 <?php do_action( 'upstream_sidebar_after_bugs_menu' ); ?>
                             </a>
                         </li>
@@ -117,28 +149,6 @@ $user = upstream_user_data();
                         <?php endif; ?>
 
                         <?php do_action( 'upstream_sidebar_after_single_menu' );  ?>
-
-                        <?php if ((!$areTasksDisabledForThisProject && !$areTasksDisabledAtAll) || (!$areBugsDisabledAtAll && !$areBugsDisabledForThisProject)): ?>
-                        <li>
-                            <hr style="border-top-color: rgba(0, 0, 0, 0.2);" />
-                        </li>
-                        <?php endif; ?>
-
-                        <?php if ($user['role'] !== 'Client User' && !$areTasksDisabledForThisProject && !$areTasksDisabledAtAll): ?>
-                        <li>
-                            <a href="#my-tasks">
-                                <i class="fa fa-wrench"></i> <?php echo sprintf(__('My %s', 'upstream'), $labelTaskPlural); ?>
-                            </a>
-                        </li>
-                        <?php endif; ?>
-
-                        <?php if ($user['role'] !== 'Client User' && !$areBugsDisabledAtAll && !$areBugsDisabledForThisProject): ?>
-                        <li>
-                            <a href="#my-bugs">
-                                <i class="fa fa-bug"></i> <?php echo sprintf(__('My %s', 'upstream'), $labelBugPlural); ?>
-                            </a>
-                        </li>
-                        <?php endif; ?>
                     </ul>
                 </div>
             <?php endif; ?>
@@ -150,8 +160,8 @@ $user = upstream_user_data();
             <a href="<?php echo $projectsListURL; ?>" data-toggle="tooltip" data-placement="top" title="<?php printf(__('My %s', 'upstream'), $labelProjectPlural); ?>">
                 <i class="fa fa-home"></i>
             </a>
-            <a href="<?php echo esc_url('mailto:' . upstream_admin_email()); ?>" data-toggle="tooltip" data-placement="top" title="<?php _e('Send email to Admin', 'upstream'); ?>">
-                <i class="fa fa-envelope-o"></i>
+            <a href="<?php echo esc_url( upstream_admin_support($pluginOptions) ); ?>" data-toggle="tooltip" data-placement="top" title="<?php echo upstream_admin_support_label($pluginOptions) ?>" target="_blank" rel="noreferrer noopener">
+                <i class="fa fa-question-circle"></i>
             </a>
             <a href="<?php echo esc_url(upstream_logout_url()); ?>" data-toggle="tooltip" data-placement="top" title="<?php _e('Log Out', 'upstream'); ?>">
                 <i class="fa fa-sign-out"></i>

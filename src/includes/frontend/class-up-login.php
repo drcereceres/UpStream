@@ -178,6 +178,8 @@ final class UpStream_Login
             // Make sure he can be authenticated if he's an admin/manager.
             if (count(array_intersect($userRoles, array('administrator', 'upstream_manager'))) > 0) {
                 $canContinue = true;
+            } else if (is_clients_disabled()) {
+                throw new \Exception(__("Invalid email address and/or password.", 'upstream'));
             } else {
                 // Check if he, as an UpStream User, is a current member of this project.
                 if (in_array('upstream_user', $userRoles)) {

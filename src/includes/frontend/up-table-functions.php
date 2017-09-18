@@ -145,7 +145,7 @@ function upstream_task_table_settings() {
         'title' => array(
             'display'       => true,
             'type'          => 'text',
-            'heading'       => upstream_task_label(),
+            'heading'       => __('Title', 'upstream'),
             'heading_class' => '',
             'row_class'     => '',
         ),
@@ -248,7 +248,7 @@ function upstream_bug_table_settings() {
         'title' => array(
             'display'       => true,
             'type'          => 'text',
-            'heading'       => upstream_bug_label(),
+            'heading'       => __('Title', 'upstream'),
             'heading_class' => '',
             'row_class'     => '',
         ),
@@ -401,7 +401,7 @@ function upstream_output_table_header( $table ) {
             if( isset( $setting['display'] ) && ! $setting['display'] )
                 continue;
 
-            $output .= "<th class='" . esc_attr( $setting['heading_class'] ) . "'>" . esc_html( $setting['heading'] ) . "</th>";
+            $output .= "<th class='" . esc_attr( $setting['heading_class'] ) . "'>" . $setting['heading'] . "</th>";
 
         }
         $output .= '</tr>';
@@ -454,9 +454,8 @@ function upstream_output_table_rows( $id, $table, $filterRowsetByCurrentUser = f
     $output = null;
 
     foreach ( $data as $item ) {
-
         // Check if $item should be skipped if we want to filter data by the current logged in user.
-        if ($filterRowsetByCurrentUser && isset($item['assigned_to']) && $currentUserId > 0 && (int)$item['assigned_to'] !== $currentUserId) {
+        if ($filterRowsetByCurrentUser && (!isset($item['assigned_to']) || ($currentUserId > 0 && (int)$item['assigned_to'] !== $currentUserId))) {
             continue;
         }
 
@@ -513,8 +512,8 @@ function upstream_output_table_rows( $id, $table, $filterRowsetByCurrentUser = f
             }
 
             $tr .= '<td data-name="' . esc_attr( $key ) . '" ' . $order . ' data-value="' . esc_attr( $data_value ) . '" class="' . esc_attr( $setting['row_class'] ) . '">' . $field_data . '</td>';
-
         }
+
         $tr .= '</tr>';
 
         $tr = apply_filters('upstream:frontend:renderGridDataRow', $tr, $item, $table);

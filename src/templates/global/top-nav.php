@@ -7,6 +7,8 @@ if (!is_archive()) {
 } else {
     $clientLogo = null;
 }
+
+$pluginOptions = get_option('upstream_general');
 ?>
 
 <?php do_action('upstream_before_top_nav'); ?>
@@ -36,8 +38,8 @@ if (!is_archive()) {
                             </a>
                         </li>
                         <li>
-                            <a href="<?php echo esc_url('mailto:' . upstream_admin_email()); ?>">
-                                <i class="fa fa-envelope-o pull-right"></i><?php _e('Contact Admin', 'upstream'); ?>
+                            <a href="<?php echo esc_url( upstream_admin_support($pluginOptions) ); ?>" target="_blank" rel="noreferrer noopener">
+                                <i class="fa fa-question-circle pull-right"></i><?php echo upstream_admin_support_label($pluginOptions); ?>
                             </a>
                         </li>
                         <li>

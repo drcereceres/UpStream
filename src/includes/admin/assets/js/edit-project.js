@@ -632,4 +632,32 @@
             }
         }
     });
+
+    $(document).ready(function() {
+        if (upstream_project.slugBox) {
+            $('#titlewrap + .inside').append($('<div id="edit-slug-box" class="hide-if-no-js"></div>'));
+        }
+    });
+
+    var titleHasFocus = false;
+    $(document)
+        .on( 'before-autosave.update-post-slug', function() {
+            titleHasFocus = document.activeElement && document.activeElement.id === 'title';
+        })
+        .on('after-autosave.update-post-slug', function( e, data ) {
+            if ( ! $('#edit-slug-box > *').length && ! titleHasFocus ) {
+                $.post( ajaxurl, {
+                        action: 'sample-permalink',
+                        post_id: $('#post_ID').val(),
+                        new_title: $('#title').val(),
+                        samplepermalinknonce: $('#samplepermalinknonce').val()
+                    },
+                    function( data ) {
+                        if ( data != '-1' ) {
+                            $('#edit-slug-box').html(data);
+                        }
+                    }
+                );
+            }
+        });
 })(jQuery);
