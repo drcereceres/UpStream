@@ -133,7 +133,7 @@ UpStream does not use the existing styling of your theme. The features and the v
 The format is based on [Keep a Changelog](http://keepachangelog.com)
 and this project adheres to [Semantic Versioning](http://semver.org).
 
-= [1.12.0] - @todo =
+= [1.12.0] - 2017-09-18 =
 
 Added:
 * Added option to toggle categories for Projects and Clients
