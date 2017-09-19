@@ -136,7 +136,7 @@ and this project adheres to [Semantic Versioning](http://semver.org).
 = [1.12.1] - 2017-09-19 =
 
 Changed:
-* Changed overview boxes items
+* Changed overview boxes items order
 
 Fixed:
 * Attempt to fix some PHP errors
