@@ -179,3 +179,7 @@ table.dataTable tr.child td.child {
   top: 10px;
   right: 15px;
 }
+
+.c-upstream-overview > div:last-child {
+  padding-right: 0;
+}
