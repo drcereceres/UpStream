@@ -163,7 +163,7 @@ function upstream_output_overview_counts($field_args, $field)
         }
 
         $countOpen = count($rowset);
-    } else {
+    } else if (is_array($rowset) && count($rowset) > 0) {
         $options = get_option('upstream_' . $itemType);
         $statuses = isset($options['statuses']) ? $options['statuses'] : array();
         $statuses = wp_list_pluck($statuses, 'type', 'name');
