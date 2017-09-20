@@ -451,33 +451,40 @@ function upstream_admin_display_messages() { ?>
     <?php
 }
 
-/**
- * Outputs comments in the admin.
- */
-function upstream_admin_display_message_item( $post_id, $comment ) {
-
-    if( ! $post_id )
-        return;
+function upstream_admin_display_message_item($project_id, $comment)
+{
+    $project_id = (int)$project_id;
+    if ($project_id <= 0) return;
 
     global $wp_embed;
 
-    $user       = upstream_user_data( $comment['created_by'] );
-    $time       = date_i18n( get_option( 'time_format' ), $comment['created_time'] ) . ' ' . upstream_format_date( $comment['created_time'] );
-    $time_ago   = sprintf( _x( '%s ago', '%s = human-readable time difference', 'upstream' ), human_time_diff( $comment['created_time'], current_time( 'timestamp', false ) ) );
-    $tooltip    = 'data-toggle="tooltip" data-placement="top"';
+    $user = wp_get_current_user();
+    $userAvatarURL = getUserAvatarURL($user->ID);
+
+    $dateFormat = get_option('date_format');
+    $timeFormat = get_option('time_format');
+    $currentTimezone = new DateTimeZone(get_option('timezone_string'));
+
+    $date = new DateTime();
+    $date->setTimestamp($comment['created_time']);
+    $date->setTimezone($currentTimezone);
     ?>
-
     <li>
-        <img width="36" height="36" src="<?php echo $user['avatar']; ?>" />
-        <span class="name"><?php echo esc_html( $user['full_name'] ); ?></span>
-        <span class="date"><?php echo esc_html( $time_ago ); ?> <small>(<?php echo esc_html( $time ); ?>)</small></span>
-        <span class="comment"><?php echo $wp_embed->autoembed(wpautop($comment['comment'])); ?></span>
-        <a data-id="<?php echo esc_attr( $comment['id'] ); ?>" class="button cmb-remove-group-row alignright" id="delete_message"><?php _e( 'Delete', 'upstream' ) ?></a>
+      <img width="36" height="36" src="<?php echo $userAvatarURL; ?>" />
+      <span class="name"><?php echo esc_html($user->display_name); ?></span>
+      <span class="date">
+        <?php echo sprintf(
+            _x('%s ago', '%s = human-readable time difference', 'upstream'),
+            human_time_diff($comment['created_time'], time())
+        ); ?>
+        <small>(<?php echo $date->format($dateFormat . ' ' . $timeFormat); ?>)</small>
+      </span>
+      <span class="comment"><?php echo $wp_embed->autoembed(wpautop($comment['comment'])); ?></span>
+      <a href="#" class="button cmb-remove-group-row alignright o-delete_message" data-id="<?php echo esc_attr( $comment['id'] ); ?>"><?php _e( 'Delete', 'upstream' ) ?></a>
     </li>
-
     <?php
-
 }
+
 
 
 /**
@@ -490,44 +497,85 @@ function upstream_admin_discussion_button() {
 /**
  * AJAX function to post a new comment in the admin.
  */
-add_action('wp_ajax_upstream_admin_new_message', 'upstream_admin_new_message');
-function upstream_admin_new_message() {
+add_action('wp_ajax_upstream_admin_new_message', 'upstreamAdminInsertNewComment');
+/**
+ * AJAX endpoint that inserts a new comment to a given project's discussion.
+ *
+ * @since   @todo
+ */
+function upstreamAdminInsertNewComment()
+{
+    try {
+        // Check if the request is AJAX.
+        if (!defined('DOING_AJAX') || !DOING_AJAX) {
+            throw new \Exception(__("Invalid request.", 'upstream'));
+        }
 
-    if( ! wp_verify_nonce( $_POST['upstream_security'], 'ajax_nonce' ) ) {
-        die( -1 );
-    }
+        // Check if the user has enough permissions to insert a new comment.
+        if (!upstream_admin_permissions('publish_project_discussion')) {
+            throw new \Exception(__("You're not allowed to do this.", 'upstream'));
+        }
 
-    if( ! upstream_admin_permissions( 'publish_project_discussion' ) ) {
-        die( -1 );
-    }
+        // Check if the request payload is potentially invalid.
+        if (empty($_POST) || !isset($_POST['upstream_security']) || !isset($_POST['project_id'])) {
+            throw new \Exception(__("Invalid request payload.", 'upstream'));
+        }
 
-    if( isset( $_POST['content'] ) && $_POST['content'] != '' ) {
+        // Check the correspondent nonce.
+        if (!wp_verify_nonce($_POST['upstream_security'], 'ajax_nonce')) {
+            throw new \Exception(__("Invalid request.", 'upstream'));
+        }
 
-        $post_id        = (int) $_POST['post_id'];
-        $existing       = get_post_meta( $post_id, '_upstream_project_discussion', true );
-        $new_comment    = wp_kses_post( $_POST['content'] );
-        $data = array(
-            'comment'   => $new_comment,
-            'is_client' => 0,
+        // Check if the project exists.
+        $project_id = (int)$_POST['project_id'];
+        $project = get_post($project_id);
+        if ($project_id <= 0 || $project === false) {
+            throw new \Exception(__("Invalid Project.", 'upstream'));
+        }
+
+        // Check if the Discussion/Comments section is disabled for the current project.
+        if (upstream_are_comments_disabled($project_id)) {
+            throw new \Exception(__("Comments are disabled for this project.", 'upstream'));
+        }
+
+        // Sanitizes the comment.
+        $commentContent = trim(wp_kses_post($_POST['content']));
+        if (strlen($commentContent) === 0) {
+            throw new \Exception(__("Comments cannot be empty.", 'upstream'));
+        }
+
+        $comments = get_post_meta($project_id, '_upstream_project_discussion');
+        $comments = !empty($comments) ? (array)$comments[0] : array();
+
+        $commendsIdsCache = array();
+        foreach ($comments as &$comment) {
+            $commendsIdsCache[$comment['id']] = $comment;
+        }
+
+        do {
+            $newCommentId = upstreamGenerateRandomString(14);
+        } while (isset($commendsIdsCache[$newCommentId]));
+
+        $user = wp_get_current_user();
+
+        $newCommentData = array(
+            'id'           => $newCommentId,
+            'comment'      => $commentContent,
+            'is_client'    => in_array('upstream_client_user', (array)$user->roles),
+            'created_by'   => $user->ID,
+            'created_time' => time()
         );
 
-        $existing[] = $data;
-        $update = update_post_meta( $post_id, '_upstream_project_discussion', $existing );
+        array_push($comments, $newCommentData);
 
-        // run this to update all missing meta data such as
-        // created date, id, project members, progress etc
-        $project = new UpStream_Project( $post_id );
-        $project->update_project_meta();
+        update_post_meta($project_id, '_upstream_project_discussion', $comments);
 
-        $last       = get_post_meta( $post_id, '_upstream_project_discussion', true );
-        $last_key   = key( array_slice( $last, -1, 1, TRUE ) );
+        upstream_admin_display_message_item($project_id, $newCommentData);
 
-        upstream_admin_display_message_item( $post_id, $last[$last_key] );
-
+        exit;
+    } catch (Exception $e) {
+        wp_die($e->getMessage());
     }
-
-    exit;
-
 }
 
 /**

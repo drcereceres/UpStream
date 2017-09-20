@@ -435,7 +435,7 @@
                     action: 'upstream_admin_new_message',
                     content: content,
                     upstream_security: cmb2_l10.ajax_nonce,
-                    post_id: post_id
+                    project_id: post_id
                 },
                 success: function(response){
                     window.tinyMCE.editors['_upstream_project_new_message'].setContent('');
