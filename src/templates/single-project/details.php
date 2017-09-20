@@ -20,6 +20,8 @@ if ($projectDateStartIsNotEmpty || $projectDateEndIsNotEmpty) {
 
 $pluginOptions = get_option('upstream_general');
 $collapseDetails = isset($pluginOptions['collapse_project_details']) && (bool)$pluginOptions['collapse_project_details'] === true;
+
+$isClientsDisabled = is_clients_disabled();
 ?>
 
 <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
@@ -42,7 +44,7 @@ $collapseDetails = isset($pluginOptions['collapse_project_details']) && (bool)$p
         </div>
         <?php endif; ?>
 
-        <?php if ($project->client_id > 0): ?>
+        <?php if (!$isClientsDisabled && $project->client_id > 0): ?>
         <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
           <p class="title"><?php _e('Client', 'upstream'); ?></p>
           <span><?php echo $project->client_id > 0 && !empty($project->clientName) ? $project->clientName : '<i class="text-muted">(' . __('none', 'upstream') . ')</i>' ; ?></span>
@@ -60,7 +62,7 @@ $collapseDetails = isset($pluginOptions['collapse_project_details']) && (bool)$p
         </div>
         <?php endif; ?>
 
-        <?php if ($project->client_id > 0): ?>
+        <?php if (!$isClientsDisabled && $project->client_id > 0): ?>
         <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
           <p class="title"><?php printf(__('%s Users', 'upstream'), upstream_client_label()); ?></p>
           <?php if (count($project->clientUsers) > 0): ?>
