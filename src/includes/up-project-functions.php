@@ -266,7 +266,15 @@ function upstream_count_assigned_to_open( $type, $id = 0 ) {
     return $count->assigned_to_open( $type );
 }
 
-// @todo
+/**
+ * Retrieve details from a given project.
+ *
+ * @since   1.12.0
+ *
+ * @param   int     $project_id The project ID.
+ *
+ * @return  object
+ */
 function getUpStreamProjectDetailsById($project_id)
 {
     $post = get_post($project_id);
@@ -381,10 +389,17 @@ function countItemsForUserOnProject($itemType, $user_id, $project_id)
     $count = 0;
 
     $metas = (array)get_post_meta((int)$project_id, '_upstream_project_' . $itemType);
-    $metas = count($metas) ? $metas[0] : array();
-    foreach ($metas as $meta) {
-        if (isset($meta['assigned_to']) && (int)$meta['assigned_to'] === $user_id) {
-            $count++;
+    $metas = count($metas) > 0 ? (array)$metas[0] : array();
+
+    if (isset($metas[0])) {
+        $metas = (array)$metas[0];
+    }
+
+    if (is_array($metas) && count($metas) > 0) {
+        foreach ($metas as $meta) {
+            if (isset($meta['assigned_to']) && (int)$meta['assigned_to'] === $user_id) {
+                $count++;
+            }
         }
     }
 

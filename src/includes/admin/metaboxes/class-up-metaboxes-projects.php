@@ -1381,7 +1381,7 @@ class UpStream_Metaboxes_Projects {
                 'type'              => 'wysiwyg',
                 'permissions'       => 'publish_project_discussion',
                 'before'            => 'upstream_add_field_attributes',
-                'after_field'       => '<p><button class="button" id="new_message" type="button">' . __( 'Post Message', 'upstream ') . '</button></p></div></div>',
+                'after_field'       => '<p><button class="button" id="new_message" type="button">' . __( 'Post Message', 'upstream') . '</button></p></div></div>',
                 'after_row'         => 'upstream_admin_display_messages',
                 'options'           => array(
                     'media_buttons' => true,

@@ -163,7 +163,7 @@ function upstream_output_overview_counts($field_args, $field)
         }
 
         $countOpen = count($rowset);
-    } else {
+    } else if (is_array($rowset) && count($rowset) > 0) {
         $options = get_option('upstream_' . $itemType);
         $statuses = isset($options['statuses']) ? $options['statuses'] : array();
         $statuses = wp_list_pluck($statuses, 'type', 'name');
@@ -484,7 +484,7 @@ function upstream_admin_display_message_item( $post_id, $comment ) {
  * Outputs the post new comment button in the admin.
  */
 function upstream_admin_discussion_button() {
-    echo '<p><button class="button" id="new_message" type="button">' . __( 'New Message', 'upstream ') . '</button></p>';
+    echo '<p><button class="button" id="new_message" type="button">' . __( 'New Message', 'upstream') . '</button></p>';
 }
 
 /**

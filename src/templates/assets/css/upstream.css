@@ -180,18 +180,6 @@ table.dataTable tr.child td.child {
   right: 15px;
 }
 
-.o-comment:not(:first-child) {
-  margin-top: 0;
-  padding: 5px 0;
-  border-top: 1px solid #ecf0f1;
-}
-
-.o-comment .o-comment__header {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-}
-
-.o-comment__toolbar + .o-comment {
-  padding-top: 10px;
+.c-upstream-overview > div:last-child {
+  padding-right: 0;
 }
