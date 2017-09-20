@@ -405,3 +405,76 @@ function countItemsForUserOnProject($itemType, $user_id, $project_id)
 
     return $count;
 }
+
+/**
+ * Retrieve all comments from a project.
+ *
+ * @since   @todo
+ *
+ * @param   int     $project_id     The project ID.
+ *
+ * @return  array
+ */
+function getProjectComments($project_id)
+{
+    $project_id = (int)$project_id;
+    $project = get_post($project_id);
+    if ($project === false) {
+        return array();
+    }
+
+    $meta = get_post_meta(get_the_ID(), '_upstream_project_discussion');
+    $meta = !empty($meta) ? $meta[0] : $meta;
+
+    $comments = array();
+
+    if (count($meta) > 0) {
+        global $wpdb, $wp_embed;
+
+        $usersRowset = $wpdb->get_results('
+            SELECT `ID`, `display_name`
+            FROM `'. $wpdb->prefix .'users`'
+        );
+
+        $users = array();
+        foreach ($usersRowset as $user) {
+            $users[(int)$user->ID] = (object)array(
+                'id'     => (int)$user->ID,
+                'name'   => $user->display_name,
+                'avatar' => getUserAvatarURL($user->ID)
+            );
+        }
+
+        $dateFormat = get_option('date_format');
+        $timeFormat = get_option('time_format');
+        $currentTimezone = new DateTimeZone(get_option('timezone_string'));
+        $currentTimestamp = time();
+
+        foreach ($meta as $commentData) {
+            $commentData['created_by'] = $users[(int)$commentData['created_by']];
+
+            $date = new DateTime();
+            $date->setTimestamp($commentData['created_time']);
+            $date->setTimezone($currentTimezone);
+
+            $created_time = (int)$commentData['created_time'];
+            unset($commentData['created_time']);
+
+            $commentData['created_at'] = (object)array(
+                'timestamp' => $created_time,
+                'formatted' => $date->format($dateFormat . ' ' . $timeFormat),
+                'human'     => sprintf(
+                    _x('%s ago', '%s = human-readable time difference', 'upstream'),
+                    human_time_diff($created_time, $currentTimestamp)
+                ),
+                'iso_8601'  => date('c', $created_time)
+            );
+
+            $commentData['comment'] = $wp_embed->autoembed(wpautop($commentData['comment']));
+
+            array_push($comments, (object)$commentData);
+        }
+    }
+
+    return $comments;
+}

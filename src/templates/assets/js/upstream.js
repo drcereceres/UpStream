@@ -208,3 +208,10 @@ jQuery(document).ready(function($){
     });
 });
 // /Panel toolbox
+
+
+(function(window, document, $, undefined) {
+  $(document).ready(function() {
+    $(".c-comments").scrollTop($(".c-comments")[0].scrollHeight);
+  });
+})(window, window.document, jQuery);
