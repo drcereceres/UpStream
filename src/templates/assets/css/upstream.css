@@ -197,6 +197,17 @@ table.dataTable tr.child td.child {
   display: flex;
   flex-direction: row;
   align-items: baseline;
+  justify-content: space-between;
+}
+
+.o-comment .o-comment__heading > div {
+  display: flex;
+  flex-direction: row;
+  align-items: baseline;
+}
+
+.o-comment .o-comment__heading > div:last-child {
+  padding-right: 20px;
 }
 
 .o-comment .o-comment__heading h5 {

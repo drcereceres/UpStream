@@ -450,8 +450,26 @@ function getProjectComments($project_id)
         $currentTimezone = new DateTimeZone(get_option('timezone_string'));
         $currentTimestamp = time();
 
+        $user = wp_get_current_user();
+        $user->ID = (int)$user->ID;
+
+        if (
+            (int)upstream_project_owner_id() === $user->ID ||
+            in_array((array)$user->roles, array('administrator', 'upstream_manager')) ||
+            current_user_can('delete_project_discussion')
+        ) {
+            $currentUserCanDeleteComments = true;
+        } else {
+            $currentUserCanDeleteComments = false;
+        }
+
         foreach ($meta as $commentData) {
             $commentData['created_by'] = $users[(int)$commentData['created_by']];
+            if ($commentData['created_by']->id === $user->ID) {
+                $commentData['userCanDelete'] = true;
+            } else {
+                $commentData['userCanDelete'] = $currentUserCanDeleteComments;
+            }
 
             $date = new DateTime();
             $date->setTimestamp($commentData['created_time']);

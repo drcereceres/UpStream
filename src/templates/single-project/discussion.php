@@ -27,11 +27,11 @@ $comments = getProjectComments($project_id);
       <div class="clearfix"></div>
     </div>
     <div class="x_content">
-      <div class="c-comments">
+      <div class="c-comments" data-label-empty="<?php _e('Currently no messages.', 'upstream'); ?>">
         <?php if (count($comments) === 0): ?>
-          <p><?php _e('Currently no messages.', 'upstream'); ?></p>
+          <p data-no-data><?php _e('Currently no messages.', 'upstream'); ?></p>
         <?php else: ?>
-          <?php foreach ($comments as $row): ?>
+          <?php foreach ($comments as $rowIndex => $row): ?>
           <?php do_action('upstream:project.discussion:before_comment', $project_id, $row); ?>
           <div class="media o-comment">
             <div class="media-left">
@@ -39,7 +39,15 @@ $comments = getProjectComments($project_id);
             </div>
             <div class="media-body">
               <div class="o-comment__heading">
-                <h5 class="media-heading"><?php echo $row->created_by->name; ?></h5> <time datetime="<?php echo $row->created_at->iso_8601; ?>" data-delay="500" data-toggle="tooltip" data-placement="top" title="<?php echo $row->created_at->formatted; ?>"><?php echo $row->created_at->human; ?></time>
+                <div>
+                  <h5 class="media-heading"><?php echo $row->created_by->name; ?></h5>
+                  <time datetime="<?php echo $row->created_at->iso_8601; ?>" data-delay="500" data-toggle="tooltip" data-placement="top" title="<?php echo $row->created_at->formatted; ?>"><?php echo $row->created_at->human; ?></time>
+                </div>
+                <div>
+                  <ul class="list-inline">
+                    <?php do_action('upstream:project.discussion:comment.controls', $project_id, $row, $rowIndex); ?>
+                  </ul>
+                </div>
               </div>
               <div><?php echo $row->comment; ?></div>
             </div>
