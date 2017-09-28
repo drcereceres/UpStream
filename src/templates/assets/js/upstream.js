@@ -206,12 +206,8 @@ jQuery(document).ready(function($){
 
         $BOX_PANEL.remove();
     });
+
+    if ($('.c-comments').length) {
+        $(".c-comments").scrollTop($(".c-comments")[0].scrollHeight);
+    }
 });
-// /Panel toolbox
-
-
-(function(window, document, $, undefined) {
-  $(document).ready(function() {
-    $(".c-comments").scrollTop($(".c-comments")[0].scrollHeight);
-  });
-})(window, window.document, jQuery);
