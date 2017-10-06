@@ -120,6 +120,8 @@ $projects = isset($user['projects']) && !empty($user['projects']) ? $user['proje
             </div>
         </div>
     </div>
+
+    <?php do_action('upstream:frontend.renderAfterProjectsList'); ?>
 </div>
 <!-- /page content -->
 
