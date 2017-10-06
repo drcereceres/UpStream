@@ -133,6 +133,16 @@ UpStream does not use the existing styling of your theme. The features and the v
 The format is based on [Keep a Changelog](http://keepachangelog.com)
 and this project adheres to [Semantic Versioning](http://semver.org).
 
+= [1.12.2] - @todo =
+
+Added:
+* Added support for the new Calendar View extension
+* Added new action on frontend to render custom HTML after the list on projects page
+
+Fixed:
+* Fixed some items count widgets displaying fuzzy numbers
+
+
 = [1.12.1] - 2017-09-19 =
 
 Changed:
