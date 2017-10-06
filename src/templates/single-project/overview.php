@@ -20,7 +20,7 @@ if ($areMilestonesEnabled) {
     $milestones = get_post_meta($project_id, '_upstream_project_milestones');
     $milestones = !empty($milestones) ? (array)$milestones[0] : array();
 
-    if (isset($milestones[0])) {
+    if (isset($milestones[0]) && !isset($milestones[0]['id'])) {
         $milestones = (array)$milestones[0];
     }
 
@@ -66,7 +66,7 @@ if ($areTasksEnabled) {
     $tasks = get_post_meta($project_id, '_upstream_project_tasks');
     $tasks = !empty($tasks) ? (array)$tasks[0] : array();
 
-    if (isset($tasks[0])) {
+    if (isset($tasks[0]) && !isset($tasks[0]['id'])) {
         $tasks = (array)$tasks[0];
     }
 
@@ -114,7 +114,7 @@ if ($areBugsEnabled) {
     $bugs = get_post_meta($project_id, '_upstream_project_bugs');
     $bugs = !empty($bugs) ? (array)$bugs[0] : array();
 
-    if (isset($bugs[0])) {
+    if (isset($bugs[0]) && !isset($bugs[0]['id'])) {
         $bugs = (array)$bugs[0];
     }
 
