@@ -58,7 +58,7 @@ while ( have_posts() ) : the_post(); ?>
 
 
 
-            <?php do_action('upstream:frontend:renderAfterDetails'); ?>
+            <?php do_action('upstream:frontend.project.renderAfterDetails'); ?>
 
             <?php if (!upstream_are_milestones_disabled() && !upstream_disable_milestones()): ?>
             <div class="row">
