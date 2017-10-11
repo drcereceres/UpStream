@@ -135,7 +135,8 @@ and this project adheres to [Semantic Versioning](http://semver.org).
 
 = [1.12.2] - @todo =
 
-@todo
+Fixed:
+* Fixed long titles overflowing tables on frontend
 
 = [1.12.1] - 2017-09-19 =
 

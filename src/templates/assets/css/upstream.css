@@ -183,3 +183,7 @@ table.dataTable tr.child td.child {
 .c-upstream-overview > div:last-child {
   padding-right: 0;
 }
+
+.dataTables_wrapper {
+  overflow: auto;
+}
