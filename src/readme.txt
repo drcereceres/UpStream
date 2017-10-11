@@ -137,6 +137,7 @@ and this project adheres to [Semantic Versioning](http://semver.org).
 
 Fixed:
 * Fixed long titles overflowing tables on frontend
+* Fixed screen reader texts appearing when they shouldn't
 
 = [1.12.1] - 2017-09-19 =
 

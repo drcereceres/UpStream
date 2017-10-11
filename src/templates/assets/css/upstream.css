@@ -187,3 +187,22 @@ table.dataTable tr.child td.child {
 .dataTables_wrapper {
   overflow: auto;
 }
+
+.screen-reader-text {
+  position: absolute;
+  margin: -1px;
+  padding: 0;
+  height: 1px;
+  width: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  border: 0;
+  word-wrap: normal!important;
+}
+
+.media-modal-close:focus {
+  color: #00a0d2;
+  border-color: #5b9dd9;
+  -webkit-box-shadow: 0 0 3px rgba(0,115,170,.8);
+  box-shadow: 0 0 3px rgba(0,115,170,.8);
+}
