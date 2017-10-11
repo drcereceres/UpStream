@@ -206,3 +206,7 @@ table.dataTable tr.child td.child {
   -webkit-box-shadow: 0 0 3px rgba(0,115,170,.8);
   box-shadow: 0 0 3px rgba(0,115,170,.8);
 }
+
+.top_nav .nav_menu {
+  z-index: 999;
+}
