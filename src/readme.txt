@@ -140,6 +140,7 @@ Fixed:
 * Fixed screen reader texts appearing when they shouldn't
 * Fixed Client/Client Users columns being displayed on /projects page even if Clients were disasbled
 * Fixed top menu buttons on frontned not working on smaller screens #179
+* Fixed missing parameter on wp_register_style function #180
 
 = [1.12.1] - 2017-09-19 =
 
