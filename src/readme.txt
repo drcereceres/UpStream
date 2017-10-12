@@ -135,6 +135,9 @@ and this project adheres to [Semantic Versioning](http://semver.org).
 
 = [1.12.2] - @todo =
 
+Changed:
+* Discussion layout on frontend just got better
+
 Fixed:
 * Fixed long titles overflowing tables on frontend #177
 * Fixed screen reader texts appearing when they shouldn't
