@@ -60,6 +60,7 @@ Add even more awesome features through the use of our extensions.
 - [Email Notifications](https://upstreamplugin.com/extensions/email-notifications)
 - [Copy Project](https://upstreamplugin.com/extensions/copy-project)
 
+
 = Milestones & Tasks =
 
 Milestones & tasks help you to successfully plan, track and manage your project from start to finish. Assign tasks & milestones to users, add start & end dates, color-coded statuses, notes and progress of the tasks & milestones. You can even add your own custom fields.
@@ -135,6 +136,9 @@ and this project adheres to [Semantic Versioning](http://semver.org).
 
 = [1.12.2] - @todo =
 
+Added:
+* Added new action on frontend to render custom HTML after the list on projects page
+
 Changed:
 * Discussion layout on frontend just got better
 
@@ -144,6 +148,7 @@ Fixed:
 * Fixed Client/Client Users columns being displayed on /projects page even if Clients were disasbled
 * Fixed top menu buttons on frontned not working on smaller screens #179
 * Fixed missing parameter on wp_register_style function #180
+* Fixed some items count widgets displaying fuzzy numbers
 
 = [1.12.1] - 2017-09-19 =
 

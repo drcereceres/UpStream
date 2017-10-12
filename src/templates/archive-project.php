@@ -126,6 +126,8 @@ $areClientsDisabled = is_clients_disabled();
             </div>
         </div>
     </div>
+
+    <?php do_action('upstream:frontend.renderAfterProjectsList'); ?>
 </div>
 <!-- /page content -->
 
