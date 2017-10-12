@@ -339,7 +339,7 @@ class UpStream_Options_Extensions {
                     );
 
                     $apiResponse = wp_remote_get(
-                        esc_url_raw(add_query_arg($apiData, 'http://local.wp-4.6.1.sbx')),
+                        esc_url_raw(add_query_arg($apiData, 'https://upstreamplugin.com')),
                         array(
                             'timeout'   => 15,
                             'body'      => $apiData,
