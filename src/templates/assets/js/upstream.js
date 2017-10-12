@@ -206,5 +206,8 @@ jQuery(document).ready(function($){
 
         $BOX_PANEL.remove();
     });
+
+    if ($('.c-comments').length) {
+        $(".c-comments").scrollTop($(".c-comments")[0].scrollHeight);
+    }
 });
-// /Panel toolbox

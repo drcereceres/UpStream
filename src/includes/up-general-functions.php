@@ -1058,3 +1058,25 @@ function isUserEitherManagerOrAdmin()
 
     return false;
 }
+
+/**
+ * Generates a random string of custom length.
+ *
+ * @since   @todo
+ *
+ * @param   int     $length     The length of the random string.
+ * @param   string  $charsPool  The characters that might compose the string.
+ *
+ * @return  string
+ */
+function upstreamGenerateRandomString($length, $charsPool = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ')
+{
+    $randomString = "";
+    $maxCharsPoolLength = mb_strlen($charsPool, '8bit') - 1;
+
+    for ($lengthIndex = 0; $lengthIndex < $length; ++$lengthIndex) {
+        $randomString .= $charsPool[random_int(0, $maxCharsPoolLength)];
+    }
+
+    return $randomString;
+}
