@@ -110,13 +110,6 @@ class UpStream_Options_Extensions {
                 'description'      => __('Allow you to duplicate an UpStream project including all the content and options.', 'upstream'),
                 'product_id'       => 5471,
                 'options_key_slug' => 'copy-project'
-            ),
-            array(
-                'id'               => 'calendar-view',
-                'title'            => 'Calendar View',
-                'description'      => '@todo',
-                'product_id'       => 1510,
-                'options_key_slug' => 'calendar-view'
             )
         );
 
