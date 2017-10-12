@@ -17,6 +17,8 @@ upstream_get_template_part( 'global/top-nav.php' );
 
 $user = upstream_user_data(@$_SESSION['upstream']['user_id']);
 $projects = isset($user['projects']) && !empty($user['projects']) ? $user['projects'] : array();
+
+$areClientsDisabled = is_clients_disabled();
 ?>
 
 <!-- page content -->
@@ -49,8 +51,10 @@ $projects = isset($user['projects']) && !empty($user['projects']) ? $user['proje
                             <thead>
                                 <tr>
                                     <th style="width: 18%"><?php esc_html_e( upstream_project_label() ); ?></th>
+                                    <?php if (!$areClientsDisabled): ?>
                                     <th style="width: 10%"><?php esc_html_e( upstream_client_label() ); ?></th>
                                     <th><?php esc_html_e( sprintf( __( '%s Users', 'upstream' ), upstream_client_label() ) ); ?></th>
+                                    <?php endif; ?>
                                     <th><?php printf( __( '%s Members', 'upstream' ), upstream_project_label() ); ?></th>
                                     <th><?php _e( 'Progress', 'upstream' ); ?></th>
                                     <th><?php _e( 'Status', 'upstream' ); ?></th>
@@ -81,12 +85,14 @@ $projects = isset($user['projects']) && !empty($user['projects']) ? $user['proje
                                         <small><?php echo $timeframe; ?></small>
                                         <?php endif; ?>
                                     </td>
+                                    <?php if (!$areClientsDisabled): ?>
                                     <td>
                                         <?php esc_html_e( upstream_project_client_name( $id ) ); ?>
                                     </td>
                                     <td>
                                         <?php upstream_output_client_users( $id ); ?>
                                     </td>
+                                    <?php endif; ?>
                                     <td>
                                         <?php upstream_output_project_members( $id ); ?>
                                     </td>

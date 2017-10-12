@@ -49,6 +49,8 @@ class UpStream_Style_Output {
      */
     private function init_hooks() {
         add_action( 'upstream_footer_text', array( $this, 'footer_text' ) );
+
+        $this->registerDeprecatedAlertHooks();
     }
 
     /**
@@ -71,5 +73,35 @@ class UpStream_Style_Output {
         return esc_html( $css );
     }
 
+    /**
+     * Register hooks that alert users about other deprecated frontend hooks.
+     *
+     * @since   @todo
+     * @access  private
+     */
+    private function registerDeprecatedAlertHooks()
+    {
+        add_action('upstream_before_single_message', array($this, 'deprecatedBeforeSingleMessageAlert'));
+        add_action('upstream_after_single_message', array($this, 'deprecatedAfterSingleMessageAlert'));
+    }
 
+    /**
+     * Deprecated alert for the hook "upstream_before_single_message" that became "upstream:project.discussion:before_comment".
+     *
+     * @since   @todo
+     */
+    public function deprecatedBeforeSingleMessageAlert()
+    {
+        _deprecated_function('The action "upstream_before_single_message"', '@todo: use new version', '"upstream:project.discussion:before_comment"');
+    }
+
+    /**
+     * Deprecated alert for the hook "upstream_after_single_message" that became "upstream:project.discussion:after_comment".
+     *
+     * @since   @todo
+     */
+    public function deprecatedAfterSingleMessageAlert()
+    {
+        _deprecated_function('The action "upstream_after_single_message"', '@todo: use new version', '"upstream:project.discussion:after_comment"');
+    }
 }

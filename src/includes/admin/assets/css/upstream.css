@@ -129,7 +129,7 @@
   font-size: 22px;
   margin: -1px 8px 0 0;
 }
-.upstream #delete_message.button {
+.upstream .o-delete_message.button {
   margin: -30px 0 0 0;
 }
 /*
