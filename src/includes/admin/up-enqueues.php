@@ -51,7 +51,7 @@ function upstream_load_admin_scripts( $hook ) {
      */
     $css_dir = UPSTREAM_PLUGIN_URL . 'includes/admin/assets/css/';
 
-    wp_register_style( 'upstream-admin', $css_dir . 'upstream.css', UPSTREAM_VERSION);
+    wp_register_style( 'upstream-admin', $css_dir . 'upstream.css', array(), UPSTREAM_VERSION);
     wp_enqueue_style( 'upstream-admin' );
 
 

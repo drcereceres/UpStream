@@ -184,10 +184,6 @@ table.dataTable tr.child td.child {
   padding-right: 0;
 }
 
-
-
-
-
 .c-comments {
   max-height: 250px;
   overflow: auto;
@@ -230,4 +226,31 @@ table.dataTable tr.child td.child {
   margin-top: 0;
   padding-top: 15px;
   border-top: 1px solid #ECF0F1;
+}
+
+.dataTables_wrapper {
+  overflow: auto;
+}
+
+.screen-reader-text {
+  position: absolute;
+  margin: -1px;
+  padding: 0;
+  height: 1px;
+  width: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  border: 0;
+  word-wrap: normal!important;
+}
+
+.media-modal-close:focus {
+  color: #00a0d2;
+  border-color: #5b9dd9;
+  -webkit-box-shadow: 0 0 3px rgba(0,115,170,.8);
+  box-shadow: 0 0 3px rgba(0,115,170,.8);
+}
+
+.top_nav .nav_menu {
+  z-index: 999;
 }

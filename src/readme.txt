@@ -4,7 +4,7 @@ Tags: project, manage, management, project management, project manager, wordpres
 Requires at least: 4.5
 Tested up to: 4.8
 Requires PHP: 5.6
-Stable tag: 1.12.1
+Stable tag: 1.12.2
 License: GPL-3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -132,6 +132,15 @@ UpStream does not use the existing styling of your theme. The features and the v
 
 The format is based on [Keep a Changelog](http://keepachangelog.com)
 and this project adheres to [Semantic Versioning](http://semver.org).
+
+= [1.12.2] - @todo =
+
+Fixed:
+* Fixed long titles overflowing tables on frontend #177
+* Fixed screen reader texts appearing when they shouldn't
+* Fixed Client/Client Users columns being displayed on /projects page even if Clients were disasbled
+* Fixed top menu buttons on frontned not working on smaller screens #179
+* Fixed missing parameter on wp_register_style function #180
 
 = [1.12.1] - 2017-09-19 =
 
