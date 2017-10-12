@@ -143,11 +143,11 @@ Changed:
 * Discussion layout on frontend just got better
 
 Fixed:
-* Fixed long titles overflowing tables on frontend #177
+* Fixed long titles overflowing tables on frontend
 * Fixed screen reader texts appearing when they shouldn't
 * Fixed Client/Client Users columns being displayed on /projects page even if Clients were disasbled
-* Fixed top menu buttons on frontned not working on smaller screens #179
-* Fixed missing parameter on wp_register_style function #180
+* Fixed top menu buttons on frontend not working on smaller screens
+* Fixed missing parameter on wp_register_style function
 * Fixed some items count widgets displaying fuzzy numbers
 
 = [1.12.1] - 2017-09-19 =
