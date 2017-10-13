@@ -63,12 +63,11 @@ trait Singleton
      * Prevent the class instance being serialized.
      *
      * @since   1.11.0
-     * @access  private
      * @final
      *
      * @throws  \Exception
      */
-    final private function __sleep()
+    final public function __sleep()
     {
         throw new \Exception("You cannot serialize a singleton.");
     }
@@ -77,12 +76,11 @@ trait Singleton
      * Prevent the class instance being unserialized.
      *
      * @since   1.11.0
-     * @access  private
      * @final
      *
      * @throws  \Exception
      */
-    final private function __wakeup()
+    final public function __wakeup()
     {
         throw new \Exception("You cannot unserialize a singleton.");
     }
@@ -91,10 +89,9 @@ trait Singleton
      * Prevent the class instance being cloned.
      *
      * @since   1.11.0
-     * @access  private
      * @final
      */
-    final private function __clone()
+    final public function __clone()
     {
         // Do nothing.
     }
