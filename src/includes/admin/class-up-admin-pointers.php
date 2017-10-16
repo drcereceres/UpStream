@@ -24,9 +24,16 @@ class UpStream_Admin_Pointers {
 
 
     public function first_project() {
+        // Make sure First Steps tutorial are not shown to Client Users first time they enter a project.
+        $user = wp_get_current_user();
+        if (count(array_intersect($user->roles, array('administrator', 'upstream_manager'))) === 0 &&
+            !current_user_can('edit_projects')
+        ) {
+            return;
+        }
 
         // Get dismissed pointers. Shows whether we have done this or not already.
-        $dismissed = explode( ',', (string) get_user_meta( get_current_user_id(), 'dismissed_wp_pointers', true ) );
+        $dismissed = explode( ',', (string) get_user_meta( $user->ID, 'dismissed_wp_pointers', true ) );
         if( in_array( 'upstream_title', $dismissed ) )
             return;
 
