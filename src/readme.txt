@@ -149,6 +149,7 @@ Fixed:
 * Fixed top menu buttons on frontend not working on smaller screens
 * Fixed missing parameter on wp_register_style function
 * Fixed some items count widgets displaying fuzzy numbers
+* Fixed some Client Users being able to access some private areas
 
 = [1.12.1] - 2017-09-19 =
 
