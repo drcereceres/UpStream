@@ -151,6 +151,7 @@ Fixed:
 * Fixed some items count widgets displaying fuzzy numbers
 * Fixed some Client Users being able to access some private areas
 * Fixed First Steps tutorial being shown to Client Users first time they enter a project
+* Fixed Client Users list within Project not returning the right data
 
 = [1.12.1] - 2017-09-19 =
 

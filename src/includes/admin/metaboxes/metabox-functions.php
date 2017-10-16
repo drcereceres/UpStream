@@ -775,10 +775,13 @@ function upstream_admin_get_all_clients( $field ) {
  * Returns the current saved clients users.
  * For use in dropdowns.
  */
-function upstream_admin_get_all_clients_users($field)
+function upstream_admin_get_all_clients_users($field, $client_id = 0)
 {
     // Get the currently selected client id.
-    $client_id = (int)get_post_meta($field->object_id, '_upstream_project_client', true);
+    if (empty($client_id) || $client_id < 0) {
+        $client_id = (int)get_post_meta($field->object_id, '_upstream_project_client', true);
+    }
+
     if ($client_id > 0) {
         $usersList = array();
         $clientUsersList = (array)get_post_meta($client_id, '_upstream_new_client_users', true);
@@ -817,35 +820,42 @@ function upstream_admin_get_all_clients_users($field)
  * For use in dropdowns.
  */
 add_action('wp_ajax_upstream_admin_ajax_get_clients_users', 'upstream_admin_ajax_get_clients_users');
-function upstream_admin_ajax_get_clients_users() {
+function upstream_admin_ajax_get_clients_users()
+{
+    $project_id = isset($_POST['project_id']) ? (int)$_POST['project_id'] : 0;
+    $client_id = isset($_POST['client_id']) ? (int)$_POST['client_id'] : 0;
 
-    $client_id = (int) $_POST['client_id'];
-    $array = array();
+    if ($project_id <= 0) {
+        wp_send_json_error(array(
+            'msg' => __('No project selected', 'upstream')
+        ));
+    } else if ($client_id <= 0) {
+        wp_send_json_error(array(
+            'msg' => __('No client selected', 'upstream')
+        ));
+    } else {
+        $field = new stdClass();
+        $field->object_id = $project_id;
 
-    if( ! $client_id ) {
-        wp_send_json_error( array( 'msg' => __( 'No client selected', 'upstream' ) ) );
+        $data = upstream_admin_get_all_clients_users($field, $client_id);
+
+        if (count($data) === 0) {
+            wp_send_json_error(array(
+                'msg' => __('No users found', 'upstream')
+            ));
+        } else {
+            $output = "";
+
+            $currentProjectClientUsers = (array)get_post_meta($project_id, '_upstream_project_client_users');
+            $currentProjectClientUsers = !empty($currentProjectClientUsers) ? $currentProjectClientUsers[0] : array();
+
+            $userIndex = 0;
+            foreach ($data as $user_id => $userName) {
+                $output .= sprintf( '<li><input type="checkbox" value="%s" id="_upstream_project_client_users%d" name="_upstream_project_client_users[]"  class="cmb2-option"%s> <label for="_upstream_project_client_users%2$d">%4$s</label></li>', $user_id, $userIndex, (in_array($user_id, $currentProjectClientUsers) ? ' checked' : ''), $userName);
+                $userIndex++;
+            }
+
+            wp_send_json_success($output);
+        }
     }
-
-    $users = get_post_meta( $client_id, '_upstream_client_users', true );
-
-    if( ! $users ) {
-        wp_send_json_error( array( 'msg' => __( 'No users found', 'upstream' ) ) );
-    }
-
-    $count = 1;
-    $output = '';
-    foreach ($users as $user) {
-
-        $username = upstream_users_name( $user['id'], true );
-
-        $output .= sprintf( '<li><input type="checkbox" value="%s" id="_upstream_project_client_users%d" name="_upstream_project_client_users[]"  class="cmb2-option"> <label for="_upstream_project_client_users%d">%s</label></li>', $user['id'], $count, $count, $username );
-
-        $count++;
-    }
-
-    if( ! empty( $output ) ){
-        wp_send_json_success( $output );
-    }
-    wp_send_json_error();
-
 }
