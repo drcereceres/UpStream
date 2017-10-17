@@ -36,17 +36,12 @@ class UpStream_Template_Loader {
         if ( is_single() ) {
             $file = 'single-project.php';
 
-            $user = wp_get_current_user();
-            if (
-                count(array_intersect($user->roles, array('administrator', 'upstream_manager'))) === 0 &&
-                in_array('upstream_client_user', $user->roles)
-            ) {
-                $project_id = upstream_post_id();
-                $projectMembers = upstream_project_members_ids($project_id);
-                if (!in_array($user->ID, $projectMembers)) {
-                    wp_redirect(site_url() . '/projects');
-                    exit;
-                }
+            $user_id = get_current_user_id();
+            $project_id = upstream_post_id();
+
+            if (!upstream_user_can_access_project($user_id, $project_id)) {
+                wp_redirect(site_url() . '/projects');
+                exit;
             }
         }
 

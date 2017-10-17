@@ -406,30 +406,30 @@ function upstream_users_name( $id = 0, $show_email = false ) {
 
 
 // returns the ID's of the projects that a user is regestired to
-function upstream_get_users_projects( $user_id ) {
+function upstream_get_users_projects($user_id)
+{
+    $user = new \WP_User($user_id);
+    if ($user->ID === 0) {
+        return array();
+    }
 
-    $args = array(
-        'post_type'        => 'project',
-        'post_status'      => 'publish',
-        'fields'           => 'ids',
-        'posts_per_page'   => -1,
-        'meta_query' => array(
-            'relation' => 'OR',
-            array(
-                'key'     => '_upstream_project_client_users',
-                'value'   => $user_id,
-                'compare' => 'REGEXP',
-            ),
-            array(
-                'key'     => '_upstream_project_members',
-                'value'   => $user_id,
-                'compare' => 'REGEXP',
-            ),
-        ),
-    );
+    $data = array();
 
-    $the_query = new WP_Query( $args );
-    return $the_query->posts;
+    $rowset = get_posts(array(
+        'post_type'      => "project",
+        'post_status'    => "publish",
+        'posts_per_page' => -1
+    ));
+
+    if (count($rowset) > 0) {
+        foreach ($rowset as $project) {
+            if (upstream_user_can_access_project($user, $project->ID)) {
+                $data[$project->ID] = $project;
+            }
+        }
+    }
+
+    return $data;
 }
 
 
