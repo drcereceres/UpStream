@@ -405,10 +405,18 @@ function upstream_users_name( $id = 0, $show_email = false ) {
 }
 
 
-// returns the ID's of the projects that a user is regestired to
-function upstream_get_users_projects($user_id)
+/**
+ * Retrieve all projects where the user has access to.
+ *
+ * @since   @todo
+ *
+ * @param   numeric/WP_User     $user    The user to be checked.
+ *
+ * @return  array
+ */
+function upstream_get_users_projects($user)
 {
-    $user = new \WP_User($user_id);
+    $user = $user instanceof \WP_User ? $user : new \WP_User($user);
     if ($user->ID === 0) {
         return array();
     }
