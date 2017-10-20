@@ -141,6 +141,7 @@ Added:
 
 Changed:
 * Discussion layout on frontend just got better
+* Dropped use of progressbar js lib
 
 Fixed:
 * Fixed long titles overflowing tables on frontend
@@ -152,6 +153,8 @@ Fixed:
 * Fixed some Client Users being able to access some private areas
 * Fixed First Steps tutorial being shown to Client Users first time they enter a project
 * Fixed Client Users list within Project not returning the right data
+* Fixed progress bars fillings on frontend
+* Fixed Tasks losing their Milestones after Disabling milestones on a project on save
 
 = [1.12.1] - 2017-09-19 =
 
