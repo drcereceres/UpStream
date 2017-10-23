@@ -1,4 +1,4 @@
-# Copyright (C) 2017 UpStream
+# Copyright (C) 2017 UpStream Project Management
 # This file is distributed under the same license as the UpStream package.
 msgid ""
 msgstr ""
