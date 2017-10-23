@@ -12,8 +12,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 // redirect to projects if no permissions for this project
-if( ! upstream_permissions( 'view_project' ) ) {
+if (!upstream_user_can_access_project(get_current_user_id(), upstream_post_id())) {
     wp_redirect(get_post_type_archive_link('project'));
+    exit;
 }
 
 
@@ -58,7 +59,7 @@ while ( have_posts() ) : the_post(); ?>
 
 
 
-            <?php do_action('upstream:frontend:renderAfterDetails'); ?>
+            <?php do_action('upstream:frontend.project.renderAfterDetails'); ?>
 
             <?php if (!upstream_are_milestones_disabled() && !upstream_disable_milestones()): ?>
             <div class="row">

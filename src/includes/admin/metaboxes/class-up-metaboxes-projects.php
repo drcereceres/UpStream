@@ -709,8 +709,14 @@ class UpStream_Metaboxes_Projects {
                     )
                 );
             } else {
-                $fields[40]['before_field'] = '<div class="row"><div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">';
-                $fields[40]['after_field'] = '</div><div class="hidden-xs hidden-sm col-md-6 col-lg-6"></div></div>';
+                $fields[41] = array(
+                    'id'          => "milestone",
+                    'type'        => "text",
+                    'permissions' => 'task_milestone_field',
+                    'attributes'  => array(
+                        'class' => "hidden"
+                    )
+                );
             }
 
             // set up the group grid plugin

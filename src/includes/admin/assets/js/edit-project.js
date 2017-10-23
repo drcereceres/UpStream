@@ -435,7 +435,7 @@
                     action: 'upstream_admin_new_message',
                     content: content,
                     upstream_security: cmb2_l10.ajax_nonce,
-                    post_id: post_id
+                    project_id: post_id
                 },
                 success: function(response){
                     window.tinyMCE.editors['_upstream_project_new_message'].setContent('');
@@ -510,12 +510,17 @@
                 type: 'post',
                 data: {
                     action: 'upstream_admin_ajax_get_clients_users',
-                    client_id: client_id
+                    client_id: client_id,
+                    project_id: $('#post_ID').val()
                 },
                 success: function(response){
                     $ul.empty();
-                    $ul.append(response.data);
-                    noUsers();
+
+                    if (typeof response.data === "string" && response.data) {
+                        $ul.append(response.data);
+                    } else if (response.data.msg) {
+                        $ul.append('<li>'+ response.data.msg +'</li>');
+                    }
                 }
             });
 

@@ -206,5 +206,19 @@ jQuery(document).ready(function($){
 
         $BOX_PANEL.remove();
     });
+
+    if ($('.c-comments').length) {
+        $(".c-comments").scrollTop($(".c-comments")[0].scrollHeight);
+    }
 });
-// /Panel toolbox
+
+// Instantiate NProgress lib.
+(function(window, document, $, NProgress, undefined) {
+  if (!NProgress) return;
+
+  NProgress.start();
+
+  $(window).load(function() {
+    NProgress.done();
+  });
+})(window, window.document, jQuery, NProgress || null);

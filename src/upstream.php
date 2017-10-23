@@ -4,7 +4,7 @@
  * Description: A WordPress Project Management plugin by UpStream.
  * Author: UpStream
  * Author URI: https://upstreamplugin.com
- * Version: 1.12.1
+ * Version: 1.12.2
  * Text Domain: upstream
  * Domain Path: /languages
  */
@@ -113,8 +113,7 @@ final class UpStream
         global $pagenow;
 
         $profilePage = 'profile.php';
-
-        if ($pagenow !== $profilePage && !wp_doing_ajax()) {
+        if ($pagenow !== $profilePage && $pagenow !== "edit.php" && !wp_doing_ajax()) {
             wp_redirect(admin_url($profilePage));
             exit;
         }
@@ -134,7 +133,7 @@ final class UpStream
         foreach ($menu as $menuIndex => $menuData) {
             $menuFile = isset($menuData[2]) ? $menuData[2] : null;
             if ($menuFile !== null) {
-                if ($menuFile === 'profile.php') {
+                if ($menuFile === 'profile.php' || $menuFile === 'edit.php?post_type=project') {
                     continue;
                 }
 
@@ -179,7 +178,7 @@ final class UpStream
         $this->define( 'UPSTREAM_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
         $this->define( 'UPSTREAM_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
         $this->define( 'UPSTREAM_PLUGIN_BASENAME', plugin_basename( __FILE__ ) );
-        $this->define( 'UPSTREAM_VERSION', '1.12.1' );
+        $this->define( 'UPSTREAM_VERSION', '1.12.2' );
     }
 
     /**

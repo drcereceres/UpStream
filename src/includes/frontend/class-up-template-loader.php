@@ -35,6 +35,14 @@ class UpStream_Template_Loader {
 
         if ( is_single() ) {
             $file = 'single-project.php';
+
+            $user_id = get_current_user_id();
+            $project_id = upstream_post_id();
+
+            if (!upstream_user_can_access_project($user_id, $project_id)) {
+                wp_redirect(site_url() . '/projects');
+                exit;
+            }
         }
 
         if (is_archive()) {

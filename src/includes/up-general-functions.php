@@ -405,31 +405,39 @@ function upstream_users_name( $id = 0, $show_email = false ) {
 }
 
 
-// returns the ID's of the projects that a user is regestired to
-function upstream_get_users_projects( $user_id ) {
+/**
+ * Retrieve all projects where the user has access to.
+ *
+ * @since   1.12.2
+ *
+ * @param   numeric/WP_User     $user    The user to be checked.
+ *
+ * @return  array
+ */
+function upstream_get_users_projects($user)
+{
+    $user = $user instanceof \WP_User ? $user : new \WP_User($user);
+    if ($user->ID === 0) {
+        return array();
+    }
 
-    $args = array(
-        'post_type'        => 'project',
-        'post_status'      => 'publish',
-        'fields'           => 'ids',
-        'posts_per_page'   => -1,
-        'meta_query' => array(
-            'relation' => 'OR',
-            array(
-                'key'     => '_upstream_project_client_users',
-                'value'   => $user_id,
-                'compare' => 'REGEXP',
-            ),
-            array(
-                'key'     => '_upstream_project_members',
-                'value'   => $user_id,
-                'compare' => 'REGEXP',
-            ),
-        ),
-    );
+    $data = array();
 
-    $the_query = new WP_Query( $args );
-    return $the_query->posts;
+    $rowset = get_posts(array(
+        'post_type'      => "project",
+        'post_status'    => "publish",
+        'posts_per_page' => -1
+    ));
+
+    if (count($rowset) > 0) {
+        foreach ($rowset as $project) {
+            if (upstream_user_can_access_project($user, $project->ID)) {
+                $data[$project->ID] = $project;
+            }
+        }
+    }
+
+    return $data;
 }
 
 
@@ -1057,4 +1065,26 @@ function isUserEitherManagerOrAdmin()
     }
 
     return false;
+}
+
+/**
+ * Generates a random string of custom length.
+ *
+ * @since   1.12.2
+ *
+ * @param   int     $length     The length of the random string.
+ * @param   string  $charsPool  The characters that might compose the string.
+ *
+ * @return  string
+ */
+function upstreamGenerateRandomString($length, $charsPool = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ')
+{
+    $randomString = "";
+    $maxCharsPoolLength = mb_strlen($charsPool, '8bit') - 1;
+
+    for ($lengthIndex = 0; $lengthIndex < $length; ++$lengthIndex) {
+        $randomString .= $charsPool[random_int(0, $maxCharsPoolLength)];
+    }
+
+    return $randomString;
 }
