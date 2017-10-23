@@ -408,7 +408,7 @@ function upstream_users_name( $id = 0, $show_email = false ) {
 /**
  * Retrieve all projects where the user has access to.
  *
- * @since   @todo
+ * @since   1.12.2
  *
  * @param   numeric/WP_User     $user    The user to be checked.
  *
@@ -1070,7 +1070,7 @@ function isUserEitherManagerOrAdmin()
 /**
  * Generates a random string of custom length.
  *
- * @since   @todo
+ * @since   1.12.2
  *
  * @param   int     $length     The length of the random string.
  * @param   string  $charsPool  The characters that might compose the string.

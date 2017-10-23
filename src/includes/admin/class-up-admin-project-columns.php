@@ -23,7 +23,7 @@ class UpStream_Admin_Project_Columns {
     /**
      * Array of projects ids current user is allowed to access.
      *
-     * @since   @todo
+     * @since   1.12.2
      * @access  private
      *
      * @see     $this->filterAllowedProjects()
@@ -35,7 +35,7 @@ class UpStream_Admin_Project_Columns {
     /**
      * Indicates either user can access all projects due his/her current roles.
      *
-     * @since   @todo
+     * @since   1.12.2
      * @access  private
      *
      * @see     $this->filterAllowedProjects()
@@ -64,7 +64,7 @@ class UpStream_Admin_Project_Columns {
      * This info is used on filter() method to ensure the user will see only projects he's allowed to see.
      * We cannot do this check within filter() itself to avoid infinite loops.
      *
-     * @since   @todo
+     * @since   1.12.2
      *
      * @see     $this->filter()
      */

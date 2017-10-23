@@ -162,7 +162,7 @@ function upstream_get_client_users_permissions()
 /**
  * Check if a given user can access a given project.
  *
- * @since   @todo
+ * @since   1.12.2
  *
  * @param   numeric/WP_User     $user_id    The user to be checked against the project.
  * @param   numeric             $project_id The project to be checked.

@@ -409,7 +409,7 @@ function countItemsForUserOnProject($itemType, $user_id, $project_id)
 /**
  * Retrieve all comments from a project.
  *
- * @since   @todo
+ * @since   1.12.2
  *
  * @param   int     $project_id     The project ID.
  *

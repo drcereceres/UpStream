@@ -501,7 +501,7 @@ add_action('wp_ajax_upstream_admin_new_message', 'upstreamAdminInsertNewComment'
 /**
  * AJAX endpoint that inserts a new comment to a given project's discussion.
  *
- * @since   @todo
+ * @since   1.12.2
  */
 function upstreamAdminInsertNewComment()
 {
