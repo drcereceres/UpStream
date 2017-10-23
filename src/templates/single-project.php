@@ -12,8 +12,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 // redirect to projects if no permissions for this project
-if( ! upstream_permissions( 'view_project' ) ) {
+if (!upstream_user_can_access_project(get_current_user_id(), upstream_post_id())) {
     wp_redirect(get_post_type_archive_link('project'));
+    exit;
 }
 
 

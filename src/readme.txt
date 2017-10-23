@@ -134,21 +134,27 @@ UpStream does not use the existing styling of your theme. The features and the v
 The format is based on [Keep a Changelog](http://keepachangelog.com)
 and this project adheres to [Semantic Versioning](http://semver.org).
 
-= [1.12.2] - @todo =
+= [1.12.2] - 2017-10-23 =
 
 Added:
 * Added new action on frontend to render custom HTML after the list on projects page
 
 Changed:
 * Discussion layout on frontend just got better
+* Dropped use of progressbar js lib
 
 Fixed:
-* Fixed long titles overflowing tables on frontend #177
+* Fixed long titles overflowing tables on frontend
 * Fixed screen reader texts appearing when they shouldn't
 * Fixed Client/Client Users columns being displayed on /projects page even if Clients were disasbled
-* Fixed top menu buttons on frontned not working on smaller screens #179
-* Fixed missing parameter on wp_register_style function #180
+* Fixed top menu buttons on frontend not working on smaller screens
+* Fixed missing parameter on wp_register_style function
 * Fixed some items count widgets displaying fuzzy numbers
+* Fixed some Client Users being able to access some private areas
+* Fixed First Steps tutorial being shown to Client Users first time they enter a project
+* Fixed Client Users list within Project not returning the right data
+* Fixed progress bars fillings on frontend
+* Fixed Tasks losing their Milestones after Disabling milestones on a project on save
 
 = [1.12.1] - 2017-09-19 =
 

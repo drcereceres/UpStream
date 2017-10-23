@@ -62,9 +62,11 @@ $areClientsDisabled = is_clients_disabled();
                                 </tr>
                             </thead>
                             <tbody>
-                                <?php foreach ($projects as $key => $id):
-                                $startDate = (string) upstream_format_date(upstream_project_start_date($id));
-                                $endDate = (string) upstream_format_date(upstream_project_end_date($id));
+                                <?php foreach ($projects as $project_id => $project):
+                                $startDate = (string) upstream_format_date(upstream_project_start_date($project_id));
+                                $endDate = (string) upstream_format_date(upstream_project_end_date($project_id));
+                                $permalink = esc_url(get_the_permalink($project_id));
+                                $progress = (float)upstream_project_progress($project_id);
 
                                 $timeframe = $startDate;
                                 if (!empty($endDate)) {
@@ -79,7 +81,7 @@ $areClientsDisabled = is_clients_disabled();
                                 ?>
                                 <tr>
                                     <td>
-                                        <a href="<?php echo esc_url( get_the_permalink( $id ) ); ?>"><?php esc_html_e( get_the_title( $id ) ); ?></a>
+                                        <a href="<?php echo $permalink; ?>"><?php esc_html_e( $project->post_title ); ?></a>
                                         <?php if (!empty($timeframe)): ?>
                                         <br />
                                         <small><?php echo $timeframe; ?></small>
@@ -87,31 +89,34 @@ $areClientsDisabled = is_clients_disabled();
                                     </td>
                                     <?php if (!$areClientsDisabled): ?>
                                     <td>
-                                        <?php esc_html_e( upstream_project_client_name( $id ) ); ?>
+                                        <?php esc_html_e( upstream_project_client_name( $project_id ) ); ?>
                                     </td>
                                     <td>
-                                        <?php upstream_output_client_users( $id ); ?>
+                                        <?php upstream_output_client_users( $project_id ); ?>
                                     </td>
                                     <?php endif; ?>
                                     <td>
-                                        <?php upstream_output_project_members( $id ); ?>
+                                        <?php upstream_output_project_members( $project_id ); ?>
                                     </td>
-                                    <td class="project_progress">
-                                        <div class="progress progress_sm">
-                                            <div class="progress-bar bg-green" role="progressbar" data-transitiongoal="<?php echo upstream_project_progress( $id ); ?>"></div>
+                                    <td>
+                                        <?php $progressString = $progress . __('% Complete', 'upstream'); ?>
+                                        <div class="progress" style="margin-bottom: 0; height: 10px;">
+                                            <div class="progress-bar<?php echo $progress >= 100 ? ' progress-bar-success' : ""; ?>" role="progressbar" aria-valuenow="<?php echo $progress; ?>" aria-valuemin="0" aria-valuemax="100" style="width: <?php echo $progress; ?>%;">
+                                                <span class="sr-only"><?php echo $progressString; ?></span>
+                                            </div>
                                         </div>
-                                        <small><?php echo upstream_project_progress( $id ); ?><?php _e( '% Complete', 'upstream' ); ?></small>
+                                        <small><?php echo $progressString; ?></small>
                                     </td>
                                     <td>
                                         <?php
-                                            $status = upstream_project_status_color( $id );
+                                            $status = upstream_project_status_color( $project_id );
                                             if( $status['status'] ) {
                                         ?>
                                             <button type="button" class="btn btn-success btn-xs" style="border: none;background-color:<?php echo esc_attr( $status['color'] ); ?>"><?php echo $status['status'] ?></button>
                                         <?php } ?>
                                     </td>
                                     <td>
-                                        <a href="<?php echo get_the_permalink( $id ); ?>" class="btn btn-primary btn-xs"><?php _e( 'View', 'upstream' ); ?> <i class="fa fa-chevron-right"></i></a>
+                                        <a href="<?php echo $permalink; ?>" class="btn btn-primary btn-xs"><?php _e( 'View', 'upstream' ); ?> <i class="fa fa-chevron-right"></i></a>
                                     </td>
                                 </tr>
                                 <?php endforeach; ?>

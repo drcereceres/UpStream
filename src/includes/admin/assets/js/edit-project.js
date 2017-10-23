@@ -510,12 +510,17 @@
                 type: 'post',
                 data: {
                     action: 'upstream_admin_ajax_get_clients_users',
-                    client_id: client_id
+                    client_id: client_id,
+                    project_id: $('#post_ID').val()
                 },
                 success: function(response){
                     $ul.empty();
-                    $ul.append(response.data);
-                    noUsers();
+
+                    if (typeof response.data === "string" && response.data) {
+                        $ul.append(response.data);
+                    } else if (response.data.msg) {
+                        $ul.append('<li>'+ response.data.msg +'</li>');
+                    }
                 }
             });
 

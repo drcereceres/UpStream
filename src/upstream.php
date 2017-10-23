@@ -113,8 +113,7 @@ final class UpStream
         global $pagenow;
 
         $profilePage = 'profile.php';
-
-        if ($pagenow !== $profilePage && !wp_doing_ajax()) {
+        if ($pagenow !== $profilePage && $pagenow !== "edit.php" && !wp_doing_ajax()) {
             wp_redirect(admin_url($profilePage));
             exit;
         }
@@ -134,7 +133,7 @@ final class UpStream
         foreach ($menu as $menuIndex => $menuData) {
             $menuFile = isset($menuData[2]) ? $menuData[2] : null;
             if ($menuFile !== null) {
-                if ($menuFile === 'profile.php') {
+                if ($menuFile === 'profile.php' || $menuFile === 'edit.php?post_type=project') {
                     continue;
                 }
 

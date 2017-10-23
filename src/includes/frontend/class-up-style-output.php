@@ -76,7 +76,7 @@ class UpStream_Style_Output {
     /**
      * Register hooks that alert users about other deprecated frontend hooks.
      *
-     * @since   @todo
+     * @since   1.12.2
      * @access  private
      */
     private function registerDeprecatedAlertHooks()
@@ -88,20 +88,20 @@ class UpStream_Style_Output {
     /**
      * Deprecated alert for the hook "upstream_before_single_message" that became "upstream:project.discussion:before_comment".
      *
-     * @since   @todo
+     * @since   1.12.2
      */
     public function deprecatedBeforeSingleMessageAlert()
     {
-        _deprecated_function('The action "upstream_before_single_message"', '@todo: use new version', '"upstream:project.discussion:before_comment"');
+        _deprecated_function('The action "upstream_before_single_message"', UPSTREAM_VERSION, '"upstream:project.discussion:before_comment"');
     }
 
     /**
      * Deprecated alert for the hook "upstream_after_single_message" that became "upstream:project.discussion:after_comment".
      *
-     * @since   @todo
+     * @since   1.12.2
      */
     public function deprecatedAfterSingleMessageAlert()
     {
-        _deprecated_function('The action "upstream_after_single_message"', '@todo: use new version', '"upstream:project.discussion:after_comment"');
+        _deprecated_function('The action "upstream_after_single_message"', UPSTREAM_VERSION, '"upstream:project.discussion:after_comment"');
     }
 }

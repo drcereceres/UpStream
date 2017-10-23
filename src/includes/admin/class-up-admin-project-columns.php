@@ -16,9 +16,33 @@ class UpStream_Admin_Project_Columns {
      * @since 0.1.0
      */
     public function __construct() {
-        return $this->hooks();
+        $this->hooks();
+        $this->filterAllowedProjects();
     }
 
+    /**
+     * Array of projects ids current user is allowed to access.
+     *
+     * @since   1.12.2
+     * @access  private
+     *
+     * @see     $this->filterAllowedProjects()
+     *
+     * @var     array   $allowedProjects
+     */
+    private $allowedProjects = array();
+
+    /**
+     * Indicates either user can access all projects due his/her current roles.
+     *
+     * @since   1.12.2
+     * @access  private
+     *
+     * @see     $this->filterAllowedProjects()
+     *
+     * @var     bool   $allowAllProjects
+     */
+    private $allowAllProjects = false;
 
     public function hooks() {
         add_filter( 'manage_project_posts_columns', array( $this, 'project_columns' ) );
@@ -33,6 +57,33 @@ class UpStream_Admin_Project_Columns {
         // filtering
         add_action( 'restrict_manage_posts', array( $this, 'table_filtering' ) );
         add_action( 'parse_query', array( $this, 'filter' ) );
+    }
+
+    /**
+     * Retrieve all projects current user are allowed to access.
+     * This info is used on filter() method to ensure the user will see only projects he's allowed to see.
+     * We cannot do this check within filter() itself to avoid infinite loops.
+     *
+     * @since   1.12.2
+     *
+     * @see     $this->filter()
+     */
+    public function filterAllowedProjects()
+    {
+        // Fetch current user.
+        $user = wp_get_current_user();
+
+        $this->allowAllProjects = count(array_intersect($user->roles, array('administrator', 'upstream_manager'))) > 0;
+        if (!$this->allowAllProjects) {
+            // Retrieve all projects current user can access.
+            $allowedProjects = upstream_get_users_projects($user);
+            // Stores the projects ids so they can be used on filter() function.
+            $this->allowedProjects = array_keys($allowedProjects);
+            // Retrieve the global query object.
+            global $wp_query;
+            // Assign this custom property so we know only this time the query will be filtered based on these ids.
+            $wp_query->filterAllowedProjects = true;
+        }
     }
 
     /**
@@ -252,21 +303,11 @@ class UpStream_Admin_Project_Columns {
         }
 
         if ($type === 'project' && is_admin()) {
-            $user = wp_get_current_user();
-            $userIsUpStreamUser = count(array_intersect($user->roles, array('administrator', 'upstream_manager'))) === 0;
-            // Check if we need to limit the projects list based on the user's role.
-            if ($userIsUpStreamUser) {
-                if ($pagenow === 'edit.php') {
-                    $query->query_vars = array_merge($query->query_vars, array(
-                        'meta_query' => array(
-                            array(
-                                'key'     => '_upstream_project_members',
-                                'value'   => $user->ID,
-                                'compare' => 'REGEXP',
-                            )
-                        )
-                    ));
-                }
+            if (!$this->allowAllProjects && $query->filterAllowedProjects) {
+                $query->query_vars = array_merge($query->query_vars, array(
+                    'post__in' => count($this->allowedProjects) === 0 ? array('making_sure_no_project_is_returned') : $this->allowedProjects
+                ));
+                $query->filterAllowedProjects = null;
             }
 
             if ($pagenow === 'edit.php' && isset($_GET['project-status']) && $_GET['project-status'] !== '') {

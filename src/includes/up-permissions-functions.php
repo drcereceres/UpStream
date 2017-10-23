@@ -158,3 +158,68 @@ function upstream_get_client_users_permissions()
 
     return $permissions;
 }
+
+/**
+ * Check if a given user can access a given project.
+ *
+ * @since   1.12.2
+ *
+ * @param   numeric/WP_User     $user_id    The user to be checked against the project.
+ * @param   numeric             $project_id The project to be checked.
+ *
+ * @return  bool
+ */
+function upstream_user_can_access_project($user_id, $project_id)
+{
+    $project_id = is_numeric($project_id) ? (int)$project_id : 0;
+    if ($project_id <= 0) {
+        return false;
+    }
+
+    $user = $user_id instanceof \WP_User ? $user_id : new \WP_User($user_id);
+    if ($user->ID === 0) {
+        return false;
+    }
+
+    $userIsAdmin = count(array_intersect($user->roles, array('administrator', 'upstream_manager'))) > 0;
+    if ($userIsAdmin) {
+        return true;
+    }
+
+    $userCanAccessProject = false;
+
+    if (in_array('upstream_client_user', $user->roles)) {
+        // Check if client user is allowed on this project.
+        $meta = (array)get_post_meta($project_id, '_upstream_project_client_users');
+        $meta = !empty($meta) ? $meta[0] : array();
+
+        if (in_array($user->ID, $meta)) {
+            $userCanAccessProject = true;
+        }
+    }
+
+    if (!$userCanAccessProject) {
+        // Check if user is a member of the project.
+        $projectMembers = upstream_project_members_ids($project_id);
+        if (in_array($user->ID, $projectMembers)) {
+            $userCanAccessProject = true;
+        } else {
+            // Check if the user has the "edit_published_projects" capability.
+            if (user_can($user, 'edit_published_projects')) {
+                $userCanAccessProject = true;
+            } else {
+                // Check if the user is the owner or can edit other published projects.
+                $projectOwner_id = (array)get_post_meta($project_id, '_upstream_project_owner');
+                $projectOwner_id = !empty($projectOwner_id) ? (int)$projectOwner_id[0] : 0;
+
+                if ($projectOwner_id === $user->ID || user_can($user, 'edit_others_projects')) {
+                    $userCanAccessProject = true;
+                }
+            }
+        }
+    }
+
+    // @todo: user_can($user, 'edit_private_projects'
+
+    return $userCanAccessProject;
+}

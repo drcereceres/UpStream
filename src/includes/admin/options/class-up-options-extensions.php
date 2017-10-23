@@ -110,13 +110,6 @@ class UpStream_Options_Extensions {
                 'description'      => __('Allow you to duplicate an UpStream project including all the content and options.', 'upstream'),
                 'product_id'       => 5471,
                 'options_key_slug' => 'copy-project'
-            ),
-            array(
-                'id'               => 'calendar-view',
-                'title'            => 'Calendar View',
-                'description'      => '@todo',
-                'product_id'       => 1510,
-                'options_key_slug' => 'calendar-view'
             )
         );
 
@@ -339,7 +332,7 @@ class UpStream_Options_Extensions {
                     );
 
                     $apiResponse = wp_remote_get(
-                        esc_url_raw(add_query_arg($apiData, 'http://local.wp-4.6.1.sbx')),
+                        esc_url_raw(add_query_arg($apiData, 'https://upstreamplugin.com')),
                         array(
                             'timeout'   => 15,
                             'body'      => $apiData,

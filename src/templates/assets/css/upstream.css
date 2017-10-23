@@ -26,13 +26,6 @@ table thead, .x_title h2, .profile_info h2, .details-panel p.title, .fn-label, a
   color: #429edb;
 }
 
-/* green progress color  */
-.progress-bar {
-  background: #45C150;
-  border-color: #45C150;
-}
-
-
 /* Backgrounds */
 body, .left_col, .nav_title, .sidebar-footer a:hover {
   background: #EDEDED; /* light */

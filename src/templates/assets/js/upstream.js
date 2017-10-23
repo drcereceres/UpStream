@@ -211,3 +211,14 @@ jQuery(document).ready(function($){
         $(".c-comments").scrollTop($(".c-comments")[0].scrollHeight);
     }
 });
+
+// Instantiate NProgress lib.
+(function(window, document, $, NProgress, undefined) {
+  if (!NProgress) return;
+
+  NProgress.start();
+
+  $(window).load(function() {
+    NProgress.done();
+  });
+})(window, window.document, jQuery, NProgress || null);
