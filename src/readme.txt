@@ -134,7 +134,7 @@ UpStream does not use the existing styling of your theme. The features and the v
 The format is based on [Keep a Changelog](http://keepachangelog.com)
 and this project adheres to [Semantic Versioning](http://semver.org).
 
-= [1.12.2] - @todo =
+= [1.12.2] - 2017-10-23 =
 
 Added:
 * Added new action on frontend to render custom HTML after the list on projects page
