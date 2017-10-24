@@ -882,9 +882,6 @@ function applyOEmbedFiltersToWysiwygEditorContent($content, $field_args, $field)
 function upstream_convert_UTC_date_to_timezone($subject)
 {
     try {
-        $timezone = get_option('timezone_string');
-        $timezone = !empty($timezone) ? $timezone : 'UTC';
-        $instanceTimezone = new DateTimeZone($timezone);
         $dateFormat = get_option('date_format') . ' ' . get_option('time_format');
 
         if (is_numeric($subject)) {
@@ -894,6 +891,7 @@ function upstream_convert_UTC_date_to_timezone($subject)
             $theDate = new DateTime($subject);
         }
 
+        $instanceTimezone = upstreamGetTimeZone();
         $theDate->setTimeZone($instanceTimezone);
 
         return $theDate->format($dateFormat);
@@ -1087,4 +1085,25 @@ function upstreamGenerateRandomString($length, $charsPool = '0123456789abcdefghi
     }
 
     return $randomString;
+}
+
+/**
+ * Retrieve a DateTimeZone object of the current WP's timezone.
+ * This function falls back to UTC in case of an invalid/empty timezone option.
+ *
+ * @since   @todo
+ *
+ * @return  \DateTimeZone
+ */
+function upstreamGetTimeZone()
+{
+    $tz = (string)get_option('timezone_string');
+
+    try {
+        $theTimeZone = new DateTimeZone($tz);
+    } catch (Exception $e) {
+        $theTimeZone = new DateTimeZone('UTC');
+    }
+
+    return $theTimeZone;
 }

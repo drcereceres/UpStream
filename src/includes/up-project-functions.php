@@ -447,7 +447,8 @@ function getProjectComments($project_id)
 
         $dateFormat = get_option('date_format');
         $timeFormat = get_option('time_format');
-        $currentTimezone = new DateTimeZone(get_option('timezone_string'));
+
+        $currentTimezone = upstreamGetTimeZone();
         $currentTimestamp = time();
 
         $user = wp_get_current_user();

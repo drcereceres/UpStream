@@ -11,10 +11,10 @@ include_once( 'upstream.php' );
 
 global $wpdb, $wp_roles;
 
-$options    = get_option( 'upstream_general' );
-$remove     = $options['remove_data'];
+$options    = (array)get_option( 'upstream_general' );
+$remove     = !empty($options['remove_data']) && !empty($options['remove_data'][0]) ? (string)$options['remove_data'][0] === 'yes' : false;
 
-if( $remove[0] == 'yes' ) {
+if($remove) {
 
     /** Delete All the Custom Post Types */
     $upstream_taxonomies = array( 'project_category' );
