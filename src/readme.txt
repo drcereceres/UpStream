@@ -138,6 +138,7 @@ and this project adheres to [Semantic Versioning](http://semver.org).
 
 Added:
 * Added Portuguese (pt_BR) translation
+* Added German (de_DE) translation
 
 Changed:
 * Dropped old language files
