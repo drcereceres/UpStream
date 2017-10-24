@@ -38,6 +38,11 @@ class UpStream_Metaboxes_Projects {
         $this->project_label = upstream_project_label();
 
         do_action('upstream_admin_notices_errors');
+
+        // Ensure WordPress can generate and display custom slugs for the project by making it public temporarily fast.
+        add_action('edit_form_before_permalink', array($this, 'makeProjectTemporarilyPublic'));
+        // Ensure the made public project are non-public as it should.
+        add_action('edit_form_after_title', array($this, 'makeProjectPrivateOnceAgain'));
     }
 
     /**
@@ -1404,6 +1409,48 @@ class UpStream_Metaboxes_Projects {
                 'type'        => 'checkbox',
                 'description' => __('Disable Discussion for this project', 'upstream')
             ));
+        }
+    }
+
+    /**
+     * This method ensures WordPress generate and show custom slugs based on project's title automaticaly below the field.
+     * Since it will do so only for public posts and Projects-post-type are not public (they would appear on sites searches),
+     * we rapidly make it public and switch back to non-public status. This temporary change will not cause search/visibility side effects.
+     *
+     * Called by the "edit_form_before_permalink" action right before the "edit_form_after_title" hook.
+     *
+     * @since   @todo
+     * @static
+     *
+     * @global  $post_type_object
+     */
+    public static function makeProjectTemporarilyPublic()
+    {
+        global $post_type_object;
+
+        if ($post_type_object->name === "project") {
+            $post_type_object->public = true;
+        }
+    }
+
+    /**
+     * This method is called right after the makeProjectTemporarilyPublic() and ensures the project is non-public once again. side effects.
+     *
+     * Called by the "edit_form_after_title" action right after the "edit_form_before_permalink" hook.
+     *
+     * @since   @todo
+     * @static
+     *
+     * @see     self::makeProjectTemporarilyPublic()
+     *
+     * @global  $post_type_object
+     */
+    public static function makeProjectPrivateOnceAgain()
+    {
+        global $post_type_object;
+
+        if ($post_type_object->name === "project") {
+            $post_type_object->public = false;
         }
     }
 }
