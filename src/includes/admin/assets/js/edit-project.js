@@ -638,12 +638,6 @@
         }
     });
 
-    $(document).ready(function() {
-        if (upstream_project.slugBox) {
-            $('#titlewrap + .inside').append($('<div id="edit-slug-box" class="hide-if-no-js"></div>'));
-        }
-    });
-
     var titleHasFocus = false;
     $(document)
         .on( 'before-autosave.update-post-slug', function() {
