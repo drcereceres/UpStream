@@ -136,6 +136,9 @@ and this project adheres to [Semantic Versioning](http://semver.org).
 
 = [1.13.0] - @todo =
 
+Added:
+* Added Portuguese (pt_BR) translation
+
 Changed:
 * Dropped old language files
 
