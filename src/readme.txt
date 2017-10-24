@@ -134,6 +134,11 @@ UpStream does not use the existing styling of your theme. The features and the v
 The format is based on [Keep a Changelog](http://keepachangelog.com)
 and this project adheres to [Semantic Versioning](http://semver.org).
 
+= [@todo] - @todo =
+
+Fixed:
+* Fixed project's permalink not appearing on form in admin
+
 = [1.12.2] - 2017-10-23 =
 
 Added:
