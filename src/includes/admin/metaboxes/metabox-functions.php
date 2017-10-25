@@ -463,7 +463,7 @@ function upstream_admin_display_message_item($project_id, $comment)
 
     $dateFormat = get_option('date_format');
     $timeFormat = get_option('time_format');
-    $currentTimezone = new DateTimeZone(get_option('timezone_string'));
+    $currentTimezone = upstreamGetTimeZone();
 
     $date = new DateTime();
     $date->setTimestamp($comment['created_time']);

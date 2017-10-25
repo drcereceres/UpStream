@@ -368,9 +368,7 @@ final class UpStream_Metaboxes_Clients
                 </thead>
                 <tbody>
                     <?php if (count($usersList) > 0):
-                    $timezone = get_option('timezone_string');
-                    $timezone = !empty($timezone) ? $timezone : 'UTC';
-                    $instanceTimezone = new DateTimeZone($timezone);
+                    $instanceTimezone = upstreamGetTimeZone();
                     $dateFormat = get_option('date_format') . ' ' . get_option('time_format');
 
                     foreach ($usersList as $user):
