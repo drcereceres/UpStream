@@ -1419,7 +1419,7 @@ class UpStream_Metaboxes_Projects {
      *
      * Called by the "edit_form_before_permalink" action right before the "edit_form_after_title" hook.
      *
-     * @since   @todo
+     * @since   1.12.3
      * @static
      *
      * @global  $post_type_object
@@ -1438,7 +1438,7 @@ class UpStream_Metaboxes_Projects {
      *
      * Called by the "edit_form_after_title" action right after the "edit_form_before_permalink" hook.
      *
-     * @since   @todo
+     * @since   1.12.3
      * @static
      *
      * @see     self::makeProjectTemporarilyPublic()

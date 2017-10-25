@@ -1091,7 +1091,7 @@ function upstreamGenerateRandomString($length, $charsPool = '0123456789abcdefghi
  * Retrieve a DateTimeZone object of the current WP's timezone.
  * This function falls back to UTC in case of an invalid/empty timezone option.
  *
- * @since   @todo
+ * @since   1.12.3
  *
  * @return  \DateTimeZone
  */
