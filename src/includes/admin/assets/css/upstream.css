@@ -962,7 +962,6 @@ body.upstream_page_upstream_extensions #upstream_extensions input[type="submit"]
 
 #installed-extensions-list article img {
   max-width: 360px;
-  width: 100%;
 }
 
 #installed-extensions-list article .u-title {

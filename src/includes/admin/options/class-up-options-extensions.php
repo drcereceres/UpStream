@@ -110,6 +110,13 @@ class UpStream_Options_Extensions {
                 'description'      => __('Allow you to duplicate an UpStream project including all the content and options.', 'upstream'),
                 'product_id'       => 5471,
                 'options_key_slug' => 'copy-project'
+            ),
+            array(
+                'id'               => 'calendar-view',
+                'title'            => 'Calendar View',
+                'description'      => __('This calendar display will allow you to easily see everything that’s happening in a project. You’ll be able to see due dates for all the milestones, tasks, and bugs.', 'upstream'),
+                'product_id'       => 6798,
+                'options_key_slug' => 'calendar-view'
             )
         );
 

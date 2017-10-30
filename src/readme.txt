@@ -134,6 +134,11 @@ UpStream does not use the existing styling of your theme. The features and the v
 The format is based on [Keep a Changelog](http://keepachangelog.com)
 and this project adheres to [Semantic Versioning](http://semver.org).
 
+= [1.12.4] - 2017-10-30 =
+
+Added:
+* Calendar View extension
+
 = [1.12.3] - 2017-10-25 =
 
 Fixed:
