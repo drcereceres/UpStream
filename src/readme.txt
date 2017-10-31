@@ -4,7 +4,7 @@ Tags: project, manage, management, project management, project manager, wordpres
 Requires at least: 4.5
 Tested up to: 4.8
 Requires PHP: 5.6
-Stable tag: 1.12.3
+Stable tag: 1.12.4
 License: GPL-3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -59,6 +59,7 @@ Add even more awesome features through the use of our extensions.
 - [Customizer](https://upstreamplugin.com/extensions/customizer)
 - [Email Notifications](https://upstreamplugin.com/extensions/email-notifications)
 - [Copy Project](https://upstreamplugin.com/extensions/copy-project)
+- [Calendar View](https://upstreamplugin.com/extensions/calendar-view)
 
 
 = Milestones & Tasks =
@@ -134,7 +135,7 @@ UpStream does not use the existing styling of your theme. The features and the v
 The format is based on [Keep a Changelog](http://keepachangelog.com)
 and this project adheres to [Semantic Versioning](http://semver.org).
 
-= [1.12.4] - 2017-10-30 =
+= [1.12.4] - 2017-10-31 =
 
 Added:
 * Calendar View extension
