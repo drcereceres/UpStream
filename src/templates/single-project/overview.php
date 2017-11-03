@@ -134,19 +134,22 @@ if ($areBugsEnabled) {
             $bugsCounts['mine']++;
           }
 
-          if (isset($bug['due_date']) && (int)$bug['due_date'] > 0 && (int)$bug['due_date'] < $currentTimestamp) {
-            $bugsCounts['overdue']++;
-          }
-
-          if (isset($bug['status'])) {
-            if (!empty($bug['status']) && $bugsMap[$bug['status']] === 'closed') {
-              $bugsCounts['closed']++;
+            if (isset($bug['status'])
+                && !empty($bug['status'])
+                && isset($bugsMap[$bug['status']])
+                && $bugsMap[$bug['status']] === "closed"
+            ) {
+                $bugsCounts['closed']++;
             } else {
-              $bugsCounts['open']++;
+                $bugsCounts['open']++;
+
+                if (isset($bug['due_date'])
+                    && (int)$bug['due_date'] > 0
+                    && (int)$bug['due_date'] < $currentTimestamp
+                ) {
+                    $bugsCounts['overdue']++;
+                }
             }
-          } else {
-            $bugsCounts['open']++;
-          }
         }
     }
 }
