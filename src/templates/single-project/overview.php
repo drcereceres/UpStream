@@ -31,16 +31,18 @@ if ($areMilestonesEnabled) {
             $milestonesCounts['mine']++;
           }
 
-          if (isset($milestone['end_date']) && (int)$milestone['end_date'] > 0 && (int)$milestone['end_date'] < $currentTimestamp) {
-            $milestonesCounts['overdue']++;
-          }
+          $progress = isset($milestone['progress']) ? (float)$milestone['progress'] : 0;
+          if ($progress < 100) {
+            $milestonesCounts['open']++;
 
-          if (isset($milestone['progress'])) {
-            if ((float)$milestone['progress'] < 100) {
-              $milestonesCounts['open']++;
-            } else {
-              $milestonesCounts['finished']++;
+            if (isset($milestone['end_date'])
+              && (int)$milestone['end_date'] > 0
+              && (int)$milestone['end_date'] < $currentTimestamp
+            ) {
+                $milestonesCounts['overdue']++;
             }
+          } else {
+              $milestonesCounts['finished']++;
           }
         }
     }
