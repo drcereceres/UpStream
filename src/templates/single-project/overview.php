@@ -79,18 +79,25 @@ if ($areTasksEnabled) {
           $tasksCounts['mine']++;
         }
 
-        if (isset($task['end_date']) && (int)$task['end_date'] > 0 && (int)$task['end_date'] < $currentTimestamp) {
-          $tasksCounts['overdue']++;
-        }
+        $progress = isset($task['progress']) ? (float)$task['progress'] : 0;
+        if ($progress < 100) {
+            if (isset($task['status'])
+                && isset($tasksMap[$task['status']])
+                && $tasksMap[$task['status']] === "closed"
+            ) {
+                $tasksCounts['closed']++;
+            } else {
+                $tasksCounts['open']++;
 
-        if (isset($task['status'])) {
-          if (!empty($task['status']) && $tasksMap[$task['status']] === 'closed') {
-            $tasksCounts['closed']++;
-          } else {
-            $tasksCounts['open']++;
-          }
+                if (isset($task['end_date'])
+                    && (int)$task['end_date'] > 0
+                    && (int)$task['end_date'] < $currentTimestamp
+                ) {
+                    $tasksCounts['overdue']++;
+                }
+            }
         } else {
-          $tasksCounts['open']++;
+            $tasksCounts['closed']++;
         }
       }
     }
