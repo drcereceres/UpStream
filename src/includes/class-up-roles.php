@@ -165,7 +165,7 @@ class UpStream_Roles {
             'edit_project',
             'read_project',
             'edit_projects',
-            'edit_others_projects',
+            // 'edit_others_projects',
             // 'read_private_projects',
             // 'edit_private_projects',
             'edit_published_projects',
