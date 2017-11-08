@@ -99,6 +99,12 @@ final class UpStream
         add_filter('tiny_mce_before_init', 'upstream_tinymce_before_init_setup_toolbar');
         add_filter('tiny_mce_before_init', 'upstream_tinymce_before_init');
         add_filter('teeny_mce_before_init', 'upstream_tinymce_before_init_setup_toolbar');
+
+        // Render additional update info if needed.
+        global $pagenow;
+        if ($pagenow === "plugins.php") {
+            add_action('in_plugin_update_message-' . UPSTREAM_PLUGIN_BASENAME, array($this, 'renderAdditionalUpdateInfo'), 20, 2);
+        }
     }
 
     /**
@@ -375,6 +381,32 @@ final class UpStream
         }
 
         return $isAllowed;
+    }
+
+    /**
+     * Render additional update info if needed.
+     *
+     * @since   @todo
+     * @static
+     *
+     * @see     https://developer.wordpress.org/reference/hooks/in_plugin_update_message-file
+     *
+     * @param   array   $pluginData     Plugin metadata.
+     * @param   object  $response       Metadata about the available plugin update.
+     */
+    public static function renderAdditionalUpdateInfo($pluginData, $response)
+    {
+        $updateNoticeTitleHtml = sprintf('<strong style="font-size: 1.25em; display: block; margin-top: 10px;">%s</strong>', __('Update notice:', 'upstream'));
+
+        if (version_compare(UPSTREAM_VERSION, "1.12.5", "<")) {
+            printf(
+                $updateNoticeTitleHtml .
+                _x('Starting from <strong>%s</strong> <code>%s</code> capability was removed from <code>%s</code> users role.', '1st %s: plugin version, 2nd %s: capability name, 3rd: UpStream User role', 'upstream'),
+                'v1.12.5',
+                'edit_others_projects',
+                __('UpStream User', 'upstream')
+            );
+        }
     }
 }
 endif;

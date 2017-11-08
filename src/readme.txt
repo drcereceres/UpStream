@@ -137,6 +137,9 @@ and this project adheres to [Semantic Versioning](http://semver.org).
 
 = [@todo: WIP] =
 
+Added:
+* Added method to render additional plugin update info if needed
+
 Changed:
 * UpStream Users user role no longer have "edit_others_projects" capability by default
 
