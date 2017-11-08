@@ -139,11 +139,16 @@ and this project adheres to [Semantic Versioning](http://semver.org).
 
 Added:
 * Added new filter "upstream:project.onBeforeUpdateMissingMeta"
+* Added method to render additional plugin update info if needed
+
+Changed:
+* UpStream Users user role no longer have "edit_others_projects" capability by default
 
 Fixed:
 * Fixed Completed/Closed Milestones, Tasks and/or Bugs counting as Overdue on frontend overview
 * Fixed Bugs table not being ordered by Due Date by default
 * Fixed some uncommon PHP errors being thrown after saving Tasks
+* Fixed UpStream Users having access to any Project
 
 = [1.12.4] - 2017-10-31 =
 
