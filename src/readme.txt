@@ -143,6 +143,7 @@ Added:
 Fixed:
 * Fixed Completed/Closed Milestones, Tasks and/or Bugs counting as Overdue on frontend overview
 * Fixed Bugs table not being ordered by Due Date by default
+* Fixed some uncommon PHP errors being thrown after saving Tasks
 
 = [1.12.4] - 2017-10-31 =
 

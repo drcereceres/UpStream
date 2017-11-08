@@ -382,24 +382,6 @@ class UpStream_Project {
 
     }
 
-    public function remove_empty_items( $data ) {
-
-        if( isset( $data[0]['file_id'] ) && $data[0]['file_id'] == '0' )
-            unset( $data[0]['file_id'] );
-
-        // removes all NULL, FALSE and Empty Strings but leaves 0 (zero) values
-        if( isset( $data[0] ) ) {
-            $first_item = is_array( $data[0] ) ? array_filter( $data[0], 'strlen' ) : $data[0];
-            if( count( $first_item ) === 3 ) {
-                $data = null;
-            }
-        }
-
-        return $data;
-
-    }
-
-
     /*
      *
      */
