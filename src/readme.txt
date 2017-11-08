@@ -140,6 +140,9 @@ and this project adheres to [Semantic Versioning](http://semver.org).
 Added:
 * Added new filter "upstream:project.onBeforeUpdateMissingMeta"
 
+Fixed:
+* Fixed Completed/Closed Milestones, Tasks and/or Bugs counting as Overdue on frontend overview
+
 = [1.12.4] - 2017-10-31 =
 
 Added:
