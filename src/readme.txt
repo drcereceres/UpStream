@@ -137,7 +137,8 @@ and this project adheres to [Semantic Versioning](http://semver.org).
 
 = [1.12.5] - @todo =
 
-@todo
+Added:
+* Added new filter "upstream:project.onBeforeUpdateMissingMeta"
 
 = [1.12.4] - 2017-10-31 =
 

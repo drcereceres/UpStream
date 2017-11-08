@@ -376,11 +376,7 @@ class UpStream_Project {
             }
         }
 
-        // removes the last empty item. So that it can be hidden
-        // essentially deletes id, created by and created time if they are the only keys
-        if( $meta_key != '_upstream_project_milestones' ) {
-            $data = $this->remove_empty_items( $data );
-        }
+        $data = apply_filters('upstream:project.onBeforeUpdateMissingMeta', $this->ID, $meta_key, $data);
 
         $updated = update_post_meta( $this->ID, $meta_key, $data );
 
