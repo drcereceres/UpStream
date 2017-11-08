@@ -135,6 +135,11 @@ UpStream does not use the existing styling of your theme. The features and the v
 The format is based on [Keep a Changelog](http://keepachangelog.com)
 and this project adheres to [Semantic Versioning](http://semver.org).
 
+= [@todo: WIP] =
+
+Added:
+* Added new filter "upstream:project.onBeforeUpdateMissingMeta"
+
 = [1.12.4] - 2017-10-31 =
 
 Added:
