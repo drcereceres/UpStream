@@ -41,7 +41,7 @@ $collapseBox = isset($pluginOptions['collapse_project_bugs']) && (bool)$pluginOp
                     </ul>
                     <div class="tab-content" style="margin-top: 7px;">
                         <div role="tabpanel" class="tab-pane active" id="bugs-table-wrapper">
-                            <table id="bugs" class="datatable table table-striped table-bordered dt-responsive nowrap" cellspacing="0" width="100%" data-order="[[ 5, &quot;asc&quot; ]]" data-type="bug">
+                            <table id="bugs" class="datatable table table-striped table-bordered dt-responsive nowrap" cellspacing="0" width="100%" data-order="[[ 4, &quot;asc&quot; ]]" data-type="bug">
                                 <thead>
                                     <?php echo upstream_output_table_header($itemType); ?>
                                 </thead>
@@ -51,7 +51,7 @@ $collapseBox = isset($pluginOptions['collapse_project_bugs']) && (bool)$pluginOp
                             </table>
                         </div>
                         <div role="tabpanel" class="tab-pane" id="my-bugs-table-wrapper">
-                            <table id="my-bugs" class="datatable table table-striped table-bordered dt-responsive nowrap" cellspacing="0" width="100%" data-order="[[ 5, &quot;asc&quot; ]]" data-type="bug">
+                            <table id="my-bugs" class="datatable table table-striped table-bordered dt-responsive nowrap" cellspacing="0" width="100%" data-order="[[ 4, &quot;asc&quot; ]]" data-type="bug">
                                 <thead>
                                     <?php echo upstream_output_table_header($itemType); ?>
                                 </thead>

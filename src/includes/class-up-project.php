@@ -376,6 +376,8 @@ class UpStream_Project {
             }
         }
 
+        $data = apply_filters('upstream:project.onBeforeUpdateMissingMeta', $this->ID, $meta_key, $data);
+
         $updated = update_post_meta( $this->ID, $meta_key, $data );
 
     }
