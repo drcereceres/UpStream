@@ -149,6 +149,7 @@ Fixed:
 * Fixed Bugs table not being ordered by Due Date by default
 * Fixed some uncommon PHP errors being thrown after saving Tasks
 * Fixed UpStream Users having access to any Project
+* Fixed PHP warning being thrown on Project activity in the presence of any Reminder activity of the Email Notifications extension
 
 = [1.12.4] - 2017-10-31 =
 
