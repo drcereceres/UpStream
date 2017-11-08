@@ -281,6 +281,16 @@ final class UpStream
             add_action('admin_bar_menu', array($this, 'limitClientUsersToolbarItems'), 999);
         }
 
+        // Starting from v@todo:version UpStream Users role won't have 'edit_others_projects' capability by default.
+        $editOtherProjectsPermissionWereRemoved = (bool)get_option('upstream:role_upstream_users:drop_edit_others_projects');
+        if (!$editOtherProjectsPermissionWereRemoved) {
+            $role = get_role('upstream_user');
+            $role->remove_cap('edit_others_projects');
+            unset($role);
+
+            update_option('upstream:role_upstream_users:drop_edit_others_projects', 1);
+        }
+
         // Init action.
         do_action( 'upstream_init' );
     }

@@ -137,6 +137,9 @@ and this project adheres to [Semantic Versioning](http://semver.org).
 
 = [@todo: WIP] =
 
+Changed:
+* UpStream Users user role no longer have "edit_others_projects" capability by default
+
 Fixed:
 * Fixed UpStream Users having access to any Project
 
