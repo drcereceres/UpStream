@@ -4,7 +4,7 @@
  * Description: A WordPress Project Management plugin by UpStream.
  * Author: UpStream
  * Author URI: https://upstreamplugin.com
- * Version: 1.12.5-beta-1.0
+ * Version: 1.12.5-beta-2.0
  * Text Domain: upstream
  * Domain Path: /languages
  */
@@ -184,7 +184,7 @@ final class UpStream
         $this->define( 'UPSTREAM_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
         $this->define( 'UPSTREAM_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
         $this->define( 'UPSTREAM_PLUGIN_BASENAME', plugin_basename( __FILE__ ) );
-        $this->define( 'UPSTREAM_VERSION', '1.12.5-beta-1.0' ); // @todo: update version
+        $this->define( 'UPSTREAM_VERSION', '1.12.5-beta-2.0' ); // @todo: update version
     }
 
     /**
@@ -287,7 +287,7 @@ final class UpStream
             add_action('admin_bar_menu', array($this, 'limitClientUsersToolbarItems'), 999);
         }
 
-        // Starting from v@todo:version UpStream Users role won't have 'edit_others_projects' capability by default.
+        // Starting from v1.12.5 UpStream Users role won't have 'edit_others_projects' capability by default.
         $editOtherProjectsPermissionWereRemoved = (bool)get_option('upstream:role_upstream_users:drop_edit_others_projects');
         if (!$editOtherProjectsPermissionWereRemoved) {
             $role = get_role('upstream_user');
@@ -386,7 +386,7 @@ final class UpStream
     /**
      * Render additional update info if needed.
      *
-     * @since   @todo
+     * @since   1.12.5
      * @static
      *
      * @see     https://developer.wordpress.org/reference/hooks/in_plugin_update_message-file
