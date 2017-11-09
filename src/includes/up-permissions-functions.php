@@ -198,28 +198,13 @@ function upstream_user_can_access_project($user_id, $project_id)
         }
     }
 
-    if (!$userCanAccessProject) {
+    if (!$userCanAccessProject && user_can($user, 'edit_published_projects')) {
         // Check if user is a member of the project.
         $projectMembers = upstream_project_members_ids($project_id);
         if (in_array($user->ID, $projectMembers)) {
             $userCanAccessProject = true;
-        } else {
-            // Check if the user has the "edit_published_projects" capability.
-            if (user_can($user, 'edit_published_projects')) {
-                $userCanAccessProject = true;
-            } else {
-                // Check if the user is the owner or can edit other published projects.
-                $projectOwner_id = (array)get_post_meta($project_id, '_upstream_project_owner');
-                $projectOwner_id = !empty($projectOwner_id) ? (int)$projectOwner_id[0] : 0;
-
-                if ($projectOwner_id === $user->ID || user_can($user, 'edit_others_projects')) {
-                    $userCanAccessProject = true;
-                }
-            }
         }
     }
-
-    // @todo: user_can($user, 'edit_private_projects'
 
     return $userCanAccessProject;
 }

@@ -444,7 +444,7 @@ class UpStream_Project_Activity {
                                     $item   = upstream_project_item_by_id( $this->ID, $item_id );
                                     $title  = isset( $item['title'] ) ? $item['title'] : $item['milestone'];
                                     $the_val = $this->format_fields( $field_id, $field_data['add'] );
-                                    $field_output .= '<span class="item">' . sprintf( __( 'New: %s - %s on %s', 'upstream' ), $field_name, $the_val, '<span class="highlight">' . $title . '</span>' ) . '</span>';
+                                    $field_output .= '<span class="item">' . sprintf( __( 'New: %s - %s on %s', 'upstream' ), $field_name, (is_array($the_val) ? json_encode($the_val) : $the_val), '<span class="highlight">' . $title . '</span>' ) . '</span>';
                                 }
 
                                 if( isset( $field_data['from'] ) ) {
