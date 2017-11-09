@@ -376,33 +376,12 @@ class UpStream_Project {
             }
         }
 
-        // removes the last empty item. So that it can be hidden
-        // essentially deletes id, created by and created time if they are the only keys
-        if( $meta_key != '_upstream_project_milestones' ) {
-            $data = $this->remove_empty_items( $data );
-        }
+        $data = apply_filters('upstream:project.onBeforeUpdateMissingMeta', $data, $this->ID, $meta_key);
+
 
         $updated = update_post_meta( $this->ID, $meta_key, $data );
 
     }
-
-    public function remove_empty_items( $data ) {
-
-        if( isset( $data[0]['file_id'] ) && $data[0]['file_id'] == '0' )
-            unset( $data[0]['file_id'] );
-
-        // removes all NULL, FALSE and Empty Strings but leaves 0 (zero) values
-        if( isset( $data[0] ) ) {
-            $first_item = is_array( $data[0] ) ? array_filter( $data[0], 'strlen' ) : $data[0];
-            if( count( $first_item ) === 3 ) {
-                $data = null;
-            }
-        }
-
-        return $data;
-
-    }
-
 
     /*
      *
