@@ -1478,12 +1478,6 @@ class UpStream_Metaboxes_Projects {
         );
 
         try {
-            // @todo: check capability
-            // Check if the user has enough permissions to insert a new comment.
-            // if (!upstream_admin_permissions('publish_project_discussion')) {
-            //     throw new \Exception(__("You're not allowed to do this.", 'upstream'));
-            // }
-
             // Check if the request payload is potentially invalid.
             if (
                 !defined('DOING_AJAX')
@@ -1495,6 +1489,12 @@ class UpStream_Metaboxes_Projects {
                 || !wp_verify_nonce($_POST['nonce'], 'upstream:project.discussion:add_comment')
             ) {
                 throw new \Exception(__("Invalid request.", 'upstream'));
+            }
+
+            $user = wp_get_current_user();
+            // Check if the user has enough permissions to insert a new comment.
+            if (!user_can($user, 'publish_project_discussion')) {
+                throw new \Exception(__("You're not allowed to do this.", 'upstream'));
             }
 
             // Check if the project exists.
@@ -1513,8 +1513,6 @@ class UpStream_Metaboxes_Projects {
             if (strlen($commentContent) === 0) {
                 throw new \Exception(__("Comments cannot be empty.", 'upstream'));
             }
-
-            $user = wp_get_current_user();
 
             $newCommentData = array(
                 'comment_post_ID'      => $project_id,
