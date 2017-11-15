@@ -1407,7 +1407,7 @@ class UpStream_Metaboxes_Projects {
                     'textarea_rows' => 5
                 ),
                 'escape_cb'         => 'applyOEmbedFiltersToWysiwygEditorContent',
-                'before_field'      => '<div class="row"><div class="hidden-xs hidden-sm col-md-12 col-lg-12"><label>' . __('Add new Comment') . '</label>'
+                'before_field'      => '<div class="row"><div class="hidden-xs hidden-sm col-md-12 col-lg-12"><label for="' . $this->prefix . 'new_message' . '">' . __('Add new Comment') . '</label>'
             ) );
         }
 

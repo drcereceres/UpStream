@@ -27,10 +27,11 @@ function upstream_load_admin_scripts( $hook ) {
             'user'      => upstream_current_user_id(),
             'slugBox'   => !(get_post_status() === "pending" && !current_user_can($post_type_object->cap->publish_posts)),
             'l'         => array(
-                'LB_CANCEL'        => __('Cancel'),
-                'LB_SEND_REPLY'    => __('Send Reply', 'upstream'),
-                'LB_REPLYING'      => _x('Replying<br/>%s', "%s: a link to some user's comment", 'upstream'),
-                'MSG_ARE_YOU_SURE' => __('Are you sure? This action cannot be undone.', 'upstream')
+                'LB_CANCEL'          => __('Cancel'),
+                'LB_SEND_REPLY'      => __('Add Reply', 'upstream'),
+                'LB_ADD_NEW_COMMENT' => __('Add new Comment'),
+                'LB_ADD_NEW_REPLY'   => __('Add Comment Reply', 'upstream'),
+                'MSG_ARE_YOU_SURE'   => __('Are you sure? This action cannot be undone.', 'upstream')
             )
         ) ) );
     }

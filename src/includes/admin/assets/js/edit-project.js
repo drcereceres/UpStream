@@ -766,14 +766,11 @@
 
       var self = $(this);
 
-      $('.c-discussion .o-comment').css('background-color', '');
+      $('label[for="_upstream_project_new_message"]').text(upstream_project.l.LB_ADD_NEW_COMMENT);
+      $('#_upstream_project_discussions .button.u-to-be-removed').remove();
+      $('#_upstream_project_discussions .button[data-action="comments.add_comment"]').show();
 
-      self.remove();
-      $('.o-comment-reply-btn').remove();
-
-      $('button#new_message').show();
-
-      newMessageLabel.text(newMessageLabelText);
+      $('.o-comment[data-id]').css('opacity', 1);
 
       resetCommentEditorContent();
     }
@@ -826,58 +823,55 @@
       });
     }
 
-    /*
     $('.c-discussion').on('click', '.o-comment[data-id] a[data-action="comment.reply"]', function(e) {
       e.preventDefault();
 
       var self = $(this);
       var commentWrapper = $(self.parents('.o-comment[data-id]'));
+      var comment_id = commentWrapper.attr('data-id');
 
-      $('.o-comment', commentWrapper.parent()).css('background-color', '');
+      $('.o-comment[data-id!="'+ comment_id +'"]').css('opacity', 0.5);
 
-      commentWrapper.css('background-color', 'aliceblue');
+      var addCommentBtn = $('#_upstream_project_discussions .button[data-action="comments.add_comment"]');
+      addCommentBtn.hide();
+      var controlsWrapper = $(addCommentBtn.parent());
 
-      if ($('.o-comment-reply-cancel-btn').length === 0) {
-        var cancelButton = $('<button />', {
-          type : "button",
-          class: "button-secondary o-comment-reply-cancel-btn",
-          'data-action': "comment.cancel_reply"
-        });
-        cancelButton.text(upstream_project.l.LB_CANCEL);
-        cancelButton.on('click', replyCancelButtonClickCallback);
-      }
+      $('#_upstream_project_discussions .button.u-to-be-removed').remove();
 
-      if ($('.o-comment-reply-btn').length === 0) {
-        var sendReplyButton = $('<button />', {
-          type : "button",
-          class: "button-secondary o-comment-reply-btn",
-          'data-id': commentWrapper.attr('data-id'),
-          'data-action': 'comment.send_reply'
-        }).css({
-          'background-color': '#2ECC71',
-          'color'           : '#FFF',
-          'border-color'    : '#27AE60',
-          'margin-left'     : '15px'
-        }).text(upstream_project.l.LB_SEND_REPLY);
-        sendReplyButton.on('click', replySendButtonCallback);
-      }
+      var cancelButton = $('<button></button>', {
+        type : 'button',
+        class: 'button button-secondary u-to-be-removed'
+      })
+        .text(upstream_project.l.LB_CANCEL);
+      cancelButton.on('click', replyCancelButtonClickCallback);
+      controlsWrapper.append(cancelButton);
 
-      $('button#new_message').hide();
-
-      var buttonsWrapper = $('.o-discussion__footer__buttons');
-      buttonsWrapper
-        .append(cancelButton)
-        .append(sendReplyButton);
-
-      newMessageLabel.html(upstream_project.l.LB_REPLYING.replace('%s', '<a href="#comment-' + commentWrapper.attr('data-id') + '">' + $('h4', commentWrapper).text() + '</a>'));
+      var sendButton = $('<button></button>', {
+        type : 'button',
+        class: 'button button-primary u-to-be-removed'
+      })
+        .text(upstream_project.l.LB_SEND_REPLY)
+        .css('margin-left', '10px');
+      controlsWrapper.append(sendButton);
 
       resetCommentEditorContent();
 
+      $('label[for="_upstream_project_new_message"]').text(upstream_project.l.LB_ADD_NEW_REPLY);
+
+      var finished = false;
       $('html, body').animate({
         scrollTop: $('#_upstream_project_discussions').offset().top
+      }, {
+        complete: function(e) {
+          if (!finished) {
+            setFocus();
+            finished = true;
+          }
+        }
       });
     });
 
+    /*
     function deleteCommentButtonClickCallback(e) {
       e.preventDefault();
 
@@ -969,6 +963,7 @@
 
         if (commentContentText.length === 0 && commentContentHtml.length === 0) {
           // @todo: set focus to editor
+          theEditor.execCommand('mceFocus', false);
           return;
         }
       } else {
@@ -1019,5 +1014,18 @@
         }
       });
     });
+
+    $('label[for="_upstream_project_new_message"]').on('click', setFocus);
+
+    function setFocus() {
+      var theEditor = getCommentEditor();
+      var isEditorInVisualMode = theEditor ? !theEditor.isHidden() : false;
+      if (isEditorInVisualMode) {
+        theEditor.execCommand('mceFocus', false);
+      } else {
+        theEditor = getCommentEditorTextarea();
+        theEditor.focus();
+      }
+    }
   });
 })(window, window.document, jQuery, upstream_project || {});
