@@ -711,56 +711,6 @@
       });
     }
 
-    function sendCommentButtonClickCallback(e) {
-      e.preventDefault();
-
-      var TinyMceSingleton = window.tinyMCE ? window.tinyMCE : (window.tinymce ? window.tinymce : null);
-      var theEditor = TinyMceSingleton.get('_upstream_project_new_message');
-
-      if (!theEditor) {
-        console.error('Editor not found.');
-        return;
-      }
-
-      var self = $(this);
-
-      var theCommentHtml = (theEditor.getContent() || "").trim();
-
-      $.ajax({
-        type: 'POST',
-        url : ajaxurl,
-        data: {
-          action    : 'upstream:project.discussion.add_comment',
-          project_id: $('#post_ID').val(),
-          content   : theCommentHtml
-        },
-        beforeSend: function() {
-          disableCommentArea();
-          self.text(self.attr('data-label-active'));
-        },
-        success: function(response) {
-          console.log(response);
-          if (response.error) {
-            console.error(response.error);
-            alert(response.error);
-          } else {
-            if (!response.success) {
-              console.error('Something went wrong.');
-            } else {
-              resetCommentEditorContent();
-
-              appendCommentHtmlToDiscussion(response.comment_html);
-            }
-          }
-        },
-        error: function() {},
-        complete: function() {
-          enableCommentArea();
-          self.text(self.attr('data-label'));
-        }
-      });
-    }
-
     function replyCancelButtonClickCallback(e) {
       e.preventDefault();
 
@@ -778,27 +728,45 @@
     function replySendButtonCallback(e) {
       e.preventDefault();
 
-      var TinyMceSingleton = window.tinyMCE ? window.tinyMCE : (window.tinymce ? window.tinymce : null);
-      var theEditor = TinyMceSingleton.get('_upstream_project_new_message');
+      var theEditor = getCommentEditor();
+      var commentContentHtml = null;
+      var commentContentText = null;
 
-      if (!theEditor) {
-        console.error('Editor not found.');
-        return;
+      var isEditorInVisualMode = theEditor ? !theEditor.isHidden() : false;
+      if (isEditorInVisualMode) {
+        commentContentHtml = (theEditor.getContent() || "").trim();
+        commentContentText = (theEditor.getContent({ format: 'text' }) || "").trim();
+
+        if (commentContentText.length === 0 && commentContentHtml.length === 0) {
+          theEditor.execCommand('mceFocus', false);
+          return;
+        }
+      } else {
+        theEditor = getCommentEditorTextarea();
+        commentContentHtml = theEditor.val().trim();
+        commentContentText = commentContentHtml;
+
+        if (commentContentText.length === 0) {
+          theEditor.focus();
+          return;
+        }
       }
 
-      var theReplyHtml = (theEditor.getContent() || "").trim();
+      var self = $(this);
 
       $.ajax({
         type: 'POST',
         url : ajaxurl,
         data: {
-          action    : 'upstream:project.discussion.comment.reply',
+          action    : 'upstream:project.discussion.add_comment_reply',
+          //nonce     : self.data('nonce'),
           project_id: $('#post_ID').val(),
-          comment_id: $(this).attr('data-id'),
-          reply_html: theReplyHtml
+          parent_id : self.attr('data-id'),
+          content   : commentContentHtml
         },
         beforeSend: function() {
           disableCommentArea();
+          //self.text(self.attr('data-label-active'));
         },
         success: function(response) {
           console.log(response);
@@ -810,7 +778,6 @@
               console.error('Something went wrong.');
             } else {
               resetCommentEditorContent();
-              $('[data-action="comment.cancel_reply"]').trigger('click');
 
               appendCommentHtmlToDiscussion(response.comment_html);
             }
@@ -819,8 +786,20 @@
         error: function() {},
         complete: function() {
           enableCommentArea();
+          //self.text(self.attr('data-label'));
         }
       });
+    }
+
+    function setFocus() {
+      var theEditor = getCommentEditor();
+      var isEditorInVisualMode = theEditor ? !theEditor.isHidden() : false;
+      if (isEditorInVisualMode) {
+        theEditor.execCommand('mceFocus', false);
+      } else {
+        theEditor = getCommentEditorTextarea();
+        theEditor.focus();
+      }
     }
 
     $('.c-discussion').on('click', '.o-comment[data-id] a[data-action="comment.reply"]', function(e) {
@@ -847,11 +826,13 @@
       controlsWrapper.append(cancelButton);
 
       var sendButton = $('<button></button>', {
-        type : 'button',
-        class: 'button button-primary u-to-be-removed'
+        type     : 'button',
+        class    : 'button button-primary u-to-be-removed',
+        'data-id': comment_id
       })
         .text(upstream_project.l.LB_SEND_REPLY)
         .css('margin-left', '10px');
+      sendButton.on('click', replySendButtonCallback);
       controlsWrapper.append(sendButton);
 
       resetCommentEditorContent();
@@ -929,6 +910,7 @@
 
     $('#_upstream_project_discussions [data-action="comment.add"]').on('click', sendCommentButtonClickCallback);
     $('.c-discussion').on('click', '.o-comment[data-id] a[data-action="comment.delete"]', deleteCommentButtonClickCallback);
+    */
 
     $('.c-discussion').on('click', '.o-comment[data-id] a[data-action="comment.go_to_reply"]', function(e) {
       e.preventDefault();
@@ -947,7 +929,6 @@
         }, 750);
       });
     });
-    */
 
     $('#cmb2-metabox-_upstream_project_discussions .cmb2-id--upstream-project-new-message').on('click', '.button[data-action="comments.add_comment"]', function(e) {
       e.preventDefault();
@@ -962,7 +943,6 @@
         commentContentText = (theEditor.getContent({ format: 'text' }) || "").trim();
 
         if (commentContentText.length === 0 && commentContentHtml.length === 0) {
-          // @todo: set focus to editor
           theEditor.execCommand('mceFocus', false);
           return;
         }
@@ -1016,16 +996,5 @@
     });
 
     $('label[for="_upstream_project_new_message"]').on('click', setFocus);
-
-    function setFocus() {
-      var theEditor = getCommentEditor();
-      var isEditorInVisualMode = theEditor ? !theEditor.isHidden() : false;
-      if (isEditorInVisualMode) {
-        theEditor.execCommand('mceFocus', false);
-      } else {
-        theEditor = getCommentEditorTextarea();
-        theEditor.focus();
-      }
-    }
   });
 })(window, window.document, jQuery, upstream_project || {});
