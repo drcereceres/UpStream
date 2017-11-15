@@ -428,60 +428,179 @@ function upstream_admin_output_bug_hidden_data() {
    ====================================================================================== */
 /**
  * Outputs comments in the admin.
+ * @todo: show we hide replies from trashed comments?
  */
-function upstream_admin_display_messages() { ?>
+function upstream_admin_display_messages()
+{
+    $project_id = upstream_post_id();
+    if (!$project_id) return;
 
-    <ul class="admin-discussion">
+    $rowsetUsers = get_users();
+    $users = array();
+    foreach ($rowsetUsers as $user) {
+        $users[(int)$user->ID] = (object)array(
+            'id'     => (int)$user->ID,
+            'name'   => $user->display_name,
+            'avatar' => getUserAvatarURL($user->ID)
+        );
+    }
+    unset($user, $rowsetUsers);
 
-    <?php
-    $post_id = isset( $_GET['post'] ) ? $_GET['post'] : null;
-    if( ! $post_id )
-        return;
+    $rowset = (array)get_comments(array(
+        'post_id' => $project_id,
+        'orderby' => 'comment_date_gmt',
+        'order'   => 'DESC',
+        'type'    => 'comment',
+        'status'  => array('hold', 'approve')
+    ));
 
-    $comments = get_post_meta( $post_id, '_upstream_project_discussion', true );
-    if( $comments ) {
-        $comments = array_reverse( get_post_meta( $post_id, '_upstream_project_discussion', true ) );
-        foreach ($comments as $comment) {
-            upstream_admin_display_message_item( $post_id, $comment );
+    $comments = array();
+    if (count($rowset) > 0) {
+        $dateFormat = get_option('date_format');
+        $timeFormat = get_option('time_format');
+        $theDateTimeFormat = $dateFormat . ' ' . $timeFormat;
+        $utcTimeZone = new DateTimeZone('UTC');
+        $currentTimezone = upstreamGetTimeZone();
+        $currentTimestamp = time();
+
+        foreach ($rowset as $row) {
+            $author = $users[(int)$row->user_id];
+
+            $date = DateTime::createFromFormat('Y-m-d H:i:s', $row->comment_date_gmt, $utcTimeZone);
+            $date->setTimezone($currentTimezone);
+            $dateTimestamp = $date->getTimestamp();
+
+            $comment = json_decode(json_encode(array(
+                'id'         => (int)$row->comment_ID,
+                'parent_id'  => (int)$row->comment_parent,
+                'content'    => $row->comment_content,
+                'state'      => (int)$row->comment_approved,
+                'created_by' => $author,
+                'created_at' => array(
+                    'timestamp' => $dateTimestamp,
+                    'utc'       => $row->comment_date_gmt,
+                    'localized' => $date->format($theDateTimeFormat),
+                    'humanized' => sprintf(
+                        _x('%s ago', '%s = human-readable time difference', 'upstream'),
+                        human_time_diff($dateTimestamp, $currentTimestamp)
+                    )
+                )
+            )));
+
+            $comments[$comment->id] = $comment;
         }
-    } ?>
+    }
 
-    </ul>
+    //var_dump($comments);
 
+    //die();
+
+    /*
+    // @todo: remove
+    $rowset = (array)get_post_meta($project_id, '_upstream_project_discussion', true);
+    if (count($rowset) > 0) {
+        $dateFormat = get_option('date_format');
+        $timeFormat = get_option('time_format');
+        $currentTimezone = upstreamGetTimeZone();
+        $currentTimestamp = time();
+
+        $rowset = array_reverse($rowset);
+        foreach ($rowset as $comment) {
+            $comment = (object)$comment;
+
+            $user = $users[(int)$comment->created_by];
+
+            $comment->created_by_name = $user->name;
+            $comment->created_by_avatar = $user->avatar;
+
+            $date = new DateTime();
+            $date->setTimestamp($comment->created_time);
+            $date->setTimezone($currentTimezone);
+            $comment->created_at_human = $date->format($dateFormat . ' ' . $timeFormat);
+
+            $comments[$comment->id] = $comment;
+        }
+
+        foreach ($comments as $comment_id => $comment) {
+            if (isset($comment->parent_id) && !empty($comment->parent_id) && isset($comments[$comment->parent_id])) {
+                $comment->parent = $comments[$comment->parent_id];
+                $comments[$comment_id] = $comment;
+            }
+        }
+    }
+    */
+    ?>
+    <div class="admin-discussion c-discussion">
+        <?php
+        if (count($comments) > 0) {
+            foreach ($comments as $comment) {
+                upstream_admin_display_message_item($comment, $comments);
+            }
+        }
+        ?>
+    </div>
     <?php
 }
 
-function upstream_admin_display_message_item($project_id, $comment)
+function upstream_admin_display_message_item($comment, $comments = array())
 {
-    $project_id = (int)$project_id;
-    if ($project_id <= 0) return;
-
     global $wp_embed;
-
-    $user = wp_get_current_user();
-    $userAvatarURL = getUserAvatarURL($user->ID);
-
-    $dateFormat = get_option('date_format');
-    $timeFormat = get_option('time_format');
-    $currentTimezone = upstreamGetTimeZone();
-
-    $date = new DateTime();
-    $date->setTimestamp($comment['created_time']);
-    $date->setTimezone($currentTimezone);
     ?>
-    <li>
-      <img width="36" height="36" src="<?php echo $userAvatarURL; ?>" />
-      <span class="name"><?php echo esc_html($user->display_name); ?></span>
-      <span class="date">
-        <?php echo sprintf(
-            _x('%s ago', '%s = human-readable time difference', 'upstream'),
-            human_time_diff($comment['created_time'], time())
-        ); ?>
-        <small>(<?php echo $date->format($dateFormat . ' ' . $timeFormat); ?>)</small>
-      </span>
-      <span class="comment"><?php echo $wp_embed->autoembed(wpautop($comment['comment'])); ?></span>
-      <a href="#" class="button cmb-remove-group-row alignright o-delete_message" data-id="<?php echo esc_attr( $comment['id'] ); ?>"><?php _e( 'Delete', 'upstream' ) ?></a>
-    </li>
+    <div class="media o-comment <?php echo $comment->state === 1 ? 's-status-approved' : 's-status-unapproved'; ?>" id="comment-<?php echo $comment->id; ?>" data-id="<?php echo $comment->id; ?>">
+      <div class="media-left">
+        <img class="media-object" src="<?php echo $comment->created_by->avatar; ?>" width="30">
+        <?php if ($comment->state !== 1): // @todo: check capabilities ?>
+        <div class="u-text-center">
+          <span class="dashicons dashicons-hidden u-color-gray" title="<?php _e("This comment is not visible by regular users.", 'upstream'); ?>" style="margin-top: 2px;"></span>
+        </div>
+        <?php endif; ?>
+      </div>
+      <div class="media-body">
+        <div class="media-heading">
+          <h4><?php echo $comment->created_by->name; ?></h4>
+          <?php if (isset($comment->parent_id) && $comment->parent_id > 0): ?>
+          <div>
+            <?php
+            if (isset($comments[$comment->parent_id])) {
+                printf(
+                    __('In reply to %s', 'upstream'),
+                    sprintf(
+                        '<a href="#%s" data-action="comment.go_to_reply">%s</a>',
+                        'comment-' . $comment->parent_id,
+                        $comments[$comment->parent_id]->created_by->name
+                    )
+                );
+            } else {
+                printf(
+                    '%s&nbsp;<i style="color: #BDC3C7;">(%s)</i>',
+                    __('In reply to'),
+                    __('comment not found', 'upstream')
+                );
+            }
+            ?>
+          </div>
+          <?php endif; ?>
+          <time>
+            <?php echo $comment->created_at->humanized; ?>
+            <span>(<?php echo $comment->created_at->localized; ?>)</span>
+          </time>
+        </div>
+        <div class="o-comment__content">
+          <?php echo $wp_embed->autoembed(wpautop($comment->content)); ?>
+        </div>
+        <div class="media-footer">
+          <div class="o-comment__actions">
+            <?php if ($comment->state === 1): ?>
+            <a href="#" data-action="comment.unapprove"><?php _e('Unapprove'); ?></a>&nbsp;|&nbsp;
+            <?php else: ?>
+            <a href="#" data-action="comment.approve"><?php _e('Approve'); ?></a>&nbsp;|&nbsp;
+            <?php endif; ?>
+            <a href="#" data-action="comment.reply"><?php _e('Reply'); ?></a>&nbsp;|&nbsp;
+            <a href="#" data-action="comment.trash"><?php _e('Trash'); ?></a>
+          </div>
+        </div>
+      </div>
+    </div>
     <?php
 }
 
@@ -492,90 +611,6 @@ function upstream_admin_display_message_item($project_id, $comment)
  */
 function upstream_admin_discussion_button() {
     echo '<p><button class="button" id="new_message" type="button">' . __( 'New Message', 'upstream') . '</button></p>';
-}
-
-/**
- * AJAX function to post a new comment in the admin.
- */
-add_action('wp_ajax_upstream_admin_new_message', 'upstreamAdminInsertNewComment');
-/**
- * AJAX endpoint that inserts a new comment to a given project's discussion.
- *
- * @since   1.12.2
- */
-function upstreamAdminInsertNewComment()
-{
-    try {
-        // Check if the request is AJAX.
-        if (!defined('DOING_AJAX') || !DOING_AJAX) {
-            throw new \Exception(__("Invalid request.", 'upstream'));
-        }
-
-        // Check if the user has enough permissions to insert a new comment.
-        if (!upstream_admin_permissions('publish_project_discussion')) {
-            throw new \Exception(__("You're not allowed to do this.", 'upstream'));
-        }
-
-        // Check if the request payload is potentially invalid.
-        if (empty($_POST) || !isset($_POST['upstream_security']) || !isset($_POST['project_id'])) {
-            throw new \Exception(__("Invalid request payload.", 'upstream'));
-        }
-
-        // Check the correspondent nonce.
-        if (!wp_verify_nonce($_POST['upstream_security'], 'ajax_nonce')) {
-            throw new \Exception(__("Invalid request.", 'upstream'));
-        }
-
-        // Check if the project exists.
-        $project_id = (int)$_POST['project_id'];
-        $project = get_post($project_id);
-        if ($project_id <= 0 || $project === false) {
-            throw new \Exception(__("Invalid Project.", 'upstream'));
-        }
-
-        // Check if the Discussion/Comments section is disabled for the current project.
-        if (upstream_are_comments_disabled($project_id)) {
-            throw new \Exception(__("Comments are disabled for this project.", 'upstream'));
-        }
-
-        // Sanitizes the comment.
-        $commentContent = trim(wp_kses_post($_POST['content']));
-        if (strlen($commentContent) === 0) {
-            throw new \Exception(__("Comments cannot be empty.", 'upstream'));
-        }
-
-        $comments = get_post_meta($project_id, '_upstream_project_discussion');
-        $comments = !empty($comments) ? (array)$comments[0] : array();
-
-        $commendsIdsCache = array();
-        foreach ($comments as &$comment) {
-            $commendsIdsCache[$comment['id']] = $comment;
-        }
-
-        do {
-            $newCommentId = upstreamGenerateRandomString(14);
-        } while (isset($commendsIdsCache[$newCommentId]));
-
-        $user = wp_get_current_user();
-
-        $newCommentData = array(
-            'id'           => $newCommentId,
-            'comment'      => $commentContent,
-            'is_client'    => in_array('upstream_client_user', (array)$user->roles),
-            'created_by'   => $user->ID,
-            'created_time' => time()
-        );
-
-        array_push($comments, $newCommentData);
-
-        update_post_meta($project_id, '_upstream_project_discussion', $comments);
-
-        upstream_admin_display_message_item($project_id, $newCommentData);
-
-        exit;
-    } catch (Exception $e) {
-        wp_die($e->getMessage());
-    }
 }
 
 /**

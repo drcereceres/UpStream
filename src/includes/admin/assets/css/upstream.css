@@ -1041,3 +1041,168 @@ body.upstream_page_upstream_extensions #upstream_extensions input[type="submit"]
 #form-add-new-user .description {
   margin-left: 15.2em
 }
+
+
+
+
+
+
+
+
+
+
+.c-discussion {
+  max-height: 340px;
+  overflow: auto;
+}
+
+.c-discussion .media {
+  margin-top: 15px;
+}
+.c-discussion .media:first-child {
+  margin-top: 0;
+}
+.c-discussion .media,
+.c-discussion .media-body {
+  zoom: 1;
+  overflow: hidden;
+}
+.c-discussion .media-body {
+  width: 100%;
+}
+.c-discussion .media-object {
+  display: block;
+}
+.c-discussion .media-object.img-thumbnail {
+  max-width: none;
+}
+.c-discussion .media-right,
+.c-discussion .media > .pull-right {
+  padding-left: 10px;
+}
+.c-discussion .media-left,
+.c-discussion .media > .pull-left {
+  padding-right: 10px;
+}
+.c-discussion .media-left,
+.c-discussion .media-right,
+.c-discussion .media-body {
+  display: table-cell;
+  vertical-align: top;
+}
+.c-discussion .media-middle {
+  vertical-align: middle;
+}
+.c-discussion .media-bottom {
+  vertical-align: bottom;
+}
+.c-discussion .media-heading {
+  margin-top: 0;
+  margin-bottom: 5px;
+}
+.c-discussion .media-list {
+  padding-left: 0;
+  list-style: none;
+}
+.o-comment {
+  -webkit-transition: background-color 250ms ease-out;  /* Android 2.1+, Chrome 1-25, iOS 3.2-6.1, Safari 3.2-6  */
+          transition: background-color 250ms ease-out;
+}
+.o-comment.s-highlighted {
+  background-color: #cce5ff !important;
+}
+.o-comment.media > .media-body > .media-heading {
+  display: flex;
+  justify-content: space-between;
+}
+.o-comment.media > .media-body > .media-heading > h4 {
+  margin: 0;
+}
+.o-comment.media > .media-body > .media-heading > *:not(h4) {
+  font-size: 80%;
+}
+.o-comment.media > .media-body > .media-heading > time span {
+  color: #BDC3C7;
+}
+.o-comment + .o-comment {
+  margin-top: 0;
+  padding-top: 15px;
+  border-top: 1px solid #ECF0F1;
+}
+.o-comment:last-child {
+  border-bottom: 1px solid #ECF0F1;
+}
+
+.o-comment .o-comment__actions {
+  visibility: hidden;
+  font-size: 90%;
+  color: #DDD;
+}
+
+.o-comment:hover .o-comment__actions {
+  visibility: visible;
+}
+
+.o-comment .o-comment__actions a[data-action="comment.delete"]:not(:active),
+.o-comment .o-comment__actions a[data-action="comment.delete"]:not(:focus),
+.o-comment .o-comment__actions a[data-action="comment.delete"]:not(:hover) {
+  color: #A00;
+}
+
+.o-comment .o-comment__actions a[data-action="comment.delete"]:active,
+.o-comment .o-comment__actions a[data-action="comment.delete"]:focus,
+.o-comment .o-comment__actions a[data-action="comment.delete"]:hover {
+  color: #DC3232;
+}
+
+.c-discussion > .o-comment:nth-child(odd) {
+  background-color: #F9F9F9;
+}
+
+.c-discussion > .o-comment {
+  padding: 10px;
+}
+
+.o-comment .o-comment__content img.aligncenter {
+  display: block;
+  margin: 0 auto;
+}
+
+#_upstream_project_discussions .cmb2-id--upstream-project-new-message .cmb-th {
+  display: none;
+}
+
+#_upstream_project_discussions .cmb2-id--upstream-project-new-message .cmb-td {
+  width: 100%;
+}
+
+.u-text-right {
+  text-align: right;
+}
+
+#_upstream_project_discussions .cmb2-id--upstream-project-new-message label {
+  font-weight: bold;
+  color: #555;
+  display: block;
+  padding-bottom: 10px;
+}
+
+a[data-action="comment.approve"] {
+  color: #006505;
+}
+
+a[data-action="comment.unapprove"] {
+  color: #D98500;
+}
+
+a[data-action="comment.trash"] {
+  color: #DC3232;
+}
+
+.o-comment.s-status-unapproved {
+  background-color: #FFFBCF !important;
+}
+
+.u-color-gray {
+  color: #BDC3C7;
+}

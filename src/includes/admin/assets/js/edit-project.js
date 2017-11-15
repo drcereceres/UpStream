@@ -619,3 +619,405 @@
             }
         });
 })(jQuery);
+
+(function(window, document, $, upstream_project, undefined) {
+  $(document).ready(function() {
+    var newMessageLabel = $('#_upstream_project_discussions label[for="_upstream_project_new_message"]');
+    var newMessageLabelText = newMessageLabel.text();
+
+    function getCommentEditor() {
+      var TinyMceSingleton = window.tinyMCE ? window.tinyMCE : (window.tinymce ? window.tinymce : null);
+      var theEditor = TinyMceSingleton.get('_upstream_project_new_message');
+
+      return theEditor;
+    }
+
+    function getCommentEditorTextarea() {
+      return $('#_upstream_project_new_message');
+    }
+
+    function disableCommentArea() {
+      var theEditor = getCommentEditor();
+
+      if (theEditor) {
+        theEditor.getDoc().designMode = 'off';
+
+        var theEditorBody = theEditor.getBody();
+        theEditorBody.setAttribute('contenteditable', 'false');
+        theEditorBody.setAttribute('readonly', '1');
+        theEditorBody.style.background = "#ECF0F1";
+        theEditorBody.style.cursor = "progress";
+      }
+
+      var theEditorTextarea = getCommentEditorTextarea();
+      theEditorTextarea.attr('disabled', 'disabled');
+      theEditorTextarea.addClass('disabled');
+
+      $('#wp-_upstream_project_new_message-wrap').css('cursor', 'progress');
+      $('#insert-media-button').attr('disabled', 'disabled');
+      $('button[data-action^="comment."]').attr('disabled', 'disabled');
+      $('button[data-action^="comments."]').attr('disabled', 'disabled');
+    }
+
+    function enableCommentArea() {
+      var theEditor = getCommentEditor();
+
+      if (theEditor) {
+        theEditor.getDoc().designMode = 'on';
+
+        var theEditorBody = theEditor.getBody();
+        theEditorBody.setAttribute('contenteditable', 'true');
+        theEditorBody.setAttribute('readonly', '0');
+        theEditorBody.style.background = null;
+        theEditorBody.style.cursor = null;
+      }
+
+      var theEditorTextarea = getCommentEditorTextarea();
+      theEditorTextarea.attr('disabled', null);
+      theEditorTextarea.removeClass('disabled');
+
+      $('#wp-_upstream_project_new_message-wrap').css('cursor', '');
+      $('#insert-media-button').attr('disabled', null);
+      $('button[data-action^="comment."]').attr('disabled', null);
+      $('button[data-action^="comments."]').attr('disabled', null);
+    }
+
+    function resetCommentEditorContent() {
+      var theEditor = getCommentEditor();
+      if (theEditor) {
+        theEditor.setContent('');
+      }
+
+      var theEditorTextarea = getCommentEditorTextarea();
+      theEditorTextarea.val('');
+    }
+
+    function appendCommentHtmlToDiscussion(commentHtml) {
+      var comment = $(commentHtml);
+      comment.hide();
+
+      commentHtml = comment.html()
+        .replace(/\\'/g, "'")
+        .replace(/\\"/g, '"');
+
+      comment.html(commentHtml);
+
+      comment.prependTo('.c-discussion');
+
+      $('.c-discussion').animate({
+        scrollTop: 0
+      }, function() {
+        comment.fadeIn();
+      });
+    }
+
+    function sendCommentButtonClickCallback(e) {
+      e.preventDefault();
+
+      var TinyMceSingleton = window.tinyMCE ? window.tinyMCE : (window.tinymce ? window.tinymce : null);
+      var theEditor = TinyMceSingleton.get('_upstream_project_new_message');
+
+      if (!theEditor) {
+        console.error('Editor not found.');
+        return;
+      }
+
+      var self = $(this);
+
+      var theCommentHtml = (theEditor.getContent() || "").trim();
+
+      $.ajax({
+        type: 'POST',
+        url : ajaxurl,
+        data: {
+          action    : 'upstream:project.discussion.add_comment',
+          project_id: $('#post_ID').val(),
+          content   : theCommentHtml
+        },
+        beforeSend: function() {
+          disableCommentArea();
+          self.text(self.attr('data-label-active'));
+        },
+        success: function(response) {
+          console.log(response);
+          if (response.error) {
+            console.error(response.error);
+            alert(response.error);
+          } else {
+            if (!response.success) {
+              console.error('Something went wrong.');
+            } else {
+              resetCommentEditorContent();
+
+              appendCommentHtmlToDiscussion(response.comment_html);
+            }
+          }
+        },
+        error: function() {},
+        complete: function() {
+          enableCommentArea();
+          self.text(self.attr('data-label'));
+        }
+      });
+    }
+
+    function replyCancelButtonClickCallback(e) {
+      e.preventDefault();
+
+      var self = $(this);
+
+      $('.c-discussion .o-comment').css('background-color', '');
+
+      self.remove();
+      $('.o-comment-reply-btn').remove();
+
+      $('button#new_message').show();
+
+      newMessageLabel.text(newMessageLabelText);
+
+      resetCommentEditorContent();
+    }
+
+    function replySendButtonCallback(e) {
+      e.preventDefault();
+
+      var TinyMceSingleton = window.tinyMCE ? window.tinyMCE : (window.tinymce ? window.tinymce : null);
+      var theEditor = TinyMceSingleton.get('_upstream_project_new_message');
+
+      if (!theEditor) {
+        console.error('Editor not found.');
+        return;
+      }
+
+      var theReplyHtml = (theEditor.getContent() || "").trim();
+
+      $.ajax({
+        type: 'POST',
+        url : ajaxurl,
+        data: {
+          action    : 'upstream:project.discussion.comment.reply',
+          project_id: $('#post_ID').val(),
+          comment_id: $(this).attr('data-id'),
+          reply_html: theReplyHtml
+        },
+        beforeSend: function() {
+          disableCommentArea();
+        },
+        success: function(response) {
+          console.log(response);
+          if (response.error) {
+            console.error(response.error);
+            alert(response.error);
+          } else {
+            if (!response.success) {
+              console.error('Something went wrong.');
+            } else {
+              resetCommentEditorContent();
+              $('[data-action="comment.cancel_reply"]').trigger('click');
+
+              appendCommentHtmlToDiscussion(response.comment_html);
+            }
+          }
+        },
+        error: function() {},
+        complete: function() {
+          enableCommentArea();
+        }
+      });
+    }
+
+    /*
+    $('.c-discussion').on('click', '.o-comment[data-id] a[data-action="comment.reply"]', function(e) {
+      e.preventDefault();
+
+      var self = $(this);
+      var commentWrapper = $(self.parents('.o-comment[data-id]'));
+
+      $('.o-comment', commentWrapper.parent()).css('background-color', '');
+
+      commentWrapper.css('background-color', 'aliceblue');
+
+      if ($('.o-comment-reply-cancel-btn').length === 0) {
+        var cancelButton = $('<button />', {
+          type : "button",
+          class: "button-secondary o-comment-reply-cancel-btn",
+          'data-action': "comment.cancel_reply"
+        });
+        cancelButton.text(upstream_project.l.LB_CANCEL);
+        cancelButton.on('click', replyCancelButtonClickCallback);
+      }
+
+      if ($('.o-comment-reply-btn').length === 0) {
+        var sendReplyButton = $('<button />', {
+          type : "button",
+          class: "button-secondary o-comment-reply-btn",
+          'data-id': commentWrapper.attr('data-id'),
+          'data-action': 'comment.send_reply'
+        }).css({
+          'background-color': '#2ECC71',
+          'color'           : '#FFF',
+          'border-color'    : '#27AE60',
+          'margin-left'     : '15px'
+        }).text(upstream_project.l.LB_SEND_REPLY);
+        sendReplyButton.on('click', replySendButtonCallback);
+      }
+
+      $('button#new_message').hide();
+
+      var buttonsWrapper = $('.o-discussion__footer__buttons');
+      buttonsWrapper
+        .append(cancelButton)
+        .append(sendReplyButton);
+
+      newMessageLabel.html(upstream_project.l.LB_REPLYING.replace('%s', '<a href="#comment-' + commentWrapper.attr('data-id') + '">' + $('h4', commentWrapper).text() + '</a>'));
+
+      resetCommentEditorContent();
+
+      $('html, body').animate({
+        scrollTop: $('#_upstream_project_discussions').offset().top
+      });
+    });
+
+    function deleteCommentButtonClickCallback(e) {
+      e.preventDefault();
+
+      var comment = $($(this).parents('.o-comment[data-id]'));
+      if (!comment.length) {
+        console.error('Comment wrapper not found.');
+        return;
+      }
+
+      comment.css('background-color', 'aliceblue');
+
+      setTimeout(function() {
+        if (!confirm(upstream_project.l.MSG_ARE_YOU_SURE)) {
+          comment.css('background-color', '');
+          return;
+        }
+
+        var theEditor = getCommentEditor();
+        if (!theEditor) {
+          console.error('Editor not found.');
+          return;
+        }
+
+        $.ajax({
+          type: 'POST',
+          url : ajaxurl,
+          data: {
+            action    : 'upstream:project.discussion.delete_comment',
+            project_id: $('#post_ID').val(),
+            comment_id: comment.attr('data-id')
+          },
+          beforeSend: function() {
+          },
+          success: function(response) {
+            console.log(response);
+            if (response.error) {
+              console.error(response.error);
+              alert(response.error);
+            } else {
+              if (!response.success) {
+                console.error('Something went wrong.');
+              } else {
+                comment.slideUp({
+                  complete: function() {
+                    comment.remove();
+                  }
+                });
+              }
+            }
+          },
+          error: function() {}
+        });
+      }, 50);
+    }
+
+    $('#_upstream_project_discussions [data-action="comment.add"]').on('click', sendCommentButtonClickCallback);
+    $('.c-discussion').on('click', '.o-comment[data-id] a[data-action="comment.delete"]', deleteCommentButtonClickCallback);
+
+    $('.c-discussion').on('click', '.o-comment[data-id] a[data-action="comment.go_to_reply"]', function(e) {
+      e.preventDefault();
+
+      var targetComment = $($(this).attr('href'));
+      var wrapper = $(targetComment.parents('.c-discussion'));
+
+      var targetCommentOffsetTop = targetComment.offset().top - wrapper.offset().top;
+
+      wrapper.animate({
+        scrollTop: targetCommentOffsetTop,
+      }, function() {
+        targetComment.addClass('s-highlighted');
+        setTimeout(function() {
+          targetComment.removeClass('s-highlighted');
+        }, 750);
+      });
+    });
+    */
+
+    $('#cmb2-metabox-_upstream_project_discussions .cmb2-id--upstream-project-new-message').on('click', '.button[data-action="comments.add_comment"]', function(e) {
+      e.preventDefault();
+
+      var theEditor = getCommentEditor();
+      var commentContentHtml = null;
+      var commentContentText = null;
+
+      var isEditorInVisualMode = theEditor ? !theEditor.isHidden() : false;
+      if (isEditorInVisualMode) {
+        commentContentHtml = (theEditor.getContent() || "").trim();
+        commentContentText = (theEditor.getContent({ format: 'text' }) || "").trim();
+
+        if (commentContentText.length === 0 && commentContentHtml.length === 0) {
+          // @todo: set focus to editor
+          return;
+        }
+      } else {
+        theEditor = getCommentEditorTextarea();
+        commentContentHtml = theEditor.val().trim();
+        commentContentText = commentContentHtml;
+
+        if (commentContentText.length === 0) {
+          theEditor.focus();
+          return;
+        }
+      }
+
+      var self = $(this);
+
+      $.ajax({
+        type: 'POST',
+        url : ajaxurl,
+        data: {
+          action    : 'upstream:project.discussion.add_comment',
+          nonce     : self.data('nonce'),
+          project_id: $('#post_ID').val(),
+          content   : commentContentHtml
+        },
+        beforeSend: function() {
+          disableCommentArea();
+          self.text(self.attr('data-label-active'));
+        },
+        success: function(response) {
+          console.log(response);
+          if (response.error) {
+            console.error(response.error);
+            alert(response.error);
+          } else {
+            if (!response.success) {
+              console.error('Something went wrong.');
+            } else {
+              resetCommentEditorContent();
+
+              appendCommentHtmlToDiscussion(response.comment_html);
+            }
+          }
+        },
+        error: function() {},
+        complete: function() {
+          enableCommentArea();
+          self.text(self.attr('data-label'));
+        }
+      });
+    });
+  });
+})(window, window.document, jQuery, upstream_project || {});

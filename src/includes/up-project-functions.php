@@ -491,9 +491,20 @@ function getProjectComments($project_id)
 
             $commentData['comment'] = $wp_embed->autoembed(wpautop($commentData['comment']));
 
-            array_push($comments, (object)$commentData);
+            $comments[$commentData['id']] = (object)$commentData;
+        }
+
+        foreach ($comments as &$comment) {
+            if (isset($comment->parent_id) && isset($comments[$comment->parent_id])) {
+                $comment->parent = &$comments[$comment->parent_id];
+                unset($comment->parent_id);
+            } else {
+                $comment->parent = null;
+            }
         }
     }
+
+    $comments = array_reverse(array_values($comments));
 
     return $comments;
 }

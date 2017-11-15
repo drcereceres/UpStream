@@ -43,6 +43,14 @@ class UpStream_Metaboxes_Projects {
         add_action('edit_form_before_permalink', array($this, 'makeProjectTemporarilyPublic'));
         // Ensure the made public project are non-public as it should.
         add_action('edit_form_after_title', array($this, 'makeProjectPrivateOnceAgain'));
+
+
+
+
+
+        add_action('wp_ajax_upstream:project.discussion.add_comment', array($this, 'storeComment'));
+        add_action('wp_ajax_upstream:project.discussion.comment.reply', array($this, 'storeCommentReply'));
+        add_action('wp_ajax_upstream:project.discussion.delete_comment', array($this, 'deleteComment'));
     }
 
     /**
@@ -1386,20 +1394,20 @@ class UpStream_Metaboxes_Projects {
 
         if (!$areCommentsDisabled) {
             $metabox->add_field( array(
-                'name'              => __( 'New Message', 'upstream' ),
+                'name'              => __('Add new Comment'),
                 'desc'              => '',
                 'id'                => $this->prefix . 'new_message',
                 'type'              => 'wysiwyg',
                 'permissions'       => 'publish_project_discussion',
                 'before'            => 'upstream_add_field_attributes',
-                'after_field'       => '<p><button class="button" id="new_message" type="button">' . __( 'Post Message', 'upstream') . '</button></p></div></div>',
+                'after_field'       => '<p class="u-text-right"><button class="button button-primary" type="button" data-action="comments.add_comment" data-nonce="' . wp_create_nonce('upstream:project.discussion:add_comment') . '">' . __('Add Comment') . '</button></p></div></div>',
                 'after_row'         => 'upstream_admin_display_messages',
                 'options'           => array(
                     'media_buttons' => true,
                     'textarea_rows' => 5
                 ),
                 'escape_cb'         => 'applyOEmbedFiltersToWysiwygEditorContent',
-                'before_field'      => '<div class="row"><div class="hidden-xs hidden-sm col-md-12 col-lg-12">'
+                'before_field'      => '<div class="row"><div class="hidden-xs hidden-sm col-md-12 col-lg-12"><label>' . __('Add new Comment') . '</label>'
             ) );
         }
 
@@ -1452,6 +1460,350 @@ class UpStream_Metaboxes_Projects {
         if ($post_type_object->name === "project") {
             $post_type_object->public = false;
         }
+    }
+
+    /**
+     * AJAX endpoint that adds a new comment to a given project.
+     *
+     * @since   @todo
+     * @static
+     */
+    static public function storeComment()
+    {
+        header('Content-Type: application/json');
+
+        $response = array(
+            'success' => false,
+            'error'   => null
+        );
+
+        try {
+            // @todo: check capability
+            // Check if the user has enough permissions to insert a new comment.
+            // if (!upstream_admin_permissions('publish_project_discussion')) {
+            //     throw new \Exception(__("You're not allowed to do this.", 'upstream'));
+            // }
+
+            // Check if the request payload is potentially invalid.
+            if (
+                !defined('DOING_AJAX')
+                || !DOING_AJAX
+                || empty($_POST)
+                || !isset($_POST['nonce'])
+                || !isset($_POST['project_id'])
+                || !isset($_POST['content'])
+                || !wp_verify_nonce($_POST['nonce'], 'upstream:project.discussion:add_comment')
+            ) {
+                throw new \Exception(__("Invalid request.", 'upstream'));
+            }
+
+            // Check if the project exists.
+            $project_id = (int)$_POST['project_id'];
+            if ($project_id <= 0) {
+                throw new \Exception(__("Invalid Project.", 'upstream'));
+            }
+
+            // Check if the Discussion/Comments section is disabled for the current project.
+            if (upstream_are_comments_disabled($project_id)) {
+                throw new \Exception(__("Comments are disabled for this project.", 'upstream'));
+            }
+
+            // Sanitizes the comment.
+            $commentContent = trim(wp_kses_post($_POST['content']));
+            if (strlen($commentContent) === 0) {
+                throw new \Exception(__("Comments cannot be empty.", 'upstream'));
+            }
+
+            $user = wp_get_current_user();
+
+            $newCommentData = array(
+                'comment_post_ID'      => $project_id,
+                'comment_author'       => $user->display_name,
+                'comment_author_email' => $user->user_email,
+                'comment_date'         => current_time('mysql'),
+                'comment_date_gmt'     => current_time('mysql', true),
+                'comment_content'      => $commentContent,
+                'comment_agent'        => isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : '',
+                'user_id'              => $user->ID,
+                'comment_approved'     => 1
+            );
+
+            if (isset($_REQUEST['author_ip']) && current_user_can('moderate_comments')) {
+                $newCommentData['comment_author_IP'] = $_REQUEST['author_ip'];
+            } else if (!empty($_SERVER['REMOTE_ADDR']) && rest_is_ip_address($_SERVER['REMOTE_ADDR'])) {
+                $newCommentData['comment_author_IP'] = $_SERVER['REMOTE_ADDR'];
+            } else {
+                $newCommentData['comment_author_IP'] = '127.0.0.1';
+            }
+
+            global $wpdb;
+            $success = (bool)$wpdb->insert($wpdb->prefix . 'comments', $newCommentData);
+
+            if (!$success) {
+                throw new \Exception(__('Unable to save the data into database.', 'upstream'));
+            }
+
+            $dateFormat = get_option('date_format');
+            $timeFormat = get_option('time_format');
+            $theDateTimeFormat = $dateFormat . ' ' . $timeFormat;
+            $utcTimeZone = new DateTimeZone('UTC');
+            $currentTimezone = upstreamGetTimeZone();
+            $currentTimestamp = time();
+
+            $date = DateTime::createFromFormat('Y-m-d H:i:s', $newCommentData['comment_date_gmt'], $utcTimeZone);
+            $date->setTimezone($currentTimezone);
+            $dateTimestamp = $date->getTimestamp();
+
+            $newCommentData = json_decode(json_encode(array(
+                'id'         => $wpdb->insert_id,
+                'parent_id'  => 0,
+                'content'    => $newCommentData['comment_content'],
+                'state'      => $newCommentData['comment_approved'],
+                'created_by' => (object)array(
+                    'id'     => $user->ID,
+                    'name'   => $user->display_name,
+                    'avatar' => getUserAvatarURL($user->ID)
+                ),
+                'created_at' => array(
+                    'timestamp' => $dateTimestamp,
+                    'utc'       => $newCommentData['comment_date_gmt'],
+                    'localized' => $date->format($theDateTimeFormat),
+                    'humanized' => sprintf(
+                        _x('%s ago', '%s = human-readable time difference', 'upstream'),
+                        human_time_diff($dateTimestamp, $currentTimestamp)
+                    )
+                )
+            )));
+
+            $response['data'] = $newCommentData;
+
+            ob_start();
+            upstream_admin_display_message_item($newCommentData);
+            $response['comment_html'] = ob_get_contents();
+            ob_end_clean();
+
+            $response['success'] = true;
+        } catch (Exception $e) {
+            $response['error'] = $e->getMessage();
+        }
+
+        wp_send_json($response);
+    }
+
+    static public function storeCommentReply()
+    {
+        header('Content-Type: application/json');
+
+        $response = array(
+            'success' => false,
+            'error'   => null
+        );
+
+        try {
+            // Check if the request is AJAX.
+            if (!defined('DOING_AJAX') || !DOING_AJAX) {
+                throw new \Exception(__("Invalid request.", 'upstream'));
+            }
+
+            // @todo: permission to reply
+            // Check if the user has enough permissions to insert a new comment.
+            // if (!upstream_admin_permissions('publish_project_discussion')) {
+            //     throw new \Exception(__("You're not allowed to do this.", 'upstream'));
+            // }
+
+            // Check if the request payload is potentially invalid.
+            if (
+                empty($_POST) ||
+                !isset($_POST['comment_id']) ||
+                !isset($_POST['project_id']) ||
+                !isset($_POST['reply_html'])
+            ) {
+                throw new \Exception(__("Invalid request payload.", 'upstream'));
+            }
+
+            // @todo: nonce
+            // Check the correspondent nonce.
+            // if (!wp_verify_nonce($_POST['csrf'], 'upstream.frontend-edit:project.discussion')) {
+            //     throw new \Exception(__("Invalid request.", 'upstream'));
+            // }
+
+            // Check if the project exists.
+            $project_id = (int)$_POST['project_id'];
+            if ($project_id <= 0) {
+                throw new \Exception(__("Invalid Project.", 'upstream'));
+            }
+
+            $parent_comment_id = (string)$_POST['comment_id'];
+            if (empty($parent_comment_id)) {
+                throw new \Exception(__("Invalid Comment.", 'upstream'));
+            }
+
+            $user = wp_get_current_user();
+
+            // Check if the Discussion/Comments section is disabled for the current project.
+            // if (upstream_are_comments_disabled($project_id)) {
+            //     throw new \Exception(__("Comments are disabled for this project.", 'upstream'));
+            // }
+
+            // Sanitizes the comment.
+            $commentContent = trim(wp_kses_post($_POST['reply_html']));
+            if (strlen($commentContent) === 0) {
+                throw new \Exception(__("Comments cannot be empty.", 'upstream'));
+            }
+
+            $comments = get_post_meta($project_id, '_upstream_project_discussion');
+            $comments = !empty($comments) ? (array)$comments[0] : array();
+
+            $commentsIdsCache = array();
+            foreach ($comments as $comment) {
+                $commentsIdsCache[$comment['id']] = $comment;
+            }
+
+            if (!isset($commentsIdsCache[$parent_comment_id])) {
+                throw new \Exception(__("Parent comment not found.", 'upstream'));
+            }
+
+            $parentComment = (object)$commentsIdsCache[$parent_comment_id];
+
+            do {
+                $newCommentId = upstreamGenerateRandomString(14);
+            } while (isset($commentsIdsCache[$newCommentId]));
+
+            $newCommentData = array(
+                'id'           => $newCommentId,
+                'comment'      => $commentContent,
+                'is_client'    => in_array('upstream_client_user', (array)$user->roles),
+                'created_by'   => $user->ID,
+                'created_time' => time(),
+                'parent_id'    => $parent_comment_id
+            );
+
+            array_push($comments, $newCommentData);
+
+            update_post_meta($project_id, '_upstream_project_discussion', $comments);
+
+            $newCommentData['created_by_name'] = $user->display_name;
+            $newCommentData['created_by_avatar'] = getUserAvatarURL($user->ID);
+
+            $parentCommentCreator = get_user_by('ID', $parentComment->created_by);
+            $parentComment->created_by_name = $parentCommentCreator->display_name;
+            $newCommentData['parent'] = $parentComment;
+
+            ob_start();
+            upstream_admin_display_message_item($newCommentData);
+            $response['comment_html'] = ob_get_contents();
+            ob_end_clean();
+
+            $response['success'] = true;
+        } catch (Exception $e) {
+            $response['error'] = $e->getMessage();
+        }
+
+        echo json_encode($response);
+
+        wp_die();
+    }
+
+    static public function deleteComment()
+    {
+        header('Content-Type: application/json');
+
+        $response = array(
+            'success' => false,
+            'error'   => null
+        );
+
+        try {
+            // Check if the request is AJAX.
+            if (!defined('DOING_AJAX') || !DOING_AJAX) {
+                throw new \Exception(__("Invalid request.", 'upstream'));
+            }
+
+            // @todo: permission to reply
+            // Check if the user has enough permissions to insert a new comment.
+            // if (!upstream_admin_permissions('publish_project_discussion')) {
+            //     throw new \Exception(__("You're not allowed to do this.", 'upstream'));
+            // }
+
+            // Check if the request payload is potentially invalid.
+            if (
+                empty($_POST) ||
+                !isset($_POST['project_id']) ||
+                !isset($_POST['comment_id'])
+            ) {
+                throw new \Exception(__("Invalid request payload.", 'upstream'));
+            }
+
+            // @todo: nonce
+            // Check the correspondent nonce.
+            // if (!wp_verify_nonce($_POST['csrf'], 'upstream.frontend-edit:project.discussion')) {
+            //     throw new \Exception(__("Invalid request.", 'upstream'));
+            // }
+
+            // Check if the project exists.
+            $project_id = (int)$_POST['project_id'];
+            if ($project_id <= 0) {
+                throw new \Exception(__("Invalid Project.", 'upstream'));
+            }
+
+            $comment_id = (string)$_POST['comment_id'];
+            if (strlen($comment_id) === 0) {
+                throw new \Exception(__("Invalid comment_id parameter.", 'upstream'));
+            }
+
+            $user = wp_get_current_user();
+
+            // Check if the Discussion/Comments section is disabled for the current project.
+            // if (upstream_are_comments_disabled($project_id)) {
+            //     throw new \Exception(__("Comments are disabled for this project.", 'upstream'));
+            // }
+
+            $comments = (array)get_post_meta($project_id, '_upstream_project_discussion', true);
+
+            $theComment = null;
+            foreach ($comments as $commentIndex => $comment) {
+                if ($comment['id'] === $comment_id) {
+                    $theComment = $comment;
+                    unset($comments[$commentIndex]);
+                    break;
+                }
+            }
+
+            if (!$theComment) {
+                throw new \Exception(sprintf(_x('Comment "%s" not found.', '%s: The comment ID', 'upstream')));
+            }
+
+            update_post_meta($project_id, '_upstream_project_discussion', $comments);
+
+            /*
+            // @todo
+            $meta = (array)get_post_meta($project_id, '_upstream_project_activity', true);
+
+            $meta[$newCommentData['created_time']] = array(
+                'fields'  => array(
+                    'group' => array(
+                        '_upstream_project_discussion' => array(
+                            'add' => array(
+                                array(
+                                    'new_message' => $commentContent
+                                )
+                            )
+                        )
+                    )
+                ),
+                'user_id' => $user->ID
+            );
+            update_post_meta($project_id, '_upstream_project_activity', $meta);
+            */
+
+            $response['success'] = true;
+        } catch (Exception $e) {
+            $response['error'] = $e->getMessage();
+        }
+
+        echo json_encode($response);
+
+        wp_die();
     }
 }
 

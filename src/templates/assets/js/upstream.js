@@ -206,10 +206,6 @@ jQuery(document).ready(function($){
 
         $BOX_PANEL.remove();
     });
-
-    if ($('.c-comments').length) {
-        $(".c-comments").scrollTop($(".c-comments")[0].scrollHeight);
-    }
 });
 
 // Instantiate NProgress lib.
@@ -222,3 +218,33 @@ jQuery(document).ready(function($){
     NProgress.done();
   });
 })(window, window.document, jQuery, NProgress || null);
+
+
+
+
+
+
+(function(window, document, $, undefined) {
+  $(document).ready(function() {
+    $('.c-discussion').on('click', '.o-comment[data-id] a[data-action="comment.go_to_reply"]', function(e) {
+      e.preventDefault();
+
+      var targetComment = $($(this).attr('href'));
+      if (targetComment.length === 0) {
+        console.error('Comment not found.');
+        return;
+      }
+
+      var wrapper = $(targetComment.parents('.c-discussion'));
+
+      wrapper.animate({
+        scrollTop: targetComment.get(0).offsetTop,
+      }, function() {
+        targetComment.addClass('s-highlighted');
+        setTimeout(function() {
+          targetComment.removeClass('s-highlighted');
+        }, 750);
+      });
+    });
+  });
+})(window, window.document, jQuery || {});

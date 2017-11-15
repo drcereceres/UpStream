@@ -177,50 +177,6 @@ table.dataTable tr.child td.child {
   padding-right: 0;
 }
 
-.c-comments {
-  max-height: 250px;
-  overflow: auto;
-}
-
-.o-comment .o-comment__heading {
-  display: flex;
-  flex-direction: row;
-  align-items: baseline;
-  justify-content: space-between;
-}
-
-.o-comment .o-comment__heading > div {
-  display: flex;
-  flex-direction: row;
-  align-items: baseline;
-}
-
-.o-comment .o-comment__heading > div:last-child {
-  padding-right: 20px;
-}
-
-.o-comment .o-comment__heading h5 {
-  font-weight: bold;
-}
-
-.o-comment .o-comment__heading time {
-  font-size: .9em;
-  color: #BDC3C7;
-}
-
-.o-comment .o-comment__heading time::before {
-  content: "•";
-  color: #ECF0F1;
-  margin-left: 5px;
-  margin-right: 5px;
-}
-
-.o-comment + .o-comment {
-  margin-top: 0;
-  padding-top: 15px;
-  border-top: 1px solid #ECF0F1;
-}
-
 .dataTables_wrapper {
   overflow: auto;
 }
@@ -246,4 +202,83 @@ table.dataTable tr.child td.child {
 
 .top_nav .nav_menu {
   z-index: 999;
+}
+
+
+
+
+
+
+
+.c-discussion {
+  max-height: 400px;
+  overflow: auto;
+}
+
+.o-comment {
+  padding: 10px;
+  -webkit-transition: background-color 250ms ease-out;  /* Android 2.1+, Chrome 1-25, iOS 3.2-6.1, Safari 3.2-6  */
+          transition: background-color 250ms ease-out;
+}
+
+.o-comment.s-highlighted {
+  background-color: #cce5ff !important;
+}
+
+.c-discussion .o-comment:nth-child(odd) {
+  background-color: #F9F9F9;
+}
+
+.o-comment .o-comment__header {
+  display: flex;
+  align-items: initial;
+  justify-content: space-between;
+  color: #3A4E66;
+}
+
+.o-comment .o-comment__creator_name {
+  font-weight: bold;
+}
+
+.o-comment .o-comment__replier,
+.o-comment .o-comment__created_at {
+  font-size: 90%;
+}
+
+.o-comment .o-comment__replier a {
+  text-decoration: underline;
+}
+
+.o-comment .o-comment__created_at {
+  color: #BDC3C7;
+}
+
+.o-comment .o-comment__content img.aligncenter {
+  display: block;
+  margin: 0 auto;
+}
+
+.o-comment + .o-comment {
+  margin-top: 0;
+  padding-top: 10px;
+  border-top: 1px solid #ECF0F1;
+}
+
+.o-comment .o-comment__footer {
+  -webkit-transition: opacity 250ms ease-out;
+          transition: opacity 250ms ease-out;
+}
+
+.o-comment:not(:hover) .o-comment__footer {
+  opacity: 0;
+  visibility: hidden;
+}
+
+.o-comment:hover .o-comment__footer {
+  opacity: 100%;
+  visibility: visible;
+}
+
+.o-comment .o-comment__footer > * + * {
+  margin-left: 5px;
 }

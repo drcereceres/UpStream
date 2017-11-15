@@ -27,34 +27,14 @@ $comments = getProjectComments($project_id);
       <div class="clearfix"></div>
     </div>
     <div class="x_content">
-      <div class="c-comments" data-label-empty="<?php _e('Currently no messages.', 'upstream'); ?>">
+      <div class="c-discussion" data-label-empty="<?php _e('Currently no messages.', 'upstream'); ?>">
         <?php if (count($comments) === 0): ?>
           <p data-no-data><?php _e('Currently no messages.', 'upstream'); ?></p>
-        <?php else: ?>
-          <?php foreach ($comments as $rowIndex => $row): ?>
-          <?php do_action('upstream:project.discussion:before_comment', $project_id, $row); ?>
-          <div class="media o-comment">
-            <div class="media-left">
-              <img class="media-object" src="<?php echo $row->created_by->avatar; ?>" alt="<?php echo $row->created_by->name; ?>" width="40" />
-            </div>
-            <div class="media-body">
-              <div class="o-comment__heading">
-                <div>
-                  <h5 class="media-heading"><?php echo $row->created_by->name; ?></h5>
-                  <time datetime="<?php echo $row->created_at->iso_8601; ?>" data-delay="500" data-toggle="tooltip" data-placement="top" title="<?php echo $row->created_at->formatted; ?>"><?php echo $row->created_at->human; ?></time>
-                </div>
-                <div>
-                  <ul class="list-inline">
-                    <?php do_action('upstream:project.discussion:comment.controls', $project_id, $row, $rowIndex); ?>
-                  </ul>
-                </div>
-              </div>
-              <div><?php echo $row->comment; ?></div>
-            </div>
-          </div>
-          <?php do_action('upstream:project.discussion:after_comment', $project_id, $row); ?>
-          <?php endforeach; ?>
-        <?php endif; ?>
+        <?php else:
+          foreach ($comments as $rowIndex => $row) {
+            upstream_frontend_output_comment($row, $rowIndex, $project_id);
+          }
+        endif; ?>
       </div>
     </div>
   </div>
