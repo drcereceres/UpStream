@@ -361,52 +361,6 @@
 #_upstream_project_bugs .cmb-attach-list li {
   margin-bottom: 10px;
 }
-/*
- * Project Discussion
- */
- #_upstream_project_discussions .cmb2-id--upstream-project-discussion {
-  padding: 5px 0;
-}
-#_upstream_project_discussions .admin-discussion {
-  background: #F9F9F9 none repeat scroll 0 0;
-  border: 1px solid #ddd;
-  padding: 0;
-}
-#_upstream_project_discussions .admin-discussion li {
-  display: block;
-  margin: 0;
-  width: 100%;
-  box-shadow: 0 -1px 0 rgba(0, 0, 0, 0.1) inset;
-  padding: 15px 15px 15px;
-}
-#_upstream_project_discussions .admin-discussion li:nth-child(2n+1) {
-  background: #fff;
-}
-#_upstream_project_discussions .admin-discussion li:last-child {
-  box-shadow: none;
-}
-#_upstream_project_discussions .admin-discussion > li > img {
-  float: left;
-  margin: 0 15px 10px 0;
-}
-#_upstream_project_discussions .admin-discussion .name {
-  display: block;
-  font-weight: bold;
-  margin: 0 0 0 54px;
-  font-size: 13px;
-}
-#_upstream_project_discussions .admin-discussion .date {
-  color: #767676;
-  display: block;
-  margin: 3px 0 0 54px;
-  font-size: 13px;
-}
-#_upstream_project_discussions .admin-discussion .comment {
-  display: block;
-  margin: 8px 0 5px 54px;
-  padding: 0;
-  font-style: italic;
-}
 
 /*
  * Client Users

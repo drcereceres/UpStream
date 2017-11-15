@@ -412,46 +412,6 @@
     }
 
     /*
-     * Adds a comment dynamically via AJAX
-     */
-    function addDiscussion() {
-
-        var $group = $( document.getElementById( '_upstream_project_discussions' ) );
-
-        $group
-            .on('click', '#new_message', function( evt ) {
-                evt.preventDefault();
-                var content = window.tinyMCE.editors['_upstream_project_new_message'].getContent();
-                var post_id = $('#post_ID').val();
-                addPost( content, post_id );
-            });
-
-        addPost = function( content, post_id ) {
-
-            $.ajax({
-                url: ajaxurl,
-                type: 'post',
-                data: {
-                    action: 'upstream_admin_new_message',
-                    content: content,
-                    upstream_security: cmb2_l10.ajax_nonce,
-                    project_id: post_id
-                },
-                success: function(response){
-                    window.tinyMCE.editors['_upstream_project_new_message'].setContent('');
-                    $(response).hide().prependTo(".admin-discussion").fadeIn("slow");
-
-                    window.wp.autosave.server.triggerSave();
-                }
-            });
-
-            return false;
-
-        };
-
-    }
-
-    /*
      * Deletes a comment dynamically via AJAX
      */
     function deleteDiscussion() {
@@ -546,7 +506,6 @@
 
     // kick it all off
     initProject();
-    addDiscussion();
     deleteDiscussion();
     showClientUsers();
 
