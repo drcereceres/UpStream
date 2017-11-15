@@ -1493,7 +1493,7 @@ class UpStream_Metaboxes_Projects {
 
             $user = wp_get_current_user();
             // Check if the user has enough permissions to insert a new comment.
-            if (!user_can($user, 'publish_project_discussion')) {
+            if (!upstream_admin_permissions('publish_project_discussion')) {
                 throw new \Exception(__("You're not allowed to do this.", 'upstream'));
             }
 
