@@ -1139,7 +1139,8 @@ body.upstream_page_upstream_extensions #upstream_extensions input[type="submit"]
   color: #DDD;
 }
 
-.o-comment:hover .o-comment__actions {
+.o-comment:hover .o-comment__actions,
+.o-comment.is-mouse-over .o-comment__actions {
   visibility: visible;
 }
 
@@ -1205,4 +1206,28 @@ a[data-action="comment.trash"] {
 
 .u-color-gray {
   color: #BDC3C7;
+}
+
+.o-comment.is-being-removed .o-comment__actions a,
+.o-comment.is-being-unapproved .o-comment__actions a,
+.o-comment.is-being-approved .o-comment__actions a,
+.o-comment.is-being-replied .o-comment__actions a {
+  text-decoration: none;
+  pointer-events: none;
+}
+
+.o-comment.is-disabled {
+  pointer-events: none;
+  opacity: 0.5;
+}
+
+.o-comment.is-being-removed .o-comment__actions a:not([data-action="comment.trash"]),
+.o-comment.is-being-unapproved .o-comment__actions a:not([data-action="comment.unapprove"]),
+.o-comment.is-being-approved .o-comment__actions a:not([data-action="comment.approve"]),
+.o-comment.is-being-replied .o-comment__actions a:not([data-action="comment.reply"]) {
+  color: #BDC3C7 !important;
+}
+
+.is-loading {
+  cursor: progress;
 }

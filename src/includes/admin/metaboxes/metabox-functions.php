@@ -463,6 +463,11 @@ function upstream_admin_display_messages()
         $currentTimezone = upstreamGetTimeZone();
         $currentTimestamp = time();
 
+        $user = wp_get_current_user();
+        $userHasAdminCapabilities = isUserEitherManagerOrAdmin();
+        $userCanComment = !$userHasAdminCapabilities ? user_can($user, 'publish_project_discussion') : true;
+        $userCanModerate = !$userHasAdminCapabilities ? user_can($user, 'moderate_comments') : true;
+
         foreach ($rowset as $row) {
             $author = $users[(int)$row->user_id];
 
@@ -484,51 +489,28 @@ function upstream_admin_display_messages()
                         _x('%s ago', '%s = human-readable time difference', 'upstream'),
                         human_time_diff($dateTimestamp, $currentTimestamp)
                     )
+                ),
+                'currentUserCap' => array(
+                    'can_reply'    => $userCanComment,
+                    'can_moderate' => $userCanModerate,
+                    'can_delete'   => $userCanModerate
                 )
             )));
 
-            $comments[$comment->id] = $comment;
-        }
-    }
-
-    //var_dump($comments);
-
-    //die();
-
-    /*
-    // @todo: remove
-    $rowset = (array)get_post_meta($project_id, '_upstream_project_discussion', true);
-    if (count($rowset) > 0) {
-        $dateFormat = get_option('date_format');
-        $timeFormat = get_option('time_format');
-        $currentTimezone = upstreamGetTimeZone();
-        $currentTimestamp = time();
-
-        $rowset = array_reverse($rowset);
-        foreach ($rowset as $comment) {
-            $comment = (object)$comment;
-
-            $user = $users[(int)$comment->created_by];
-
-            $comment->created_by_name = $user->name;
-            $comment->created_by_avatar = $user->avatar;
-
-            $date = new DateTime();
-            $date->setTimestamp($comment->created_time);
-            $date->setTimezone($currentTimezone);
-            $comment->created_at_human = $date->format($dateFormat . ' ' . $timeFormat);
-
-            $comments[$comment->id] = $comment;
-        }
-
-        foreach ($comments as $comment_id => $comment) {
-            if (isset($comment->parent_id) && !empty($comment->parent_id) && isset($comments[$comment->parent_id])) {
-                $comment->parent = $comments[$comment->parent_id];
-                $comments[$comment_id] = $comment;
+            if ($author->id == $user->ID) {
+                $comment->currentUserCap->can_delete = true;
             }
+
+            if ($userHasAdminCapabilities) {
+                $comment->currentUserCap->can_reply = true;
+                $comment->currentUserCap->can_moderate = true;
+            } else {
+            }
+
+            $comments[$comment->id] = $comment;
         }
     }
-    */
+
     ?>
     <div class="admin-discussion c-discussion">
         <?php
@@ -549,7 +531,7 @@ function upstream_admin_display_message_item($comment, $comments = array())
     <div class="media o-comment <?php echo $comment->state === 1 ? 's-status-approved' : 's-status-unapproved'; ?>" id="comment-<?php echo $comment->id; ?>" data-id="<?php echo $comment->id; ?>">
       <div class="media-left">
         <img class="media-object" src="<?php echo $comment->created_by->avatar; ?>" width="30">
-        <?php if ($comment->state !== 1): // @todo: check capabilities ?>
+        <?php if ($comment->state !== 1 && $comment->currentUserCap->can_moderate): // @todo: check capabilities ?>
         <div class="u-text-center">
           <span class="dashicons dashicons-hidden u-color-gray" title="<?php _e("This comment is not visible by regular users.", 'upstream'); ?>" style="margin-top: 2px;"></span>
         </div>
@@ -591,12 +573,14 @@ function upstream_admin_display_message_item($comment, $comments = array())
         <div class="media-footer">
           <div class="o-comment__actions">
             <?php if ($comment->state === 1): ?>
-            <a href="#" data-action="comment.unapprove"><?php _e('Unapprove'); ?></a>&nbsp;|&nbsp;
+            <a href="#" data-action="comment.unapprove" data-nonce="<?php echo wp_create_nonce('upstream:project.discussion:unapprove_comment:' . $comment->id); ?>"><?php _e('Unapprove'); ?></a>&nbsp;|&nbsp;
             <?php else: ?>
-            <a href="#" data-action="comment.approve"><?php _e('Approve'); ?></a>&nbsp;|&nbsp;
+            <a href="#" data-action="comment.approve" data-nonce="<?php echo wp_create_nonce('upstream:project.discussion:approve_comment:' . $comment->id); ?>"><?php _e('Approve'); ?></a>&nbsp;|&nbsp;
             <?php endif; ?>
-            <a href="#" data-action="comment.reply"><?php _e('Reply'); ?></a>&nbsp;|&nbsp;
-            <a href="#" data-action="comment.trash"><?php _e('Trash'); ?></a>
+            <a href="#" data-action="comment.reply" data-nonce="<?php echo wp_create_nonce('upstream:project.discussion:add_comment_reply:' . $comment->id); ?>"><?php _e('Reply'); ?></a>&nbsp;|&nbsp;
+            <?php if ($comment->currentUserCap->can_delete): ?>
+            <a href="#" data-action="comment.trash" data-nonce="<?php echo wp_create_nonce('upstream:project.discussion:delete_comment:' . $comment->id); ?>"><?php _e('Delete'); ?></a>
+            <?php endif; ?>
           </div>
         </div>
       </div>

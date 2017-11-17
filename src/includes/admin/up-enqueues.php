@@ -27,11 +27,20 @@ function upstream_load_admin_scripts( $hook ) {
             'user'      => upstream_current_user_id(),
             'slugBox'   => !(get_post_status() === "pending" && !current_user_can($post_type_object->cap->publish_posts)),
             'l'         => array(
-                'LB_CANCEL'          => __('Cancel'),
-                'LB_SEND_REPLY'      => __('Add Reply', 'upstream'),
-                'LB_ADD_NEW_COMMENT' => __('Add new Comment'),
-                'LB_ADD_NEW_REPLY'   => __('Add Comment Reply', 'upstream'),
-                'MSG_ARE_YOU_SURE'   => __('Are you sure? This action cannot be undone.', 'upstream')
+                'LB_CANCEL'           => __('Cancel'),
+                'LB_SEND_REPLY'       => __('Add Reply', 'upstream'),
+                'LB_REPLY'            => __('Reply'),
+                'LB_ADD_NEW_COMMENT'  => __('Add new Comment'),
+                'LB_ADD_NEW_REPLY'    => __('Add Comment Reply', 'upstream'),
+                'LB_REPLYING'         => __('Replying...', 'upstream'),
+                'LB_DELETE'           => __('Delete', 'upstream'),
+                'LB_DELETING'         => __('Deleting...', 'upstream'),
+                'LB_UNAPPROVE'        => __('Unapprove'),
+                'LB_UNAPPROVING'      => __('Unapproving...', 'upstream'),
+                'LB_APPROVE'          => __('Approve'),
+                'LB_APPROVING'        => __('Approving...', 'upstream'),
+                'MSG_ARE_YOU_SURE'    => __('Are you sure? This action cannot be undone.', 'upstream'),
+                'MSG_COMMENT_NOT_VIS' => __('This comment is not visible by regular users.', 'upstream')
             )
         ) ) );
     }

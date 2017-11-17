@@ -720,7 +720,7 @@
       $('#_upstream_project_discussions .button.u-to-be-removed').remove();
       $('#_upstream_project_discussions .button[data-action="comments.add_comment"]').show();
 
-      $('.o-comment[data-id]').css('opacity', 1);
+      $('.o-comment[data-id]').removeClass('is-mouse-over is-disabled is-being-replied');
 
       resetCommentEditorContent();
     }
@@ -754,39 +754,59 @@
 
       var self = $(this);
 
+      var errorCallback = function() {
+        self.text(upstream_project.l.LB_SEND_REPLY);
+        $('#_upstream_project_discussions .button.u-to-be-removed').attr('disabled', null);
+        $('#_upstream_project_discussions .o-comment.is-being-replied a[data-action="comment.reply"]').text(upstream_project.l.LB_REPLY);
+      };
+
       $.ajax({
         type: 'POST',
         url : ajaxurl,
         data: {
           action    : 'upstream:project.discussion.add_comment_reply',
-          //nonce     : self.data('nonce'),
+          nonce     : self.data('nonce'),
           project_id: $('#post_ID').val(),
           parent_id : self.attr('data-id'),
           content   : commentContentHtml
         },
         beforeSend: function() {
           disableCommentArea();
-          //self.text(self.attr('data-label-active'));
+          self.text(upstream_project.l.LB_REPLYING);
+          $('#_upstream_project_discussions .button.u-to-be-removed').attr('disabled', 'disabled');
+          $('#_upstream_project_discussions .o-comment.is-being-replied a[data-action="comment.reply"]').text(upstream_project.l.LB_REPLYING);
         },
         success: function(response) {
-          console.log(response);
           if (response.error) {
+            errorCallback();
             console.error(response.error);
             alert(response.error);
           } else {
             if (!response.success) {
+              errorCallback();
               console.error('Something went wrong.');
             } else {
               resetCommentEditorContent();
 
               appendCommentHtmlToDiscussion(response.comment_html);
+
+              $('#_upstream_project_discussions .o-comment.is-being-replied a[data-action="comment.reply"]').text(upstream_project.l.LB_REPLY);
+              $('#_upstream_project_discussions .o-comment').removeClass('is-disabled is-mouse-over is-being-replied');
             }
           }
         },
-        error: function() {},
+        error: function(jqXHR, textStatus, errorThrown) {
+          errorCallback();
+
+          var response = {
+            text_status: textStatus,
+            errorThrown: errorThrown
+          };
+
+          console.error(response);
+        },
         complete: function() {
           enableCommentArea();
-          //self.text(self.attr('data-label'));
         }
       });
     }
@@ -802,6 +822,8 @@
       }
     }
 
+    $('label[for="_upstream_project_new_message"]').on('click', setFocus);
+
     $('.c-discussion').on('click', '.o-comment[data-id] a[data-action="comment.reply"]', function(e) {
       e.preventDefault();
 
@@ -809,7 +831,9 @@
       var commentWrapper = $(self.parents('.o-comment[data-id]'));
       var comment_id = commentWrapper.attr('data-id');
 
-      $('.o-comment[data-id!="'+ comment_id +'"]').css('opacity', 0.5);
+      commentWrapper.addClass('is-mouse-over is-being-replied');
+
+      $('.o-comment[data-id!="'+ comment_id +'"]').addClass('is-disabled');
 
       var addCommentBtn = $('#_upstream_project_discussions .button[data-action="comments.add_comment"]');
       addCommentBtn.hide();
@@ -828,7 +852,8 @@
       var sendButton = $('<button></button>', {
         type     : 'button',
         class    : 'button button-primary u-to-be-removed',
-        'data-id': comment_id
+        'data-id': comment_id,
+        'data-nonce': self.data('nonce')
       })
         .text(upstream_project.l.LB_SEND_REPLY)
         .css('margin-left', '10px');
@@ -852,81 +877,69 @@
       });
     });
 
-    /*
-    function deleteCommentButtonClickCallback(e) {
+    $('.c-discussion').on('click', '.o-comment[data-id] a[data-action="comment.trash"]', function(e) {
       e.preventDefault();
 
-      var comment = $($(this).parents('.o-comment[data-id]'));
+      var self = $(this);
+
+      var comment = $(self.parents('.o-comment[data-id]'));
       if (!comment.length) {
         console.error('Comment wrapper not found.');
         return;
       }
 
-      comment.css('background-color', 'aliceblue');
+      if (!confirm(upstream_project.l.MSG_ARE_YOU_SURE)) return;
 
-      setTimeout(function() {
-        if (!confirm(upstream_project.l.MSG_ARE_YOU_SURE)) {
-          comment.css('background-color', '');
-          return;
-        }
+      var errorCallback = function() {
+        comment.removeClass('is-loading is-mouse-over is-being-removed');
+        self.text(upstream_project.l.LB_DELETE);
+      };
 
-        var theEditor = getCommentEditor();
-        if (!theEditor) {
-          console.error('Editor not found.');
-          return;
-        }
+      $.ajax({
+        type: 'POST',
+        url : ajaxurl,
+        data: {
+          action    : 'upstream:project.discussion.trash_comment',
+          nonce     : self.data('nonce'),
+          project_id: $('#post_ID').val(),
+          comment_id: comment.attr('data-id')
+        },
+        beforeSend: function() {
+          comment.addClass('is-loading is-mouse-over is-being-removed');
+          self.text(upstream_project.l.LB_DELETING);
+        },
+        success: function(response) {
+          if (response.error) {
+            errorCallback();
 
-        $.ajax({
-          type: 'POST',
-          url : ajaxurl,
-          data: {
-            action    : 'upstream:project.discussion.delete_comment',
-            project_id: $('#post_ID').val(),
-            comment_id: comment.attr('data-id')
-          },
-          beforeSend: function() {
-          },
-          success: function(response) {
-            console.log(response);
-            if (response.error) {
-              console.error(response.error);
-              alert(response.error);
+            console.error(response.error);
+            alert(response.error);
+          } else {
+            if (!response.success) {
+              console.error('Something went wrong.');
+
+              errorCallback();
             } else {
-              if (!response.success) {
-                console.error('Something went wrong.');
-              } else {
-                comment.slideUp({
-                  complete: function() {
-                    comment.remove();
-                  }
-                });
-              }
+              comment.css('background-color', '#E74C3C');
+
+              comment.slideUp({
+                complete: function() {
+                  comment.remove();
+                }
+              });
             }
-          },
-          error: function() {}
-        });
-      }, 50);
-    }
+          }
+        },
+        error: function(jqXHR, textStatus, errorThrown) {
+          errorCallback();
 
-    $('#_upstream_project_discussions [data-action="comment.add"]').on('click', sendCommentButtonClickCallback);
-    $('.c-discussion').on('click', '.o-comment[data-id] a[data-action="comment.delete"]', deleteCommentButtonClickCallback);
-    */
+          var response = {
+            text_status: textStatus,
+            errorThrown: errorThrown
+          };
 
-    $('.c-discussion').on('click', '.o-comment[data-id] a[data-action="comment.go_to_reply"]', function(e) {
-      e.preventDefault();
-
-      var targetComment = $($(this).attr('href'));
-      var wrapper = $(targetComment.parents('.c-discussion'));
-
-      var targetCommentOffsetTop = targetComment.offset().top - wrapper.offset().top;
-
-      wrapper.animate({
-        scrollTop: targetCommentOffsetTop,
-      }, function() {
-        targetComment.addClass('s-highlighted');
-        setTimeout(function() {
-          targetComment.removeClass('s-highlighted');
-        }, 750);
+          console.error(response);
+        }
       });
     });
 
@@ -995,6 +1008,146 @@
       });
     });
 
-    $('label[for="_upstream_project_new_message"]').on('click', setFocus);
+    $('.c-discussion').on('click', '.o-comment[data-id] a[data-action="comment.unapprove"]', function(e) {
+      e.preventDefault();
+
+      var self = $(this);
+
+      var comment = $(self.parents('.o-comment[data-id]'));
+      if (!comment.length) {
+        console.error('Comment wrapper not found.');
+        return;
+      }
+
+      var errorCallback = function() {
+        comment
+          .removeClass('is-loading is-mouse-over is-being-unapproved')
+          .css('background-color', '');
+        self.text(upstream_project.l.LB_UNAPPROVE);
+      };
+
+      $.ajax({
+        type: 'POST',
+        url : ajaxurl,
+        data: {
+          action    : 'upstream:project.discussion.unapprove_comment',
+          nonce     : self.data('nonce'),
+          project_id: $('#post_ID').val(),
+          comment_id: comment.attr('data-id')
+        },
+        beforeSend: function() {
+          comment.addClass('is-loading is-mouse-over is-being-unapproved');
+          self.text(upstream_project.l.LB_UNAPPROVING);
+        },
+        success: function(response) {
+          if (response.error) {
+            errorCallback();
+            console.error(response.error);
+            alert(response.error);
+          } else {
+            if (!response.success) {
+              errorCallback();
+              console.error('Something went wrong.');
+            } else {
+              comment.replaceWith($(response.comment_html));
+            }
+          }
+        },
+        error: function(jqXHR, textStatus, errorThrown) {
+          errorCallback();
+
+          var response = {
+            text_status: textStatus,
+            errorThrown: errorThrown
+          };
+
+          console.error(response);
+        }
+      });
+    });
+
+    $('.c-discussion').on('click', '.o-comment[data-id] a[data-action="comment.approve"]', function(e) {
+      e.preventDefault();
+
+      var self = $(this);
+
+      var comment = $(self.parents('.o-comment[data-id]'));
+      if (!comment.length) {
+        console.error('Comment wrapper not found.');
+        return;
+      }
+
+      var errorCallback = function() {
+        comment
+          .removeClass('is-loading is-mouse-over is-being-approved')
+          .css('background-color', '');
+        self.text(upstream_project.l.LB_APPROVE);
+      };
+
+      $.ajax({
+        type: 'POST',
+        url : ajaxurl,
+        data: {
+          action    : 'upstream:project.discussion.approve_comment',
+          nonce     : self.data('nonce'),
+          project_id: $('#post_ID').val(),
+          comment_id: comment.attr('data-id')
+        },
+        beforeSend: function() {
+          comment.addClass('is-loading is-mouse-over is-being-approved');
+          self.text(upstream_project.l.LB_APPROVING);
+        },
+        success: function(response) {
+          if (response.error) {
+            errorCallback();
+            console.error(response.error);
+            alert(response.error);
+          } else {
+            if (!response.success) {
+              errorCallback();
+              console.error('Something went wrong.');
+            } else {
+              comment.replaceWith($(response.comment_html));
+            }
+          }
+        },
+        error: function(jqXHR, textStatus, errorThrown) {
+          errorCallback();
+
+          var response = {
+            text_status: textStatus,
+            errorThrown: errorThrown
+          };
+
+          console.error(response);
+        }
+      });
+    });
+
+    // @todo: has some bugs
+    $('.c-discussion').on('click', '.o-comment[data-id] a[data-action="comment.go_to_reply"]', function(e) {
+      e.preventDefault();
+
+      var targetComment = $($(this).attr('href'));
+      if (!targetComment) {
+        console.error('Comment not found.');
+        return;
+      }
+
+      var wrapper = $(targetComment.parents('.c-discussion'));
+
+      var targetCommentOffsetTop = targetComment.offset().top - wrapper.offset().top;
+
+      wrapper.animate({
+        scrollTop: targetCommentOffsetTop,
+      }, function() {
+        targetComment.addClass('s-highlighted');
+        setTimeout(function() {
+          targetComment.removeClass('s-highlighted');
+        }, 750);
+      });
+    });
+
+    // @todo: make sure the selectors are scopped within #_upstream_project_discussions
   });
 })(window, window.document, jQuery, upstream_project || {});
