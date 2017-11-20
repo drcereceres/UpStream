@@ -492,7 +492,6 @@ function upstream_admin_display_messages()
                 ),
                 'currentUserCap' => array(
                     'can_reply'    => $userCanComment,
-                    'can_moderate' => $userCanModerate,
                     'can_delete'   => $userCanModerate
                 )
             )));
@@ -503,10 +502,10 @@ function upstream_admin_display_messages()
 
             if ($userHasAdminCapabilities) {
                 $comment->currentUserCap->can_reply = true;
-                $comment->currentUserCap->can_moderate = true;
+                $comment->currentUserCap->can_delete = true;
             } else {
                 $comment->currentUserCap->can_reply = $userCanComment;
-                $comment->currentUserCap->can_moderate = $userCanModerate;
+                $comment->currentUserCap->can_delete = $userCanModerate;
             }
 
             $comments[$comment->id] = $comment;
@@ -539,7 +538,7 @@ function upstream_admin_display_message_item($comment, $comments = array())
     <div class="media o-comment <?php echo $comment->state === 1 ? 's-status-approved' : 's-status-unapproved'; ?>" id="comment-<?php echo $comment->id; ?>" data-id="<?php echo $comment->id; ?>">
       <div class="media-left">
         <img class="media-object" src="<?php echo $comment->created_by->avatar; ?>" width="30">
-        <?php if ($comment->state !== 1 && isset($comment->currentUserCap) && $comment->currentUserCap->can_moderate): ?>
+        <?php if ($comment->state !== 1 && isset($comment->currentUserCap) && $comment->currentUserCap->can_delete): ?>
         <div class="u-text-center">
           <span class="dashicons dashicons-hidden u-color-gray" title="<?php _e("This comment is not visible by regular users.", 'upstream'); ?>" style="margin-top: 2px;"></span>
         </div>
