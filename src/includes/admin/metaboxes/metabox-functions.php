@@ -603,7 +603,7 @@ function upstream_display_message_item($comment, $comments = array())
     <div class="media o-comment <?php echo $comment->state === 1 ? 's-status-approved' : 's-status-unapproved'; ?>" id="comment-<?php echo $comment->id; ?>" data-id="<?php echo $comment->id; ?>">
       <div class="media-left">
         <img class="media-object" src="<?php echo $comment->created_by->avatar; ?>" width="30">
-        <?php if ($comment->state !== 1 && isset($comment->currentUserCap) && $comment->currentUserCap->can_moderate): ?>
+        <?php if ($comment->state !== 1 && isset($comment->currentUserCap) && $comment->currentUserCap->can_delete): ?>
         <div class="u-text-center">
           <i class="fa fa-eye-slash u-color-gray" title="<?php _e("This comment is not visible by regular users.", 'upstream'); ?>" style="margin-top: 2px;"></i>
         </div>

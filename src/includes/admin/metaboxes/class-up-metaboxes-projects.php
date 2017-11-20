@@ -1575,13 +1575,23 @@ class UpStream_Metaboxes_Projects {
                         _x('%s ago', '%s = human-readable time difference', 'upstream'),
                         human_time_diff($dateTimestamp, $currentTimestamp)
                     )
+                ),
+                'currentUserCap' => array(
+                    'can_reply'  => true,
+                    'can_delete' => true
                 )
             )));
 
             $response['data'] = $newCommentData;
 
             ob_start();
-            upstream_admin_display_message_item($newCommentData);
+
+            if (is_admin()) {
+                upstream_admin_display_message_item($newCommentData, $comments);
+            } else {
+                upstream_display_message_item($newCommentData, $comments);
+            }
+
             $response['comment_html'] = ob_get_contents();
             ob_end_clean();
 
@@ -1693,6 +1703,14 @@ class UpStream_Metaboxes_Projects {
             $date->setTimezone($currentTimezone);
             $dateTimestamp = $date->getTimestamp();
 
+            $userHasAdminCapabilities = isUserEitherManagerOrAdmin();
+            $userCanComment = !$userHasAdminCapabilities ? user_can($user, 'publish_project_discussion') : true;
+            $userCanModerate = !$userHasAdminCapabilities ? user_can($user, 'moderate_comments') : true;
+
+            if ((int)$comment['user_id'] === (int)$user->ID) {
+                $userCanModerate = true;
+            }
+
             $newCommentData = json_decode(json_encode(array(
                 'id'         => $wpdb->insert_id,
                 'parent_id'  => $comment_parent_id,
@@ -1711,6 +1729,10 @@ class UpStream_Metaboxes_Projects {
                         _x('%s ago', '%s = human-readable time difference', 'upstream'),
                         human_time_diff($dateTimestamp, $currentTimestamp)
                     )
+                ),
+                'currentUserCap' => array(
+                    'can_reply'  => $userCanComment,
+                    'can_delete' => $userCanModerate
                 )
             )));
 
@@ -1725,7 +1747,13 @@ class UpStream_Metaboxes_Projects {
             );
 
             ob_start();
-            upstream_admin_display_message_item($newCommentData, $comments);
+
+            if (is_admin()) {
+                upstream_admin_display_message_item($newCommentData, $comments);
+            } else {
+                upstream_display_message_item($newCommentData, $comments);
+            }
+
             $response['comment_html'] = ob_get_contents();
             ob_end_clean();
 
@@ -1949,13 +1977,21 @@ class UpStream_Metaboxes_Projects {
                     )
                 ),
                 'currentUserCap' => array(
-                    'can_reply'    => $userCanComment,
-                    'can_moderate' => $userCanModerate
+                    'can_reply'  => $userCanComment,
+                    'can_delete' => $userCanModerate
                 )
             )));
 
+            $useFrontLayout = isset($_POST['teeny']) ? (bool)$_POST['teeny'] : false;
+
             ob_start();
-            upstream_admin_display_message_item($comment, $comments);
+
+            if (!$useFrontLayout) {
+                upstream_admin_display_message_item($comment, $comments);
+            } else {
+                upstream_display_message_item($comment, $comments);
+            }
+
             $response['comment_html'] = ob_get_contents();
             ob_end_clean();
 
@@ -2012,6 +2048,15 @@ class UpStream_Metaboxes_Projects {
             $date->setTimezone($currentTimezone);
             $dateTimestamp = $date->getTimestamp();
 
+            $user = wp_get_current_user();
+            $userHasAdminCapabilities = isUserEitherManagerOrAdmin();
+            $userCanComment = !$userHasAdminCapabilities ? user_can($user, 'publish_project_discussion') : true;
+            $userCanModerate = !$userHasAdminCapabilities ? user_can($user, 'moderate_comments') : true;
+
+            if ((int)$comment['user_id'] === (int)$user->ID) {
+                $userCanModerate = true;
+            }
+
             $newCommentData = json_decode(json_encode(array(
                 'id'         => $comment['comment_ID'],
                 'parent_id'  => $comment['comment_parent'],
@@ -2030,11 +2075,23 @@ class UpStream_Metaboxes_Projects {
                         _x('%s ago', '%s = human-readable time difference', 'upstream'),
                         human_time_diff($dateTimestamp, $currentTimestamp)
                     )
+                ),
+                'currentUserCap' => array(
+                    'can_reply'  => $userCanComment,
+                    'can_delete' => $userCanModerate
                 )
             )));
 
+            $useFrontLayout = isset($_POST['teeny']) ? (bool)$_POST['teeny'] : false;
+
             ob_start();
-            upstream_admin_display_message_item($newCommentData, $comments);
+
+            if (!$useFrontLayout) {
+                upstream_admin_display_message_item($newCommentData, $comments);
+            } else {
+                upstream_display_message_item($newCommentData, $comments);
+            }
+
             $response['comment_html'] = ob_get_contents();
             ob_end_clean();
 
