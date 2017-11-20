@@ -6,8 +6,6 @@ if (!defined('ABSPATH')) exit;
 <?php if (!upstream_disable_discussions() && !upstream_are_comments_disabled()):
 $pluginOptions = get_option('upstream_general');
 $collapseBox = isset($pluginOptions['collapse_project_discussion']) && (bool)$pluginOptions['collapse_project_discussion'] === true;
-$project_id = get_the_ID();
-$comments = getProjectComments($project_id);
 ?>
 
 <div class="col-xs-12 col-sm-12 col-md-12">
@@ -27,15 +25,7 @@ $comments = getProjectComments($project_id);
       <div class="clearfix"></div>
     </div>
     <div class="x_content">
-      <div class="c-discussion" data-label-empty="<?php _e('Currently no messages.', 'upstream'); ?>">
-        <?php if (count($comments) === 0): ?>
-          <p data-no-data><?php _e('Currently no messages.', 'upstream'); ?></p>
-        <?php else:
-          foreach ($comments as $rowIndex => $row) {
-            upstream_frontend_output_comment($row, $rowIndex, $project_id);
-          }
-        endif; ?>
-      </div>
+      <?php upstream_admin_display_messages(); ?>
     </div>
   </div>
 </div>

@@ -1135,7 +1135,7 @@ body.upstream_page_upstream_extensions #upstream_extensions input[type="submit"]
 
 .o-comment .o-comment__actions {
   visibility: hidden;
-  font-size: 90%;
+  font-size: 80%;
   color: #DDD;
 }
 

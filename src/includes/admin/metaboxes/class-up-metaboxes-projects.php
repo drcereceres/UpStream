@@ -1748,7 +1748,7 @@ class UpStream_Metaboxes_Projects {
         header('Content-Type: application/json');
 
         $response = array(
-            'success' => true,
+            'success' => false,
             'error'   => null
         );
 
@@ -1920,7 +1920,16 @@ class UpStream_Metaboxes_Projects {
             $date->setTimezone($currentTimezone);
             $dateTimestamp = $date->getTimestamp();
 
-            $newCommentData = json_decode(json_encode(array(
+            $user = wp_get_current_user();
+            $userHasAdminCapabilities = isUserEitherManagerOrAdmin();
+            $userCanComment = !$userHasAdminCapabilities ? user_can($user, 'publish_project_discussion') : true;
+            $userCanModerate = !$userHasAdminCapabilities ? user_can($user, 'moderate_comments') : true;
+
+            if ((int)$comment['user_id'] === (int)$user->ID) {
+                $userCanModerate = true;
+            }
+
+            $comment = json_decode(json_encode(array(
                 'id'         => $comment['comment_ID'],
                 'parent_id'  => $comment['comment_parent'],
                 'content'    => $comment['comment_content'],
@@ -1938,11 +1947,15 @@ class UpStream_Metaboxes_Projects {
                         _x('%s ago', '%s = human-readable time difference', 'upstream'),
                         human_time_diff($dateTimestamp, $currentTimestamp)
                     )
+                ),
+                'currentUserCap' => array(
+                    'can_reply'    => $userCanComment,
+                    'can_moderate' => $userCanModerate
                 )
             )));
 
             ob_start();
-            upstream_admin_display_message_item($newCommentData, $comments);
+            upstream_admin_display_message_item($comment, $comments);
             $response['comment_html'] = ob_get_contents();
             ob_end_clean();
 
