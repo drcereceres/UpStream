@@ -132,7 +132,14 @@ class UpStream_Admin {
         return $query;
     }
 
-    // @todo
+    /**
+     * Filter comments for Comments.php page.
+     *
+     * @since   @todo
+     * @static
+     *
+     * @param   array   $query  Query args array.
+     */
     public static function preGetComments($query)
     {
         if (!isUserEitherManagerOrAdmin()) {
@@ -168,7 +175,16 @@ class UpStream_Admin {
         }
     }
 
-    // @todo: doc
+    /**
+     * Set up WP-Table filters links.
+     *
+     * @since   @todo
+     * @static
+     *
+     * @param   array   $links  Associative array of table filters.
+     *
+     * @return  array   $links
+     */
     public static function commentStatusLinks($links)
     {
         if (!isUserEitherManagerOrAdmin()) {
