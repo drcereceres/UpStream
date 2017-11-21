@@ -467,6 +467,7 @@ function upstream_admin_display_messages()
         $userHasAdminCapabilities = isUserEitherManagerOrAdmin();
         $userCanComment = !$userHasAdminCapabilities ? user_can($user, 'publish_project_discussion') : true;
         $userCanModerate = !$userHasAdminCapabilities ? user_can($user, 'moderate_comments') : true;
+        $userCanDelete = !$userHasAdminCapabilities ? user_can($user, 'delete_project_discussion') : true;
 
         foreach ($rowset as $row) {
             $author = $users[(int)$row->user_id];
@@ -492,20 +493,13 @@ function upstream_admin_display_messages()
                 ),
                 'currentUserCap' => array(
                     'can_reply'    => $userCanComment,
-                    'can_delete'   => $userCanModerate
+                    'can_moderate' => $userCanModerate,
+                    'can_delete'   => $userCanDelete
                 )
             )));
 
             if ($author->id == $user->ID) {
                 $comment->currentUserCap->can_delete = true;
-            }
-
-            if ($userHasAdminCapabilities) {
-                $comment->currentUserCap->can_reply = true;
-                $comment->currentUserCap->can_delete = true;
-            } else {
-                $comment->currentUserCap->can_reply = $userCanComment;
-                $comment->currentUserCap->can_delete = $userCanModerate;
             }
 
             $comments[$comment->id] = $comment;
@@ -642,27 +636,7 @@ function upstream_display_message_item($comment, $comments = array())
         </div>
         <div class="media-footer">
           <div class="o-comment__actions">
-            <?php if ($comment->state === 1): ?>
-            <a href="#" data-action="comment.unapprove" data-nonce="<?php echo wp_create_nonce('upstream:project.discussion:unapprove_comment:' . $comment->id); ?>">
-              <i class="fa fa-eye-slash"></i>&nbsp;
-              <?php _e('Unapprove'); ?>
-            </a>&nbsp;|&nbsp;
-            <?php else: ?>
-            <a href="#" data-action="comment.approve" data-nonce="<?php echo wp_create_nonce('upstream:project.discussion:approve_comment:' . $comment->id); ?>">
-              <i class="fa fa-eye"></i>&nbsp;
-              <?php _e('Approve'); ?>
-              </a>&nbsp;|&nbsp;
-            <?php endif; ?>
-            <a href="#" data-action="comment.reply" data-nonce="<?php echo wp_create_nonce('upstream:project.discussion:add_comment_reply:' . $comment->id); ?>">
-              <i class="fa fa-reply"></i>&nbsp;
-              <?php _e('Reply'); ?>
-            </a>&nbsp;|&nbsp;
-            <?php if ($comment->currentUserCap->can_delete): ?>
-            <a href="#" data-action="comment.trash" data-nonce="<?php echo wp_create_nonce('upstream:project.discussion:delete_comment:' . $comment->id); ?>">
-              <i class="fa fa-trash-o"></i>&nbsp;
-              <?php _e('Delete'); ?>
-            </a>
-            <?php endif; ?>
+            <?php do_action('upstream:project.comments.comment_controls', $comment); ?>
           </div>
         </div>
       </div>

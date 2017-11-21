@@ -1794,12 +1794,6 @@ class UpStream_Metaboxes_Projects {
                 throw new \Exception(__("Invalid request.", 'upstream'));
             }
 
-            if (!upstream_admin_permissions('delete_project_discussion')
-                && !current_user_can('moderate_comments')
-            ) {
-                throw new \Exception(__("You're not allowed to do this.", 'upstream'));
-            }
-
             // Check if the project exists.
             $project_id = (int)$_POST['project_id'];
             if ($project_id <= 0) {
@@ -1822,6 +1816,15 @@ class UpStream_Metaboxes_Projects {
                 )
             ) {
                 throw new \Exception(_x('Comment not found.', 'Removing a comment in projects', 'upstream'));
+            }
+
+            $user_id = (int)get_current_user_id();
+
+            if (!upstream_admin_permissions('delete_project_discussion')
+                && !current_user_can('moderate_comments')
+                && (int)$comment->user_id !== $user_id
+            ) {
+                throw new \Exception(__("You're not allowed to do this.", 'upstream'));
             }
 
             $success = wp_trash_comment($comment);
@@ -1952,6 +1955,7 @@ class UpStream_Metaboxes_Projects {
             $userHasAdminCapabilities = isUserEitherManagerOrAdmin();
             $userCanComment = !$userHasAdminCapabilities ? user_can($user, 'publish_project_discussion') : true;
             $userCanModerate = !$userHasAdminCapabilities ? user_can($user, 'moderate_comments') : true;
+            $userCanDelete = !$userHasAdminCapabilities ? user_can($user, 'delete_project_discussion') : true;
 
             if ((int)$comment['user_id'] === (int)$user->ID) {
                 $userCanModerate = true;
@@ -1977,8 +1981,9 @@ class UpStream_Metaboxes_Projects {
                     )
                 ),
                 'currentUserCap' => array(
-                    'can_reply'  => $userCanComment,
-                    'can_delete' => $userCanModerate
+                    'can_reply'    => $userCanComment,
+                    'can_moderate' => $userCanModerate,
+                    'can_delete'   => $userCanDelete
                 )
             )));
 
@@ -2052,6 +2057,7 @@ class UpStream_Metaboxes_Projects {
             $userHasAdminCapabilities = isUserEitherManagerOrAdmin();
             $userCanComment = !$userHasAdminCapabilities ? user_can($user, 'publish_project_discussion') : true;
             $userCanModerate = !$userHasAdminCapabilities ? user_can($user, 'moderate_comments') : true;
+            $userCanDelete = !$userHasAdminCapabilities ? user_can($user, 'delete_project_discussion') : true;
 
             if ((int)$comment['user_id'] === (int)$user->ID) {
                 $userCanModerate = true;
@@ -2077,8 +2083,9 @@ class UpStream_Metaboxes_Projects {
                     )
                 ),
                 'currentUserCap' => array(
-                    'can_reply'  => $userCanComment,
-                    'can_delete' => $userCanModerate
+                    'can_reply'    => $userCanComment,
+                    'can_moderate' => $userCanModerate,
+                    'can_delete'   => $userCanDelete
                 )
             )));
 
