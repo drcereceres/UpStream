@@ -578,15 +578,58 @@ function upstream_admin_display_message_item($comment, $comments = array())
         </div>
         <div class="media-footer">
           <div class="o-comment__actions">
-            <?php if ($comment->state === 1): ?>
-            <a href="#" data-action="comment.unapprove" data-nonce="<?php echo wp_create_nonce('upstream:project.discussion:unapprove_comment:' . $comment->id); ?>"><?php _e('Unapprove'); ?></a>&nbsp;|&nbsp;
-            <?php else: ?>
-            <a href="#" data-action="comment.approve" data-nonce="<?php echo wp_create_nonce('upstream:project.discussion:approve_comment:' . $comment->id); ?>"><?php _e('Approve'); ?></a>&nbsp;|&nbsp;
-            <?php endif; ?>
-            <a href="#" data-action="comment.reply" data-nonce="<?php echo wp_create_nonce('upstream:project.discussion:add_comment_reply:' . $comment->id); ?>"><?php _e('Reply'); ?></a>&nbsp;|&nbsp;
-            <?php if ($comment->currentUserCap->can_delete): ?>
-            <a href="#" data-action="comment.trash" data-nonce="<?php echo wp_create_nonce('upstream:project.discussion:delete_comment:' . $comment->id); ?>"><?php _e('Delete'); ?></a>
-            <?php endif; ?>
+            <?php
+            $controls = array();
+            if (isset($comment->currentUserCap->can_moderate) && $comment->currentUserCap->can_moderate) {
+                if ($comment->state === 1) {
+                    $controls[0] = array(
+                        'action' => 'unapprove',
+                        'nonce'  => "unapprove_comment",
+                        'label'  => __('Unapprove')
+                    );
+                } else {
+                    $controls[2] = array(
+                        'action' => 'approve',
+                        'nonce'  => "approve_comment",
+                        'label'  => __('Approve')
+                    );
+                }
+            }
+
+            if (isset($comment->currentUserCap->can_reply) && $comment->currentUserCap->can_reply) {
+                $controls[1] = array(
+                    'action' => 'reply',
+                    'nonce'  => "add_comment_reply",
+                    'label'  => __('Reply')
+                );
+            }
+
+            if (isset($comment->currentUserCap->can_delete) && $comment->currentUserCap->can_delete) {
+                $controls[] = array(
+                    'action' => 'trash',
+                    'nonce'  => "delete_comment",
+                    'label'  => __('Delete')
+                );
+            }
+
+            if (count($controls) > 0) {
+                $first = true;
+                foreach ($controls as $control) {
+                    if (!$first) {
+                        echo '&nbsp;|&nbsp;';
+                    }
+
+                    $first = false;
+
+                    printf(
+                        '<a href="#" data-action="comment.%s" data-nonce="%s">%s</a>',
+                        $control['action'],
+                        wp_create_nonce('upstream:project.discussion:' . $control['nonce'] . ':' . $comment->id),
+                        $control['label']
+                    );
+                }
+            }
+            ?>
           </div>
         </div>
       </div>

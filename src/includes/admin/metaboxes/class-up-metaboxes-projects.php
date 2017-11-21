@@ -1557,6 +1557,9 @@ class UpStream_Metaboxes_Projects {
             $date->setTimezone($currentTimezone);
             $dateTimestamp = $date->getTimestamp();
 
+            $userHasAdminCapabilities = isUserEitherManagerOrAdmin();
+            $userCanModerate = !$userHasAdminCapabilities ? user_can($user, 'moderate_comments') : true;
+
             $newCommentData = json_decode(json_encode(array(
                 'id'         => $wpdb->insert_id,
                 'parent_id'  => 0,
@@ -1577,8 +1580,9 @@ class UpStream_Metaboxes_Projects {
                     )
                 ),
                 'currentUserCap' => array(
-                    'can_reply'  => true,
-                    'can_delete' => true
+                    'can_reply'    => true,
+                    'can_moderate' => $userCanModerate,
+                    'can_delete'   => true
                 )
             )));
 
@@ -1587,9 +1591,9 @@ class UpStream_Metaboxes_Projects {
             ob_start();
 
             if (is_admin()) {
-                upstream_admin_display_message_item($newCommentData, $comments);
+                upstream_admin_display_message_item($newCommentData);
             } else {
-                upstream_display_message_item($newCommentData, $comments);
+                upstream_display_message_item($newCommentData);
             }
 
             $response['comment_html'] = ob_get_contents();
@@ -1706,10 +1710,7 @@ class UpStream_Metaboxes_Projects {
             $userHasAdminCapabilities = isUserEitherManagerOrAdmin();
             $userCanComment = !$userHasAdminCapabilities ? user_can($user, 'publish_project_discussion') : true;
             $userCanModerate = !$userHasAdminCapabilities ? user_can($user, 'moderate_comments') : true;
-
-            if ((int)$comment['user_id'] === (int)$user->ID) {
-                $userCanModerate = true;
-            }
+            $userCanDelete = true;
 
             $newCommentData = json_decode(json_encode(array(
                 'id'         => $wpdb->insert_id,
@@ -1731,8 +1732,9 @@ class UpStream_Metaboxes_Projects {
                     )
                 ),
                 'currentUserCap' => array(
-                    'can_reply'  => $userCanComment,
-                    'can_delete' => $userCanModerate
+                    'can_reply'    => $userCanComment,
+                    'can_moderate' => $userCanModerate,
+                    'can_delete'   => $userCanDelete
                 )
             )));
 
@@ -1958,7 +1960,7 @@ class UpStream_Metaboxes_Projects {
             $userCanDelete = !$userHasAdminCapabilities ? user_can($user, 'delete_project_discussion') : true;
 
             if ((int)$comment['user_id'] === (int)$user->ID) {
-                $userCanModerate = true;
+                $userCanDelete = true;
             }
 
             $comment = json_decode(json_encode(array(
@@ -2060,7 +2062,7 @@ class UpStream_Metaboxes_Projects {
             $userCanDelete = !$userHasAdminCapabilities ? user_can($user, 'delete_project_discussion') : true;
 
             if ((int)$comment['user_id'] === (int)$user->ID) {
-                $userCanModerate = true;
+                $userCanDelete = true;
             }
 
             $newCommentData = json_decode(json_encode(array(
