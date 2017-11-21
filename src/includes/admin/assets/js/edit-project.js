@@ -670,7 +670,9 @@
     }
 
     function replyCancelButtonClickCallback(e) {
-      e.preventDefault();
+      if (typeof e !== "undefined" && e) {
+        e.preventDefault();
+      }
 
       var self = $(this);
 
@@ -745,6 +747,7 @@
               console.error('Something went wrong.');
             } else {
               resetCommentEditorContent();
+              replyCancelButtonClickCallback();
 
               appendCommentHtmlToDiscussion(response.comment_html);
 
@@ -1082,19 +1085,25 @@
       });
     });
 
-    // @todo: has some bugs
+    // @todo: might have some bugs.
     $('.c-discussion').on('click', '.o-comment[data-id] a[data-action="comment.go_to_reply"]', function(e) {
       e.preventDefault();
 
       var targetComment = $($(this).attr('href'));
-      if (!targetComment) {
+      if (!targetComment.length) {
         console.error('Comment not found.');
         return;
       }
 
       var wrapper = $(targetComment.parents('.c-discussion'));
+      var wrapperOffset = wrapper.offset();
 
-      var targetCommentOffsetTop = targetComment.offset().top - wrapper.offset().top;
+      if (!wrapperOffset) return;
+
+      var offset = targetComment.offset() || null;
+      if (!offset) return;
+
+      var targetCommentOffsetTop = offset.top - wrapperOffset.top;
 
       wrapper.animate({
         scrollTop: targetCommentOffsetTop,
