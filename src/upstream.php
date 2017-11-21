@@ -99,6 +99,9 @@ final class UpStream
         add_filter('tiny_mce_before_init', 'upstream_tinymce_before_init_setup_toolbar');
         add_filter('tiny_mce_before_init', 'upstream_tinymce_before_init');
         add_filter('teeny_mce_before_init', 'upstream_tinymce_before_init_setup_toolbar');
+        add_filter('comments_clauses', array($this, 'filterCommentsOnDashboard'), 10, 2);
+        add_filter('views_dashboard', array('UpStream_Admin', 'commentStatusLinks'), 10, 1);
+
 
         // Render additional update info if needed.
         global $pagenow;
@@ -407,6 +410,52 @@ final class UpStream
                 __('UpStream User', 'upstream')
             );
         }
+    }
+
+    /**
+     * Make sure Recent Comments section on admin Dashboard display only comments
+     * current user is allowed to see from projects he's allowed to access.
+     *
+     * @since   @todo
+     * @static
+     *
+     * @param   array               $queryArgs  Query clauses.
+     * @param   WP_Comment_Query    $query      Current query instance.
+     *
+     * @return  array   $queryArgs
+     */
+    public static function filterCommentsOnDashboard($queryArgs, $query)
+    {
+        global $pagenow;
+
+        if ($pagenow === "index.php"
+            && !isUserEitherManagerOrAdmin()
+        ) {
+            global $wpdb;
+
+            $queryArgs['join'] = 'LEFT JOIN ' . $wpdb->prefix . 'posts AS post ON post.ID = ' . $wpdb->prefix . 'comments.comment_post_ID';
+
+            $user = wp_get_current_user();
+            if (in_array('upstream_user', $user->roles) || in_array('upstream_client_user', $user->roles)) {
+                $projects = upstream_get_users_projects($user);
+                if (count($projects) === 0) {
+                    $queryArgs['where'] = "(post.ID = -1)";
+                } else {
+                    $queryArgs['where'] = "(post.post_type = 'project' AND post.ID IN (" . implode(', ', array_keys($projects)) . "))";
+
+                    $userCanModerateComments = user_can($user, 'moderate_comments');
+                    if (!$userCanModerateComments) {
+                        $queryArgs['where'] .= " AND ( comment_approved = '1' )";
+                    } else {
+                        $queryArgs['where'] .= " AND ( comment_approved = '1' OR comment_approved = '0' )";
+                    }
+                }
+            } else {
+                $queryArgs['where'] .= " AND (post.post_type != 'project')";
+            }
+        }
+
+        return $queryArgs;
     }
 }
 endif;
