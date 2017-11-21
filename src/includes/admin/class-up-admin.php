@@ -142,6 +142,15 @@ class UpStream_Admin {
                 // Limit comments visibility to projects user is participating in.
                 $allowedProjects = upstream_get_users_projects($user);
                 $query->query_vars['post__in'] = array_keys($allowedProjects);
+
+                $userCanModerateComments = user_can($user, 'moderate_comments');
+                $userCanDeleteComments = user_can($user, 'delete_project_discussion');
+
+                $query->query_vars['status'] = array('approve');
+
+                if ($userCanModerateComments) {
+                    $query->query_vars['status'][] = 'hold';
+                }
             } else {
                 // Hide Projects comments from other user types.
                 $projects = get_posts(array(

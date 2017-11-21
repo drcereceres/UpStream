@@ -446,12 +446,23 @@ function upstream_admin_display_messages()
     }
     unset($user, $rowsetUsers);
 
+    $user = wp_get_current_user();
+    $userHasAdminCapabilities = isUserEitherManagerOrAdmin();
+    $userCanComment = !$userHasAdminCapabilities ? user_can($user, 'publish_project_discussion') : true;
+    $userCanModerate = !$userHasAdminCapabilities ? user_can($user, 'moderate_comments') : true;
+    $userCanDelete = !$userHasAdminCapabilities ? user_can($user, 'delete_project_discussion') : true;
+
+    $commentsStatuses = array('approve');
+    if ($userHasAdminCapabilities || $userCanModerate) {
+        $commentsStatuses[] = 'hold';
+    }
+
     $rowset = (array)get_comments(array(
         'post_id' => $project_id,
         'orderby' => 'comment_date_gmt',
         'order'   => 'DESC',
         'type'    => 'comment',
-        'status'  => array('hold', 'approve')
+        'status'  => $commentsStatuses
     ));
 
     $comments = array();
@@ -462,12 +473,6 @@ function upstream_admin_display_messages()
         $utcTimeZone = new DateTimeZone('UTC');
         $currentTimezone = upstreamGetTimeZone();
         $currentTimestamp = time();
-
-        $user = wp_get_current_user();
-        $userHasAdminCapabilities = isUserEitherManagerOrAdmin();
-        $userCanComment = !$userHasAdminCapabilities ? user_can($user, 'publish_project_discussion') : true;
-        $userCanModerate = !$userHasAdminCapabilities ? user_can($user, 'moderate_comments') : true;
-        $userCanDelete = !$userHasAdminCapabilities ? user_can($user, 'delete_project_discussion') : true;
 
         foreach ($rowset as $row) {
             $author = $users[(int)$row->user_id];
