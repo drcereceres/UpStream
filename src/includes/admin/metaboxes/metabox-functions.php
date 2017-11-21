@@ -649,57 +649,6 @@ function upstream_display_message_item($comment, $comments = array())
     <?php
 }
 
-
-/**
- * Outputs the post new comment button in the admin.
- */
-function upstream_admin_discussion_button() {
-    echo '<p><button class="button" id="new_message" type="button">' . __( 'New Message', 'upstream') . '</button></p>';
-}
-
-/**
- * AJAX function to delete a new comment in the admin.
- */
-add_action('wp_ajax_upstream_admin_delete_message', 'upstream_admin_delete_message');
-function upstream_admin_delete_message() {
-
-    if( ! wp_verify_nonce( $_POST['upstream_security'], 'ajax_nonce' ) ) {
-        die( -1 );
-    }
-
-    if( ! upstream_admin_permissions( 'delete_project_discussion' ) ) {
-        die( -1 );
-    }
-
-    if( isset( $_POST['item_id'] ) && $_POST['item_id'] != '' ) {
-
-        $post_id        = (int) $_POST['post_id'];
-        $item_id        = esc_html( $_POST['item_id'] );
-        $data           = get_post_meta( $post_id, '_upstream_project_discussion', true );
-        $existing       = $data;
-
-        if( $existing ) :
-            foreach ($existing as $key => $value) {
-                if( $item_id == $value['id'] ) {
-                    unset( $data[$key] );
-                }
-            }
-        endif;
-
-        // reset array keys back into sequential order
-        $data       = array_values($data);
-        $deleted    = update_post_meta( $post_id, '_upstream_project_discussion', $data );
-
-        echo '1';
-
-    }
-
-    exit;
-
-}
-
-
-
 /* ======================================================================================
                                         GENERAL
    ====================================================================================== */

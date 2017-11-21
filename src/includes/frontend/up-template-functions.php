@@ -154,52 +154,6 @@ function upstream_output_file_list( $img_size = 'thumbnail' ) {
 
 }
 
-
-function upstream_output_comments( $id ) {
-
-    $comments = upstream_project_discussion( $id );
-
-    if( $comments ) {
-        global $wp_embed;
-
-        $comments = array_reverse( $comments );
-        foreach ($comments as $comment) {
-
-            $user       = upstream_user_data( $comment['created_by'] );
-            $time       = date_i18n( get_option( 'time_format' ), $comment['created_time'] ) . ' ' . upstream_format_date( $comment['created_time'] );
-            $time_ago   = sprintf( _x( '%s ago', '%s = human-readable time difference', 'upstream' ), human_time_diff( $comment['created_time'], current_time( 'timestamp', false ) ) );
-            $tooltip    = 'data-toggle="tooltip" data-placement="top"';
-            ?>
-
-            <li>
-                <?php echo upstream_user_avatar( $comment['created_by'], false ); ?>
-                <div class="message_date">
-                    <h3 class="date text-info" title="<?php echo esc_attr( $time ); ?>" <?php echo $tooltip; ?> ><?php echo date_i18n( 'd', $comment['created_time'] ) ?></h3>
-                    <p class="month" title="<?php echo esc_attr( $time ); ?>"><?php echo date_i18n( 'M', $comment['created_time'] ) ?></p>
-                </div>
-                <div class="message_wrapper">
-                    <h4 class="heading"><?php echo esc_html($user['display_name']); ?>
-                    <small><?php echo esc_html( $time_ago ); ?></small></h4>
-
-                    <?php do_action( 'upstream_before_single_message', $id, $comment ); ?>
-
-                    <blockquote class="message"><?php echo $wp_embed->autoembed(wpautop($comment['comment'])); ?></blockquote>
-
-                    <?php do_action( 'upstream_after_single_message', $id, $comment ); ?>
-
-                </div>
-            </li>
-
-        <?php }
-
-    } else {
-
-        echo '<p>' . __( 'Currently no messages', 'upstream' ) . '</p>';
-
-    }
-
-}
-
 function upstream_frontend_output_comment($row, $rowIndex, $project_id)
 {
     ?>

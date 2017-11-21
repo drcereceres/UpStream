@@ -412,47 +412,6 @@
     }
 
     /*
-     * Deletes a comment dynamically via AJAX
-     */
-    function deleteDiscussion() {
-
-        var $group = $( document.getElementById( '_upstream_project_discussions' ) );
-
-        $group
-            .on('click', '#delete_message', function( evt ) {
-                evt.preventDefault();
-                var $this   = $( this );
-                var item_id = $this.attr( 'data-id' );
-                var post_id = $('#post_ID').val();
-                deleteMessage( item_id, post_id );
-            });
-
-        deleteMessage = function( item_id, post_id ) {
-
-            $.ajax({
-                url: ajaxurl,
-                type: 'post',
-                data: {
-                    action: 'upstream_admin_delete_message',
-                    item_id: item_id,
-                    upstream_security: cmb2_l10.ajax_nonce,
-                    post_id: post_id
-                },
-                success: function(response){
-                    var $item = $group.find("[data-id='" + item_id + "']");
-                    $item.parents('li').remove();
-
-                    window.wp.autosave.server.triggerSave();
-                }
-            });
-
-            return false;
-
-        };
-
-    }
-
-    /*
      * Shows a clients users dynamically via AJAX
      */
     function showClientUsers() {
@@ -506,7 +465,6 @@
 
     // kick it all off
     initProject();
-    deleteDiscussion();
     showClientUsers();
 
     $('form#post').on('submit', function(e) {
