@@ -188,14 +188,9 @@ class UpStream_Admin {
 
                 $projects = upstream_get_users_projects($user);
 
-                $userMemberProjectsIds = array();
-                foreach ($projects as $project) {
-                    $userMemberProjectsIds[] = $project->ID;
-                }
-
                 $commentsQueryArgs = array(
                     'post_type' => "project",
-                    'post__in'  => $userMemberProjectsIds,
+                    'post__in'  => array_keys($projects),
                     'count'     => true
                 );
 
