@@ -508,3 +508,16 @@ function getProjectComments($project_id)
 
     return $comments;
 }
+
+function getProjectCommentsCount($project_id)
+{
+    if (!is_numeric($project_id) || $project_id < 0) return;
+
+    $commentsCount = get_comments(array(
+        'post_id' => $project_id,
+        'count'   => true,
+        'status'  => "approve"
+    ));
+
+    return (int)$commentsCount;
+}
