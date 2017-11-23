@@ -23,6 +23,8 @@ class Comments
     {
         add_action('wp_ajax_upstream:project.add_comment', array(self::$namespace, 'storeComment'));
         add_action('wp_ajax_upstream:project.trash_comment', array(self::$namespace, 'trashComment'));
+        add_action('wp_ajax_upstream:project.unapprove_comment', array(self::$namespace, 'unapproveComment'));
+        add_action('wp_ajax_upstream:project.approve_comment', array(self::$namespace, 'approveComment'));
     }
 
     public static function storeComment()
@@ -104,7 +106,6 @@ class Comments
 
             $useAdminLayout = is_admin();
 
-            $response['data'] = $comment;
             $response['comment_html'] = $comment->render(true, $useAdminLayout);
             $response['success'] = true;
         } catch (\Exception $e) {
@@ -183,6 +184,158 @@ class Comments
 
             $response['success'] = true;
         } catch (Exception $e) {
+            $response['error'] = $e->getMessage();
+        }
+
+        wp_send_json($response);
+    }
+
+    /**
+     * Either approves/unapproves a given comment.
+     *
+     * @since   @todo
+     * @access  private
+     * @static
+     *
+     * @throws  \Exception when something went wrong or failed on validations.
+     *
+     * @param   int     $comment_id         Comment ID being edited.
+     * @param   bool    $newApprovalStatus  Either the comment will be approved or not.
+     *
+     * @param   Comment $comment
+     */
+    private static function toggleCommentApprovalStatus($comment_id, $isApproved)
+    {
+        // Check if the request payload is potentially invalid.
+        if (
+            !defined('DOING_AJAX')
+            || !DOING_AJAX
+            || empty($_POST)
+            || !isset($_POST['nonce'])
+            || !isset($_POST['project_id'])
+            || !isset($_POST['comment_id'])
+            || !wp_verify_nonce($_POST['nonce'], 'upstream:project.' . ($isApproved ? 'approve_comment' : 'unapprove_comment') . ':' . $_POST['comment_id'])
+        ) {
+            throw new \Exception(__('Invalid request.', 'upstream'));
+        }
+
+        // Check if the user has enough permissions to do this.
+        if (!current_user_can('moderate_comments')) {
+            throw new \Exception(__("You're not allowed to do this.", 'upstream'));
+        }
+
+        // Check if the project potentially exists.
+        $project_id = (int)$_POST['project_id'];
+        if ($project_id <= 0) {
+            throw new \Exception(sprintf(__('Invalid "%s" parameter.', 'upstream'), 'project_id'));
+        }
+
+        // Check if the Discussion/Comments section is disabled for the current project.
+        if (upstream_are_comments_disabled($project_id)) {
+            throw new \Exception(__('Comments are disabled for this project.', 'upstream'));
+        }
+
+        $comment = Comment::load($_POST['comment_id']);
+        if (!($comment instanceof Comment)) {
+            throw new \Exception(__('Comment not found.', 'upstream'));
+        }
+
+        $success = (bool)$isApproved ? $comment->approve() : $comment->unapprove();
+        if (!$success) {
+            throw new \Exception(__('Unable to save the data into database.', 'upstream'));
+        }
+
+        return $comment;
+    }
+
+    /**
+     * AJAX endpoint that unapproves a comment.
+     *
+     * @since   @todo
+     * @static
+     */
+    public static function unapproveComment()
+    {
+        header('Content-Type: application/json');
+
+        $response = array(
+            'success' => false,
+            'error'   => null,
+            'comment_html' => ''
+        );
+
+        try {
+            $comment_id = isset($_POST['comment_id']) ? (int)$_POST['comment_id'] : 0;
+            $comment = self::toggleCommentApprovalStatus($comment_id, false);
+
+            $comments = array();
+            if ($comment->parent_id > 0) {
+                $parentComment = get_comment($comment->parent_id);
+                $comments = array(
+                    $comment->parent_id => json_decode(json_encode(array(
+                        'created_by' => array(
+                            'name' => $parentComment->comment_author
+                        )
+                    )))
+                );
+                unset($parentComment);
+            }
+
+            $useAdminLayout = !isset($_POST['teeny']) ? true : (bool)$_POST['teeny'];
+
+            $response['comment_html'] = $comment->render(true, $useAdminLayout);
+
+            wp_new_comment_notify_moderator($comment->id);
+
+            $response['success'] = true;
+        } catch (\Exception $e) {
+            $response['error'] = $e->getMessage();
+        }
+
+        wp_send_json($response);
+    }
+
+    /**
+     * AJAX endpoint that approves a comment.
+     *
+     * @since   @todo
+     * @static
+     */
+    public static function approveComment()
+    {
+        header('Content-Type: application/json');
+
+        $response = array(
+            'success' => false,
+            'error'   => null,
+            'comment_html' => ''
+        );
+
+        try {
+            $comment_id = isset($_POST['comment_id']) ? (int)$_POST['comment_id'] : 0;
+            $comment = self::toggleCommentApprovalStatus($comment_id, true);
+
+            $comments = array();
+            if ($comment->parent_id > 0) {
+                $parentComment = get_comment($comment->parent_id);
+                $comments = array(
+                    $comment->parent_id => json_decode(json_encode(array(
+                        'created_by' => array(
+                            'name' => $parentComment->comment_author
+                        )
+                    )))
+                );
+                unset($parentComment);
+            }
+
+            $useAdminLayout = !isset($_POST['teeny']) ? true : (bool)$_POST['teeny'];
+
+            $response['comment_html'] = $comment->render(true, $useAdminLayout);
+
+            wp_new_comment_notify_moderator($comment->id);
+
+            $response['success'] = true;
+        } catch (\Exception $e) {
             $response['error'] = $e->getMessage();
         }
 

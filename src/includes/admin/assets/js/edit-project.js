@@ -1012,11 +1012,7 @@
       );
     });
 
-    $('.c-discussion').on('click', '.o-comment[data-id] a[data-action="comment.unapprove"]', function(e) {
-      e.preventDefault();
-
-      var self = $(this);
-
+    function sendToggleApprovalStateRequest(self, isApproved) {
       var comment = $(self.parents('.o-comment[data-id]'));
       if (!comment.length) {
         console.error('Comment wrapper not found.');
@@ -1025,23 +1021,23 @@
 
       var errorCallback = function() {
         comment
-          .removeClass('is-loading is-mouse-over is-being-unapproved')
+          .removeClass('is-loading is-mouse-over is-being-' + (isApproved ? 'approved' : 'unapproved'))
           .css('background-color', '');
-        self.text(upstream_project.l.LB_UNAPPROVE);
+        self.text(isApproved ? upstream_project.l.LB_APPROVE : upstream_project.l.LB_UNAPPROVE);
       };
 
       $.ajax({
         type: 'POST',
         url : ajaxurl,
         data: {
-          action    : 'upstream:project.discussion.unapprove_comment',
+          action    : 'upstream:project.' + (isApproved ? 'approve' : 'unapprove') + '_comment',
           nonce     : self.data('nonce'),
           project_id: $('#post_ID').val(),
           comment_id: comment.attr('data-id')
         },
         beforeSend: function() {
-          comment.addClass('is-loading is-mouse-over is-being-unapproved');
-          self.text(upstream_project.l.LB_UNAPPROVING);
+          comment.addClass('is-loading is-mouse-over is-being-' + (isApproved ? 'approved' : 'unapproved'));
+          self.text(isApproved ? upstream_project.l.LB_APPROVING : upstream_project.l.LB_UNAPPROVING);
         },
         success: function(response) {
           if (response.error) {
@@ -1068,64 +1064,16 @@
           console.error(response);
         }
       });
+    }
+
+    $('.cmb2-wrap').on('click', '.o-comment[data-id] a[data-action="comment.unapprove"]', function(e) {
+      e.preventDefault();
+      sendToggleApprovalStateRequest($(this), false);
     });
 
-    $('.c-discussion').on('click', '.o-comment[data-id] a[data-action="comment.approve"]', function(e) {
+    $('.cmb2-wrap').on('click', '.o-comment[data-id] a[data-action="comment.approve"]', function(e) {
       e.preventDefault();
-
-      var self = $(this);
-
-      var comment = $(self.parents('.o-comment[data-id]'));
-      if (!comment.length) {
-        console.error('Comment wrapper not found.');
-        return;
-      }
-
-      var errorCallback = function() {
-        comment
-          .removeClass('is-loading is-mouse-over is-being-approved')
-          .css('background-color', '');
-        self.text(upstream_project.l.LB_APPROVE);
-      };
-
-      $.ajax({
-        type: 'POST',
-        url : ajaxurl,
-        data: {
-          action    : 'upstream:project.discussion.approve_comment',
-          nonce     : self.data('nonce'),
-          project_id: $('#post_ID').val(),
-          comment_id: comment.attr('data-id')
-        },
-        beforeSend: function() {
-          comment.addClass('is-loading is-mouse-over is-being-approved');
-          self.text(upstream_project.l.LB_APPROVING);
-        },
-        success: function(response) {
-          if (response.error) {
-            errorCallback();
-            console.error(response.error);
-            alert(response.error);
-          } else {
-            if (!response.success) {
-              errorCallback();
-              console.error('Something went wrong.');
-            } else {
-              comment.replaceWith($(response.comment_html));
-            }
-          }
-        },
-        error: function(jqXHR, textStatus, errorThrown) {
-          errorCallback();
-
-          var response = {
-            text_status: textStatus,
-            errorThrown: errorThrown
-          };
-
-          console.error(response);
-        }
-      });
+      sendToggleApprovalStateRequest($(this), true);
     });
 
     // @todo: might have some bugs.
