@@ -256,6 +256,7 @@ final class UpStream
         include_once( 'includes/up-client-functions.php' );
         include_once( 'includes/up-permissions-functions.php' );
         include_once( 'includes/up-client-users-migration.php' );
+        include_once( 'includes/up-comments-migration.php' );
     }
 
     /**
@@ -281,6 +282,7 @@ final class UpStream
 
         // Executes the Legacy Client Users Migration script if needed.
         \UpStream\Migrations\ClientUsers::run();
+        \UpStream\Migrations\Comments::run();
 
         $user = wp_get_current_user();
         $userRoles = (array)$user->roles;
