@@ -865,7 +865,7 @@
       });
     });
 
-    $('.c-discussion').on('click', '.o-comment[data-id] a[data-action="comment.trash"]', function(e) {
+    $('.cmb2-wrap').on('click', '.o-comment[data-id] a[data-action="comment.trash"]', function(e) {
       e.preventDefault();
 
       var self = $(this);
@@ -887,7 +887,7 @@
         type: 'POST',
         url : ajaxurl,
         data: {
-          action    : 'upstream:project.discussion.trash_comment',
+          action    : 'upstream:project.trash_comment',
           nonce     : self.data('nonce'),
           project_id: $('#post_ID').val(),
           comment_id: comment.attr('data-id')
@@ -986,73 +986,6 @@
         }
       });
     }
-
-    /*
-    $('#cmb2-metabox-_upstream_project_discussions .cmb2-id--upstream-project-new-message').on('click', '.button[data-action="comments.add_comment"]', function(e) {
-      e.preventDefault();
-
-      var theEditor = getCommentEditor();
-      var commentContentHtml = null;
-      var commentContentText = null;
-
-      var isEditorInVisualMode = theEditor ? !theEditor.isHidden() : false;
-      if (isEditorInVisualMode) {
-        commentContentHtml = (theEditor.getContent() || "").trim();
-        commentContentText = (theEditor.getContent({ format: 'text' }) || "").trim();
-
-        if (commentContentText.length === 0 && commentContentHtml.length === 0) {
-          theEditor.execCommand('mceFocus', false);
-          return;
-        }
-      } else {
-        theEditor = getCommentEditorTextarea('_upstream_project_new_message');
-        commentContentHtml = theEditor.val().trim();
-        commentContentText = commentContentHtml;
-
-        if (commentContentText.length === 0) {
-          theEditor.focus();
-          return;
-        }
-      }
-
-      var self = $(this);
-
-      $.ajax({
-        type: 'POST',
-        url : ajaxurl,
-        data: {
-          action    : 'upstream:project.discussion.add_comment',
-          nonce     : self.data('nonce'),
-          project_id: $('#post_ID').val(),
-          content   : commentContentHtml
-        },
-        beforeSend: function() {
-          disableCommentArea('_upstream_project_new_message');
-          self.text(self.attr('data-label-active'));
-        },
-        success: function(response) {
-          console.log(response);
-          if (response.error) {
-            console.error(response.error);
-            alert(response.error);
-          } else {
-            if (!response.success) {
-              console.error('Something went wrong.');
-            } else {
-              resetCommentEditorContent('_upstream_project_new_message');
-
-              appendCommentHtmlToDiscussion(response.comment_html, $('#_upstream_project_discussions .c-discussion'));
-            }
-          }
-        },
-        error: function() {},
-        complete: function() {
-          enableCommentArea('_upstream_project_new_message');
-          self.text(self.attr('data-label'));
-        }
-      });
-    });
-    */
 
     $('#_upstream_project_discussions .button[data-action="comments.add_comment"]').on('click', function(e) {
       e.preventDefault();

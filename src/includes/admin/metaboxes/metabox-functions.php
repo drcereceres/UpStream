@@ -609,7 +609,7 @@ function upstream_admin_display_message_item($comment, $comments = array(), $deb
             if (isset($comment->currentUserCap->can_delete) && $comment->currentUserCap->can_delete) {
                 $controls[] = array(
                     'action' => 'trash',
-                    'nonce'  => "delete_comment",
+                    'nonce'  => "trash_comment",
                     'label'  => __('Delete')
                 );
             }
@@ -626,7 +626,7 @@ function upstream_admin_display_message_item($comment, $comments = array(), $deb
                     printf(
                         '<a href="#" data-action="comment.%s" data-nonce="%s">%s</a>',
                         $control['action'],
-                        wp_create_nonce('upstream:project.discussion:' . $control['nonce'] . ':' . $comment->id),
+                        wp_create_nonce('upstream:project.' . $control['nonce'] . ':' . $comment->id),
                         $control['label']
                     );
                 }

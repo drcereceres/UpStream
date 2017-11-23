@@ -49,7 +49,6 @@ class UpStream_Metaboxes_Projects {
 
 
         add_action('wp_ajax_upstream:project.discussion.add_comment_reply', array($this, 'storeCommentReply'));
-        add_action('wp_ajax_upstream:project.discussion.trash_comment', array($this, 'trashComment'));
         add_action('wp_ajax_upstream:project.discussion.unapprove_comment', array($this, 'unapproveComment'));
         add_action('wp_ajax_upstream:project.discussion.approve_comment', array($this, 'approveComment'));
 
@@ -1688,81 +1687,6 @@ class UpStream_Metaboxes_Projects {
     }
 
     /**
-     * AJAX endpoint that removes a comment.
-     *
-     * @since   @todo
-     * @static
-     */
-    static public function trashComment()
-    {
-        header('Content-Type: application/json');
-
-        $response = array(
-            'success' => false,
-            'error'   => null
-        );
-
-        try {
-            // Check if the request payload is potentially invalid.
-            if (
-                !defined('DOING_AJAX')
-                || !DOING_AJAX
-                || empty($_POST)
-                || !isset($_POST['nonce'])
-                || !isset($_POST['project_id'])
-                || !isset($_POST['comment_id'])
-                || !wp_verify_nonce($_POST['nonce'], 'upstream:project.discussion:delete_comment:' . $_POST['comment_id'])
-            ) {
-                throw new \Exception(__("Invalid request.", 'upstream'));
-            }
-
-            // Check if the project exists.
-            $project_id = (int)$_POST['project_id'];
-            if ($project_id <= 0) {
-                throw new \Exception(__("Invalid Project.", 'upstream'));
-            }
-
-            // Check if the Discussion/Comments section is disabled for the current project.
-            if (upstream_are_comments_disabled($project_id)) {
-                throw new \Exception(__("Comments are disabled for this project.", 'upstream'));
-            }
-
-            // Check if the parent comment exists.
-            $comment_id = (int)$_POST['comment_id'];
-            $comment = get_comment($comment_id);
-
-            if (empty($comment)
-                // Check if the comment belongs to that project.
-                || (isset($comment->comment_post_ID)
-                    && (int)$comment->comment_post_ID !== $project_id
-                )
-            ) {
-                throw new \Exception(_x('Comment not found.', 'Removing a comment in projects', 'upstream'));
-            }
-
-            $user_id = (int)get_current_user_id();
-
-            if (!upstream_admin_permissions('delete_project_discussion')
-                && !current_user_can('moderate_comments')
-                && (int)$comment->user_id !== $user_id
-            ) {
-                throw new \Exception(__("You're not allowed to do this.", 'upstream'));
-            }
-
-            $success = wp_trash_comment($comment);
-            if (!$success) {
-                throw new \Exception(__("It wasn't possible to delete this comment.", 'upstream'));
-            }
-
-            $response['success'] = true;
-        } catch (Exception $e) {
-            $response['error'] = $e->getMessage();
-        }
-
-        wp_send_json($response);
-    }
-
-    /**
      * Either approves/unapproves a given comment.
      *
      * @since   @todo
@@ -2109,7 +2033,7 @@ class UpStream_Metaboxes_Projects {
                             $date = DateTime::createFromFormat('Y-m-d H:i:s', $comment->comment_date_gmt, $utcTimeZone);
 
                             $commentData = json_decode(json_encode(array(
-                                'id'         => $comment->ID,
+                                'id'         => $comment->comment_ID,
                                 'parent_id'  => $comment->parent_id,
                                 'content'    => $comment->comment_content,
                                 'state'      => $comment->comment_approved,
