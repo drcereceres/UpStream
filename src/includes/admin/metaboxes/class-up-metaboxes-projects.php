@@ -48,11 +48,17 @@ class UpStream_Metaboxes_Projects {
 
 
 
-        add_action('wp_ajax_upstream:project.discussion.add_comment', array($this, 'storeComment'));
+        //add_action('wp_ajax_upstream:project.discussion.add_comment', array($this, 'storeComment'));
         add_action('wp_ajax_upstream:project.discussion.add_comment_reply', array($this, 'storeCommentReply'));
         add_action('wp_ajax_upstream:project.discussion.trash_comment', array($this, 'trashComment'));
         add_action('wp_ajax_upstream:project.discussion.unapprove_comment', array($this, 'unapproveComment'));
         add_action('wp_ajax_upstream:project.discussion.approve_comment', array($this, 'approveComment'));
+
+
+
+        add_action('cmb2_render_comments', array($this, 'renderCommentsField'), 10, 5);
+
+        add_action('wp_ajax_upstream:project.get_all_items_comments', array($this, 'fetchAllItemsComments'));
     }
 
     /**
@@ -796,6 +802,47 @@ class UpStream_Metaboxes_Projects {
         }
     }
 
+
+
+
+    private static $commentsFieldsNonce = false;
+
+    private static $itemsCommentsSectionCache = array();
+
+    public static function renderCommentsField($field, $escapedValue, $object_id, $objectType, $fieldType)
+    {
+        if (!self::$commentsFieldsNonce) {
+            echo '<input type="hidden" id="project_all_items_comments_nonce" value="' . wp_create_nonce('project.get_all_items_comments') . '">';
+            self::$commentsFieldsNonce = true;
+        }
+
+        $field_id = $field->args['id'];
+
+        if (!isset(self::$itemsCommentsSectionCache[$field_id])) {
+            $editorIdentifier = $field_id .'_editor';
+
+            preg_match('/^_upstream_project_([a-z]+)_([0-9]+)_comments/i', $field_id, $matches);
+
+            printf(
+                '<input type="hidden" id="%s" value="%s">',
+                $field_id . '_add_comment_nonce',
+                wp_create_nonce('upstream:project.' . $matches[1] . '.add_comment:' . $matches[2])
+            );
+
+            wp_editor("", $editorIdentifier, array(
+                'media_buttons' => true,
+                'textarea_rows' => 5,
+                'textarea_name' => $editorIdentifier
+            ));
+
+            self::$itemsCommentsSectionCache[$field_id] = 1;
+        }
+    }
+
+
+
+
+
 /* ======================================================================================
                                         BUGS
    ====================================================================================== */
@@ -867,7 +914,14 @@ class UpStream_Metaboxes_Projects {
                 'before'        => 'upstream_add_field_attributes',
                 'attributes'    => array(
                     'class' => 'hidden',
-                )
+                ),
+                'before_row' => '
+                    <div class="up-c-tabs-header">
+                      <a href="#" class="up-o-tab up-o-tab-data is-active" role="tab" data-target=".up-c-tab-content-data">Data</a>
+                      <a href="#" class="up-o-tab up-o-tab-comments" role="tab" data-target=".up-c-tab-content-comments">Comments (x)</a>
+                    </div>
+                    <div class="up-c-tabs-content">
+                      <div class="up-o-tab-content up-c-tab-content-data is-active">'
             );
             $fields[1] = array(
                 'id'            => 'created_by',
@@ -967,6 +1021,14 @@ class UpStream_Metaboxes_Projects {
                 'date_format'       => 'Y-m-d',
                 'permissions'       => 'bug_due_date_field',
                 'before'            => 'upstream_add_field_attributes',
+                'after_row' => '<aside></aside>'
+            );
+
+            $fields[50] = array(
+                'name' => '&nbsp;',
+                'id'   => 'comments',
+                'type' => 'comments',
+                'after_row' => '</div><div class="up-o-tab-content up-c-tab-content-comments"></div></div>'
             );
 
             // set up the group grid plugin
@@ -1402,7 +1464,7 @@ class UpStream_Metaboxes_Projects {
                 'type'              => 'wysiwyg',
                 'permissions'       => 'publish_project_discussion',
                 'before'            => 'upstream_add_field_attributes',
-                'after_field'       => '<p class="u-text-right"><button class="button button-primary" type="button" data-action="comments.add_comment" data-nonce="' . wp_create_nonce('upstream:project.discussion:add_comment') . '">' . __('Add Comment') . '</button></p></div></div>',
+                'after_field'       => '<p class="u-text-right"><button class="button button-primary" type="button" data-action="comments.add_comment" data-nonce="' . wp_create_nonce('upstream:project.add_comment') . '">' . __('Add Comment') . '</button></p></div></div>',
                 'after_row'         => 'upstream_admin_display_messages',
                 'options'           => array(
                     'media_buttons' => true,
@@ -1545,6 +1607,8 @@ class UpStream_Metaboxes_Projects {
             if (!$success) {
                 throw new \Exception(__('Unable to save the data into database.', 'upstream'));
             }
+
+            update_comment_meta($wpdb->insert_id, 'type', 'project');
 
             $dateFormat = get_option('date_format');
             $timeFormat = get_option('time_format');
@@ -1695,6 +1759,8 @@ class UpStream_Metaboxes_Projects {
             if (!$success) {
                 throw new \Exception(__('Unable to save the data into database.', 'upstream'));
             }
+
+            update_comment_meta($wpdb->insert_id, 'type', 'project');
 
             $dateFormat = get_option('date_format');
             $timeFormat = get_option('time_format');
@@ -2103,6 +2169,130 @@ class UpStream_Metaboxes_Projects {
 
             $response['comment_html'] = ob_get_contents();
             ob_end_clean();
+
+            $response['success'] = true;
+        } catch (Exception $e) {
+            $response['error'] = $e->getMessage();
+        }
+
+        wp_send_json($response);
+    }
+
+    /**
+     * @todo
+     *
+     * @since   @todo
+     * @static
+     */
+    static public function fetchAllItemsComments()
+    {
+        header('Content-Type: application/json');
+
+        $response = array(
+            'success' => false,
+            'data'    => array(
+                'bugs' => array()
+            ),
+            'error'   => null
+        );
+
+        try {
+            // Check if the request payload is potentially invalid.
+            if (
+                !defined('DOING_AJAX')
+                || !DOING_AJAX
+                || empty($_GET)
+                || !isset($_GET['nonce'])
+                || !isset($_GET['project_id'])
+                //|| !wp_verify_nonce($_POST['nonce'], 'project.get_all_items_comments')
+            ) {
+                throw new \Exception(__("Invalid request.", 'upstream'));
+            }
+
+            // Check if the project exists.
+            $project_id = (int)$_GET['project_id'];
+            if ($project_id <= 0) {
+                //throw new \Exception(__("Invalid Project.", 'upstream'));
+            }
+
+            $dateFormat = get_option('date_format');
+            $timeFormat = get_option('time_format');
+            $theDateTimeFormat = $dateFormat . ' ' . $timeFormat;
+            $utcTimeZone = new DateTimeZone('UTC');
+            $currentTimezone = upstreamGetTimeZone();
+            $currentTimestamp = time();
+
+            $userHasAdminCapabilities = isUserEitherManagerOrAdmin();
+            $userCanModerate = !$userHasAdminCapabilities ? user_can($user, 'moderate_comments') : true;
+
+            // @todo: fetch all milestones comments
+            // @todo: fetch all tasks comments
+            // @todo: fetch all bugs comments
+            $bugsRowset = (array)get_post_meta($project_id, '_upstream_project_bugs', true);
+            if (count($bugsRowset) > 0) {
+                foreach ($bugsRowset as $bugRow) {
+                    $comments = get_comments(array(
+                        'post_id'    => $project_id,
+                        'meta_query' => array(
+                            'relation' => 'AND',
+                            array(
+                                'key'   => 'type',
+                                'value' => 'bug'
+                            ),
+                            array(
+                                'key'   => 'id',
+                                'value' => $bugRow['id']
+                            )
+                        )
+                    ));
+
+                    if (count($comments) > 0) {
+                        $response['data']['bugs'][$bugRow['id']] = array();
+
+                        foreach ($comments as $comment) {
+                            $user = get_user_by('id', $comment->user_id);
+
+                            $date = DateTime::createFromFormat('Y-m-d H:i:s', $comment->comment_date_gmt, $utcTimeZone);
+
+                            $commentData = json_decode(json_encode(array(
+                                'id'         => $comment->ID,
+                                'parent_id'  => $comment->parent_id,
+                                'content'    => $comment->comment_content,
+                                'state'      => $comment->comment_approved,
+                                'created_by' => (object)array(
+                                    'id'     => $user->ID,
+                                    'name'   => $user->display_name,
+                                    'avatar' => getUserAvatarURL($user->ID)
+                                ),
+                                'created_at' => array(
+                                    'localized' => "",
+                                    'humanized' => sprintf(
+                                        _x('%s ago', '%s = human-readable time difference', 'upstream'),
+                                        human_time_diff($date->getTimestamp(), $currentTimestamp)
+                                    )
+                                ),
+                                // @todo
+                                'currentUserCap' => array(
+                                    'can_reply'    => true,
+                                    'can_moderate' => true,
+                                    'can_delete'   => true
+                                )
+                            )));
+
+                            $date->setTimezone($currentTimezone);
+
+                            $commentData->created_at->localized = $date->format($theDateTimeFormat);
+
+                            ob_start();
+                            upstream_admin_display_message_item($commentData);
+                            $response['data']['bugs'][$bugRow['id']][] = ob_get_contents();
+                            ob_end_clean();
+                        }
+                    }
+                }
+            }
+            // @todo: fetch all files comments
+
 
             $response['success'] = true;
         } catch (Exception $e) {

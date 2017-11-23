@@ -458,11 +458,13 @@ function upstream_admin_display_messages()
     }
 
     $rowset = (array)get_comments(array(
-        'post_id' => $project_id,
-        'orderby' => 'comment_date_gmt',
-        'order'   => 'DESC',
-        'type'    => 'comment',
-        'status'  => $commentsStatuses
+        'post_id'    => $project_id,
+        'orderby'    => 'comment_date_gmt',
+        'order'      => 'DESC',
+        'type'       => 'comment',
+        'status'     => $commentsStatuses,
+        'meta_key'   => "type",
+        'meta_value' => "project"
     ));
 
     $comments = array();
@@ -530,14 +532,14 @@ function upstream_admin_display_messages()
     <?php
 }
 
-function upstream_admin_display_message_item($comment, $comments = array())
+function upstream_admin_display_message_item($comment, $comments = array(), $debug = false)
 {
     global $wp_embed;
     ?>
-    <div class="media o-comment <?php echo $comment->state === 1 ? 's-status-approved' : 's-status-unapproved'; ?>" id="comment-<?php echo $comment->id; ?>" data-id="<?php echo $comment->id; ?>">
+    <div class="media o-comment <?php echo (int)$comment->state === 1 ? 's-status-approved' : 's-status-unapproved'; ?>" id="comment-<?php echo $comment->id; ?>" data-id="<?php echo $comment->id; ?>">
       <div class="media-left">
         <img class="media-object" src="<?php echo $comment->created_by->avatar; ?>" width="30">
-        <?php if ($comment->state !== 1 && isset($comment->currentUserCap) && $comment->currentUserCap->can_delete): ?>
+        <?php if ((int)$comment->state !== 1 && isset($comment->currentUserCap) && $comment->currentUserCap->can_delete): ?>
         <div class="u-text-center">
           <span class="dashicons dashicons-hidden u-color-gray" title="<?php _e("This comment is not visible by regular users.", 'upstream'); ?>" style="margin-top: 2px;"></span>
         </div>
@@ -581,7 +583,7 @@ function upstream_admin_display_message_item($comment, $comments = array())
             <?php
             $controls = array();
             if (isset($comment->currentUserCap->can_moderate) && $comment->currentUserCap->can_moderate) {
-                if ($comment->state === 1) {
+                if ((int)$comment->state === 1) {
                     $controls[0] = array(
                         'action' => 'unapprove',
                         'nonce'  => "unapprove_comment",
@@ -641,10 +643,10 @@ function upstream_display_message_item($comment, $comments = array())
 {
     global $wp_embed;
     ?>
-    <div class="media o-comment <?php echo $comment->state === 1 ? 's-status-approved' : 's-status-unapproved'; ?>" id="comment-<?php echo $comment->id; ?>" data-id="<?php echo $comment->id; ?>">
+    <div class="media o-comment <?php echo (int)$comment->state === 1 ? 's-status-approved' : 's-status-unapproved'; ?>" id="comment-<?php echo $comment->id; ?>" data-id="<?php echo $comment->id; ?>">
       <div class="media-left">
         <img class="media-object" src="<?php echo $comment->created_by->avatar; ?>" width="30">
-        <?php if ($comment->state !== 1 && isset($comment->currentUserCap) && $comment->currentUserCap->can_delete): ?>
+        <?php if ((int)$comment->state !== 1 && isset($comment->currentUserCap) && $comment->currentUserCap->can_delete): ?>
         <div class="u-text-center">
           <i class="fa fa-eye-slash u-color-gray" title="<?php _e("This comment is not visible by regular users.", 'upstream'); ?>" style="margin-top: 2px;"></i>
         </div>

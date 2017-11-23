@@ -583,19 +583,40 @@
     var newMessageLabel = $('#_upstream_project_discussions label[for="_upstream_project_new_message"]');
     var newMessageLabelText = newMessageLabel.text();
 
-    function getCommentEditor() {
+    function getCommentEditor(editor_id) {
       var TinyMceSingleton = window.tinyMCE ? window.tinyMCE : (window.tinymce ? window.tinymce : null);
-      var theEditor = TinyMceSingleton.get('_upstream_project_new_message');
+      var theEditor = TinyMceSingleton.get(editor_id);
 
       return theEditor;
     }
 
-    function getCommentEditorTextarea() {
-      return $('#_upstream_project_new_message');
+    function getCommentEditorTextarea(editor_id) {
+      return $('#' + editor_id);
     }
 
-    function disableCommentArea() {
-      var theEditor = getCommentEditor();
+    function getEditorContent(editor_id, asHtml) {
+      asHtml = typeof asHtml === 'undefined' ? true : (asHtml ? true : false);
+
+      var theEditor = getCommentEditor(editor_id);
+      var content = "";
+
+      var isEditorInVisualMode = theEditor ? !theEditor.isHidden() : false;
+      if (isEditorInVisualMode) {
+        if (asHtml) {
+          content = (theEditor.getContent() || "").trim();
+        } else {
+          content = (theEditor.getContent({ format: 'text' }) || "").trim();
+        }
+      } else {
+        theEditor = getCommentEditorTextarea(editor_id);
+        content = theEditor.val().trim();
+      }
+
+      return content;
+    }
+
+    function disableCommentArea(editor_id) {
+      var theEditor = getCommentEditor(editor_id);
 
       if (theEditor) {
         theEditor.getDoc().designMode = 'off';
@@ -607,18 +628,19 @@
         theEditorBody.style.cursor = "progress";
       }
 
-      var theEditorTextarea = getCommentEditorTextarea();
+      var theEditorTextarea = getCommentEditorTextarea(editor_id);
       theEditorTextarea.attr('disabled', 'disabled');
       theEditorTextarea.addClass('disabled');
 
-      $('#wp-_upstream_project_new_message-wrap').css('cursor', 'progress');
+      $('#wp-' + editor_id + '-wrap').css('cursor', 'progress');
       $('#insert-media-button').attr('disabled', 'disabled');
       $('button[data-action^="comment."]').attr('disabled', 'disabled');
       $('button[data-action^="comments."]').attr('disabled', 'disabled');
+      $('button[data-editor="'+ editor_id +'"]').attr('disabled', 'disabled');
     }
 
-    function enableCommentArea() {
-      var theEditor = getCommentEditor();
+    function enableCommentArea(editor_id) {
+      var theEditor = getCommentEditor(editor_id);
 
       if (theEditor) {
         theEditor.getDoc().designMode = 'on';
@@ -630,27 +652,28 @@
         theEditorBody.style.cursor = null;
       }
 
-      var theEditorTextarea = getCommentEditorTextarea();
+      var theEditorTextarea = getCommentEditorTextarea(editor_id);
       theEditorTextarea.attr('disabled', null);
       theEditorTextarea.removeClass('disabled');
 
-      $('#wp-_upstream_project_new_message-wrap').css('cursor', '');
+      $('#wp-' + editor_id + '-wrap').css('cursor', '');
       $('#insert-media-button').attr('disabled', null);
       $('button[data-action^="comment."]').attr('disabled', null);
       $('button[data-action^="comments."]').attr('disabled', null);
+      $('button[data-editor="'+ editor_id +'"]').attr('disabled', null);
     }
 
-    function resetCommentEditorContent() {
-      var theEditor = getCommentEditor();
+    function resetCommentEditorContent(editor_id) {
+      var theEditor = getCommentEditor(editor_id);
       if (theEditor) {
         theEditor.setContent('');
       }
 
-      var theEditorTextarea = getCommentEditorTextarea();
+      var theEditorTextarea = getCommentEditorTextarea(editor_id);
       theEditorTextarea.val('');
     }
 
-    function appendCommentHtmlToDiscussion(commentHtml) {
+    function appendCommentHtmlToDiscussion(commentHtml, wrapper) {
       var comment = $(commentHtml);
       comment.hide();
 
@@ -660,9 +683,9 @@
 
       comment.html(commentHtml);
 
-      comment.prependTo('.c-discussion');
+      comment.prependTo(wrapper);
 
-      $('.c-discussion').animate({
+      wrapper.animate({
         scrollTop: 0
       }, function() {
         comment.fadeIn();
@@ -682,7 +705,7 @@
 
       $('.o-comment[data-id]').removeClass('is-mouse-over is-disabled is-being-replied');
 
-      resetCommentEditorContent();
+      resetCommentEditorContent('_upstream_project_new_message');
     }
 
     function replySendButtonCallback(e) {
@@ -702,7 +725,7 @@
           return;
         }
       } else {
-        theEditor = getCommentEditorTextarea();
+        theEditor = getCommentEditorTextarea('_upstream_project_new_message');
         commentContentHtml = theEditor.val().trim();
         commentContentText = commentContentHtml;
 
@@ -731,7 +754,7 @@
           content   : commentContentHtml
         },
         beforeSend: function() {
-          disableCommentArea();
+          disableCommentArea('_upstream_project_new_message');
           self.text(upstream_project.l.LB_REPLYING);
           $('#_upstream_project_discussions .button.u-to-be-removed').attr('disabled', 'disabled');
           $('#_upstream_project_discussions .o-comment.is-being-replied a[data-action="comment.reply"]').text(upstream_project.l.LB_REPLYING);
@@ -746,10 +769,10 @@
               errorCallback();
               console.error('Something went wrong.');
             } else {
-              resetCommentEditorContent();
+              resetCommentEditorContent('_upstream_project_new_message');
               replyCancelButtonClickCallback();
 
-              appendCommentHtmlToDiscussion(response.comment_html);
+              appendCommentHtmlToDiscussion(response.comment_html, $('#_upstream_project_discussions .c-discussion'));
 
               $('#_upstream_project_discussions .o-comment.is-being-replied a[data-action="comment.reply"]').text(upstream_project.l.LB_REPLY);
               $('#_upstream_project_discussions .o-comment').removeClass('is-disabled is-mouse-over is-being-replied');
@@ -767,23 +790,27 @@
           console.error(response);
         },
         complete: function() {
-          enableCommentArea();
+          enableCommentArea('_upstream_project_new_message');
         }
       });
     }
 
-    function setFocus() {
-      var theEditor = getCommentEditor();
+    function setFocus(editor_id) {
+      var theEditor = getCommentEditor(editor_id);
       var isEditorInVisualMode = theEditor ? !theEditor.isHidden() : false;
       if (isEditorInVisualMode) {
         theEditor.execCommand('mceFocus', false);
       } else {
-        theEditor = getCommentEditorTextarea();
+        theEditor = getCommentEditorTextarea(editor_id);
         theEditor.focus();
       }
     }
 
-    $('label[for="_upstream_project_new_message"]').on('click', setFocus);
+    $('label[for="_upstream_project_new_message"]').on('click', function(e) {
+      e.preventDefault();
+
+      setFocus('_upstream_project_new_message');
+    });
 
     $('.c-discussion').on('click', '.o-comment[data-id] a[data-action="comment.reply"]', function(e) {
       e.preventDefault();
@@ -821,7 +848,7 @@
       sendButton.on('click', replySendButtonCallback);
       controlsWrapper.append(sendButton);
 
-      resetCommentEditorContent();
+      resetCommentEditorContent('_upstream_project_new_message');
 
       $('label[for="_upstream_project_new_message"]').text(upstream_project.l.LB_ADD_NEW_REPLY);
 
@@ -831,7 +858,7 @@
       }, {
         complete: function(e) {
           if (!finished) {
-            setFocus();
+            setFocus('_upstream_project_new_message');
             finished = true;
           }
         }
@@ -904,6 +931,63 @@
       });
     });
 
+    function sendNewCommentRequest(self, content, nonce, item_type, item_id, item_index, editor_id, commentsWrapper) {
+      item_type = typeof item_type === 'undefined' ? 'project' : item_type;
+      item_id = typeof item_id === 'undefined' ? null : item_id;
+      item_index = typeof item_index === 'undefined' ? null : item_index;
+
+      console.debug(arguments.callee.name + '()', {
+        content   : content || null,
+        nonce     : nonce || null,
+        item_type : item_type || null,
+        item_id   : item_id || null,
+        item_index: item_index || null
+      });
+
+      $.ajax({
+        type: 'POST',
+        url : ajaxurl,
+        data: {
+          action    : 'upstream:project.add_comment',
+          nonce     : nonce,
+          project_id: $('#post_ID').val(),
+          item_type : item_type,
+          item_index: item_index,
+          item_id   : item_id,
+          content   : content
+        },
+        beforeSend: function() {
+          disableCommentArea(editor_id);
+          self.text(upstream_project.l.LB_ADDING);
+          self.attr('disabled', 'disabled');
+        },
+        success: function(response) {
+          console.log(response);
+          if (response.error) {
+            console.error(response.error);
+            alert(response.error);
+          } else {
+            if (!response.success) {
+              console.error('Something went wrong.');
+            } else {
+              resetCommentEditorContent(editor_id);
+
+              appendCommentHtmlToDiscussion(response.comment_html, commentsWrapper);
+            }
+          }
+        },
+        error: function() {
+          // @todo
+        },
+        complete: function() {
+          enableCommentArea(editor_id);
+          self.text(upstream_project.l.LB_ADD_COMMENT);
+          self.attr('disabled', null);
+        }
+      });
+    }
+
+    /*
     $('#cmb2-metabox-_upstream_project_discussions .cmb2-id--upstream-project-new-message').on('click', '.button[data-action="comments.add_comment"]', function(e) {
       e.preventDefault();
 
@@ -921,7 +1005,7 @@
           return;
         }
       } else {
-        theEditor = getCommentEditorTextarea();
+        theEditor = getCommentEditorTextarea('_upstream_project_new_message');
         commentContentHtml = theEditor.val().trim();
         commentContentText = commentContentHtml;
 
@@ -943,7 +1027,7 @@
           content   : commentContentHtml
         },
         beforeSend: function() {
-          disableCommentArea();
+          disableCommentArea('_upstream_project_new_message');
           self.text(self.attr('data-label-active'));
         },
         success: function(response) {
@@ -955,18 +1039,44 @@
             if (!response.success) {
               console.error('Something went wrong.');
             } else {
-              resetCommentEditorContent();
+              resetCommentEditorContent('_upstream_project_new_message');
 
-              appendCommentHtmlToDiscussion(response.comment_html);
+              appendCommentHtmlToDiscussion(response.comment_html, $('#_upstream_project_discussions .c-discussion'));
             }
           }
         },
         error: function() {},
         complete: function() {
-          enableCommentArea();
+          enableCommentArea('_upstream_project_new_message');
           self.text(self.attr('data-label'));
         }
       });
+    });
+    */
+
+    $('#_upstream_project_discussions .button[data-action="comments.add_comment"]').on('click', function(e) {
+      e.preventDefault();
+
+      var self = $(this);
+
+      var editor_id = '_upstream_project_new_message';
+      if (getEditorContent(editor_id, false).length === 0) {
+        setFocus(editor_id);
+        return;
+      }
+
+      var commentHtml = getEditorContent(editor_id);
+
+      sendNewCommentRequest(
+        self,
+        commentHtml,
+        self.attr('data-nonce'),
+        'project',
+        null,
+        null,
+        editor_id,
+        $('#_upstream_project_discussions .c-discussion')
+      );
     });
 
     $('.c-discussion').on('click', '.o-comment[data-id] a[data-action="comment.unapprove"]', function(e) {
@@ -1116,5 +1226,119 @@
     });
 
     // @todo: make sure the selectors are scopped within #_upstream_project_discussions
+
+
+
+
+
+
+    $('.cmb2-wrap').on('click', '.up-o-tab[role="tab"][data-target]', function(e) {
+      e.preventDefault();
+
+      var self = $(this);
+      var wrapper = $(self.parents('.postbox'));
+
+      $('.up-o-tab', wrapper).removeClass('is-active');
+      self.addClass('is-active');
+
+      var target = $('.up-o-tab-content' + self.attr('data-target'), wrapper);
+      if (target.length > 0) {
+        $('.up-o-tab-content', wrapper).removeClass('is-active');
+        target.addClass('is-active');
+      }
+    });
+
+    function fetchAllComments() {
+      $.ajax({
+        type    : 'GET',
+        url     : ajaxurl,
+        data    : {
+          action    : 'upstream:project.get_all_items_comments',
+          nonce     : $('#project_all_items_comments_nonce').val(),
+          project_id: $('#post_ID').val()
+        },
+        success : function(response) {
+          if (response.success) {
+            if (response.data.bugs) {
+              for (var bug_id in response.data.bugs) {
+                var bugCommentsHtmlList = response.data.bugs[bug_id];
+                var wrapper = $($('input.hidden[type="text"][id^="_upstream_project_bugs_"][id$="_id"]').parents('.up-c-tabs-content'));
+
+                var commentsWrapper = $('.up-c-tab-content-comments', wrapper);
+                if ($('.c-discussion', commentsWrapper).length === 0) {
+                  commentsWrapper.append($('<div class="admin-discussion c-discussion"></div>'));
+                }
+
+                commentsWrapper = $('.c-discussion', commentsWrapper);
+
+                if (bugCommentsHtmlList.length === 0) {
+
+                } else {
+                  for (var commentIndex = 0; commentIndex < bugCommentsHtmlList.length; commentIndex++) {
+                    commentsWrapper.append($(bugCommentsHtmlList[commentIndex]));
+                  }
+                }
+              }
+            }
+          }
+        },
+        error   : function() {},
+        complete: function() {}
+      });
+    }
+
+    fetchAllComments();
+
+    $('.cmb-row.cmb-type-comments[data-fieldtype="comments"]').each(function() {
+      var self = $(this);
+
+      var itemsWrapper = $(self.parents('.cmb-nested.cmb-field-list[data-groupid]'));
+      var itemWrapper = $(self.parents('.postbox.cmb-row[data-iterator]'));
+
+      var group_id = itemsWrapper.attr('data-groupid');
+
+      var parent = $(self.parents('.up-c-tabs-content'));
+      var wrapper = $('.up-c-tab-content-comments', parent);
+
+      var prefix = group_id + '_' + itemWrapper.attr('data-iterator');
+
+      var addCommentButton = $('<button></button>', {
+        'type'      : 'button',
+        'class'     : 'button button-primary',
+        'data-nonce': $('#' + prefix + '_comments_add_comment_nonce', parent).val()
+      })
+        .text(upstream_project.l.LB_ADD_COMMENT)
+        .on('click', function(e) {
+          e.preventDefault();
+
+          var self = $(this);
+
+          var editor_id = prefix + '_comments_editor';
+          if (getEditorContent(editor_id, false).length === 0) {
+            setFocus(editor_id);
+            return;
+          }
+
+          var commentHtml = getEditorContent(editor_id);
+
+          var item_type_plural = group_id.replace('_upstream_project_', '');
+          var item_id = $('#' + prefix + '_id').val();
+
+          sendNewCommentRequest(
+            self,
+            commentHtml,
+            self.attr('data-nonce'),
+            item_type_plural.substring(0, item_type_plural.length - 1),
+            item_id,
+            itemWrapper.attr('data-iterator'),
+            editor_id,
+            $('.c-discussion', itemWrapper)
+          );
+        });
+
+      wrapper.prepend(addCommentButton);
+
+      wrapper.prepend($('.cmb-td > div.wp-editor-wrap', self));
+    });
   });
 })(window, window.document, jQuery, upstream_project || {});

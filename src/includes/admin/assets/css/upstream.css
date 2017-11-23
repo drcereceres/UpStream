@@ -1231,3 +1231,19 @@ a[data-action="comment.trash"] {
 .is-loading {
   cursor: progress;
 }
+
+.up-c-tabs-header .up-o-tab.is-active {
+  color: darkmagenta;
+}
+
+.up-c-tabs-content .up-o-tab-content:not(.is-active) {
+  display: none;
+}
+
+#commentsdiv {
+  display: none;
+}
+
+.cmb-row.cmb-type-comments[data-fieldtype="comments"] {
+  display: none;
+}

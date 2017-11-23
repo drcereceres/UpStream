@@ -1054,9 +1054,11 @@ function getUserAvatarURL($user_id)
  *
  * @return  bool
  */
-function isUserEitherManagerOrAdmin()
+function isUserEitherManagerOrAdmin($user = null)
 {
-    $user = wp_get_current_user();
+    if (empty($user) || !($user instanceof \WP_User)) {
+        $user = wp_get_current_user();
+    }
 
     if ($user->ID > 0 && isset($user->roles)) {
         return count(array_intersect((array)$user->roles, array('administrator', 'upstream_manager'))) > 0;

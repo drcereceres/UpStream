@@ -9,6 +9,8 @@
  * Domain Path: /languages
  */
 
+use \UpStream\Comments;
+
 
 // Exit if accessed directly.
 if ( ! defined( 'ABSPATH' ) ) exit;
@@ -233,6 +235,7 @@ final class UpStream
         include_once( 'includes/up-post-types.php' );
         include_once( 'includes/up-labels.php' );
         include_once( 'includes/trait-up-singleton.php' );
+        include_once( 'includes/abs-class-up-struct.php' );
 
         if ( $this->is_request( 'admin' ) ) {
             include_once( 'includes/libraries/cmb2/init.php' );
@@ -257,6 +260,8 @@ final class UpStream
         include_once( 'includes/up-permissions-functions.php' );
         include_once( 'includes/up-client-users-migration.php' );
         include_once( 'includes/up-comments-migration.php' );
+        include_once( 'includes/class-up-comments.php' );
+        include_once( 'includes/class-up-comment.php' );
     }
 
     /**
@@ -301,6 +306,8 @@ final class UpStream
 
             update_option('upstream:role_upstream_users:drop_edit_others_projects', 1);
         }
+
+        Comments::instantiate();
 
         // Init action.
         do_action( 'upstream_init' );
