@@ -22,6 +22,7 @@ class Comments
     private function attachHooks()
     {
         add_action('wp_ajax_upstream:project.add_comment', array(self::$namespace, 'storeComment'));
+        add_action('wp_ajax_upstream:project.add_comment_reply', array($this, 'storeCommentReply'));
         add_action('wp_ajax_upstream:project.trash_comment', array(self::$namespace, 'trashComment'));
         add_action('wp_ajax_upstream:project.unapprove_comment', array(self::$namespace, 'unapproveComment'));
         add_action('wp_ajax_upstream:project.approve_comment', array(self::$namespace, 'approveComment'));
@@ -91,7 +92,9 @@ class Comments
                 throw new \Exception(__("Commenting is disabled on this project.", 'upstream'));
             }
 
-            $comment = new Comment($_POST['content'], $project_id);
+            $user_id = get_current_user_id();
+
+            $comment = new Comment($_POST['content'], $project_id, $user_id);
 
             $comment->created_by->ip = preg_replace('/[^0-9a-fA-F:., ]/', '', $_SERVER['REMOTE_ADDR']);
             $comment->created_by->agent = isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : null;
@@ -107,6 +110,102 @@ class Comments
             $useAdminLayout = is_admin();
 
             $response['comment_html'] = $comment->render(true, $useAdminLayout);
+            $response['success'] = true;
+        } catch (\Exception $e) {
+            $response['error'] = $e->getMessage();
+        }
+
+        wp_send_json($response);
+    }
+
+    /**
+     * AJAX endpoint that adds a new comment reply to a given project.
+     *
+     * @since   @todo
+     * @static
+     */
+    public static function storeCommentReply()
+    {
+        header('Content-Type: application/json');
+
+        $response = array(
+            'success' => false,
+            'error'   => null
+        );
+
+        try {
+            // Check if the request payload is potentially invalid.
+            if (
+                !defined('DOING_AJAX')
+                || !DOING_AJAX
+                || empty($_POST)
+                || !isset($_POST['nonce'])
+                || !isset($_POST['project_id'])
+                || !isset($_POST['item_type'])
+                || !in_array($_POST['item_type'], array('project', 'milestone', 'task', 'bug'))
+                || !isset($_POST['content'])
+                || !isset($_POST['parent_id'])
+                || !is_numeric($_POST['parent_id'])
+                || !wp_verify_nonce($_POST['nonce'], 'upstream:project.add_comment_reply:' . $_POST['parent_id'])
+            ) {
+                throw new \Exception(__("Invalid request.", 'upstream'));
+            }
+
+            $commentTargetItemType = strtolower($_POST['item_type']);
+            if ($commentTargetItemType !== 'project') {
+                if (
+                    !isset($_POST['item_id'])
+                    || empty($_POST['item_id'])
+                ) {
+                    throw new \Exception(__("Invalid request.", 'upstream'));
+                }
+            }
+
+            // Check if the user has enough permissions to insert a new comment.
+            if (!upstream_admin_permissions('publish_project_discussion')) {
+                throw new \Exception(__("You're not allowed to do this.", 'upstream'));
+            }
+
+            // Check if the project exists.
+            $project_id = (int)$_POST['project_id'];
+            if ($project_id <= 0) {
+                throw new \Exception(__("Invalid Project.", 'upstream'));
+            }
+
+            // Check if commenting is disabled on the given project.
+            if (upstream_are_comments_disabled($project_id)) {
+                throw new \Exception(__("Commenting is disabled on this project.", 'upstream'));
+            }
+
+            $user_id = get_current_user_id();
+
+            $comment = new Comment($_POST['content'], $project_id, $user_id);
+            $comment->parent_id = (int)$_POST['parent_id'];
+            $comment->created_by->ip = preg_replace('/[^0-9a-fA-F:., ]/', '', $_SERVER['REMOTE_ADDR']);
+            $comment->created_by->agent = isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : null;
+
+            $comment->save();
+
+            update_comment_meta($comment->id, 'type', $commentTargetItemType);
+
+            if ($commentTargetItemType !== "project") {
+                update_comment_meta($comment->id, 'id', $_POST['item_id']);
+            }
+
+            $useAdminLayout = is_admin();
+
+            $parent = get_comment($comment->parent_id);
+
+            $commentsCache = array(
+                $parent->comment_ID => json_decode(json_encode(array(
+                    'created_by' => array(
+                        'name' => $parent->comment_author
+                    )
+                )))
+            );
+
+            $response['comment_html'] = $comment->render(true, $useAdminLayout, $commentsCache);
+
             $response['success'] = true;
         } catch (\Exception $e) {
             $response['error'] = $e->getMessage();
@@ -261,7 +360,6 @@ class Comments
         $response = array(
             'success' => false,
             'error'   => null,
-            'comment_html' => ''
         );
 
         try {
@@ -308,7 +406,6 @@ class Comments
         $response = array(
             'success' => false,
             'error'   => null,
-            'comment_html' => ''
         );
 
         try {

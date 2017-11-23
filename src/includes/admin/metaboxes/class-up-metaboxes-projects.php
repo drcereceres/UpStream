@@ -47,8 +47,10 @@ class UpStream_Metaboxes_Projects {
 
 
 
+        // @todo
 
-        add_action('wp_ajax_upstream:project.discussion.add_comment_reply', array($this, 'storeCommentReply'));
+
+
 
 
         add_action('cmb2_render_comments', array($this, 'renderCommentsField'), 10, 5);
@@ -911,9 +913,9 @@ class UpStream_Metaboxes_Projects {
                     'class' => 'hidden',
                 ),
                 'before_row' => '
-                    <div class="up-c-tabs-header">
-                      <a href="#" class="up-o-tab up-o-tab-data is-active" role="tab" data-target=".up-c-tab-content-data">Data</a>
-                      <a href="#" class="up-o-tab up-o-tab-comments" role="tab" data-target=".up-c-tab-content-comments">Comments (x)</a>
+                    <div class="up-c-tabs-header nav-tab-wrapper nav-tab-wrapper">
+                      <a href="#" class="nav-tab nav-tab-active up-o-tab up-o-tab-data" role="tab" data-target=".up-c-tab-content-data">Data</a>
+                      <a href="#" class="nav-tab up-o-tab up-o-tab-comments" role="tab" data-target=".up-c-tab-content-comments">Comments (x)</a>
                     </div>
                     <div class="up-c-tabs-content">
                       <div class="up-o-tab-content up-c-tab-content-data is-active">'
@@ -1522,168 +1524,6 @@ class UpStream_Metaboxes_Projects {
     }
 
     /**
-     * AJAX endpoint that adds a new comment reply to a given project.
-     *
-     * @since   @todo
-     * @static
-     */
-    static public function storeCommentReply()
-    {
-        header('Content-Type: application/json');
-
-        $response = array(
-            'success' => false,
-            'error'   => null
-        );
-
-        try {
-            // Check if the request payload is potentially invalid.
-            if (
-                !defined('DOING_AJAX')
-                || !DOING_AJAX
-                || empty($_POST)
-                || !isset($_POST['nonce'])
-                || !isset($_POST['project_id'])
-                || !isset($_POST['parent_id'])
-                || !isset($_POST['content'])
-                || !wp_verify_nonce($_POST['nonce'], 'upstream:project.discussion:add_comment_reply:' . $_POST['parent_id'])
-            ) {
-                throw new \Exception(__("Invalid request.", 'upstream'));
-            }
-
-            // Check if the user has enough permissions to insert a new comment.
-            if (!upstream_admin_permissions('publish_project_discussion')) {
-                throw new \Exception(__("You're not allowed to do this.", 'upstream'));
-            }
-
-            // Check if the project exists.
-            $project_id = (int)$_POST['project_id'];
-            if ($project_id <= 0) {
-                throw new \Exception(__("Invalid Project.", 'upstream'));
-            }
-
-            // Check if the parent comment exists.
-            $comment_parent_id = (int)$_POST['parent_id']; // @todo: base64?
-            $parentComment = get_comment($comment_parent_id);
-            if (empty($parentComment)) {
-                throw new \Exception(_x('Comment not found.', 'Replying a comment in projects', 'upstream'));
-            }
-
-            // Check if the Discussion/Comments section is disabled for the current project.
-            if (upstream_are_comments_disabled($project_id)) {
-                throw new \Exception(__("Comments are disabled for this project.", 'upstream'));
-            }
-
-            // Sanitizes the comment.
-            $commentContent = trim(wp_kses_post($_POST['content']));
-            if (strlen($commentContent) === 0) {
-                throw new \Exception(__("Comments cannot be empty.", 'upstream'));
-            }
-
-            $user = wp_get_current_user();
-
-            $newCommentData = array(
-                'comment_post_ID'      => $project_id,
-                'comment_author'       => $user->display_name,
-                'comment_author_email' => $user->user_email,
-                'comment_parent'       => $comment_parent_id,
-                'comment_date'         => current_time('mysql'),
-                'comment_date_gmt'     => current_time('mysql', true),
-                'comment_content'      => $commentContent,
-                'comment_agent'        => isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : '',
-                'user_id'              => $user->ID,
-                'comment_approved'     => 1
-            );
-
-            if (isset($_REQUEST['author_ip']) && current_user_can('moderate_comments')) {
-                $newCommentData['comment_author_IP'] = $_REQUEST['author_ip'];
-            } else if (!empty($_SERVER['REMOTE_ADDR']) && rest_is_ip_address($_SERVER['REMOTE_ADDR'])) {
-                $newCommentData['comment_author_IP'] = $_SERVER['REMOTE_ADDR'];
-            } else {
-                $newCommentData['comment_author_IP'] = '127.0.0.1';
-            }
-
-            global $wpdb;
-            $success = (bool)$wpdb->insert($wpdb->prefix . 'comments', $newCommentData);
-
-            if (!$success) {
-                throw new \Exception(__('Unable to save the data into database.', 'upstream'));
-            }
-
-            update_comment_meta($wpdb->insert_id, 'type', 'project');
-
-            $dateFormat = get_option('date_format');
-            $timeFormat = get_option('time_format');
-            $theDateTimeFormat = $dateFormat . ' ' . $timeFormat;
-            $utcTimeZone = new DateTimeZone('UTC');
-            $currentTimezone = upstreamGetTimeZone();
-            $currentTimestamp = time();
-
-            $date = DateTime::createFromFormat('Y-m-d H:i:s', $newCommentData['comment_date_gmt'], $utcTimeZone);
-            $date->setTimezone($currentTimezone);
-            $dateTimestamp = $date->getTimestamp();
-
-            $userHasAdminCapabilities = isUserEitherManagerOrAdmin();
-            $userCanComment = !$userHasAdminCapabilities ? user_can($user, 'publish_project_discussion') : true;
-            $userCanModerate = !$userHasAdminCapabilities ? user_can($user, 'moderate_comments') : true;
-            $userCanDelete = true;
-
-            $newCommentData = json_decode(json_encode(array(
-                'id'         => $wpdb->insert_id,
-                'parent_id'  => $comment_parent_id,
-                'content'    => $newCommentData['comment_content'],
-                'state'      => $newCommentData['comment_approved'],
-                'created_by' => (object)array(
-                    'id'     => $user->ID,
-                    'name'   => $user->display_name,
-                    'avatar' => getUserAvatarURL($user->ID)
-                ),
-                'created_at' => array(
-                    'timestamp' => $dateTimestamp,
-                    'utc'       => $newCommentData['comment_date_gmt'],
-                    'localized' => $date->format($theDateTimeFormat),
-                    'humanized' => sprintf(
-                        _x('%s ago', '%s = human-readable time difference', 'upstream'),
-                        human_time_diff($dateTimestamp, $currentTimestamp)
-                    )
-                ),
-                'currentUserCap' => array(
-                    'can_reply'    => $userCanComment,
-                    'can_moderate' => $userCanModerate,
-                    'can_delete'   => $userCanDelete
-                )
-            )));
-
-            $response['data'] = $newCommentData;
-
-            $comments = array(
-                $comment_parent_id => json_decode(json_encode(array(
-                    'created_by' => array(
-                        'name' => $parentComment->comment_author
-                    )
-                )))
-            );
-
-            ob_start();
-
-            if (is_admin()) {
-                upstream_admin_display_message_item($newCommentData, $comments);
-            } else {
-                upstream_display_message_item($newCommentData, $comments);
-            }
-
-            $response['comment_html'] = ob_get_contents();
-            ob_end_clean();
-
-            $response['success'] = true;
-        } catch (Exception $e) {
-            $response['error'] = $e->getMessage();
-        }
-
-        wp_send_json($response);
-    }
-
-    /**
      * @todo
      *
      * @since   @todo
@@ -1761,7 +1601,7 @@ class UpStream_Metaboxes_Projects {
 
                             $commentData = json_decode(json_encode(array(
                                 'id'         => $comment->comment_ID,
-                                'parent_id'  => $comment->parent_id,
+                                'parent_id'  => $comment->comment_parent,
                                 'content'    => $comment->comment_content,
                                 'state'      => $comment->comment_approved,
                                 'created_by' => (object)array(
@@ -1788,8 +1628,19 @@ class UpStream_Metaboxes_Projects {
 
                             $commentData->created_at->localized = $date->format($theDateTimeFormat);
 
+                            if ((int)$comment->comment_parent > 0) {
+                                $parent = get_comment($comment->comment_parent);
+                                $commentsCache = array(
+                                    $parent->comment_ID => json_decode(json_encode(array(
+                                        'created_by' => array(
+                                            'name' => $parent->comment_author
+                                        )
+                                    )))
+                                );
+                            }
+
                             ob_start();
-                            upstream_admin_display_message_item($commentData);
+                            upstream_admin_display_message_item($commentData, $commentsCache);
                             $response['data']['bugs'][$bugRow['id']][] = ob_get_contents();
                             ob_end_clean();
                         }

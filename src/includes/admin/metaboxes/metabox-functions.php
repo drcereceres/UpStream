@@ -514,7 +514,7 @@ function upstream_admin_display_messages()
     }
 
     ?>
-    <div class="admin-discussion c-discussion">
+    <div class="admin-discussion c-discussion" data-type="project">
         <?php
         if (count($comments) > 0) {
             if (is_admin()) {
@@ -532,7 +532,7 @@ function upstream_admin_display_messages()
     <?php
 }
 
-function upstream_admin_display_message_item($comment, $comments = array(), $debug = false)
+function upstream_admin_display_message_item($comment, $comments = array())
 {
     global $wp_embed;
     ?>

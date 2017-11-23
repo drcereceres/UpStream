@@ -268,7 +268,7 @@ class Comment extends Struct
         );
     }
 
-    public function render($return = false, $useAdminLayout = true)
+    public function render($return = false, $useAdminLayout = true, $commentsCache = array())
     {
         if (empty($this->currentUserCap)) {
             $user = wp_get_current_user();
@@ -285,9 +285,9 @@ class Comment extends Struct
             ob_start();
 
             if ((bool)$useAdminLayout === true) {
-                upstream_admin_display_message_item($this, array(), true);
+                upstream_admin_display_message_item($this, $commentsCache);
             } else {
-                upstream_display_message_item($this);
+                upstream_display_message_item($this, $commentsCache);
             }
 
             $html = ob_get_contents();

@@ -692,72 +692,78 @@
       });
     }
 
-    function replyCancelButtonClickCallback(e) {
-      if (typeof e !== "undefined" && e) {
-        e.preventDefault();
+    function replyCancelButtonClickCallback(editor_id, wrapper) {
+      if (editor_id === "_upstream_project_new_message") {
+        $('label[for="_upstream_project_new_message"]').text(upstream_project.l.LB_ADD_NEW_COMMENT);
       }
 
-      var self = $(this);
+      $('.button.u-to-be-removed', wrapper).remove();
+      $('.button[data-action="comments.add_comment"]', wrapper).show();
 
-      $('label[for="_upstream_project_new_message"]').text(upstream_project.l.LB_ADD_NEW_COMMENT);
-      $('#_upstream_project_discussions .button.u-to-be-removed').remove();
-      $('#_upstream_project_discussions .button[data-action="comments.add_comment"]').show();
+      $('.o-comment[data-id]', wrapper).removeClass('is-mouse-over is-disabled is-being-replied');
 
-      $('.o-comment[data-id]').removeClass('is-mouse-over is-disabled is-being-replied');
-
-      resetCommentEditorContent('_upstream_project_new_message');
+      resetCommentEditorContent(editor_id);
     }
 
     function replySendButtonCallback(e) {
       e.preventDefault();
 
-      var theEditor = getCommentEditor();
-      var commentContentHtml = null;
-      var commentContentText = null;
+      var self = $(this);
+      var parent = $(self.parent().parent());
+      var commentsWrapper;
 
-      var isEditorInVisualMode = theEditor ? !theEditor.isHidden() : false;
-      if (isEditorInVisualMode) {
-        commentContentHtml = (theEditor.getContent() || "").trim();
-        commentContentText = (theEditor.getContent({ format: 'text' }) || "").trim();
+      var editor_id = $('textarea.wp-editor-area', parent).attr('id');
 
-        if (commentContentText.length === 0 && commentContentHtml.length === 0) {
-          theEditor.execCommand('mceFocus', false);
-          return;
-        }
-      } else {
-        theEditor = getCommentEditorTextarea('_upstream_project_new_message');
-        commentContentHtml = theEditor.val().trim();
-        commentContentText = commentContentHtml;
-
-        if (commentContentText.length === 0) {
-          theEditor.focus();
-          return;
-        }
+      if (getEditorContent(editor_id, false).length === 0) {
+        setFocus(editor_id);
+        return;
       }
 
-      var self = $(this);
+      var commentContentHtml = getEditorContent(editor_id);
+
+      var item_type, item_id, item_index;
+      var itemsWrapper = $(self.parents('.cmb-nested.cmb-field-list[data-groupid]'));
+
+      if (itemsWrapper.length > 0) {
+        commentsWrapper = $('.c-discussion', parent);
+        var itemWrapper = $(self.parents('.cmb-row[data-iterator]'));
+
+        item_index = itemWrapper.attr('data-iterator');
+
+        var group_id = itemsWrapper.attr('data-groupid');
+        var item_type_plural = group_id.replace('_upstream_project_', '');
+        item_type = item_type_plural.substring(0, item_type_plural.length - 1);
+
+        var prefix = group_id + '_' + item_index;
+        item_id = $('#' + prefix + '_id').val();
+      } else {
+        item_type = 'project';
+        commentsWrapper = $('.c-discussion', self.parents('.cmb2-metabox'));
+      }
 
       var errorCallback = function() {
         self.text(upstream_project.l.LB_SEND_REPLY);
-        $('#_upstream_project_discussions .button.u-to-be-removed').attr('disabled', null);
-        $('#_upstream_project_discussions .o-comment.is-being-replied a[data-action="comment.reply"]').text(upstream_project.l.LB_REPLY);
+        $('.button.u-to-be-removed', parent).attr('disabled', null);
+        $('.o-comment.is-being-replied a[data-action="comment.reply"]', commentsWrapper).text(upstream_project.l.LB_REPLY);
       };
 
       $.ajax({
         type: 'POST',
         url : ajaxurl,
         data: {
-          action    : 'upstream:project.discussion.add_comment_reply',
+          action    : 'upstream:project.add_comment_reply',
           nonce     : self.data('nonce'),
           project_id: $('#post_ID').val(),
           parent_id : self.attr('data-id'),
-          content   : commentContentHtml
+          content   : commentContentHtml,
+          item_type : item_type || null,
+          item_id   : item_id || null
         },
         beforeSend: function() {
-          disableCommentArea('_upstream_project_new_message');
+          disableCommentArea(editor_id);
           self.text(upstream_project.l.LB_REPLYING);
-          $('#_upstream_project_discussions .button.u-to-be-removed').attr('disabled', 'disabled');
-          $('#_upstream_project_discussions .o-comment.is-being-replied a[data-action="comment.reply"]').text(upstream_project.l.LB_REPLYING);
+          $('.button.u-to-be-removed', parent).attr('disabled', 'disabled');
+          $('.o-comment.is-being-replied a[data-action="comment.reply"]', commentsWrapper).text(upstream_project.l.LB_REPLYING);
         },
         success: function(response) {
           if (response.error) {
@@ -769,13 +775,13 @@
               errorCallback();
               console.error('Something went wrong.');
             } else {
-              resetCommentEditorContent('_upstream_project_new_message');
-              replyCancelButtonClickCallback();
+              resetCommentEditorContent(editor_id);
+              replyCancelButtonClickCallback(editor_id, parent);
 
-              appendCommentHtmlToDiscussion(response.comment_html, $('#_upstream_project_discussions .c-discussion'));
+              appendCommentHtmlToDiscussion(response.comment_html, commentsWrapper);
 
-              $('#_upstream_project_discussions .o-comment.is-being-replied a[data-action="comment.reply"]').text(upstream_project.l.LB_REPLY);
-              $('#_upstream_project_discussions .o-comment').removeClass('is-disabled is-mouse-over is-being-replied');
+              $('.o-comment.is-being-replied a[data-action="comment.reply"]', commentsWrapper).text(upstream_project.l.LB_REPLY);
+              $('.o-comment', commentsWrapper).removeClass('is-disabled is-mouse-over is-being-replied');
             }
           }
         },
@@ -790,7 +796,7 @@
           console.error(response);
         },
         complete: function() {
-          enableCommentArea('_upstream_project_new_message');
+          enableCommentArea(editor_id);
         }
       });
     }
@@ -812,7 +818,7 @@
       setFocus('_upstream_project_new_message');
     });
 
-    $('.c-discussion').on('click', '.o-comment[data-id] a[data-action="comment.reply"]', function(e) {
+    $('.cmb2-wrap').on('click', '.c-discussion .o-comment[data-id] a[data-action="comment.reply"]', function(e) {
       e.preventDefault();
 
       var self = $(this);
@@ -820,21 +826,28 @@
       var comment_id = commentWrapper.attr('data-id');
 
       commentWrapper.addClass('is-mouse-over is-being-replied');
+      var parent = $(commentWrapper.parents('.c-discussion').parent());
 
-      $('.o-comment[data-id!="'+ comment_id +'"]').addClass('is-disabled');
+      $('.o-comment[data-id!="'+ comment_id +'"]', parent).addClass('is-disabled');
 
-      var addCommentBtn = $('#_upstream_project_discussions .button[data-action="comments.add_comment"]');
+      var editor_id = $('textarea.wp-editor-area', parent).attr('id');
+
+      var addCommentBtn = $('.button[data-action="comments.add_comment"]', parent);
       addCommentBtn.hide();
       var controlsWrapper = $(addCommentBtn.parent());
 
-      $('#_upstream_project_discussions .button.u-to-be-removed').remove();
+      $('.button.u-to-be-removed', parent).remove();
 
       var cancelButton = $('<button></button>', {
         type : 'button',
         class: 'button button-secondary u-to-be-removed'
       })
         .text(upstream_project.l.LB_CANCEL);
-      cancelButton.on('click', replyCancelButtonClickCallback);
+      cancelButton.on('click', function(e) {
+        e.preventDefault();
+
+        replyCancelButtonClickCallback(editor_id, parent);
+      });
       controlsWrapper.append(cancelButton);
 
       var sendButton = $('<button></button>', {
@@ -848,17 +861,19 @@
       sendButton.on('click', replySendButtonCallback);
       controlsWrapper.append(sendButton);
 
-      resetCommentEditorContent('_upstream_project_new_message');
+      resetCommentEditorContent(editor_id);
 
-      $('label[for="_upstream_project_new_message"]').text(upstream_project.l.LB_ADD_NEW_REPLY);
+      if (editor_id === "_upstream_project_new_message") {
+        $('label[for="_upstream_project_new_message"]').text(upstream_project.l.LB_ADD_NEW_REPLY);
+      }
 
       var finished = false;
       $('html, body').animate({
-        scrollTop: $('#_upstream_project_discussions').offset().top
+        scrollTop: $(editor_id === "_upstream_project_new_message" ? '#_upstream_project_discussions' : commentWrapper.parents('.postbox.cmb-row[data-iterator]')).offset().top
       }, {
         complete: function(e) {
           if (!finished) {
-            setFocus('_upstream_project_new_message');
+            setFocus(editor_id);
             finished = true;
           }
         }
@@ -1077,7 +1092,7 @@
     });
 
     // @todo: might have some bugs.
-    $('.c-discussion').on('click', '.o-comment[data-id] a[data-action="comment.go_to_reply"]', function(e) {
+    $('.cmb2-wrap').on('click', '.c-discussion .o-comment[data-id] a[data-action="comment.go_to_reply"]', function(e) {
       e.preventDefault();
 
       var targetComment = $($(this).attr('href'));
@@ -1119,8 +1134,8 @@
       var self = $(this);
       var wrapper = $(self.parents('.postbox'));
 
-      $('.up-o-tab', wrapper).removeClass('is-active');
-      self.addClass('is-active');
+      $('.up-o-tab', wrapper).removeClass('nav-tab-active');
+      self.addClass('nav-tab-active');
 
       var target = $('.up-o-tab-content' + self.attr('data-target'), wrapper);
       if (target.length > 0) {
@@ -1147,7 +1162,7 @@
 
                 var commentsWrapper = $('.up-c-tab-content-comments', wrapper);
                 if ($('.c-discussion', commentsWrapper).length === 0) {
-                  commentsWrapper.append($('<div class="admin-discussion c-discussion"></div>'));
+                  commentsWrapper.append($('<div class="admin-discussion c-discussion" data-type="bug"></div>'));
                 }
 
                 commentsWrapper = $('.c-discussion', commentsWrapper);
@@ -1183,10 +1198,13 @@
 
       var prefix = group_id + '_' + itemWrapper.attr('data-iterator');
 
+      var div = $('<div></div>');
+
       var addCommentButton = $('<button></button>', {
-        'type'      : 'button',
-        'class'     : 'button button-primary',
-        'data-nonce': $('#' + prefix + '_comments_add_comment_nonce', parent).val()
+        'type'       : 'button',
+        'class'      : 'button button-primary',
+        'data-nonce' : $('#' + prefix + '_comments_add_comment_nonce', parent).val(),
+        'data-action': 'comments.add_comment'
       })
         .text(upstream_project.l.LB_ADD_COMMENT)
         .on('click', function(e) {
@@ -1217,7 +1235,8 @@
           );
         });
 
-      wrapper.prepend(addCommentButton);
+      div.append(addCommentButton);
+      wrapper.prepend(div);
 
       wrapper.prepend($('.cmb-td > div.wp-editor-wrap', self));
     });
