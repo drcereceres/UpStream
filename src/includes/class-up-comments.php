@@ -25,7 +25,7 @@ class Comments
         add_action('wp_ajax_upstream:project.trash_comment', array(self::$namespace, 'trashComment'));
     }
 
-    static public function storeComment()
+    public static function storeComment()
     {
         header('Content-Type: application/json');
 
@@ -120,7 +120,7 @@ class Comments
      * @since   @todo
      * @static
      */
-    static public function trashComment()
+    public static function trashComment()
     {
         header('Content-Type: application/json');
 
