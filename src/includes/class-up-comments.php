@@ -562,6 +562,12 @@ class Comments
             $itemsRowset = (array)get_post_meta($project_id, '_upstream_project_' . $commentTargetItemType . 's', true);
             if (count($itemsRowset) > 0) {
                 foreach ($itemsRowset as $row) {
+                    if (isset($item_id)) {
+                        if ($item_id != $row['id']) {
+                            continue;
+                        }
+                    }
+
                     $comments = get_comments(array(
                         'post_id'    => $project_id,
                         'meta_query' => array(
