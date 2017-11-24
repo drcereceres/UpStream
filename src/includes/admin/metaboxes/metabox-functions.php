@@ -428,7 +428,6 @@ function upstream_admin_output_bug_hidden_data() {
    ====================================================================================== */
 /**
  * Outputs comments in the admin.
- * @todo: show we hide replies from trashed comments?
  */
 function upstream_admin_display_messages()
 {

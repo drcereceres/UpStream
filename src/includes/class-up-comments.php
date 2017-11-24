@@ -72,8 +72,7 @@ class Comments
 
             // Verify nonce.
             if (!wp_verify_nonce($_POST['nonce'], $nonceIdentifier)) {
-                // @todo: Change to "Invalid request.".
-                throw new \Exception(__("Invalid nonce.", 'upstream'));
+                throw new \Exception(__("Invalid request.", 'upstream'));
             }
 
             // Check if the user has enough permissions to insert a new comment.

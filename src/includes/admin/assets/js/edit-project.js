@@ -999,8 +999,15 @@
             }
           }
         },
-        error: function() {
-          // @todo
+        error: function(jqXHR, textStatus, errorThrown) {
+          errorCallback();
+
+          var response = {
+            text_status: textStatus,
+            errorThrown: errorThrown
+          };
+
+          console.error(response);
         },
         complete: function() {
           enableCommentArea(editor_id);
@@ -1129,13 +1136,6 @@
       });
     });
 
-    // @todo: make sure the selectors are scopped within #_upstream_project_discussions
-
-
-
-
-
-
     $('.cmb2-wrap').on('click', '.up-o-tab[role="tab"][data-target]', function(e) {
       e.preventDefault();
 
@@ -1169,13 +1169,20 @@
               console.log(itemType);
               var rowset = response.data[itemType];
 
+              $('input.hidden[type="text"][id^="_upstream_project_' + itemType + '_"][id$="_id"]').each(function() {
+                var wrapper = $($(this).parents('.up-c-tabs-content'));
+                if ($('up-c-tab-content-comments .c-discussion', wrapper).length === 0) {
+                  $('.up-c-tab-content-comments', wrapper).append($('.c-discussion', wrapper));
+                }
+              });
+
               if (!rowset || rowset.length === 0) {
                 continue;
               }
 
               for (var item_id in rowset) {
                 var commentsList = rowset[item_id];
-                var itemEl = $('input.hidden[type="text"][id^="_upstream_project_' + itemType + '_"][id$="_id"][value="'+ item_id +'"');
+                var itemEl = $('input.hidden[type="text"][id^="_upstream_project_' + itemType + '_"][id$="_id"][value="'+ item_id +'"]');
 
                 var wrapper = $(itemEl.parents('.up-c-tabs-content'));
                 if ($('up-c-tab-content-comments .c-discussion', wrapper).length === 0) {

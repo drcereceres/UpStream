@@ -44,17 +44,7 @@ class UpStream_Metaboxes_Projects {
         // Ensure the made public project are non-public as it should.
         add_action('edit_form_after_title', array($this, 'makeProjectPrivateOnceAgain'));
 
-
-
-
-        // @todo
-
-
-
-
-
         add_action('cmb2_render_comments', array($this, 'renderCommentsField'), 10, 5);
-
         add_action('wp_ajax_upstream:project.get_all_items_comments', array($this, 'fetchAllItemsComments'));
     }
 
@@ -1572,7 +1562,7 @@ class UpStream_Metaboxes_Projects {
      * @since   @todo
      * @static
      */
-    static public function fetchAllItemsComments()
+    public static function fetchAllItemsComments()
     {
         header('Content-Type: application/json');
 
@@ -1595,7 +1585,7 @@ class UpStream_Metaboxes_Projects {
                 || empty($_GET)
                 || !isset($_GET['nonce'])
                 || !isset($_GET['project_id'])
-                //|| !wp_verify_nonce($_POST['nonce'], 'project.get_all_items_comments')
+                || !wp_verify_nonce($_GET['nonce'], 'project.get_all_items_comments')
             ) {
                 throw new \Exception(__("Invalid request.", 'upstream'));
             }
@@ -1603,7 +1593,7 @@ class UpStream_Metaboxes_Projects {
             // Check if the project exists.
             $project_id = (int)$_GET['project_id'];
             if ($project_id <= 0) {
-                //throw new \Exception(__("Invalid Project.", 'upstream'));
+                throw new \Exception(__("Invalid Project.", 'upstream'));
             }
 
             $dateFormat = get_option('date_format');
@@ -1613,8 +1603,11 @@ class UpStream_Metaboxes_Projects {
             $currentTimezone = upstreamGetTimeZone();
             $currentTimestamp = time();
 
-            $userHasAdminCapabilities = isUserEitherManagerOrAdmin();
+            $user = wp_get_current_user();
+            $userHasAdminCapabilities = isUserEitherManagerOrAdmin($user);
+            $userCanReply = !$userHasAdminCapabilities ? user_can($user, 'publish_project_discussion') : true;
             $userCanModerate = !$userHasAdminCapabilities ? user_can($user, 'moderate_comments') : true;
+            $userCanDelete = !$userHasAdminCapabilities ? $userCanModerate || user_can($user, 'delete_project_discussion') : true;
 
             $itemsTypes = array('milestones', 'tasks', 'bugs', 'files');
             foreach ($itemsTypes as $itemType) {
@@ -1641,7 +1634,7 @@ class UpStream_Metaboxes_Projects {
                             $response['data'][$itemType][$row['id']] = array();
 
                             foreach ($comments as $comment) {
-                                $user = get_user_by('id', $comment->user_id);
+                                $author = get_user_by('id', $comment->user_id);
 
                                 $date = DateTime::createFromFormat('Y-m-d H:i:s', $comment->comment_date_gmt, $utcTimeZone);
 
@@ -1651,9 +1644,9 @@ class UpStream_Metaboxes_Projects {
                                     'content'    => $comment->comment_content,
                                     'state'      => $comment->comment_approved,
                                     'created_by' => (object)array(
-                                        'id'     => $user->ID,
-                                        'name'   => $user->display_name,
-                                        'avatar' => getUserAvatarURL($user->ID)
+                                        'id'     => $author->ID,
+                                        'name'   => $author->display_name,
+                                        'avatar' => getUserAvatarURL($author->ID)
                                     ),
                                     'created_at' => array(
                                         'localized' => "",
@@ -1662,11 +1655,10 @@ class UpStream_Metaboxes_Projects {
                                             human_time_diff($date->getTimestamp(), $currentTimestamp)
                                         )
                                     ),
-                                    // @todo
                                     'currentUserCap' => array(
-                                        'can_reply'    => true,
-                                        'can_moderate' => true,
-                                        'can_delete'   => true
+                                        'can_reply'    => $userCanReply,
+                                        'can_moderate' => $userCanModerate,
+                                        'can_delete'   => $userCanDelete || $author->ID === $user->ID
                                     )
                                 )));
 
