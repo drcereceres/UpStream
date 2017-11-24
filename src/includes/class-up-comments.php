@@ -281,7 +281,7 @@ class Comments
             }
 
             $response['success'] = true;
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             $response['error'] = $e->getMessage();
         }
 
