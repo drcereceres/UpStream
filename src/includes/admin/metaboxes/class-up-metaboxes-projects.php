@@ -1596,6 +1596,23 @@ class UpStream_Metaboxes_Projects {
                 throw new \Exception(__("Invalid Project.", 'upstream'));
             }
 
+            $usersCache = array();
+            $usersRowset = get_users(array(
+                'fields' => array(
+                    'ID', 'display_name'
+                )
+            ));
+            foreach ($usersRowset as $userRow) {
+                $userRow->ID *= 1;
+
+                $usersCache[$userRow->ID] = (object)array(
+                    'id'     => $userRow->ID,
+                    'name'   => $userRow->display_name,
+                    'avatar' => getUserAvatarURL($userRow->ID)
+                );
+            }
+            unset($userRow, $usersRowset);
+
             $dateFormat = get_option('date_format');
             $timeFormat = get_option('time_format');
             $theDateTimeFormat = $dateFormat . ' ' . $timeFormat;
@@ -1634,7 +1651,7 @@ class UpStream_Metaboxes_Projects {
                             $response['data'][$itemType][$row['id']] = array();
 
                             foreach ($comments as $comment) {
-                                $author = get_user_by('id', $comment->user_id);
+                                $author = $usersCache[(int)$comment->user_id];
 
                                 $date = DateTime::createFromFormat('Y-m-d H:i:s', $comment->comment_date_gmt, $utcTimeZone);
 
@@ -1643,11 +1660,7 @@ class UpStream_Metaboxes_Projects {
                                     'parent_id'  => $comment->comment_parent,
                                     'content'    => $comment->comment_content,
                                     'state'      => $comment->comment_approved,
-                                    'created_by' => (object)array(
-                                        'id'     => $author->ID,
-                                        'name'   => $author->display_name,
-                                        'avatar' => getUserAvatarURL($author->ID)
-                                    ),
+                                    'created_by' => $author,
                                     'created_at' => array(
                                         'localized' => "",
                                         'humanized' => sprintf(
@@ -1658,7 +1671,7 @@ class UpStream_Metaboxes_Projects {
                                     'currentUserCap' => array(
                                         'can_reply'    => $userCanReply,
                                         'can_moderate' => $userCanModerate,
-                                        'can_delete'   => $userCanDelete || $author->ID === $user->ID
+                                        'can_delete'   => $userCanDelete || $author->id === $user->ID
                                     )
                                 )));
 
