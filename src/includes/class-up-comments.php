@@ -19,6 +19,13 @@ class Comments
         $this->attachHooks();
     }
 
+    public static function isItemTypeValid($itemType)
+    {
+        $itemTypes = array('project', 'milestone', 'task', 'bug', 'file');
+
+        return in_array($itemType, $itemTypes);
+    }
+
     private function attachHooks()
     {
         add_action('wp_ajax_upstream:project.add_comment', array(self::$namespace, 'storeComment'));
@@ -47,6 +54,7 @@ class Comments
                 || !isset($_POST['nonce'])
                 || !isset($_POST['project_id'])
                 || !isset($_POST['item_type'])
+                || !self::isItemTypeValid($_POST['item_type'])
                 || !isset($_POST['content'])
             ) {
                 throw new \Exception(__("Invalid request.", 'upstream'));
@@ -140,7 +148,7 @@ class Comments
                 || !isset($_POST['nonce'])
                 || !isset($_POST['project_id'])
                 || !isset($_POST['item_type'])
-                || !in_array($_POST['item_type'], array('project', 'milestone', 'task', 'bug', 'file')) // @todo make sure all items are included on all checks
+                || !self::isItemTypeValid($_POST['item_type'])
                 || !isset($_POST['content'])
                 || !isset($_POST['parent_id'])
                 || !is_numeric($_POST['parent_id'])
@@ -490,6 +498,7 @@ class Comments
                 || !isset($_GET['nonce'])
                 || !isset($_GET['project_id'])
                 || !isset($_GET['item_type'])
+                || !self::isItemTypeValid($_GET['item_type'])
             ) {
                 throw new \Exception(__("Invalid request.", 'upstream'));
             }
