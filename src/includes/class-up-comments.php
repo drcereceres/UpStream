@@ -568,6 +568,11 @@ class Comments
             $userCanModerate = !$userHasAdminCapabilities ? user_can($user, 'moderate_comments') : true;
             $userCanDelete = !$userHasAdminCapabilities ? $userCanModerate || user_can($user, 'delete_project_discussion') : true;
 
+            $commentsStatuses = array('approve');
+            if ($userHasAdminCapabilities || $userCanModerate) {
+                $commentsStatuses[] = 'hold';
+            }
+
             $itemsRowset = (array)get_post_meta($project_id, '_upstream_project_' . $commentTargetItemType . 's', true);
             if (count($itemsRowset) > 0) {
                 foreach ($itemsRowset as $row) {
@@ -579,6 +584,7 @@ class Comments
 
                     $comments = get_comments(array(
                         'post_id'    => $project_id,
+                        'status'     => $commentsStatuses,
                         'meta_query' => array(
                             'relation' => 'AND',
                             array(

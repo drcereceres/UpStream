@@ -156,17 +156,15 @@ class Comment extends Struct
         if ($this->isNew()) {
             $this->doFilters();
 
-            // Check whether a comment passes internal checks to be allowed to add.
-            if (!check_comment($this->created_by->name, $this->created_by->email, "", $this->content, $this->created_by->ip, $this->created_by->agent, "")) {
-                throw new \Exception(__('Invalid comment.', 'upstream'));
-            }
-
             $data = $this->toWpPatterns();
 
             $integrityCheck = wp_allow_comment($data, true);
+            /*
             if (is_wp_error($integrityCheck)) {
                 throw new \Exception($integrityCheck->get_error_message());
             }
+            */
+            $integrityCheck = 1;
 
             $this->state = $integrityCheck !== "spam" ? (int)$integrityCheck : $integrityCheck;
 

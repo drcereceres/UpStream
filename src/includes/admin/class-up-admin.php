@@ -157,6 +157,8 @@ class UpStream_Admin {
 
                 if ($userCanModerateComments) {
                     $query->query_vars['status'][] = 'hold';
+                } else if (empty($allowedProjects)) {
+                    $query->query_vars['post__in'] = -1;
                 }
             } else {
                 // Hide Projects comments from other user types.

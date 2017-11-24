@@ -13,7 +13,6 @@ final class Comments
         }
 
         $rowset = self::fetchMetasRowset();
-
         if (count($rowset) > 0) {
             global $wpdb;
 
@@ -22,7 +21,6 @@ final class Comments
             $theDateTimeFormat = $dateFormat . ' ' . $timeFormat;
             $utcTimeZone = new \DateTimeZone('UTC');
             $currentTimezone = upstreamGetTimeZone();
-
             foreach ($rowset as $project_id => $legacyComments) {
                 foreach ($legacyComments as $legacyComment) {
                     if (!isset($legacyComment['created_by'])
@@ -43,8 +41,6 @@ final class Comments
                         'comment_author_email' => $user->user_email,
                         'comment_date_gmt'     => $date->format('Y-m-d H:i:s'),
                         'comment_content'      => $legacyComment['comment'],
-                        'comment_agent'        => "",
-                        'comment_author_IP'    => "",
                         'user_id'              => $user->ID,
                         'comment_approved'     => 1
                     );
@@ -88,7 +84,7 @@ final class Comments
                         $data[$project_id] = array();
                     }
 
-                    $data[$project_id] = $metaValue;
+                    $data[$project_id][] = $metaValue;
                 }
             }
         }
@@ -100,24 +96,5 @@ final class Comments
     private static function isMigrationNeeded()
     {
         return (string)get_option('upstream:migration.comments') !== 'yes';
-        /*
-        if (!$option) {
-
-        }
-
-        global $wpdb;
-
-        $rowset = (int)$wpdb->get_var('
-            SELECT COUNT(`ID`) AS qty
-            FROM `' . $wpdb->prefix . 'postmeta`
-            WHERE `meta_key` = "_upstream_project_discussion"'
-        );
-
-        if ($clientsCount === 0) {
-            return false;
-        }
-
-        return (string)get_option('upstream:attemptedToMigrateLegacyClientUsers') !== 'yes';
-        */
     }
 }

@@ -1626,6 +1626,11 @@ class UpStream_Metaboxes_Projects {
             $userCanModerate = !$userHasAdminCapabilities ? user_can($user, 'moderate_comments') : true;
             $userCanDelete = !$userHasAdminCapabilities ? $userCanModerate || user_can($user, 'delete_project_discussion') : true;
 
+            $commentsStatuses = array('approve');
+            if ($userHasAdminCapabilities || $userCanModerate) {
+                $commentsStatuses[] = 'hold';
+            }
+
             $itemsTypes = array('milestones', 'tasks', 'bugs', 'files');
             foreach ($itemsTypes as $itemType) {
                 $itemTypeSingular = rtrim($itemType, 's');
@@ -1634,6 +1639,7 @@ class UpStream_Metaboxes_Projects {
                     foreach ($rowset as $row) {
                         $comments = get_comments(array(
                             'post_id'    => $project_id,
+                            'status'     => $commentsStatuses,
                             'meta_query' => array(
                                 'relation' => 'AND',
                                 array(
