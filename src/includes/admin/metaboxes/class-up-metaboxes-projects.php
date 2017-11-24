@@ -1616,7 +1616,7 @@ class UpStream_Metaboxes_Projects {
             $dateFormat = get_option('date_format');
             $timeFormat = get_option('time_format');
             $theDateTimeFormat = $dateFormat . ' ' . $timeFormat;
-            $utcTimeZone = new DateTimeZone('UTC');
+            $utcTimeZone = new \DateTimeZone('UTC');
             $currentTimezone = upstreamGetTimeZone();
             $currentTimestamp = time();
 

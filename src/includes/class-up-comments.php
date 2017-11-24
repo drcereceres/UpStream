@@ -26,6 +26,7 @@ class Comments
         add_action('wp_ajax_upstream:project.trash_comment', array(self::$namespace, 'trashComment'));
         add_action('wp_ajax_upstream:project.unapprove_comment', array(self::$namespace, 'unapproveComment'));
         add_action('wp_ajax_upstream:project.approve_comment', array(self::$namespace, 'approveComment'));
+        add_action('wp_ajax_upstream:project.fetch_comments', array(self::$namespace, 'fetchComments'));
     }
 
     public static function storeComment()
@@ -463,6 +464,190 @@ class Comments
             $useAdminLayout = !isset($_POST['teeny']) ? true : (bool)$_POST['teeny'];
 
             $response['comment_html'] = $comment->render(true, $useAdminLayout, $comments);
+
+            $response['success'] = true;
+        } catch (\Exception $e) {
+            $response['error'] = $e->getMessage();
+        }
+
+        wp_send_json($response);
+    }
+
+    public static function fetchComments()
+    {
+        header('Content-Type: application/json');
+
+        $response = array(
+            'success' => false,
+            'data'    => array(),
+            'error'   => null
+        );
+
+        try {
+            // Check if the request payload is potentially invalid.
+            if (
+                !defined('DOING_AJAX')
+                || !DOING_AJAX
+                || empty($_GET)
+                || !isset($_GET['nonce'])
+                || !isset($_GET['project_id'])
+                || !isset($_GET['item_type'])
+            ) {
+                throw new \Exception(__("Invalid request.", 'upstream'));
+            }
+
+            // Check if the project potentially exists.
+            $project_id = (int)$_GET['project_id'];
+            if ($project_id <= 0) {
+                throw new \Exception(__("Invalid Project.", 'upstream'));
+            }
+
+            // Prepare data to verify nonce.
+            $commentTargetItemType = strtolower($_GET['item_type']);
+            if ($commentTargetItemType !== 'project') {
+                if (
+                    !isset($_GET['item_id'])
+                    || empty($_GET['item_id'])
+                ) {
+                    throw new \Exception(__("Invalid request.", 'upstream'));
+                }
+
+                $item_id = $_GET['item_id'];
+
+                $nonceIdentifier = 'upstream:project.' . $commentTargetItemType . 's.fetch_comments';
+            } else {
+                $nonceIdentifier = 'upstream:project.fetch_comments';
+            }
+
+            // Verify nonce.
+            if (!wp_verify_nonce($_GET['nonce'], $nonceIdentifier)) {
+                throw new \Exception(__("Invalid request.", 'upstream'));
+            }
+
+            // Check if commenting is disabled on the given project.
+            if (upstream_are_comments_disabled($project_id)) {
+                throw new \Exception(__("Commenting is disabled on this project.", 'upstream'));
+            }
+
+            $useAdminLayout = isset($_GET['teeny']) && (bool)$_GET['teeny'] === false;
+
+            $usersCache = array();
+            $usersRowset = get_users(array(
+                'fields' => array(
+                    'ID', 'display_name'
+                )
+            ));
+            foreach ($usersRowset as $userRow) {
+                $userRow->ID *= 1;
+
+                $usersCache[$userRow->ID] = (object)array(
+                    'id'     => $userRow->ID,
+                    'name'   => $userRow->display_name,
+                    'avatar' => getUserAvatarURL($userRow->ID)
+                );
+            }
+            unset($userRow, $usersRowset);
+
+            $dateFormat = get_option('date_format');
+            $timeFormat = get_option('time_format');
+            $theDateTimeFormat = $dateFormat . ' ' . $timeFormat;
+            $utcTimeZone = new \DateTimeZone('UTC');
+            $currentTimezone = upstreamGetTimeZone();
+            $currentTimestamp = time();
+
+            $user = wp_get_current_user();
+            $userHasAdminCapabilities = isUserEitherManagerOrAdmin($user);
+            $userCanReply = !$userHasAdminCapabilities ? user_can($user, 'publish_project_discussion') : true;
+            $userCanModerate = !$userHasAdminCapabilities ? user_can($user, 'moderate_comments') : true;
+            $userCanDelete = !$userHasAdminCapabilities ? $userCanModerate || user_can($user, 'delete_project_discussion') : true;
+
+            $itemsRowset = (array)get_post_meta($project_id, '_upstream_project_' . $commentTargetItemType . 's', true);
+            if (count($itemsRowset) > 0) {
+                foreach ($itemsRowset as $row) {
+                    $comments = get_comments(array(
+                        'post_id'    => $project_id,
+                        'meta_query' => array(
+                            'relation' => 'AND',
+                            array(
+                                'key'   => 'type',
+                                'value' => $commentTargetItemType
+                            ),
+                            array(
+                                'key'   => 'id',
+                                'value' => $row['id']
+                            )
+                        )
+                    ));
+
+                    if (count($comments) > 0) {
+                        foreach ($comments as $comment) {
+                            $author = $usersCache[(int)$comment->user_id];
+
+                            $date = \DateTime::createFromFormat('Y-m-d H:i:s', $comment->comment_date_gmt, $utcTimeZone);
+
+                            $commentData = json_decode(json_encode(array(
+                                'id'         => $comment->comment_ID,
+                                'parent_id'  => $comment->comment_parent,
+                                'content'    => $comment->comment_content,
+                                'state'      => $comment->comment_approved,
+                                'created_by' => $author,
+                                'created_at' => array(
+                                    'localized' => "",
+                                    'humanized' => sprintf(
+                                        _x('%s ago', '%s = human-readable time difference', 'upstream'),
+                                        human_time_diff($date->getTimestamp(), $currentTimestamp)
+                                    )
+                                ),
+                                'currentUserCap' => array(
+                                    'can_reply'    => $userCanReply,
+                                    'can_moderate' => $userCanModerate,
+                                    'can_delete'   => $userCanDelete || $author->id === $user->ID
+                                )
+                            )));
+
+                            $date->setTimezone($currentTimezone);
+
+                            $commentData->created_at->localized = $date->format($theDateTimeFormat);
+
+                            $commentsCache = array();
+
+                            if ((int)$comment->comment_parent > 0) {
+                                $parentComment = get_comment($comment->comment_parent);
+                                if (is_numeric($parentComment->comment_approved)) {
+                                    if ((bool)$parentComment->comment_approved) {
+                                        $commentsCache = array(
+                                            $comment->comment_parent => json_decode(json_encode(array(
+                                                'created_by' => array(
+                                                    'name'   => $parentComment->comment_author
+                                                )
+                                            )))
+                                        );
+                                    } else if ($userCanModerate) {
+                                        $commentsCache = array(
+                                            $comment->comment_parent => json_decode(json_encode(array(
+                                                'created_by' => array(
+                                                    'name'   => $parentComment->comment_author
+                                                )
+                                            )))
+                                        );
+                                    }
+                                }
+                                unset($parentComment);
+                            }
+
+                            ob_start();
+                            if ($useAdminLayout) {
+                                upstream_admin_display_message_item($commentData, $commentsCache);
+                            } else {
+                                upstream_display_message_item($commentData, $commentsCache);
+                            }
+
+                            $response['data'][] = ob_get_contents();
+                            ob_end_clean();
+                        }
+                    }
+                }
+            }
 
             $response['success'] = true;
         } catch (\Exception $e) {
