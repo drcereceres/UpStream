@@ -1257,3 +1257,15 @@ a[data-action="comment.trash"] {
 .cmb-row .wp-editor-wrap {
   margin: 15px 0;
 }
+
+.postbox.cmb-row.cmb-repeatable-grouping.is-new[data-iterator] .up-c-tabs-header.nav-tab-wrapper {
+  display: none;
+}
+
+.postbox.cmb-row.cmb-repeatable-grouping.is-new[data-iterator] .up-o-tab-content.up-c-tab-content-data {
+  display: block !important;
+}
+
+.postbox.cmb-row.cmb-repeatable-grouping.is-new[data-iterator] .up-o-tab-content.up-c-tab-content-comments {
+  display: none !important;
+}

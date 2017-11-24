@@ -383,7 +383,6 @@
      *
      */
     function addRow( $group ) {
-
         // if first item is hidden, then show it
         var first = $group.find( '.cmb-nested .cmb-row' )[0];
         if( $(first).is(":hidden") ) {
@@ -394,12 +393,21 @@
 
         // enable all fields in this row and reset them
         var $row = $group.find( '.cmb-repeatable-grouping' ).last();
+        $row.addClass('is-new');
         $row.find( 'input, textarea, select' ).not(':button,:hidden').val("");
         $row.find( ':input' ).prop({ 'disabled': false, 'readonly': false });
         $row.find( '[data-user_assigned]' ).attr( 'data-user_assigned', '' );
         $row.find( '[data-user_created_by]' ).attr( 'data-user_created_by', '' );
         $row.find( '[data-avatar_assigned]' ).attr( 'data-avatar_assigned', '' );
         $row.find( '[data-avatar_created_by]' ).attr( 'data-avatar_created_by', '' );
+        $row.find('.up-o-tab').removeClass('nav-tab-active');
+        $row.find('.up-o-tab[data-target=".up-c-tab-content-data"]').addClass('nav-tab-active');
+
+        setTimeout(function() {
+          $row.find('.up-o-tab[data-target=".up-c-tab-content-comments"]').remove();
+          $row.find('.up-c-tabs-header').remove();
+          $row.find('.cmb-row[data-fieldtype="comments"]').remove();
+        }, 25);
 
         $group.find( '.cmb-add-row span' ).remove();
 
@@ -1132,7 +1140,7 @@
       e.preventDefault();
 
       var self = $(this);
-      var wrapper = $(self.parents('.postbox'));
+      var wrapper = $(self.parents('.cmb-row[data-iterator]'));
 
       $('.up-o-tab', wrapper).removeClass('nav-tab-active');
       self.addClass('nav-tab-active');
@@ -1155,23 +1163,29 @@
         },
         success : function(response) {
           if (response.success) {
-            if (response.data.bugs) {
-              for (var bug_id in response.data.bugs) {
-                var bugCommentsHtmlList = response.data.bugs[bug_id];
-                var wrapper = $($('input.hidden[type="text"][id^="_upstream_project_bugs_"][id$="_id"]').parents('.up-c-tabs-content'));
+            var itemsTypes = ['milestones', 'tasks', 'bugs', 'files'];
+            for (var itemTypeIndex = 0; itemTypeIndex < itemsTypes.length; itemTypeIndex++) {
+              var itemType = itemsTypes[itemTypeIndex];
+              console.log(itemType);
+              var rowset = response.data[itemType];
 
-                var commentsWrapper = $('.up-c-tab-content-comments', wrapper);
-                if ($('.c-discussion', commentsWrapper).length === 0) {
-                  commentsWrapper.append($('<div class="admin-discussion c-discussion" data-type="bug"></div>'));
+              if (!rowset || rowset.length === 0) {
+                continue;
+              }
+
+              for (var item_id in rowset) {
+                var commentsList = rowset[item_id];
+                var itemEl = $('input.hidden[type="text"][id^="_upstream_project_' + itemType + '_"][id$="_id"][value="'+ item_id +'"');
+
+                var wrapper = $(itemEl.parents('.up-c-tabs-content'));
+                if ($('up-c-tab-content-comments .c-discussion', wrapper).length === 0) {
+                  $('.up-c-tab-content-comments', wrapper).append($('.c-discussion', wrapper));
                 }
 
-                commentsWrapper = $('.c-discussion', commentsWrapper);
-
-                if (bugCommentsHtmlList.length === 0) {
-
-                } else {
-                  for (var commentIndex = 0; commentIndex < bugCommentsHtmlList.length; commentIndex++) {
-                    commentsWrapper.append($(bugCommentsHtmlList[commentIndex]));
+                var commentsWrapper = $('.up-c-tab-content-comments .c-discussion', wrapper);
+                if (commentsList.length > 0) {
+                  for (var commentIndex = 0; commentIndex < commentsList.length; commentIndex++) {
+                    commentsWrapper.append($(commentsList[commentIndex]));
                   }
                 }
               }

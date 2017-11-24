@@ -234,7 +234,14 @@ class UpStream_Metaboxes_Projects {
                 'before'        => 'upstream_add_field_attributes',
                 'attributes'    => array(
                     'class' => 'hidden',
-                )
+                ),
+                'before_row' => '
+                    <div class="up-c-tabs-header nav-tab-wrapper nav-tab-wrapper">
+                      <a href="#" class="nav-tab nav-tab-active up-o-tab up-o-tab-data" role="tab" data-target=".up-c-tab-content-data">' . __('Data', 'upstream') . '</a>
+                      <a href="#" class="nav-tab up-o-tab up-o-tab-comments" role="tab" data-target=".up-c-tab-content-comments">' . __('Comments') . '</a>
+                    </div>
+                    <div class="up-c-tabs-content">
+                      <div class="up-o-tab-content up-c-tab-content-data is-active">'
             );
             $fields[1] = array(
                 'id'            => 'created_by',
@@ -314,6 +321,13 @@ class UpStream_Metaboxes_Projects {
                     'textarea_rows' => 5
                 ),
                 'escape_cb'         => 'applyOEmbedFiltersToWysiwygEditorContent'
+            );
+
+            $fields[40] = array(
+                'name' => '&nbsp;',
+                'id'   => 'comments',
+                'type' => 'comments',
+                'after_row' => '</div><div class="up-o-tab-content up-c-tab-content-comments"></div></div>'
             );
 
             // set up the group grid plugin
@@ -613,7 +627,14 @@ class UpStream_Metaboxes_Projects {
                 'permissions'       => '',
                 'attributes'        => array(
                     'class' => 'hidden',
-                )
+                ),
+                'before_row' => '
+                    <div class="up-c-tabs-header nav-tab-wrapper nav-tab-wrapper">
+                      <a href="#" class="nav-tab nav-tab-active up-o-tab up-o-tab-data" role="tab" data-target=".up-c-tab-content-data">' . __('Data', 'upstream') . '</a>
+                      <a href="#" class="nav-tab up-o-tab up-o-tab-comments" role="tab" data-target=".up-c-tab-content-comments">' . __('Comments') . '</a>
+                    </div>
+                    <div class="up-c-tabs-content">
+                      <div class="up-o-tab-content up-c-tab-content-data is-active">'
             );
             $fields[1] = array(
                 'id'                => 'created_by',
@@ -737,6 +758,13 @@ class UpStream_Metaboxes_Projects {
                 );
             }
 
+            $fields[50] = array(
+                'name' => '&nbsp;',
+                'id'   => 'comments',
+                'type' => 'comments',
+                'after_row' => '</div><div class="up-o-tab-content up-c-tab-content-comments"></div></div>'
+            );
+
             // set up the group grid plugin
             $cmb2GroupGrid = $cmb2Grid->addCmb2GroupGrid( $group_field_id );
 
@@ -819,6 +847,8 @@ class UpStream_Metaboxes_Projects {
             $editorIdentifier = $field_id .'_editor';
 
             preg_match('/^_upstream_project_([a-z]+)_([0-9]+)_comments/i', $field_id, $matches);
+
+            echo '<div class="admin-discussion c-discussion" data-type="' . rtrim($matches[1], "s") . '"></div>';
 
             printf(
                 '<input type="hidden" id="%s" value="%s">',
@@ -914,8 +944,8 @@ class UpStream_Metaboxes_Projects {
                 ),
                 'before_row' => '
                     <div class="up-c-tabs-header nav-tab-wrapper nav-tab-wrapper">
-                      <a href="#" class="nav-tab nav-tab-active up-o-tab up-o-tab-data" role="tab" data-target=".up-c-tab-content-data">Data</a>
-                      <a href="#" class="nav-tab up-o-tab up-o-tab-comments" role="tab" data-target=".up-c-tab-content-comments">Comments (x)</a>
+                      <a href="#" class="nav-tab nav-tab-active up-o-tab up-o-tab-data" role="tab" data-target=".up-c-tab-content-data">' . __('Data', 'upstream') . '</a>
+                      <a href="#" class="nav-tab up-o-tab up-o-tab-comments" role="tab" data-target=".up-c-tab-content-comments">' . __('Comments') . '</a>
                     </div>
                     <div class="up-c-tabs-content">
                       <div class="up-o-tab-content up-c-tab-content-data is-active">'
@@ -1017,8 +1047,7 @@ class UpStream_Metaboxes_Projects {
                 'type'              => 'text_date_timestamp',
                 'date_format'       => 'Y-m-d',
                 'permissions'       => 'bug_due_date_field',
-                'before'            => 'upstream_add_field_attributes',
-                'after_row' => '<aside></aside>'
+                'before'            => 'upstream_add_field_attributes'
             );
 
             $fields[50] = array(
@@ -1286,7 +1315,14 @@ class UpStream_Metaboxes_Projects {
                 'id'            => 'id',
                 'type'          => 'text',
                 'before'        => 'upstream_add_field_attributes',
-                'attributes'    => array( 'class' => 'hidden' )
+                'attributes'    => array( 'class' => 'hidden' ),
+                'before_row' => '
+                    <div class="up-c-tabs-header nav-tab-wrapper nav-tab-wrapper">
+                      <a href="#" class="nav-tab nav-tab-active up-o-tab up-o-tab-data" role="tab" data-target=".up-c-tab-content-data">' . __('Data', 'upstream') . '</a>
+                      <a href="#" class="nav-tab up-o-tab up-o-tab-comments" role="tab" data-target=".up-c-tab-content-comments">' . __('Comments') . '</a>
+                    </div>
+                    <div class="up-c-tabs-content">
+                      <div class="up-o-tab-content up-c-tab-content-data is-active">'
             );
             $fields[1] = array(
                 'id'            => 'created_by',
@@ -1333,6 +1369,13 @@ class UpStream_Metaboxes_Projects {
                     'media_buttons' => true,
                     'textarea_rows' => 3
                 )
+            );
+
+            $fields[30] = array(
+                'name' => '&nbsp;',
+                'id'   => 'comments',
+                'type' => 'comments',
+                'after_row' => '</div><div class="up-o-tab-content up-c-tab-content-comments"></div></div>'
             );
 
             // set up the group grid plugin
@@ -1536,7 +1579,10 @@ class UpStream_Metaboxes_Projects {
         $response = array(
             'success' => false,
             'data'    => array(
-                'bugs' => array()
+                'milestones' => array(),
+                'tasks'      => array(),
+                'bugs'       => array(),
+                'files'      => array()
             ),
             'error'   => null
         );
@@ -1570,85 +1616,84 @@ class UpStream_Metaboxes_Projects {
             $userHasAdminCapabilities = isUserEitherManagerOrAdmin();
             $userCanModerate = !$userHasAdminCapabilities ? user_can($user, 'moderate_comments') : true;
 
-            // @todo: fetch all milestones comments
-            // @todo: fetch all tasks comments
-            // @todo: fetch all bugs comments
-            $bugsRowset = (array)get_post_meta($project_id, '_upstream_project_bugs', true);
-            if (count($bugsRowset) > 0) {
-                foreach ($bugsRowset as $bugRow) {
-                    $comments = get_comments(array(
-                        'post_id'    => $project_id,
-                        'meta_query' => array(
-                            'relation' => 'AND',
-                            array(
-                                'key'   => 'type',
-                                'value' => 'bug'
-                            ),
-                            array(
-                                'key'   => 'id',
-                                'value' => $bugRow['id']
-                            )
-                        )
-                    ));
-
-                    if (count($comments) > 0) {
-                        $response['data']['bugs'][$bugRow['id']] = array();
-
-                        foreach ($comments as $comment) {
-                            $user = get_user_by('id', $comment->user_id);
-
-                            $date = DateTime::createFromFormat('Y-m-d H:i:s', $comment->comment_date_gmt, $utcTimeZone);
-
-                            $commentData = json_decode(json_encode(array(
-                                'id'         => $comment->comment_ID,
-                                'parent_id'  => $comment->comment_parent,
-                                'content'    => $comment->comment_content,
-                                'state'      => $comment->comment_approved,
-                                'created_by' => (object)array(
-                                    'id'     => $user->ID,
-                                    'name'   => $user->display_name,
-                                    'avatar' => getUserAvatarURL($user->ID)
+            $itemsTypes = array('milestones', 'tasks', 'bugs', 'files');
+            foreach ($itemsTypes as $itemType) {
+                $itemTypeSingular = rtrim($itemType, 's');
+                $rowset = (array)get_post_meta($project_id, '_upstream_project_' . $itemType, true);
+                if (count($rowset) > 0) {
+                    foreach ($rowset as $row) {
+                        $comments = get_comments(array(
+                            'post_id'    => $project_id,
+                            'meta_query' => array(
+                                'relation' => 'AND',
+                                array(
+                                    'key'   => 'type',
+                                    'value' => $itemTypeSingular
                                 ),
-                                'created_at' => array(
-                                    'localized' => "",
-                                    'humanized' => sprintf(
-                                        _x('%s ago', '%s = human-readable time difference', 'upstream'),
-                                        human_time_diff($date->getTimestamp(), $currentTimestamp)
-                                    )
-                                ),
-                                // @todo
-                                'currentUserCap' => array(
-                                    'can_reply'    => true,
-                                    'can_moderate' => true,
-                                    'can_delete'   => true
+                                array(
+                                    'key'   => 'id',
+                                    'value' => $row['id']
                                 )
-                            )));
+                            )
+                        ));
 
-                            $date->setTimezone($currentTimezone);
+                        if (count($comments) > 0) {
+                            $response['data'][$itemType][$row['id']] = array();
 
-                            $commentData->created_at->localized = $date->format($theDateTimeFormat);
+                            foreach ($comments as $comment) {
+                                $user = get_user_by('id', $comment->user_id);
 
-                            if ((int)$comment->comment_parent > 0) {
-                                $parent = get_comment($comment->comment_parent);
-                                $commentsCache = array(
-                                    $parent->comment_ID => json_decode(json_encode(array(
-                                        'created_by' => array(
-                                            'name' => $parent->comment_author
+                                $date = DateTime::createFromFormat('Y-m-d H:i:s', $comment->comment_date_gmt, $utcTimeZone);
+
+                                $commentData = json_decode(json_encode(array(
+                                    'id'         => $comment->comment_ID,
+                                    'parent_id'  => $comment->comment_parent,
+                                    'content'    => $comment->comment_content,
+                                    'state'      => $comment->comment_approved,
+                                    'created_by' => (object)array(
+                                        'id'     => $user->ID,
+                                        'name'   => $user->display_name,
+                                        'avatar' => getUserAvatarURL($user->ID)
+                                    ),
+                                    'created_at' => array(
+                                        'localized' => "",
+                                        'humanized' => sprintf(
+                                            _x('%s ago', '%s = human-readable time difference', 'upstream'),
+                                            human_time_diff($date->getTimestamp(), $currentTimestamp)
                                         )
-                                    )))
-                                );
-                            }
+                                    ),
+                                    // @todo
+                                    'currentUserCap' => array(
+                                        'can_reply'    => true,
+                                        'can_moderate' => true,
+                                        'can_delete'   => true
+                                    )
+                                )));
 
-                            ob_start();
-                            upstream_admin_display_message_item($commentData, $commentsCache);
-                            $response['data']['bugs'][$bugRow['id']][] = ob_get_contents();
-                            ob_end_clean();
+                                $date->setTimezone($currentTimezone);
+
+                                $commentData->created_at->localized = $date->format($theDateTimeFormat);
+
+                                if ((int)$comment->comment_parent > 0) {
+                                    $parent = get_comment($comment->comment_parent);
+                                    $commentsCache = array(
+                                        $parent->comment_ID => json_decode(json_encode(array(
+                                            'created_by' => array(
+                                                'name' => $parent->comment_author
+                                            )
+                                        )))
+                                    );
+                                }
+
+                                ob_start();
+                                upstream_admin_display_message_item($commentData, $commentsCache);
+                                $response['data'][$itemType][$row['id']][] = ob_get_contents();
+                                ob_end_clean();
+                            }
                         }
                     }
                 }
             }
-            // @todo: fetch all files comments
-
 
             $response['success'] = true;
         } catch (Exception $e) {

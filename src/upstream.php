@@ -11,7 +11,6 @@
 
 use \UpStream\Comments;
 
-
 // Exit if accessed directly.
 if ( ! defined( 'ABSPATH' ) ) exit;
 
