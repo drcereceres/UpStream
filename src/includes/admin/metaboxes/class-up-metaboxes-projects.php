@@ -843,7 +843,7 @@ class UpStream_Metaboxes_Projects {
             printf(
                 '<input type="hidden" id="%s" value="%s">',
                 $field_id . '_add_comment_nonce',
-                wp_create_nonce('upstream:project.' . $matches[1] . '.add_comment:' . $matches[2])
+                wp_create_nonce('upstream:project.' . $matches[1] . '.add_comment')
             );
 
             wp_editor("", $editorIdentifier, array(

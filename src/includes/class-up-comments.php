@@ -56,9 +56,7 @@ class Comments
             $commentTargetItemType = strtolower($_POST['item_type']);
             if ($commentTargetItemType !== 'project') {
                 if (
-                    !isset($_POST['item_index'])
-                    || !is_numeric($_POST['item_index'])
-                    || !isset($_POST['item_id'])
+                    !isset($_POST['item_id'])
                     || empty($_POST['item_id'])
                 ) {
                     throw new \Exception(__("Invalid request.", 'upstream'));
@@ -66,7 +64,7 @@ class Comments
 
                 $item_id = $_POST['item_id'];
 
-                $nonceIdentifier = 'upstream:project.' . $commentTargetItemType . 's.add_comment:' . $_POST['item_index'];
+                $nonceIdentifier = 'upstream:project.' . $commentTargetItemType . 's.add_comment';
             } else {
                 $nonceIdentifier = 'upstream:project.add_comment';
             }
