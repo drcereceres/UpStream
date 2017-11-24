@@ -368,19 +368,37 @@ class Comments
             $comments = array();
             if ($comment->parent_id > 0) {
                 $parentComment = get_comment($comment->parent_id);
-                $comments = array(
-                    $comment->parent_id => json_decode(json_encode(array(
-                        'created_by' => array(
-                            'name' => $parentComment->comment_author
-                        )
-                    )))
-                );
+                if (is_numeric($parentComment->comment_approved)) {
+                    if ((bool)$parentComment->comment_approved) {
+                        $comments = array(
+                            $comment->parent_id => json_decode(json_encode(array(
+                                'created_by' => array(
+                                    'name' => $parentComment->comment_author
+                                )
+                            )))
+                        );
+                    } else {
+                        $user = wp_get_current_user();
+                        $userHasAdminCapabilities = isUserEitherManagerOrAdmin($user);
+                        $userCanModerateComments = !$userHasAdminCapabilities ? user_can($user, 'moderate_comments') : true;
+
+                        if ($userCanModerateComments) {
+                            $comments = array(
+                                $comment->parent_id => json_decode(json_encode(array(
+                                    'created_by' => array(
+                                        'name' => $parentComment->comment_author
+                                    )
+                                )))
+                            );
+                        }
+                    }
+                }
                 unset($parentComment);
             }
 
             $useAdminLayout = !isset($_POST['teeny']) ? true : (bool)$_POST['teeny'];
 
-            $response['comment_html'] = $comment->render(true, $useAdminLayout);
+            $response['comment_html'] = $comment->render(true, $useAdminLayout, $comments);
 
             wp_new_comment_notify_moderator($comment->id);
 
@@ -414,21 +432,37 @@ class Comments
             $comments = array();
             if ($comment->parent_id > 0) {
                 $parentComment = get_comment($comment->parent_id);
-                $comments = array(
-                    $comment->parent_id => json_decode(json_encode(array(
-                        'created_by' => array(
-                            'name' => $parentComment->comment_author
-                        )
-                    )))
-                );
+                if (is_numeric($parentComment->comment_approved)) {
+                    if ((bool)$parentComment->comment_approved) {
+                        $comments = array(
+                            $comment->parent_id => json_decode(json_encode(array(
+                                'created_by' => array(
+                                    'name' => $parentComment->comment_author
+                                )
+                            )))
+                        );
+                    } else {
+                        $user = wp_get_current_user();
+                        $userHasAdminCapabilities = isUserEitherManagerOrAdmin($user);
+                        $userCanModerateComments = !$userHasAdminCapabilities ? user_can($user, 'moderate_comments') : true;
+
+                        if ($userCanModerateComments) {
+                            $comments = array(
+                                $comment->parent_id => json_decode(json_encode(array(
+                                    'created_by' => array(
+                                        'name' => $parentComment->comment_author
+                                    )
+                                )))
+                            );
+                        }
+                    }
+                }
                 unset($parentComment);
             }
 
             $useAdminLayout = !isset($_POST['teeny']) ? true : (bool)$_POST['teeny'];
 
-            $response['comment_html'] = $comment->render(true, $useAdminLayout);
-
-            wp_new_comment_notify_moderator($comment->id);
+            $response['comment_html'] = $comment->render(true, $useAdminLayout, $comments);
 
             $response['success'] = true;
         } catch (\Exception $e) {
