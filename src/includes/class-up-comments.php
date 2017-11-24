@@ -105,7 +105,7 @@ class Comments
                 update_comment_meta($comment->id, 'id', $item_id);
             }
 
-            $useAdminLayout = is_admin();
+            $useAdminLayout = !isset($_POST['teeny']) ? true : (bool)$_POST['teeny'] === false;
 
             $response['comment_html'] = $comment->render(true, $useAdminLayout);
             $response['success'] = true;
@@ -140,7 +140,7 @@ class Comments
                 || !isset($_POST['nonce'])
                 || !isset($_POST['project_id'])
                 || !isset($_POST['item_type'])
-                || !in_array($_POST['item_type'], array('project', 'milestone', 'task', 'bug'))
+                || !in_array($_POST['item_type'], array('project', 'milestone', 'task', 'bug', 'file')) // @todo make sure all items are included on all checks
                 || !isset($_POST['content'])
                 || !isset($_POST['parent_id'])
                 || !is_numeric($_POST['parent_id'])
@@ -190,7 +190,7 @@ class Comments
                 update_comment_meta($comment->id, 'id', $_POST['item_id']);
             }
 
-            $useAdminLayout = is_admin();
+            $useAdminLayout = !isset($_POST['teeny']) ? true : (bool)$_POST['teeny'] === false;
 
             $parent = get_comment($comment->parent_id);
 
@@ -395,7 +395,7 @@ class Comments
                 unset($parentComment);
             }
 
-            $useAdminLayout = !isset($_POST['teeny']) ? true : (bool)$_POST['teeny'];
+            $useAdminLayout = !isset($_POST['teeny']) ? true : (bool)$_POST['teeny'] === false;
 
             $response['comment_html'] = $comment->render(true, $useAdminLayout, $comments);
 
@@ -459,7 +459,7 @@ class Comments
                 unset($parentComment);
             }
 
-            $useAdminLayout = !isset($_POST['teeny']) ? true : (bool)$_POST['teeny'];
+            $useAdminLayout = !isset($_POST['teeny']) ? true : (bool)$_POST['teeny'] === false;
 
             $response['comment_html'] = $comment->render(true, $useAdminLayout, $comments);
 
@@ -527,7 +527,7 @@ class Comments
                 throw new \Exception(__("Commenting is disabled on this project.", 'upstream'));
             }
 
-            $useAdminLayout = isset($_GET['teeny']) && (bool)$_GET['teeny'] === false;
+            $useAdminLayout = !isset($_GET['teeny']) ? true : (bool)$_GET['teeny'] === false;
 
             $usersCache = array();
             $usersRowset = get_users(array(
