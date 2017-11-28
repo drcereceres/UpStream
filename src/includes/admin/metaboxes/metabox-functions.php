@@ -426,6 +426,7 @@ function upstream_admin_output_bug_hidden_data() {
 /* ======================================================================================
                                         DISCUSSION
    ====================================================================================== */
+
 /**
  * Outputs comments in the admin.
  */
@@ -529,7 +530,9 @@ function upstream_admin_display_messages()
         if (count($commentsCache) > 0) {
             if (is_admin()) {
                 foreach ($commentsCache as $comment) {
-                    upstream_admin_display_message_item($comment, $commentsCache);
+                    if ($comment->parent_id === 0) {
+                        upstream_admin_display_message_item($comment, $commentsCache);
+                    }
                 }
             } else {
                 foreach ($commentsCache as $comment) {
@@ -547,55 +550,40 @@ function upstream_admin_display_messages()
 function upstream_admin_display_message_item($comment, $comments = array())
 {
     global $wp_embed;
+
+    $isApproved = (int)$comment->state === 1;
+    $currentUserCapabilities = (object)array(
+        'can_reply'    => isset($comment->currentUserCap->can_reply) ? (bool)$comment->currentUserCap->can_reply : false,
+        'can_moderate' => isset($comment->currentUserCap->can_moderate) ? (bool)$comment->currentUserCap->can_moderate : false,
+        'can_delete'   => isset($comment->currentUserCap->can_delete) ? (bool)$comment->currentUserCap->can_delete : false
+    );
     ?>
-    <div class="media o-comment <?php echo (int)$comment->state === 1 ? 's-status-approved' : 's-status-unapproved'; ?>" id="comment-<?php echo $comment->id; ?>" data-id="<?php echo $comment->id; ?>">
-      <div class="media-left">
-        <img class="media-object" src="<?php echo $comment->created_by->avatar; ?>" width="30">
-        <?php if ((int)$comment->state !== 1 && isset($comment->currentUserCap) && $comment->currentUserCap->can_delete): ?>
-        <div class="u-text-center">
-          <span class="dashicons dashicons-hidden u-color-gray" title="<?php _e("This comment is not visible by regular users.", 'upstream'); ?>" style="margin-top: 2px;"></span>
-        </div>
-        <?php endif; ?>
-      </div>
-      <div class="media-body">
-        <div class="media-heading">
-          <h4><?php echo $comment->created_by->name; ?></h4>
-          <?php if (isset($comment->parent_id) && $comment->parent_id > 0): ?>
-          <div>
-            <?php
-            if (isset($comments[$comment->parent_id])) {
-                printf(
-                    __('In reply to %s', 'upstream'),
-                    sprintf(
-                        '<a href="#%s" data-action="comment.go_to_reply">%s</a>',
-                        'comment-' . $comment->parent_id,
-                        $comments[$comment->parent_id]->created_by->name
-                    )
-                );
-            } else {
-                printf(
-                    '%s&nbsp;<i style="color: #BDC3C7;">(%s)</i>',
-                    __('In reply to'),
-                    __('comment not found', 'upstream')
-                );
-            }
-            ?>
+    <div class="o-comment s-status-<?php echo $isApproved ? 'approved' : 'unapproved'; ?>" id="comment-<?php echo $comment->id; ?>" data-id="<?php echo $comment->id; ?>">
+      <div class="o-comment__body">
+        <div class="o-comment__body__left">
+          <img class="o-comment__user_photo" src="<?php echo $comment->created_by->avatar; ?>" width="30">
+          <?php if (!$isApproved && $currentUserCapabilities->can_moderate): ?>
+          <div class="u-text-center">
+            <i class="fa fa-eye-slash u-color-gray" title="<?php _e("This comment and its replies are not visible by regular users.", 'upstream'); ?>" style="margin-top: 2px;"></i>
           </div>
           <?php endif; ?>
-          <time>
-            <?php echo $comment->created_at->humanized; ?>
-            <span>(<?php echo $comment->created_at->localized; ?>)</span>
-          </time>
         </div>
-        <div class="o-comment__content">
-          <?php echo $wp_embed->autoembed(wpautop($comment->content)); ?>
-        </div>
-        <div class="media-footer">
-          <div class="o-comment__actions">
+        <div class="o-comment__body__right">
+          <div class="o-comment__body__head">
+            <div class="o-comment__user_name"><?php echo $comment->created_by->name; ?></div>
+            <div class="o-comment__reply_info">
+              <?php
+              // @todo: reimplement this feature
+              ?>
+            </div>
+            <div class="o-comment__date"><?php echo $comment->created_at->humanized; ?>&nbsp;<small>(<?php echo $comment->created_at->localized; ?>)</small></div>
+          </div>
+          <div class="o-comment__content"><?php echo $wp_embed->autoembed(wpautop($comment->content)); ?></div>
+          <div class="o-comment__body__footer">
             <?php
             $controls = array();
-            if (isset($comment->currentUserCap->can_moderate) && $comment->currentUserCap->can_moderate) {
-                if ((int)$comment->state === 1) {
+            if ($currentUserCapabilities->can_moderate) {
+                if ($isApproved) {
                     $controls[0] = array(
                         'action' => 'unapprove',
                         'nonce'  => "unapprove_comment",
@@ -610,7 +598,7 @@ function upstream_admin_display_message_item($comment, $comments = array())
                 }
             }
 
-            if (isset($comment->currentUserCap->can_reply) && $comment->currentUserCap->can_reply) {
+            if ($currentUserCapabilities->can_reply) {
                 $controls[1] = array(
                     'action' => 'reply',
                     'nonce'  => "add_comment_reply",
@@ -618,7 +606,7 @@ function upstream_admin_display_message_item($comment, $comments = array())
                 );
             }
 
-            if (isset($comment->currentUserCap->can_delete) && $comment->currentUserCap->can_delete) {
+            if ($currentUserCapabilities->can_delete) {
                 $controls[] = array(
                     'action' => 'trash',
                     'nonce'  => "trash_comment",
@@ -627,16 +615,9 @@ function upstream_admin_display_message_item($comment, $comments = array())
             }
 
             if (count($controls) > 0) {
-                $first = true;
                 foreach ($controls as $control) {
-                    if (!$first) {
-                        echo '&nbsp;|&nbsp;';
-                    }
-
-                    $first = false;
-
                     printf(
-                        '<a href="#" data-action="comment.%s" data-nonce="%s">%s</a>',
+                        '<a href="#" class="o-comment-control" data-action="comment.%s" data-nonce="%s">%s</a>',
                         $control['action'],
                         wp_create_nonce('upstream:project.' . $control['nonce'] . ':' . $comment->id),
                         $control['label']
@@ -646,6 +627,13 @@ function upstream_admin_display_message_item($comment, $comments = array())
             ?>
           </div>
         </div>
+      </div>
+      <div class="o-comment-replies">
+        <?php if (isset($comment->replies) && count($comment->replies) > 0): ?>
+        <?php foreach ($comment->replies as $commentReply): ?>
+          <?php upstream_admin_display_message_item($commentReply, $comments); ?>
+        <?php endforeach; ?>
+        <?php endif; ?>
       </div>
     </div>
     <?php

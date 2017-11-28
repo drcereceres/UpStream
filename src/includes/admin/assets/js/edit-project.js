@@ -693,11 +693,7 @@
 
       comment.prependTo(wrapper);
 
-      wrapper.animate({
-        scrollTop: 0
-      }, function() {
-        comment.fadeIn();
-      });
+      comment.slideDown();
     }
 
     function replyCancelButtonClickCallback(editor_id, wrapper) {
@@ -733,7 +729,7 @@
       var itemsWrapper = $(self.parents('.cmb-nested.cmb-field-list[data-groupid]'));
 
       if (itemsWrapper.length > 0) {
-        commentsWrapper = $('.c-discussion', parent);
+        commentsWrapper = $('.c-comments', parent);
         var itemWrapper = $(self.parents('.cmb-row[data-iterator]'));
 
         item_index = itemWrapper.attr('data-iterator');
@@ -746,7 +742,7 @@
         item_id = $('#' + prefix + '_id').val();
       } else {
         item_type = 'project';
-        commentsWrapper = $('.c-discussion', self.parents('.cmb2-metabox'));
+        commentsWrapper = $('.c-comments', self.parents('.cmb2-metabox'));
       }
 
       var errorCallback = function() {
@@ -754,6 +750,8 @@
         $('.button.u-to-be-removed', parent).attr('disabled', null);
         $('.o-comment.is-being-replied a[data-action="comment.reply"]', commentsWrapper).text(upstream_project.l.LB_REPLY);
       };
+
+      var theCommentBeingReplied = $('.o-comment.is-being-replied', commentsWrapper);
 
       $.ajax({
         type: 'POST',
@@ -771,7 +769,7 @@
           disableCommentArea(editor_id);
           self.text(upstream_project.l.LB_REPLYING);
           $('.button.u-to-be-removed', parent).attr('disabled', 'disabled');
-          $('.o-comment.is-being-replied a[data-action="comment.reply"]', commentsWrapper).text(upstream_project.l.LB_REPLYING);
+          $('a[data-action="comment.reply"]', theCommentBeingReplied).text(upstream_project.l.LB_REPLYING);
         },
         success: function(response) {
           if (response.error) {
@@ -786,9 +784,9 @@
               resetCommentEditorContent(editor_id);
               replyCancelButtonClickCallback(editor_id, parent);
 
-              appendCommentHtmlToDiscussion(response.comment_html, commentsWrapper);
+              appendCommentHtmlToDiscussion(response.comment_html, theCommentBeingReplied.find('.o-comment-replies').get(0));
 
-              $('.o-comment.is-being-replied a[data-action="comment.reply"]', commentsWrapper).text(upstream_project.l.LB_REPLY);
+              $('a[data-action="comment.reply"]', theCommentBeingReplied).text(upstream_project.l.LB_REPLY);
               $('.o-comment', commentsWrapper).removeClass('is-disabled is-mouse-over is-being-replied');
             }
           }
@@ -826,15 +824,15 @@
       setFocus('_upstream_project_new_message');
     });
 
-    $('.cmb2-wrap').on('click', '.c-discussion .o-comment[data-id] a[data-action="comment.reply"]', function(e) {
+    $('.cmb2-wrap').on('click', '.c-comments .o-comment[data-id] a[data-action="comment.reply"]', function(e) {
       e.preventDefault();
 
       var self = $(this);
-      var commentWrapper = $(self.parents('.o-comment[data-id]'));
+      var commentWrapper = $(self.parents('.o-comment[data-id]').get(0));
       var comment_id = commentWrapper.attr('data-id');
 
       commentWrapper.addClass('is-mouse-over is-being-replied');
-      var parent = $(commentWrapper.parents('.c-discussion').parent());
+      var parent = $(commentWrapper.parents('.c-comments').parent());
 
       $('.o-comment[data-id!="'+ comment_id +'"]', parent).addClass('is-disabled');
 
@@ -893,7 +891,7 @@
 
       var self = $(this);
 
-      var comment = $(self.parents('.o-comment[data-id]'));
+      var comment = $(self.parents('.o-comment[data-id]').get(0));
       if (!comment.length) {
         console.error('Comment wrapper not found.');
         return;
@@ -985,7 +983,6 @@
           self.attr('disabled', 'disabled');
         },
         success: function(response) {
-          console.log(response);
           if (response.error) {
             console.error(response.error);
             alert(response.error);
@@ -1038,12 +1035,12 @@
         null,
         null,
         editor_id,
-        $('#_upstream_project_discussions .c-discussion')
+        $('#_upstream_project_discussions .c-comments')
       );
     });
 
     function sendToggleApprovalStateRequest(self, isApproved) {
-      var comment = $(self.parents('.o-comment[data-id]'));
+      var comment = $(self.parents('.o-comment[data-id]').get(0));
       if (!comment.length) {
         console.error('Comment wrapper not found.');
         return;
@@ -1079,7 +1076,13 @@
               errorCallback();
               console.error('Something went wrong.');
             } else {
-              comment.replaceWith($(response.comment_html));
+              comment.removeClass('s-status-' + (!isApproved ? 'approved' : 'unapproved') + ' is-being-' + (!isApproved ? 'approved' : 'unapproved'))
+                .addClass('s-status-' + (isApproved ? 'approved' : 'unapproved'));
+
+              var newComment = $(response.comment_html);
+              var newCommentBody = $('.o-comment__body', newComment);
+
+              $(comment.find('.o-comment__body').get(0)).replaceWith(newCommentBody);
             }
           }
         },
@@ -1092,6 +1095,9 @@
           };
 
           console.error(response);
+        },
+        complete: function() {
+          comment.removeClass('is-loading is-mouse-over is-being-approved is-being-unapproved');
         }
       });
     }
@@ -1107,7 +1113,7 @@
     });
 
     // @todo: might have some bugs.
-    $('.cmb2-wrap').on('click', '.c-discussion .o-comment[data-id] a[data-action="comment.go_to_reply"]', function(e) {
+    $('.cmb2-wrap').on('click', '.c-comments .o-comment[data-id] a[data-action="comment.go_to_reply"]', function(e) {
       e.preventDefault();
 
       var targetComment = $($(this).attr('href'));
@@ -1116,7 +1122,7 @@
         return;
       }
 
-      var wrapper = $(targetComment.parents('.c-discussion'));
+      var wrapper = $(targetComment.parents('.c-comments'));
       var wrapperOffset = wrapper.offset();
 
       if (!wrapperOffset) return;
@@ -1166,13 +1172,12 @@
             var itemsTypes = ['milestones', 'tasks', 'bugs', 'files'];
             for (var itemTypeIndex = 0; itemTypeIndex < itemsTypes.length; itemTypeIndex++) {
               var itemType = itemsTypes[itemTypeIndex];
-              console.log(itemType);
               var rowset = response.data[itemType];
 
               $('input.hidden[type="text"][id^="_upstream_project_' + itemType + '_"][id$="_id"]').each(function() {
                 var wrapper = $($(this).parents('.up-c-tabs-content'));
-                if ($('up-c-tab-content-comments .c-discussion', wrapper).length === 0) {
-                  $('.up-c-tab-content-comments', wrapper).append($('.c-discussion', wrapper));
+                if ($('up-c-tab-content-comments .c-comments', wrapper).length === 0) {
+                  $('.up-c-tab-content-comments', wrapper).append($('.c-comments', wrapper));
                 }
               });
 
@@ -1185,11 +1190,11 @@
                 var itemEl = $('input.hidden[type="text"][id^="_upstream_project_' + itemType + '_"][id$="_id"][value="'+ item_id +'"]');
 
                 var wrapper = $(itemEl.parents('.up-c-tabs-content'));
-                if ($('up-c-tab-content-comments .c-discussion', wrapper).length === 0) {
-                  $('.up-c-tab-content-comments', wrapper).append($('.c-discussion', wrapper));
+                if ($('up-c-tab-content-comments .c-comments', wrapper).length === 0) {
+                  $('.up-c-tab-content-comments', wrapper).append($('.c-comments', wrapper));
                 }
 
-                var commentsWrapper = $('.up-c-tab-content-comments .c-discussion', wrapper);
+                var commentsWrapper = $('.up-c-tab-content-comments .c-comments', wrapper);
                 if (commentsList.length > 0) {
                   for (var commentIndex = 0; commentIndex < commentsList.length; commentIndex++) {
                     commentsWrapper.append($(commentsList[commentIndex]));
@@ -1252,7 +1257,7 @@
             item_id,
             itemWrapper.attr('data-iterator'),
             editor_id,
-            $('.c-discussion', itemWrapper)
+            $('.c-comments', itemWrapper)
           );
         });
 

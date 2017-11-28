@@ -838,7 +838,7 @@ class UpStream_Metaboxes_Projects {
 
             preg_match('/^_upstream_project_([a-z]+)_([0-9]+)_comments/i', $field_id, $matches);
 
-            echo '<div class="admin-discussion c-discussion" data-type="' . rtrim($matches[1], "s") . '"></div>';
+            echo '<div class="c-comments" data-type="' . rtrim($matches[1], "s") . '"></div>';
 
             printf(
                 '<input type="hidden" id="%s" value="%s">',
