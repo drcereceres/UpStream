@@ -4,8 +4,19 @@ namespace UpStream\Migrations;
 // Prevent direct access.
 if (!defined('ABSPATH')) exit;
 
+/**
+ * This class transform all existent project comments into WordPress Comments.
+ *
+ * @since   @todo
+ */
 final class Comments
 {
+    /**
+     * Run the migration if needed.
+     *
+     * @since   @todo
+     * @static
+     */
     public static function run()
     {
         if (!self::isMigrationNeeded()) {
@@ -58,12 +69,25 @@ final class Comments
         update_option('upstream:migration.comments', 'yes');
     }
 
+    /**
+     * Fetch all discussion metas from all projects.
+     * It returns an associative array with project ID as keys and a list of comments as values.
+     *
+     * @since   @todo
+     * @access  private
+     * @static
+     *
+     * @global  $wpdb
+     *
+     * @return  array
+     */
     private static function fetchMetasRowset()
     {
         global $wpdb;
 
         $data = array();
 
+        // Fetch all existent discussion metas.
         $metasRowset = $wpdb->get_results('
             SELECT `post_id`, `meta_key`, `meta_value`
             FROM `' . $wpdb->prefix . 'postmeta`
@@ -92,7 +116,13 @@ final class Comments
         return $data;
     }
 
-
+    /**
+     * Check if migration is needed.
+     *
+     * @since   @todo
+     * @access  private
+     * @static
+     */
     private static function isMigrationNeeded()
     {
         return (string)get_option('upstream:migration.comments') !== 'yes';

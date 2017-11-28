@@ -1557,7 +1557,7 @@ class UpStream_Metaboxes_Projects {
     }
 
     /**
-     * @todo
+     * AJAX endpoint that retrieves all comments from all items on the give project.
      *
      * @since   @todo
      * @static
@@ -1630,7 +1630,7 @@ class UpStream_Metaboxes_Projects {
             if ($userHasAdminCapabilities || $userCanModerate) {
                 $commentsStatuses[] = 'hold';
             }
-
+            // @todo: add support for disabled items via option
             $itemsTypes = array('milestones', 'tasks', 'bugs', 'files');
             foreach ($itemsTypes as $itemType) {
                 $itemTypeSingular = rtrim($itemType, 's');

@@ -1,20 +1,111 @@
 <?php
 namespace UpStream;
 
+// Prevent direct access.
+if (!defined('ABSPATH')) exit;
+
 use \UpStream\Struct;
 
+/**
+ * Struct that represents an UpStream Comment.
+ *
+ * @since   @todo
+ */
 class Comment extends Struct
 {
+    /**
+     * Comment ID.
+     *
+     * @since   @todo
+     *
+     * @var     int     $id
+     */
     public $id;
+
+    /**
+     * Project ID where the comments belongs to.
+     *
+     * @since   @todo
+     *
+     * @var     int     $project_id
+     */
     public $project_id;
+
+    /**
+     * Comment parent ID.
+     *
+     * @since   @todo
+     *
+     * @var     int     $parent_id
+     */
     public $parent_id;
+
+    /**
+     * Comment content.
+     *
+     * @since   @todo
+     *
+     * @var     string  $content
+     */
     public $content;
+
+    /**
+     * Comment current status.
+     * Valid values are: -2, -1, 0, 1 ~ representing spam, trash, unapproved, approved.
+     *
+     * @since   @todo
+     *
+     * @var     int     $state
+     */
     public $state;
+
+    /**
+     * Comment author.
+     *
+     * @since   @todo
+     *
+     * @var     object     $created_by
+     */
     public $created_by;
+
+    /**
+     * Date info where the comment was added.
+     *
+     * @since   @todo
+     *
+     * @var     object     $created_at
+     */
     public $created_at;
+
+    /**
+     * Current cached user capabilities related to comments.
+     *
+     * @since   @todo
+     *
+     * @var     object     $currentUserCap
+     */
     public $currentUserCap;
+
+    /**
+     * Cached author info.
+     *
+     * @since   @todo
+     * @access  protected
+     *
+     * @var     object     $author
+     */
     protected $author;
 
+    /**
+     * Convert a given comment state into its equivalent WordPress value.
+     *
+     * @since   @todo
+     * @static
+     *
+     * @param   mixed   $state  The state to be translated.
+     *
+     * @return  mixed
+     */
     public static function convertStateToWpPatterns($state)
     {
         if (is_numeric($state)) {
@@ -31,6 +122,16 @@ class Comment extends Struct
         return $state;
     }
 
+    /**
+     * Convert a given comment state into its equivalent int value.
+     *
+     * @since   @todo
+     * @static
+     *
+     * @param   string  $state  State to be converted.
+     *
+     * @return  int
+     */
     public static function convertStateToInt($state)
     {
         if (is_numeric($state)) {
@@ -48,6 +149,16 @@ class Comment extends Struct
         return $state;
     }
 
+    /**
+     * Fill missing comment info from a given comment array.
+     *
+     * @since   @todo
+     * @static
+     *
+     * @param   array   $customData     Associative array with comment info.
+     *
+     * @return  array
+     */
     public static function arrayToWPPatterns($customData)
     {
         $defaultData = array(
@@ -68,6 +179,13 @@ class Comment extends Struct
         return $data;
     }
 
+    /**
+     * Retrieve an associative array following WordPress Comments design pattern with the instance's data.
+     *
+     * @since   @todo
+     *
+     * @return  array
+     */
     public function toWpPatterns()
     {
         $data = array(
@@ -86,6 +204,15 @@ class Comment extends Struct
         return $data;
     }
 
+    /**
+     * Class constructor.
+     *
+     * @since   @todo
+     *
+     * @param   string  $content        Comment content.
+     * @param   int     $project_id     Project ID.
+     * @param   int     $user_id        Author ID.
+     */
     public function __construct($content = "", $project_id = 0, $user_id = 0)
     {
         if (!empty($content)) {
@@ -132,6 +259,13 @@ class Comment extends Struct
         $this->state = 1;
     }
 
+    /**
+     * Apply WordPress comment filters to the instance data.
+     *
+     * @since   @todo
+     *
+     * @uses    wp_filter_comment
+     */
     public function doFilters()
     {
         $data = $this->toWpPatterns();
@@ -146,11 +280,25 @@ class Comment extends Struct
         $this->content = $safeData['comment_content'];
     }
 
+    /**
+     * Check if instance represents a new or an existent comment.
+     *
+     * @since   @todo
+     *
+     * @return  bool
+     */
     public function isNew()
     {
         return (int)$this->id <= 0;
     }
 
+    /**
+     * Either insert/update the comment into DB.
+     *
+     * @since   @todo
+     *
+     * @return  mixed   int if inserted or bool if updated
+     */
     public function save()
     {
         if ($this->isNew()) {
@@ -160,6 +308,7 @@ class Comment extends Struct
 
             $integrityCheck = wp_allow_comment($data, true);
             /*
+            // Commented to avoid comment rejection by WordPress on simmilar comments made across different items on the same project.
             if (is_wp_error($integrityCheck)) {
                 throw new \Exception($integrityCheck->get_error_message());
             }
@@ -203,6 +352,18 @@ class Comment extends Struct
         }
     }
 
+    /**
+     * Update comment state statically.
+     *
+     * @since   @todo
+     * @access  protected
+     * @static
+     *
+     * @param   int     $comment_id     Comment ID to be updated.
+     * @param   mixed   $newState       Comment's new state.
+     *
+     * @return  bool
+     */
     protected static function updateApprovalState($comment_id, $newState)
     {
         if (!in_array(strtolower((string)$newState), array('1', '0', 'spam', 'trash'))) {
@@ -218,6 +379,13 @@ class Comment extends Struct
         return $success;
     }
 
+    /**
+     * Unapprove the comment.
+     *
+     * @since   @todo
+     *
+     * @return  bool
+     */
     public function unapprove()
     {
         if (!$this->isNew()) {
@@ -232,6 +400,13 @@ class Comment extends Struct
         return false;
     }
 
+    /**
+     * Approve the comment.
+     *
+     * @since   @todo
+     *
+     * @return  bool
+     */
     public function approve()
     {
         if (!$this->isNew()) {
@@ -246,6 +421,11 @@ class Comment extends Struct
         return false;
     }
 
+    /**
+     * Update comment's dates to human format.
+     *
+     * @since   @todo
+     */
     public function updateHumanizedDate()
     {
         $dateFormat = get_option('date_format');
@@ -266,6 +446,17 @@ class Comment extends Struct
         );
     }
 
+    /**
+     * Render the comment as HTML.
+     *
+     * @since   @todo
+     *
+     * @param   bool    $return             Either return the HTML or render it insted.
+     * @param   bool    $useAdminLayout     Either use admin/frontend layout.
+     * @param   array   $commentsCache      Array of comments passed to render functions.
+     *
+     * @return  string  Will only return something if $return is true.
+     */
     public function render($return = false, $useAdminLayout = true, $commentsCache = array())
     {
         if (empty($this->currentUserCap)) {
@@ -302,6 +493,16 @@ class Comment extends Struct
         }
     }
 
+    /**
+     * Load a given comment data into its own instance based on ID.
+     *
+     * @since   @todo
+     * @static
+     *
+     * @param   int     $comment_id     Comment ID to be loaded.
+     *
+     * return   Comment
+     */
     public static function load($comment_id)
     {
         $data = get_comment($comment_id);

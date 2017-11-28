@@ -427,6 +427,8 @@ final class UpStream
      * @since   @todo
      * @static
      *
+     * @global  $pagenow, $wpdb
+     *
      * @param   array               $queryArgs  Query clauses.
      * @param   WP_Comment_Query    $query      Current query instance.
      *

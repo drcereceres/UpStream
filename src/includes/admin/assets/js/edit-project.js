@@ -1112,7 +1112,6 @@
       sendToggleApprovalStateRequest($(this), true);
     });
 
-    // @todo: might have some bugs.
     $('.cmb2-wrap').on('click', '.c-comments .o-comment[data-id] a[data-action="comment.go_to_reply"]', function(e) {
       e.preventDefault();
 

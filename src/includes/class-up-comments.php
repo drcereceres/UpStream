@@ -1,17 +1,37 @@
 <?php
 namespace UpStream;
 
+// Prevent direct access.
+if (!defined('ABSPATH')) exit;
+
 use UpStream\Traits\Singleton;
 use UpStream\Comment;
 
-// @todo: doc everything
-
+/**
+ * This class will act as a controller handling incoming requests regarding comments on UpStream items.
+ *
+ * @since   @todo
+ */
 class Comments
 {
     use Singleton;
 
+    /**
+     * The current full namespace.
+     *
+     * @since   @todo
+     * @access  private
+     * @static
+     *
+     * @var     string  $namespace
+     */
     private static $namespace;
 
+    /**
+     * Class constructor.
+     *
+     * @since   @todo
+     */
     public function __construct()
     {
         self::$namespace = get_class(self::$instance);
@@ -19,6 +39,16 @@ class Comments
         $this->attachHooks();
     }
 
+    /**
+     * Check if the item type is valid.
+     *
+     * @since   @todo
+     * @static
+     *
+     * @param   string  $itemType   Value to be validated.
+     *
+     * @return  bool
+     */
     public static function isItemTypeValid($itemType)
     {
         $itemTypes = array('project', 'milestone', 'task', 'bug', 'file');
@@ -26,6 +56,12 @@ class Comments
         return in_array($itemType, $itemTypes);
     }
 
+    /**
+     * Attach all relevant actions to handle comments.
+     *
+     * @since   @todo
+     * @access  private
+     */
     private function attachHooks()
     {
         add_action('wp_ajax_upstream:project.add_comment', array(self::$namespace, 'storeComment'));
@@ -36,6 +72,12 @@ class Comments
         add_action('wp_ajax_upstream:project.fetch_comments', array(self::$namespace, 'fetchComments'));
     }
 
+    /**
+     * AJAX endpoint that stores a new comment.
+     *
+     * @since   @todo
+     * @static
+     */
     public static function storeComment()
     {
         header('Content-Type: application/json');
@@ -125,7 +167,7 @@ class Comments
     }
 
     /**
-     * AJAX endpoint that adds a new comment reply to a given project.
+     * AJAX endpoint that adds a new comment reply.
      *
      * @since   @todo
      * @static
@@ -221,7 +263,7 @@ class Comments
     }
 
     /**
-     * AJAX endpoint that removes a comment.
+     * AJAX endpoint that trashes a comment.
      *
      * @since   @todo
      * @static
@@ -297,6 +339,7 @@ class Comments
 
     /**
      * Either approves/unapproves a given comment.
+     * This method is called by the correspondent AJAX endpoints.
      *
      * @since   @todo
      * @access  private
@@ -479,6 +522,12 @@ class Comments
         wp_send_json($response);
     }
 
+    /**
+     * AJAX endpoint that fetches all comments from a given item/project.
+     *
+     * @since   @todo
+     * @static
+     */
     public static function fetchComments()
     {
         header('Content-Type: application/json');
