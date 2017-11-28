@@ -1685,6 +1685,7 @@ class UpStream_Metaboxes_Projects {
 
                                 $commentData->created_at->localized = $date->format($theDateTimeFormat);
 
+                                $commentsCache = array();
                                 if ((int)$comment->comment_parent > 0) {
                                     $parent = get_comment($comment->comment_parent);
                                     $commentsCache = array(
