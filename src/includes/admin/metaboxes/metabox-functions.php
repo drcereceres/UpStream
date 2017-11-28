@@ -466,7 +466,7 @@ function upstream_admin_display_messages()
         'meta_value' => "project"
     ));
 
-    $comments = array();
+    $commentsCache = array();
     if (count($rowset) > 0) {
         $dateFormat = get_option('date_format');
         $timeFormat = get_option('time_format');
@@ -487,6 +487,7 @@ function upstream_admin_display_messages()
                 'parent_id'  => (int)$row->comment_parent,
                 'content'    => $row->comment_content,
                 'state'      => (int)$row->comment_approved,
+                'replies'    => array(),
                 'created_by' => $author,
                 'created_at' => array(
                     'timestamp' => $dateTimestamp,
@@ -508,21 +509,33 @@ function upstream_admin_display_messages()
                 $comment->currentUserCap->can_delete = true;
             }
 
-            $comments[$comment->id] = $comment;
+            $commentsCache[$comment->id] = $comment;
+        }
+
+        foreach ($commentsCache as $comment) {
+            if ($comment->parent_id > 0) {
+                if (isset($commentsCache[$comment->parent_id])) {
+                    $commentsCache[$comment->parent_id]->replies[] = $comment;
+                } else {
+                    unset($commentsCache[$comment->id]);
+                }
+            }
         }
     }
 
     ?>
-    <div class="admin-discussion c-discussion" data-type="project">
+    <div class="c-comments" data-type="project">
         <?php
-        if (count($comments) > 0) {
+        if (count($commentsCache) > 0) {
             if (is_admin()) {
-                foreach ($comments as $comment) {
-                    upstream_admin_display_message_item($comment, $comments);
+                foreach ($commentsCache as $comment) {
+                    upstream_admin_display_message_item($comment, $commentsCache);
                 }
             } else {
-                foreach ($comments as $comment) {
-                    upstream_display_message_item($comment, $comments);
+                foreach ($commentsCache as $comment) {
+                    if ($comment->parent_id === 0) {
+                        upstream_display_message_item($comment, $commentsCache);
+                    }
                 }
             }
         }
@@ -641,53 +654,52 @@ function upstream_admin_display_message_item($comment, $comments = array())
 function upstream_display_message_item($comment, $comments = array())
 {
     global $wp_embed;
+
+    $isApproved = (int)$comment->state === 1;
+    $currentUserCapabilities = (object)array(
+        'can_reply'    => isset($comment->currentUserCap->can_reply) ? (bool)$comment->currentUserCap->can_reply : false,
+        'can_moderate' => isset($comment->currentUserCap->can_moderate) ? (bool)$comment->currentUserCap->can_moderate : false,
+        'can_delete'   => isset($comment->currentUserCap->can_delete) ? (bool)$comment->currentUserCap->can_delete : false
+    );
     ?>
-    <div class="media o-comment <?php echo (int)$comment->state === 1 ? 's-status-approved' : 's-status-unapproved'; ?>" id="comment-<?php echo $comment->id; ?>" data-id="<?php echo $comment->id; ?>">
-      <div class="media-left">
-        <img class="media-object" src="<?php echo $comment->created_by->avatar; ?>" width="30">
-        <?php if ((int)$comment->state !== 1 && isset($comment->currentUserCap) && $comment->currentUserCap->can_delete): ?>
-        <div class="u-text-center">
-          <i class="fa fa-eye-slash u-color-gray" title="<?php _e("This comment is not visible by regular users.", 'upstream'); ?>" style="margin-top: 2px;"></i>
-        </div>
-        <?php endif; ?>
-      </div>
-      <div class="media-body">
-        <div class="media-heading">
-          <h4><?php echo $comment->created_by->name; ?></h4>
-          <?php if (isset($comment->parent_id) && $comment->parent_id > 0): ?>
-          <div>
-            <?php
-            if (isset($comments[$comment->parent_id])) {
-                printf(
-                    __('In reply to %s', 'upstream'),
-                    sprintf(
-                        '<a href="#%s" data-action="comment.go_to_reply">%s</a>',
-                        'comment-' . $comment->parent_id,
-                        $comments[$comment->parent_id]->created_by->name
-                    )
-                );
-            } else {
-                printf(
-                    '%s&nbsp;<i style="color: #BDC3C7;">(%s)</i>',
-                    __('In reply to'),
-                    __('comment not found', 'upstream')
-                );
-            }
-            ?>
+    <div class="o-comment s-status-<?php echo $isApproved ? 'approved' : 'unapproved'; ?>" id="comment-<?php echo $comment->id; ?>" data-id="<?php echo $comment->id; ?>">
+      <div class="o-comment__body">
+        <div class="o-comment__body__left">
+          <img class="o-comment__user_photo" src="<?php echo $comment->created_by->avatar; ?>" width="30">
+          <?php if (!$isApproved && $currentUserCapabilities->can_moderate): ?>
+          <div class="u-text-center">
+            <i class="fa fa-eye-slash u-color-gray" data-toggle="tooltip" title="<?php _e("This comment and its replies are not visible by regular users.", 'upstream'); ?>" style="margin-top: 2px;"></i>
           </div>
           <?php endif; ?>
-          <time title="<?php echo $comment->created_at->localized; ?>" data-toggle="tooltip">
-            <?php echo $comment->created_at->humanized; ?>
-          </time>
         </div>
-        <div class="o-comment__content">
-          <?php echo $wp_embed->autoembed(wpautop($comment->content)); ?>
-        </div>
-        <div class="media-footer">
-          <div class="o-comment__actions">
+        <div class="o-comment__body__right">
+          <div class="o-comment__body__head">
+            <div class="o-comment__user_name"><?php echo $comment->created_by->name; ?></div>
+            <div class="o-comment__reply_info">
+              <?php
+              // @todo: reimplement this feature
+              ?>
+            </div>
+            <div class="o-comment__date" data-toggle="tooltip" title="<?php echo $comment->created_at->localized; ?>"><?php echo $comment->created_at->humanized; ?></div>
+          </div>
+          <div class="o-comment__content"><?php echo $wp_embed->autoembed(wpautop($comment->content)); ?></div>
+          <div class="o-comment__body__footer">
+            <?php
+            /*
+            @todo: turn this action into a filter
+            @todo: add toggle comment replies control by default
+            */
+            ?>
             <?php do_action('upstream:project.comments.comment_controls', $comment); ?>
           </div>
         </div>
+      </div>
+      <div class="o-comment-replies">
+        <?php if (isset($comment->replies) && count($comment->replies) > 0): ?>
+        <?php foreach ($comment->replies as $commentReply): ?>
+          <?php upstream_display_message_item($commentReply, $comments); ?>
+        <?php endforeach; ?>
+        <?php endif; ?>
       </div>
     </div>
     <?php

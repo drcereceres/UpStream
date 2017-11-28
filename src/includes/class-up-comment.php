@@ -295,9 +295,9 @@ class Comment extends Struct
             return $html;
         } else {
             if ((bool)$useAdminLayout === true) {
-                upstream_admin_display_message_item($this);
+                upstream_admin_display_message_item($this, $commentsCache);
             } else {
-                upstream_display_message_item($this);
+                upstream_display_message_item($this, $commentsCache);
             }
         }
     }

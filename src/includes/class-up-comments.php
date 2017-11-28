@@ -599,14 +599,15 @@ class Comments
                     ));
 
                     if (count($comments) > 0) {
+                        $commentsCache = array();
                         foreach ($comments as $comment) {
                             $author = $usersCache[(int)$comment->user_id];
 
                             $date = \DateTime::createFromFormat('Y-m-d H:i:s', $comment->comment_date_gmt, $utcTimeZone);
 
                             $commentData = json_decode(json_encode(array(
-                                'id'         => $comment->comment_ID,
-                                'parent_id'  => $comment->comment_parent,
+                                'id'         => (int)$comment->comment_ID,
+                                'parent_id'  => (int)$comment->comment_parent,
                                 'content'    => $comment->comment_content,
                                 'state'      => $comment->comment_approved,
                                 'created_by' => $author,
@@ -621,48 +622,39 @@ class Comments
                                     'can_reply'    => $userCanReply,
                                     'can_moderate' => $userCanModerate,
                                     'can_delete'   => $userCanDelete || $author->id === $user->ID
-                                )
+                                ),
+                                'replies' => array()
                             )));
 
                             $date->setTimezone($currentTimezone);
 
                             $commentData->created_at->localized = $date->format($theDateTimeFormat);
 
-                            $commentsCache = array();
+                            $commentsCache[$commentData->id] = $commentData;
+                        }
 
-                            if ((int)$comment->comment_parent > 0) {
-                                $parentComment = get_comment($comment->comment_parent);
-                                if (is_numeric($parentComment->comment_approved)) {
-                                    if ((bool)$parentComment->comment_approved) {
-                                        $commentsCache = array(
-                                            $comment->comment_parent => json_decode(json_encode(array(
-                                                'created_by' => array(
-                                                    'name'   => $parentComment->comment_author
-                                                )
-                                            )))
-                                        );
-                                    } else if ($userCanModerate) {
-                                        $commentsCache = array(
-                                            $comment->comment_parent => json_decode(json_encode(array(
-                                                'created_by' => array(
-                                                    'name'   => $parentComment->comment_author
-                                                )
-                                            )))
-                                        );
-                                    }
+                        foreach ($commentsCache as $comment) {
+                            if ($comment->parent_id > 0) {
+                                if (isset($commentsCache[$comment->parent_id])) {
+                                    $commentsCache[$comment->parent_id]->replies[] = $comment;
+                                } else {
+                                    unset($commentsCache[$comment->id]);
                                 }
-                                unset($parentComment);
                             }
+                        }
 
-                            ob_start();
-                            if ($useAdminLayout) {
-                                upstream_admin_display_message_item($commentData, $commentsCache);
-                            } else {
-                                upstream_display_message_item($commentData, $commentsCache);
+                        foreach ($commentsCache as $comment) {
+                            if ($comment->parent_id === 0) {
+                                ob_start();
+                                if ($useAdminLayout) {
+                                    upstream_admin_display_message_item($comment, array());
+                                } else {
+                                    upstream_display_message_item($comment, array());
+                                }
+
+                                $response['data'][] = trim(ob_get_contents());
+                                ob_end_clean();
                             }
-
-                            $response['data'][] = ob_get_contents();
-                            ob_end_clean();
                         }
                     }
                 }
