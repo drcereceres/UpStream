@@ -1158,3 +1158,21 @@ function upstreamAreCommentsEnabledOnMilestones()
 
     return $allow;
 }
+
+/**
+ * Check if comments are allowed on tasks.
+ *
+ * @since   @todo
+ *
+ * @return  bool
+ */
+function upstreamAreCommentsEnabledOnTasks()
+{
+    $options = get_option('upstream_general');
+
+    $optionName = 'disable_comments_on_tasks';
+
+    $allow = isset($options[$optionName]) ? (bool)$options[$optionName] : true;
+
+    return $allow;
+}

@@ -637,15 +637,20 @@ class UpStream_Metaboxes_Projects {
                 'permissions'       => '',
                 'attributes'        => array(
                     'class' => 'hidden',
-                ),
-                'before_row' => '
+                )
+            );
+
+            $allowComments = upstreamAreCommentsEnabledOnTasks();
+            if ($allowComments) {
+                $fields[0]['before_row'] = '
                     <div class="up-c-tabs-header nav-tab-wrapper nav-tab-wrapper">
                       <a href="#" class="nav-tab nav-tab-active up-o-tab up-o-tab-data" role="tab" data-target=".up-c-tab-content-data">' . __('Data', 'upstream') . '</a>
                       <a href="#" class="nav-tab up-o-tab up-o-tab-comments" role="tab" data-target=".up-c-tab-content-comments">' . __('Comments') . '</a>
                     </div>
                     <div class="up-c-tabs-content">
-                      <div class="up-o-tab-content up-c-tab-content-data is-active">'
-            );
+                      <div class="up-o-tab-content up-c-tab-content-data is-active">';
+            }
+
             $fields[1] = array(
                 'id'                => 'created_by',
                 'type'              => 'text',
@@ -768,12 +773,14 @@ class UpStream_Metaboxes_Projects {
                 );
             }
 
-            $fields[50] = array(
-                'name' => '&nbsp;',
-                'id'   => 'comments',
-                'type' => 'comments',
-                'after_row' => '</div><div class="up-o-tab-content up-c-tab-content-comments"></div></div>'
-            );
+            if ($allowComments) {
+                $fields[50] = array(
+                    'name' => '&nbsp;',
+                    'id'   => 'comments',
+                    'type' => 'comments',
+                    'after_row' => '</div><div class="up-o-tab-content up-c-tab-content-comments"></div></div>'
+                );
+            }
 
             // set up the group grid plugin
             $cmb2GroupGrid = $cmb2Grid->addCmb2GroupGrid( $group_field_id );

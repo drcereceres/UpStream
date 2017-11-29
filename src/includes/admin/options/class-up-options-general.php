@@ -336,6 +336,17 @@ class UpStream_Options_General {
                     )
                 ),
                 array(
+                    'name'    => __('Comments on Tasks', 'upstream'),
+                    'id'      => 'disable_comments_on_tasks',
+                    'type'    => 'radio_inline',
+                    'desc'    => sprintf(__('Either allow comments on %s or hide the section.', 'upstream'), __('Tasks', 'upstream')),
+                    'default' => '1',
+                    'options' => array(
+                        '1' => __('Allow comments on Tasks', 'upstream'),
+                        '0' => __('Hide section', 'upstream')
+                    )
+                ),
+                array(
                     'name' => __( 'Remove Data', 'upstream' ),
                     'id'   => 'remove_data',
                     'type' => 'multicheck',
