@@ -426,11 +426,167 @@ function upstream_admin_output_bug_hidden_data() {
 /* ======================================================================================
                                         DISCUSSION
    ====================================================================================== */
+function upstreamRenderCommentsBox($item_id = "", $itemType = "project", $project_id = 0, $renderControls = true, $returnAsHtml = false)
+{
+    $project_id = (int)$project_id;
+    if ($project_id <= 0) {
+        $project_id = upstream_post_id();
+        if ($project_id <= 0) {
+            return;
+        }
+    }
+
+    $itemType = trim(strtolower($itemType));
+    if (
+        !in_array($itemType, array('project', 'milestone', 'task', 'bug', 'file'))
+        || empty($item_id)
+    ) {
+        return;
+    }
+
+    $rowsetUsers = get_users();
+    $users = array();
+    foreach ($rowsetUsers as $user) {
+        $users[(int)$user->ID] = (object)array(
+            'id'     => (int)$user->ID,
+            'name'   => $user->display_name,
+            'avatar' => getUserAvatarURL($user->ID)
+        );
+    }
+    unset($rowsetUsers);
+
+    $user = wp_get_current_user();
+    $userHasAdminCapabilities = isUserEitherManagerOrAdmin();
+    $userCanComment = !$userHasAdminCapabilities ? user_can($user, 'publish_project_discussion') : true;
+    $userCanModerate = !$userHasAdminCapabilities ? user_can($user, 'moderate_comments') : true;
+    $userCanDelete = !$userHasAdminCapabilities ? ($userCanModerate || user_can($user, 'delete_project_discussion')) : true;
+
+    $commentsStatuses = array('approve');
+    if ($userHasAdminCapabilities || $userCanModerate) {
+        $commentsStatuses[] = 'hold';
+    }
+
+    $queryParams = array(
+        'post_id' => $project_id,
+        'orderby' => 'comment_date_gmt',
+        'order'   => 'DESC',
+        'type'    => 'comment',
+        'status'  => $commentsStatuses
+    );
+
+    if ($itemType === "project") {
+        $queryParams['meta_key'] = "type";
+        $queryParams['meta_value'] = $itemType;
+    } else {
+        $queryParams['meta_query'] = array(
+            'relation' => 'AND',
+            array(
+                'key'   => 'type',
+                'value' => $itemType
+            ),
+            array(
+                'key'   => 'id',
+                'value' => $item_id
+            )
+        );
+    }
+
+    $rowset = (array)get_comments($queryParams);
+
+    $commentsCache = array();
+    if (count($rowset) > 0) {
+        $dateFormat = get_option('date_format');
+        $timeFormat = get_option('time_format');
+        $theDateTimeFormat = $dateFormat . ' ' . $timeFormat;
+        $utcTimeZone = new DateTimeZone('UTC');
+        $currentTimezone = upstreamGetTimeZone();
+        $currentTimestamp = time();
+
+        foreach ($rowset as $row) {
+            $author = $users[(int)$row->user_id];
+
+            $date = DateTime::createFromFormat('Y-m-d H:i:s', $row->comment_date_gmt, $utcTimeZone);
+            $date->setTimezone($currentTimezone);
+            $dateTimestamp = $date->getTimestamp();
+
+            $comment = json_decode(json_encode(array(
+                'id'         => (int)$row->comment_ID,
+                'parent_id'  => (int)$row->comment_parent,
+                'content'    => $row->comment_content,
+                'state'      => (int)$row->comment_approved,
+                'replies'    => array(),
+                'created_by' => $author,
+                'created_at' => array(
+                    'timestamp' => $dateTimestamp,
+                    'utc'       => $row->comment_date_gmt,
+                    'localized' => $date->format($theDateTimeFormat),
+                    'humanized' => sprintf(
+                        _x('%s ago', '%s = human-readable time difference', 'upstream'),
+                        human_time_diff($dateTimestamp, $currentTimestamp)
+                    )
+                ),
+                'currentUserCap' => array(
+                    'can_reply'    => $userCanComment,
+                    'can_moderate' => $userCanModerate,
+                    'can_delete'   => $userCanDelete
+                )
+            )));
+
+            if ($author->id == $user->ID) {
+                $comment->currentUserCap->can_delete = true;
+            }
+
+            $commentsCache[$comment->id] = $comment;
+        }
+
+        foreach ($commentsCache as $comment) {
+            if ($comment->parent_id > 0) {
+                if (isset($commentsCache[$comment->parent_id])) {
+                    $commentsCache[$comment->parent_id]->replies[] = $comment;
+                } else {
+                    unset($commentsCache[$comment->id]);
+                }
+            }
+        }
+    }
+
+    if ($returnAsHtml) {
+        ob_start();
+    }
+    ?>
+    <div class="c-comments" data-type="project">
+        <?php
+        if (count($commentsCache) > 0) {
+            if (is_admin()) {
+                foreach ($commentsCache as $comment) {
+                    if ($comment->parent_id === 0) {
+                        upstream_admin_display_message_item($comment, $commentsCache, $renderControls);
+                    }
+                }
+            } else {
+                foreach ($commentsCache as $comment) {
+                    if ($comment->parent_id === 0) {
+                        upstream_display_message_item($comment, $commentsCache, $renderControls);
+                    }
+                }
+            }
+        }
+        ?>
+    </div>
+    <?php
+
+    if ($returnAsHtml) {
+        $contentHtml = ob_get_contents();
+        ob_end_clean();
+
+        return $contentHtml;
+    }
+}
 
 /**
  * Outputs comments in the admin.
  */
-function upstream_admin_display_messages()
+function upstream_admin_display_messages($returnHtml = false)
 {
     $project_id = upstream_post_id();
     if (!$project_id) return;
@@ -524,6 +680,9 @@ function upstream_admin_display_messages()
         }
     }
 
+    if ($returnHtml) {
+        ob_start();
+    }
     ?>
     <div class="c-comments" data-type="project">
         <?php
@@ -545,9 +704,16 @@ function upstream_admin_display_messages()
         ?>
     </div>
     <?php
+
+    if ($returnHtml) {
+        $contentHtml = ob_get_contents();
+        ob_end_clean();
+
+        return $contentHtml;
+    }
 }
 
-function upstream_admin_display_message_item($comment, $comments = array())
+function upstream_admin_display_message_item($comment, $comments = array(), $renderControls = true)
 {
     global $wp_embed;
 
@@ -581,47 +747,49 @@ function upstream_admin_display_message_item($comment, $comments = array())
           <div class="o-comment__content"><?php echo $wp_embed->autoembed(wpautop($comment->content)); ?></div>
           <div class="o-comment__body__footer">
             <?php
-            $controls = array();
-            if ($currentUserCapabilities->can_moderate) {
-                if ($isApproved) {
-                    $controls[0] = array(
-                        'action' => 'unapprove',
-                        'nonce'  => "unapprove_comment",
-                        'label'  => __('Unapprove')
-                    );
-                } else {
-                    $controls[2] = array(
-                        'action' => 'approve',
-                        'nonce'  => "approve_comment",
-                        'label'  => __('Approve')
+            if ($renderControls) {
+                $controls = array();
+                if ($currentUserCapabilities->can_moderate) {
+                    if ($isApproved) {
+                        $controls[0] = array(
+                            'action' => 'unapprove',
+                            'nonce'  => "unapprove_comment",
+                            'label'  => __('Unapprove')
+                        );
+                    } else {
+                        $controls[2] = array(
+                            'action' => 'approve',
+                            'nonce'  => "approve_comment",
+                            'label'  => __('Approve')
+                        );
+                    }
+                }
+
+                if ($currentUserCapabilities->can_reply) {
+                    $controls[1] = array(
+                        'action' => 'reply',
+                        'nonce'  => "add_comment_reply",
+                        'label'  => __('Reply')
                     );
                 }
-            }
 
-            if ($currentUserCapabilities->can_reply) {
-                $controls[1] = array(
-                    'action' => 'reply',
-                    'nonce'  => "add_comment_reply",
-                    'label'  => __('Reply')
-                );
-            }
-
-            if ($currentUserCapabilities->can_delete) {
-                $controls[] = array(
-                    'action' => 'trash',
-                    'nonce'  => "trash_comment",
-                    'label'  => __('Delete')
-                );
-            }
-
-            if (count($controls) > 0) {
-                foreach ($controls as $control) {
-                    printf(
-                        '<a href="#" class="o-comment-control" data-action="comment.%s" data-nonce="%s">%s</a>',
-                        $control['action'],
-                        wp_create_nonce('upstream:project.' . $control['nonce'] . ':' . $comment->id),
-                        $control['label']
+                if ($currentUserCapabilities->can_delete) {
+                    $controls[] = array(
+                        'action' => 'trash',
+                        'nonce'  => "trash_comment",
+                        'label'  => __('Delete')
                     );
+                }
+
+                if (count($controls) > 0) {
+                    foreach ($controls as $control) {
+                        printf(
+                            '<a href="#" class="o-comment-control" data-action="comment.%s" data-nonce="%s">%s</a>',
+                            $control['action'],
+                            wp_create_nonce('upstream:project.' . $control['nonce'] . ':' . $comment->id),
+                            $control['label']
+                        );
+                    }
                 }
             }
             ?>
@@ -631,7 +799,7 @@ function upstream_admin_display_message_item($comment, $comments = array())
       <div class="o-comment-replies">
         <?php if (isset($comment->replies) && count($comment->replies) > 0): ?>
         <?php foreach ($comment->replies as $commentReply): ?>
-          <?php upstream_admin_display_message_item($commentReply, $comments); ?>
+          <?php upstream_admin_display_message_item($commentReply, $comments, $renderControls); ?>
         <?php endforeach; ?>
         <?php endif; ?>
       </div>
@@ -639,7 +807,7 @@ function upstream_admin_display_message_item($comment, $comments = array())
     <?php
 }
 
-function upstream_display_message_item($comment, $comments = array())
+function upstream_display_message_item($comment, $comments = array(), $renderControls = true)
 {
     global $wp_embed;
 
@@ -677,15 +845,18 @@ function upstream_display_message_item($comment, $comments = array())
             @todo: turn this action into a filter
             @todo: add toggle comment replies control by default
             */
+
+            if ($renderControls) {
+                do_action('upstream:project.comments.comment_controls', $comment);
+            }
             ?>
-            <?php do_action('upstream:project.comments.comment_controls', $comment); ?>
           </div>
         </div>
       </div>
       <div class="o-comment-replies">
         <?php if (isset($comment->replies) && count($comment->replies) > 0): ?>
         <?php foreach ($comment->replies as $commentReply): ?>
-          <?php upstream_display_message_item($commentReply, $comments); ?>
+          <?php upstream_display_message_item($commentReply, $comments, $renderControls); ?>
         <?php endforeach; ?>
         <?php endif; ?>
       </div>

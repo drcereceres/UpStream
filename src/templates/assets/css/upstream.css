@@ -317,3 +317,7 @@ table.dataTable tr.child td.child {
   visibility: visible;
   opacity: 1;
 }
+
+table.datatable > tbody > tr.child > td.child > ul {
+  width: 100%;
+}
