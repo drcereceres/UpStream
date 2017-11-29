@@ -1194,3 +1194,21 @@ function upstreamAreCommentsEnabledOnBugs()
 
     return $allow;
 }
+
+/**
+ * Check if comments are allowed on files.
+ *
+ * @since   @todo
+ *
+ * @return  bool
+ */
+function upstreamAreCommentsEnabledOnFiles()
+{
+    $options = get_option('upstream_general');
+
+    $optionName = 'disable_comments_on_files';
+
+    $allow = isset($options[$optionName]) ? (bool)$options[$optionName] : true;
+
+    return $allow;
+}
