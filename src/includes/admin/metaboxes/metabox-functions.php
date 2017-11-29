@@ -439,7 +439,7 @@ function upstreamRenderCommentsBox($item_id = "", $itemType = "project", $projec
     $itemType = trim(strtolower($itemType));
     if (
         !in_array($itemType, array('project', 'milestone', 'task', 'bug', 'file'))
-        || empty($item_id)
+        || ($itemType !== "project" && empty($item_id))
     ) {
         return;
     }
