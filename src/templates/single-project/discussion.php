@@ -25,7 +25,7 @@ $collapseBox = isset($pluginOptions['collapse_project_discussion']) && (bool)$pl
       <div class="clearfix"></div>
     </div>
     <div class="x_content">
-      <?php upstream_admin_display_messages(); ?>
+      <?php upstreamRenderCommentsBox(); ?>
     </div>
   </div>
 </div>

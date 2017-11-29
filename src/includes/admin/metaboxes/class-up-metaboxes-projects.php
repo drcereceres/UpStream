@@ -1536,7 +1536,7 @@ class UpStream_Metaboxes_Projects {
                 'permissions'       => 'publish_project_discussion',
                 'before'            => 'upstream_add_field_attributes',
                 'after_field'       => '<p class="u-text-right"><button class="button button-primary" type="button" data-action="comments.add_comment" data-nonce="' . wp_create_nonce('upstream:project.add_comment') . '">' . __('Add Comment') . '</button></p></div></div>',
-                'after_row'         => 'upstream_admin_display_messages',
+                'after_row'         => 'upstreamRenderCommentsBox',
                 'options'           => array(
                     'media_buttons' => true,
                     'textarea_rows' => 5
