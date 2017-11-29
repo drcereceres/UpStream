@@ -135,6 +135,18 @@ UpStream does not use the existing styling of your theme. The features and the v
 The format is based on [Keep a Changelog](http://keepachangelog.com)
 and this project adheres to [Semantic Versioning](http://semver.org).
 
+= [@todo] - @todo =
+
+Added:
+* UpStream comments are now integrated with WordPress Comments
+
+Changed:
+* "Discussion" was renamed to "Comments"
+* All project comments on Discussion were moved to WordPress Comments
+
+Deprecated:
+* upstream_disable_discussions()
+
 = [1.12.5] - 2017-11-09 =
 
 Added:
