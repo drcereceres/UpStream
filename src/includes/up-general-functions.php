@@ -1140,3 +1140,21 @@ function upstreamAreProjectCommentsEnabled()
 
     return $allow;
 }
+
+/**
+ * Check if comments are allowed on milestones.
+ *
+ * @since   @todo
+ *
+ * @return  bool
+ */
+function upstreamAreCommentsEnabledOnMilestones()
+{
+    $options = get_option('upstream_general');
+
+    $optionName = 'disable_comments_on_milestones';
+
+    $allow = isset($options[$optionName]) ? (bool)$options[$optionName] : true;
+
+    return $allow;
+}

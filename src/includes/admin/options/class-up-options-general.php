@@ -314,16 +314,26 @@ class UpStream_Options_General {
                     'select_all_button' => false
                 ),
                 array(
-                    'name' => __('Comments on Projects', 'upstream'),
-                    'id'   => 'disable_project_comments',
-                    'type' => 'radio_inline',
-                    'desc' => __('Either allow comments on projects on both the frontend and the admin area or hide the section.', 'upstream'),
+                    'name'    => __('Comments on Projects', 'upstream'),
+                    'id'      => 'disable_project_comments',
+                    'type'    => 'radio_inline',
+                    'desc'    => __('Either allow comments on projects on both the frontend and the admin area or hide the section.', 'upstream'),
                     'default' => '1',
                     'options' => array(
-                        '1' => __('Allow comments', 'upstream'),
+                        '1' => __('Allow comments on projects', 'upstream'),
                         '0' => __('Hide section', 'upstream')
-                    ),
-                    'select_all_button' => false
+                    )
+                ),
+                array(
+                    'name'    => __('Comments on Milestones', 'upstream'),
+                    'id'      => 'disable_comments_on_milestones',
+                    'type'    => 'radio_inline',
+                    'desc'    => sprintf(__('Either allow comments on %s or hide the section.', 'upstream'), __('Milestones', 'upstream')),
+                    'default' => '1',
+                    'options' => array(
+                        '1' => __('Allow comments on Milestones', 'upstream'),
+                        '0' => __('Hide section', 'upstream')
+                    )
                 ),
                 array(
                     'name' => __( 'Remove Data', 'upstream' ),
