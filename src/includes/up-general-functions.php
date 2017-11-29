@@ -827,15 +827,16 @@ function upstream_disable_files()
     return $areFilesDisabled;
 }
 
+/**
+ * This function is deprecated. Use upstreamAreProjectCommentsEnabled() instead.
+ *
+ * @deprecated
+ */
 function upstream_disable_discussions()
 {
-    $options = get_option('upstream_general');
+    __doing_it_wrong(__FUNCTION__, 'This function is deprecated in favor of upstreamAreProjectCommentsEnabled().', UPSTREAM_VERSION);
 
-    $disable_discussion = isset($options['disable_discussion']) ? (array)$options['disable_discussion'] : array('no');
-
-    $areDiscussionsDisabled = $disable_discussion[0] === 'yes';
-
-    return $areDiscussionsDisabled;
+    return upstreamAreProjectCommentsEnabled();
 }
 
 /**
@@ -1108,4 +1109,34 @@ function upstreamGetTimeZone()
     }
 
     return $theTimeZone;
+}
+
+/**
+ * Check if comments are allowed on projects.
+ *
+ * @since   @todo
+ *
+ * @return  bool
+ */
+function upstreamAreProjectCommentsEnabled()
+{
+    // Retrieve UpStream general options.
+    $options = get_option('upstream_general');
+
+    $optionName = 'disable_project_comments';
+    // Check if the option exists.
+    if (isset($options[$optionName])) {
+        $allow = (bool)$options[$optionName];
+    } else {
+        $legacyOptionName = 'disable_discussion';
+        // Check if user has legacy option set.
+        if (isset($options[$legacyOptionName])) {
+            $allow = strtoupper(trim($options[$legacyOptionName])) !== 'YES';
+        } else {
+            // Default value.
+            $allow = true;
+        }
+    }
+
+    return $allow;
 }

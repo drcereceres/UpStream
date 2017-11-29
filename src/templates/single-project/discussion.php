@@ -3,7 +3,7 @@
 if (!defined('ABSPATH')) exit;
 ?>
 
-<?php if (!upstream_disable_discussions() && !upstream_are_comments_disabled()):
+<?php if (upstreamAreProjectCommentsEnabled() && !upstream_are_comments_disabled()):
 $pluginOptions = get_option('upstream_general');
 $collapseBox = isset($pluginOptions['collapse_project_discussion']) && (bool)$pluginOptions['collapse_project_discussion'] === true;
 ?>

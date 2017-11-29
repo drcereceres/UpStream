@@ -314,13 +314,14 @@ class UpStream_Options_General {
                     'select_all_button' => false
                 ),
                 array(
-                    'name' => __( 'Disable Discussions', 'upstream' ),
-                    'id'   => 'disable_discussion',
-                    'type' => 'multicheck',
-                    'desc' => __( 'Ticking this box will disable the Discussion section on both the frontend and the admin area.', 'upstream' ),
-                    'default' => '',
+                    'name' => __('Comments on Projects', 'upstream'),
+                    'id'   => 'disable_project_comments',
+                    'type' => 'radio_inline',
+                    'desc' => __('Either allow comments on projects on both the frontend and the admin area or hide the section.', 'upstream'),
+                    'default' => '1',
                     'options' => array(
-                        'yes' => __('Disable the Discussion section?', 'upstream')
+                        '1' => __('Allow comments', 'upstream'),
+                        '0' => __('Hide section', 'upstream')
                     ),
                     'select_all_button' => false
                 ),

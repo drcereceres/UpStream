@@ -34,6 +34,17 @@ class UpStream_Metaboxes_Projects {
      **/
     public static $instance = null;
 
+    /**
+     * Indicates if comments section is enabled.
+     *
+     * @since   @todo
+     * @access  private
+     * @static
+     *
+     * @var     bool    $allowProjectComments
+     */
+    private static $allowProjectComments = true;
+
     public function __construct() {
         $this->project_label = upstream_project_label();
 
@@ -80,7 +91,9 @@ class UpStream_Metaboxes_Projects {
             self::$instance->details();
             self::$instance->sidebar_low();
 
-            if (!upstream_disable_discussions()) {
+            self::$allowProjectComments = upstreamAreProjectCommentsEnabled();
+
+            if (self::$allowProjectComments) {
                 self::$instance->comments();
             }
 
@@ -1475,7 +1488,7 @@ class UpStream_Metaboxes_Projects {
         $areCommentsDisabled = upstream_are_comments_disabled();
         $userHasAdminPermissions = upstream_admin_permissions('disable_project_comments');
 
-        if (upstream_disable_discussions() || ($areCommentsDisabled && !$userHasAdminPermissions)) {
+        if (!self::$allowProjectComments || ($areCommentsDisabled && !$userHasAdminPermissions)) {
             return;
         }
 
