@@ -139,6 +139,7 @@ and this project adheres to [Semantic Versioning](http://semver.org).
 
 Added:
 * Discussion/Comments are now integrated with WordPress Comments
+* Added support for comment replies
 * Added Discussion/Comments to Milestones, Tasks, Bugs, Files
 
 Changed:
