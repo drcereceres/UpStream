@@ -247,3 +247,10 @@ table.dataTable tr.child td.child {
 .top_nav .nav_menu {
   z-index: 999;
 }
+
+.datatable > tbody > tr > td[data-name="title"] {
+  max-width: 250px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
