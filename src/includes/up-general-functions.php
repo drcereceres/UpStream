@@ -827,15 +827,16 @@ function upstream_disable_files()
     return $areFilesDisabled;
 }
 
+/**
+ * This function is deprecated. Use upstreamAreProjectCommentsEnabled() instead.
+ *
+ * @deprecated
+ */
 function upstream_disable_discussions()
 {
-    $options = get_option('upstream_general');
+    __doing_it_wrong(__FUNCTION__, 'This function is deprecated in favor of upstreamAreProjectCommentsEnabled().', UPSTREAM_VERSION);
 
-    $disable_discussion = isset($options['disable_discussion']) ? (array)$options['disable_discussion'] : array('no');
-
-    $areDiscussionsDisabled = $disable_discussion[0] === 'yes';
-
-    return $areDiscussionsDisabled;
+    return upstreamAreProjectCommentsEnabled();
 }
 
 /**
@@ -1054,9 +1055,11 @@ function getUserAvatarURL($user_id)
  *
  * @return  bool
  */
-function isUserEitherManagerOrAdmin()
+function isUserEitherManagerOrAdmin($user = null)
 {
-    $user = wp_get_current_user();
+    if (empty($user) || !($user instanceof \WP_User)) {
+        $user = wp_get_current_user();
+    }
 
     if ($user->ID > 0 && isset($user->roles)) {
         return count(array_intersect((array)$user->roles, array('administrator', 'upstream_manager'))) > 0;
@@ -1106,4 +1109,106 @@ function upstreamGetTimeZone()
     }
 
     return $theTimeZone;
+}
+
+/**
+ * Check if comments are allowed on projects.
+ *
+ * @since   1.13.0
+ *
+ * @return  bool
+ */
+function upstreamAreProjectCommentsEnabled()
+{
+    // Retrieve UpStream general options.
+    $options = get_option('upstream_general');
+
+    $optionName = 'disable_project_comments';
+    // Check if the option exists.
+    if (isset($options[$optionName])) {
+        $allow = (bool)$options[$optionName];
+    } else {
+        $legacyOptionName = 'disable_discussion';
+        // Check if user has legacy option set.
+        if (isset($options[$legacyOptionName])) {
+            $allow = strtoupper(trim($options[$legacyOptionName])) !== 'YES';
+        } else {
+            // Default value.
+            $allow = true;
+        }
+    }
+
+    return $allow;
+}
+
+/**
+ * Check if comments are allowed on milestones.
+ *
+ * @since   1.13.0
+ *
+ * @return  bool
+ */
+function upstreamAreCommentsEnabledOnMilestones()
+{
+    $options = get_option('upstream_general');
+
+    $optionName = 'disable_comments_on_milestones';
+
+    $allow = isset($options[$optionName]) ? (bool)$options[$optionName] : true;
+
+    return $allow;
+}
+
+/**
+ * Check if comments are allowed on tasks.
+ *
+ * @since   1.13.0
+ *
+ * @return  bool
+ */
+function upstreamAreCommentsEnabledOnTasks()
+{
+    $options = get_option('upstream_general');
+
+    $optionName = 'disable_comments_on_tasks';
+
+    $allow = isset($options[$optionName]) ? (bool)$options[$optionName] : true;
+
+    return $allow;
+}
+
+/**
+ * Check if comments are allowed on bugs.
+ *
+ * @since   1.13.0
+ *
+ * @return  bool
+ */
+function upstreamAreCommentsEnabledOnBugs()
+{
+    $options = get_option('upstream_general');
+
+    $optionName = 'disable_comments_on_bugs';
+
+    $allow = isset($options[$optionName]) ? (bool)$options[$optionName] : true;
+
+    return $allow;
+}
+
+/**
+ * Check if comments are allowed on files.
+ *
+ * @since   1.13.0
+ *
+ * @return  bool
+ */
+function upstreamAreCommentsEnabledOnFiles()
+{
+    $options = get_option('upstream_general');
+
+    $optionName = 'disable_comments_on_files';
+
+    $allow = isset($options[$optionName]) ? (bool)$options[$optionName] : true;
+
+    return $allow;
 }

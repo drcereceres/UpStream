@@ -101,6 +101,18 @@ function upstream_milestone_table_settings() {
         unset($columnsSchema['tasks']);
     }
 
+    $allowComments = upstreamAreCommentsEnabledOnMilestones();
+    if ($allowComments) {
+        $columnsSchema['comments'] = array(
+            'display'       => true,
+            'type'          => 'comments',
+            'heading'       => __('Comments'),
+            'heading_class' => 'none',
+            'row_class'     => "",
+            'item_type'     => "milestone"
+        );
+    }
+
     $settings = apply_filters( 'upstream_milestone_table_settings', $columnsSchema);
 
     return $settings;
@@ -204,6 +216,18 @@ function upstream_task_table_settings() {
         unset($tableSettings['milestone']);
     }
 
+    $allowComments = upstreamAreCommentsEnabledOnTasks();
+    if ($allowComments) {
+        $tableSettings['comments'] = array(
+            'display'       => true,
+            'type'          => 'comments',
+            'heading'       => __('Comments'),
+            'heading_class' => 'none',
+            'row_class'     => "",
+            'item_type'     => "task"
+        );
+    }
+
     $settings = apply_filters('upstream_task_table_settings', $tableSettings);
 
     return $settings;
@@ -293,11 +317,23 @@ function upstream_bug_table_settings() {
             'heading'       => __( 'File', 'upstream' ),
             'heading_class' => '',
             'row_class'     => '',
-        ),
+        )
     );
 
     if (upstream_disable_files()) {
         unset($columnsSchema['file']);
+    }
+
+    $allowComments = upstreamAreCommentsEnabledOnBugs();
+    if ($allowComments) {
+        $columnsSchema['comments'] = array(
+            'display'       => true,
+            'type'          => 'comments',
+            'heading'       => __('Comments'),
+            'heading_class' => 'none',
+            'row_class'     => "",
+            'item_type'     => "bug"
+        );
     }
 
     $settings = apply_filters( 'upstream_bug_table_settings', $columnsSchema);
@@ -320,7 +356,7 @@ function upstream_file_table_settings() {
      * heading_class | string | A custom class for the column heading
      * row_class | string | A custom class for the row
      */
-    $settings = apply_filters( 'upstream_file_table_settings', array(
+    $settings = array(
         'id' => array(
             'display'       => false,
             'type'          => 'text',
@@ -362,8 +398,22 @@ function upstream_file_table_settings() {
             'heading'       => __( 'File', 'upstream' ),
             'heading_class' => '',
             'row_class'     => '',
-        ),
-    ));
+        )
+    );
+
+    $allowComments = upstreamAreCommentsEnabledOnFiles();
+    if ($allowComments) {
+        $settings['comments'] = array(
+            'display'       => true,
+            'type'          => 'comments',
+            'heading'       => __('Comments'),
+            'heading_class' => 'none',
+            'row_class'     => "",
+            'item_type'     => "file"
+        );
+    }
+
+    $settings = apply_filters('upstream_file_table_settings', $settings);
 
     return $settings;
 
@@ -539,6 +589,7 @@ function upstream_format_table_data( $item, $key, $setting ) {
 
     $field_data = isset( $item[$key] ) ? $item[$key] : null;
     $output     = '';
+    $project_id = upstream_post_id();
 
     // type: name
     if ($setting['type'] === 'name') {
@@ -587,7 +638,7 @@ function upstream_format_table_data( $item, $key, $setting ) {
         if (empty($field_data)) {
             $output = '<i>' . __('none', 'upstream') . '</i>';
         } else {
-            $item = upstream_project_item_by_id( upstream_post_id(), $field_data );
+            $item = upstream_project_item_by_id( $project_id, $field_data );
             $output = isset( $item['title'] ) ? $item['title'] :  $item['milestone'];
         }
     }
@@ -615,6 +666,10 @@ function upstream_format_table_data( $item, $key, $setting ) {
         $output .= '%';
     }
 
+
+    if ($setting['type'] === "comments") {
+        $output = upstreamRenderCommentsBox($item['id'], $setting['item_type'], $project_id, false, true);
+    }
 
     // allows us to add extra checks for different data and field formatting
     $output = apply_filters( 'upstream_format_table_data', $output, $item, $key, $setting );

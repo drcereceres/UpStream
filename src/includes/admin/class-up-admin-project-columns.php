@@ -204,7 +204,7 @@ class UpStream_Admin_Project_Columns {
         }
 
         if ( $column_name == 'messages' ) {
-            $count = (int) upstream_count_total( 'discussion', $post_id );
+            $count = getProjectCommentsCount($post_id);
             if( $count > 0 ) {
                 echo '<a href="' . esc_url( get_edit_post_link( $post_id ) .'#_upstream_project_discussions' ) . '"><span>' . esc_html( $count ) . '</a></span>';
             } else {

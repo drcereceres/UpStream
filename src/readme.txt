@@ -2,9 +2,9 @@
 Contributors: upstreamplugin
 Tags: project, manage, management, project management, project manager, wordpress project management, crm, client, client manager, tasks, issue tracker, bug tracker, task manager
 Requires at least: 4.5
-Tested up to: 4.8
+Tested up to: 4.9
 Requires PHP: 5.6
-Stable tag: 1.12.5
+Stable tag: 1.13.0
 License: GPL-3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -134,6 +134,22 @@ UpStream does not use the existing styling of your theme. The features and the v
 
 The format is based on [Keep a Changelog](http://keepachangelog.com)
 and this project adheres to [Semantic Versioning](http://semver.org).
+
+= [1.13.0] - 2017-11-30 =
+
+Added:
+* Added support for comment replies
+* Added Discussion/Comments to Milestones, Tasks, Bugs, Files
+
+Changed:
+* "Discussion" was renamed to "Comments"
+* All project comments on Discussion were converted into WordPress Comments
+
+Fixed:
+* Better handling of long item names on frontend
+
+Deprecated:
+* upstream_disable_discussions()
 
 = [1.12.5] - 2017-11-09 =
 
