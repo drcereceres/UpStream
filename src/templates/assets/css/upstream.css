@@ -321,3 +321,10 @@ table.dataTable tr.child td.child {
 table.datatable > tbody > tr.child > td.child > ul {
   width: 100%;
 }
+
+.datatable > tbody > tr > td[data-name="title"] {
+  max-width: 250px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
