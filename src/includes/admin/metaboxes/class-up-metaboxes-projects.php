@@ -34,6 +34,17 @@ class UpStream_Metaboxes_Projects {
      **/
     public static $instance = null;
 
+    /**
+     * Indicates if comments section is enabled.
+     *
+     * @since   1.13.0
+     * @access  private
+     * @static
+     *
+     * @var     bool    $allowProjectComments
+     */
+    private static $allowProjectComments = true;
+
     public function __construct() {
         $this->project_label = upstream_project_label();
 
@@ -43,6 +54,9 @@ class UpStream_Metaboxes_Projects {
         add_action('edit_form_before_permalink', array($this, 'makeProjectTemporarilyPublic'));
         // Ensure the made public project are non-public as it should.
         add_action('edit_form_after_title', array($this, 'makeProjectPrivateOnceAgain'));
+
+        add_action('cmb2_render_comments', array($this, 'renderCommentsField'), 10, 5);
+        add_action('wp_ajax_upstream:project.get_all_items_comments', array($this, 'fetchAllItemsComments'));
     }
 
     /**
@@ -77,7 +91,9 @@ class UpStream_Metaboxes_Projects {
             self::$instance->details();
             self::$instance->sidebar_low();
 
-            if (!upstream_disable_discussions()) {
+            self::$allowProjectComments = upstreamAreProjectCommentsEnabled();
+
+            if (self::$allowProjectComments) {
                 self::$instance->comments();
             }
 
@@ -223,6 +239,18 @@ class UpStream_Metaboxes_Projects {
                     'class' => 'hidden',
                 )
             );
+
+            $allowComments = upstreamAreCommentsEnabledOnMilestones();
+            if ($allowComments) {
+                $fields[0]['before_row'] = '
+                    <div class="up-c-tabs-header nav-tab-wrapper nav-tab-wrapper">
+                      <a href="#" class="nav-tab nav-tab-active up-o-tab up-o-tab-data" role="tab" data-target=".up-c-tab-content-data">' . __('Data', 'upstream') . '</a>
+                      <a href="#" class="nav-tab up-o-tab up-o-tab-comments" role="tab" data-target=".up-c-tab-content-comments">' . __('Comments') . '</a>
+                    </div>
+                    <div class="up-c-tabs-content">
+                      <div class="up-o-tab-content up-c-tab-content-data is-active">';
+            }
+
             $fields[1] = array(
                 'id'            => 'created_by',
                 'type'          => 'text',
@@ -302,6 +330,15 @@ class UpStream_Metaboxes_Projects {
                 ),
                 'escape_cb'         => 'applyOEmbedFiltersToWysiwygEditorContent'
             );
+
+            if ($allowComments) {
+                $fields[40] = array(
+                    'name' => '&nbsp;',
+                    'id'   => 'comments',
+                    'type' => 'comments',
+                    'after_row' => '</div><div class="up-o-tab-content up-c-tab-content-comments"></div></div>'
+                );
+            }
 
             // set up the group grid plugin
             $cmb2GroupGrid = $cmb2Grid->addCmb2GroupGrid( $group_field_id );
@@ -602,6 +639,18 @@ class UpStream_Metaboxes_Projects {
                     'class' => 'hidden',
                 )
             );
+
+            $allowComments = upstreamAreCommentsEnabledOnTasks();
+            if ($allowComments) {
+                $fields[0]['before_row'] = '
+                    <div class="up-c-tabs-header nav-tab-wrapper nav-tab-wrapper">
+                      <a href="#" class="nav-tab nav-tab-active up-o-tab up-o-tab-data" role="tab" data-target=".up-c-tab-content-data">' . __('Data', 'upstream') . '</a>
+                      <a href="#" class="nav-tab up-o-tab up-o-tab-comments" role="tab" data-target=".up-c-tab-content-comments">' . __('Comments') . '</a>
+                    </div>
+                    <div class="up-c-tabs-content">
+                      <div class="up-o-tab-content up-c-tab-content-data is-active">';
+            }
+
             $fields[1] = array(
                 'id'                => 'created_by',
                 'type'              => 'text',
@@ -724,6 +773,15 @@ class UpStream_Metaboxes_Projects {
                 );
             }
 
+            if ($allowComments) {
+                $fields[50] = array(
+                    'name' => '&nbsp;',
+                    'id'   => 'comments',
+                    'type' => 'comments',
+                    'after_row' => '</div><div class="up-o-tab-content up-c-tab-content-comments"></div></div>'
+                );
+            }
+
             // set up the group grid plugin
             $cmb2GroupGrid = $cmb2Grid->addCmb2GroupGrid( $group_field_id );
 
@@ -785,6 +843,49 @@ class UpStream_Metaboxes_Projects {
             ));
         }
     }
+
+
+
+
+    private static $commentsFieldsNonce = false;
+
+    private static $itemsCommentsSectionCache = array();
+
+    public static function renderCommentsField($field, $escapedValue, $object_id, $objectType, $fieldType)
+    {
+        if (!self::$commentsFieldsNonce) {
+            echo '<input type="hidden" id="project_all_items_comments_nonce" value="' . wp_create_nonce('project.get_all_items_comments') . '">';
+            self::$commentsFieldsNonce = true;
+        }
+
+        $field_id = $field->args['id'];
+
+        if (!isset(self::$itemsCommentsSectionCache[$field_id])) {
+            $editorIdentifier = $field_id .'_editor';
+
+            preg_match('/^_upstream_project_([a-z]+)_([0-9]+)_comments/i', $field_id, $matches);
+
+            echo '<div class="c-comments" data-type="' . rtrim($matches[1], "s") . '"></div>';
+
+            printf(
+                '<input type="hidden" id="%s" value="%s">',
+                $field_id . '_add_comment_nonce',
+                wp_create_nonce('upstream:project.' . $matches[1] . '.add_comment')
+            );
+
+            wp_editor("", $editorIdentifier, array(
+                'media_buttons' => true,
+                'textarea_rows' => 5,
+                'textarea_name' => $editorIdentifier
+            ));
+
+            self::$itemsCommentsSectionCache[$field_id] = 1;
+        }
+    }
+
+
+
+
 
 /* ======================================================================================
                                         BUGS
@@ -859,6 +960,18 @@ class UpStream_Metaboxes_Projects {
                     'class' => 'hidden',
                 )
             );
+
+            $allowComments = upstreamAreCommentsEnabledOnBugs();
+            if ($allowComments) {
+                $fields[0]['before_row'] = '
+                    <div class="up-c-tabs-header nav-tab-wrapper nav-tab-wrapper">
+                      <a href="#" class="nav-tab nav-tab-active up-o-tab up-o-tab-data" role="tab" data-target=".up-c-tab-content-data">' . __('Data', 'upstream') . '</a>
+                      <a href="#" class="nav-tab up-o-tab up-o-tab-comments" role="tab" data-target=".up-c-tab-content-comments">' . __('Comments') . '</a>
+                    </div>
+                    <div class="up-c-tabs-content">
+                      <div class="up-o-tab-content up-c-tab-content-data is-active">';
+            }
+
             $fields[1] = array(
                 'id'            => 'created_by',
                 'type'          => 'text',
@@ -956,8 +1069,17 @@ class UpStream_Metaboxes_Projects {
                 'type'              => 'text_date_timestamp',
                 'date_format'       => 'Y-m-d',
                 'permissions'       => 'bug_due_date_field',
-                'before'            => 'upstream_add_field_attributes',
+                'before'            => 'upstream_add_field_attributes'
             );
+
+            if ($allowComments) {
+                $fields[50] = array(
+                    'name' => '&nbsp;',
+                    'id'   => 'comments',
+                    'type' => 'comments',
+                    'after_row' => '</div><div class="up-o-tab-content up-c-tab-content-comments"></div></div>'
+                );
+            }
 
             // set up the group grid plugin
             $cmb2GroupGrid = $cmb2Grid->addCmb2GroupGrid( $group_field_id );
@@ -1219,6 +1341,18 @@ class UpStream_Metaboxes_Projects {
                 'before'        => 'upstream_add_field_attributes',
                 'attributes'    => array( 'class' => 'hidden' )
             );
+
+            $allowComments = upstreamAreCommentsEnabledOnFiles();
+            if ($allowComments) {
+                $fields[0]['before_row'] = '
+                    <div class="up-c-tabs-header nav-tab-wrapper nav-tab-wrapper">
+                      <a href="#" class="nav-tab nav-tab-active up-o-tab up-o-tab-data" role="tab" data-target=".up-c-tab-content-data">' . __('Data', 'upstream') . '</a>
+                      <a href="#" class="nav-tab up-o-tab up-o-tab-comments" role="tab" data-target=".up-c-tab-content-comments">' . __('Comments') . '</a>
+                    </div>
+                    <div class="up-c-tabs-content">
+                      <div class="up-o-tab-content up-c-tab-content-data is-active">';
+            }
+
             $fields[1] = array(
                 'id'            => 'created_by',
                 'type'          => 'text',
@@ -1265,6 +1399,15 @@ class UpStream_Metaboxes_Projects {
                     'textarea_rows' => 3
                 )
             );
+
+            if ($allowComments) {
+                $fields[30] = array(
+                    'name' => '&nbsp;',
+                    'id'   => 'comments',
+                    'type' => 'comments',
+                    'after_row' => '</div><div class="up-o-tab-content up-c-tab-content-comments"></div></div>'
+                );
+            }
 
             // set up the group grid plugin
             $cmb2GroupGrid = $cmb2Grid->addCmb2GroupGrid( $group_field_id );
@@ -1373,33 +1516,33 @@ class UpStream_Metaboxes_Projects {
         $areCommentsDisabled = upstream_are_comments_disabled();
         $userHasAdminPermissions = upstream_admin_permissions('disable_project_comments');
 
-        if (upstream_disable_discussions() || ($areCommentsDisabled && !$userHasAdminPermissions)) {
+        if (!self::$allowProjectComments || ($areCommentsDisabled && !$userHasAdminPermissions)) {
             return;
         }
 
         $metabox = new_cmb2_box( array(
             'id'            => $this->prefix . 'discussions',
-            'title'         => '<span class="dashicons dashicons-format-chat"></span> ' . __( "Discussion", 'upstream' ),
+            'title'         => '<span class="dashicons dashicons-format-chat"></span> ' . __("Comments"),
             'object_types'  => array( $this->type ),
             'priority'      => 'low',
         ) );
 
         if (!$areCommentsDisabled) {
             $metabox->add_field( array(
-                'name'              => __( 'New Message', 'upstream' ),
+                'name'              => __('Add new Comment'),
                 'desc'              => '',
                 'id'                => $this->prefix . 'new_message',
                 'type'              => 'wysiwyg',
                 'permissions'       => 'publish_project_discussion',
                 'before'            => 'upstream_add_field_attributes',
-                'after_field'       => '<p><button class="button" id="new_message" type="button">' . __( 'Post Message', 'upstream') . '</button></p></div></div>',
-                'after_row'         => 'upstream_admin_display_messages',
+                'after_field'       => '<p class="u-text-right"><button class="button button-primary" type="button" data-action="comments.add_comment" data-nonce="' . wp_create_nonce('upstream:project.add_comment') . '">' . __('Add Comment') . '</button></p></div></div>',
+                'after_row'         => 'upstreamRenderCommentsBox',
                 'options'           => array(
                     'media_buttons' => true,
                     'textarea_rows' => 5
                 ),
                 'escape_cb'         => 'applyOEmbedFiltersToWysiwygEditorContent',
-                'before_field'      => '<div class="row"><div class="hidden-xs hidden-sm col-md-12 col-lg-12">'
+                'before_field'      => '<div class="row"><div class="hidden-xs hidden-sm col-md-12 col-lg-12"><label for="' . $this->prefix . 'new_message' . '">' . __('Add new Comment') . '</label>'
             ) );
         }
 
@@ -1452,6 +1595,165 @@ class UpStream_Metaboxes_Projects {
         if ($post_type_object->name === "project") {
             $post_type_object->public = false;
         }
+    }
+
+    /**
+     * AJAX endpoint that retrieves all comments from all items on the give project.
+     *
+     * @since   1.13.0
+     * @static
+     */
+    public static function fetchAllItemsComments()
+    {
+        header('Content-Type: application/json');
+
+        $response = array(
+            'success' => false,
+            'data'    => array(
+                'milestones' => array(),
+                'tasks'      => array(),
+                'bugs'       => array(),
+                'files'      => array()
+            ),
+            'error'   => null
+        );
+
+        try {
+            // Check if the request payload is potentially invalid.
+            if (
+                !defined('DOING_AJAX')
+                || !DOING_AJAX
+                || empty($_GET)
+                || !isset($_GET['nonce'])
+                || !isset($_GET['project_id'])
+                || !wp_verify_nonce($_GET['nonce'], 'project.get_all_items_comments')
+            ) {
+                throw new \Exception(__("Invalid request.", 'upstream'));
+            }
+
+            // Check if the project exists.
+            $project_id = (int)$_GET['project_id'];
+            if ($project_id <= 0) {
+                throw new \Exception(__("Invalid Project.", 'upstream'));
+            }
+
+            $usersCache = array();
+            $usersRowset = get_users(array(
+                'fields' => array(
+                    'ID', 'display_name'
+                )
+            ));
+            foreach ($usersRowset as $userRow) {
+                $userRow->ID *= 1;
+
+                $usersCache[$userRow->ID] = (object)array(
+                    'id'     => $userRow->ID,
+                    'name'   => $userRow->display_name,
+                    'avatar' => getUserAvatarURL($userRow->ID)
+                );
+            }
+            unset($userRow, $usersRowset);
+
+            $dateFormat = get_option('date_format');
+            $timeFormat = get_option('time_format');
+            $theDateTimeFormat = $dateFormat . ' ' . $timeFormat;
+            $utcTimeZone = new \DateTimeZone('UTC');
+            $currentTimezone = upstreamGetTimeZone();
+            $currentTimestamp = time();
+
+            $user = wp_get_current_user();
+            $userHasAdminCapabilities = isUserEitherManagerOrAdmin($user);
+            $userCanReply = !$userHasAdminCapabilities ? user_can($user, 'publish_project_discussion') : true;
+            $userCanModerate = !$userHasAdminCapabilities ? user_can($user, 'moderate_comments') : true;
+            $userCanDelete = !$userHasAdminCapabilities ? $userCanModerate || user_can($user, 'delete_project_discussion') : true;
+
+            $commentsStatuses = array('approve');
+            if ($userHasAdminCapabilities || $userCanModerate) {
+                $commentsStatuses[] = 'hold';
+            }
+
+            $itemsTypes = array('milestones', 'tasks', 'bugs', 'files');
+            foreach ($itemsTypes as $itemType) {
+                $itemTypeSingular = rtrim($itemType, 's');
+                $rowset = (array)get_post_meta($project_id, '_upstream_project_' . $itemType, true);
+                if (count($rowset) > 0) {
+                    foreach ($rowset as $row) {
+                        $comments = get_comments(array(
+                            'post_id'    => $project_id,
+                            'status'     => $commentsStatuses,
+                            'meta_query' => array(
+                                'relation' => 'AND',
+                                array(
+                                    'key'   => 'type',
+                                    'value' => $itemTypeSingular
+                                ),
+                                array(
+                                    'key'   => 'id',
+                                    'value' => $row['id']
+                                )
+                            )
+                        ));
+
+                        if (count($comments) > 0) {
+                            $response['data'][$itemType][$row['id']] = array();
+
+                            foreach ($comments as $comment) {
+                                $author = $usersCache[(int)$comment->user_id];
+
+                                $date = DateTime::createFromFormat('Y-m-d H:i:s', $comment->comment_date_gmt, $utcTimeZone);
+
+                                $commentData = json_decode(json_encode(array(
+                                    'id'         => $comment->comment_ID,
+                                    'parent_id'  => $comment->comment_parent,
+                                    'content'    => $comment->comment_content,
+                                    'state'      => $comment->comment_approved,
+                                    'created_by' => $author,
+                                    'created_at' => array(
+                                        'localized' => "",
+                                        'humanized' => sprintf(
+                                            _x('%s ago', '%s = human-readable time difference', 'upstream'),
+                                            human_time_diff($date->getTimestamp(), $currentTimestamp)
+                                        )
+                                    ),
+                                    'currentUserCap' => array(
+                                        'can_reply'    => $userCanReply,
+                                        'can_moderate' => $userCanModerate,
+                                        'can_delete'   => $userCanDelete || $author->id === $user->ID
+                                    )
+                                )));
+
+                                $date->setTimezone($currentTimezone);
+
+                                $commentData->created_at->localized = $date->format($theDateTimeFormat);
+
+                                $commentsCache = array();
+                                if ((int)$comment->comment_parent > 0) {
+                                    $parent = get_comment($comment->comment_parent);
+                                    $commentsCache = array(
+                                        $parent->comment_ID => json_decode(json_encode(array(
+                                            'created_by' => array(
+                                                'name' => $parent->comment_author
+                                            )
+                                        )))
+                                    );
+                                }
+
+                                ob_start();
+                                upstream_admin_display_message_item($commentData, $commentsCache);
+                                $response['data'][$itemType][$row['id']][] = ob_get_contents();
+                                ob_end_clean();
+                            }
+                        }
+                    }
+                }
+            }
+
+            $response['success'] = true;
+        } catch (Exception $e) {
+            $response['error'] = $e->getMessage();
+        }
+
+        wp_send_json($response);
     }
 }
 

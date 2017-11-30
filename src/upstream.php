@@ -4,11 +4,12 @@
  * Description: A WordPress Project Management plugin by UpStream.
  * Author: UpStream
  * Author URI: https://upstreamplugin.com
- * Version: 1.12.5
+ * Version: 1.13.0
  * Text Domain: upstream
  * Domain Path: /languages
  */
 
+use \UpStream\Comments;
 
 // Exit if accessed directly.
 if ( ! defined( 'ABSPATH' ) ) exit;
@@ -99,6 +100,9 @@ final class UpStream
         add_filter('tiny_mce_before_init', 'upstream_tinymce_before_init_setup_toolbar');
         add_filter('tiny_mce_before_init', 'upstream_tinymce_before_init');
         add_filter('teeny_mce_before_init', 'upstream_tinymce_before_init_setup_toolbar');
+        add_filter('comments_clauses', array($this, 'filterCommentsOnDashboard'), 10, 2);
+        add_filter('views_dashboard', array('UpStream_Admin', 'commentStatusLinks'), 10, 1);
+
 
         // Render additional update info if needed.
         global $pagenow;
@@ -184,7 +188,7 @@ final class UpStream
         $this->define( 'UPSTREAM_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
         $this->define( 'UPSTREAM_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
         $this->define( 'UPSTREAM_PLUGIN_BASENAME', plugin_basename( __FILE__ ) );
-        $this->define( 'UPSTREAM_VERSION', '1.12.5' );
+        $this->define( 'UPSTREAM_VERSION', '1.13.0' );
     }
 
     /**
@@ -230,6 +234,7 @@ final class UpStream
         include_once( 'includes/up-post-types.php' );
         include_once( 'includes/up-labels.php' );
         include_once( 'includes/trait-up-singleton.php' );
+        include_once( 'includes/abs-class-up-struct.php' );
 
         if ( $this->is_request( 'admin' ) ) {
             include_once( 'includes/libraries/cmb2/init.php' );
@@ -253,6 +258,9 @@ final class UpStream
         include_once( 'includes/up-client-functions.php' );
         include_once( 'includes/up-permissions-functions.php' );
         include_once( 'includes/up-client-users-migration.php' );
+        include_once( 'includes/up-comments-migration.php' );
+        include_once( 'includes/class-up-comments.php' );
+        include_once( 'includes/class-up-comment.php' );
     }
 
     /**
@@ -278,6 +286,7 @@ final class UpStream
 
         // Executes the Legacy Client Users Migration script if needed.
         \UpStream\Migrations\ClientUsers::run();
+        \UpStream\Migrations\Comments::run();
 
         $user = wp_get_current_user();
         $userRoles = (array)$user->roles;
@@ -296,6 +305,8 @@ final class UpStream
 
             update_option('upstream:role_upstream_users:drop_edit_others_projects', 1);
         }
+
+        Comments::instantiate();
 
         // Init action.
         do_action( 'upstream_init' );
@@ -407,6 +418,55 @@ final class UpStream
                 __('UpStream User', 'upstream')
             );
         }
+    }
+
+    /**
+     * Make sure Recent Comments section on admin Dashboard display only comments
+     * current user is allowed to see from projects he's allowed to access.
+     *
+     * @since   1.13.0
+     * @static
+     *
+     * @global  $pagenow, $wpdb
+     *
+     * @param   array               $queryArgs  Query clauses.
+     * @param   WP_Comment_Query    $query      Current query instance.
+     *
+     * @return  array   $queryArgs
+     */
+    public static function filterCommentsOnDashboard($queryArgs, $query)
+    {
+        global $pagenow;
+
+        if (is_admin()
+            && $pagenow === "index.php"
+            && !isUserEitherManagerOrAdmin()
+        ) {
+            global $wpdb;
+
+            $queryArgs['join'] = 'LEFT JOIN ' . $wpdb->prefix . 'posts AS post ON post.ID = ' . $wpdb->prefix . 'comments.comment_post_ID';
+
+            $user = wp_get_current_user();
+            if (in_array('upstream_user', $user->roles) || in_array('upstream_client_user', $user->roles)) {
+                $projects = upstream_get_users_projects($user);
+                if (count($projects) === 0) {
+                    $queryArgs['where'] = "(post.ID = -1)";
+                } else {
+                    $queryArgs['where'] = "(post.post_type = 'project' AND post.ID IN (" . implode(', ', array_keys($projects)) . "))";
+
+                    $userCanModerateComments = user_can($user, 'moderate_comments');
+                    if (!$userCanModerateComments) {
+                        $queryArgs['where'] .= " AND ( comment_approved = '1' )";
+                    } else {
+                        $queryArgs['where'] .= " AND ( comment_approved = '1' OR comment_approved = '0' )";
+                    }
+                }
+            } else {
+                $queryArgs['where'] .= " AND (post.post_type != 'project')";
+            }
+        }
+
+        return $queryArgs;
     }
 }
 endif;

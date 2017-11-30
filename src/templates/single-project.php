@@ -93,7 +93,7 @@ while ( have_posts() ) : the_post(); ?>
             </div>
             <?php endif; ?>
 
-            <?php if (!upstream_disable_discussions()): ?>
+            <?php if (upstreamAreProjectCommentsEnabled()): ?>
             <div class="row">
                 <?php do_action( 'upstream_single_project_before_discussion' ); ?>
 
