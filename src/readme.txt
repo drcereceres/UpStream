@@ -137,7 +137,8 @@ and this project adheres to [Semantic Versioning](http://semver.org).
 
 = [1.13.0] - @todo =
 
-@todo
+Fixed:
+* Better handling of long item names on frontend
 
 = [1.12.5] - 2017-11-09 =
 
