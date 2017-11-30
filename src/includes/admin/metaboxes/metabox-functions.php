@@ -426,6 +426,7 @@ function upstream_admin_output_bug_hidden_data() {
 /* ======================================================================================
                                         DISCUSSION
    ====================================================================================== */
+
 function upstreamRenderCommentsBox($item_id = "", $itemType = "project", $project_id = 0, $renderControls = true, $returnAsHtml = false)
 {
     $project_id = (int)$project_id;
@@ -554,7 +555,7 @@ function upstreamRenderCommentsBox($item_id = "", $itemType = "project", $projec
         ob_start();
     }
     ?>
-    <div class="c-comments" data-type="project">
+    <div class="c-comments" data-type="<?php echo $itemType; ?>" <?php echo $renderControls ? 'data-nonce' : ''; ?>>
         <?php
         if (count($commentsCache) > 0) {
             if (is_admin()) {
