@@ -33,7 +33,7 @@ function upstream_enqueue_styles_scripts(){
     }
 
     $up_url = UPSTREAM_PLUGIN_URL;
-    $up_ver = UPSTREAM_VERSION . mt_rand(1, 9999); // @todo
+    $up_ver = UPSTREAM_VERSION;
 
     /*
      * Enqueue styles

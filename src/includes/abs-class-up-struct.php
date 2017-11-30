@@ -4,7 +4,7 @@ namespace UpStream;
 /**
  * Basic abstract class to represent a simple struct structure.
  *
- * @since       @todo
+ * @since       1.13.0
  * @abstract
  */
 abstract class Struct
@@ -12,7 +12,7 @@ abstract class Struct
     /**
      * Prevent non existent properties from being retrieved.
      *
-     * @since   @todo
+     * @since   1.13.0
      *
      * @param   string  $property   Property being retrieved.
      *
@@ -26,7 +26,7 @@ abstract class Struct
     /**
      * Prevent non existent properties from being set.
      *
-     * @since   @todo
+     * @since   1.13.0
      *
      * @param   string  $property   Property being set.
      * @param   mixed   $value      Value being set.
@@ -41,7 +41,7 @@ abstract class Struct
     /**
      * Prevent structs from being passed by reference.
      *
-     * @since   @todo
+     * @since   1.13.0
      */
     public function __clone()
     {

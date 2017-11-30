@@ -135,7 +135,7 @@ class UpStream_Admin {
     /**
      * Filter comments for Comments.php page.
      *
-     * @since   @todo
+     * @since   1.13.0
      * @static
      *
      * @param   array   $query  Query args array.
@@ -180,7 +180,7 @@ class UpStream_Admin {
     /**
      * Set up WP-Table filters links.
      *
-     * @since   @todo
+     * @since   1.13.0
      * @static
      *
      * @param   array   $links  Associative array of table filters.

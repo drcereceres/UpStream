@@ -7,14 +7,14 @@ if (!defined('ABSPATH')) exit;
 /**
  * This class transform all existent project comments into WordPress Comments.
  *
- * @since   @todo
+ * @since   1.13.0
  */
 final class Comments
 {
     /**
      * Run the migration if needed.
      *
-     * @since   @todo
+     * @since   1.13.0
      * @static
      */
     public static function run()
@@ -73,7 +73,7 @@ final class Comments
      * Fetch all discussion metas from all projects.
      * It returns an associative array with project ID as keys and a list of comments as values.
      *
-     * @since   @todo
+     * @since   1.13.0
      * @access  private
      * @static
      *
@@ -119,7 +119,7 @@ final class Comments
     /**
      * Check if migration is needed.
      *
-     * @since   @todo
+     * @since   1.13.0
      * @access  private
      * @static
      */

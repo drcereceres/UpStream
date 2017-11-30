@@ -10,7 +10,7 @@ use UpStream\Comment;
 /**
  * This class will act as a controller handling incoming requests regarding comments on UpStream items.
  *
- * @since   @todo
+ * @since   1.13.0
  */
 class Comments
 {
@@ -19,7 +19,7 @@ class Comments
     /**
      * The current full namespace.
      *
-     * @since   @todo
+     * @since   1.13.0
      * @access  private
      * @static
      *
@@ -30,7 +30,7 @@ class Comments
     /**
      * Class constructor.
      *
-     * @since   @todo
+     * @since   1.13.0
      */
     public function __construct()
     {
@@ -42,7 +42,7 @@ class Comments
     /**
      * Check if the item type is valid.
      *
-     * @since   @todo
+     * @since   1.13.0
      * @static
      *
      * @param   string  $itemType   Value to be validated.
@@ -59,7 +59,7 @@ class Comments
     /**
      * Attach all relevant actions to handle comments.
      *
-     * @since   @todo
+     * @since   1.13.0
      * @access  private
      */
     private function attachHooks()
@@ -75,7 +75,7 @@ class Comments
     /**
      * AJAX endpoint that stores a new comment.
      *
-     * @since   @todo
+     * @since   1.13.0
      * @static
      */
     public static function storeComment()
@@ -169,7 +169,7 @@ class Comments
     /**
      * AJAX endpoint that adds a new comment reply.
      *
-     * @since   @todo
+     * @since   1.13.0
      * @static
      */
     public static function storeCommentReply()
@@ -265,7 +265,7 @@ class Comments
     /**
      * AJAX endpoint that trashes a comment.
      *
-     * @since   @todo
+     * @since   1.13.0
      * @static
      */
     public static function trashComment()
@@ -341,7 +341,7 @@ class Comments
      * Either approves/unapproves a given comment.
      * This method is called by the correspondent AJAX endpoints.
      *
-     * @since   @todo
+     * @since   1.13.0
      * @access  private
      * @static
      *
@@ -399,7 +399,7 @@ class Comments
     /**
      * AJAX endpoint that unapproves a comment.
      *
-     * @since   @todo
+     * @since   1.13.0
      * @static
      */
     public static function unapproveComment()
@@ -463,7 +463,7 @@ class Comments
     /**
      * AJAX endpoint that approves a comment.
      *
-     * @since   @todo
+     * @since   1.13.0
      * @static
      */
     public static function approveComment()
@@ -525,7 +525,7 @@ class Comments
     /**
      * AJAX endpoint that fetches all comments from a given item/project.
      *
-     * @since   @todo
+     * @since   1.13.0
      * @static
      */
     public static function fetchComments()

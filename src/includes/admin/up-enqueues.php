@@ -20,7 +20,7 @@ function upstream_load_admin_scripts( $hook ) {
     if( $post_type == 'project' ) {
         global $post_type_object;
 
-        wp_register_script( 'upstream-project', $js_dir . 'edit-project.js', $admin_deps, UPSTREAM_VERSION . mt_rand(1, 99999), false ); // @todo
+        wp_register_script( 'upstream-project', $js_dir . 'edit-project.js', $admin_deps, UPSTREAM_VERSION, false );
         wp_enqueue_script( 'upstream-project' );
         wp_localize_script( 'upstream-project', 'upstream_project', apply_filters( 'upstream_project_script_vars', array(
             'version'   => UPSTREAM_VERSION,
@@ -69,7 +69,7 @@ function upstream_load_admin_scripts( $hook ) {
      */
     $css_dir = UPSTREAM_PLUGIN_URL . 'includes/admin/assets/css/';
 
-    wp_register_style( 'upstream-admin', $css_dir . 'upstream.css', array(), UPSTREAM_VERSION . mt_rand(1, 99999)); // @todo
+    wp_register_style( 'upstream-admin', $css_dir . 'upstream.css', array(), UPSTREAM_VERSION);
     wp_enqueue_style( 'upstream-admin' );
 
 

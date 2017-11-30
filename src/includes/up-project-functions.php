@@ -403,7 +403,7 @@ function countItemsForUserOnProject($itemType, $user_id, $project_id)
 /**
  * Retrieve the number of approved comments within a given project.
  *
- * @since   @todo
+ * @since   1.13.0
  *
  * @param   int     $project_id     The project ID.
  *

@@ -4,7 +4,7 @@
  * Description: A WordPress Project Management plugin by UpStream.
  * Author: UpStream
  * Author URI: https://upstreamplugin.com
- * Version: 1.13.0-beta-1.0
+ * Version: 1.13.0
  * Text Domain: upstream
  * Domain Path: /languages
  */
@@ -188,7 +188,7 @@ final class UpStream
         $this->define( 'UPSTREAM_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
         $this->define( 'UPSTREAM_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
         $this->define( 'UPSTREAM_PLUGIN_BASENAME', plugin_basename( __FILE__ ) );
-        $this->define( 'UPSTREAM_VERSION', '1.13.0-beta-1.0' );
+        $this->define( 'UPSTREAM_VERSION', '1.13.0' );
     }
 
     /**
@@ -424,7 +424,7 @@ final class UpStream
      * Make sure Recent Comments section on admin Dashboard display only comments
      * current user is allowed to see from projects he's allowed to access.
      *
-     * @since   @todo
+     * @since   1.13.0
      * @static
      *
      * @global  $pagenow, $wpdb

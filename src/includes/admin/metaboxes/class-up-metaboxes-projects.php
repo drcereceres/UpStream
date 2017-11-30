@@ -37,7 +37,7 @@ class UpStream_Metaboxes_Projects {
     /**
      * Indicates if comments section is enabled.
      *
-     * @since   @todo
+     * @since   1.13.0
      * @access  private
      * @static
      *
@@ -1600,7 +1600,7 @@ class UpStream_Metaboxes_Projects {
     /**
      * AJAX endpoint that retrieves all comments from all items on the give project.
      *
-     * @since   @todo
+     * @since   1.13.0
      * @static
      */
     public static function fetchAllItemsComments()
@@ -1671,7 +1671,7 @@ class UpStream_Metaboxes_Projects {
             if ($userHasAdminCapabilities || $userCanModerate) {
                 $commentsStatuses[] = 'hold';
             }
-            // @todo: add support for disabled items via option
+
             $itemsTypes = array('milestones', 'tasks', 'bugs', 'files');
             foreach ($itemsTypes as $itemType) {
                 $itemTypeSingular = rtrim($itemType, 's');

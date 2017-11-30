@@ -331,7 +331,6 @@
         $group.find( '.cmb-group-title' ).each( function() {
             var $this       = $( this );
             var date        = $this.next().find( '[id$="end_date"], [id$="due_date"]' ).val();
-            //console.log(date);
             if( date ){
                 $this.append( '<span class="dates">End: ' + date + '</span>' );
             }

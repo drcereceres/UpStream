@@ -1114,7 +1114,7 @@ function upstreamGetTimeZone()
 /**
  * Check if comments are allowed on projects.
  *
- * @since   @todo
+ * @since   1.13.0
  *
  * @return  bool
  */
@@ -1144,7 +1144,7 @@ function upstreamAreProjectCommentsEnabled()
 /**
  * Check if comments are allowed on milestones.
  *
- * @since   @todo
+ * @since   1.13.0
  *
  * @return  bool
  */
@@ -1162,7 +1162,7 @@ function upstreamAreCommentsEnabledOnMilestones()
 /**
  * Check if comments are allowed on tasks.
  *
- * @since   @todo
+ * @since   1.13.0
  *
  * @return  bool
  */
@@ -1180,7 +1180,7 @@ function upstreamAreCommentsEnabledOnTasks()
 /**
  * Check if comments are allowed on bugs.
  *
- * @since   @todo
+ * @since   1.13.0
  *
  * @return  bool
  */
@@ -1198,7 +1198,7 @@ function upstreamAreCommentsEnabledOnBugs()
 /**
  * Check if comments are allowed on files.
  *
- * @since   @todo
+ * @since   1.13.0
  *
  * @return  bool
  */

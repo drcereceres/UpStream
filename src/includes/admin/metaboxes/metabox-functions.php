@@ -612,11 +612,7 @@ function upstream_admin_display_message_item($comment, $comments = array(), $ren
         <div class="o-comment__body__right">
           <div class="o-comment__body__head">
             <div class="o-comment__user_name"><?php echo $comment->created_by->name; ?></div>
-            <div class="o-comment__reply_info">
-              <?php
-              // @todo: reimplement this feature
-              ?>
-            </div>
+            <div class="o-comment__reply_info"></div>
             <div class="o-comment__date"><?php echo $comment->created_at->humanized; ?>&nbsp;<small>(<?php echo $comment->created_at->localized; ?>)</small></div>
           </div>
           <div class="o-comment__content"><?php echo $wp_embed->autoembed(wpautop($comment->content)); ?></div>
@@ -706,21 +702,12 @@ function upstream_display_message_item($comment, $comments = array(), $renderCon
         <div class="o-comment__body__right">
           <div class="o-comment__body__head">
             <div class="o-comment__user_name"><?php echo $comment->created_by->name; ?></div>
-            <div class="o-comment__reply_info">
-              <?php
-              // @todo: reimplement this feature
-              ?>
-            </div>
+            <div class="o-comment__reply_info"></div>
             <div class="o-comment__date" data-toggle="tooltip" title="<?php echo $comment->created_at->localized; ?>"><?php echo $comment->created_at->humanized; ?></div>
           </div>
           <div class="o-comment__content"><?php echo $wp_embed->autoembed(wpautop($comment->content)); ?></div>
           <div class="o-comment__body__footer">
             <?php
-            /*
-            @todo: turn this action into a filter
-            @todo: add toggle comment replies control by default
-            */
-
             if ($renderControls) {
                 do_action('upstream:project.comments.comment_controls', $comment);
             }

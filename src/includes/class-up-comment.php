@@ -9,14 +9,14 @@ use \UpStream\Struct;
 /**
  * Struct that represents an UpStream Comment.
  *
- * @since   @todo
+ * @since   1.13.0
  */
 class Comment extends Struct
 {
     /**
      * Comment ID.
      *
-     * @since   @todo
+     * @since   1.13.0
      *
      * @var     int     $id
      */
@@ -25,7 +25,7 @@ class Comment extends Struct
     /**
      * Project ID where the comments belongs to.
      *
-     * @since   @todo
+     * @since   1.13.0
      *
      * @var     int     $project_id
      */
@@ -34,7 +34,7 @@ class Comment extends Struct
     /**
      * Comment parent ID.
      *
-     * @since   @todo
+     * @since   1.13.0
      *
      * @var     int     $parent_id
      */
@@ -43,7 +43,7 @@ class Comment extends Struct
     /**
      * Comment content.
      *
-     * @since   @todo
+     * @since   1.13.0
      *
      * @var     string  $content
      */
@@ -53,7 +53,7 @@ class Comment extends Struct
      * Comment current status.
      * Valid values are: -2, -1, 0, 1 ~ representing spam, trash, unapproved, approved.
      *
-     * @since   @todo
+     * @since   1.13.0
      *
      * @var     int     $state
      */
@@ -62,7 +62,7 @@ class Comment extends Struct
     /**
      * Comment author.
      *
-     * @since   @todo
+     * @since   1.13.0
      *
      * @var     object     $created_by
      */
@@ -71,7 +71,7 @@ class Comment extends Struct
     /**
      * Date info where the comment was added.
      *
-     * @since   @todo
+     * @since   1.13.0
      *
      * @var     object     $created_at
      */
@@ -80,7 +80,7 @@ class Comment extends Struct
     /**
      * Current cached user capabilities related to comments.
      *
-     * @since   @todo
+     * @since   1.13.0
      *
      * @var     object     $currentUserCap
      */
@@ -89,7 +89,7 @@ class Comment extends Struct
     /**
      * Cached author info.
      *
-     * @since   @todo
+     * @since   1.13.0
      * @access  protected
      *
      * @var     object     $author
@@ -99,7 +99,7 @@ class Comment extends Struct
     /**
      * Convert a given comment state into its equivalent WordPress value.
      *
-     * @since   @todo
+     * @since   1.13.0
      * @static
      *
      * @param   mixed   $state  The state to be translated.
@@ -125,7 +125,7 @@ class Comment extends Struct
     /**
      * Convert a given comment state into its equivalent int value.
      *
-     * @since   @todo
+     * @since   1.13.0
      * @static
      *
      * @param   string  $state  State to be converted.
@@ -152,7 +152,7 @@ class Comment extends Struct
     /**
      * Fill missing comment info from a given comment array.
      *
-     * @since   @todo
+     * @since   1.13.0
      * @static
      *
      * @param   array   $customData     Associative array with comment info.
@@ -182,7 +182,7 @@ class Comment extends Struct
     /**
      * Retrieve an associative array following WordPress Comments design pattern with the instance's data.
      *
-     * @since   @todo
+     * @since   1.13.0
      *
      * @return  array
      */
@@ -207,7 +207,7 @@ class Comment extends Struct
     /**
      * Class constructor.
      *
-     * @since   @todo
+     * @since   1.13.0
      *
      * @param   string  $content        Comment content.
      * @param   int     $project_id     Project ID.
@@ -262,7 +262,7 @@ class Comment extends Struct
     /**
      * Apply WordPress comment filters to the instance data.
      *
-     * @since   @todo
+     * @since   1.13.0
      *
      * @uses    wp_filter_comment
      */
@@ -283,7 +283,7 @@ class Comment extends Struct
     /**
      * Check if instance represents a new or an existent comment.
      *
-     * @since   @todo
+     * @since   1.13.0
      *
      * @return  bool
      */
@@ -295,7 +295,7 @@ class Comment extends Struct
     /**
      * Either insert/update the comment into DB.
      *
-     * @since   @todo
+     * @since   1.13.0
      *
      * @return  mixed   int if inserted or bool if updated
      */
@@ -355,7 +355,7 @@ class Comment extends Struct
     /**
      * Update comment state statically.
      *
-     * @since   @todo
+     * @since   1.13.0
      * @access  protected
      * @static
      *
@@ -382,7 +382,7 @@ class Comment extends Struct
     /**
      * Unapprove the comment.
      *
-     * @since   @todo
+     * @since   1.13.0
      *
      * @return  bool
      */
@@ -403,7 +403,7 @@ class Comment extends Struct
     /**
      * Approve the comment.
      *
-     * @since   @todo
+     * @since   1.13.0
      *
      * @return  bool
      */
@@ -424,7 +424,7 @@ class Comment extends Struct
     /**
      * Update comment's dates to human format.
      *
-     * @since   @todo
+     * @since   1.13.0
      */
     public function updateHumanizedDate()
     {
@@ -449,7 +449,7 @@ class Comment extends Struct
     /**
      * Render the comment as HTML.
      *
-     * @since   @todo
+     * @since   1.13.0
      *
      * @param   bool    $return             Either return the HTML or render it insted.
      * @param   bool    $useAdminLayout     Either use admin/frontend layout.
@@ -496,7 +496,7 @@ class Comment extends Struct
     /**
      * Load a given comment data into its own instance based on ID.
      *
-     * @since   @todo
+     * @since   1.13.0
      * @static
      *
      * @param   int     $comment_id     Comment ID to be loaded.
