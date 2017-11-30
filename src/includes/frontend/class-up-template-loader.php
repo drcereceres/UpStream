@@ -34,6 +34,8 @@ class UpStream_Template_Loader {
             return $template;
 
         if ( is_single() ) {
+            require_once UPSTREAM_PLUGIN_DIR . 'includes/admin/metaboxes/metabox-functions.php';
+
             $file = 'single-project.php';
 
             $user_id = get_current_user_id();

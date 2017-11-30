@@ -107,12 +107,6 @@ function upstream_project_description($projectId = 0)
     return apply_filters('upstream_project_description', $result, $projectId);
 }
 
-function upstream_project_discussion( $id = 0 ) {
-    $project    = new UpStream_Project( $id );
-    $result     = $project->get_meta( 'discussion' );
-    return apply_filters( 'upstream_project_discussion', $result, $id );
-}
-
 /* ------------ MILESTONES -------------- */
 
 function upstream_project_milestones( $id = 0 ) {
@@ -407,93 +401,23 @@ function countItemsForUserOnProject($itemType, $user_id, $project_id)
 }
 
 /**
- * Retrieve all comments from a project.
+ * Retrieve the number of approved comments within a given project.
  *
- * @since   1.12.2
+ * @since   @todo
  *
  * @param   int     $project_id     The project ID.
  *
- * @return  array
+ * @return  int
  */
-function getProjectComments($project_id)
+function getProjectCommentsCount($project_id)
 {
-    $project_id = (int)$project_id;
-    $project = get_post($project_id);
-    if ($project === false) {
-        return array();
-    }
+    if (!is_numeric($project_id) || $project_id < 0) return;
 
-    $meta = get_post_meta(get_the_ID(), '_upstream_project_discussion');
-    $meta = !empty($meta) ? $meta[0] : $meta;
+    $commentsCount = get_comments(array(
+        'post_id' => $project_id,
+        'count'   => true,
+        'status'  => "approve"
+    ));
 
-    $comments = array();
-
-    if (count($meta) > 0) {
-        global $wpdb, $wp_embed;
-
-        $usersRowset = $wpdb->get_results('
-            SELECT `ID`, `display_name`
-            FROM `'. $wpdb->prefix .'users`'
-        );
-
-        $users = array();
-        foreach ($usersRowset as $user) {
-            $users[(int)$user->ID] = (object)array(
-                'id'     => (int)$user->ID,
-                'name'   => $user->display_name,
-                'avatar' => getUserAvatarURL($user->ID)
-            );
-        }
-
-        $dateFormat = get_option('date_format');
-        $timeFormat = get_option('time_format');
-
-        $currentTimezone = upstreamGetTimeZone();
-        $currentTimestamp = time();
-
-        $user = wp_get_current_user();
-        $user->ID = (int)$user->ID;
-
-        if (
-            (int)upstream_project_owner_id() === $user->ID ||
-            in_array((array)$user->roles, array('administrator', 'upstream_manager')) ||
-            current_user_can('delete_project_discussion')
-        ) {
-            $currentUserCanDeleteComments = true;
-        } else {
-            $currentUserCanDeleteComments = false;
-        }
-
-        foreach ($meta as $commentData) {
-            $commentData['created_by'] = $users[(int)$commentData['created_by']];
-            if ($commentData['created_by']->id === $user->ID) {
-                $commentData['userCanDelete'] = true;
-            } else {
-                $commentData['userCanDelete'] = $currentUserCanDeleteComments;
-            }
-
-            $date = new DateTime();
-            $date->setTimestamp($commentData['created_time']);
-            $date->setTimezone($currentTimezone);
-
-            $created_time = (int)$commentData['created_time'];
-            unset($commentData['created_time']);
-
-            $commentData['created_at'] = (object)array(
-                'timestamp' => $created_time,
-                'formatted' => $date->format($dateFormat . ' ' . $timeFormat),
-                'human'     => sprintf(
-                    _x('%s ago', '%s = human-readable time difference', 'upstream'),
-                    human_time_diff($created_time, $currentTimestamp)
-                ),
-                'iso_8601'  => date('c', $created_time)
-            );
-
-            $commentData['comment'] = $wp_embed->autoembed(wpautop($commentData['comment']));
-
-            array_push($comments, (object)$commentData);
-        }
-    }
-
-    return $comments;
+    return (int)$commentsCount;
 }

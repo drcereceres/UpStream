@@ -137,8 +137,18 @@ and this project adheres to [Semantic Versioning](http://semver.org).
 
 = [1.13.0] - @todo =
 
+Added:
+* UpStream comments are now integrated with WordPress Comments
+
+Changed:
+* "Discussion" was renamed to "Comments"
+* All project comments on Discussion were moved to WordPress Comments
+
 Fixed:
 * Better handling of long item names on frontend
+
+Deprecated:
+* upstream_disable_discussions()
 
 = [1.12.5] - 2017-11-09 =
 

@@ -20,12 +20,30 @@ function upstream_load_admin_scripts( $hook ) {
     if( $post_type == 'project' ) {
         global $post_type_object;
 
-        wp_register_script( 'upstream-project', $js_dir . 'edit-project.js', $admin_deps, UPSTREAM_VERSION, false );
+        wp_register_script( 'upstream-project', $js_dir . 'edit-project.js', $admin_deps, UPSTREAM_VERSION . mt_rand(1, 99999), false ); // @todo
         wp_enqueue_script( 'upstream-project' );
         wp_localize_script( 'upstream-project', 'upstream_project', apply_filters( 'upstream_project_script_vars', array(
             'version'   => UPSTREAM_VERSION,
             'user'      => upstream_current_user_id(),
-            'slugBox'   => !(get_post_status() === "pending" && !current_user_can($post_type_object->cap->publish_posts))
+            'slugBox'   => !(get_post_status() === "pending" && !current_user_can($post_type_object->cap->publish_posts)),
+            'l'         => array(
+                'LB_CANCEL'           => __('Cancel'),
+                'LB_SEND_REPLY'       => __('Add Reply', 'upstream'),
+                'LB_REPLY'            => __('Reply'),
+                'LB_ADD_COMMENT'      => __('Add Comment'),
+                'LB_ADD_NEW_COMMENT'  => __('Add new Comment'),
+                'LB_ADD_NEW_REPLY'    => __('Add Comment Reply', 'upstream'),
+                'LB_ADDING'           => __('Adding...', 'upstream'),
+                'LB_REPLYING'         => __('Replying...', 'upstream'),
+                'LB_DELETE'           => __('Delete', 'upstream'),
+                'LB_DELETING'         => __('Deleting...', 'upstream'),
+                'LB_UNAPPROVE'        => __('Unapprove'),
+                'LB_UNAPPROVING'      => __('Unapproving...', 'upstream'),
+                'LB_APPROVE'          => __('Approve'),
+                'LB_APPROVING'        => __('Approving...', 'upstream'),
+                'MSG_ARE_YOU_SURE'    => __('Are you sure? This action cannot be undone.', 'upstream'),
+                'MSG_COMMENT_NOT_VIS' => __('This comment is not visible by regular users.', 'upstream')
+            )
         ) ) );
     }
 
@@ -51,7 +69,7 @@ function upstream_load_admin_scripts( $hook ) {
      */
     $css_dir = UPSTREAM_PLUGIN_URL . 'includes/admin/assets/css/';
 
-    wp_register_style( 'upstream-admin', $css_dir . 'upstream.css', array(), UPSTREAM_VERSION);
+    wp_register_style( 'upstream-admin', $css_dir . 'upstream.css', array(), UPSTREAM_VERSION . mt_rand(1, 99999)); // @todo
     wp_enqueue_style( 'upstream-admin' );
 
 

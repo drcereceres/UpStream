@@ -25,6 +25,12 @@ class UpStream_Admin {
         add_filter( 'admin_body_class', array( $this, 'admin_body_class' ) );
         add_filter( 'ajax_query_attachments_args', array( $this, 'filter_user_attachments' ), 10, 1 );
         add_action('admin_menu', array($this, 'limitUpStreamUserAccess'));
+
+        global $pagenow;
+        if ($pagenow === 'edit-comments.php') {
+            add_filter('comment_status_links', array($this, 'commentStatusLinks'), 10, 1);
+            add_action('pre_get_comments', array($this, 'preGetComments'), 10, 1);
+        }
     }
 
     public function limitUpStreamUserAccess()
@@ -124,6 +130,152 @@ class UpStream_Admin {
             $query['author'] = $user_id;
         }
         return $query;
+    }
+
+    /**
+     * Filter comments for Comments.php page.
+     *
+     * @since   @todo
+     * @static
+     *
+     * @param   array   $query  Query args array.
+     */
+    public static function preGetComments($query)
+    {
+        if (!isUserEitherManagerOrAdmin()) {
+            $user = wp_get_current_user();
+
+            if (in_array('upstream_user', $user->roles) || in_array('upstream_client_user', $user->roles)) {
+                // Limit comments visibility to projects user is participating in.
+                $allowedProjects = upstream_get_users_projects($user);
+                $query->query_vars['post__in'] = array_keys($allowedProjects);
+
+                $userCanModerateComments = user_can($user, 'moderate_comments');
+                $userCanDeleteComments = user_can($user, 'delete_project_discussion');
+
+                $query->query_vars['status'] = array('approve');
+
+                if ($userCanModerateComments) {
+                    $query->query_vars['status'][] = 'hold';
+                } else if (empty($allowedProjects)) {
+                    $query->query_vars['post__in'] = -1;
+                }
+            } else {
+                // Hide Projects comments from other user types.
+                $projects = get_posts(array(
+                    'post_type'      => "project",
+                    'posts_per_page' => -1
+                ));
+
+                $ids = array();
+                foreach ($projects as $project) {
+                    $ids[] = $project->ID;
+                }
+
+                $query->query_vars['post__not_in'] = $ids;
+            }
+        }
+    }
+
+    /**
+     * Set up WP-Table filters links.
+     *
+     * @since   @todo
+     * @static
+     *
+     * @param   array   $links  Associative array of table filters.
+     *
+     * @return  array   $links
+     */
+    public static function commentStatusLinks($links)
+    {
+        if (!isUserEitherManagerOrAdmin()) {
+            $user = wp_get_current_user();
+
+            if (in_array('upstream_user', $user->roles) || in_array('upstream_client_user', $user->roles)) {
+                $userCanModerateComments = user_can($user, 'moderate_comments');
+                $userCanDeleteComments = user_can($user, 'delete_project_discussion');
+
+                if (!$userCanModerateComments) {
+                    unset($links['moderated'], $links['approved'], $links['spam']);
+
+                    if (!$userCanDeleteComments) {
+                        unset($links['trash']);
+                    }
+                }
+
+                $projects = upstream_get_users_projects($user);
+
+                $commentsQueryArgs = array(
+                    'post_type' => "project",
+                    'post__in'  => array_keys($projects),
+                    'count'     => true
+                );
+
+                $commentsCount = new stdClass();
+                $commentsCount->all = get_comments($commentsQueryArgs);
+
+                $links['all'] = preg_replace('/<span class="all-count">\d+<\/span>/', '<span class="all-count">'. $commentsCount->all .'</span>', $links['all']);
+
+                if (isset($links['moderated'])) {
+                    $commentsCount->approved = get_comments(array_merge($commentsQueryArgs, array('status' => "approve")));
+
+                    $links['approved'] = preg_replace('/<span class="approved-count">\d+<\/span>/', '<span class="approved-count">'. $commentsCount->approved .'</span>', $links['approved']);
+
+                    $commentsCount->pending = get_comments(array_merge($commentsQueryArgs, array('status' => "hold")));
+
+                    $links['moderated'] = preg_replace('/<span class="pending-count">\d+<\/span>/', '<span class="pending-count">'. $commentsCount->pending .'</span>', $links['moderated']);
+                }
+
+                if (isset($links['trash'])) {
+                    $commentsCount->trash = get_comments(array_merge($commentsQueryArgs, array('status' => "trash")));
+
+                    $links['trash'] = preg_replace('/<span class="trash-count">\d+<\/span>/', '<span class="trash-count">'. $commentsCount->trash .'</span>', $links['trash']);
+                }
+            } else {
+                $projects = get_posts(array(
+                    'post_type'      => "project",
+                    'posts_per_page' => -1
+                ));
+
+                $projectsIds = array();
+                foreach ($projects as $project) {
+                    $projectsIds[] = $project->ID;
+                }
+
+                $commentsQueryArgs = array(
+                    'post__not_in'  => $projectsIds,
+                    'count'         => true
+                );
+
+                if (isset($links['all'])) {
+                    $count = get_comments($commentsQueryArgs);
+                    $links['all'] = preg_replace('/<span class="all-count">\d+<\/span>/', '<span class="all-count">'. $count .'</span>', $links['all']);
+                }
+
+                if (isset($links['moderated'])) {
+                    $count = get_comments(array_merge($commentsQueryArgs, array('status' => "hold")));
+                    $links['moderated'] = preg_replace('/<span class="pending-count">\d+<\/span>/', '<span class="pending-count">'. $count .'</span>', $links['moderated']);
+                }
+
+                if (isset($links['approved'])) {
+                    $count = get_comments(array_merge($commentsQueryArgs, array('status' => "approve")));
+                    $links['approved'] = preg_replace('/<span class="approved-count">\d+<\/span>/', '<span class="approved-count">'. $count .'</span>', $links['approved']);
+                }
+
+                if (isset($links['spam'])) {
+                    $count = get_comments(array_merge($commentsQueryArgs, array('status' => "spam")));
+                    $links['spam'] = preg_replace('/<span class="spam-count">\d+<\/span>/', '<span class="spam-count">'. $count .'</span>', $links['spam']);
+                }
+
+                if (isset($links['trash'])) {
+                    $count = get_comments(array_merge($commentsQueryArgs, array('status' => "trash")));
+                    $links['trash'] = preg_replace('/<span class="trash-count">\d+<\/span>/', '<span class="trash-count">'. $count .'</span>', $links['trash']);
+                }
+            }
+        }
+
+        return $links;
     }
 }
 
