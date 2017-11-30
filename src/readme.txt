@@ -135,7 +135,7 @@ UpStream does not use the existing styling of your theme. The features and the v
 The format is based on [Keep a Changelog](http://keepachangelog.com)
 and this project adheres to [Semantic Versioning](http://semver.org).
 
-= [1.13.0] - @todo =
+= [1.13.0] - 2017-11-30 =
 
 Added:
 * UpStream comments are now integrated with WordPress Comments
