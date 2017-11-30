@@ -138,11 +138,12 @@ and this project adheres to [Semantic Versioning](http://semver.org).
 = [1.13.0] - 2017-11-30 =
 
 Added:
-* UpStream comments are now integrated with WordPress Comments
+* Discussion/Comments are now integrated with WordPress Comments
+* Added Discussion/Comments to Milestones, Tasks, Bugs, Files
 
 Changed:
 * "Discussion" was renamed to "Comments"
-* All project comments on Discussion were moved to WordPress Comments
+* All project comments on Discussion were converted into WordPress Comments
 
 Fixed:
 * Better handling of long item names on frontend
