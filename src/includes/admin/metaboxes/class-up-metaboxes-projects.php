@@ -786,7 +786,7 @@ class UpStream_Metaboxes_Projects {
             $cmb2GroupGrid = $cmb2Grid->addCmb2GroupGrid( $group_field_id );
 
             // define nuber of rows
-            $rows = apply_filters( 'upstream_task_metabox_rows', 5 );
+            $rows = apply_filters( 'upstream_task_metabox_rows', 10 );
 
             // filter the fields & sort numerically
             $fields = apply_filters( 'upstream_task_metabox_fields', $fields );
@@ -800,7 +800,7 @@ class UpStream_Metaboxes_Projects {
             }
 
             // loop through number of rows
-            for ($i=0; $i < $rows; $i++) {
+            for ($i=0; $i < 7; $i++) {
 
                 // add each row
                 $row[$i] = $cmb2GroupGrid->addRow();
@@ -827,6 +827,9 @@ class UpStream_Metaboxes_Projects {
                         $array[] = $fields[$i * 10 + 3];
                     }
 
+                    if (empty($array)) {
+                        continue;
+                    }
                     // add the fields as columns
                     $row[$i]->addColumns(
                         apply_filters( "upstream_task_row_{$i}_columns", $array )
