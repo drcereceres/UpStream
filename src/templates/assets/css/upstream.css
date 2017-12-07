@@ -325,3 +325,9 @@ table.datatable > tbody > tr.child > td.child > ul {
   overflow: hidden;
   text-overflow: ellipsis;
 }
+
+.dataTable > tbody > tr > td[data-name="description"] br + ol,
+.dataTable > tbody > tr > td[data-name="description"] br + ul {
+  margin-top: 15px;
+  margin-bottom: 0;
+}
