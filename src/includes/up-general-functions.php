@@ -1122,7 +1122,6 @@ function upstreamAreProjectCommentsEnabled()
 {
     // Retrieve UpStream general options.
     $options = get_option('upstream_general');
-
     $optionName = 'disable_project_comments';
     // Check if the option exists.
     if (isset($options[$optionName])) {
@@ -1131,7 +1130,22 @@ function upstreamAreProjectCommentsEnabled()
         $legacyOptionName = 'disable_discussion';
         // Check if user has legacy option set.
         if (isset($options[$legacyOptionName])) {
-            $allow = strtoupper(trim($options[$legacyOptionName])) !== 'YES';
+            if (is_array($options[$legacyOptionName])) {
+                if (!empty($options[$legacyOptionName])) {
+                    $options[$legacyOptionName] = array_reverse($options[$legacyOptionName]);
+                    $legacyOptionValue = array_pop($options[$legacyOptionName]);
+                } else {
+                    $legacyOptionValue = "";
+                }
+            } else {
+                $legacyOptionValue = (string)$options[$legacyOptionName];
+            }
+
+            if (is_string($legacyOptionValue)) {
+                $allow = strtoupper(trim($legacyOptionValue)) !== 'YES';
+            } else {
+                $allow = true;
+            }
         } else {
             // Default value.
             $allow = true;

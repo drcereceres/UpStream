@@ -142,6 +142,7 @@ Fixed:
 * Fixed wrong redirects for some non UpStream users
 * Fixed some users not being able to access their own posts
 * Fixed post listing being empty for some users outside UpStream's scope
+* Fixed potential PHP error on frontend
 
 = [1.13.0] - 2017-11-30 =
 
