@@ -1239,7 +1239,7 @@ function upstreamAreCommentsEnabledOnFiles()
 /**
  * Slighted modification of PHP's native nl2br function.
  *
- * @since   @todo
+ * @since   1.13.1
  *
  * @param   string  $subject    String to be processed.
  *
