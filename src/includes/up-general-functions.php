@@ -1130,7 +1130,8 @@ function upstreamAreProjectCommentsEnabled()
         $legacyOptionName = 'disable_discussion';
         // Check if user has legacy option set.
         if (isset($options[$legacyOptionName])) {
-            if (is_array($options[$legacyOptionName])) {
+            if (is_array($options[$legacyOptionName]) || is_object($options[$legacyOptionName])) {
+                $options[$legacyOptionName] = json_decode(json_encode($options[$legacyOptionName]), true);
                 if (!empty($options[$legacyOptionName])) {
                     $options[$legacyOptionName] = array_reverse($options[$legacyOptionName]);
                     $legacyOptionValue = array_pop($options[$legacyOptionName]);
@@ -1146,6 +1147,14 @@ function upstreamAreProjectCommentsEnabled()
             } else {
                 $allow = true;
             }
+
+            unset($options[$legacyOptionName]);
+
+            // Migrate existent legacy option.
+            $options[$optionName] = (int)!$allow;
+
+            // Update options.
+            update_option('upstream_general', $options);
         } else {
             // Default value.
             $allow = true;
