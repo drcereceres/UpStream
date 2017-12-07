@@ -1226,3 +1226,58 @@ function upstreamAreCommentsEnabledOnFiles()
 
     return $allow;
 }
+
+/**
+ * Slighted modification of PHP's native nl2br function.
+ *
+ * @since   @todo
+ *
+ * @param   string  $subject    String to be processed.
+ *
+ * @return  string
+ */
+function upstream_nl2br($subject)
+{
+    // Step 1: Add <br /> tags for each line-break.
+    $subject = nl2br($subject);
+
+    // Step 2: Remove the actual line-breaks.
+    $subject = str_replace("\n", "", $subject);
+    $subject = str_replace("\r", "", $subject);
+
+    // Step 3: Restore the line-breaks that are inside <pre></pre> tags.
+    if (preg_match_all('/\<pre\>(.*?)\<\/pre\>/', $subject, $match)) {
+        foreach ($match as $a) {
+            foreach($a as $b) {
+                $subject = str_replace('<pre>' . $b . '</pre>', "<pre>" . str_replace("<br />", PHP_EOL, $b) . "</pre>", $subject);
+            }
+        }
+    }
+
+    // Step 4: Removes extra <br /> tags.
+
+    // Before <pre> tags.
+    $subject = str_replace("<br /><br /><br /><pre>", '<br /><br /><pre>', $subject);
+    // After </pre> tags.
+    $subject = str_replace("</pre><br /><br />", '</pre><br />', $subject);
+
+    // Arround <ul></ul> tags.
+    $subject = str_replace("<br /><br /><ul>", '<br /><ul>', $subject);
+    $subject = str_replace("</ul><br /><br />", '</ul><br />', $subject);
+    // Inside <ul> </ul> tags.
+    $subject = str_replace("<ul><br />", '<ul>', $subject);
+    $subject = str_replace("<br /></ul>", '</ul>', $subject);
+
+    // Arround <ol></ol> tags.
+    $subject = str_replace("<br /><br /><ol>", '<br /><ol>', $subject);
+    $subject = str_replace("</ol><br /><br />", '</ol><br />', $subject);
+    // Inside <ol> </ol> tags.
+    $subject = str_replace("<ol><br />", '<ol>', $subject);
+    $subject = str_replace("<br /></ol>", '</ol>', $subject);
+
+    // Arround <li></li> tags.
+    $subject = str_replace("<br /><li>", '<li>', $subject);
+    $subject = str_replace("</li><br />", '</li>', $subject);
+
+    return $subject;
+}

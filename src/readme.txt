@@ -143,6 +143,7 @@ Fixed:
 * Fixed some users not being able to access their own posts
 * Fixed post listing being empty for some users outside UpStream's scope
 * Fixed potential PHP error on frontend
+* Fixed Description/Notes losing line breaks on frontend display
 
 = [1.13.0] - 2017-11-30 =
 
