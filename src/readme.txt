@@ -139,6 +139,9 @@ and this project adheres to [Semantic Versioning](http://semver.org).
 
 Fixed:
 * Fix Bugs widget on frontend using Tasks statuses labels instead
+* Fixed wrong redirects for some non UpStream users
+* Fixed some users not being able to access their own posts
+* Fixed post listing being empty for some users outside UpStream's scope
 
 = [1.13.0] - 2017-11-30 =
 

@@ -297,12 +297,10 @@ class UpStream_Admin_Project_Columns {
 
     function filter( $query ){
         global $pagenow;
-        $type = 'project';
-        if (isset($_GET['post_type'])) {
-            $type = $_GET['post_type'];
-        }
 
-        if ($type === 'project' && is_admin()) {
+        $postType = isset($_GET['post_type']) ? $_GET['post_type'] : 'post';
+
+        if ($postType === 'project' && is_admin()) {
             if (!$this->allowAllProjects && $query->filterAllowedProjects) {
                 $query->query_vars = array_merge($query->query_vars, array(
                     'post__in' => count($this->allowedProjects) === 0 ? array('making_sure_no_project_is_returned') : $this->allowedProjects
