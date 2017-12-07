@@ -137,7 +137,8 @@ and this project adheres to [Semantic Versioning](http://semver.org).
 
 = [1.13.1] - @todo =
 
-@todo
+Fixed:
+* Fix Bugs widget on frontend using Tasks statuses labels instead
 
 = [1.13.0] - 2017-11-30 =
 

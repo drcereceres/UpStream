@@ -113,7 +113,7 @@ if ($areBugsEnabled) {
         'total'   => 0
     );
 
-    $bugsOptions = get_option('upstream_tasks');
+    $bugsOptions = get_option('upstream_bugs');
     $bugsMap = array();
     foreach ($bugsOptions['statuses'] as $bug) {
         $bugsMap[$bug['name']] = $bug['type'];
