@@ -83,14 +83,19 @@ function upstream_output_project_members($id = null)
     <?php endif;
 }
 
-function upstream_get_file_preview( $attachment_id, $attachment_url ) {
-
+function upstream_get_file_preview( $attachment_id, $attachment_url, $useLi = true ) {
+    $useLi = (bool)$useLi;
     $filetype = wp_check_filetype( $attachment_url );
     $filename = basename( $attachment_url );
 
-    if( wp_get_attachment_image( $attachment_id, 'thumbnail' ) ) {
+    $output = '';
 
-        $output = '<li><a target="_blank" href="' . esc_url( $attachment_url ) . '">' . wp_get_attachment_image(
+    if ($useLi) {
+        $output = '<li>';
+    }
+
+    if( wp_get_attachment_image( $attachment_id, 'thumbnail' ) ) {
+        $output .=  '<a target="_blank" href="' . esc_url( $attachment_url ) . '">' . wp_get_attachment_image(
             $attachment_id,
             array( 32, 32 ),
             false,
@@ -102,7 +107,7 @@ function upstream_get_file_preview( $attachment_id, $attachment_url ) {
                 'data-fileurl' => esc_attr( $attachment_url ),
                 'class' => 'avatar itemfile'
                 )
-            ) . '</a></li>';
+            ) . '</a>';
 
     } else {
 
@@ -117,7 +122,16 @@ function upstream_get_file_preview( $attachment_id, $attachment_url ) {
             default: $icon = 'fa-file-text-o'; break;
         };
 
-        $output = '<li><a target="_blank" href="' . esc_url( $attachment_url ) . '"><i class="itemfile fa ' . esc_attr( $icon ) . '" data-toggle="tooltip" data-placement="top" data-fileid="' . (int) $attachment_id . '" data-fileurl="' . esc_attr( $attachment_url ) . '" title="' . esc_attr( $filename ) . '"></i></a></li>';
+        $output = '';
+        if ($useLi) {
+            $output = '<li>';
+        }
+
+        $output .= '<a target="_blank" href="' . esc_url( $attachment_url ) . '"><i class="itemfile fa ' . esc_attr( $icon ) . '" data-toggle="tooltip" data-placement="top" data-fileid="' . (int) $attachment_id . '" data-fileurl="' . esc_attr( $attachment_url ) . '" title="' . esc_attr( $filename ) . '"></i></a>';
+    }
+
+    if ($useLi) {
+        $output .= '</li>';
     }
 
     return $output;
