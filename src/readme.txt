@@ -135,6 +135,11 @@ UpStream does not use the existing styling of your theme. The features and the v
 The format is based on [Keep a Changelog](http://keepachangelog.com)
 and this project adheres to [Semantic Versioning](http://semver.org).
 
+= [@todo: WIP] =
+
+Fixed:
+* Fixed Description/Notes losing line breaks on frontend display
+
 = [1.13.0] - 2017-11-30 =
 
 Added:
