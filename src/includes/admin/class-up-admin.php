@@ -47,28 +47,32 @@ class UpStream_Admin {
 
             $shouldRedirect = false;
 
+            $postType = isset($_GET['post_type']) ? $_GET['post_type'] : '';
+            $isPostTypeProject = $postType === 'project';
+
             if ($pagenow === 'edit-tags.php') {
-                if (
-                    isset($_GET['taxonomy']) &&
-                    $_GET['taxonomy'] === 'project_category' &&
-                    isset($_GET['post_type']) &&
-                    $_GET['post_type'] === 'project'
+                if (isset($_GET['taxonomy'])
+                    && $_GET['taxonomy'] === 'project_category'
+                    && $isPostTypeProject
                 ) {
                     $shouldRedirect = true;
                 }
-            } else if ($pagenow === 'post.php') {
-                $projectMembersList = get_post_meta((int)$_GET['post'], '_upstream_project_members');
+            } else if ($pagenow === 'post.php'
+                && $isPostTypeProject
+            ) {
+                $projectMembersList = (array)get_post_meta((int)$_GET['post'], '_upstream_project_members', true);
                 // Since he's not and Administrator nor an UpStream Manager, we need to check if he's participating in the project.
-                if (!in_array($user->ID, $projectMembersList[0])) {
+                if (!in_array($user->ID, $projectMembersList)) {
                     $shouldRedirect = true;
                 }
-            } else if ($pagenow === 'post-new.php') {
+            } else if ($pagenow === 'post-new.php'
+                && $isPostTypeProject
+            ) {
                 $shouldRedirect = true;
-            } else if ($pagenow === 'edit.php') {
-                $postType = @$_GET['post_type'];
-                if ($postType === 'client') {
-                    $shouldRedirect = true;
-                }
+            } else if ($pagenow === 'edit.php'
+                && $postType === 'client'
+            ) {
+                $shouldRedirect = true;
             }
 
             if ($shouldRedirect) {

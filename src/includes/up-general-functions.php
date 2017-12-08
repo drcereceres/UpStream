@@ -1122,7 +1122,6 @@ function upstreamAreProjectCommentsEnabled()
 {
     // Retrieve UpStream general options.
     $options = get_option('upstream_general');
-
     $optionName = 'disable_project_comments';
     // Check if the option exists.
     if (isset($options[$optionName])) {
@@ -1131,7 +1130,31 @@ function upstreamAreProjectCommentsEnabled()
         $legacyOptionName = 'disable_discussion';
         // Check if user has legacy option set.
         if (isset($options[$legacyOptionName])) {
-            $allow = strtoupper(trim($options[$legacyOptionName])) !== 'YES';
+            if (is_array($options[$legacyOptionName]) || is_object($options[$legacyOptionName])) {
+                $options[$legacyOptionName] = json_decode(json_encode($options[$legacyOptionName]), true);
+                if (!empty($options[$legacyOptionName])) {
+                    $options[$legacyOptionName] = array_reverse($options[$legacyOptionName]);
+                    $legacyOptionValue = array_pop($options[$legacyOptionName]);
+                } else {
+                    $legacyOptionValue = "";
+                }
+            } else {
+                $legacyOptionValue = (string)$options[$legacyOptionName];
+            }
+
+            if (is_string($legacyOptionValue)) {
+                $allow = strtoupper(trim($legacyOptionValue)) !== 'YES';
+            } else {
+                $allow = true;
+            }
+
+            unset($options[$legacyOptionName]);
+
+            // Migrate existent legacy option.
+            $options[$optionName] = (int)!$allow;
+
+            // Update options.
+            update_option('upstream_general', $options);
         } else {
             // Default value.
             $allow = true;
@@ -1211,4 +1234,59 @@ function upstreamAreCommentsEnabledOnFiles()
     $allow = isset($options[$optionName]) ? (bool)$options[$optionName] : true;
 
     return $allow;
+}
+
+/**
+ * Slighted modification of PHP's native nl2br function.
+ *
+ * @since   1.13.1
+ *
+ * @param   string  $subject    String to be processed.
+ *
+ * @return  string
+ */
+function upstream_nl2br($subject)
+{
+    // Step 1: Add <br /> tags for each line-break.
+    $subject = nl2br($subject);
+
+    // Step 2: Remove the actual line-breaks.
+    $subject = str_replace("\n", "", $subject);
+    $subject = str_replace("\r", "", $subject);
+
+    // Step 3: Restore the line-breaks that are inside <pre></pre> tags.
+    if (preg_match_all('/\<pre\>(.*?)\<\/pre\>/', $subject, $match)) {
+        foreach ($match as $a) {
+            foreach($a as $b) {
+                $subject = str_replace('<pre>' . $b . '</pre>', "<pre>" . str_replace("<br />", PHP_EOL, $b) . "</pre>", $subject);
+            }
+        }
+    }
+
+    // Step 4: Removes extra <br /> tags.
+
+    // Before <pre> tags.
+    $subject = str_replace("<br /><br /><br /><pre>", '<br /><br /><pre>', $subject);
+    // After </pre> tags.
+    $subject = str_replace("</pre><br /><br />", '</pre><br />', $subject);
+
+    // Arround <ul></ul> tags.
+    $subject = str_replace("<br /><br /><ul>", '<br /><ul>', $subject);
+    $subject = str_replace("</ul><br /><br />", '</ul><br />', $subject);
+    // Inside <ul> </ul> tags.
+    $subject = str_replace("<ul><br />", '<ul>', $subject);
+    $subject = str_replace("<br /></ul>", '</ul>', $subject);
+
+    // Arround <ol></ol> tags.
+    $subject = str_replace("<br /><br /><ol>", '<br /><ol>', $subject);
+    $subject = str_replace("</ol><br /><br />", '</ol><br />', $subject);
+    // Inside <ol> </ol> tags.
+    $subject = str_replace("<ol><br />", '<ol>', $subject);
+    $subject = str_replace("<br /></ol>", '</ol>', $subject);
+
+    // Arround <li></li> tags.
+    $subject = str_replace("<br /><li>", '<li>', $subject);
+    $subject = str_replace("</li><br />", '</li>', $subject);
+
+    return $subject;
 }
