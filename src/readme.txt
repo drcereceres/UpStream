@@ -135,7 +135,7 @@ UpStream does not use the existing styling of your theme. The features and the v
 The format is based on [Keep a Changelog](http://keepachangelog.com)
 and this project adheres to [Semantic Versioning](http://semver.org).
 
-= [1.13.1] - @todo =
+= [1.13.1] - 2017-12-07 =
 
 Fixed:
 * Fix Bugs widget on frontend using Tasks statuses labels instead
