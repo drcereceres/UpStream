@@ -561,7 +561,7 @@ function upstream_output_table_rows( $id, $table, $filterRowsetByCurrentUser = f
                 }
             }
 
-            $tr .= '<td data-name="' . esc_attr( $key ) . '" ' . $order . ' data-value="' . esc_attr( $data_value ) . '" class="' . esc_attr( $setting['row_class'] ) . '">' . $field_data . '</td>';
+            $tr .= '<td data-name="' . esc_attr( $key ) . '" ' . $order . ' data-value="' . esc_attr( $data_value ) . '" class="' . esc_attr( $setting['row_class'] ) . '">' . (in_array($key, array('notes', 'description')) ?  upstream_nl2br($field_data) : $field_data) . '</td>';
         }
 
         $tr .= '</tr>';
@@ -655,7 +655,7 @@ function upstream_format_table_data( $item, $key, $setting ) {
             $output = '<i>' . __('none', 'upstream') . '</i>';
         } else {
             if( isset( $item['file'] ) && isset( $item['file_id'] ) && $item['file'] != '' ) {
-                $output .= upstream_get_file_preview( $item['file_id'], $item['file'] );
+                $output .= upstream_get_file_preview( $item['file_id'], $item['file'], false );
             }
         }
     }
