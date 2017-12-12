@@ -1266,3 +1266,7 @@ body.upstream_page_upstream_extensions #upstream_extensions input[type="submit"]
   -moz-box-sizing: initial !important;
   -webkit-box-sizing: initial !important;
 }
+
+.up-s-hidden {
+  display: none;
+}
