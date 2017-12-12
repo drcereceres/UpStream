@@ -561,7 +561,9 @@ function upstream_output_table_rows( $id, $table, $filterRowsetByCurrentUser = f
                 }
             }
 
-            $tr .= '<td data-name="' . esc_attr( $key ) . '" ' . $order . ' data-value="' . esc_attr( $data_value ) . '" class="' . esc_attr( $setting['row_class'] ) . '">' . $field_data . '</td>';
+            $td = '<td data-name="' . esc_attr( $key ) . '" ' . $order . ' data-value="' . esc_attr( $data_value ) . '" class="' . esc_attr( $setting['row_class'] ) . '">' . $field_data . '</td>';
+
+            $tr .= apply_filters('upstream:frontend:renderGridDataRowColumn', $td, $key, $setting, $item, $table);
         }
 
         $tr .= '</tr>';
