@@ -451,7 +451,16 @@ function upstream_output_table_header( $table ) {
             if( isset( $setting['display'] ) && ! $setting['display'] )
                 continue;
 
-            $output .= "<th class='" . esc_attr( $setting['heading_class'] ) . "'>" . $setting['heading'] . "</th>";
+            $attrs = array();
+            if (isset($setting['attributes'])
+                && is_array($setting['attributes'])
+            ) {
+                foreach ($setting['attributes'] as $attrKey => $attrValue) {
+                    $attrs[] = sprintf('%s="%s"', $attrKey, esc_attr($attrValue));
+                }
+            }
+
+            $output .= "<th class='" . esc_attr( $setting['heading_class'] ) . "'" . (count($attrs) > 0 ? implode(' ', $attrs) : '') . ">" . $setting['heading'] . "</th>";
 
         }
         $output .= '</tr>';
@@ -519,6 +528,9 @@ function upstream_output_table_rows( $id, $table, $filterRowsetByCurrentUser = f
 
             $order = null;
 
+            if (is_array($item[$key])) {
+                $item[$key] = implode('#', $item[$key]);
+            }
 
             // get the raw value before formatting
             // will be used with the frontend edit plugin for getting actual values via JS
