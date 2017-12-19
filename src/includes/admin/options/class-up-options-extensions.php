@@ -117,7 +117,16 @@ class UpStream_Options_Extensions {
                 'description'      => __('This calendar display will allow you to easily see everything that’s happening in a project. You’ll be able to see due dates for all the milestones, tasks, and bugs.', 'upstream'),
                 'product_id'       => 6798,
                 'options_key_slug' => 'calendar-view'
+            ),
+            /*
+            array(
+                'id'               => 'custom-fields',
+                'title'            => 'Custom Fields',
+                'description'      => __('@todo', 'upstream'),
+                'product_id'       => '@todo',
+                'options_key_slug' => 'custom-fields'
             )
+            */
         );
 
         $licenses = (array)get_option('upstream:extensions');
