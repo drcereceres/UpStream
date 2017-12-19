@@ -669,7 +669,7 @@ function upstream_format_table_data( $item, $key, $setting ) {
             $output = '<i>' . __('none', 'upstream') . '</i>';
         } else {
             if( isset( $item['file'] ) && isset( $item['file_id'] ) && $item['file'] != '' ) {
-                $output .= upstream_get_file_preview( $item['file_id'], $item['file'] );
+                $output .= upstream_get_file_preview( $item['file_id'], $item['file'], false );
             }
         }
     }

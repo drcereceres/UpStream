@@ -4,7 +4,7 @@ Tags: project, manage, management, project management, project manager, wordpres
 Requires at least: 4.5
 Tested up to: 4.9
 Requires PHP: 5.6
-Stable tag: 1.13.0
+Stable tag: 1.13.1
 License: GPL-3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -139,6 +139,16 @@ and this project adheres to [Semantic Versioning](http://semver.org).
 
 Changed:
 * CMB2 lib was updated to v2.2.6.2
+
+= [1.13.1] - 2017-12-07 =
+
+Fixed:
+* Fix Bugs widget on frontend using Tasks statuses labels instead
+* Fixed wrong redirects for some non UpStream users
+* Fixed some users not being able to access their own posts
+* Fixed post listing being empty for some users outside UpStream's scope
+* Fixed potential PHP error on frontend
+* Fixed Description/Notes losing line breaks on frontend display
 
 = [1.13.0] - 2017-11-30 =
 
