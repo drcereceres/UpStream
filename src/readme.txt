@@ -139,6 +139,7 @@ and this project adheres to [Semantic Versioning](http://semver.org).
 
 Changed:
 * CMB2 lib was updated to v2.2.6.2
+* Lang files cleanup
 
 = [1.13.1] - 2017-12-07 =
 
