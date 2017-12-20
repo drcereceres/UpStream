@@ -137,6 +137,9 @@ and this project adheres to [Semantic Versioning](http://semver.org).
 
 = [@todo: WIP] =
 
+Added:
+* Added new Custom Fields extension
+
 Changed:
 * CMB2 lib was updated to v2.2.6.2
 * Lang files cleanup
