@@ -561,6 +561,14 @@ function upstream_output_table_rows( $id, $table, $filterRowsetByCurrentUser = f
                 }
             }
 
+            if ($key === 'notes'
+                || $key === 'description'
+            ) {
+                if (strlen($field_data) === 0) {
+                    $field_data = '<i>' . __('none', 'upstream') . '</i>';
+                }
+            }
+
             $tr .= '<td data-name="' . esc_attr( $key ) . '" ' . $order . ' data-value="' . esc_attr( $data_value ) . '" class="' . esc_attr( $setting['row_class'] ) . '">' . (in_array($key, array('notes', 'description')) ?  upstream_nl2br($field_data) : $field_data) . '</td>';
         }
 
