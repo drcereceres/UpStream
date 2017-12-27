@@ -137,6 +137,9 @@ and this project adheres to [Semantic Versioning](http://semver.org).
 
 = [@todo: WIP] =
 
+Changed:
+* Display none to empty Notes/Descirption fields
+
 = [1.13.1] - 2017-12-07 =
 
 Fixed:
