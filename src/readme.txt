@@ -142,6 +142,7 @@ Added:
 
 Changed:
 * Display none to empty Notes/Descirption/Comments fields
+* Removed "Settings" label from settings sub menu items
 
 Fixed:
 * Fixed some assets being loaded on every page

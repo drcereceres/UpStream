@@ -49,7 +49,7 @@ class UpStream_Options_Extensions {
     public function __construct() {
         // Set our title
         $this->title = __( 'Extensions', 'upstream' );
-        $this->menu_title = __( 'Extensions', 'upstream' );
+        $this->menu_title = $this->title;
         $this->description = __( 'These extensions add extra functionality to the UpStream Project Management plugin.', 'upstream' );
 
         add_action('cmb2_render_upstream_extensions_wrapper', array('UpStream_Options_Extensions', 'renderExtensionsWrapper'), 10, 5 );
