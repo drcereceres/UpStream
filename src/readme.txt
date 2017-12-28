@@ -137,8 +137,14 @@ and this project adheres to [Semantic Versioning](http://semver.org).
 
 = [1.13.2] - @todo =
 
+Added:
+* Added new filter that allow custom post types to load CMB2 in admin
+
 Changed:
 * Display none to empty Notes/Descirption/Comments fields
+
+Fixed:
+* Fixed some assets being loaded on every page
 
 = [1.13.1] - 2017-12-07 =
 
