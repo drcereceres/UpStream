@@ -137,7 +137,8 @@ and this project adheres to [Semantic Versioning](http://semver.org).
 
 = [1.13.2] - @todo =
 
-@todo
+Changed:
+* Display none to empty Notes/Descirption/Comments fields
 
 = [1.13.1] - 2017-12-07 =
 
