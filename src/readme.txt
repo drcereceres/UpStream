@@ -150,7 +150,7 @@ Changed:
 
 Fixed:
 * Fixed some assets being loaded on every page
-* Fixed missing Discussion link the on the frontend sidebar
+* Fixed missing Discussion link on the frontend sidebar
 
 = [1.13.1] - 2017-12-07 =
 
