@@ -146,9 +146,11 @@ Changed:
 * Removed "Settings" label from settings sub menu items
 * CMB2 lib was updated to v2.2.6.2
 * Lang files cleanup
+* Project Comments section was renamed back to Discussion
 
 Fixed:
 * Fixed some assets being loaded on every page
+* Fixed missing Discussion link the on the frontend sidebar
 
 = [1.13.1] - 2017-12-07 =
 
