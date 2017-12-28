@@ -138,11 +138,14 @@ and this project adheres to [Semantic Versioning](http://semver.org).
 = [1.13.2] - @todo =
 
 Added:
+* Added new extension: Custom Fields
 * Added new filter that allow custom post types to load CMB2 in admin
 
 Changed:
 * Display none to empty Notes/Descirption/Comments fields
 * Removed "Settings" label from settings sub menu items
+* CMB2 lib was updated to v2.2.6.2
+* Lang files cleanup
 
 Fixed:
 * Fixed some assets being loaded on every page
