@@ -2,7 +2,7 @@
 # This file is distributed under the same license as the UpStream package.
 msgid ""
 msgstr ""
-"Project-Id-Version: UpStream v1.13.1\n"
+"Project-Id-Version: UpStream v1.13.2\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -16,40 +16,40 @@ msgstr ""
 "X-Poedit-SourceCharset: UTF-8\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: ../upstream.php:344
+#: ../upstream.php:355
 msgid "View Documentation"
 msgstr ""
 
-#: ../upstream.php:344
+#: ../upstream.php:355
 msgid "Docs"
 msgstr ""
 
-#: ../upstream.php:345
+#: ../upstream.php:356
 msgid "View Quick Start Guide"
 msgstr ""
 
-#: ../upstream.php:345
+#: ../upstream.php:356
 msgid "Quick Start Guide"
 msgstr ""
 
-#: ../upstream.php:369
+#: ../upstream.php:380
 msgid "Open Settings Page"
 msgstr ""
 
-#: ../upstream.php:370
+#: ../upstream.php:381
 msgid "Settings"
 msgstr ""
 
-#: ../upstream.php:410
+#: ../upstream.php:421
 msgid "Update notice:"
 msgstr ""
 
-#: ../upstream.php:415
+#: ../upstream.php:426
 msgctxt "1st %s: plugin version, 2nd %s: capability name, 3rd: UpStream User role"
 msgid "Starting from <strong>%s</strong> <code>%s</code> capability was removed from <code>%s</code> users role."
 msgstr ""
 
-#: ../upstream.php:418, ../includes/class-up-roles.php:61
+#: ../upstream.php:429, ../includes/class-up-roles.php:61
 msgid "UpStream User"
 msgstr ""
 
@@ -62,20 +62,20 @@ msgstr ""
 msgid "Unable to save the data into database."
 msgstr ""
 
-#: ../includes/class-up-comment.php:444, ../includes/class-up-comments.php:666, ../includes/admin/metaboxes/class-up-metaboxes-projects.php:1714, ../includes/admin/metaboxes/metabox-functions.php:529
+#: ../includes/class-up-comment.php:444, ../includes/class-up-comments.php:666, ../includes/admin/metaboxes/class-up-metaboxes-projects.php:1717, ../includes/admin/metaboxes/metabox-functions.php:529
 msgctxt "%s = human-readable time difference"
 msgid "%s ago"
 msgstr ""
 
-#: ../includes/class-up-comments.php:102, ../includes/class-up-comments.php:112, ../includes/class-up-comments.php:124, ../includes/class-up-comments.php:199, ../includes/class-up-comments.php:208, ../includes/class-up-comments.php:291, ../includes/class-up-comments.php:367, ../includes/class-up-comments.php:552, ../includes/class-up-comments.php:568, ../includes/class-up-comments.php:580, ../includes/admin/metaboxes/class-up-metaboxes-clients.php:665, ../includes/admin/metaboxes/class-up-metaboxes-clients.php:785, ../includes/admin/metaboxes/class-up-metaboxes-clients.php:846, ../includes/admin/metaboxes/class-up-metaboxes-clients.php:913, ../includes/admin/metaboxes/class-up-metaboxes-clients.php:1293, ../includes/admin/metaboxes/class-up-metaboxes-clients.php:1343, ../includes/admin/metaboxes/class-up-metaboxes-projects.php:1631, ../includes/admin/options/class-up-options-extensions.php:311, ../includes/admin/options/class-up-options-extensions.php:411
+#: ../includes/class-up-comments.php:102, ../includes/class-up-comments.php:112, ../includes/class-up-comments.php:124, ../includes/class-up-comments.php:199, ../includes/class-up-comments.php:208, ../includes/class-up-comments.php:291, ../includes/class-up-comments.php:367, ../includes/class-up-comments.php:552, ../includes/class-up-comments.php:568, ../includes/class-up-comments.php:580, ../includes/admin/metaboxes/class-up-metaboxes-clients.php:665, ../includes/admin/metaboxes/class-up-metaboxes-clients.php:785, ../includes/admin/metaboxes/class-up-metaboxes-clients.php:846, ../includes/admin/metaboxes/class-up-metaboxes-clients.php:913, ../includes/admin/metaboxes/class-up-metaboxes-clients.php:1293, ../includes/admin/metaboxes/class-up-metaboxes-clients.php:1343, ../includes/admin/metaboxes/class-up-metaboxes-projects.php:1634, ../includes/admin/options/class-up-options-extensions.php:320, ../includes/admin/options/class-up-options-extensions.php:420
 msgid "Invalid request."
 msgstr ""
 
-#: ../includes/class-up-comments.php:129, ../includes/class-up-comments.php:214, ../includes/class-up-comments.php:324, ../includes/class-up-comments.php:372, ../includes/admin/metaboxes/class-up-metaboxes-clients.php:661, ../includes/admin/metaboxes/class-up-metaboxes-clients.php:781, ../includes/admin/metaboxes/class-up-metaboxes-clients.php:842, ../includes/admin/metaboxes/class-up-metaboxes-clients.php:909, ../includes/admin/metaboxes/class-up-metaboxes-clients.php:1007, ../includes/admin/metaboxes/class-up-metaboxes-clients.php:1193, ../includes/admin/metaboxes/class-up-metaboxes-clients.php:1289, ../includes/admin/metaboxes/class-up-metaboxes-clients.php:1339, ../includes/admin/options/class-up-options-extensions.php:307, ../includes/admin/options/class-up-options-extensions.php:315, ../includes/admin/options/class-up-options-extensions.php:407, ../includes/admin/options/class-up-options-extensions.php:415
+#: ../includes/class-up-comments.php:129, ../includes/class-up-comments.php:214, ../includes/class-up-comments.php:324, ../includes/class-up-comments.php:372, ../includes/admin/metaboxes/class-up-metaboxes-clients.php:661, ../includes/admin/metaboxes/class-up-metaboxes-clients.php:781, ../includes/admin/metaboxes/class-up-metaboxes-clients.php:842, ../includes/admin/metaboxes/class-up-metaboxes-clients.php:909, ../includes/admin/metaboxes/class-up-metaboxes-clients.php:1007, ../includes/admin/metaboxes/class-up-metaboxes-clients.php:1193, ../includes/admin/metaboxes/class-up-metaboxes-clients.php:1289, ../includes/admin/metaboxes/class-up-metaboxes-clients.php:1339, ../includes/admin/options/class-up-options-extensions.php:316, ../includes/admin/options/class-up-options-extensions.php:324, ../includes/admin/options/class-up-options-extensions.php:416, ../includes/admin/options/class-up-options-extensions.php:424
 msgid "You're not allowed to do this."
 msgstr ""
 
-#: ../includes/class-up-comments.php:135, ../includes/class-up-comments.php:220, ../includes/class-up-comments.php:297, ../includes/class-up-comments.php:558, ../includes/admin/metaboxes/class-up-metaboxes-projects.php:1637
+#: ../includes/class-up-comments.php:135, ../includes/class-up-comments.php:220, ../includes/class-up-comments.php:297, ../includes/class-up-comments.php:558, ../includes/admin/metaboxes/class-up-metaboxes-projects.php:1640
 msgid "Invalid Project."
 msgstr ""
 
@@ -475,7 +475,7 @@ msgstr ""
 msgid "Progress"
 msgstr ""
 
-#: ../templates/archive-project.php:60, ../includes/admin/class-up-admin-bugs-page.php:39, ../includes/admin/class-up-admin-tasks-page.php:40, ../includes/frontend/up-table-functions.php:174, ../includes/frontend/up-table-functions.php:296, ../includes/admin/metaboxes/class-up-metaboxes-projects.php:464, ../includes/admin/metaboxes/class-up-metaboxes-projects.php:694, ../includes/admin/metaboxes/class-up-metaboxes-projects.php:1028, ../includes/admin/metaboxes/class-up-metaboxes-projects.php:1171
+#: ../templates/archive-project.php:60, ../includes/admin/class-up-admin-bugs-page.php:39, ../includes/admin/class-up-admin-tasks-page.php:40, ../includes/frontend/up-table-functions.php:174, ../includes/frontend/up-table-functions.php:296, ../includes/admin/metaboxes/class-up-metaboxes-projects.php:464, ../includes/admin/metaboxes/class-up-metaboxes-projects.php:694, ../includes/admin/metaboxes/class-up-metaboxes-projects.php:1031, ../includes/admin/metaboxes/class-up-metaboxes-projects.php:1174
 msgid "Status"
 msgstr ""
 
@@ -507,15 +507,15 @@ msgstr ""
 msgid "Sign In"
 msgstr ""
 
-#: ../includes/admin/class-up-admin-bugs-page.php:37, ../includes/admin/class-up-admin-tasks-page.php:38, ../includes/frontend/up-table-functions.php:59, ../includes/frontend/up-table-functions.php:167, ../includes/frontend/up-table-functions.php:282, ../includes/admin/metaboxes/class-up-metaboxes-projects.php:286, ../includes/admin/metaboxes/class-up-metaboxes-projects.php:431, ../includes/admin/metaboxes/class-up-metaboxes-projects.php:683, ../includes/admin/metaboxes/class-up-metaboxes-projects.php:1003
+#: ../includes/admin/class-up-admin-bugs-page.php:37, ../includes/admin/class-up-admin-tasks-page.php:38, ../includes/frontend/up-table-functions.php:59, ../includes/frontend/up-table-functions.php:167, ../includes/frontend/up-table-functions.php:282, ../includes/admin/metaboxes/class-up-metaboxes-projects.php:286, ../includes/admin/metaboxes/class-up-metaboxes-projects.php:431, ../includes/admin/metaboxes/class-up-metaboxes-projects.php:683, ../includes/admin/metaboxes/class-up-metaboxes-projects.php:1006
 msgid "Assigned To"
 msgstr ""
 
-#: ../includes/admin/class-up-admin-bugs-page.php:38, ../includes/frontend/up-table-functions.php:303, ../includes/admin/metaboxes/class-up-metaboxes-projects.php:1067
+#: ../includes/admin/class-up-admin-bugs-page.php:38, ../includes/frontend/up-table-functions.php:303, ../includes/admin/metaboxes/class-up-metaboxes-projects.php:1070
 msgid "Due Date"
 msgstr ""
 
-#: ../includes/admin/class-up-admin-bugs-page.php:40, ../includes/frontend/up-table-functions.php:289, ../includes/admin/metaboxes/class-up-metaboxes-projects.php:497, ../includes/admin/metaboxes/class-up-metaboxes-projects.php:1041, ../includes/admin/options/class-up-options-bugs.php:131
+#: ../includes/admin/class-up-admin-bugs-page.php:40, ../includes/frontend/up-table-functions.php:289, ../includes/admin/metaboxes/class-up-metaboxes-projects.php:497, ../includes/admin/metaboxes/class-up-metaboxes-projects.php:1044, ../includes/admin/options/class-up-options-bugs.php:131
 msgid "Severity"
 msgstr ""
 
@@ -535,7 +535,7 @@ msgstr ""
 msgid "Filter"
 msgstr ""
 
-#: ../includes/admin/class-up-admin-bugs-page.php:253, ../includes/admin/class-up-admin-bugs-page.php:260, ../includes/admin/class-up-admin-bugs-page.php:265, ../includes/admin/class-up-admin-bugs-page.php:276, ../includes/admin/class-up-admin-client-columns.php:120, ../includes/admin/class-up-admin-tasks-page.php:260, ../includes/admin/class-up-admin-tasks-page.php:274, ../includes/admin/class-up-admin-tasks-page.php:281, ../includes/admin/class-up-admin-tasks-page.php:286, ../includes/frontend/up-table-functions.php:542, ../includes/frontend/up-table-functions.php:552, ../includes/frontend/up-table-functions.php:560, ../includes/frontend/up-table-functions.php:597, ../includes/frontend/up-table-functions.php:606, ../includes/frontend/up-table-functions.php:639, ../includes/frontend/up-table-functions.php:655, ../templates/single-project/details.php:50, ../templates/single-project/details.php:61, ../templates/single-project/details.php:71
+#: ../includes/admin/class-up-admin-bugs-page.php:253, ../includes/admin/class-up-admin-bugs-page.php:260, ../includes/admin/class-up-admin-bugs-page.php:265, ../includes/admin/class-up-admin-bugs-page.php:276, ../includes/admin/class-up-admin-client-columns.php:120, ../includes/admin/class-up-admin-tasks-page.php:260, ../includes/admin/class-up-admin-tasks-page.php:274, ../includes/admin/class-up-admin-tasks-page.php:281, ../includes/admin/class-up-admin-tasks-page.php:286, ../includes/frontend/up-table-functions.php:569, ../includes/frontend/up-table-functions.php:607, ../includes/frontend/up-table-functions.php:616, ../includes/frontend/up-table-functions.php:649, ../includes/frontend/up-table-functions.php:665, ../templates/single-project/details.php:50, ../templates/single-project/details.php:61, ../templates/single-project/details.php:71, ../includes/admin/metaboxes/metabox-functions.php:565
 msgid "none"
 msgstr ""
 
@@ -654,7 +654,7 @@ msgstr ""
 msgid "If there are no %s here, you need to add one first by clicking on <strong>New Client</strong> in the sidebar."
 msgstr ""
 
-#: ../includes/admin/class-up-admin-pointers.php:139, ../templates/single-project/details.php:67, ../includes/admin/metaboxes/class-up-metaboxes-projects.php:1210
+#: ../includes/admin/class-up-admin-pointers.php:139, ../templates/single-project/details.php:67, ../includes/admin/metaboxes/class-up-metaboxes-projects.php:1213
 msgid "%s Users"
 msgstr ""
 
@@ -690,7 +690,7 @@ msgstr ""
 msgid "If there are no %s in the dropdown, add them by editing the <strong>UpStream Settings</strong>."
 msgstr ""
 
-#: ../includes/admin/class-up-admin-project-columns.php:112, ../templates/single-project/details.php:60, ../includes/admin/metaboxes/class-up-metaboxes-projects.php:1183
+#: ../includes/admin/class-up-admin-project-columns.php:112, ../templates/single-project/details.php:60, ../includes/admin/metaboxes/class-up-metaboxes-projects.php:1186
 msgid "Owner"
 msgstr ""
 
@@ -702,7 +702,7 @@ msgstr ""
 msgid "End"
 msgstr ""
 
-#: ../includes/admin/class-up-admin-tasks-page.php:39, ../includes/frontend/up-table-functions.php:87, ../includes/frontend/up-table-functions.php:202, ../templates/single-project/details.php:15, ../includes/admin/metaboxes/class-up-metaboxes-projects.php:309, ../includes/admin/metaboxes/class-up-metaboxes-projects.php:729, ../includes/admin/metaboxes/class-up-metaboxes-projects.php:1233
+#: ../includes/admin/class-up-admin-tasks-page.php:39, ../includes/frontend/up-table-functions.php:87, ../includes/frontend/up-table-functions.php:202, ../templates/single-project/details.php:15, ../includes/admin/metaboxes/class-up-metaboxes-projects.php:309, ../includes/admin/metaboxes/class-up-metaboxes-projects.php:729, ../includes/admin/metaboxes/class-up-metaboxes-projects.php:1236
 msgid "End Date"
 msgstr ""
 
@@ -710,43 +710,43 @@ msgstr ""
 msgid "Complete"
 msgstr ""
 
-#: ../includes/admin/up-enqueues.php:31
+#: ../includes/admin/up-enqueues.php:33
 msgid "Add Reply"
 msgstr ""
 
-#: ../includes/admin/up-enqueues.php:35
+#: ../includes/admin/up-enqueues.php:37
 msgid "Add Comment Reply"
 msgstr ""
 
-#: ../includes/admin/up-enqueues.php:36, ../includes/admin/up-enqueues.php:59, ../includes/admin/metaboxes/class-up-metaboxes-clients.php:239
+#: ../includes/admin/up-enqueues.php:38, ../includes/admin/up-enqueues.php:59, ../includes/admin/metaboxes/class-up-metaboxes-clients.php:239
 msgid "Adding..."
 msgstr ""
 
-#: ../includes/admin/up-enqueues.php:37
+#: ../includes/admin/up-enqueues.php:39
 msgid "Replying..."
 msgstr ""
 
-#: ../includes/admin/up-enqueues.php:38
+#: ../includes/admin/up-enqueues.php:40
 msgid "Delete"
 msgstr ""
 
-#: ../includes/admin/up-enqueues.php:39
+#: ../includes/admin/up-enqueues.php:41
 msgid "Deleting..."
 msgstr ""
 
-#: ../includes/admin/up-enqueues.php:41
+#: ../includes/admin/up-enqueues.php:43
 msgid "Unapproving..."
 msgstr ""
 
-#: ../includes/admin/up-enqueues.php:43
+#: ../includes/admin/up-enqueues.php:45
 msgid "Approving..."
 msgstr ""
 
-#: ../includes/admin/up-enqueues.php:44, ../includes/admin/up-enqueues.php:60
+#: ../includes/admin/up-enqueues.php:46, ../includes/admin/up-enqueues.php:60
 msgid "Are you sure? This action cannot be undone."
 msgstr ""
 
-#: ../includes/admin/up-enqueues.php:45
+#: ../includes/admin/up-enqueues.php:47
 msgid "This comment is not visible by regular users."
 msgstr ""
 
@@ -826,7 +826,7 @@ msgstr ""
 msgid "No data available"
 msgstr ""
 
-#: ../includes/frontend/up-table-functions.php:80, ../includes/frontend/up-table-functions.php:195, ../templates/single-project/details.php:13, ../includes/admin/metaboxes/class-up-metaboxes-projects.php:298, ../includes/admin/metaboxes/class-up-metaboxes-projects.php:721, ../includes/admin/metaboxes/class-up-metaboxes-projects.php:1222
+#: ../includes/frontend/up-table-functions.php:80, ../includes/frontend/up-table-functions.php:195, ../templates/single-project/details.php:13, ../includes/admin/metaboxes/class-up-metaboxes-projects.php:298, ../includes/admin/metaboxes/class-up-metaboxes-projects.php:721, ../includes/admin/metaboxes/class-up-metaboxes-projects.php:1225
 msgid "Start Date"
 msgstr ""
 
@@ -834,15 +834,15 @@ msgstr ""
 msgid "Notes"
 msgstr ""
 
-#: ../includes/frontend/up-table-functions.php:160, ../includes/frontend/up-table-functions.php:275, ../includes/frontend/up-table-functions.php:384, ../includes/admin/metaboxes/class-up-metaboxes-projects.php:671, ../includes/admin/metaboxes/class-up-metaboxes-projects.php:992, ../includes/admin/metaboxes/class-up-metaboxes-projects.php:1369, ../includes/admin/options/class-up-options-milestones.php:106
+#: ../includes/frontend/up-table-functions.php:160, ../includes/frontend/up-table-functions.php:275, ../includes/frontend/up-table-functions.php:384, ../includes/admin/metaboxes/class-up-metaboxes-projects.php:671, ../includes/admin/metaboxes/class-up-metaboxes-projects.php:995, ../includes/admin/metaboxes/class-up-metaboxes-projects.php:1372, ../includes/admin/options/class-up-options-milestones.php:106
 msgid "Title"
 msgstr ""
 
-#: ../includes/frontend/up-table-functions.php:310, ../includes/frontend/up-table-functions.php:391, ../includes/admin/metaboxes/class-up-metaboxes-projects.php:1014, ../includes/admin/metaboxes/class-up-metaboxes-projects.php:1245, ../includes/admin/metaboxes/class-up-metaboxes-projects.php:1392
+#: ../includes/frontend/up-table-functions.php:310, ../includes/frontend/up-table-functions.php:391, ../includes/admin/metaboxes/class-up-metaboxes-projects.php:1017, ../includes/admin/metaboxes/class-up-metaboxes-projects.php:1248, ../includes/admin/metaboxes/class-up-metaboxes-projects.php:1395
 msgid "Description"
 msgstr ""
 
-#: ../includes/frontend/up-table-functions.php:649
+#: ../includes/frontend/up-table-functions.php:659
 msgid "%d %s / %d Open"
 msgstr ""
 
@@ -854,19 +854,19 @@ msgstr ""
 msgid "In reply to"
 msgstr ""
 
-#: ../templates/global/sidebar.php:63, ../templates/single-project/bugs.php:36, ../templates/single-project/tasks.php:38
+#: ../templates/global/sidebar.php:64, ../templates/single-project/bugs.php:36, ../templates/single-project/tasks.php:38
 msgid "All %s"
 msgstr ""
 
-#: ../templates/global/sidebar.php:99, ../templates/global/sidebar.php:117, ../templates/global/sidebar.php:136, ../templates/single-project/overview.php:167, ../templates/single-project/overview.php:192, ../templates/single-project/overview.php:217
+#: ../templates/global/sidebar.php:100, ../templates/global/sidebar.php:118, ../templates/global/sidebar.php:137, ../templates/single-project/overview.php:167, ../templates/single-project/overview.php:192, ../templates/single-project/overview.php:217
 msgid "Assigned to me"
 msgstr ""
 
-#: ../templates/global/sidebar.php:160, ../templates/global/top-nav.php:37
+#: ../templates/global/sidebar.php:171, ../templates/global/top-nav.php:37
 msgid "My %s"
 msgstr ""
 
-#: ../templates/global/sidebar.php:166, ../templates/global/top-nav.php:47
+#: ../templates/global/sidebar.php:177, ../templates/global/top-nav.php:47
 msgid "Log Out"
 msgstr ""
 
@@ -874,7 +874,7 @@ msgstr ""
 msgid "Assigned to me only"
 msgstr ""
 
-#: ../templates/single-project/details.php:30, ../includes/admin/metaboxes/class-up-metaboxes-projects.php:1160
+#: ../templates/single-project/details.php:30, ../includes/admin/metaboxes/class-up-metaboxes-projects.php:1163
 msgid "%s Details"
 msgstr ""
 
@@ -1102,7 +1102,7 @@ msgstr ""
 msgid " Overview"
 msgstr ""
 
-#: ../includes/admin/metaboxes/class-up-metaboxes-projects.php:247, ../includes/admin/metaboxes/class-up-metaboxes-projects.php:647, ../includes/admin/metaboxes/class-up-metaboxes-projects.php:968, ../includes/admin/metaboxes/class-up-metaboxes-projects.php:1349
+#: ../includes/admin/metaboxes/class-up-metaboxes-projects.php:247, ../includes/admin/metaboxes/class-up-metaboxes-projects.php:647, ../includes/admin/metaboxes/class-up-metaboxes-projects.php:971, ../includes/admin/metaboxes/class-up-metaboxes-projects.php:1352
 msgid "Data"
 msgstr ""
 
@@ -1122,11 +1122,11 @@ msgstr ""
 msgid "Selecting a milestone will count this task's progress toward that milestone as well as overall project progress."
 msgstr ""
 
-#: ../includes/admin/metaboxes/class-up-metaboxes-projects.php:1055
+#: ../includes/admin/metaboxes/class-up-metaboxes-projects.php:1058
 msgid "Attachments"
 msgstr ""
 
-#: ../includes/admin/metaboxes/class-up-metaboxes-projects.php:1486
+#: ../includes/admin/metaboxes/class-up-metaboxes-projects.php:1489
 msgid "Activity"
 msgstr ""
 
@@ -1146,28 +1146,24 @@ msgstr ""
 msgid "View All"
 msgstr ""
 
-#: ../includes/admin/metaboxes/metabox-functions.php:608, ../includes/admin/metaboxes/metabox-functions.php:698
+#: ../includes/admin/metaboxes/metabox-functions.php:615, ../includes/admin/metaboxes/metabox-functions.php:705
 msgid "This comment and its replies are not visible by regular users."
 msgstr ""
 
-#: ../includes/admin/metaboxes/metabox-functions.php:870
+#: ../includes/admin/metaboxes/metabox-functions.php:877
 msgid "Not Assigned"
 msgstr ""
 
-#: ../includes/admin/metaboxes/metabox-functions.php:935
+#: ../includes/admin/metaboxes/metabox-functions.php:942
 msgid "No project selected"
 msgstr ""
 
-#: ../includes/admin/metaboxes/metabox-functions.php:939
+#: ../includes/admin/metaboxes/metabox-functions.php:946
 msgid "No client selected"
 msgstr ""
 
-#: ../includes/admin/metaboxes/metabox-functions.php:949
+#: ../includes/admin/metaboxes/metabox-functions.php:956
 msgid "No users found"
-msgstr ""
-
-#: ../includes/admin/options/class-up-options-bugs.php:51, ../includes/admin/options/class-up-options-bugs.php:52, ../includes/admin/options/class-up-options-milestones.php:51, ../includes/admin/options/class-up-options-milestones.php:52, ../includes/admin/options/class-up-options-projects.php:51, ../includes/admin/options/class-up-options-projects.php:52, ../includes/admin/options/class-up-options-tasks.php:51, ../includes/admin/options/class-up-options-tasks.php:52
-msgid "%s Settings"
 msgstr ""
 
 #: ../includes/admin/options/class-up-options-bugs.php:83, ../includes/admin/options/class-up-options-projects.php:84, ../includes/admin/options/class-up-options-tasks.php:84
@@ -1230,7 +1226,7 @@ msgstr ""
 msgid "Severity Name"
 msgstr ""
 
-#: ../includes/admin/options/class-up-options-extensions.php:51, ../includes/admin/options/class-up-options-extensions.php:52
+#: ../includes/admin/options/class-up-options-extensions.php:51
 msgid "Extensions"
 msgstr ""
 
@@ -1262,76 +1258,76 @@ msgstr ""
 msgid "This calendar display will allow you to easily see everything that’s happening in a project. You’ll be able to see due dates for all the milestones, tasks, and bugs."
 msgstr ""
 
-#: ../includes/admin/options/class-up-options-extensions.php:208, ../includes/admin/options/class-up-options-extensions.php:245
+#: ../includes/admin/options/class-up-options-extensions.php:217, ../includes/admin/options/class-up-options-extensions.php:254
 msgid "Activate"
 msgstr ""
 
-#: ../includes/admin/options/class-up-options-extensions.php:209, ../includes/admin/options/class-up-options-extensions.php:247
+#: ../includes/admin/options/class-up-options-extensions.php:218, ../includes/admin/options/class-up-options-extensions.php:256
 msgid "Change"
 msgstr ""
 
-#: ../includes/admin/options/class-up-options-extensions.php:210, ../includes/admin/options/class-up-options-extensions.php:252
+#: ../includes/admin/options/class-up-options-extensions.php:219, ../includes/admin/options/class-up-options-extensions.php:261
 msgid "Deactivate"
 msgstr ""
 
-#: ../includes/admin/options/class-up-options-extensions.php:211
+#: ../includes/admin/options/class-up-options-extensions.php:220
 msgid "Deactivating..."
 msgstr ""
 
-#: ../includes/admin/options/class-up-options-extensions.php:212, ../includes/admin/options/class-up-options-extensions.php:244
+#: ../includes/admin/options/class-up-options-extensions.php:221, ../includes/admin/options/class-up-options-extensions.php:253
 msgid "Enter your License Key"
 msgstr ""
 
-#: ../includes/admin/options/class-up-options-extensions.php:213, ../includes/admin/options/class-up-options-extensions.php:256
+#: ../includes/admin/options/class-up-options-extensions.php:222, ../includes/admin/options/class-up-options-extensions.php:265
 msgid "Your license is not activated yet."
 msgstr ""
 
-#: ../includes/admin/options/class-up-options-extensions.php:223
+#: ../includes/admin/options/class-up-options-extensions.php:232
 msgid "Installed Extensions"
 msgstr ""
 
-#: ../includes/admin/options/class-up-options-extensions.php:224
+#: ../includes/admin/options/class-up-options-extensions.php:233
 msgid "Browse More Extensions"
 msgstr ""
 
-#: ../includes/admin/options/class-up-options-extensions.php:228
+#: ../includes/admin/options/class-up-options-extensions.php:237
 msgid "No installed extensions yet."
 msgstr ""
 
-#: ../includes/admin/options/class-up-options-extensions.php:247
+#: ../includes/admin/options/class-up-options-extensions.php:256
 msgid "License Key"
 msgstr ""
 
-#: ../includes/admin/options/class-up-options-extensions.php:252, ../includes/admin/options/class-up-options-extensions.php:373
+#: ../includes/admin/options/class-up-options-extensions.php:261, ../includes/admin/options/class-up-options-extensions.php:382
 msgid "Active license key."
 msgstr ""
 
-#: ../includes/admin/options/class-up-options-extensions.php:254, ../includes/admin/options/class-up-options-extensions.php:325, ../includes/admin/options/class-up-options-extensions.php:370
+#: ../includes/admin/options/class-up-options-extensions.php:263, ../includes/admin/options/class-up-options-extensions.php:334, ../includes/admin/options/class-up-options-extensions.php:379
 msgid "Invalid license key."
 msgstr ""
 
-#: ../includes/admin/options/class-up-options-extensions.php:268
+#: ../includes/admin/options/class-up-options-extensions.php:277
 msgid "Looks like you have acquired all of our currently available extensions."
 msgstr ""
 
-#: ../includes/admin/options/class-up-options-extensions.php:269
+#: ../includes/admin/options/class-up-options-extensions.php:278
 msgid "<strong>Thank you</strong> for your support, and stay tunned for more."
 msgstr ""
 
-#: ../includes/admin/options/class-up-options-extensions.php:279
+#: ../includes/admin/options/class-up-options-extensions.php:288
 msgid "Get This Extension"
 msgstr ""
 
-#: ../includes/admin/options/class-up-options-extensions.php:320, ../includes/admin/options/class-up-options-extensions.php:330, ../includes/admin/options/class-up-options-extensions.php:420
+#: ../includes/admin/options/class-up-options-extensions.php:329, ../includes/admin/options/class-up-options-extensions.php:339, ../includes/admin/options/class-up-options-extensions.php:429
 msgid "Invalid extension."
 msgstr ""
 
-#: ../includes/admin/options/class-up-options-extensions.php:368
+#: ../includes/admin/options/class-up-options-extensions.php:377
 msgid "This key is expired and could not be activated."
 msgstr ""
 
-#: ../includes/admin/options/class-up-options-general.php:51, ../includes/admin/options/class-up-options-general.php:52
-msgid "General Settings"
+#: ../includes/admin/options/class-up-options-general.php:51
+msgid "General"
 msgstr ""
 
 #: ../includes/admin/options/class-up-options-general.php:87

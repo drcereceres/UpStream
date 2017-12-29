@@ -4,7 +4,7 @@
  * Description: A WordPress Project Management plugin by UpStream.
  * Author: UpStream
  * Author URI: https://upstreamplugin.com
- * Version: 1.13.1
+ * Version: 1.13.2
  * Text Domain: upstream
  * Domain Path: /languages
  */
@@ -188,7 +188,7 @@ final class UpStream
         $this->define( 'UPSTREAM_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
         $this->define( 'UPSTREAM_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
         $this->define( 'UPSTREAM_PLUGIN_BASENAME', plugin_basename( __FILE__ ) );
-        $this->define( 'UPSTREAM_VERSION', '1.13.1' );
+        $this->define( 'UPSTREAM_VERSION', '1.13.2' );
     }
 
     /**
@@ -237,8 +237,19 @@ final class UpStream
         include_once( 'includes/abs-class-up-struct.php' );
 
         if ( $this->is_request( 'admin' ) ) {
-            include_once( 'includes/libraries/cmb2/init.php' );
-            include_once( 'includes/libraries/cmb2-grid/Cmb2GridPlugin.php' );
+            global $pagenow;
+
+            if ($pagenow === 'post.php') {
+                $post_id = isset($_GET['post']) ? (int)$_GET['post'] : 0;
+                $postType = get_post_type($post_id);
+                $postTypesUsingCmb2 = apply_filters('upstream:post_types_using_cmb2', array('project', 'client'));
+
+                if (in_array($postType, $postTypesUsingCmb2)) {
+                    include_once('includes/libraries/cmb2/init.php');
+                    include_once('includes/libraries/cmb2-grid/Cmb2GridPlugin.php');
+                }
+            }
+
             include_once( 'includes/admin/class-up-admin.php' );
             include_once( 'includes/admin/class-up-admin-tasks-page.php' );
             include_once( 'includes/admin/class-up-admin-bugs-page.php' );

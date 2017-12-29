@@ -7,20 +7,22 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  * Enqueues the required admin scripts.
  *
  */
-function upstream_load_admin_scripts( $hook ) {
+function upstream_load_admin_scripts($hook)
+{
+    $isAdmin = is_admin();
+    if (!$isAdmin) {
+        return;
+    }
 
+    $postType = get_post_type();
+    $assetsDir =  UPSTREAM_PLUGIN_URL . 'includes/admin/assets/';
 
-    /*
-     * Javascript
-     */
-    $js_dir     = UPSTREAM_PLUGIN_URL . 'includes/admin/assets/js/';
     $admin_deps = array( 'jquery', 'cmb2-scripts' );
-    $post_type  = get_post_type();
 
-    if( $post_type == 'project' ) {
+    if ($postType === 'project') {
         global $post_type_object;
 
-        wp_register_script( 'upstream-project', $js_dir . 'edit-project.js', $admin_deps, UPSTREAM_VERSION, false );
+        wp_register_script( 'upstream-project', $assetsDir . 'js/edit-project.js', $admin_deps, UPSTREAM_VERSION, false );
         wp_enqueue_script( 'upstream-project' );
         wp_localize_script( 'upstream-project', 'upstream_project', apply_filters( 'upstream_project_script_vars', array(
             'version'   => UPSTREAM_VERSION,
@@ -45,10 +47,8 @@ function upstream_load_admin_scripts( $hook ) {
                 'MSG_COMMENT_NOT_VIS' => __('This comment is not visible by regular users.', 'upstream')
             )
         ) ) );
-    }
-
-    if ($post_type === 'client') {
-        wp_enqueue_script('up-metabox-client', $js_dir . 'metabox-client.js', array('jquery'), UPSTREAM_VERSION, true);
+    } else if ($postType === 'client') {
+        wp_enqueue_script('up-metabox-client', $assetsDir . 'js/metabox-client.js', array('jquery'), UPSTREAM_VERSION, true);
         wp_localize_script('up-metabox-client', 'upstreamMetaboxClientLangStrings', array(
             'ERR_JQUERY_NOT_FOUND'     => __('UpStream requires jQuery.', 'upstream'),
             'MSG_NO_ASSIGNED_USERS'    => __("There's no users assigned yet.", 'upstream'),
@@ -62,16 +62,11 @@ function upstream_load_admin_scripts( $hook ) {
             'MSG_NO_DATA_FOUND'        => __('No data found.', 'upstream'),
             'MSG_MANAGING_PERMISSIONS' => __("Managing %s\'s Permissions", 'upstream')
         ));
+    } else {
+        return;
     }
 
-    /*
-     * CSS
-     */
-    $css_dir = UPSTREAM_PLUGIN_URL . 'includes/admin/assets/css/';
-
-    wp_register_style( 'upstream-admin', $css_dir . 'upstream.css', array(), UPSTREAM_VERSION);
-    wp_enqueue_style( 'upstream-admin' );
-
-
+    wp_register_style('upstream-admin', $assetsDir . 'css/upstream.css', array(), UPSTREAM_VERSION);
+    wp_enqueue_style('upstream-admin');
 }
-add_action( 'admin_enqueue_scripts', 'upstream_load_admin_scripts', 100 );
+add_action('admin_enqueue_scripts', 'upstream_load_admin_scripts', 100);
