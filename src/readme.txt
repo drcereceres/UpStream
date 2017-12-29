@@ -60,6 +60,7 @@ Add even more awesome features through the use of our extensions.
 - [Email Notifications](https://upstreamplugin.com/extensions/email-notifications)
 - [Copy Project](https://upstreamplugin.com/extensions/copy-project)
 - [Calendar View](https://upstreamplugin.com/extensions/calendar-view)
+- [Custom Fields](https://upstreamplugin.com/extensions/custom-fields)
 
 
 = Milestones & Tasks =
