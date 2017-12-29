@@ -451,7 +451,16 @@ function upstream_output_table_header( $table ) {
             if( isset( $setting['display'] ) && ! $setting['display'] )
                 continue;
 
-            $output .= "<th class='" . esc_attr( $setting['heading_class'] ) . "'>" . $setting['heading'] . "</th>";
+            $attrs = array();
+            if (isset($setting['attributes'])
+                && is_array($setting['attributes'])
+            ) {
+                foreach ($setting['attributes'] as $attrKey => $attrValue) {
+                    $attrs[] = sprintf('%s="%s"', $attrKey, esc_attr($attrValue));
+                }
+            }
+
+            $output .= "<th class='" . esc_attr( $setting['heading_class'] ) . "'" . (count($attrs) > 0 ? implode(' ', $attrs) : '') . ">" . $setting['heading'] . "</th>";
 
         }
         $output .= '</tr>';
@@ -519,6 +528,9 @@ function upstream_output_table_rows( $id, $table, $filterRowsetByCurrentUser = f
 
             $order = null;
 
+            if (is_array($item[$key])) {
+                $item[$key] = implode('#', $item[$key]);
+            }
 
             // get the raw value before formatting
             // will be used with the frontend edit plugin for getting actual values via JS
@@ -535,33 +547,31 @@ function upstream_output_table_rows( $id, $table, $filterRowsetByCurrentUser = f
             // now process and format the data for proper output
             $field_data = upstream_format_table_data( $item, $key, $setting );
 
-            if( $key == 'status' ) {
-                $color  = isset( $status_c[$field_data] ) ? $status_c[$field_data] : 'transparent';
+            $isValueEmpty = strlen($field_data) === 0;
 
-                if (empty($field_data)) {
-                    $field_data = '<i>' . __('none', 'upstream') . '</i>';
-                } else {
-                    $field_data = '<span class="btn btn-xs" style="background: ' . esc_attr( $color ) . '">' . esc_html( $field_data ) . '</span>';
+            if ($key === 'status'
+                || $key === 'severity'
+            ) {
+                $collectionKeyName = $key . '_c';
+                $color = isset(${$collectionKeyName}[$field_data])
+                    ? ${$collectionKeyName}[$field_data]
+                    : 'transparent';
+                if (!$isValueEmpty) {
+                    $field_data = sprintf(
+                        '<span class="btn btn-xs" style="background: %s">%s</span>',
+                        esc_attr($color),
+                        esc_html($field_data)
+                    );
                 }
             }
 
-            if( $key == 'severity' ) {
-                $color      = isset( $severity_c[$field_data] ) ? $severity_c[$field_data] : 'transparent';
-
-                if (empty($field_data)) {
-                    $field_data = '<i>' . __('none', 'upstream') . '</i>';
-                } else {
-                    $field_data = '<span class="btn btn-xs" style="background: ' . esc_attr( $color ) . '">' . esc_html( $field_data ) . '</span>';
-                }
+            if ($isValueEmpty) {
+                $field_data = '<i>' . __('none', 'upstream') . '</i>';
             }
 
-            if ($table === 'files') {
-                if (in_array($key, array('title', 'description')) && empty($data_value)) {
-                    $field_data = '<i>' . __('none', 'upstream') . '</i>';
-                }
-            }
+            $td = '<td data-name="' . esc_attr( $key ) . '" ' . $order . ' data-value="' . esc_attr( $data_value ) . '" class="' . esc_attr( $setting['row_class'] ) . '">' . $field_data . '</td>';
 
-            $tr .= '<td data-name="' . esc_attr( $key ) . '" ' . $order . ' data-value="' . esc_attr( $data_value ) . '" class="' . esc_attr( $setting['row_class'] ) . '">' . (in_array($key, array('notes', 'description')) ?  upstream_nl2br($field_data) : $field_data) . '</td>';
+            $tr .= apply_filters('upstream:frontend:renderGridDataRowColumn', $td, $key, $setting, $item, $table);
         }
 
         $tr .= '</tr>';

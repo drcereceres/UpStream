@@ -1259,3 +1259,14 @@ body.upstream_page_upstream_extensions #upstream_extensions input[type="submit"]
 .o-comment.is-disabled > .o-comment__body  {
   opacity: .5;
 }
+
+.cmb2-wrap .wp-picker-holder,
+.cmb2-wrap .wp-picker-holder * {
+  box-sizing: initial !important;
+  -moz-box-sizing: initial !important;
+  -webkit-box-sizing: initial !important;
+}
+
+.up-s-hidden {
+  display: none;
+}
