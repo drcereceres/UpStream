@@ -122,7 +122,7 @@ class UpStream_Options_Extensions {
                 'id'               => 'custom-fields',
                 'title'            => 'Custom Fields',
                 'description'      => __('This extension will allow you to add more information to tasks and bugs. For example, in a web design project, the bugs could have fields for the browser type, PHP version, and screen size.', 'upstream'),
-                'product_id'       => '@todo',
+                'product_id'       => 8409,
                 'options_key_slug' => 'custom-fields'
             )
         );
