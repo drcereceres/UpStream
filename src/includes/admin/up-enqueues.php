@@ -15,6 +15,10 @@ function upstream_load_admin_scripts($hook)
     }
 
     $postType = get_post_type();
+    if (empty($postType)) {
+        $postType = isset($_GET['post_type']) ? $_GET['post_type'] : '';
+    }
+
     $assetsDir =  UPSTREAM_PLUGIN_URL . 'includes/admin/assets/';
 
     $admin_deps = array( 'jquery', 'cmb2-scripts' );
@@ -62,11 +66,19 @@ function upstream_load_admin_scripts($hook)
             'MSG_NO_DATA_FOUND'        => __('No data found.', 'upstream'),
             'MSG_MANAGING_PERMISSIONS' => __("Managing %s\'s Permissions", 'upstream')
         ));
-    } else {
-        return;
     }
 
-    wp_register_style('upstream-admin', $assetsDir . 'css/upstream.css', array(), UPSTREAM_VERSION);
-    wp_enqueue_style('upstream-admin');
+    global $pagenow;
+
+    $postTypesUsingCmb2 = apply_filters('upstream:post_types_using_cmb2', array('project', 'client'));
+
+    if (in_array($postType, $postTypesUsingCmb2)
+        || ($pagenow === 'admin.php'
+        && isset($_GET['page'])
+        && preg_match('/^upstream_/i', $_GET['page']))
+    ) {
+        wp_register_style('upstream-admin', $assetsDir . 'css/upstream.css', array(), UPSTREAM_VERSION);
+        wp_enqueue_style('upstream-admin');
+    }
 }
 add_action('admin_enqueue_scripts', 'upstream_load_admin_scripts', 100);
