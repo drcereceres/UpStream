@@ -84,5 +84,8 @@ function upstream_load_admin_scripts($hook)
         wp_register_style('upstream-admin', $assetsDir . 'css/upstream.css', array(), UPSTREAM_VERSION);
         wp_enqueue_style('upstream-admin');
     }
+
+    wp_register_style('upstream-admin-icon', $assetsDir . 'css/admin-upstream-icon.css', array(), UPSTREAM_VERSION);
+    wp_enqueue_style('upstream-admin-icon');
 }
 add_action('admin_enqueue_scripts', 'upstream_load_admin_scripts', 100);
