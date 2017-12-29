@@ -5,7 +5,7 @@ The following is a set of guidelines for contributing to UpStream plugin. Use yo
 ## How can I contribute?
 ### Reporting Bugs
 A bug is a demonstrable problem caused by code in the repository.
-Before creating bug reports, please check our [bug list](@todo), as the bug might be already be known.
+Before creating bug reports, please check our [bug list](https://github.com/upstreamplugin/UpStream/issues?q=is%3Aopen+is%3Aissue+label%3Atype%3Aissue%3Abug), as the bug might be already be known.
 
 > **Note:** If you find a **closed** issue that seems the same as the one you're experiencing, please open a new issue inclusing a link to the original one in its body.
 
@@ -18,7 +18,7 @@ How do I submit a good bug report?
 
 ### Suggesting Enhancements
 Enhancements can be minor improvements to existing functionality or even completely new features.
-Before creating enhancement suggestions, please check our [issues list](@todo), as the enhancement might be already known.
+Before creating enhancement suggestions, please check our [issues list](https://github.com/upstreamplugin/UpStream/issues), as the enhancement might be already known.
 
 How do I submit a good enhancement suggestion?
 - **Use a clear and descriptive title**
@@ -30,4 +30,4 @@ How do I submit a good enhancement suggestion?
 
 ### Pull Requests
 How do I submit a good pull request?
-- Fill in the [required template](@todo).
+- Fill in the [required template](https://github.com/upstreamplugin/UpStream/blob/master/.github/PULL_REQUEST_TEMPLATE.md).

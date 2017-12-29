@@ -136,14 +136,14 @@ UpStream does not use the existing styling of your theme. The features and the v
 The format is based on [Keep a Changelog](http://keepachangelog.com)
 and this project adheres to [Semantic Versioning](http://semver.org).
 
-= [1.13.2] - @todo =
+= [1.13.2] - 2017-12-29 =
 
 Added:
 * Added new extension: Custom Fields
 * Added new filter that allow custom post types to load CMB2 in admin
 
 Changed:
-* Display none to empty Notes/Descirption/Comments fields
+* Display none to empty Notes/Description/Comments fields
 * Removed "Settings" label from settings sub menu items
 * CMB2 lib was updated to v2.2.6.2
 * Lang files cleanup

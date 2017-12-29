@@ -6,7 +6,6 @@ UpStream is a free project management plugin that allows you to manage any type 
 - [About](https://github.com/upstreamplugin/UpStream#upstream---project-management-for-wordpress)
 - [Requirements](https://github.com/upstreamplugin/UpStream#requirements)
 - [Contributing](https://github.com/upstreamplugin/UpStream#contributing)
-   - [Contributing Guidelines](@todo)
 - [Versioning](https://github.com/upstreamplugin/UpStream#versioning)
 - [License](https://github.com/upstreamplugin/UpStream#license)
 
@@ -17,7 +16,7 @@ UpStream is a free project management plugin that allows you to manage any type 
 ## Contributing
 Hey, that's awesome!
 
-Check out our [contributing guidelines](@todo).
+Check out our [contributing guidelines](https://github.com/upstreamplugin/UpStream/blob/master/CONTRIBUTING.md).
 
 ## Versioning
 UpStream versioning system is maintained using the [Semantic Versioning Specification (SemVer)](http://semver.org).
