@@ -33,9 +33,11 @@ var milestonesTableOptions = getTableDefaultOptions();
 milestonesTableOptions.columnDefs[0].targets = (function() {
     return [(jQuery('#milestones thead tr th').length - 1)];
 })();
+milestonesTableOptions.language.emptyTable = upstream.langs.MSG_NO_MILESTONES_YET;
 var tableMilestones = jQuery('#milestones').DataTable(milestonesTableOptions);
 
 var tasksTableOptions = getTableDefaultOptions();
+tasksTableOptions.language.emptyTable = upstream.langs.MSG_NO_TASKS_YET;
 tasksTableOptions.columnDefs[0].targets = (function() {
     return [(jQuery('#tasks thead tr th').length - 1)];
 })();
@@ -47,6 +49,7 @@ bugsTableOptions.columnDefs[0].targets = (function() {
     var lastIndex = jQuery('#bugs thead tr th').length;
     return [lastIndex - 1, lastIndex - 2];
 })();
+bugsTableOptions.language.emptyTable = upstream.langs.MSG_NO_BUGS_YET;
 var tableBugs = jQuery('#bugs').DataTable(bugsTableOptions);
 var tableMyBugs = jQuery('#my-bugs').DataTable(bugsTableOptions);
 
@@ -55,6 +58,7 @@ filesTableOptions.columnDefs[0].targets = (function() {
     var lastIndex = jQuery('#files thead tr th').length;
     return [lastIndex - 1, lastIndex - 2];
 })();
+filesTableOptions.language.emptyTable = upstream.langs.MSG_NO_FILES_YET;
 var tableFiles = jQuery('#files').DataTable(filesTableOptions);
 
 /**
