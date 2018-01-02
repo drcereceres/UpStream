@@ -138,6 +138,9 @@ and this project adheres to [Semantic Versioning](http://semver.org).
 
 = [@todo: WIP] =
 
+Changed:
+* Changed no data message for consistency across sections on frontend
+
 Fixed:
 * Removed stray "none" text from Discussion section in admin
 * Fixed no-data-message consistency on Discussion section in frontend
