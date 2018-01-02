@@ -270,46 +270,11 @@ final class UpStream_Metaboxes_Clients
      * @since   1.11.0
      * @access  private
      * @static
+     * @deprecated
      */
     private static function renderMigrateUserModal()
     {
-        ?>
-        <div id="modal-migrate-user" style="display: none;">
-            <div id="form-migrate-user">
-                <div>
-                    <h3><?php echo __('Credentials', 'upstream'); ?></h3>
-                    <div class="up-form-group">
-                        <label for="migrate-user-email"><?php echo __('Email', 'upstream') . ' *'; ?></label>
-                        <input type="email" name="email" id="migrate-user-email" required size="35" />
-                    </div>
-                    <div class="up-form-group">
-                        <label for="migrate-user-password"><?php echo __('Password', 'upstream') . ' *'; ?></label>
-                        <input type="password" name="password" id="migrate-user-password" required size="35" />
-                        <p class="description up-help-block"><?php echo __('Must be at least 6 characters long.', 'upstream'); ?></p>
-                    </div>
-                    <div class="up-form-group">
-                        <label for="migrate-user-password_c"><?php echo __('Confirm Password', 'upstream') . ' *'; ?></label>
-                        <input type="password" name="password_c" id="migrate-user-password_c" required size="35" />
-                    </div>
-                    <hr />
-                    <h3><?php echo __('Profile', 'upstream'); ?></h3>
-                    <div class="up-form-group">
-                        <label for="migrate-user-fname"><?php echo __('First Name', 'upstream'); ?></label>
-                        <input type="text" name="fname" id="migrate-user-fname" size="35" />
-                    </div>
-                    <div class="up-form-group">
-                        <label for="migrate-user-lname"><?php echo __('Last Name', 'upstream'); ?></label>
-                        <input type="text" name="lname" id="migrate-user-lname" size="35" />
-                    </div>
-                </div>
-                <div>
-                    <div class="up-form-group">
-                        <button type="submit" class="button button-primary" data-label="<?php echo __('Migrate User', 'upstream'); ?>" data-loading-label="<?php echo __('Migrating...', 'upstream'); ?>"><?php echo __('Migrate User', 'upstream'); ?></button>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <?php
+        _doing_it_wrong(__FUNCTION__, 'This method is deprecated and it will be removed on future releases.', '@todo');
     }
 
     /**
@@ -508,8 +473,6 @@ final class UpStream_Metaboxes_Clients
                 <?php endforeach; ?>
                 </tbody>
             </table>
-
-            <?php self::renderMigrateUserModal(); ?>
         </div>
         <?php
     }
