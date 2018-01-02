@@ -418,24 +418,11 @@ final class UpStream_Metaboxes_Clients
      *
      * @since   1.11.0
      * @static
+     * @deprecated
      */
     public static function createLegacyUsersMetabox()
     {
-        $client_id = upstream_post_id();
-
-        $legacyUsersErrors = (array)get_post_meta($client_id, '_upstream_client_legacy_users_errors');
-        if (count($legacyUsersErrors) === 0 || empty($legacyUsersErrors[0])) {
-            delete_post_meta($client_id, '_upstream_client_legacy_users_errors');
-            return;
-        }
-
-        add_meta_box(
-            self::$prefix . 'legacy_users',
-            '<span class="dashicons dashicons-groups"></span>' . __("Legacy Users", 'upstream'),
-            array(get_class(self::$instance), 'renderLegacyUsersMetabox'),
-            self::$postType,
-            'normal'
-        );
+        _doing_it_wrong(__FUNCTION__, 'This method is deprecated and it will be removed on future releases.', '@todo');
     }
 
     /**
