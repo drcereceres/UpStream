@@ -138,6 +138,10 @@ and this project adheres to [Semantic Versioning](http://semver.org).
 
 = [@todo: WIP] =
 
+Fixed:
+* Removed stray "none" text from Discussion section in admin
+* Fixed no-data-message consistency on Discussion section in frontend
+
 = [1.13.4] - 2017-12-29 =
 
 Fixed:
