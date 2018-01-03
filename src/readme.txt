@@ -138,6 +138,9 @@ and this project adheres to [Semantic Versioning](http://semver.org).
 
 = [@todo: WIP] =
 
+Fixed:
+* Fixed some bad redirects relying on home_url() instead of site_url()
+
 = [1.13.4] - 2017-12-29 =
 
 Fixed:
