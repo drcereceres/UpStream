@@ -245,6 +245,11 @@ final class UpStream
                 $postType = get_post_type($post_id);
                 if (empty($postType)) {
                     $postType = isset($_GET['post_type']) ? $_GET['post_type'] : '';
+                    if (empty($postType)
+                        && isset($_POST['post_type'])
+                    ) {
+                        $postType = $_POST['post_type'];
+                    }
                 }
 
                 $postTypesUsingCmb2 = apply_filters('upstream:post_types_using_cmb2', array('project', 'client'));
