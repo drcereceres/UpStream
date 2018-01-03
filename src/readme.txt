@@ -138,8 +138,13 @@ and this project adheres to [Semantic Versioning](http://semver.org).
 
 = [1.13.5] - @todo =
 
+Changed:
+* Changed no data message for consistency across sections on frontend
+
 Fixed:
 * Fixed some bad redirects relying on home_url() instead of site_url()
+* Removed stray "none" text from Discussion section in admin
+* Fixed no-data-message consistency on Discussion section in frontend
 
 = [1.13.4] - 2017-12-29 =
 

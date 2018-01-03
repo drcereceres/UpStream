@@ -75,6 +75,9 @@ function upstream_enqueue_styles_scripts(){
     wp_enqueue_script( 'dt-responsive', $up_url . $js_dir . 'datatables/dataTables.responsive.min.js', array( 'jquery' ), $up_ver, true );
 
     wp_enqueue_script( 'upstream', $up_url . $js_dir . 'upstream.js', array( 'jquery' ), $up_ver, true );
+
+    $noDataStringTemplate = _x("You haven't created any %s yet", '%s: item name, ie Milestones, Tasks, Bugs, Files, Discussion', 'upstream');
+
     wp_localize_script( 'upstream', 'upstream', apply_filters( 'upstream_localized_javascript', array(
         'ajaxurl'           => admin_url( 'admin-ajax.php'),
         'upload_url'        => admin_url('async-upload.php'),
@@ -84,7 +87,12 @@ function upstream_enqueue_styles_scripts(){
             'LB_COPY'                 => __('Copy', 'upstream'),
             'LB_CSV'                  => __('CSV', 'upstream'),
             'LB_SEARCH'               => __('Search:', 'upstream'),
-            'MSG_TABLE_NO_DATA_FOUND' => __('No data available', 'upstream')
+            'MSG_TABLE_NO_DATA_FOUND' => _x("You haven't created any %s yet", '%s: item name, ie Milestones, Tasks, Bugs, Files, Discussion', 'upstream'),
+            'MSG_NO_MILESTONES_YET' => sprintf($noDataStringTemplate, upstream_milestone_label_plural()),
+            'MSG_NO_TASKS_YET'      => sprintf($noDataStringTemplate, upstream_task_label_plural()),
+            'MSG_NO_BUGS_YET'       => sprintf($noDataStringTemplate, upstream_bug_label_plural()),
+            'MSG_NO_FILES_YET'      => sprintf($noDataStringTemplate, upstream_file_label_plural()),
+            'MSG_NO_DISCUSSION_YET' => sprintf($noDataStringTemplate, __('Discussion', 'upstream'))
         )
     )));
 }
