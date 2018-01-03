@@ -43,7 +43,7 @@ function upstream_logout_url() {
     ) {
         return '?action=logout';
     } else {
-        return wp_logout_url() . '&redirect_to=' . urlencode(home_url() . '/projects');
+        return wp_logout_url(site_url('projects'));
     }
 }
 
