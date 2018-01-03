@@ -138,6 +138,12 @@ and this project adheres to [Semantic Versioning](http://semver.org).
 
 = [@todo: WIP] =
 
+Updated:
+* Update CMB2 to v2.3.0
+
+Fixed:
+* Fixed some users not being able to save/update Projects on admin
+
 = [1.13.4] - 2017-12-29 =
 
 Fixed:
