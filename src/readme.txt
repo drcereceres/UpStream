@@ -141,6 +141,7 @@ and this project adheres to [Semantic Versioning](http://semver.org).
 Changed:
 * Changed no data message for consistency across sections on frontend
 * Update CMB2 to v2.3.0
+* Legacy Client Users Migration script and related methods were marked as deprecated and will be removed on future releases
 
 Fixed:
 * Fixed some bad redirects relying on home_url() instead of site_url()
