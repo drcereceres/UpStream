@@ -561,8 +561,10 @@ function upstreamRenderCommentsBox($item_id = "", $itemType = "project", $projec
 
     $commentsCacheCount = count($commentsCache);
 
-    if ($commentsCacheCount === 0) {
-        printf('<i>%s</i>', __('none', 'upstream'));
+    if ($commentsCacheCount === 0
+        && !is_admin()
+    ) {
+        printf('<p data-empty>%s</>', sprintf(_x("You haven't created any %s yet", '%s: item name, ie Milestones, Tasks, Bugs, Files, Discussion', 'upstream'), __('Discussion', 'upstream')));
     }
     ?>
 

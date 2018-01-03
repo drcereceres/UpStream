@@ -4,7 +4,7 @@ Tags: project, manage, management, project management, project manager, wordpres
 Requires at least: 4.5
 Tested up to: 4.9
 Requires PHP: 5.6
-Stable tag: 1.13.4
+Stable tag: 1.13.5
 License: GPL-3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -136,12 +136,16 @@ UpStream does not use the existing styling of your theme. The features and the v
 The format is based on [Keep a Changelog](http://keepachangelog.com)
 and this project adheres to [Semantic Versioning](http://semver.org).
 
-= [@todo: WIP] =
+= [1.13.5] - @todo =
 
-Updated:
+Changed:
+* Changed no data message for consistency across sections on frontend
 * Update CMB2 to v2.3.0
 
 Fixed:
+* Fixed some bad redirects relying on home_url() instead of site_url()
+* Removed stray "none" text from Discussion section in admin
+* Fixed no-data-message consistency on Discussion section in frontend
 * Fixed some users not being able to save/update Projects on admin
 
 = [1.13.4] - 2017-12-29 =
