@@ -4,7 +4,7 @@
  * Description: A WordPress Project Management plugin by UpStream.
  * Author: UpStream
  * Author URI: https://upstreamplugin.com
- * Version: 1.13.4
+ * Version: 1.13.5
  * Text Domain: upstream
  * Domain Path: /languages
  */
@@ -187,7 +187,7 @@ final class UpStream
         $this->define( 'UPSTREAM_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
         $this->define( 'UPSTREAM_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
         $this->define( 'UPSTREAM_PLUGIN_BASENAME', plugin_basename( __FILE__ ) );
-        $this->define( 'UPSTREAM_VERSION', '1.13.4' );
+        $this->define( 'UPSTREAM_VERSION', '1.13.5' );
     }
 
     /**
@@ -245,6 +245,11 @@ final class UpStream
                 $postType = get_post_type($post_id);
                 if (empty($postType)) {
                     $postType = isset($_GET['post_type']) ? $_GET['post_type'] : '';
+                    if (empty($postType)
+                        && isset($_POST['post_type'])
+                    ) {
+                        $postType = $_POST['post_type'];
+                    }
                 }
 
                 $postTypesUsingCmb2 = apply_filters('upstream:post_types_using_cmb2', array('project', 'client'));
@@ -279,7 +284,6 @@ final class UpStream
         include_once( 'includes/up-project-functions.php' );
         include_once( 'includes/up-client-functions.php' );
         include_once( 'includes/up-permissions-functions.php' );
-        include_once( 'includes/up-client-users-migration.php' );
         include_once( 'includes/up-comments-migration.php' );
         include_once( 'includes/class-up-comments.php' );
         include_once( 'includes/class-up-comment.php' );
@@ -307,7 +311,6 @@ final class UpStream
         UpStream_Roles::addClientUsersRole();
 
         // Executes the Legacy Client Users Migration script if needed.
-        \UpStream\Migrations\ClientUsers::run();
         \UpStream\Migrations\Comments::run();
 
         $user = wp_get_current_user();
