@@ -147,6 +147,7 @@ Fixed:
 * Fixed some bad redirects relying on home_url() instead of site_url()
 * Removed stray "none" text from Discussion section in admin
 * Fixed some users not being able to save/update Projects on admin
+* Fixed some PHP warnings thrown while adding comments
 
 = [1.13.4] - 2017-12-29 =
 
