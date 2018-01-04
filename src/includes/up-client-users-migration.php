@@ -103,7 +103,7 @@ final class ClientUsers
 
     public static function run()
     {
-        return _doing_it_wrong(__FUNCTION__, 'This method is deprecated and it will be removed on future releases.', '@todo');
+        return _doing_it_wrong(__FUNCTION__, 'This method is deprecated and it will be removed on future releases.', '1.13.5');
 
         // Check if we really need to run the migration.
         if (!self::isMigrationNeeded()) {
@@ -431,7 +431,7 @@ final class ClientUsers
 
     public static function insertNewClientUser($data, $client_id)
     {
-        return _doing_it_wrong(__FUNCTION__, 'This method is deprecated and it will be removed on future releases.', '@todo');
+        return _doing_it_wrong(__FUNCTION__, 'This method is deprecated and it will be removed on future releases.', '1.13.5');
 
         global $wpdb;
 

@@ -273,7 +273,7 @@ final class UpStream_Metaboxes_Clients
      */
     private static function renderMigrateUserModal()
     {
-        _doing_it_wrong(__FUNCTION__, 'This method is deprecated and it will be removed on future releases.', '@todo');
+        _doing_it_wrong(__FUNCTION__, 'This method is deprecated and it will be removed on future releases.', '1.13.5');
     }
 
     /**
@@ -386,7 +386,7 @@ final class UpStream_Metaboxes_Clients
      */
     public static function createLegacyUsersMetabox()
     {
-        _doing_it_wrong(__FUNCTION__, 'This method is deprecated and it will be removed on future releases.', '@todo');
+        _doing_it_wrong(__FUNCTION__, 'This method is deprecated and it will be removed on future releases.', '1.13.5');
     }
 
     /**
@@ -910,7 +910,7 @@ final class UpStream_Metaboxes_Clients
                 throw new \Exception(__("You're not allowed to do this.", 'upstream'));
             }
 
-            _doing_it_wrong(__FUNCTION__, 'This method is deprecated and it will be removed on future releases.', '@todo');
+            _doing_it_wrong(__FUNCTION__, 'This method is deprecated and it will be removed on future releases.', '1.13.5');
         } catch (\Exception $e) {
             $response['err'] = $e->getMessage();
         }
@@ -947,7 +947,7 @@ final class UpStream_Metaboxes_Clients
                 throw new \Exception(__("Invalid UpStream Client ID.", 'upstream'));
             }
 
-            _doing_it_wrong(__FUNCTION__, 'This method is deprecated and it will be removed on future releases.', '@todo');
+            _doing_it_wrong(__FUNCTION__, 'This method is deprecated and it will be removed on future releases.', '1.13.5');
         } catch (\Exception $e) {
             $response['err'] = $e->getMessage();
         }
