@@ -28,13 +28,15 @@ function getTableDefaultOptions() {
         }
     };
 }
-
+/*
+// @todo
 var milestonesTableOptions = getTableDefaultOptions();
 milestonesTableOptions.columnDefs[0].targets = (function() {
     return [(jQuery('#milestones thead tr th').length - 1)];
 })();
 milestonesTableOptions.language.emptyTable = upstream.langs.MSG_NO_MILESTONES_YET;
 var tableMilestones = jQuery('#milestones').DataTable(milestonesTableOptions);
+*/
 
 var tasksTableOptions = getTableDefaultOptions();
 tasksTableOptions.language.emptyTable = upstream.langs.MSG_NO_TASKS_YET;
@@ -252,3 +254,44 @@ jQuery(document).ready(function($){
     });
   });
 })(window, window.document, jQuery || {});
+
+
+
+
+
+
+
+(function(window, document, $, $data, undefined) {
+  $(document).ready(function() {
+    $('.o-data-table tr[data-id] a[data-toggle="up-modal"]').on('click', function(e) {
+      e.preventDefault();
+      e.stopPropagation();
+
+      var self = $(this);
+      var tr = self.parents('tr[data-id]');
+
+      var modal = new Modal({
+        el: self.attr('data-up-target')
+      });
+
+      modal.on('show', function(modal, e) {
+        $('[data-column]', tr).each(function() {
+          var columnEl = $(this);
+          var columnName = $(this).attr('data-column');
+
+          if (['notes', 'description', 'comments'].indexOf(columnName) >= 0) {
+            $('[data-column="'+ columnName +'"]', modal.el).html(columnEl.html());
+          } else {
+            $('[data-column="'+ columnName +'"]', modal.el).text(columnEl.text());
+          }
+        });
+      });
+
+      modal.on('hidden', function(modal, e) {
+        $('[data-column]', modal.el).html('');
+      });
+
+      modal.show();
+    });
+  });
+})(window, window.document, jQuery || {}, upstream || {});
