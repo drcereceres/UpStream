@@ -74,7 +74,9 @@ function upstream_enqueue_styles_scripts(){
     wp_enqueue_script( 'dt-buttons', $up_url . $js_dir . 'datatables/dataTables.buttons.min.js', array( 'jquery' ), $up_ver, true );
     wp_enqueue_script( 'dt-responsive', $up_url . $js_dir . 'datatables/dataTables.responsive.min.js', array( 'jquery' ), $up_ver, true );
 
-    wp_enqueue_script( 'upstream', $up_url . $js_dir . 'upstream.js', array( 'jquery' ), $up_ver, true );
+    wp_enqueue_script( 'up-modal', $up_url . $js_dir . 'vendor/modal.min.js', array( 'jquery' ), $up_ver, true );
+
+    wp_enqueue_script( 'upstream', $up_url . $js_dir . 'upstream.js', array( 'jquery', 'up-modal' ), $up_ver, true );
 
     $noDataStringTemplate = _x("You haven't created any %s yet", '%s: item name, ie Milestones, Tasks, Bugs, Files, Discussion', 'upstream');
 
