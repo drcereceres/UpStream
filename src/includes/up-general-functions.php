@@ -880,10 +880,14 @@ function applyOEmbedFiltersToWysiwygEditorContent($content, $field_args, $field)
  *
  * @return  string|false                The converted string or false in case of failure.
  */
-function upstream_convert_UTC_date_to_timezone($subject)
+function upstream_convert_UTC_date_to_timezone($subject, $includeTime = true)
 {
     try {
-        $dateFormat = get_option('date_format') . ' ' . get_option('time_format');
+        $dateFormat = get_option('date_format');
+
+        if ($includeTime === true) {
+            $dateFormat .= ' ' . get_option('time_format');
+        }
 
         if (is_numeric($subject)) {
             $theDate = new DateTime();
@@ -1289,4 +1293,19 @@ function upstream_nl2br($subject)
     $subject = str_replace("</li><br />", '</li>', $subject);
 
     return $subject;
+}
+
+function upstreamGetUsersMap()
+{
+    $map = array();
+
+    $rowset = get_users(array(
+        'fields' => array('ID', 'display_name')
+    ));
+
+    foreach ($rowset as $user) {
+        $map[(int)$user->ID] = $user->display_name;
+    }
+
+    return $map;
 }

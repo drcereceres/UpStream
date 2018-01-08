@@ -8,6 +8,85 @@ if (!upstream_are_milestones_disabled()
 $collapseBox = isset($pluginOptions['collapse_project_milestones'])
     && (bool)$pluginOptions['collapse_project_milestones'] === true;
 $rowset = upstream_project_milestones(); // @todo: optimize
+
+/*
+function table($attrs = array(), $columns = array(), $rowset = array(), $orderedBy = null, $orderDir = 'DESC') {
+    $tableAttrs = array();
+
+    $attrs = array_merge(array(
+        'class'           => ' table table-striped table-bordered table-hover o-data-table is-orderable ',
+        'cellspacing'     => 0,
+        'width'           => '100%',
+        'data-ordered-by' => $orderedBy,
+        'data-order-dir'  => $orderDir
+    ), $attrs);
+
+    foreach ($attrs as $attrName => $attrValue) {
+        $tableAttrs[] = sprintf('%s="%s"', $attrName, $attrValue);
+    }
+
+    ob_start();
+    ?>
+    <table <?php echo implode(' ', $tableAttrs); ?>>
+      <thead>
+        <tr>
+          <?php foreach ($columns as $columnName => $columnSettings):
+          $columnAttrs = array(
+              'class' => ''
+          );
+
+          if (isset($columnSettings->isOrderable)
+            && (bool)$columnSettings->isOrderable
+          ) {
+            $columnAttrs['class'] .= ' is-orderable';
+            $columnAttrs['role'] = 'button';
+          }
+
+          if ($columnName === $orderedBy) {
+            $columnAttrs['class'] .= 'is-ordered';
+            $columnAttrs['data-order-dir'] = $orderDir;
+          }
+
+          $trAttrs = array();
+          foreach ($columnSettings->attrs as $attrName => $attrValue):
+            $trAttrs[] = sprintf('%s="%s"', $attrName, $attrValue);
+          endforeach; ?>
+          <th <?php echo implode(' ', $trAttrs); ?>>
+            <?php echo isset($columnSettings->label) ? $columnSettings->label : ''; ?>
+            <?php if ($columnName === $orderedBy): ?>
+            <span class="pull-right o-order-direction">
+              <i class="fa fa-angle-<?php echo $orderDir === 'DESC' ? 'down' : 'up'; ?>"></i>
+            </span>
+            <?php endif; ?>
+          </th>
+          <?php endforeach; ?>
+        </tr>
+      </thead>
+      <tbody>
+        <?php foreach ($rowset as $row): ?>
+        <tr data-id="<?php echo $row->id; ?>">
+          <?php foreach ($row as $columnName => $columnValue):
+            if ($columnName === 'id') continue;
+            $columnSettings = $columns[$columnName];
+          ?>
+          <td <?php echo $columnSettings->isOrderable ? ' data-column="' . $columnName . '"'; ?>>
+
+          </td>
+          <?php endforeach; ?>
+        </tr>
+        <?php endforeach; ?>
+      </tbody>
+    </table>
+    <?php
+    $html = ob_get_contents();
+    ob_clean();
+
+    return $html
+}
+*/
+
+$itemType = 'milestone';
+
 ?>
 <div class="col-md-12 col-sm-12 col-xs-12">
   <div class="x_panel">
@@ -51,24 +130,10 @@ $rowset = upstream_project_milestones(); // @todo: optimize
           data-order-dir="DESC"
           >
           <thead>
-            <tr>
-              <th class="is-ordered is-orderable" data-order-dir="DESC" role="button" data-column="milestone">
-                Milestone
-                <span class="pull-right o-order-direction">
-                  <i class="fa fa-angle-down"></i>
-                </span>
-              </th>
-              <th class="is-orderable" role="button" data-column="assigned_to">Assigned To</th>
-              <th>Tasks</th>
-              <th class="is-orderable" role="button" data-column="progress">Progress</th>
-              <th class="is-orderable" role="button" data-column="start_date">Start Date</th>
-              <th class="is-orderable" role="button" data-column="end_date">End Date</th>
-              <th class="text-center">Notes</th>
-              <th class="text-center">Comments</th>
-            </tr>
+            <?php echo upstream_output_table_header($itemType); ?>
           </thead>
           <tbody>
-            <?php foreach ($rowset as $row): ?>
+            <?php /* foreach ($rowset as $row): ?>
             <tr data-id="<?php echo $row['id']; ?>">
               <td>
                 <a href="#" data-toggle="up-modal" data-up-target="#milestoneModal" data-column="milestone" data-value="<?php echo $row['milestone']; ?>"><?php echo $row['milestone']; ?></a>
@@ -89,7 +154,8 @@ $rowset = upstream_project_milestones(); // @todo: optimize
                 </div>
               </td>
             </tr>
-            <?php endforeach; ?>
+            <?php endforeach; */ ?>
+            <?php echo upstream_output_table_rows(get_the_ID(), $itemType); ?>
           </tbody>
         </table>
       </div>
