@@ -21,28 +21,28 @@ $rowset = upstream_project_milestones(); // @todo: optimize
     </div>
     <div class="x_content" style="display: <?php echo $collapseBox ? 'none' : 'block'; ?>;">
       <div class="c-data-table table-responsive">
-        <form class="form-inline c-data-table__filters" style="margin-bottom: 15px;">
+        <form class="form-inline c-data-table__filters" data-target="#milestones" style="margin-bottom: 15px;">
           <div class="form-group">
-            <input type="search" class="form-control" placeholder="Search...">
+            <input type="search" class="form-control" placeholder="Search..." data-column="milestone" data-compare-operator="contains">
           </div>
           <div class="form-group">
-            <select class="form-control">
-              <option>Status</option>
+            <select id="kluster" class="form-control" data-column="assigned_to">
+              <option value="">Assignee</option>
+              <option value="1">ID 1</option>
+              <option value="321">ID 321</option>
             </select>
           </div>
           <div class="form-group">
-            <select class="form-control">
-              <option>Assignee</option>
-            </select>
+            <input type="text" class="form-control o-datepicker datepicker" placeholder="Start Date" id="milestones-filter-start_date">
+            <input type="hidden" id="milestones-filter-start_date_timestamp" data-column="start_date" data-compare-operator=">=">
           </div>
           <div class="form-group">
-            <input type="date" class="form-control" placeholder="Start Date">
-          </div>
-          <div class="form-group">
-            <input type="date" class="form-control" placeholder="End Date">
+            <input type="text" class="form-control o-datepicker datepicker" placeholder="End Date" id="milestones-filter-end_date">
+            <input type="hidden" id="milestones-filter-end_date_timestamp" data-column="end_date" data-compare-operator="<=">
           </div>
         </form>
         <table
+          id="milestones"
           class="o-data-table table table-striped table-bordered table-hover is-orderable"
           cellspacing="0"
           width="100%"
@@ -76,7 +76,7 @@ $rowset = upstream_project_milestones(); // @todo: optimize
               <td data-column="assigned_to" data-value="<?php echo $row['assigned_to']; ?>"><?php echo $row['assigned_to']; ?></td>
               <td data-column="tasks">0 Tasks / 0 Open</td>
               <td data-column="progress" data-value="<?php echo $row['progress']; ?>"><?php echo $row['progress']; ?>%</td>
-              <td data-column="start_date" data-value="<?php echo $row['start_date']; ?>"><?php echo $row['start_date']; ?></td>
+              <td data-column="start_date" data-value="<?php echo $row['start_date']; ?>"><?php echo date('Y-m-d', $row['start_date']); ?></td>
               <td data-column="end_date" data-value="<?php echo $row['end_date']; ?>"><?php echo $row['end_date']; ?></td>
               <td class="text-center">
                 <i class="fa fa-<?php echo strlen($row['notes']) > 0 ? 'check' : 'times'; ?>"></i>

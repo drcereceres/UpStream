@@ -262,6 +262,8 @@ jQuery(document).ready(function($){
 
 
 (function(window, document, $, $data, undefined) {
+
+
   $(document).ready(function() {
     $('.o-data-table tr[data-id] a[data-toggle="up-modal"]').on('click', function(e) {
       e.preventDefault();
@@ -372,6 +374,113 @@ jQuery(document).ready(function($){
       self.addClass('is-ordered');
 
       orderTable(self.attr('data-column'), newOrderDir, $(self.parents('table.o-data-table')));
+    });
+
+    function sortTable(columnName, columnValue, filtersWrapper) {
+      var table = $(filtersWrapper.attr('data-target'));
+      var filtersMap = [];
+
+      var filters = $('[data-column]', filtersWrapper);
+      filters.each(function() {
+        var self = $(this);
+
+        var value = self.val().trim();
+
+        filtersMap[self.attr('data-column')] = value.length  > 0 ? value : null;
+        filtersMap.push({
+          column    : self.attr('data-column'),
+          value     : value.length  > 0 ? value : null,
+          comparator: self.attr('data-compare-operator') || 'exact'
+        });
+      });
+
+      console.log(filtersMap);
+
+      var filtersHasChanged = false;
+      var trs = $('tbody tr[data-id]', table);
+      trs.each(function(trIndex) {
+        var tr = $(this);
+        var shouldDisplay = false;
+
+        var filter, filterIndex, filterColumnValue, columnValue, comparator;
+        for (filterIndex =  0; filterIndex < filtersMap.length; filterIndex++) {
+          filter = filtersMap[filterIndex];
+          if (filter.value === null) {
+            continue;
+          }
+
+          filtersHasChanged = true;
+
+          columnValue = $('[data-column="'+ filter.column +'"]', tr).attr('data-value');
+
+          if (filter.comparator === 'contains') {
+            comparator = new RegExp(filter.value, 'i');
+            shouldDisplay = comparator.test(columnValue);
+          } else if (filter.comparator === '>') {
+            shouldDisplay = columnValue > filter.value;
+          } else if (filter.comparator === '>=') {
+            shouldDisplay = columnValue >= filter.value;
+          } else if (filter.comparator === '<') {
+            shouldDisplay = columnValue < filter.value;
+          } else if (filter.comparator === '<=') {
+            shouldDisplay = columnValue <= filter.value;
+          } else {
+            shouldDisplay = columnValue.localeCompare(filter.value) === 0;
+          }
+
+          if (filtersHasChanged && !shouldDisplay) {
+            break;
+          }
+        }
+
+        if (shouldDisplay) {
+          tr.show();
+        } else {
+          tr.hide();
+        }
+      });
+
+      if (!filtersHasChanged) {
+        trs.show();
+      }
+    }
+
+    $('#kluster').on('change', function(e) {
+      e.preventDefault();
+
+      var self = $(this);
+
+      sortTable(self.attr('data-column'), self.val(), $(self.parents('form').get(0)));
+    });
+
+    $('.c-data-table .c-data-table__filters input[type="search"]').on('keyup', function(e) {
+      e.preventDefault();
+
+      var self = $(this);
+      var value = self.val().trim();
+
+      sortTable(self.attr('data-column'), value, $(self.parents('form').get(0)));
+    });
+
+    $('.c-data-table .c-data-table__filters .o-datepicker').on('change', function() {
+      var self = $(this);
+
+      var hiddenField = $('#' + self.attr('id') + '_timestamp');
+
+      sortTable(hiddenField.attr('data-column'), hiddenField.val(), $(self.parents('form').get(0)));
+    });
+
+    $('.c-data-table .c-data-table__filters .o-datepicker').on('blur', function() {
+      var self = $(this);
+      var value = self.val().trim();
+
+      // setTimeout(function() {
+        if (value.length === 0) {
+          var hiddenField = $('#' + self.attr('id') + '_timestamp');
+          //hiddenField.val('');
+          sortTable(hiddenField.attr('data-column'), hiddenField.val(), $(self.parents('form').get(0)));
+        }
+      // });
     });
   });
 })(window, window.document, jQuery || {}, upstream || {});
