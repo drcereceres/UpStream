@@ -336,3 +336,12 @@ table.datatable > tbody > tr.child > td.child > ul {
   margin: 0;
   text-align: center;
 }
+
+
+
+
+
+.o-data-table thead th.is-orderable[role="button"]:hover {
+  cursor: pointer;
+  background-color: rgba(0, 0, 0, .05);
+}

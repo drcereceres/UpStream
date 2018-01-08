@@ -43,18 +43,26 @@ $rowset = upstream_project_milestones(); // @todo: optimize
           </div>
         </form>
         <table
-          class="o-data-table table table-striped table-bordered table-hover"
+          class="o-data-table table table-striped table-bordered table-hover is-orderable"
           cellspacing="0"
           width="100%"
-          data-type="milestone">
+          data-type="milestone"
+          data-ordered-by="milestone"
+          data-order-dir="DESC"
+          >
           <thead>
             <tr>
-              <th>Milestone</th>
-              <th>Assigned To</th>
+              <th class="is-ordered is-orderable" data-order-dir="DESC" role="button" data-column="milestone">
+                Milestone
+                <span class="pull-right o-order-direction">
+                  <i class="fa fa-angle-down"></i>
+                </span>
+              </th>
+              <th class="is-orderable" role="button" data-column="assigned_to">Assigned To</th>
               <th>Tasks</th>
-              <th>Progress</th>
-              <th>Start Date</th>
-              <th>End Date</th>
+              <th class="is-orderable" role="button" data-column="progress">Progress</th>
+              <th class="is-orderable" role="button" data-column="start_date">Start Date</th>
+              <th class="is-orderable" role="button" data-column="end_date">End Date</th>
               <th class="text-center">Notes</th>
               <th class="text-center">Comments</th>
             </tr>
@@ -63,7 +71,7 @@ $rowset = upstream_project_milestones(); // @todo: optimize
             <?php foreach ($rowset as $row): ?>
             <tr data-id="<?php echo $row['id']; ?>">
               <td>
-                <a href="#" data-toggle="up-modal" data-up-target="#milestoneModal" data-column="milestone"><?php echo $row['milestone']; ?></a>
+                <a href="#" data-toggle="up-modal" data-up-target="#milestoneModal" data-column="milestone" data-value="<?php echo $row['milestone']; ?>"><?php echo $row['milestone']; ?></a>
               </td>
               <td data-column="assigned_to" data-value="<?php echo $row['assigned_to']; ?>"><?php echo $row['assigned_to']; ?></td>
               <td data-column="tasks">0 Tasks / 0 Open</td>

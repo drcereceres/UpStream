@@ -293,5 +293,85 @@ jQuery(document).ready(function($){
 
       modal.show();
     });
+
+    function createOrderDirectionEl(direction) {
+      var span = $('<span></span>', {
+        class: 'pull-right o-order-direction'
+      });
+
+      span.append($('<i></i>', {
+        class: 'fa fa-angle-' + (direction === 'ASC' ? 'up' : 'down')
+      }));
+
+      return span;
+    }
+
+    function orderTable(columnName, direction, table) {
+      var trs = $('tbody tr', table);
+
+      if (trs.length === 0) return;
+
+      var data = [];
+
+      var tr, columnValue;
+
+      var data = [];
+      trs.each(function(trIndex) {
+        var tr = $(this);
+
+        columnValue = $('[data-column="'+ columnName +'"]', tr).attr('data-value') || "";
+
+        data.push({
+          index: trIndex,
+          value: columnValue.toUpperCase()
+        });
+      });
+
+      data.sort(function(a, b) {
+        var comparison = a.value.localeCompare(b.value);
+
+        if (direction === 'DESC' && comparison !== 0) {
+          comparison *= -1;
+        }
+
+        return comparison;
+      });
+
+      $('tbody tr', table).remove();
+
+      $.each(data, function(trNewIndex) {
+        var tr = trs.get(this.index);
+
+        $('tbody', table).append(tr);
+      });
+
+      table.attr('data-order-dir', direction)
+        .attr('data-ordered-by', columnName);
+    }
+
+    $('.o-data-table').on('click', 'thead th.is-orderable[role="button"]', function(e) {
+      e.preventDefault();
+
+      var self = $(this);
+      var wrapper = $(self.parent());
+
+      $('.o-order-direction', wrapper).remove();
+
+      if (self.hasClass('is-ordered')) {
+        var orderDir = (self.attr('data-order-dir') || 'DESC').toUpperCase();
+        var newOrderDir = orderDir === 'DESC' ? 'ASC' : 'DESC';
+      } else {
+        $('.is-ordered', wrapper).removeClass('is-ordered');
+        $('th[data-order-dir]', wrapper).attr('data-order-dir', null);
+
+        var newOrderDir = 'ASC';
+      }
+
+      self.attr('data-order-dir', newOrderDir);
+      self.append(createOrderDirectionEl(newOrderDir));
+      self.addClass('is-ordered');
+
+      orderTable(self.attr('data-column'), newOrderDir, $(self.parents('table.o-data-table')));
+    });
   });
 })(window, window.document, jQuery || {}, upstream || {});
