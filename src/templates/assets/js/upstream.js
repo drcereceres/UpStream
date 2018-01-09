@@ -302,14 +302,14 @@ jQuery(document).ready(function($){
       });
 
       span.append($('<i></i>', {
-        class: 'fa fa-angle-' + (direction === 'ASC' ? 'up' : 'down')
+        class: 'fa fa-sort' + (!direction ? '' : (direction === 'ASC' ? '-asc' : '-desc'))
       }));
 
       return span;
     }
 
     function orderTable(columnName, direction, table) {
-      var trs = $('tbody tr', table);
+      var trs = $('tbody tr[data-id]', table);
 
       if (trs.length === 0) return;
 
@@ -325,7 +325,8 @@ jQuery(document).ready(function($){
 
         data.push({
           index: trIndex,
-          value: columnValue.toUpperCase()
+          value: columnValue.toUpperCase(),
+          children: $('tr[data-parent="'+ tr.attr('data-id') +'"]', table).clone()
         });
       });
 
@@ -342,9 +343,13 @@ jQuery(document).ready(function($){
       $('tbody tr', table).remove();
 
       $.each(data, function(trNewIndex) {
-        var tr = trs.get(this.index);
+        var tr = $(trs.get(this.index));
 
         $('tbody', table).append(tr);
+
+        if (this.children.length > 0) {
+          $('tbody', table).append(this.children);
+        }
       });
 
       table.attr('data-order-dir', direction)
@@ -358,6 +363,8 @@ jQuery(document).ready(function($){
       var wrapper = $(self.parent());
 
       $('.o-order-direction', wrapper).remove();
+      $('th.is-orderable[role="button"]', wrapper).append(createOrderDirectionEl(null));
+      $('.o-order-direction', self).remove();
 
       if (self.hasClass('is-ordered')) {
         var orderDir = (self.attr('data-order-dir') || 'DESC').toUpperCase();
@@ -481,6 +488,34 @@ jQuery(document).ready(function($){
           sortTable(hiddenField.attr('data-column'), hiddenField.val(), $(self.parents('form').get(0)));
         }
       // });
+    });
+
+    // Expand rows in tables.
+    $('.o-data-table').on('click', 'tr.is-expandable > td:first-child', function(e) {
+      var self = $(this);
+      var tr = $(self.parents('tr[data-id]').get(0));
+      var table = $(tr.parents('.o-data-table').get(0));
+      var trChild = $('tr[data-parent="'+ tr.attr('data-id') +'"]', table);
+
+      if (trChild.length > 0) {
+        if (!tr.hasClass('is-expanded')) {
+          tr.addClass('is-expanded')
+            .attr('aria-expanded', 'true');
+          trChild.show();
+
+          $('.fa', self)
+            .removeClass('fa-angle-right')
+            .addClass('fa-angle-down');
+        } else {
+          tr.removeClass('is-expanded')
+            .attr('aria-expanded', 'false');
+          trChild.hide();
+
+          $('.fa', self)
+            .removeClass('fa-angle-down')
+            .addClass('fa-angle-right');
+        }
+      }
     });
   });
 })(window, window.document, jQuery || {}, upstream || {});
