@@ -138,6 +138,9 @@ and this project adheres to [Semantic Versioning](http://semver.org).
 
 = [@todo: WIP] =
 
+Changed:
+* Users can no longer be added via Clients page
+
 = [1.13.5] - 2018-01-04 =
 
 Changed:
