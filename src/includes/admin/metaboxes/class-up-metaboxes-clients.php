@@ -175,57 +175,6 @@ final class UpStream_Metaboxes_Clients
     }
 
     /**
-     * Renders the modal's html which is used to add new client users.
-     *
-     * @since   1.11.0
-     * @access  private
-     * @static
-     */
-    private static function renderAddNewUserModal()
-    {
-        ?>
-        <div id="modal-add-new-user" style="display: none;">
-            <div id="form-add-new-user">
-                <div>
-                    <div class="up-form-group">
-                        <label for="new-user-email"><?php echo __('Email', 'upstream') .' *'; ?></label>
-                        <input type="email" name="email" id="new-user-email" size="35" />
-                    </div>
-                    <div class="up-form-group">
-                        <label for="new-user-password"><?php echo __('Password', 'upstream') .' *'; ?></label>
-                        <input type="password" name="password" id="new-user-password" size="35" />
-                        <p class="description up-help-block"><?php echo __('Must be at least 6 characters long.', 'upstream'); ?></p>
-                    </div>
-                    <div class="up-form-group">
-                        <label for="new-user-password_confirmation"><?php echo __('Confirm Password', 'upstream') .' *'; ?></label>
-                        <input type="password" name="password_confirmation" id="new-user-password_confirmation" size="35" />
-                    </div>
-                    <div class="up-form-group">
-                        <label for="new-user-first_name"><?php echo __('First Name', 'upstream'); ?></label>
-                        <input type="text" name="first_name" id="new-user-first_name" size="35" />
-                    </div>
-                    <div class="up-form-group">
-                        <label for="new-user-last_name"><?php echo __('Last Name', 'upstream'); ?></label>
-                        <input type="text" name="last_name" id="new-user-last_name" size="35" />
-                    </div>
-                </div>
-                <div>
-                    <div class="up-form-group label-default">
-                        <label style="margin-left: 13.5em;">
-                            <input type="checkbox" name="notification" id="new-user-notification" value="1" checked />
-                            <span><?php echo __('Send user info via email', 'upstream'); ?></span>
-                        </label>
-                    </div>
-                    <div class="up-form-group">
-                        <button type="submit" class="button button-primary" data-label="<?php echo __('Add New User', 'upstream'); ?>" data-loading-label="<?php echo __('Adding...', 'upstream'); ?>"><?php echo __('Add New User', 'upstream'); ?></button>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <?php
-    }
-
-    /**
      * Renders the modal's html which is used to associate existent client users with a client.
      *
      * @since   1.11.0
@@ -290,11 +239,6 @@ final class UpStream_Metaboxes_Clients
 
         <div class="upstream-row">
             <a
-                name="<?php echo __('Add New User', 'upstream'); ?>"
-                href="#TB_inline?width=600&height=360&inlineId=modal-add-new-user"
-                class="thickbox button"
-            ><?php echo __('Add New User', 'upstream'); ?></a>
-            <a
                 id="add-existent-user"
                 name="<?php echo __('Add Existing Users', 'upstream'); ?>"
                 href="#TB_inline?width=600&height=300&inlineId=modal-add-existent-user"
@@ -351,7 +295,6 @@ final class UpStream_Metaboxes_Clients
 
         <?php
         self::renderUserPermissionsModal();
-        self::renderAddNewUserModal();
         self::renderAddExistentUserModal();
     }
 
