@@ -74,19 +74,19 @@ $currentUserId = get_current_user_id();
           <div class="form-group">
             <div class="btn-group">
               <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                Export
+                <i class="fa fa-download"></i>
                 <span class="caret"></span>
               </button>
               <ul class="dropdown-menu dropdown-menu-right">
                 <li>
-                  <a href="#" data-action="export" data-type="txt">as TXT</a>
+                  <a href="#" data-action="export" data-type="txt">TXT</a>
                 </li>
                 <li>
-                  <a href="#" data-action="export" data-type="csv">as CSV</a>
+                  <a href="#" data-action="export" data-type="csv">CSV</a>
                 </li>
                 <li role="separator" class="divider"></li>
                 <li>
-                  <a href="#">Four</a>
+                  <a href="#">Copy to clipboard</a>
                 </li>
               </ul>
             </div>
@@ -141,7 +141,7 @@ $currentUserId = get_current_user_id();
           </thead>
           <tbody>
             <?php foreach ($rowset as $row): ?>
-            <tr class="is-expandable" data-id="<?php echo $row['id']; ?>" aria-expanded="false">
+            <tr class="is-expandable is-filtered" data-id="<?php echo $row['id']; ?>" aria-expanded="false">
               <td class="is-clickable" role="button">
                 <i class="fa fa-angle-right" style="width: 8.36px;"></i>&nbsp;
                 <span data-column="milestone" data-value="<?php echo $row['milestone']; ?>"><?php echo $row['milestone']; ?></span>

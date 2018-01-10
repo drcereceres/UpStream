@@ -408,6 +408,8 @@ jQuery(document).ready(function($){
       var filtersHasChanged = false;
       var trs = $('tbody tr[data-id]', table);
 
+      trs.removeClass('is-filtered');
+
       trs.each(function(trIndex) {
         var tr = $(this);
         var shouldDisplay = false;
@@ -446,7 +448,7 @@ jQuery(document).ready(function($){
         }
 
         if (shouldDisplay) {
-          tr.show();
+          tr.addClass('is-filtered').show();
         } else {
           tr.hide();
         }
@@ -460,6 +462,8 @@ jQuery(document).ready(function($){
       if (filteredRows.length === 0) {
         var thsCount = $('thead th', table).length;
         $('tbody', table).append($('<tr data-empty-row><td colspan="'+ thsCount +'" class="text-center">No results</td></tr>'));
+      } else {
+        $('tbody tr[data-id]:visible', table).addClass('is-filtered');
       }
     }
 
@@ -536,46 +540,92 @@ jQuery(document).ready(function($){
       }
     });
 
-    /*
-    // @todo
-    function exportTableDataAsTxt(table) {
-      var data = table.clone().tableExport().getExportData();
+    function cloneTableForExport(table) {
+      var clonedTable = table.clone();
+      $('thead tr', clonedTable).prepend($('<th>#</th>'));
+
+      $('tbody tr:not(.is-filtered)', clonedTable).remove();
+
+      var visibleIndex = 0;
+      $('tbody tr[data-id]', clonedTable).each(function() {
+        visibleIndex++;
+
+        $(this).prepend($('<td>'+ visibleIndex +'</td>'));
+      });
+
+      return clonedTable;
+    }
+
+    function getCurrentDate() {
+      var now = new Date();
+      var currentMonth = now.getMonth() + 1;
+      var currentDate = [
+        now.getFullYear(),
+        (currentMonth < 10 ? '0' + currentMonth : currentMonth),
+        now.getDate()
+      ];
+
+      var fileName = currentDate.join('');
+
+      return fileName;
+    }
+
+    function isExportedDataFormatValid(format) {
+      var allowedFormats = ['txt', 'csv'];
+
+      return allowedFormats.indexOf(format) >= 0;
+    }
+
+    function exportTableData(table, targetFormat, charset) {
+      if (!isExportedDataFormatValid(targetFormat)) {
+        return false;
+      }
+
+      charset = (typeof charset === 'undefined'
+                  || !charset
+        ? 'utf-8'
+        : charset
+      );
+
+      var clonedTable = cloneTableForExport(table);
+
+      var data = clonedTable.tableExport({
+        trimWhitespace: true
+      }).getExportData();
 
       var tableId = table.attr('id');
 
-      console.log(data);
+      var exportedData = data[tableId][targetFormat];
 
-      var dataBlob = new Blob([data[tableId].txt.data], {
-        type: 'text/plain;charset=UTF-8'
+      var dataBlob = new Blob([exportedData.data], {
+        type: exportedData.mimeType + ';charset=' + charset
       });
 
-      saveAs(dataBlob, 'lorem.txt');
-    }
-    function exportTableDataAsCsv(table) {
-      console.log('csv');
+      var fileName = getCurrentDate() + '-' + exportedData.filename + exportedData.fileExtension;
+
+      saveAs(dataBlob, fileName);
+
+      return true;
     }
 
     $('.c-data-table [data-action="export"]').on('click', function(e) {
       e.preventDefault();
 
-      var callbacksMap = {
-        txt: exportTableDataAsTxt,
-        csv: exportTableDataAsCsv
-      };
-
       var self = $(this);
+      var fileType = (self.attr('data-type') || '').toLowerCase();
 
-      var dataType = self.attr('data-type');
-      if (dataType in callbacksMap) {
-        var cTable = $(self.parents('.c-data-table'));
-        var table = $('.o-data-table', cTable);
-        if (cTable.length > 0
-            && table.length > 0) {
-          callbacksMap[dataType](table);
-        }
+      if (!isExportedDataFormatValid(fileType)) {
+        console.error('Invalid mime type "'+ fileType +'"');
+        return;
+      }
+
+      var cTable = $(self.parents('.c-data-table'));
+      var table = $('.o-data-table', cTable);
+      if (cTable.length > 0
+          && table.length > 0) {
+        exportTableData(table, fileType);
       }
     });
-    */
 
     $('.c-data-table select.form-control').select2({
       allowClear: true
