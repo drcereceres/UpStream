@@ -12,7 +12,7 @@ $rowset = upstream_project_milestones(); // @todo: optimize
 $users = upstreamGetUsersMap();
 
 $itemType = 'milestone';
-
+$currentUserId = get_current_user_id();
 ?>
 <div class="col-md-12 col-sm-12 col-xs-12">
   <div class="x_panel">
@@ -28,23 +28,68 @@ $itemType = 'milestone';
       <div class="c-data-table table-responsive">
         <form class="form-inline c-data-table__filters" data-target="#milestones" style="margin-bottom: 15px;">
           <div class="form-group">
-            <input type="search" class="form-control" placeholder="Search..." data-column="milestone" data-compare-operator="contains">
+            <div class="input-group">
+              <div class="input-group-addon">
+                <i class="fa fa-search"></i>
+              </div>
+              <input type="search" class="form-control" placeholder="<?php echo upstream_milestone_label(); ?>" data-column="milestone" data-compare-operator="contains">
+            </div>
           </div>
           <div class="form-group">
-            <select id="kluster" class="form-control" data-column="assigned_to">
-              <option value="">Assignee</option>
-              <?php foreach ($users as $user_id => $userName): ?>
-              <option value="<?php echo $user_id; ?>"><?php echo $userName; ?></option>
-              <?php endforeach; ?>
-            </select>
+            <div class="input-group">
+              <div class="input-group-addon">
+                <i class="fa fa-user"></i>
+              </div>
+              <select id="kluster" class="form-control" data-column="assigned_to" data-placeholder="Assignee">
+                <option value></option>
+                <option value="__none__">Nobody</option>
+                <option value="<?php echo $currentUserId; ?>"><?php _e('Me', 'upstream'); ?></option>
+                <optgroup label="<?php _e('Users'); ?>">
+                  <?php foreach ($users as $user_id => $userName): ?>
+                  <?php if ($user_id === $currentUserId) continue; ?>
+                  <option value="<?php echo $user_id; ?>"><?php echo $userName; ?></option>
+                  <?php endforeach; ?>
+                </optgroup>
+              </select>
+            </div>
           </div>
           <div class="form-group">
-            <input type="text" class="form-control o-datepicker datepicker" placeholder="Start Date" id="milestones-filter-start_date">
+            <div class="input-group">
+              <div class="input-group-addon">
+                <i class="fa fa-calendar"></i>
+              </div>
+              <input type="text" class="form-control o-datepicker" placeholder="Start Date" id="milestones-filter-start_date">
+            </div>
             <input type="hidden" id="milestones-filter-start_date_timestamp" data-column="start_date" data-compare-operator=">=">
           </div>
           <div class="form-group">
-            <input type="text" class="form-control o-datepicker datepicker" placeholder="End Date" id="milestones-filter-end_date">
+            <div class="input-group">
+              <div class="input-group-addon">
+                <i class="fa fa-calendar"></i>
+              </div>
+              <input type="text" class="form-control o-datepicker" placeholder="End Date" id="milestones-filter-end_date">
+            </div>
             <input type="hidden" id="milestones-filter-end_date_timestamp" data-column="end_date" data-compare-operator="<=">
+          </div>
+          <div class="form-group">
+            <div class="btn-group">
+              <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Export
+                <span class="caret"></span>
+              </button>
+              <ul class="dropdown-menu dropdown-menu-right">
+                <li>
+                  <a href="#" data-action="export" data-type="txt">as TXT</a>
+                </li>
+                <li>
+                  <a href="#" data-action="export" data-type="csv">as CSV</a>
+                </li>
+                <li role="separator" class="divider"></li>
+                <li>
+                  <a href="#">Four</a>
+                </li>
+              </ul>
+            </div>
           </div>
         </form>
         <table

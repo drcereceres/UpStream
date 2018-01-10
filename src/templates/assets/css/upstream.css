@@ -343,9 +343,13 @@ table.datatable > tbody > tr.child > td.child > ul {
   background-color: rgba(0, 0, 0, .05);
 }
 
-.o-data-table .dropdown-menu-right {
+.c-data-table .dropdown-menu-right {
   right: 0 !important;
   left: auto !important;
+}
+
+.c-data-table .c-data-table__filters .input-group {
+  margin-bottom: 0;
 }
 
 .o-data-table .o-order-direction .fa-sort {

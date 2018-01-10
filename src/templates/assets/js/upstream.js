@@ -261,7 +261,7 @@ jQuery(document).ready(function($){
 
 
 
-(function(window, document, $, $data, undefined) {
+(function(window, document, $, $data, TableExport, undefined) {
 
 
   $(document).ready(function() {
@@ -403,8 +403,11 @@ jQuery(document).ready(function($){
 
       console.log(filtersMap);
 
+      $('tbody tr[data-empty-row]', table).remove();
+
       var filtersHasChanged = false;
       var trs = $('tbody tr[data-id]', table);
+
       trs.each(function(trIndex) {
         var tr = $(this);
         var shouldDisplay = false;
@@ -431,6 +434,8 @@ jQuery(document).ready(function($){
             shouldDisplay = columnValue < filter.value;
           } else if (filter.comparator === '<=') {
             shouldDisplay = columnValue <= filter.value;
+          } else if (filter.value === '__none__') {
+            shouldDisplay = !columnValue;
           } else {
             shouldDisplay = columnValue.localeCompare(filter.value) === 0;
           }
@@ -450,6 +455,12 @@ jQuery(document).ready(function($){
       if (!filtersHasChanged) {
         trs.show();
       }
+
+      var filteredRows = $('tbody tr[data-id]:visible', table);
+      if (filteredRows.length === 0) {
+        var thsCount = $('thead th', table).length;
+        $('tbody', table).append($('<tr data-empty-row><td colspan="'+ thsCount +'" class="text-center">No results</td></tr>'));
+      }
     }
 
     $('#kluster').on('change', function(e) {
@@ -467,27 +478,6 @@ jQuery(document).ready(function($){
       var value = self.val().trim();
 
       sortTable(self.attr('data-column'), value, $(self.parents('form').get(0)));
-    });
-
-    $('.c-data-table .c-data-table__filters .o-datepicker').on('change', function() {
-      var self = $(this);
-
-      var hiddenField = $('#' + self.attr('id') + '_timestamp');
-
-      sortTable(hiddenField.attr('data-column'), hiddenField.val(), $(self.parents('form').get(0)));
-    });
-
-    $('.c-data-table .c-data-table__filters .o-datepicker').on('blur', function() {
-      var self = $(this);
-      var value = self.val().trim();
-
-      // setTimeout(function() {
-        if (value.length === 0) {
-          var hiddenField = $('#' + self.attr('id') + '_timestamp');
-          //hiddenField.val('');
-          sortTable(hiddenField.attr('data-column'), hiddenField.val(), $(self.parents('form').get(0)));
-        }
-      // });
     });
 
     // Expand rows in tables.
@@ -517,5 +507,78 @@ jQuery(document).ready(function($){
         }
       }
     });
+
+    $('.o-datepicker').datepicker({
+      todayBtn: 'linked',
+      clearBtn: true,
+      autoclose: true,
+      keyboardNavigation: false
+    }).on('change', function(e) {
+      var self = $(this);
+      var value = self.datepicker('getUTCDate');
+
+      if (value) {
+        value /= 1000;
+      }
+
+      var hiddenField = $('#' + self.attr('id') + '_timestamp');
+      if (hiddenField.length > 0) {
+        hiddenField.val(value);
+      }
+    });
+
+    $('.c-data-table .c-data-table__filters .o-datepicker').on('change', function() {
+      var self = $(this);
+
+      var hiddenField = $('#' + self.attr('id') + '_timestamp');
+      if (hiddenField.length > 0) {
+        sortTable(hiddenField.attr('data-column'), '', $(self.parents('form').get(0)));
+      }
+    });
+
+    /*
+    // @todo
+    function exportTableDataAsTxt(table) {
+      var data = table.clone().tableExport().getExportData();
+
+      var tableId = table.attr('id');
+
+      console.log(data);
+
+      var dataBlob = new Blob([data[tableId].txt.data], {
+        type: 'text/plain;charset=UTF-8'
+      });
+
+      saveAs(dataBlob, 'lorem.txt');
+    }
+    function exportTableDataAsCsv(table) {
+      console.log('csv');
+    }
+
+    $('.c-data-table [data-action="export"]').on('click', function(e) {
+      e.preventDefault();
+
+      var callbacksMap = {
+        txt: exportTableDataAsTxt,
+        csv: exportTableDataAsCsv
+      };
+
+      var self = $(this);
+
+      var dataType = self.attr('data-type');
+      if (dataType in callbacksMap) {
+        var cTable = $(self.parents('.c-data-table'));
+        var table = $('.o-data-table', cTable);
+        if (cTable.length > 0
+            && table.length > 0) {
+          callbacksMap[dataType](table);
+        }
+      }
+    });
+    */
+
+    $('.c-data-table select.form-control').select2({
+      allowClear: true
+    });
   });
-})(window, window.document, jQuery || {}, upstream || {});
+})(window, window.document, jQuery || {}, upstream || {}, TableExport);
