@@ -76,7 +76,6 @@ final class UpStream_Metaboxes_Clients
 
         // Define all ajax endpoints.
         $ajaxEndpointsSchema = array(
-            'add_new_user'            => 'addNewUser',
             'remove_user'             => 'removeUser',
             'fetch_unassigned_users'  => 'fetchUnassignedUsers',
             'add_existent_users'      => 'addExistentUsers',
@@ -538,129 +537,6 @@ final class UpStream_Metaboxes_Clients
 
         $metaboxGrid = new Cmb2Grid($metabox);
         $metaboxGridRow = $metaboxGrid->addRow(array($logoField));
-    }
-
-    /**
-     * Ajax endpoint responsible for adding new Client Users to the system and client.
-     *
-     * @since   1.11.0
-     * @static
-     */
-    public static function addNewUser()
-    {
-        header('Content-Type: application/json');
-
-        global $wpdb;
-
-        $response = array(
-            'success' => false,
-            'data'    => null,
-            'err'     => null
-        );
-
-        try {
-            if (!upstream_admin_permissions('edit_clients')) {
-                throw new \Exception(__("You're not allowed to do this.", 'upstream'));
-            }
-
-            if (empty($_POST) || !isset($_POST['client'])) {
-                throw new \Exception(__('Invalid request.', 'upstream'));
-            }
-
-            $clientId = (int)$_POST['client'];
-            if ($clientId <= 0) {
-                throw new \Exception(__('Invalid Client ID.', 'upstream'));
-            }
-
-            $data = array(
-                'email'        => isset($_POST['email']) ? $_POST['email'] : '',
-                'password'     => isset($_POST['password']) ? $_POST['password'] : '',
-                'password_c'   => isset($_POST['password_c']) ? $_POST['password_c'] : '',
-                'first_name'   => trim(@$_POST['first_name']),
-                'last_name'    => trim(@$_POST['last_name']),
-                'notification' => isset($_POST['notification']) ? (bool)$_POST['notification'] : true
-            );
-
-            // Validate `password` field.
-            if (strlen($data['password']) < 6) {
-                throw new \Exception(__("Password must be at least 6 characters long.", 'upstream'));
-            }
-
-            if (strcmp($data['password'], $data['password_c']) !== 0) {
-                throw new \Exception(__("Passwords don't match.", 'upstream'));
-            }
-
-            // Validate the `email` field.
-            $userDataEmail = trim($data['email']);
-            if (!filter_var($userDataEmail, FILTER_VALIDATE_EMAIL) || !is_email($userDataEmail)) {
-                throw new \Exception(__("Invalid email.", 'upstream'));
-            } else {
-                $emailExists = (bool)$wpdb->get_var(sprintf('
-                    SELECT COUNT(`ID`)
-                    FROM `%s`
-                    WHERE `user_email` = "%s"',
-                    $wpdb->prefix . 'users',
-                    $data['email']
-                ));
-
-                if ($emailExists) {
-                    throw new \Exception(__("This email address is not available.", 'upstream'));
-                }
-            }
-
-            $userDataDisplayName = trim($data['first_name'] . ' ' . $data['last_name']);
-            $userDataDisplayName = !empty($userDataDisplayName) ? $userDataDisplayName : $data['email'];
-
-            $userData = array(
-                'user_login'    => $userDataDisplayName,
-                'user_pass'     => $data['password'],
-                'user_nicename' => $userDataEmail,
-                'user_email'    => $userDataEmail,
-                'display_name'  => $userDataEmail,
-                'nickname'      => $userDataDisplayName,
-                'first_name'    => $data['first_name'],
-                'last_name'     => $data['last_name'],
-                'role'          => 'upstream_client_user'
-            );
-
-            $userDataId = wp_insert_user($userData);
-            if (is_wp_error($userDataId)) {
-                throw new \Exception($userDataId->get_error_message());
-            }
-
-            if ($data['notification']) {
-                wp_new_user_notification($userDataId);
-            }
-
-            $currentUser = get_userdata(get_current_user_id());
-
-            $nowTimestamp = time();
-
-            $response['data'] = array(
-                'id'          => $userDataId,
-                'assigned_at' => upstream_convert_UTC_date_to_timezone($nowTimestamp),
-                'assigned_by' => $currentUser->display_name,
-                'name'        => $userDataDisplayName,
-                'email'       => $userDataEmail
-            );
-
-            $clientUsersMetaKey = '_upstream_new_client_users';
-            $clientUsersList = (array)get_post_meta($clientId, $clientUsersMetaKey, true);
-            array_push($clientUsersList, array(
-                'user_id'     => $userDataId,
-                'assigned_by' => $currentUser->ID,
-                'assigned_at' => date('Y-m-d H:i:s', $nowTimestamp)
-            ));
-            update_post_meta($clientId, $clientUsersMetaKey, $clientUsersList);
-
-            $response['success'] = true;
-        } catch (\Exception $e) {
-            $response['err'] = $e->getMessage();
-        }
-
-        echo wp_json_encode($response);
-
-        wp_die();
     }
 
     /**
