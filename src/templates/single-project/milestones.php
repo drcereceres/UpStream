@@ -79,14 +79,10 @@ $currentUserId = get_current_user_id();
               </button>
               <ul class="dropdown-menu dropdown-menu-right">
                 <li>
-                  <a href="#" data-action="export" data-type="txt">TXT</a>
+                  <a href="#" data-action="export" data-type="txt">txt</a>
                 </li>
                 <li>
-                  <a href="#" data-action="export" data-type="csv">CSV</a>
-                </li>
-                <li role="separator" class="divider"></li>
-                <li>
-                  <a href="#">Copy to clipboard</a>
+                  <a href="#" data-action="export" data-type="csv">csv</a>
                 </li>
               </ul>
             </div>

@@ -516,7 +516,8 @@ jQuery(document).ready(function($){
       todayBtn: 'linked',
       clearBtn: true,
       autoclose: true,
-      keyboardNavigation: false
+      keyboardNavigation: false,
+      format: $data.datepickerDateFormat
     }).on('change', function(e) {
       var self = $(this);
       var value = self.datepicker('getUTCDate');
