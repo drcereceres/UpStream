@@ -309,7 +309,7 @@ jQuery(document).ready(function($){
     }
 
     function orderTable(columnName, direction, table) {
-      var trs = $('tbody tr[data-id]', table);
+      var trs = $('> tbody > tr[data-id]', table);
 
       if (trs.length === 0) return;
 
@@ -326,7 +326,7 @@ jQuery(document).ready(function($){
         data.push({
           index: trIndex,
           value: columnValue.toUpperCase(),
-          children: $('tr[data-parent="'+ tr.attr('data-id') +'"]', table).clone()
+          children: $('> tbody > tr[data-parent="'+ tr.attr('data-id') +'"]', table).clone()
         });
       });
 
@@ -340,15 +340,15 @@ jQuery(document).ready(function($){
         return comparison;
       });
 
-      $('tbody tr', table).remove();
+      $('> tbody > tr', table).remove();
 
       $.each(data, function(trNewIndex) {
         var tr = $(trs.get(this.index));
 
-        $('tbody', table).append(tr);
+        $('> tbody', table).append(tr);
 
         if (this.children.length > 0) {
-          $('tbody', table).append(this.children);
+          $('> tbody', table).append(this.children);
         }
       });
 
