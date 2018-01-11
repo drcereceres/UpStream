@@ -348,6 +348,10 @@ table.datatable > tbody > tr.child > td.child > ul {
   left: auto !important;
 }
 
+.c-data-table .c-data-table__filters {
+  margin-bottom: 15px;
+}
+
 .c-data-table .c-data-table__filters .input-group {
   margin-bottom: 0;
 }
@@ -386,4 +390,14 @@ table.datatable > tbody > tr.child > td.child > ul {
 
 .c-data-table .c-data-table__filters .btn {
   padding: 8px 12px;
+}
+
+.o-data-table tr td blockquote {
+  font-size: 1em;
+  padding: 5px 10px;
+}
+
+.o-data-table tr[data-id] i.fa-angle-right,
+.o-data-table tr[data-id] i.fa-angle-down {
+  width: 8.36px;
 }

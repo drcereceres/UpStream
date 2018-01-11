@@ -354,6 +354,11 @@ jQuery(document).ready(function($){
 
       table.attr('data-order-dir', direction)
         .attr('data-ordered-by', columnName);
+
+      var th = $('thead tr th[data-column="'+ columnName +'"]');
+      $('.o-order-direction', th).remove();
+
+      th.append(createOrderDirectionEl(direction));
     }
 
     $('.o-data-table').on('click', 'thead th.is-orderable[role="button"]', function(e) {
@@ -467,7 +472,7 @@ jQuery(document).ready(function($){
       }
     }
 
-    $('#kluster').on('change', function(e) {
+    $('.c-data-table .c-data-table__filters .o-select2').on('change', function(e) {
       e.preventDefault();
 
       var self = $(this);
@@ -630,6 +635,18 @@ jQuery(document).ready(function($){
 
     $('.c-data-table select.form-control').select2({
       allowClear: true
+    });
+
+    $('.c-data-table').each(function() {
+      var self = $(this);
+
+      var table = $('.o-data-table', self);
+      var order_dir = table.attr('data-order-dir') || 'DESC';
+      var order_by = table.attr('data-ordered-by') || '';
+
+      if (order_by.length > 0) {
+        orderTable(order_by, order_dir, table);
+      }
     });
   });
 })(window, window.document, jQuery || {}, upstream || {}, TableExport);
