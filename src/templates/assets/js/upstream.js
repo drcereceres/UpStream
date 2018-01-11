@@ -36,7 +36,6 @@ milestonesTableOptions.columnDefs[0].targets = (function() {
 })();
 milestonesTableOptions.language.emptyTable = upstream.langs.MSG_NO_MILESTONES_YET;
 var tableMilestones = jQuery('#milestones').DataTable(milestonesTableOptions);
-*/
 
 var tasksTableOptions = getTableDefaultOptions();
 tasksTableOptions.language.emptyTable = upstream.langs.MSG_NO_TASKS_YET;
@@ -45,6 +44,7 @@ tasksTableOptions.columnDefs[0].targets = (function() {
 })();
 var tableTasks = jQuery('#tasks').DataTable(tasksTableOptions);
 var tableMyTasks = jQuery('#my-tasks').DataTable(tasksTableOptions);
+*/
 
 var bugsTableOptions = getTableDefaultOptions();
 bugsTableOptions.columnDefs[0].targets = (function() {
