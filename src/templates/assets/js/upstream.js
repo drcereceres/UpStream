@@ -433,6 +433,8 @@ jQuery(document).ready(function($){
           if (filter.comparator === 'contains') {
             comparator = new RegExp(filter.value, 'i');
             shouldDisplay = comparator.test(columnValue);
+          } else if (filter.comparator === 'exact') {
+            shouldDisplay = columnValue === filter.value;
           } else if (filter.comparator === '>') {
             shouldDisplay = columnValue > filter.value;
           } else if (filter.comparator === '>=') {
@@ -442,7 +444,7 @@ jQuery(document).ready(function($){
           } else if (filter.comparator === '<=') {
             shouldDisplay = columnValue <= filter.value;
           } else if (filter.value === '__none__') {
-            shouldDisplay = !columnValue;
+            shouldDisplay = !columnValue || columnValue === '__none__';
           } else {
             shouldDisplay = columnValue.localeCompare(filter.value) === 0;
           }
