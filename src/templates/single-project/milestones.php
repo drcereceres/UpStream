@@ -79,10 +79,14 @@ $currentUserId = get_current_user_id();
               </button>
               <ul class="dropdown-menu dropdown-menu-right">
                 <li>
-                  <a href="#" data-action="export" data-type="txt">txt</a>
+                  <a href="#" data-action="export" data-type="txt">
+                    <i class="fa fa-file-text-o"></i>&nbsp;&nbsp;Plain Text
+                  </a>
                 </li>
                 <li>
-                  <a href="#" data-action="export" data-type="csv">csv</a>
+                  <a href="#" data-action="export" data-type="csv">
+                    <i class="fa fa-file-code-o"></i>&nbsp;&nbsp;CSV
+                  </a>
                 </li>
               </ul>
             </div>

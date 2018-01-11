@@ -367,3 +367,23 @@ table.datatable > tbody > tr.child > td.child > ul {
 .s-text-color-darkred {
   color: #c0392b;
 }
+
+.c-data-table .dropdown-menu > li > a {
+  padding: 8px 16px;
+}
+
+.c-data-table .c-data-table__filters .input-group-addon + input {
+  height: 38px;
+  border-top-right-radius: 3px;
+  border-bottom-right-radius: 3px;
+  font-size: 13px;
+}
+
+.c-data-table .c-data-table__filters .select2-selection {
+  border-top-right-radius: 3px;
+  border-bottom-right-radius: 3px;
+}
+
+.c-data-table .c-data-table__filters .btn {
+  padding: 8px 12px;
+}
