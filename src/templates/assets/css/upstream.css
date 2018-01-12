@@ -400,3 +400,33 @@ table.datatable > tbody > tr.child > td.child > ul {
 .o-data-table tr[data-id] i.fa-angle-down {
   width: 8.36px;
 }
+
+.o-data-table > thead > tr {
+  background-color: #f9f9f9;
+}
+
+.c-data-table .c-data-table__filters > div:first-child {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.c-data-table .c-data-table__filters > div[id$="-filters"] {
+  margin-top: 10px;
+}
+
+.o-data-table > thead > tr > th {
+  min-width: 110px;
+}
+
+.c-data-table .c-data-table__filters > .visible-xs > div {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+@media screen and (max-width: 767px) {
+  .c-data-table {
+    border: 0;
+  }
+}
