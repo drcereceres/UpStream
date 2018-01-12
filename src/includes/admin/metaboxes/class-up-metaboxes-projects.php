@@ -56,7 +56,6 @@ class UpStream_Metaboxes_Projects {
         add_action('edit_form_after_title', array($this, 'makeProjectPrivateOnceAgain'));
 
         add_action('cmb2_render_comments', array($this, 'renderCommentsField'), 10, 5);
-        add_action('wp_ajax_upstream:project.get_all_items_comments', array($this, 'fetchAllItemsComments'));
     }
 
     /**
