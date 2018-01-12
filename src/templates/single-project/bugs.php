@@ -42,7 +42,7 @@ foreach ($meta as $data) {
 unset($data, $meta);
 
 $l = array(
-    'LB_TITLE'         => _x('Title', "Task's title", 'upstream'),
+    'LB_TITLE'         => _x('Title', "Bug's title", 'upstream'),
     'LB_NONE'          => __('none', 'upstream'),
     'LB_DESCRIPTION'   => __('Description', 'upstream'),
     'LB_COMMENTS'      => __('Comments', 'upstream'),
