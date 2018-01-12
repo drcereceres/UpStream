@@ -54,7 +54,7 @@ bugsTableOptions.columnDefs[0].targets = (function() {
 bugsTableOptions.language.emptyTable = upstream.langs.MSG_NO_BUGS_YET;
 var tableBugs = jQuery('#bugs').DataTable(bugsTableOptions);
 var tableMyBugs = jQuery('#my-bugs').DataTable(bugsTableOptions);
-*/
+
 
 var filesTableOptions = getTableDefaultOptions();
 filesTableOptions.columnDefs[0].targets = (function() {
@@ -63,7 +63,7 @@ filesTableOptions.columnDefs[0].targets = (function() {
 })();
 filesTableOptions.language.emptyTable = upstream.langs.MSG_NO_FILES_YET;
 var tableFiles = jQuery('#files').DataTable(filesTableOptions);
-
+*/
 /**
  * Resize function without multiple trigger
  *
