@@ -331,7 +331,6 @@ table.datatable > tbody > tr.child > td.child > ul {
 
 .x_panel > .x_content p[data-empty] {
   margin: 0;
-  text-align: center;
 }
 
 

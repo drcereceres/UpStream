@@ -242,9 +242,7 @@ $areCommentsEnabled = upstreamAreCommentsEnabledOnMilestones();
                   <?php if ($areCommentsEnabled): ?>
                   <div class="form-group">
                     <label><?php echo $l['LB_COMMENTS']; ?></label>
-                    <p>
-                      <i class="s-text-color-gray"><?php echo $l['LB_NONE']; ?></i>
-                    </p>
+                    <?php echo upstreamRenderCommentsBox($row['id'], 'milestone', $projectId, false, true); ?>
                   </div>
                   <?php endif; ?>
                 </div>
