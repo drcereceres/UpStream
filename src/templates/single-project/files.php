@@ -145,7 +145,7 @@ $areCommentsEnabled = upstreamAreCommentsEnabledOnFiles();
                   <i class="fa fa-sort"></i>
                 </span>
               </th>
-              <th scope="col" class="is-orderable" data-column="file">
+              <th scope="col" class="is-orderable" data-column="file" data-type="file">
                 <?php _e('File', 'upstream'); ?>
               </th>
             </tr>
@@ -171,7 +171,7 @@ $areCommentsEnabled = upstreamAreCommentsEnabledOnFiles();
               <td data-column="created_at" data-value="<?php echo $row['created_time']; ?>">
                 <?php echo upstream_convert_UTC_date_to_timezone($row['created_time'], false); ?>
               </td>
-              <td>
+              <td data-column="file">
                 <?php
                 if (strlen($row['file']) > 0) {
                   if (@is_array(getimagesize($row['file']))) {

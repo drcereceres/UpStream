@@ -202,7 +202,7 @@ $areCommentsEnabled = upstreamAreCommentsEnabledOnBugs();
                   <i class="fa fa-sort"></i>
                 </span>
               </th>
-              <th scope="col" data-column="file">
+              <th scope="col" data-column="file" data-type="file">
                 <?php _e('File', 'upstream'); ?>
               </th>
             </tr>
@@ -246,7 +246,7 @@ $areCommentsEnabled = upstreamAreCommentsEnabledOnBugs();
                   <i class="s-text-color-gray"><?php echo $l['LB_NONE']; ?></i>
                 <?php endif; ?>
               </td>
-              <td>
+              <td data-column="file">
                 <?php
                 if (strlen($row['file']) > 0) {
                   if (@is_array(getimagesize($row['file']))) {

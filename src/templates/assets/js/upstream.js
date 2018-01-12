@@ -598,6 +598,19 @@ jQuery(document).ready(function($){
 
       var clonedTable = cloneTableForExport(table);
 
+      $('> thead th[data-type="file"]', clonedTable).each(function() {
+        var th = $(this);
+
+        $('> tbody > tr > td[data-column="'+ th.attr('data-column') +'"]', clonedTable).each(function() {
+          var td = $(this);
+
+          var a = $('a', td);
+          if (a.length > 0) {
+            td.text(a.attr('href'));
+          }
+        });
+      });
+
       var data = clonedTable.tableExport({
         trimWhitespace: true
       }).getExportData();
