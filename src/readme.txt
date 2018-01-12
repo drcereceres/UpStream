@@ -141,6 +141,7 @@ and this project adheres to [Semantic Versioning](http://semver.org).
 Fixed:
 * Fixed conflict with Sliced Invoices plugin
 * Fixed bug where items comments were not being retrieved on admin
+* Fixed some dates being converted when they shouldn't
 
 = [1.13.5] - 2018-01-04 =
 
