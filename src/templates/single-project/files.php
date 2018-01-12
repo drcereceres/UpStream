@@ -168,7 +168,7 @@ $areCommentsEnabled = upstreamAreCommentsEnabledOnFiles();
                 <i class="s-text-color-gray"><?php echo $l['LB_NONE']; ?></i>
                 <?php endif; ?>
               </td>
-              <td data-column="created_time" data-value="<?php echo $row['created_time']; ?>">
+              <td data-column="created_at" data-value="<?php echo $row['created_time']; ?>">
                 <?php echo upstream_convert_UTC_date_to_timezone($row['created_time'], false); ?>
               </td>
               <td>
