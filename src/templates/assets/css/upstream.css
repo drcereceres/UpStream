@@ -336,3 +336,8 @@ table.datatable > tbody > tr.child > td.child > ul {
   margin: 0;
   text-align: center;
 }
+
+.profile .profile_info h2 {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
