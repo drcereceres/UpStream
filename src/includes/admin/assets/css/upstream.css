@@ -1229,3 +1229,7 @@ body.upstream_page_upstream_extensions #upstream_extensions input[type="submit"]
 .up-s-hidden {
   display: none;
 }
+
+.upstream-filters-wrapper {
+  margin-top: 15px;
+}

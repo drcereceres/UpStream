@@ -222,7 +222,7 @@ class UpStream_Metaboxes_Projects {
                     'remove_button' => sprintf( __( "Delete %s", 'upstream' ), esc_html( $label ) ),
                     'sortable'      => upstream_admin_permissions( 'sort_project_milestones' ),
                 ),
-                'after_group' =>
+                'before_group' =>
                     $this->getFiltersHeaderHtml() .
                     $this->getAssignedToFilterHtml() .
                     $this->getFiltersFooterHtml()
@@ -618,7 +618,7 @@ class UpStream_Metaboxes_Projects {
                 'remove_button' => sprintf( __( "Delete %s", 'upstream' ), esc_html( $label ) ),
                 'sortable'      => upstream_admin_permissions( 'sort_project_tasks' ), // beta
             ),
-            'after_group'       =>
+            'before_group'       =>
                 $this->getFiltersHeaderHtml() .
                 $this->getAssignedToFilterHtml() .
                 $this->getMilestoneFilterHtml() .
@@ -943,7 +943,7 @@ class UpStream_Metaboxes_Projects {
                 'remove_button' => sprintf( __( "Delete %s", 'upstream' ), esc_html( $label ) ),
                 'sortable'      => upstream_admin_permissions( 'sort_project_bugs' ),
             ),
-            'after_group'       =>
+            'before_group'       =>
                 $this->getFiltersHeaderHtml() .
                 $this->getAssignedToFilterHtml() .
                 $this->getStatusFilterHtml() .
