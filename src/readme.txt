@@ -148,6 +148,7 @@ Fixed:
 * Fixed some dates being converted when they shouldn't
 * Fixed long user names overflowing on frontend sidebar
 * Fixed Notes/Description fields losing their format on frontend
+* Fixed not being able to assign existent users to Clients
 
 = [1.13.5] - 2018-01-04 =
 

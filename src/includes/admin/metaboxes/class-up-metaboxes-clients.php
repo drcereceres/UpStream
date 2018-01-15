@@ -74,21 +74,7 @@ final class UpStream_Metaboxes_Clients
         self::$postTypeLabelSingular = upstream_client_label();
         self::$postTypeLabelPlural = upstream_client_label_plural();
 
-        // Define all ajax endpoints.
-        $ajaxEndpointsSchema = array(
-            'remove_user'             => 'removeUser',
-            'fetch_unassigned_users'  => 'fetchUnassignedUsers',
-            'add_existent_users'      => 'addExistentUsers',
-            'migrate_legacy_user'     => 'migrateLegacyUser',
-            'discard_legacy_user'     => 'discardLegacyUser',
-            'fetch_user_permissions'  => 'fetchUserPermissions',
-            'update_user_permissions' => 'updateUserPermissions'
-        );
-
-        $namespace = get_class(self::$instance);
-        foreach ($ajaxEndpointsSchema as $endpoint => $callbackName) {
-            add_action('wp_ajax_upstream:client.' . $endpoint, array($namespace, $callbackName));
-        }
+        self::attachHooks();
 
         // Enqueues the default ThickBox assets.
         add_thickbox();
@@ -96,7 +82,8 @@ final class UpStream_Metaboxes_Clients
         // Render all inner metaboxes.
         self::renderMetaboxes();
 
-        // Starting from v@todo UpStream Users cannot be added through here anymore.
+        $namespace = get_class(self::$instance);
+        // Starting from v1.13.6 UpStream Users cannot be added through here anymore.
         $noticeIdentifier = 'upstream:notices.client.add_new_users_changes';
         $shouldDisplayNotice = (bool)get_option($noticeIdentifier);
         if (!$shouldDisplayNotice) {
@@ -952,7 +939,7 @@ final class UpStream_Metaboxes_Clients
     /**
      * Add notice to users warning about Client Users creation changes.
      *
-     * @since   @todo
+     * @since   1.13.6
      * @static
      */
     public static function renderAddingClientUsersChangesNotice()
@@ -986,5 +973,30 @@ final class UpStream_Metaboxes_Clients
           </ol>
         </div>
         <?php
+    }
+
+    /**
+     * Attach all hooks.
+     *
+     * @since   1.13.6
+     * @static
+     */
+    public static function attachHooks()
+    {
+        // Define all ajax endpoints.
+        $ajaxEndpointsSchema = array(
+            'remove_user'             => 'removeUser',
+            'fetch_unassigned_users'  => 'fetchUnassignedUsers',
+            'add_existent_users'      => 'addExistentUsers',
+            'migrate_legacy_user'     => 'migrateLegacyUser',
+            'discard_legacy_user'     => 'discardLegacyUser',
+            'fetch_user_permissions'  => 'fetchUserPermissions',
+            'update_user_permissions' => 'updateUserPermissions'
+        );
+
+        $namespace = get_class(self::$instance);
+        foreach ($ajaxEndpointsSchema as $endpoint => $callbackName) {
+            add_action('wp_ajax_upstream:client.' . $endpoint, array($namespace, $callbackName));
+        }
     }
 }
