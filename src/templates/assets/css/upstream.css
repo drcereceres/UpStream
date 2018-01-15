@@ -340,3 +340,8 @@ table.datatable > tbody > tr.child > td.child > ul {
 table.dataTable>tbody>tr.child .dtr-data ul {
   list-style-type: initial;
 }
+
+.profile .profile_info h2 {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
