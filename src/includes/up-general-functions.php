@@ -828,18 +828,6 @@ function upstream_disable_files()
 }
 
 /**
- * This function is deprecated. Use upstreamAreProjectCommentsEnabled() instead.
- *
- * @deprecated
- */
-function upstream_disable_discussions()
-{
-    __doing_it_wrong(__FUNCTION__, 'This function is deprecated in favor of upstreamAreProjectCommentsEnabled().', UPSTREAM_VERSION);
-
-    return upstreamAreProjectCommentsEnabled();
-}
-
-/**
  * Apply OEmbed filters to a given string in an attempt to render potential embeddable content.
  * This function is called as a callback from CMB2 field method 'escape_cb'.
  *
@@ -1293,6 +1281,39 @@ function upstream_nl2br($subject)
     $subject = str_replace("</li><br />", '</li>', $subject);
 
     return $subject;
+}
+
+function upstreamShouldRunCmb2()
+{
+    global $pagenow;
+
+    if ($pagenow === 'post.php'
+        || $pagenow === 'post-new.php'
+    ) {
+        $post_id = isset($_GET['post']) ? (int)$_GET['post'] : 0;
+        $postType = get_post_type($post_id);
+        if (empty($postType)) {
+            $postType = isset($_GET['post_type']) ? $_GET['post_type'] : '';
+            if (empty($postType)
+                && isset($_POST['post_type'])
+            ) {
+                $postType = $_POST['post_type'];
+            }
+        }
+
+        $postTypesUsingCmb2 = apply_filters('upstream:post_types_using_cmb2', array('project', 'client'));
+
+        if (in_array($postType, $postTypesUsingCmb2)) {
+            return true;
+        }
+    } else if ($pagenow === 'admin.php'
+        && isset($_GET['page'])
+        && preg_match('/^upstream_/i', $_GET['page'])
+    ) {
+        return true;
+    }
+
+    return false;
 }
 
 function upstreamGetUsersMap()
