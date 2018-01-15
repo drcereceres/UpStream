@@ -400,8 +400,10 @@ jQuery(document).ready(function($){
         var value = self.val();
         if (typeof value === 'string') {
           value = value.trim();
-        } else {
+        } else if (value) {
           value = value.filter(function(elValue) { return elValue.length > 0; });
+        } else {
+          value = '';
         }
 
         filtersMap[self.attr('data-column')] = value.length  > 0 ? value : null;
@@ -412,7 +414,7 @@ jQuery(document).ready(function($){
         });
       });
 
-      console.log(filtersMap);
+      console.debug(filtersMap);
 
       $('tbody tr[data-empty-row]', table).remove();
 
@@ -480,7 +482,6 @@ jQuery(document).ready(function($){
               shouldDisplay = columnValue.localeCompare(filter.value) === 0;
             } else {
               for (var valueIndex in filter.value) {
-                console.log(filter.value[valueIndex]);
                 if (filter.value[valueIndex] === '__none__') {
                   shouldDisplay = !columnValue || columnValue === '__none__';
                 } else {
@@ -525,12 +526,9 @@ jQuery(document).ready(function($){
       var self = $(this);
 
       var filterColumn = self.attr('data-column');
-      var filterValue = self.val();
+      var filterValue = self.val() || [];
 
-      var wrapper = $(self.parents('.c-data-table__filters'));
-      $('.form-control[data-column="'+ filterColumn +'"]', wrapper).val(filterValue);
-
-      sortTable(filterColumn, filterValue, $(self.parents('form').get(0)));
+      sortTable(filterColumn, filterValue || '', $(self.parents('form').get(0)));
     });
 
     $('.c-data-table .c-data-table__filters input[type="search"]').on('keyup', function(e) {
@@ -600,7 +598,6 @@ jQuery(document).ready(function($){
       var filterColumn = self.attr('data-column');
       var wrapper = $(self.parents('.c-data-table__filters'));
       var value = self.val();
-      $('.form-control[data-column="'+ filterColumn +'"]', wrapper).val(value);
 
       var hiddenField = $('#' + self.attr('id') + '_timestamp');
       if (hiddenField.length > 0) {
@@ -708,8 +705,12 @@ jQuery(document).ready(function($){
       }
     });
 
-    $('.c-data-table select.form-control').select2({
+    $('.c-data-table select.form-control:not([multiple])').select2({
       allowClear: true
+    });
+
+    $('.c-data-table select.form-control[multiple]').select2({
+      allowClear: false
     });
 
     $('.c-data-table').each(function() {
