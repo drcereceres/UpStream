@@ -336,3 +336,12 @@ table.datatable > tbody > tr.child > td.child > ul {
   margin: 0;
   text-align: center;
 }
+
+table.dataTable>tbody>tr.child .dtr-data ul {
+  list-style-type: initial;
+}
+
+.profile .profile_info h2 {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
