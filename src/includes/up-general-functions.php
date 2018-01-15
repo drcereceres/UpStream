@@ -828,18 +828,6 @@ function upstream_disable_files()
 }
 
 /**
- * This function is deprecated. Use upstreamAreProjectCommentsEnabled() instead.
- *
- * @deprecated
- */
-function upstream_disable_discussions()
-{
-    __doing_it_wrong(__FUNCTION__, 'This function is deprecated in favor of upstreamAreProjectCommentsEnabled().', UPSTREAM_VERSION);
-
-    return upstreamAreProjectCommentsEnabled();
-}
-
-/**
  * Apply OEmbed filters to a given string in an attempt to render potential embeddable content.
  * This function is called as a callback from CMB2 field method 'escape_cb'.
  *

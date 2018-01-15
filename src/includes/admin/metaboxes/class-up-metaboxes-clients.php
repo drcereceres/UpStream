@@ -74,28 +74,22 @@ final class UpStream_Metaboxes_Clients
         self::$postTypeLabelSingular = upstream_client_label();
         self::$postTypeLabelPlural = upstream_client_label_plural();
 
-        // Define all ajax endpoints.
-        $ajaxEndpointsSchema = array(
-            'add_new_user'            => 'addNewUser',
-            'remove_user'             => 'removeUser',
-            'fetch_unassigned_users'  => 'fetchUnassignedUsers',
-            'add_existent_users'      => 'addExistentUsers',
-            'migrate_legacy_user'     => 'migrateLegacyUser',
-            'discard_legacy_user'     => 'discardLegacyUser',
-            'fetch_user_permissions'  => 'fetchUserPermissions',
-            'update_user_permissions' => 'updateUserPermissions'
-        );
-
-        $namespace = get_class(self::$instance);
-        foreach ($ajaxEndpointsSchema as $endpoint => $callbackName) {
-            add_action('wp_ajax_upstream:client.' . $endpoint, array($namespace, $callbackName));
-        }
+        self::attachHooks();
 
         // Enqueues the default ThickBox assets.
         add_thickbox();
 
         // Render all inner metaboxes.
         self::renderMetaboxes();
+
+        $namespace = get_class(self::$instance);
+        // Starting from v1.13.6 UpStream Users cannot be added through here anymore.
+        $noticeIdentifier = 'upstream:notices.client.add_new_users_changes';
+        $shouldDisplayNotice = (bool)get_option($noticeIdentifier);
+        if (!$shouldDisplayNotice) {
+            add_action('admin_notices', array($namespace, 'renderAddingClientUsersChangesNotice'));
+            update_option($noticeIdentifier, 1);
+        }
     }
 
     /**
@@ -176,57 +170,6 @@ final class UpStream_Metaboxes_Clients
     }
 
     /**
-     * Renders the modal's html which is used to add new client users.
-     *
-     * @since   1.11.0
-     * @access  private
-     * @static
-     */
-    private static function renderAddNewUserModal()
-    {
-        ?>
-        <div id="modal-add-new-user" style="display: none;">
-            <div id="form-add-new-user">
-                <div>
-                    <div class="up-form-group">
-                        <label for="new-user-email"><?php echo __('Email', 'upstream') .' *'; ?></label>
-                        <input type="email" name="email" id="new-user-email" size="35" />
-                    </div>
-                    <div class="up-form-group">
-                        <label for="new-user-password"><?php echo __('Password', 'upstream') .' *'; ?></label>
-                        <input type="password" name="password" id="new-user-password" size="35" />
-                        <p class="description up-help-block"><?php echo __('Must be at least 6 characters long.', 'upstream'); ?></p>
-                    </div>
-                    <div class="up-form-group">
-                        <label for="new-user-password_confirmation"><?php echo __('Confirm Password', 'upstream') .' *'; ?></label>
-                        <input type="password" name="password_confirmation" id="new-user-password_confirmation" size="35" />
-                    </div>
-                    <div class="up-form-group">
-                        <label for="new-user-first_name"><?php echo __('First Name', 'upstream'); ?></label>
-                        <input type="text" name="first_name" id="new-user-first_name" size="35" />
-                    </div>
-                    <div class="up-form-group">
-                        <label for="new-user-last_name"><?php echo __('Last Name', 'upstream'); ?></label>
-                        <input type="text" name="last_name" id="new-user-last_name" size="35" />
-                    </div>
-                </div>
-                <div>
-                    <div class="up-form-group label-default">
-                        <label style="margin-left: 13.5em;">
-                            <input type="checkbox" name="notification" id="new-user-notification" value="1" checked />
-                            <span><?php echo __('Send user info via email', 'upstream'); ?></span>
-                        </label>
-                    </div>
-                    <div class="up-form-group">
-                        <button type="submit" class="button button-primary" data-label="<?php echo __('Add New User', 'upstream'); ?>" data-loading-label="<?php echo __('Adding...', 'upstream'); ?>"><?php echo __('Add New User', 'upstream'); ?></button>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <?php
-    }
-
-    /**
      * Renders the modal's html which is used to associate existent client users with a client.
      *
      * @since   1.11.0
@@ -269,7 +212,7 @@ final class UpStream_Metaboxes_Clients
      * @since   1.11.0
      * @access  private
      * @static
-     * @deprecated
+     * @deprecated  1.13.6
      */
     private static function renderMigrateUserModal()
     {
@@ -290,11 +233,6 @@ final class UpStream_Metaboxes_Clients
         ?>
 
         <div class="upstream-row">
-            <a
-                name="<?php echo __('Add New User', 'upstream'); ?>"
-                href="#TB_inline?width=600&height=360&inlineId=modal-add-new-user"
-                class="thickbox button"
-            ><?php echo __('Add New User', 'upstream'); ?></a>
             <a
                 id="add-existent-user"
                 name="<?php echo __('Add Existing Users', 'upstream'); ?>"
@@ -352,7 +290,6 @@ final class UpStream_Metaboxes_Clients
 
         <?php
         self::renderUserPermissionsModal();
-        self::renderAddNewUserModal();
         self::renderAddExistentUserModal();
     }
 
@@ -382,7 +319,7 @@ final class UpStream_Metaboxes_Clients
      *
      * @since   1.11.0
      * @static
-     * @deprecated
+     * @deprecated  1.13.6
      */
     public static function createLegacyUsersMetabox()
     {
@@ -538,129 +475,6 @@ final class UpStream_Metaboxes_Clients
 
         $metaboxGrid = new Cmb2Grid($metabox);
         $metaboxGridRow = $metaboxGrid->addRow(array($logoField));
-    }
-
-    /**
-     * Ajax endpoint responsible for adding new Client Users to the system and client.
-     *
-     * @since   1.11.0
-     * @static
-     */
-    public static function addNewUser()
-    {
-        header('Content-Type: application/json');
-
-        global $wpdb;
-
-        $response = array(
-            'success' => false,
-            'data'    => null,
-            'err'     => null
-        );
-
-        try {
-            if (!upstream_admin_permissions('edit_clients')) {
-                throw new \Exception(__("You're not allowed to do this.", 'upstream'));
-            }
-
-            if (empty($_POST) || !isset($_POST['client'])) {
-                throw new \Exception(__('Invalid request.', 'upstream'));
-            }
-
-            $clientId = (int)$_POST['client'];
-            if ($clientId <= 0) {
-                throw new \Exception(__('Invalid Client ID.', 'upstream'));
-            }
-
-            $data = array(
-                'email'        => isset($_POST['email']) ? $_POST['email'] : '',
-                'password'     => isset($_POST['password']) ? $_POST['password'] : '',
-                'password_c'   => isset($_POST['password_c']) ? $_POST['password_c'] : '',
-                'first_name'   => trim(@$_POST['first_name']),
-                'last_name'    => trim(@$_POST['last_name']),
-                'notification' => isset($_POST['notification']) ? (bool)$_POST['notification'] : true
-            );
-
-            // Validate `password` field.
-            if (strlen($data['password']) < 6) {
-                throw new \Exception(__("Password must be at least 6 characters long.", 'upstream'));
-            }
-
-            if (strcmp($data['password'], $data['password_c']) !== 0) {
-                throw new \Exception(__("Passwords don't match.", 'upstream'));
-            }
-
-            // Validate the `email` field.
-            $userDataEmail = trim($data['email']);
-            if (!filter_var($userDataEmail, FILTER_VALIDATE_EMAIL) || !is_email($userDataEmail)) {
-                throw new \Exception(__("Invalid email.", 'upstream'));
-            } else {
-                $emailExists = (bool)$wpdb->get_var(sprintf('
-                    SELECT COUNT(`ID`)
-                    FROM `%s`
-                    WHERE `user_email` = "%s"',
-                    $wpdb->prefix . 'users',
-                    $data['email']
-                ));
-
-                if ($emailExists) {
-                    throw new \Exception(__("This email address is not available.", 'upstream'));
-                }
-            }
-
-            $userDataDisplayName = trim($data['first_name'] . ' ' . $data['last_name']);
-            $userDataDisplayName = !empty($userDataDisplayName) ? $userDataDisplayName : $data['email'];
-
-            $userData = array(
-                'user_login'    => $userDataDisplayName,
-                'user_pass'     => $data['password'],
-                'user_nicename' => $userDataEmail,
-                'user_email'    => $userDataEmail,
-                'display_name'  => $userDataEmail,
-                'nickname'      => $userDataDisplayName,
-                'first_name'    => $data['first_name'],
-                'last_name'     => $data['last_name'],
-                'role'          => 'upstream_client_user'
-            );
-
-            $userDataId = wp_insert_user($userData);
-            if (is_wp_error($userDataId)) {
-                throw new \Exception($userDataId->get_error_message());
-            }
-
-            if ($data['notification']) {
-                wp_new_user_notification($userDataId);
-            }
-
-            $currentUser = get_userdata(get_current_user_id());
-
-            $nowTimestamp = time();
-
-            $response['data'] = array(
-                'id'          => $userDataId,
-                'assigned_at' => upstream_convert_UTC_date_to_timezone($nowTimestamp),
-                'assigned_by' => $currentUser->display_name,
-                'name'        => $userDataDisplayName,
-                'email'       => $userDataEmail
-            );
-
-            $clientUsersMetaKey = '_upstream_new_client_users';
-            $clientUsersList = (array)get_post_meta($clientId, $clientUsersMetaKey, true);
-            array_push($clientUsersList, array(
-                'user_id'     => $userDataId,
-                'assigned_by' => $currentUser->ID,
-                'assigned_at' => date('Y-m-d H:i:s', $nowTimestamp)
-            ));
-            update_post_meta($clientId, $clientUsersMetaKey, $clientUsersList);
-
-            $response['success'] = true;
-        } catch (\Exception $e) {
-            $response['err'] = $e->getMessage();
-        }
-
-        echo wp_json_encode($response);
-
-        wp_die();
     }
 
     /**
@@ -891,7 +705,7 @@ final class UpStream_Metaboxes_Clients
      *
      * @since   1.11.0
      * @static
-     * @deprecated
+     * @deprecated  1.13.6
      */
     public static function migrateLegacyUser()
     {
@@ -925,7 +739,7 @@ final class UpStream_Metaboxes_Clients
      *
      * @since   1.11.0
      * @static
-     * @deprecated
+     * @deprecated  1.13.6
      */
     public static function discardLegacyUser()
     {
@@ -1120,5 +934,69 @@ final class UpStream_Metaboxes_Clients
         echo wp_json_encode($response);
 
         wp_die();
+    }
+
+    /**
+     * Add notice to users warning about Client Users creation changes.
+     *
+     * @since   1.13.6
+     * @static
+     */
+    public static function renderAddingClientUsersChangesNotice()
+    {
+        ?>
+        <div class="notice notice-info is-dismissible">
+          <h3><?php _e('Important notice', 'upstream'); ?></h3>
+          <p><?php _e('New users can no longer be added through here.', 'upstream'); ?></p>
+          <p><?php _e('From now on, to ensure newly created users are listed on the Existing Users table, do the following:', 'upstream'); ?></p>
+          <ol>
+            <li>
+              <?php printf(
+                  'Go to the %s page',
+                  sprintf(
+                      '<a href="%s" target="_blank">%s</a>',
+                      admin_url('user-new.php'),
+                      __('Users')
+                  )
+              ); ?>
+            </li>
+            <li><?php _e("Add the users as you need if you haven't already", 'upstream'); ?></li>
+            <li>
+              <?php printf(
+                  'Make sure they have the %s role assigned to them',
+                  sprintf(
+                      '<code>%s</code>',
+                      __('UpStream Client User', 'upstream')
+                  )
+              ); ?>
+            </li>
+          </ol>
+        </div>
+        <?php
+    }
+
+    /**
+     * Attach all hooks.
+     *
+     * @since   1.13.6
+     * @static
+     */
+    public static function attachHooks()
+    {
+        // Define all ajax endpoints.
+        $ajaxEndpointsSchema = array(
+            'remove_user'             => 'removeUser',
+            'fetch_unassigned_users'  => 'fetchUnassignedUsers',
+            'add_existent_users'      => 'addExistentUsers',
+            'migrate_legacy_user'     => 'migrateLegacyUser',
+            'discard_legacy_user'     => 'discardLegacyUser',
+            'fetch_user_permissions'  => 'fetchUserPermissions',
+            'update_user_permissions' => 'updateUserPermissions'
+        );
+
+        $namespace = get_class(self::$instance);
+        foreach ($ajaxEndpointsSchema as $endpoint => $callbackName) {
+            add_action('wp_ajax_upstream:client.' . $endpoint, array($namespace, $callbackName));
+        }
     }
 }
