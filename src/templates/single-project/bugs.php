@@ -146,7 +146,7 @@ $areCommentsEnabled = upstreamAreCommentsEnabledOnBugs();
                 <div class="input-group-addon">
                   <i class="fa fa-user"></i>
                 </div>
-                <select class="form-control o-select2" data-column="assigned_to" data-placeholder="<?php _e('Assignee', 'upstream'); ?>">
+                <select class="form-control o-select2" data-column="assigned_to" data-placeholder="<?php _e('Assignee', 'upstream'); ?>" multiple>
                   <option value></option>
                   <option value="__none__"><?php _e('Nobody', 'upstream'); ?></option>
                   <option value="<?php echo $currentUserId; ?>"><?php _e('Me', 'upstream'); ?></option>
@@ -164,7 +164,7 @@ $areCommentsEnabled = upstreamAreCommentsEnabledOnBugs();
                 <div class="input-group-addon">
                   <i class="fa fa-asterisk"></i>
                 </div>
-                <select class="form-control o-select2" data-column="severity" data-placeholder="<?php _e('Severity', 'upstream'); ?>">
+                <select class="form-control o-select2" data-column="severity" data-placeholder="<?php _e('Severity', 'upstream'); ?>" multiple>
                   <option value></option>
                   <option value="__none__"><?php _e('None', 'upstream'); ?></option>
                   <optgroup label="<?php _e('Severity', 'upstream'); ?>">
@@ -180,7 +180,7 @@ $areCommentsEnabled = upstreamAreCommentsEnabledOnBugs();
                 <div class="input-group-addon">
                   <i class="fa fa-bookmark"></i>
                 </div>
-                <select class="form-control o-select2" data-column="status" data-placeholder="<?php _e('Status', 'upstream'); ?>">
+                <select class="form-control o-select2" data-column="status" data-placeholder="<?php _e('Status', 'upstream'); ?>" multiple>
                   <option value></option>
                   <option value="__none__"><?php _e('None', 'upstream'); ?></option>
                   <optgroup label="<?php _e('Status', 'upstream'); ?>">

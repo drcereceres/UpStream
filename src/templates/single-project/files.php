@@ -134,7 +134,7 @@ $areCommentsEnabled = upstreamAreCommentsEnabledOnFiles();
                 <div class="input-group-addon">
                   <i class="fa fa-user"></i>
                 </div>
-                <select class="form-control o-select2" data-column="created_by" data-placeholder="<?php _e('Uploader', 'upstream'); ?>">
+                <select class="form-control o-select2" data-column="created_by" data-placeholder="<?php _e('Uploader', 'upstream'); ?>" multiple>
                   <option value></option>
                   <option value="<?php echo $currentUserId; ?>"><?php _e('Me', 'upstream'); ?></option>
                   <optgroup label="<?php _e('Users'); ?>">

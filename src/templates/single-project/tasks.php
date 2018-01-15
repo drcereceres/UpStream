@@ -167,7 +167,7 @@ $areCommentsEnabled = upstreamAreCommentsEnabledOnTasks();
                 <div class="input-group-addon">
                   <i class="fa fa-user"></i>
                 </div>
-                <select class="form-control o-select2" data-column="assigned_to" data-placeholder="<?php _e('Assignee', 'upstream'); ?>">
+                <select class="form-control o-select2" data-column="assigned_to" multiple data-placeholder="<?php _e('Assignee', 'upstream'); ?>">
                   <option value></option>
                   <option value="__none__"><?php _e('Nobody', 'upstream'); ?></option>
                   <option value="<?php echo $currentUserId; ?>"><?php _e('Me', 'upstream'); ?></option>
@@ -185,7 +185,7 @@ $areCommentsEnabled = upstreamAreCommentsEnabledOnTasks();
                 <div class="input-group-addon">
                   <i class="fa fa-bookmark"></i>
                 </div>
-                <select class="form-control o-select2" data-column="status" data-placeholder="<?php _e('Status', 'upstream'); ?>">
+                <select class="form-control o-select2" data-column="status" data-placeholder="<?php _e('Status', 'upstream'); ?>" multiple>
                   <option value></option>
                   <option value="__none__"><?php _e('None', 'upstream'); ?></option>
                   <optgroup label="<?php _e('Status', 'upstream'); ?>">
@@ -201,7 +201,7 @@ $areCommentsEnabled = upstreamAreCommentsEnabledOnTasks();
                 <div class="input-group-addon">
                   <i class="fa fa-flag"></i>
                 </div>
-                <select class="form-control o-select2" data-column="milestone" data-placeholder="<?php echo $l['LB_MILESTONE']; ?>">
+                <select class="form-control o-select2" data-column="milestone" data-placeholder="<?php echo $l['LB_MILESTONE']; ?>" multiple>
                   <option value></option>
                   <option value="__none__"><?php _e('None', 'upstream'); ?></option>
                   <optgroup label="<?php echo upstream_milestone_label_plural(); ?>">
