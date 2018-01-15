@@ -6,7 +6,7 @@ if (!defined('ABSPATH')) exit;
 
 /**
  * @final
- * @deprecated
+ * @deprecated  1.13.6
  */
 final class ClientUsers
 {

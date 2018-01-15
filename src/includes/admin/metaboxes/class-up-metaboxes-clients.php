@@ -212,7 +212,7 @@ final class UpStream_Metaboxes_Clients
      * @since   1.11.0
      * @access  private
      * @static
-     * @deprecated
+     * @deprecated  1.13.6
      */
     private static function renderMigrateUserModal()
     {
@@ -319,7 +319,7 @@ final class UpStream_Metaboxes_Clients
      *
      * @since   1.11.0
      * @static
-     * @deprecated
+     * @deprecated  1.13.6
      */
     public static function createLegacyUsersMetabox()
     {
@@ -705,7 +705,7 @@ final class UpStream_Metaboxes_Clients
      *
      * @since   1.11.0
      * @static
-     * @deprecated
+     * @deprecated  1.13.6
      */
     public static function migrateLegacyUser()
     {
@@ -739,7 +739,7 @@ final class UpStream_Metaboxes_Clients
      *
      * @since   1.11.0
      * @static
-     * @deprecated
+     * @deprecated  1.13.6
      */
     public static function discardLegacyUser()
     {
