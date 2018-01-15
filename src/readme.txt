@@ -138,6 +138,10 @@ and this project adheres to [Semantic Versioning](http://semver.org).
 
 = [1.13.6] - @todo =
 
+Changed:
+* Users can no longer be added via Clients page
+* Legacy Users migration functions were marked as deprecated
+
 Fixed:
 * Fixed conflict with Sliced Invoices plugin
 * Fixed bug where items comments were not being retrieved on admin
