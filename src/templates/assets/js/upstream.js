@@ -480,16 +480,26 @@ jQuery(document).ready(function($){
 
       var self = $(this);
 
-      sortTable(self.attr('data-column'), self.val(), $(self.parents('form').get(0)));
+      var filterColumn = self.attr('data-column');
+      var filterValue = self.val();
+
+      var wrapper = $(self.parents('.c-data-table__filters'));
+      $('.form-control[data-column="'+ filterColumn +'"]', wrapper).val(filterValue);
+
+      sortTable(filterColumn, filterValue, $(self.parents('form').get(0)));
     });
 
     $('.c-data-table .c-data-table__filters input[type="search"]').on('keyup', function(e) {
       e.preventDefault();
 
       var self = $(this);
+      var filterColumn = self.attr('data-column');
       var value = self.val().trim();
 
-      sortTable(self.attr('data-column'), value, $(self.parents('form').get(0)));
+      var wrapper = $(self.parents('.c-data-table__filters'));
+      $('.form-control[data-column="'+ filterColumn +'"]', wrapper).val(value);
+
+      sortTable(filterColumn, value, $(self.parents('form').get(0)));
     });
 
     // Expand rows in tables.
@@ -543,9 +553,14 @@ jQuery(document).ready(function($){
     $('.c-data-table .c-data-table__filters .o-datepicker').on('change', function() {
       var self = $(this);
 
+      var filterColumn = self.attr('data-column');
+      var wrapper = $(self.parents('.c-data-table__filters'));
+      var value = self.val();
+      $('.form-control[data-column="'+ filterColumn +'"]', wrapper).val(value);
+
       var hiddenField = $('#' + self.attr('id') + '_timestamp');
       if (hiddenField.length > 0) {
-        sortTable(hiddenField.attr('data-column'), '', $(self.parents('form').get(0)));
+        sortTable(hiddenField.attr('data-column'), value, $(self.parents('form').get(0)));
       }
     });
 
