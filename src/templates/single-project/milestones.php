@@ -55,7 +55,7 @@ $areCommentsEnabled = upstreamAreCommentsEnabledOnMilestones();
                 <div class="input-group-addon">
                   <i class="fa fa-search"></i>
                 </div>
-                <input type="search" class="form-control" placeholder="<?php echo $l['LB_MILESTONE']; ?>" data-column="milestone" data-compare-operator="contains">
+                <input type="search" class="form-control" placeholder="<?php echo $l['LB_MILESTONE']; ?>" data-column="milestone" data-compare-operator="contains" width="200">
               </div>
             </div>
             <div class="form-group">
@@ -121,7 +121,7 @@ $areCommentsEnabled = upstreamAreCommentsEnabledOnMilestones();
                 <div class="input-group-addon">
                   <i class="fa fa-user"></i>
                 </div>
-                <select class="form-control o-select2" data-column="assigned_to" data-placeholder="<?php _e('Assignee', 'upstream'); ?>">
+                <select class="form-control o-select2" data-column="assigned_to" data-placeholder="<?php _e('Assignee', 'upstream'); ?>" multiple>
                   <option value></option>
                   <option value="__none__"><?php _e('Nobody', 'upstream'); ?></option>
                   <option value="<?php echo $currentUserId; ?>"><?php _e('Me', 'upstream'); ?></option>
@@ -205,7 +205,7 @@ $areCommentsEnabled = upstreamAreCommentsEnabledOnMilestones();
                 <i class="fa fa-angle-right"></i>&nbsp;
                 <span data-column="milestone" data-value="<?php echo $row['milestone']; ?>"><?php echo $row['milestone']; ?></span>
               </td>
-              <td data-column="assigned_to" data-value="<?php echo $row['assigned_to']; ?>">
+              <td data-column="assigned_to" data-value="<?php echo $row['assigned_to'] > 0 ? $row['assigned_to'] : ''; ?>">
                 <?php if (isset($row['assigned_to'])
                     && is_numeric($row['assigned_to'])
                     && (int)$row['assigned_to'] > 0
