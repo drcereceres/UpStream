@@ -140,7 +140,12 @@ and this project adheres to [Semantic Versioning](http://semver.org).
 
 Changed:
 * Users can no longer be added via Clients page
-* Legacy Users migration functions were marked as deprecated
+
+Deprecated:
+* Legacy Users migration class/functions/methods were marked as deprecated
+
+Removed:
+* Removed upstream_disable_discussions() deprecated function
 
 Fixed:
 * Fixed conflict with Sliced Invoices plugin
