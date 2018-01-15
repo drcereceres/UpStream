@@ -438,4 +438,22 @@ table.dataTable>tbody>tr.child .dtr-data ul {
   .c-data-table {
     border: 0;
   }
+
+  .c-data-table__filters select.o-select2[multiple] + .select2-container {
+    width: 100% !important;
+  }
+}
+
+@media screen and (min-width: 768px) {
+  .c-data-table__filters select.o-select2[multiple] + .select2-container {
+    min-width: 250px;
+  }
+}
+
+.c-data-table__filters select.o-select2[multiple] + .select2-container .select2-selection--multiple {
+  padding-left: 12px;
+}
+
+.c-data-table__filters select.o-select2[multiple] + .select2-container .select2-selection__rendered {
+  padding-left: 0;
 }

@@ -397,7 +397,12 @@ jQuery(document).ready(function($){
       filters.each(function() {
         var self = $(this);
 
-        var value = self.val().trim();
+        var value = self.val();
+        if (typeof value === 'string') {
+          value = value.trim();
+        } else {
+          value = value.filter(function(elValue) { return elValue.length > 0; });
+        }
 
         filtersMap[self.attr('data-column')] = value.length  > 0 ? value : null;
         filtersMap.push({
@@ -432,10 +437,34 @@ jQuery(document).ready(function($){
           columnValue = $('[data-column="'+ filter.column +'"]', tr).attr('data-value');
 
           if (filter.comparator === 'contains') {
-            comparator = new RegExp(filter.value, 'i');
-            shouldDisplay = comparator.test(columnValue);
+            if (typeof filter.value === 'string') {
+              comparator = new RegExp(filter.value, 'i');
+              shouldDisplay = comparator.test(columnValue);
+            } else {
+              for (var valueIndex in filter.value) {
+                comparator = new RegExp(filter.value[valueIndex], 'i');
+                if (comparator.test(columnValue)) {
+                  shouldDisplay = true;
+                  break;
+                }
+              }
+            }
           } else if (filter.comparator === 'exact') {
-            shouldDisplay = columnValue === filter.value;
+            if (typeof filter.value === 'string') {
+              shouldDisplay = shouldDisplay = columnValue === filter.value;
+            } else {
+              for (var valueIndex in filter.value) {
+                if (filter.value[valueIndex] === '__none__') {
+                  shouldDisplay = !columnValue || columnValue === '__none__';
+                } else {
+                  shouldDisplay = columnValue === filter.value[valueIndex];
+                }
+
+                if (shouldDisplay) {
+                  break;
+                }
+              }
+            }
           } else if (filter.comparator === '>') {
             shouldDisplay = columnValue > filter.value;
           } else if (filter.comparator === '>=') {
@@ -447,7 +476,22 @@ jQuery(document).ready(function($){
           } else if (filter.value === '__none__') {
             shouldDisplay = !columnValue || columnValue === '__none__';
           } else {
-            shouldDisplay = columnValue.localeCompare(filter.value) === 0;
+            if (typeof filter.value === 'string') {
+              shouldDisplay = columnValue.localeCompare(filter.value) === 0;
+            } else {
+              for (var valueIndex in filter.value) {
+                console.log(filter.value[valueIndex]);
+                if (filter.value[valueIndex] === '__none__') {
+                  shouldDisplay = !columnValue || columnValue === '__none__';
+                } else {
+                  shouldDisplay = columnValue.localeCompare(filter.value[valueIndex]) === 0;
+                }
+
+                if (shouldDisplay) {
+                  break;
+                }
+              }
+            }
           }
 
           if (filtersHasChanged && !shouldDisplay) {
