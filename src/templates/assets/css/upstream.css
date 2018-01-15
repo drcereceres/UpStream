@@ -445,6 +445,11 @@ table.dataTable>tbody>tr.child .dtr-data ul {
 }
 
 @media screen and (min-width: 768px) {
+  .c-data-table__filters .form-control[data-column="title"],
+  .c-data-table__filters .form-control[data-column="milestone"] {
+    min-width: 250px;
+  }
+
   .c-data-table__filters select.o-select2[multiple] + .select2-container {
     min-width: 250px;
   }
