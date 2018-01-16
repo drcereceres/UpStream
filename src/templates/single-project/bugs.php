@@ -288,7 +288,7 @@ $areCommentsEnabled = upstreamAreCommentsEnabledOnBugs();
               </td>
               <td data-column="file">
                 <?php
-                if (strlen($row['file']) > 0) {
+                if (isset($row['file']) && strlen($row['file']) > 0) {
                   if (@is_array(getimagesize($row['file']))) {
                     printf(
                       '<a href="%s" target="_blank">
