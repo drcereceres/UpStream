@@ -1274,7 +1274,7 @@
     });
     */
 
-    $('select.up-o-filter').on('change', function(e) {
+    $('select.up-o-filter:not(.up-o-filter-date)').on('change', function(e) {
       e.preventDefault();
       e.stopPropagation();
 
@@ -1285,6 +1285,23 @@
       var metabox = $(self.parents('.cmb2-metabox').get(0));
 
       filterMetaboxTableBy(metabox, filterColumn, filterValue, 'contains');
+    });
+
+    $('.up-o-filter-date.up-o-filter').on('change', function(e) {
+      e.preventDefault();
+      e.stopPropagation();
+
+      var self = $(this);
+      var filterColumn = self.attr('data-column');
+      var filterValue = self.val().trim();
+
+      if (filterValue.length > 0) {
+        filterValue = +new Date(filterValue);
+      }
+
+      var metabox = $(self.parents('.cmb2-metabox').get(0));
+
+      filterMetaboxTableBy(metabox, filterColumn, filterValue, self.attr('data-compare-operator'));
     });
 
     function filterMetaboxTableBy(metabox, columnName, filterValue, operator) {
@@ -1331,7 +1348,7 @@
         var tr = $(this);
         var shouldDisplay = false;
 
-        var filter, filterIndex, filterColumnValue, columnValue, comparator;
+        var filter, filterIndex, filterColumnValue, columnValue, comparator, theColumn;
         for (filterIndex =  0; filterIndex < filtersMap.length; filterIndex++) {
           filter = filtersMap[filterIndex];
           if (filter.value === null) {
@@ -1340,7 +1357,13 @@
 
           filtersHasChanged = true;
 
-          columnValue = $('[name$="['+ filter.column +']"]', tr).val();
+          theColumn = $('[name$="['+ filter.column +']"]', tr);
+          columnValue = theColumn.val();
+
+          if (theColumn.hasClass('hasDatepicker') && columnValue.length > 0) {
+            filter.value = +new Date(filter.value);
+            columnValue = +new Date(columnValue);
+          }
 
           if (filter.comparator === 'contains') {
             if (typeof filter.value === 'string') {

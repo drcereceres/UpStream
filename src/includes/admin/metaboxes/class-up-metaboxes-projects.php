@@ -434,11 +434,11 @@ class UpStream_Metaboxes_Projects {
             </div>
             <div class="col-md-3">
               <label for="milestones-filter-start_date">Start Date</label>
-              <input type="text" id="milestones-filter-start_date" class="up-o-filter up-o-filter-date">
+              <input type="text" id="milestones-filter-start_date" class="up-o-filter up-o-filter-date" data-column="start_date" data-compare-operator=">=">
             </div>
             <div class="col-md-3">
               <label for="milestones-filter-end_date">End Date</label>
-              <input type="text" id="milestones-filter-end_date" class="up-o-filter up-o-filter-date">
+              <input type="text" id="milestones-filter-end_date" class="up-o-filter up-o-filter-date" data-column="end_date" data-compare-operator="<=">
             </div>
             ',
             __('Assigned To', 'upstream'),
