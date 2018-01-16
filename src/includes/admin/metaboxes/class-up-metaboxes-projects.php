@@ -413,22 +413,35 @@ class UpStream_Metaboxes_Projects {
     private function getAssignedToFilterHtml()
     {
         $upstreamUsersList = upstream_admin_get_all_project_users();
-        $usersOptionsHtml = '<option>- ' . __('Show Everyone', 'upstream') . ' -</option>';
+        $usersOptionsHtml = '<option value="">- ' . __('Show Everyone', 'upstream') . ' -</option>';
+        $usersOptionsHtml .= '<option value="__none__">' . __('Nobody', 'upstream') . '</option>';
         foreach ($upstreamUsersList as $userId => $userName) {
             $usersOptionsHtml .= sprintf('<option value="%s">%s</option>', $userId, $userName);
         }
 
         $html = sprintf('
-            <div class="col-md-4">
-                <div>
-                    <label>%s</label>
-                    <select class="cmb-type-select upstream-filter upstream-filter-assigned_to" data-disabled="false" data-owner="true" data-no-items-found-message="%s" data-column="assigned_to">
-                        %s
-                    </select>
-                </div>
-            </div>',
+            <div class="col-md-3">
+              <label for="milestones-filter-milestone">Milestone</label>
+              <input type="text" id="milestones-filter-milestone" class="up-o-filter" data-column="milestone" data-trigger_on="keyup" data-compare-operator="contains">
+            </div>
+            <div class="col-md-3">
+              <div>
+                <label>%s</label>
+                <select class="cmb-type-select upstream-filter upstream-filter-assigned_to up-o-filter" data-disabled="false" data-owner="true" data-column="assigned_to">
+                    %s
+                </select>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <label for="milestones-filter-start_date">Start Date</label>
+              <input type="text" id="milestones-filter-start_date" class="up-o-filter up-o-filter-date">
+            </div>
+            <div class="col-md-3">
+              <label for="milestones-filter-end_date">End Date</label>
+              <input type="text" id="milestones-filter-end_date" class="up-o-filter up-o-filter-date">
+            </div>
+            ',
             __('Assigned To', 'upstream'),
-            __('No items found.', 'upstream'),
             $usersOptionsHtml
         );
 
@@ -620,7 +633,7 @@ class UpStream_Metaboxes_Projects {
             ),
             'before_group'       =>
                 $this->getFiltersHeaderHtml() .
-                $this->getAssignedToFilterHtml() .
+                // @todo $this->getAssignedToFilterHtml() .
                 $this->getMilestoneFilterHtml() .
                 $this->getStatusFilterHtml() .
                 $this->getFiltersFooterHtml()
@@ -945,7 +958,7 @@ class UpStream_Metaboxes_Projects {
             ),
             'before_group'       =>
                 $this->getFiltersHeaderHtml() .
-                $this->getAssignedToFilterHtml() .
+                // @todo $this->getAssignedToFilterHtml() .
                 $this->getStatusFilterHtml() .
                 $this->getSeverityFilterHtml() .
                 $this->getFiltersFooterHtml()
