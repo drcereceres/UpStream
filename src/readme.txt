@@ -138,6 +138,23 @@ and this project adheres to [Semantic Versioning](http://semver.org).
 
 = [@todo: WIP] =
 
+Added:
+* Added Milestone, Assignee, Star and End Dates filters for Milestones
+* Added Title, Assignee, Status, Milestone, Star and End Dates filters for Tasks
+* Added Title, Assignee, Severity, Status, Due Date filters for Bugs
+* Added Title, Uploader, Upload Date filters for Files
+
+Changed:
+* Users can now filter metaboxes/tables data using multiple filters at once
+* We're slowly moving towards using Select2 lib across the whole plugin
+* Frontend Date filters now use a new Date Picker js lib
+
+Deprecated:
+* On class-up-metaboxes-project.php, both getFiltersHeaderHtml and getFiltersFooterHtml methods were marked as deprecated
+
+Removed:
+* Frontend tables no longer use Datatable lib due lack of flexibility and performance issues
+
 = [1.13.6] - 2018-01-15 =
 
 Changed:
