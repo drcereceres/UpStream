@@ -597,7 +597,7 @@ class UpStream_Metaboxes_Projects {
     }
 
     // @todo
-    private function getFiltersFiltersHtml()
+    private function getFilesFiltersHtml()
     {
         $users = upstream_admin_get_all_project_users();
         $prefix = 'files-filter-';
@@ -1516,7 +1516,7 @@ class UpStream_Metaboxes_Projects {
             'type'              => 'group',
             'description'       => '',
             'permissions'       => 'delete_project_files', // also set on individual row level
-            'before_group'      => $this->getFiltersFiltersHtml(),
+            'before_group'      => $this->getFilesFiltersHtml(),
             'options'           => array(
                 'group_title'   => esc_html( $label ) . " {#}",
                 'add_button'    => sprintf( __( "Add %s", 'upstream' ), esc_html( $label ) ),
