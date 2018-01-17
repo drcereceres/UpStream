@@ -234,7 +234,7 @@ $areCommentsEnabled = upstreamAreCommentsEnabledOnTasks();
         </form>
         <table
           id="tasks"
-          class="o-data-table table table-striped table-bordered table-responsive is-orderable"
+          class="o-data-table table table-hover table-bordered table-responsive is-orderable"
           cellspacing="0"
           width="100%"
           data-type="task"
