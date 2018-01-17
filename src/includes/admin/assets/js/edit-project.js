@@ -1313,7 +1313,7 @@
       });
 
       var table = metabox.find('.cmb-nested.cmb-field-list.cmb-repeatable-group');
-      var filtersWrapper = metabox.find('.upstream-filters-wrapper');
+      var filtersWrapper = metabox.find('.up-c-filters');
       var filtersMap = [];
 
       var filters = $('[data-column]', filtersWrapper);

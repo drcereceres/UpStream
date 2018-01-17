@@ -216,17 +216,14 @@ class UpStream_Metaboxes_Projects {
                 'type'              => 'group',
                 'description'       => '',
                 'permissions'       => 'delete_project_milestones', // also set on individual row level
+                'before_group'      => $this->getMilestonesFiltersHtml(),
                 'options'           => array(
                     'group_title'   => esc_html( $label ) . " {#}",
                     'add_button'    => sprintf( __( "Add %s", 'upstream' ), esc_html( $label ) ),
                     'remove_button' => sprintf( __( "Delete %s", 'upstream' ), esc_html( $label ) ),
                     'sortable'      => upstream_admin_permissions( 'sort_project_milestones' ),
-                ),
-                'before_group' =>
-                    $this->getFiltersHeaderHtml() .
-                    $this->getAssignedToFilterHtml() .
-                    $this->getFiltersFooterHtml()
-            ) );
+                )
+            ));
 
             $fields = array();
 
@@ -402,48 +399,239 @@ class UpStream_Metaboxes_Projects {
         }
     }
 
-    /**
-     * Return the Assigned To filter HTML.
-     *
-     * @since   1.0.0
-     * @access  private
-     *
-     * @return  string
-     */
-    private function getAssignedToFilterHtml()
+    // @todo
+    private function getMilestonesFiltersHtml()
     {
-        $upstreamUsersList = upstream_admin_get_all_project_users();
-        $usersOptionsHtml = '<option value="">- ' . __('Show Everyone', 'upstream') . ' -</option>';
-        $usersOptionsHtml .= '<option value="__none__">' . __('Nobody', 'upstream') . '</option>';
-        foreach ($upstreamUsersList as $userId => $userName) {
-            $usersOptionsHtml .= sprintf('<option value="%s">%s</option>', $userId, $userName);
-        }
+        $users = upstream_admin_get_all_project_users();
+        $prefix = 'milestones-filter-';
+        $currentUserId = get_current_user_id();
 
-        $html = sprintf('
-            <div class="col-md-3">
-              <label for="milestones-filter-milestone">Milestone</label>
-              <input type="text" id="milestones-filter-milestone" class="up-o-filter" data-column="milestone" data-trigger_on="keyup" data-compare-operator="contains">
-            </div>
-            <div class="col-md-3">
-              <div>
-                <label>%s</label>
-                <select class="cmb-type-select upstream-filter upstream-filter-assigned_to up-o-filter" data-disabled="false" data-owner="true" data-column="assigned_to">
-                    %s
-                </select>
-              </div>
-            </div>
-            <div class="col-md-3">
-              <label for="milestones-filter-start_date">Start Date</label>
-              <input type="text" id="milestones-filter-start_date" class="up-o-filter up-o-filter-date" data-column="start_date" data-compare-operator=">=">
-            </div>
-            <div class="col-md-3">
-              <label for="milestones-filter-end_date">End Date</label>
-              <input type="text" id="milestones-filter-end_date" class="up-o-filter up-o-filter-date" data-column="end_date" data-compare-operator="<=">
-            </div>
-            ',
-            __('Assigned To', 'upstream'),
-            $usersOptionsHtml
-        );
+        ob_start();
+        ?>
+        <div class="up-c-filters">
+          <div class="up-c-filter">
+            <label for="<?php echo $prefix . 'milestone'; ?>"><?php echo upstream_milestone_label(); ?></label>
+            <input type="text" id="<?php echo $prefix . 'milestone'; ?>" class="up-o-filter" data-column="milestone" data-trigger_on="keyup" data-compare-operator="contains">
+          </div>
+          <div class="up-c-filter">
+            <label for="<?php echo $prefix . 'assignee'; ?>"><?php _e('Assignee', 'upstream'); ?></label>
+            <select id="<?php echo $prefix . 'assignee'; ?>" class="up-o-filter" data-column="assigned_to">
+              <option value=""></option>
+              <option value="<?php echo $currentUserId; ?>"><?php _e('Me', 'upstream'); ?></option>
+              <option value="__none__"><?php _e('Nobody', 'upstream'); ?></option>
+              <optgroup label="<?php _e('Users'); ?>">
+                <?php foreach ($users as $userId => $userName): ?>
+                  <?php if ((int)$userId === $currentUserId) continue; ?>
+                  <option value="<?php echo $userId; ?>"><?php echo $userName; ?></option>
+                <?php endforeach; ?>
+              </optgroup>
+            </select>
+          </div>
+          <div class="up-c-filter">
+            <label for="<?php echo $prefix . 'start_date'; ?>"><?php _e('Start Date', 'upstream'); ?></label>
+            <input type="text" id="<?php echo $prefix . 'start_date'; ?>" class="up-o-filter up-o-filter-date" data-column="start_date" data-compare-operator=">=">
+          </div>
+          <div class="up-c-filter">
+            <label for="<?php echo $prefix . 'end_date'; ?>"><?php _e('End Date', 'upstream'); ?></label>
+            <input type="text" id="<?php echo $prefix . 'end_date'; ?>" class="up-o-filter up-o-filter-date" data-column="end_date" data-compare-operator="<=">
+          </div>
+        </div>
+        <?php
+        $html = ob_get_contents();
+        ob_clean();
+
+        return $html;
+    }
+
+    // @todo
+    private function getTasksFiltersHtml()
+    {
+        $users = upstream_admin_get_all_project_users();
+        $prefix = 'tasks-filter-';
+        $currentUserId = get_current_user_id();
+        $statuses = get_option('upstream_tasks');
+        $statuses = $statuses['statuses'];
+        $projectId = upstream_post_id();
+
+        $milestones = array();
+        $meta = (array)get_post_meta($projectId, '_upstream_project_milestones', true);
+        foreach ($meta as $data) {
+            if (!isset($data['id'])
+                || !isset($data['created_by'])
+                || !isset($data['milestone'])
+            ) {
+                continue;
+            }
+
+            $milestones[$data['id']] = $data['milestone'];
+        }
+        unset($data, $meta);
+
+        ob_start();
+        ?>
+        <div class="up-c-filters">
+          <div class="up-c-filter">
+            <label for="<?php echo $prefix . 'title'; ?>"><?php _e('Title', 'upstream'); ?></label>
+            <input type="text" id="<?php echo $prefix . 'title'; ?>" class="up-o-filter" data-column="title" data-trigger_on="keyup" data-compare-operator="contains">
+          </div>
+          <div class="up-c-filter">
+            <label for="<?php echo $prefix . 'assignee'; ?>"><?php _e('Assignee', 'upstream'); ?></label>
+            <select id="<?php echo $prefix . 'assignee'; ?>" class="up-o-filter" data-column="assigned_to">
+              <option value=""></option>
+              <option value="<?php echo $currentUserId; ?>"><?php _e('Me', 'upstream'); ?></option>
+              <option value="__none__"><?php _e('Nobody', 'upstream'); ?></option>
+              <optgroup label="<?php _e('Users'); ?>">
+                <?php foreach ($users as $userId => $userName): ?>
+                  <?php if ((int)$userId === $currentUserId) continue; ?>
+                  <option value="<?php echo $userId; ?>"><?php echo $userName; ?></option>
+                <?php endforeach; ?>
+              </optgroup>
+            </select>
+          </div>
+          <div class="up-c-filter">
+            <label for="<?php echo $prefix . 'status'; ?>"><?php _e('Status', 'upstream'); ?></label>
+            <select id="<?php echo $prefix . 'status'; ?>" class="up-o-filter" data-column="status">
+              <option value=""></option>
+              <option value="__none__"><?php _e('None', 'upstream'); ?></option>
+              <optgroup label="<?php _e('Statuses', 'upstream'); ?>">
+                <?php foreach ($statuses as $status): ?>
+                <option value="<?php echo $status['name']; ?>"><?php echo $status['name']; ?></option>
+                <?php endforeach; ?>
+              </optgroup>
+            </select>
+          </div>
+          <div class="up-c-filter">
+            <label for="<?php echo $prefix . 'milestone'; ?>"><?php echo upstream_milestone_label(); ?></label>
+            <select id="<?php echo $prefix . 'milestone'; ?>" class="up-o-filter" data-column="milestone">
+              <option value=""></option>
+              <option value="__none__"><?php _e('None', 'upstream'); ?></option>
+              <optgroup label="<?php echo upstream_milestone_label_plural(); ?>">
+                <?php foreach ($milestones as $milestoneId => $milestoneTitle): ?>
+                <option value="<?php echo $milestoneId; ?>"><?php echo $milestoneTitle; ?></option>
+                <?php endforeach; ?>
+              </optgroup>
+            </select>
+          </div>
+          <div class="up-c-filter">
+            <label for="<?php echo $prefix . 'start_date'; ?>"><?php _e('Start Date', 'upstream'); ?></label>
+            <input type="text" id="<?php echo $prefix . 'start_date'; ?>" class="up-o-filter up-o-filter-date" data-column="start_date" data-compare-operator=">=">
+          </div>
+          <div class="up-c-filter">
+            <label for="<?php echo $prefix . 'end_date'; ?>"><?php _e('End Date', 'upstream'); ?></label>
+            <input type="text" id="<?php echo $prefix . 'end_date'; ?>" class="up-o-filter up-o-filter-date" data-column="end_date" data-compare-operator="<=">
+          </div>
+        </div>
+        <?php
+        $html = ob_get_contents();
+        ob_clean();
+
+        return $html;
+    }
+
+    // @todo
+    private function getBugsFiltersHtml()
+    {
+        $users = upstream_admin_get_all_project_users();
+        $prefix = 'bugs-filter-';
+        $currentUserId = get_current_user_id();
+        $bugsSettings = get_option('upstream_bugs');
+        $statuses = $bugsSettings['statuses'];
+        $severities = $bugsSettings['severities'];
+        unset($bugsSettings);
+
+        ob_start();
+        ?>
+        <div class="up-c-filters">
+          <div class="up-c-filter">
+            <label for="<?php echo $prefix . 'title'; ?>"><?php _e('Title', 'upstream'); ?></label>
+            <input type="text" id="<?php echo $prefix . 'title'; ?>" class="up-o-filter" data-column="title" data-trigger_on="keyup" data-compare-operator="contains">
+          </div>
+          <div class="up-c-filter">
+            <label for="<?php echo $prefix . 'assignee'; ?>"><?php _e('Assignee', 'upstream'); ?></label>
+            <select id="<?php echo $prefix . 'assignee'; ?>" class="up-o-filter" data-column="assigned_to">
+              <option value=""></option>
+              <option value="<?php echo $currentUserId; ?>"><?php _e('Me', 'upstream'); ?></option>
+              <option value="__none__"><?php _e('Nobody', 'upstream'); ?></option>
+              <optgroup label="<?php _e('Users'); ?>">
+                <?php foreach ($users as $userId => $userName): ?>
+                  <?php if ((int)$userId === $currentUserId) continue; ?>
+                  <option value="<?php echo $userId; ?>"><?php echo $userName; ?></option>
+                <?php endforeach; ?>
+              </optgroup>
+            </select>
+          </div>
+          <div class="up-c-filter">
+            <label for="<?php echo $prefix . 'severity'; ?>"><?php _e('Severities', 'upstream'); ?></label>
+            <select id="<?php echo $prefix . 'severity'; ?>" class="up-o-filter" data-column="severity">
+              <option value=""></option>
+              <option value="__none__"><?php _e('None', 'upstream'); ?></option>
+              <optgroup label="<?php _e('Severities', 'upstream'); ?>">
+                <?php foreach ($severities as $severity): ?>
+                <option value="<?php echo $severity['name']; ?>"><?php echo $severity['name']; ?></option>
+                <?php endforeach; ?>
+              </optgroup>
+            </select>
+          </div>
+          <div class="up-c-filter">
+            <label for="<?php echo $prefix . 'status'; ?>"><?php _e('Status', 'upstream'); ?></label>
+            <select id="<?php echo $prefix . 'status'; ?>" class="up-o-filter" data-column="status">
+              <option value=""></option>
+              <option value="__none__"><?php _e('None', 'upstream'); ?></option>
+              <optgroup label="<?php _e('Statuses', 'upstream'); ?>">
+                <?php foreach ($statuses as $status): ?>
+                <option value="<?php echo $status['name']; ?>"><?php echo $status['name']; ?></option>
+                <?php endforeach; ?>
+              </optgroup>
+            </select>
+          </div>
+          <div class="up-c-filter">
+            <label for="<?php echo $prefix . 'due_date'; ?>"><?php _e('Due Date', 'upstream'); ?></label>
+            <input type="text" id="<?php echo $prefix . 'due_date'; ?>" class="up-o-filter up-o-filter-date" data-column="due_date" data-compare-operator="<=">
+          </div>
+        </div>
+        <?php
+        $html = ob_get_contents();
+        ob_clean();
+
+        return $html;
+    }
+
+    // @todo
+    private function getFiltersFiltersHtml()
+    {
+        $users = upstream_admin_get_all_project_users();
+        $prefix = 'files-filter-';
+        $currentUserId = get_current_user_id();
+
+        ob_start();
+        ?>
+        <div class="up-c-filters">
+          <div class="up-c-filter">
+            <label for="<?php echo $prefix . 'title'; ?>"><?php _e('Title', 'upstream'); ?></label>
+            <input type="text" id="<?php echo $prefix . 'title'; ?>" class="up-o-filter" data-column="title" data-trigger_on="keyup" data-compare-operator="contains">
+          </div>
+          <div class="up-c-filter">
+            <label for="<?php echo $prefix . 'uploaded_by'; ?>"><?php _e('Uploaded by', 'upstream'); ?></label>
+            <select id="<?php echo $prefix . 'uploaded_by'; ?>" class="up-o-filter" data-column="created_by">
+              <option value=""></option>
+              <option value="<?php echo $currentUserId; ?>"><?php _e('Me', 'upstream'); ?></option>
+              <option value="__none__"><?php _e('Nobody', 'upstream'); ?></option>
+              <optgroup label="<?php _e('Users'); ?>">
+                <?php foreach ($users as $userId => $userName): ?>
+                  <?php if ((int)$userId === $currentUserId) continue; ?>
+                  <option value="<?php echo $userId; ?>"><?php echo $userName; ?></option>
+                <?php endforeach; ?>
+              </optgroup>
+            </select>
+          </div>
+          <div class="up-c-filter">
+            <label for="<?php echo $prefix . 'uploaded_at'; ?>"><?php _e('Upload Date', 'upstream'); ?></label>
+            <input type="text" id="<?php echo $prefix . 'uploaded_at'; ?>" class="up-o-filter up-o-filter-date" data-column="created_time" data-compare-operator="<=">
+          </div>
+        </div>
+        <?php
+        $html = ob_get_contents();
+        ob_clean();
 
         return $html;
     }
@@ -631,13 +819,8 @@ class UpStream_Metaboxes_Projects {
                 'remove_button' => sprintf( __( "Delete %s", 'upstream' ), esc_html( $label ) ),
                 'sortable'      => upstream_admin_permissions( 'sort_project_tasks' ), // beta
             ),
-            'before_group'       =>
-                $this->getFiltersHeaderHtml() .
-                // @todo $this->getAssignedToFilterHtml() .
-                $this->getMilestoneFilterHtml() .
-                $this->getStatusFilterHtml() .
-                $this->getFiltersFooterHtml()
-        ) );
+            'before_group'      => $this->getTasksFiltersHtml()
+        ));
 
         if (!$areTasksDisabled) {
             $fields = array();
@@ -956,13 +1139,8 @@ class UpStream_Metaboxes_Projects {
                 'remove_button' => sprintf( __( "Delete %s", 'upstream' ), esc_html( $label ) ),
                 'sortable'      => upstream_admin_permissions( 'sort_project_bugs' ),
             ),
-            'before_group'       =>
-                $this->getFiltersHeaderHtml() .
-                // @todo $this->getAssignedToFilterHtml() .
-                $this->getStatusFilterHtml() .
-                $this->getSeverityFilterHtml() .
-                $this->getFiltersFooterHtml()
-        ) );
+            'before_group'      => $this->getBugsFiltersHtml()
+        ));
 
         if (!$areBugsDisabled) {
             $fields = array();
@@ -1338,6 +1516,7 @@ class UpStream_Metaboxes_Projects {
             'type'              => 'group',
             'description'       => '',
             'permissions'       => 'delete_project_files', // also set on individual row level
+            'before_group'      => $this->getFiltersFiltersHtml(),
             'options'           => array(
                 'group_title'   => esc_html( $label ) . " {#}",
                 'add_button'    => sprintf( __( "Add %s", 'upstream' ), esc_html( $label ) ),
