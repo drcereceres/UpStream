@@ -75,10 +75,6 @@ function upstream_enqueue_styles_scripts(){
     wp_enqueue_script( 'up-bootstrap', $up_url . $js_dir . 'bootstrap.min.js', array( 'jquery' ), $up_ver, true );
     wp_enqueue_script( 'up-fastclick', $up_url . $js_dir . 'fastclick.js', array( 'jquery' ), $up_ver, true );
     wp_enqueue_script( 'up-nprogress', $up_url . $js_dir . 'nprogress.js', array( 'jquery' ), $up_ver, true );
-    wp_enqueue_script( 'up-datatables', $up_url . $js_dir . 'datatables/dataTables.min.js', array( 'jquery' ), $up_ver, true );
-    wp_enqueue_script( 'dt-bootstrap', $up_url . $js_dir . 'datatables/dataTables.bootstrap.min.js', array( 'jquery' ), $up_ver, true );
-    wp_enqueue_script( 'dt-buttons', $up_url . $js_dir . 'datatables/dataTables.buttons.min.js', array( 'jquery' ), $up_ver, true );
-    wp_enqueue_script( 'dt-responsive', $up_url . $js_dir . 'datatables/dataTables.responsive.min.js', array( 'jquery' ), $up_ver, true );
 
     wp_enqueue_script( 'upstream-datepicker', $up_url . $js_dir . 'vendor/bootstrap-datepicker.min.js', array( 'jquery', 'up-bootstrap' ), $up_ver, true );
     wp_enqueue_script( 'up-modal', $up_url . $js_dir . 'vendor/modal.min.js', array( 'jquery' ), $up_ver, true );
