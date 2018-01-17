@@ -599,9 +599,7 @@ class UpStream_Metaboxes_Projects {
     // @todo
     private function getFilesFiltersHtml()
     {
-        $users = upstream_admin_get_all_project_users();
         $prefix = 'files-filter-';
-        $currentUserId = get_current_user_id();
 
         ob_start();
         ?>
@@ -609,24 +607,6 @@ class UpStream_Metaboxes_Projects {
           <div class="up-c-filter">
             <label for="<?php echo $prefix . 'title'; ?>"><?php _e('Title', 'upstream'); ?></label>
             <input type="text" id="<?php echo $prefix . 'title'; ?>" class="up-o-filter" data-column="title" data-trigger_on="keyup" data-compare-operator="contains">
-          </div>
-          <div class="up-c-filter">
-            <label for="<?php echo $prefix . 'uploaded_by'; ?>" class="up-s-mb-2"><?php _e('Uploaded by', 'upstream'); ?></label>
-            <select id="<?php echo $prefix . 'uploaded_by'; ?>" class="up-o-filter o-select2" data-column="created_by" data-placeholder="" multiple>
-              <option></option>
-              <option value="<?php echo $currentUserId; ?>"><?php _e('Me', 'upstream'); ?></option>
-              <option value="__none__"><?php _e('Nobody', 'upstream'); ?></option>
-              <optgroup label="<?php _e('Users'); ?>">
-                <?php foreach ($users as $userId => $userName): ?>
-                  <?php if ((int)$userId === $currentUserId) continue; ?>
-                  <option value="<?php echo $userId; ?>"><?php echo $userName; ?></option>
-                <?php endforeach; ?>
-              </optgroup>
-            </select>
-          </div>
-          <div class="up-c-filter">
-            <label for="<?php echo $prefix . 'uploaded_at'; ?>"><?php _e('Upload Date', 'upstream'); ?></label>
-            <input type="text" id="<?php echo $prefix . 'uploaded_at'; ?>" class="up-o-filter up-o-filter-date" data-column="created_time" data-compare-operator="<=">
           </div>
         </div>
         <?php
