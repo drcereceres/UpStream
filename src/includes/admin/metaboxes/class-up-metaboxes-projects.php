@@ -683,6 +683,38 @@ class UpStream_Metaboxes_Projects {
     }
 
     /**
+     * Return the HTML that opens the Filters wrapper.
+     *
+     * @since       1.0.0
+     * @access      private
+     * @deprecated  @todo
+     *
+     * @return      string
+     */
+    private function getFiltersHeaderHtml()
+    {
+        $html = '<div class="row upstream-filters-wrapper">';
+
+        return $html;
+    }
+
+    /**
+     * Return the HTML that closes the Filters wrapper.
+     *
+     * @since       1.0.0
+     * @access      private
+     * @deprecated  @todo
+     *
+     * @return      string
+     */
+    private function getFiltersFooterHtml()
+    {
+        $html = '</div>';
+
+        return $html;
+    }
+
+    /**
      * Return the Milestone filter HTML.
      *
      * @since   1.0.0
