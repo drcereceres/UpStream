@@ -415,8 +415,8 @@ class UpStream_Metaboxes_Projects {
           </div>
           <div class="up-c-filter">
             <label for="<?php echo $prefix . 'assignee'; ?>"><?php _e('Assignee', 'upstream'); ?></label>
-            <select id="<?php echo $prefix . 'assignee'; ?>" class="up-o-filter" data-column="assigned_to">
-              <option value=""></option>
+            <select id="<?php echo $prefix . 'assignee'; ?>" class="up-o-filter o-select2" data-column="assigned_to" data-placeholder="" multiple>
+              <option></option>
               <option value="<?php echo $currentUserId; ?>"><?php _e('Me', 'upstream'); ?></option>
               <option value="__none__"><?php _e('Nobody', 'upstream'); ?></option>
               <optgroup label="<?php _e('Users'); ?>">
@@ -476,8 +476,8 @@ class UpStream_Metaboxes_Projects {
           </div>
           <div class="up-c-filter">
             <label for="<?php echo $prefix . 'assignee'; ?>"><?php _e('Assignee', 'upstream'); ?></label>
-            <select id="<?php echo $prefix . 'assignee'; ?>" class="up-o-filter" data-column="assigned_to">
-              <option value=""></option>
+            <select id="<?php echo $prefix . 'assignee'; ?>" class="up-o-filter o-select2" data-column="assigned_to" multiple data-placeholder="">
+              <option></option>
               <option value="<?php echo $currentUserId; ?>"><?php _e('Me', 'upstream'); ?></option>
               <option value="__none__"><?php _e('Nobody', 'upstream'); ?></option>
               <optgroup label="<?php _e('Users'); ?>">
@@ -490,8 +490,8 @@ class UpStream_Metaboxes_Projects {
           </div>
           <div class="up-c-filter">
             <label for="<?php echo $prefix . 'status'; ?>"><?php _e('Status', 'upstream'); ?></label>
-            <select id="<?php echo $prefix . 'status'; ?>" class="up-o-filter" data-column="status">
-              <option value=""></option>
+            <select id="<?php echo $prefix . 'status'; ?>" class="up-o-filter o-select2" data-column="status" data-placeholder="" multiple>
+              <option></option>
               <option value="__none__"><?php _e('None', 'upstream'); ?></option>
               <optgroup label="<?php _e('Statuses', 'upstream'); ?>">
                 <?php foreach ($statuses as $status): ?>
@@ -502,8 +502,8 @@ class UpStream_Metaboxes_Projects {
           </div>
           <div class="up-c-filter">
             <label for="<?php echo $prefix . 'milestone'; ?>"><?php echo upstream_milestone_label(); ?></label>
-            <select id="<?php echo $prefix . 'milestone'; ?>" class="up-o-filter" data-column="milestone">
-              <option value=""></option>
+            <select id="<?php echo $prefix . 'milestone'; ?>" class="up-o-filter o-select2" data-column="milestone" data-placeholder="" multiple>
+              <option></option>
               <option value="__none__"><?php _e('None', 'upstream'); ?></option>
               <optgroup label="<?php echo upstream_milestone_label_plural(); ?>">
                 <?php foreach ($milestones as $milestoneId => $milestoneTitle): ?>
@@ -548,8 +548,8 @@ class UpStream_Metaboxes_Projects {
           </div>
           <div class="up-c-filter">
             <label for="<?php echo $prefix . 'assignee'; ?>"><?php _e('Assignee', 'upstream'); ?></label>
-            <select id="<?php echo $prefix . 'assignee'; ?>" class="up-o-filter" data-column="assigned_to">
-              <option value=""></option>
+            <select id="<?php echo $prefix . 'assignee'; ?>" class="up-o-filter o-select2" data-column="assigned_to" data-placeholder="" multiple>
+              <option></option>
               <option value="<?php echo $currentUserId; ?>"><?php _e('Me', 'upstream'); ?></option>
               <option value="__none__"><?php _e('Nobody', 'upstream'); ?></option>
               <optgroup label="<?php _e('Users'); ?>">
@@ -562,8 +562,8 @@ class UpStream_Metaboxes_Projects {
           </div>
           <div class="up-c-filter">
             <label for="<?php echo $prefix . 'severity'; ?>"><?php _e('Severities', 'upstream'); ?></label>
-            <select id="<?php echo $prefix . 'severity'; ?>" class="up-o-filter" data-column="severity">
-              <option value=""></option>
+            <select id="<?php echo $prefix . 'severity'; ?>" class="up-o-filter o-select2" data-column="severity" data-placeholder="" multiple>
+              <option></option>
               <option value="__none__"><?php _e('None', 'upstream'); ?></option>
               <optgroup label="<?php _e('Severities', 'upstream'); ?>">
                 <?php foreach ($severities as $severity): ?>
@@ -574,8 +574,8 @@ class UpStream_Metaboxes_Projects {
           </div>
           <div class="up-c-filter">
             <label for="<?php echo $prefix . 'status'; ?>"><?php _e('Status', 'upstream'); ?></label>
-            <select id="<?php echo $prefix . 'status'; ?>" class="up-o-filter" data-column="status">
-              <option value=""></option>
+            <select id="<?php echo $prefix . 'status'; ?>" class="up-o-filter o-select2" data-column="status" data-placeholder="" multiple>
+              <option></option>
               <option value="__none__"><?php _e('None', 'upstream'); ?></option>
               <optgroup label="<?php _e('Statuses', 'upstream'); ?>">
                 <?php foreach ($statuses as $status): ?>
@@ -612,8 +612,8 @@ class UpStream_Metaboxes_Projects {
           </div>
           <div class="up-c-filter">
             <label for="<?php echo $prefix . 'uploaded_by'; ?>"><?php _e('Uploaded by', 'upstream'); ?></label>
-            <select id="<?php echo $prefix . 'uploaded_by'; ?>" class="up-o-filter" data-column="created_by">
-              <option value=""></option>
+            <select id="<?php echo $prefix . 'uploaded_by'; ?>" class="up-o-filter o-select2" data-column="created_by" data-placeholder="" multiple>
+              <option></option>
               <option value="<?php echo $currentUserId; ?>"><?php _e('Me', 'upstream'); ?></option>
               <option value="__none__"><?php _e('Nobody', 'upstream'); ?></option>
               <optgroup label="<?php _e('Users'); ?>">

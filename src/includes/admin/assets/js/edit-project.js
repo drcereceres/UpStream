@@ -1273,7 +1273,7 @@
 
       var self = $(this);
       var filterColumn = self.attr('data-column');
-      var filterValue = self.val().trim();
+      var filterValue = self.val();
 
       var metabox = $(self.parents('.cmb2-metabox').get(0));
 
@@ -1286,7 +1286,7 @@
 
       var self = $(this);
       var filterColumn = self.attr('data-column');
-      var filterValue = self.val().trim();
+      var filterValue = self.val();
 
       if (filterValue.length > 0) {
         filterValue = +new Date(filterValue);
@@ -1455,5 +1455,7 @@
 
       filterMetaboxTableBy(metabox, filterColumn, filterValue, 'contains');
     });
+
+    $('.o-select2').select2();
   });
 })(window, window.document, jQuery, upstream_project || {});
