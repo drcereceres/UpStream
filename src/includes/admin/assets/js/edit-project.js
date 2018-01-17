@@ -1267,13 +1267,6 @@
       }
     });
 
-    /*
-    $('.up-o-filter').on('keyup', function(e) {
-      e.preventDefault();
-      e.stopPropagation();
-    });
-    */
-
     $('select.up-o-filter:not(.up-o-filter-date)').on('change', function(e) {
       e.preventDefault();
       e.stopPropagation();
