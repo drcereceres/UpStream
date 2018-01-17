@@ -196,7 +196,7 @@ $areCommentsEnabled = upstreamAreCommentsEnabledOnBugs();
                 <div class="input-group-addon">
                   <i class="fa fa-calendar"></i>
                 </div>
-                <input type="text" class="form-control o-datepicker" placeholder="<?php echo $l['LB_DUE_DATE']; ?> <?php echo $l['LB_DUE_DATE']; ?>" id="tasks-filter-due_date_from">
+                <input type="text" class="form-control o-datepicker" placeholder="<?php echo $l['LB_DUE_DATE']; ?>" id="tasks-filter-due_date_from">
               </div>
               <input type="hidden" id="tasks-filter-due_date_from_timestamp" data-column="due_date" data-compare-operator=">=">
             </div>
