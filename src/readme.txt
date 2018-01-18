@@ -150,7 +150,7 @@ Changed:
 * Frontend Date filters now use a new Date Picker js lib
 
 Deprecated:
-* On class-up-metaboxes-project.php, both getFiltersHeaderHtml and getFiltersFooterHtml methods were marked as deprecated
+* @todo
 
 Removed:
 * Frontend tables no longer use Datatable lib due lack of flexibility and performance issues
