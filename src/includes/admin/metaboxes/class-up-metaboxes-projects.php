@@ -637,6 +637,7 @@ class UpStream_Metaboxes_Projects {
      *
      * @since   1.0.0
      * @access  private
+     * @deprecated  @todo
      *
      * @return  string
      */
@@ -670,6 +671,7 @@ class UpStream_Metaboxes_Projects {
      *
      * @since   1.0.0
      * @access  private
+     * @deprecated  @todo
      *
      * @return  string
      */
@@ -735,6 +737,7 @@ class UpStream_Metaboxes_Projects {
      *
      * @since   1.0.0
      * @access  private
+     * @deprecated  @todo
      *
      * @return  string
      */
