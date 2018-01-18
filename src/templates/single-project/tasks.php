@@ -74,6 +74,7 @@ $l['MSG_INVALID_MILESTONE'] = sprintf(
     strtolower($l['LB_MILESTONE'])
 );
 
+$areMilestonesEnabled = !upstream_are_milestones_disabled() && !upstream_disable_milestones();
 $areCommentsEnabled = upstreamAreCommentsEnabledOnTasks();
 ?>
 <div class="col-md-12 col-sm-12 col-xs-12">
@@ -196,6 +197,8 @@ $areCommentsEnabled = upstreamAreCommentsEnabledOnTasks();
                 </select>
               </div>
             </div>
+            <?php
+            if ($areMilestonesEnabled): ?>
             <div class="form-group">
               <div class="input-group">
                 <div class="input-group-addon">
@@ -212,6 +215,7 @@ $areCommentsEnabled = upstreamAreCommentsEnabledOnTasks();
                 </select>
               </div>
             </div>
+            <?php endif; ?>
             <div class="form-group">
               <div class="input-group">
                 <div class="input-group-addon">
@@ -266,12 +270,14 @@ $areCommentsEnabled = upstreamAreCommentsEnabledOnTasks();
                   <i class="fa fa-sort"></i>
                 </span>
               </th>
+              <?php if ($areMilestonesEnabled): ?>
               <th scope="col" class="is-orderable" data-column="milestone" role="button">
                 <?php echo $l['LB_MILESTONE']; ?>
                 <span class="pull-right o-order-direction">
                   <i class="fa fa-sort"></i>
                 </span>
               </th>
+              <?php endif; ?>
               <th scope="col" class="is-orderable" data-column="start_date" role="button">
                 <?php _e('Start Date', 'upstream'); ?>
                 <span class="pull-right o-order-direction">
@@ -312,6 +318,7 @@ $areCommentsEnabled = upstreamAreCommentsEnabledOnTasks();
                 <?php endif; ?>
               </td>
               <td data-column="progress" data-value="<?php echo $row['progress']; ?>"><?php echo $row['progress']; ?>%</td>
+              <?php if ($areMilestonesEnabled): ?>
               <td data-column="milestone" data-value="<?php echo !empty($row['milestone']) ? $row['milestone'] : '__none__'; ?>">
                 <?php if (!empty($row['milestone'])): ?>
                   <?php if (isset($milestones[$row['milestone']])): ?>
@@ -323,6 +330,7 @@ $areCommentsEnabled = upstreamAreCommentsEnabledOnTasks();
                 <i class="s-text-color-gray"><?php echo $l['LB_NONE']; ?></i>
                 <?php endif; ?>
               </td>
+              <?php endif; ?>
               <td data-column="start_date" data-value="<?php echo $row['start_date']; ?>">
                 <?php if ($row['start_date'] > 0): ?>
                   <?php echo upstream_convert_UTC_date_to_timezone($row['start_date'], false); ?>
@@ -339,7 +347,7 @@ $areCommentsEnabled = upstreamAreCommentsEnabledOnTasks();
               </td>
             </tr>
             <tr data-parent="<?php echo $row['id']; ?>" style="display: none;">
-              <td colspan="7">
+              <td colspan="<?php echo $areMilestonesEnabled ? 7 : 6; ?>">
                 <div class="hidden-xs">
                   <div class="form-group">
                     <label><?php echo $l['LB_NOTES']; ?></label>

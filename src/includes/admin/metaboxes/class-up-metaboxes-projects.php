@@ -500,6 +500,9 @@ class UpStream_Metaboxes_Projects {
               </optgroup>
             </select>
           </div>
+          <?php
+          if (upstream_are_milestones_disabled()
+              && upstream_disable_milestones()): ?>
           <div class="up-c-filter">
             <label for="<?php echo $prefix . 'milestone'; ?>" class="up-s-mb-2"><?php echo upstream_milestone_label(); ?></label>
             <select id="<?php echo $prefix . 'milestone'; ?>" class="up-o-filter o-select2" data-column="milestone" data-placeholder="" multiple>
@@ -512,6 +515,7 @@ class UpStream_Metaboxes_Projects {
               </optgroup>
             </select>
           </div>
+          <?php endif; ?>
           <div class="up-c-filter">
             <label for="<?php echo $prefix . 'start_date'; ?>"><?php _e('Start Date', 'upstream'); ?></label>
             <input type="text" id="<?php echo $prefix . 'start_date'; ?>" class="up-o-filter up-o-filter-date" data-column="start_date" data-compare-operator=">=">
