@@ -21,18 +21,18 @@ $areClientsEnabled = !is_clients_disabled();
 $clients = array();
 
 $l = array(
-  'LB_PROJECTS' => upstream_project_label_plural(),
-  'LB_PROJECT'  => upstream_project_label(),
-  'LB_TITLE'    => __('Title', 'upstream'),
-  'LB_CLIENT'   => upstream_client_label(),
-  'LB_CLIENTS'  => upstream_client_label_plural(),
-  'LB_ENDS_AT'  => __('Ends at', 'upstream'),
-  'LB_STATUS'   => __('Status', 'upstream'),
-  'LB_STATUSES' => __('Statuses', 'upstream'),
-  'LB_NONE_UCF' => __('None', 'upstream'),
-  'LB_NONE'     => __('none', 'upstream'),
-  'LB_VIEW'     => __('View', 'upstream'),
-  'LB_COMPLETE' => __('%s Complete', 'upstream')
+  'LB_PROJECTS'   => upstream_project_label_plural(),
+  'LB_PROJECT'    => upstream_project_label(),
+  'LB_TITLE'      => __('Title', 'upstream'),
+  'LB_CLIENT'     => upstream_client_label(),
+  'LB_CLIENTS'    => upstream_client_label_plural(),
+  'LB_ENDS_AT'    => __('Ends at', 'upstream'),
+  'LB_STATUS'     => __('Status', 'upstream'),
+  'LB_STATUSES'   => __('Statuses', 'upstream'),
+  'LB_NONE_UCF'   => __('None', 'upstream'),
+  'LB_NONE'       => __('none', 'upstream'),
+  'LB_CATEGORIES' => __('Categories'),
+  'LB_COMPLETE'   => __('%s Complete', 'upstream')
 );
 
 if ($projectsCount > 0 && $areClientsEnabled) {
@@ -55,6 +55,15 @@ if ($projectsCount > 0 && $areClientsEnabled) {
         $data->status = upstream_project_status_color($data->id);
         $data->status = is_array($data->status) && !empty($data->status['status']) ? $data->status : null;
 
+        $data->categories = array();
+        $categories = (array)wp_get_object_terms($data->id, 'project_category');
+        if (count($categories) > 0) {
+            foreach ($categories as $category) {
+                $data->categories[$category->term_id] = $category->name;
+            }
+        }
+        unset($categories);
+
         $data->timeframe = $data->startDate;
         if (!empty($data->endDate)) {
             if (!empty($data->timeframe)) {
@@ -74,6 +83,11 @@ if ($projectsCount > 0 && $areClientsEnabled) {
 }
 
 $statuses = upstream_project_statuses_colors();
+
+$categories = (array)get_terms(array(
+    'taxonomy'   => 'project_category',
+    'hide_empty' => false
+));
 ?>
 
 <div class="right_col" role="main">
@@ -187,6 +201,22 @@ $statuses = upstream_project_statuses_colors();
                     </select>
                   </div>
                 </div>
+                <div class="form-group">
+                  <div class="input-group">
+                    <div class="input-group-addon">
+                      <i class="fa fa-tags"></i>
+                    </div>
+                    <select class="form-control o-select2" data-column="categories" data-placeholder="<?php echo $l['LB_CATEGORIES']; ?>" multiple data-compare-operator="contains">
+                      <option value></option>
+                      <option value="__none__"><?php echo $l['LB_NONE_UCF']; ?></option>
+                      <optgroup label="<?php echo $l['LB_CATEGORIES'] ?>">
+                        <?php foreach ($categories as $category): ?>
+                        <option value="<?php echo $category->term_id; ?>"><?php echo esc_html($category->name); ?></option>
+                        <?php endforeach; ?>
+                      </optgroup>
+                    </select>
+                  </div>
+                </div>
               </div>
             </form>
             <table id="projects"
@@ -231,7 +261,7 @@ $statuses = upstream_project_statuses_colors();
                     </span>
                   </th>
                   <th>
-                    <?php echo $l['LB_VIEW']; ?>
+                    <?php echo $l['LB_CATEGORIES']; ?>
                   </th>
                 </tr>
               </thead>
@@ -274,11 +304,12 @@ $statuses = upstream_project_statuses_colors();
                       <i class="s-text-color-gray"><?php echo $l['LB_NONE']; ?></i>
                     <?php endif; ?>
                   </td>
-                  <td>
-                    <a href="<?php echo $project->permalink; ?>" class="btn btn-primary btn-xs">
-                      <?php echo $l['LB_VIEW']; ?>
-                      <i class="fa fa-chevron-right"></i>
-                    </a>
+                  <td data-column="categories" data-value="<?php echo count($project->categories) ? esc_attr(implode(',', array_keys($project->categories))) : '__none__'; ?>">
+                    <?php if (count($project->categories) > 0): ?>
+                      <?php echo esc_attr(implode(',', array_values($project->categories))); ?>
+                    <?php else: ?>
+                      <i class="s-text-color-gray"><?php echo $l['LB_NONE']; ?></i>
+                    <?php endif;?>
                   </td>
                 </tr>
                 <?php endforeach; ?>
