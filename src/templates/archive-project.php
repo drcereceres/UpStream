@@ -260,7 +260,7 @@ $categories = (array)get_terms(array(
                       <i class="fa fa-sort"></i>
                     </span>
                   </th>
-                  <th>
+                  <th style="max-width: 250px;">
                     <?php echo $l['LB_CATEGORIES']; ?>
                   </th>
                 </tr>
@@ -270,6 +270,7 @@ $categories = (array)get_terms(array(
                 <tr data-id="<?php echo $project->id; ?>">
                   <td data-column="title" data-value="<?php echo esc_attr($project->title); ?>">
                     <a href="<?php echo $project->permalink; ?>">
+                      <i class="fa fa-link"></i>
                       <?php echo $project->title; ?>
                     </a><br/>
                     <small><?php echo $project->timeframe; ?></small>
@@ -297,16 +298,16 @@ $categories = (array)get_terms(array(
                     </div>
                     <small><?php printf($l['LB_COMPLETE'], $project->progress . '%'); ?></small>
                   </td>
-                  <td data-column="status" data-value="<?php echo $project->status !== null ? esc_attr($project->status['status']) : ''; ?>">
+                  <td data-column="status" data-value="<?php echo $project->status !== null ? esc_attr($project->status['status']) : '__none__'; ?>">
                     <?php if ($project->status !== null): ?>
-                      <span class="label" style="border: none; background-color: <?php echo esc_attr($project->status['color']); ?>;"><?php echo esc_html($project->status['status']); ?></span>
+                      <span class="label up-o-label" style="background-color: <?php echo esc_attr($project->status['color']); ?>;"><?php echo esc_html($project->status['status']); ?></span>
                     <?php else: ?>
                       <i class="s-text-color-gray"><?php echo $l['LB_NONE']; ?></i>
                     <?php endif; ?>
                   </td>
                   <td data-column="categories" data-value="<?php echo count($project->categories) ? esc_attr(implode(',', array_keys($project->categories))) : '__none__'; ?>">
                     <?php if (count($project->categories) > 0): ?>
-                      <?php echo esc_attr(implode(',', array_values($project->categories))); ?>
+                      <?php echo esc_attr(implode(', ', array_values($project->categories))); ?>
                     <?php else: ?>
                       <i class="s-text-color-gray"><?php echo $l['LB_NONE']; ?></i>
                     <?php endif;?>

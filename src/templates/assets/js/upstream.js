@@ -658,5 +658,69 @@ jQuery(document).ready(function($){
         orderTable(order_by, order_dir, table);
       }
     });
+
+    (function() {
+      function generateContrastColor(baseColor) {
+        var d = 0;
+
+        // Counting the perceptive luminance - human eye favors green color.
+        var a = 1 - (0.299 * baseColor.r + 0.587 * baseColor.g + 0.114 * baseColor.b) / 255;
+        if (a >= 0.4) {
+          // Base color is dark, so we'll use white
+          d = 255;
+        }
+
+        var newColor = {
+          r: d,
+          g: d,
+          b: d
+        };
+
+        return newColor;
+      }
+
+      function hexToRGB(hexColor) {
+        var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hexColor);
+        var rgb = result ? {
+          r: parseInt(result[1], 16),
+          g: parseInt(result[2], 16),
+          b: parseInt(result[3], 16)
+        } : null;
+
+        var color = new Color(rgb);
+
+        return color;
+      }
+
+      function componentToHex(c) {
+          var hex = c.toString(16);
+          return hex.length == 1 ? "0" + hex : hex;
+      }
+
+      function rgbToHex(r, g, b) {
+          return "#" + componentToHex(r) + componentToHex(g) + componentToHex(b);
+      }
+
+      $('.up-o-label').each(function() {
+        var self = $(this);
+
+        var bgColor = self.css('background-color');
+        if (bgColor) {
+          bgColor = bgColor.replace(/rgb\(|\)/ig, '').replace(/\s+/g, '').split(',');
+          if (bgColor.length === 3) {
+            bgColor = {
+              r: bgColor[0],
+              g: bgColor[1],
+              b: bgColor[2]
+            };
+
+            var constrastColor = generateContrastColor(bgColor);
+            var contrastColorHex = rgbToHex(constrastColor.r, constrastColor.g, constrastColor.b);
+
+            self.css('color', contrastColorHex);
+          }
+        }
+      });
+    })();
   });
 })(window, window.document, jQuery || {}, upstream || {}, TableExport);

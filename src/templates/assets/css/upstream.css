@@ -405,3 +405,7 @@ td .btn {
 .c-data-table__filters select.o-select2[multiple] + .select2-container .select2-selection__rendered {
   padding-left: 0;
 }
+
+.up-o-label {
+  border: none;
+}

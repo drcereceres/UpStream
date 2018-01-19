@@ -9,7 +9,10 @@ $collapseBox = isset($pluginOptions['collapse_project_tasks'])
     && (bool)$pluginOptions['collapse_project_tasks'] === true;
 
 $tasksStatuses = get_option('upstream_tasks');
-$tasksStatuses = $tasksStatuses['statuses'];
+$statuses = array();
+foreach ($tasksStatuses['statuses'] as $status) {
+    $statuses[$status['name']] = $status;
+}
 
 $itemType = 'task';
 $currentUserId = get_current_user_id();
@@ -17,6 +20,12 @@ $users = upstreamGetUsersMap();
 
 $rowset = array();
 $projectId = upstream_post_id();
+
+$milestonesList = get_option('upstream_milestones');
+$milestonesColors = array();
+foreach ($milestonesList['milestones'] as $milestone) {
+    $milestonesColors[$milestone['title']] = $milestone['color'];
+}
 
 $milestones = array();
 $meta = (array)get_post_meta($projectId, '_upstream_project_milestones', true);
@@ -28,8 +37,12 @@ foreach ($meta as $data) {
         continue;
     }
 
-    $milestones[$data['id']] = $data['milestone'];
-  }
+    $milestones[$data['id']] = array(
+        'title' => $data['milestone'],
+        'color' => $milestonesColors[$data['milestone']],
+        'id'    => $data['id']
+    );
+}
 
 $meta = (array)get_post_meta($projectId, '_upstream_project_tasks', true);
 foreach ($meta as $data) {
@@ -190,7 +203,7 @@ $areCommentsEnabled = upstreamAreCommentsEnabledOnTasks();
                   <option value></option>
                   <option value="__none__"><?php _e('None', 'upstream'); ?></option>
                   <optgroup label="<?php _e('Status', 'upstream'); ?>">
-                    <?php foreach ($tasksStatuses as $status): ?>
+                    <?php foreach ($statuses as $status): ?>
                     <option value="<?php echo $status['name']; ?>"><?php echo $status['name']; ?></option>
                     <?php endforeach; ?>
                   </optgroup>
@@ -209,7 +222,7 @@ $areCommentsEnabled = upstreamAreCommentsEnabledOnTasks();
                   <option value="__none__"><?php _e('None', 'upstream'); ?></option>
                   <optgroup label="<?php echo upstream_milestone_label_plural(); ?>">
                     <?php foreach ($milestones as $milestone_id => $milestone): ?>
-                    <option value="<?php echo $milestone_id; ?>"><?php echo $milestone; ?></option>
+                    <option value="<?php echo $milestone_id; ?>"><?php echo $milestone['title']; ?></option>
                     <?php endforeach; ?>
                   </optgroup>
                 </select>
@@ -311,8 +324,8 @@ $areCommentsEnabled = upstreamAreCommentsEnabledOnTasks();
                 <?php endif; ?>
               </td>
               <td data-column="status" data-value="<?php echo !empty($row['status']) ? $row['status'] : '__none__'; ?>">
-                <?php if (!empty($row['status'])): ?>
-                <?php echo $row['status']; ?>
+                <?php if (!empty($row['status']) && isset($statuses[$row['status']])): ?>
+                <span class="label up-o-label" style="background-color: <?php echo $statuses[$row['status']]['color']; ?>;"><?php echo $row['status']; ?></span>
                 <?php else: ?>
                 <i class="s-text-color-gray"><?php echo $l['LB_NONE']; ?></i>
                 <?php endif; ?>
@@ -322,7 +335,7 @@ $areCommentsEnabled = upstreamAreCommentsEnabledOnTasks();
               <td data-column="milestone" data-value="<?php echo !empty($row['milestone']) ? $row['milestone'] : '__none__'; ?>">
                 <?php if (!empty($row['milestone'])): ?>
                   <?php if (isset($milestones[$row['milestone']])): ?>
-                    <?php echo $milestones[$row['milestone']]; ?>
+                    <span class="label up-o-label" style="background-color: <?php echo $milestones[$row['milestone']]['color']; ?>"><?php echo $milestones[$row['milestone']]['title']; ?></span>
                   <?php else: ?>
                     <i class="s-text-color-darkred"><?php echo $l['MSG_INVALID_MILESTONE']; ?></i>
                   <?php endif; ?>

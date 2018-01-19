@@ -10,7 +10,17 @@ $collapseBox = isset($pluginOptions['collapse_project_bugs'])
 
 $bugsSettings = get_option('upstream_bugs');
 $bugsStatuses = $bugsSettings['statuses'];
+$statuses = array();
+foreach ($bugsStatuses as $status) {
+    $statuses[$status['name']] = $status;
+}
+
 $bugsSeverities = $bugsSettings['severities'];
+$severities = array();
+foreach ($bugsSeverities as $severity) {
+    $severities[$severity['name']] = $severity;
+}
+unset($bugsSeverities);
 
 $itemType = 'bug';
 $currentUserId = get_current_user_id();
@@ -168,7 +178,7 @@ $areCommentsEnabled = upstreamAreCommentsEnabledOnBugs();
                   <option value></option>
                   <option value="__none__"><?php _e('None', 'upstream'); ?></option>
                   <optgroup label="<?php _e('Severity', 'upstream'); ?>">
-                    <?php foreach ($bugsSeverities as $severity): ?>
+                    <?php foreach ($severities as $severity): ?>
                     <option value="<?php echo $severity['name']; ?>"><?php echo $severity['name']; ?></option>
                     <?php endforeach; ?>
                   </optgroup>
@@ -184,7 +194,7 @@ $areCommentsEnabled = upstreamAreCommentsEnabledOnBugs();
                   <option value></option>
                   <option value="__none__"><?php _e('None', 'upstream'); ?></option>
                   <optgroup label="<?php _e('Status', 'upstream'); ?>">
-                    <?php foreach ($bugsStatuses as $status): ?>
+                    <?php foreach ($statuses as $status): ?>
                     <option value="<?php echo $status['name']; ?>"><?php echo $status['name']; ?></option>
                     <?php endforeach; ?>
                   </optgroup>
@@ -266,17 +276,17 @@ $areCommentsEnabled = upstreamAreCommentsEnabledOnBugs();
                 <?php endif; ?>
               </td>
               <td data-column="severity" data-value="<?php echo !empty($row['severity']) ? $row['severity'] : '__none__'; ?>">
-                <?php if (!empty($row['severity'])): ?>
-                <?php echo $row['severity']; ?>
+                <?php if (!empty($row['severity']) && isset($severities[$row['severity']])): ?>
+                  <span class="label up-o-label" style="background-color: <?php echo $severities[$row['severity']]['color']; ?>"><?php echo $row['severity']; ?></span>
                 <?php else: ?>
                 <i class="s-text-color-gray"><?php echo $l['LB_NONE']; ?></i>
                 <?php endif; ?>
               </td>
               <td data-column="status" data-value="<?php echo !empty($row['status']) ? $row['status'] : '__none__'; ?>">
-                <?php if (!empty($row['status'])): ?>
-                <?php echo $row['status']; ?>
+                <?php if (!empty($row['status']) && isset($statuses[$row['status']])): ?>
+                  <span class="label up-o-label" style="background-color: <?php echo $statuses[$row['status']]['color']; ?>"><?php echo $row['status']; ?></span>
                 <?php else: ?>
-                <i class="s-text-color-gray"><?php echo $l['LB_NONE']; ?></i>
+                  <i class="s-text-color-gray"><?php echo $l['LB_NONE']; ?></i>
                 <?php endif; ?>
               </td>
               <td data-column="due_date" data-value="<?php echo $row['due_date']; ?>">
