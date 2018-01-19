@@ -9,7 +9,7 @@ if (!defined('ABSPATH')) exit;
  */
 
 upstream_get_template_part('global/header.php');
-// upstream_get_template_part('global/sidebar.php');
+// upstream_get_template_part('global/sidebar.php'); // @todo
 upstream_get_template_part('global/top-nav.php');
 
 $user = upstream_user_data(@$_SESSION['upstream']['user_id']);
@@ -19,6 +19,21 @@ $projectsCount = count($projects);
 
 $areClientsEnabled = !is_clients_disabled();
 $clients = array();
+
+$l = array(
+  'LB_PROJECTS' => upstream_project_label_plural(),
+  'LB_PROJECT'  => upstream_project_label(),
+  'LB_TITLE'    => __('Title', 'upstream'),
+  'LB_CLIENT'   => upstream_client_label(),
+  'LB_CLIENTS'  => upstream_client_label_plural(),
+  'LB_ENDS_AT'  => __('Ends at', 'upstream'),
+  'LB_STATUS'   => __('Status', 'upstream'),
+  'LB_STATUSES' => __('Statuses', 'upstream'),
+  'LB_NONE_UCF' => __('None', 'upstream'),
+  'LB_NONE'     => __('none', 'upstream'),
+  'LB_VIEW'     => __('View', 'upstream'),
+  'LB_COMPLETE' => __('%s Complete', 'upstream')
+);
 
 if ($projectsCount > 0 && $areClientsEnabled) {
     $rowset = array();
@@ -45,7 +60,7 @@ if ($projectsCount > 0 && $areClientsEnabled) {
             if (!empty($data->timeframe)) {
                 $data->timeframe .= ' - ';
             } else {
-                $data->timeframe = '<i>' . __('Ends at', 'upstream') . '</i>';
+                $data->timeframe = '<i>' . $l['LB_ENDS_AT'] . '</i>';
             }
 
             $data->timeframe .= $data->endDate;
@@ -58,7 +73,7 @@ if ($projectsCount > 0 && $areClientsEnabled) {
     unset($rowset);
 }
 
-var_dump($projects);
+$statuses = upstream_project_statuses_colors();
 ?>
 
 <div class="right_col" role="main">
@@ -67,7 +82,7 @@ var_dump($projects);
       <div class="col-md-12">
         <div class="x_panel">
           <div class="x_title">
-            <h2><?php echo upstream_project_label_plural(); ?></h2>
+            <h2><?php echo $l['LB_PROJECTS']; ?></h2>
             <ul class="nav navbar-right panel_toolbox">
               <li>
                 <a class="collapse-link">
@@ -80,7 +95,100 @@ var_dump($projects);
         <div class="x_content">
           <?php if (count($projects) > 0): ?>
           <div class="c-data-table table-responsive">
-            <form class="form-inline c-data-table__filters" data-target="#projects"></form>
+            <form class="form-inline c-data-table__filters" data-target="#projects">
+              <div class="hidden-xs">
+                <div class="form-group">
+                  <div class="input-group">
+                    <div class="input-group-addon">
+                      <i class="fa fa-search"></i>
+                    </div>
+                    <input type="search" class="form-control" placeholder="<?php echo $l['LB_TITLE']; ?>" data-column="title" data-compare-operator="contains">
+                  </div>
+                </div>
+                <div class="form-group">
+                  <div class="btn-group">
+                    <a href="#projects-filters" role="button" class="btn btn-default" data-toggle="collapse" aria-expanded="false" aria-controls="projects-filters">
+                      <i class="fa fa-filter"></i> <?php _e('Toggle Filters', 'upstream'); ?>
+                    </a>
+                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                      <i class="fa fa-download"></i> <?php _e('Export', 'upstream'); ?>
+                      <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-right">
+                      <li>
+                        <a href="#" data-action="export" data-type="txt">
+                          <i class="fa fa-file-text-o"></i>&nbsp;&nbsp;<?php _e('Plain Text', 'upstream'); ?>
+                        </a>
+                      </li>
+                      <li>
+                        <a href="#" data-action="export" data-type="csv">
+                          <i class="fa fa-file-code-o"></i>&nbsp;&nbsp;<?php _e('CSV', 'upstream'); ?>
+                        </a>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+              <div class="visible-xs">
+                <div>
+                  <a href="#projects-filters" role="button" class="btn btn-default" data-toggle="collapse" aria-expanded="false" aria-controls="projects-filters">
+                    <i class="fa fa-filter"></i> <?php _e('Toggle Filters', 'upstream'); ?>
+                  </a>
+                  <div class="btn-group">
+                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                      <i class="fa fa-download"></i> <?php _e('Export', 'upstream'); ?>
+                      <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-right">
+                      <li>
+                        <a href="#" data-action="export" data-type="txt">
+                          <i class="fa fa-file-text-o"></i>&nbsp;&nbsp;<?php _e('Plain Text', 'upstream'); ?>
+                        </a>
+                      </li>
+                      <li>
+                        <a href="#" data-action="export" data-type="csv">
+                          <i class="fa fa-file-code-o"></i>&nbsp;&nbsp;<?php _e('CSV', 'upstream'); ?>
+                        </a>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+              <div id="projects-filters" class="collapse">
+                <div class="form-group visible-xs">
+                  <div class="input-group">
+                    <div class="input-group-addon">
+                      <i class="fa fa-search"></i>
+                    </div>
+                    <input type="search" class="form-control" placeholder="<?php echo $l['LB_TITLE']; ?>" data-column="title" data-compare-operator="contains">
+                  </div>
+                </div>
+                <div class="form-group">
+                  <div class="input-group">
+                    <div class="input-group-addon">
+                      <i class="fa fa-user"></i>
+                    </div>
+                    <input type="search" class="form-control" placeholder="<?php echo $l['LB_CLIENTS']; ?>" data-column="client" data-compare-operator="contains">
+                  </div>
+                </div>
+                <div class="form-group">
+                  <div class="input-group">
+                    <div class="input-group-addon">
+                      <i class="fa fa-bookmark"></i>
+                    </div>
+                    <select class="form-control o-select2" data-column="status" data-placeholder="<?php echo $l['LB_STATUS']; ?>" multiple>
+                      <option value></option>
+                      <option value="__none__"><?php echo $l['LB_NONE_UCF']; ?></option>
+                      <optgroup label="<?php echo $l['LB_STATUSES'] ?>">
+                        <?php foreach ($statuses as $statusName => $statusColor): ?>
+                        <option value="<?php echo $statusName; ?>"><?php echo $statusName; ?></option>
+                        <?php endforeach; ?>
+                      </optgroup>
+                    </select>
+                  </div>
+                </div>
+              </div>
+            </form>
             <table id="projects"
               class="o-data-table table table-bordered table-responsive table-hover is-orderable"
               cellspacing="0"
@@ -91,24 +199,24 @@ var_dump($projects);
               <thead>
                 <tr>
                   <th class="is-clickable is-orderable" data-column="title" role="button">
-                    <?php echo upstream_project_label(); ?>
+                    <?php echo $l['LB_PROJECT']; ?>
                     <span class="pull-right o-order-direction">
                       <i class="fa fa-sort"></i>
                     </span>
                   </th>
                   <?php if ($areClientsEnabled): ?>
                   <th class="is-clickable is-orderable" data-column="client" role="button">
-                    <?php echo upstream_client_label(); ?>
+                    <?php echo $l['LB_CLIENT']; ?>
                     <span class="pull-right o-order-direction">
                       <i class="fa fa-sort"></i>
                     </span>
                   </th>
                   <th>
-                    <?php printf(__('%s Users', 'upstream'), upstream_client_label()); ?>
+                    <?php printf(__('%s Users', 'upstream'), $l['LB_CLIENT']); ?>
                   </th>
                   <?php endif; ?>
                   <th>
-                    <?php printf(__('%s Members', 'upstream'), upstream_project_label()); ?>
+                    <?php printf(__('%s Members', 'upstream'), $l['LB_PROJECT']); ?>
                   </th>
                   <th class="is-clickable is-orderable" data-column="progress" role="button">
                     <?php _e('Progress', 'upstream'); ?>
@@ -117,13 +225,13 @@ var_dump($projects);
                     </span>
                   </th>
                   <th class="is-clickable is-orderable" data-column="status" role="button">
-                    <?php _e('Status', 'upstream'); ?>
+                    <?php echo $l['LB_STATUS']; ?>
                     <span class="pull-right o-order-direction">
                       <i class="fa fa-sort"></i>
                     </span>
                   </th>
                   <th>
-                    <?php _e('View', 'upstream'); ?>
+                    <?php echo $l['LB_VIEW']; ?>
                   </th>
                 </tr>
               </thead>
@@ -133,14 +241,15 @@ var_dump($projects);
                   <td data-column="title" data-value="<?php echo esc_attr($project->title); ?>">
                     <a href="<?php echo $project->permalink; ?>">
                       <?php echo $project->title; ?>
-                    </a>
+                    </a><br/>
+                    <small><?php echo $project->timeframe; ?></small>
                   </td>
                   <?php if ($areClientsEnabled): ?>
                   <td data-column="client" data-value="<?php echo $project->clientName !== null ? esc_attr($project->clientName) : '__none__'; ?>">
                     <?php if ($project->clientName !== null): ?>
                       <?php echo esc_html($project->clientName); ?>
                     <?php else: ?>
-                      <i class="s-text-color-gray"><?php _e('none', 'upstream'); ?></i>
+                      <i class="s-text-color-gray"><?php echo $l['LB_NONE']; ?></i>
                     <?php endif; ?>
                   </td>
                   <td>
@@ -153,21 +262,21 @@ var_dump($projects);
                   <td data-column="progress" data-value="<?php echo $project->progress; ?>">
                     <div class="progress" style="margin-bottom: 0; height: 10px;">
                       <div class="progress-bar<?php echo $project->progress >= 100 ? ' progress-bar-success' : ""; ?>" role="progressbar" aria-valuenow="<?php echo $project->progress; ?>" aria-valuemin="0" aria-valuemax="100" style="width: <?php echo $project->progress; ?>%;">
-                        <span class="sr-only"><?php printf(__('%s Complete', 'upstream'), $project->progress . '%'); ?></span>
+                        <span class="sr-only"><?php printf($l['LB_COMPLETE'], $project->progress . '%'); ?></span>
                       </div>
                     </div>
-                    <small><?php printf(__('%s Complete', 'upstream'), $project->progress . '%'); ?></small>
+                    <small><?php printf($l['LB_COMPLETE'], $project->progress . '%'); ?></small>
                   </td>
                   <td data-column="status" data-value="<?php echo $project->status !== null ? esc_attr($project->status['status']) : ''; ?>">
                     <?php if ($project->status !== null): ?>
                       <span class="label" style="border: none; background-color: <?php echo esc_attr($project->status['color']); ?>;"><?php echo esc_html($project->status['status']); ?></span>
                     <?php else: ?>
-                      <i class="s-text-color-gray"><?php _e('none', 'upstream'); ?></i>
+                      <i class="s-text-color-gray"><?php echo $l['LB_NONE']; ?></i>
                     <?php endif; ?>
                   </td>
                   <td>
                     <a href="<?php echo $project->permalink; ?>" class="btn btn-primary btn-xs">
-                      <?php _e('View', 'upstream'); ?>
+                      <?php echo $l['LB_VIEW']; ?>
                       <i class="fa fa-chevron-right"></i>
                     </a>
                   </td>
