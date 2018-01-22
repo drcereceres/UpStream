@@ -278,7 +278,7 @@ jQuery(document).ready(function($){
       $('> tbody > tr', table).remove();
 
       $.each(data, function(trNewIndex) {
-        var tr = $(trs.get(this.index));
+        var tr = $(trs.get(this.index), table);
 
         $('> tbody', table).append(tr);
 
@@ -290,7 +290,7 @@ jQuery(document).ready(function($){
       table.attr('data-order-dir', direction)
         .attr('data-ordered-by', columnName);
 
-      var th = $('thead tr th[data-column="'+ columnName +'"]');
+      var th = $('thead tr th[data-column="'+ columnName +'"]', table);
       $('.o-order-direction', th).remove();
 
       th.append(createOrderDirectionEl(direction));
