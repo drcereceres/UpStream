@@ -139,6 +139,7 @@ and this project adheres to [Semantic Versioning](http://semver.org).
 = [@todo: WIP] =
 
 Added:
+* Added Categories, Status, Clients, Title filters for Projects on frontend
 * Added Milestone, Assignee, Star and End Dates filters for Milestones
 * Added Title, Assignee, Status, Milestone, Star and End Dates filters for Tasks
 * Added Title, Assignee, Severity, Status, Due Date filters for Bugs
@@ -150,7 +151,7 @@ Changed:
 * Frontend Date filters now use a new Date Picker js lib
 
 Deprecated:
-* @todo
+* Within UpStream_Metaboxes_Projects class: getStatusFilterHtml, getSeverityFilterHtml, getFiltersHeaderHtml, getFiltersFooterHtml, getMilestoneFilterHtml
 
 Removed:
 * Frontend tables no longer use Datatable lib due lack of flexibility and performance issues
