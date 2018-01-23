@@ -42,6 +42,65 @@ $l = array(
 );
 
 $areCommentsEnabled = upstreamAreCommentsEnabledOnFiles();
+
+$tableSettings = array(
+    'id'              => 'files',
+    'type'            => 'file',
+    'data-ordered-by' => 'created_at',
+    'data-order-dir'  => 'DESC'
+);
+
+function getFilesTableColumns(&$areCommentsEnabled)
+{
+    $tableColumns = array(
+        'title' => array(
+            'type'        => 'raw',
+            'isOrderable' => true,
+            'label'       => __('Title', 'upstream')
+        ),
+        'created_by' => array(
+            'type'        => 'user',
+            'isOrderable' => true,
+            'label'       => __('Uploaded by', 'upstream')
+        ),
+        'created_at'  => array(
+            'type'        => 'date',
+            'isOrderable' => true,
+            'label'       => __('Upload Date', 'upstream')
+        ),
+        'file'    => array(
+            'type'        => 'file',
+            'isOrderable' => false,
+            'label'       => __('File', 'upstream')
+        )
+    );
+
+    $hiddenTableColumns = array(
+        'description' => array(
+            'type'     => 'wysiwyg',
+            'label'    => __('Description', 'upstream'),
+            'isHidden' => true
+        ),
+        'comments'    => array(
+            'type'     => 'comments',
+            'label'    => __('Comments'),
+            'isHidden' => true
+        )
+    );
+
+    if (!$areCommentsEnabled) {
+        unset($hiddenTableColumns['comments']);
+    }
+
+    $schema = array(
+        'visibleColumns' => $tableColumns,
+        'hiddenColumns'  => $hiddenTableColumns
+    );
+
+    return $schema;
+}
+
+$columnsSettings = getFilesTableColumns($areCommentsEnabled);
 ?>
 <div class="col-md-12 col-sm-12 col-xs-12">
   <div class="x_panel">
@@ -157,111 +216,7 @@ $areCommentsEnabled = upstreamAreCommentsEnabledOnFiles();
             </div>
           </div>
         </form>
-        <table
-          id="files"
-          class="o-data-table table table-hover table-bordered table-responsive is-orderable"
-          cellspacing="0"
-          width="100%"
-          data-type="file"
-          data-ordered-by="created_at"
-          data-order-dir="DESC">
-          <thead>
-            <tr scope="row">
-              <th scope="col" class="is-clickable is-orderable" data-column="title" role="button" style="width: 25%;">
-                <?php echo $l['LB_TITLE']; ?>
-                <span class="pull-right o-order-direction">
-                  <i class="fa fa-sort"></i>
-                </span>
-              </th>
-              <th scope="col" class="is-orderable" data-column="created_by" role="button">
-                <?php _e('Uploaded by', 'upstream'); ?>
-                <span class="pull-right o-order-direction">
-                  <i class="fa fa-sort"></i>
-                </span>
-              </th>
-              <th scope="col" class="is-orderable" data-column="created_at" role="button">
-                <?php _e('Uploaded at', 'upstream'); ?>
-                <span class="pull-right o-order-direction">
-                  <i class="fa fa-sort"></i>
-                </span>
-              </th>
-              <th scope="col" class="is-orderable" data-column="file" data-type="file">
-                <?php _e('File', 'upstream'); ?>
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            <?php foreach ($rowset as $row): ?>
-            <tr class="is-expandable is-filtered" data-id="<?php echo $row['id']; ?>" aria-expanded="false">
-              <td class="is-clickable" role="button">
-                <i class="fa fa-angle-right"></i>&nbsp;
-                <span data-column="title" data-value="<?php echo $row['title']; ?>"><?php echo $row['title']; ?></span>
-              </td>
-              <td data-column="created_by" data-value="<?php echo (int)$row['created_by'] > 0 ? $row['created_by'] : '__none__'; ?>">
-                <?php if ((int)$row['created_by'] > 0): ?>
-                    <?php if (isset($users[$row['created_by']])): ?>
-                    <?php echo $users[$row['created_by']]; ?>
-                    <?php else: ?>
-                    <i class="s-text-color-darkred"><?php echo $l['MSG_INVALID_USER']; ?></i>
-                    <?php endif; ?>
-                <?php else: ?>
-                <i class="s-text-color-gray"><?php echo $l['LB_NONE']; ?></i>
-                <?php endif; ?>
-              </td>
-              <td data-column="created_at" data-value="<?php echo $row['created_time']; ?>">
-                <?php echo upstream_convert_UTC_date_to_timezone($row['created_time'], false); ?>
-              </td>
-              <td data-column="file">
-                <?php
-                if (strlen($row['file']) > 0) {
-                  if (@is_array(getimagesize($row['file']))) {
-                    printf(
-                      '<a href="%s" target="_blank">
-                        <img class="avatar itemfile" width="32" height="32" src="%1$s">
-                      </a>',
-                      $row['file']
-                    );
-                  } else {
-                    printf(
-                      '<a href="%s" target="_blank">%s</a>',
-                      $row['file'],
-                      basename($row['file'])
-                    );
-                  }
-                } else {
-                  echo '<i class="s-text-color-gray">'. $l['LB_NONE'] .'</i>';
-                }
-                ?>
-              </td>
-            </tr>
-            <tr data-parent="<?php echo $row['id']; ?>" style="display: none;">
-              <td colspan="4">
-                <div class="hidden-xs">
-                  <div class="form-group">
-                    <label><?php echo $l['LB_DESCRIPTION']; ?></label>
-                    <?php
-                    if (isset($row['description'])
-                        && strlen($row['description']) > 0
-                    ): ?>
-                    <blockquote><?php echo $row['description']; ?></blockquote>
-                    <?php else: ?>
-                    <p>
-                      <i class="s-text-color-gray"><?php echo $l['LB_NONE']; ?></i>
-                    </p>
-                    <?php endif; ?>
-                  </div>
-                  <?php if ($areCommentsEnabled): ?>
-                  <div class="form-group">
-                    <label><?php echo $l['LB_COMMENTS']; ?></label>
-                    <?php echo upstreamRenderCommentsBox($row['id'], 'file', $projectId, false, true); ?>
-                  </div>
-                  <?php endif; ?>
-                </div>
-              </td>
-            </tr>
-            <?php endforeach; ?>
-          </tbody>
-        </table>
+        <?php \UpStream\WIP\renderTable($tableSettings, $columnsSettings, $rowset, 'file', $projectId); ?>
       </div>
     </div>
   </div>

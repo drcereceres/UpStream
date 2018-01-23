@@ -89,6 +89,109 @@ $l['MSG_INVALID_MILESTONE'] = sprintf(
 
 $areMilestonesEnabled = !upstream_are_milestones_disabled() && !upstream_disable_milestones();
 $areCommentsEnabled = upstreamAreCommentsEnabledOnTasks();
+
+$tableSettings = array(
+    'id'              => 'tasks',
+    'type'            => 'task',
+    'data-ordered-by' => 'start_date',
+    'data-order-dir'  => 'DESC'
+);
+
+function getTasksTableColumns(&$statuses, &$milestones, &$areMilestonesEnabled, &$areCommentsEnabled)
+{
+    $tableColumns = array(
+        'title' => array(
+            'type'        => 'raw',
+            'isOrderable' => true,
+            'label'       => __('Title', 'upstream')
+        ),
+        'assigned_to' => array(
+            'type'        => 'user',
+            'isOrderable' => true,
+            'label'       => __('Assigned To', 'upstream')
+        ),
+        'status'       => array(
+            'type'  => 'custom',
+            'label' => __('Status', 'upstream'),
+            'renderCallback' => function($columnName, $columnValue, $column, $row, $rowType, $projectId) use (&$statuses) {
+                if (strlen($columnValue) > 0) {
+                    if (isset($statuses[$columnValue])) {
+                        $columnValue = sprintf('<span class="label up-o-label" style="background-color: %s;">%s</span>', $statuses[$columnValue]['color'], $statuses[$columnValue]['name']);
+                    } else {
+                        $columnValue = sprintf('<i class="@todo">%s</i>', __('invalid status', 'upstream'));
+                    }
+                } else {
+                    $columnValue = sprintf('<i class="s-text-color-gray">%s</i>', __('none', 'upstream'));
+                }
+
+                return $columnValue;
+            }
+        ),
+        'progress'    => array(
+            'type'        => 'percentage',
+            'isOrderable' => true,
+            'label'       => __('Progress', 'upstream')
+        ),
+        'milestone'   => array(
+            'type'        => 'custom',
+            'isOrderable' => true,
+            'label'       => upstream_milestone_label(),
+            'renderCallback' => function($columnName, $columnValue, $column, $row, $rowType, $projectId) use (&$milestones) {
+                if (strlen($columnValue) > 0) {
+                    if (isset($milestones[$columnValue])) {
+                        $columnValue = sprintf('<span class="label up-o-label" style="background-color: %s;">%s</span>', $milestones[$columnValue]['color'], $milestones[$columnValue]['title']);
+                    } else {
+                        $columnValue = sprintf('<i class="@todo">%s</i>', __('invalid milestone', 'upstream'));
+                    }
+                } else {
+                    $columnValue = sprintf('<i class="s-text-color-gray">%s</i>', __('none', 'upstream'));
+                }
+
+                return $columnValue;
+            }
+        ),
+        'start_date'  => array(
+            'type'        => 'date',
+            'isOrderable' => true,
+            'label'       => __('Start Date', 'upstream')
+        ),
+        'end_date'    => array(
+            'type'        => 'date',
+            'isOrderable' => true,
+            'label'       => __('End Date', 'upstream')
+        )
+    );
+
+    $hiddenTableColumns = array(
+        'notes'       => array(
+            'type'     => 'wysiwyg',
+            'label'    => __('Notes', 'upstream'),
+            'isHidden' => true
+        ),
+        'comments'    => array(
+            'type'     => 'comments',
+            'label'    => __('Comments'),
+            'isHidden' => true
+        )
+    );
+
+    if (!$areMilestonesEnabled) {
+        unset($visibleColumns['milestone']);
+    }
+
+    if (!$areCommentsEnabled) {
+        unset($hiddenTableColumns['comments']);
+    }
+
+    $schema = array(
+        'visibleColumns' => $tableColumns,
+        'hiddenColumns'  => $hiddenTableColumns
+    );
+
+    return $schema;
+}
+
+$columnsSettings = getTasksTableColumns($statuses, $milestones, $areMilestonesEnabled, $areCommentsEnabled);
 ?>
 <div class="col-md-12 col-sm-12 col-xs-12">
   <div class="x_panel">
@@ -249,144 +352,7 @@ $areCommentsEnabled = upstreamAreCommentsEnabledOnTasks();
             </div>
           </div>
         </form>
-        <table
-          id="tasks"
-          class="o-data-table table table-hover table-bordered table-responsive is-orderable"
-          cellspacing="0"
-          width="100%"
-          data-type="task"
-          data-ordered-by="start_date"
-          data-order-dir="DESC">
-          <thead>
-            <tr scope="row">
-              <th scope="col" class="is-clickable is-orderable" data-column="title" role="button" style="width: 25%;">
-                <?php _e('Title', "Task's title", 'upstream'); ?>
-                <span class="pull-right o-order-direction">
-                  <i class="fa fa-sort"></i>
-                </span>
-              </th>
-              <th scope="col" class="is-orderable" data-column="assigned_to" role="button">
-                <?php _e('Assigned To', 'upstream'); ?>
-                <span class="pull-right o-order-direction">
-                  <i class="fa fa-sort"></i>
-                </span>
-              </th>
-              <th scope="col" class="is-orderable" data-column="status" role="button">
-                <?php _e('Status', 'upstream'); ?>
-                <span class="pull-right o-order-direction">
-                  <i class="fa fa-sort"></i>
-                </span>
-              </th>
-              <th scope="col" class="is-orderable" data-column="progress" role="button">
-                <?php _e('Progress', 'upstream'); ?>
-                <span class="pull-right o-order-direction">
-                  <i class="fa fa-sort"></i>
-                </span>
-              </th>
-              <?php if ($areMilestonesEnabled): ?>
-              <th scope="col" class="is-orderable" data-column="milestone" role="button">
-                <?php echo $l['LB_MILESTONE']; ?>
-                <span class="pull-right o-order-direction">
-                  <i class="fa fa-sort"></i>
-                </span>
-              </th>
-              <?php endif; ?>
-              <th scope="col" class="is-orderable" data-column="start_date" role="button">
-                <?php _e('Start Date', 'upstream'); ?>
-                <span class="pull-right o-order-direction">
-                  <i class="fa fa-sort"></i>
-                </span>
-              </th>
-              <th scope="col" class="is-orderable" data-column="end_date" role="button">
-                <?php _e('End Date', 'upstream'); ?>
-                <span class="pull-right o-order-direction">
-                  <i class="fa fa-sort"></i>
-                </span>
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            <?php foreach ($rowset as $row): ?>
-            <tr class="is-expandable is-filtered" data-id="<?php echo $row['id']; ?>" aria-expanded="false">
-              <td class="is-clickable" role="button">
-                <i class="fa fa-angle-right"></i>&nbsp;
-                <span data-column="title" data-value="<?php echo $row['title']; ?>"><?php echo $row['title']; ?></span>
-              </td>
-              <td data-column="assigned_to" data-value="<?php echo (int)$row['assigned_to'] > 0 ? $row['assigned_to'] : '__none__'; ?>">
-                <?php if ((int)$row['assigned_to'] > 0): ?>
-                    <?php if (isset($users[$row['assigned_to']])): ?>
-                    <?php echo $users[$row['assigned_to']]; ?>
-                    <?php else: ?>
-                    <i class="s-text-color-darkred"><?php echo $l['MSG_INVALID_USER']; ?></i>
-                    <?php endif; ?>
-                <?php else: ?>
-                <i class="s-text-color-gray"><?php echo $l['LB_NONE']; ?></i>
-                <?php endif; ?>
-              </td>
-              <td data-column="status" data-value="<?php echo !empty($row['status']) ? $row['status'] : '__none__'; ?>">
-                <?php if (!empty($row['status']) && isset($statuses[$row['status']])): ?>
-                <span class="label up-o-label" style="background-color: <?php echo $statuses[$row['status']]['color']; ?>;"><?php echo $row['status']; ?></span>
-                <?php else: ?>
-                <i class="s-text-color-gray"><?php echo $l['LB_NONE']; ?></i>
-                <?php endif; ?>
-              </td>
-              <td data-column="progress" data-value="<?php echo $row['progress']; ?>"><?php echo $row['progress']; ?>%</td>
-              <?php if ($areMilestonesEnabled): ?>
-              <td data-column="milestone" data-value="<?php echo !empty($row['milestone']) ? $row['milestone'] : '__none__'; ?>">
-                <?php if (!empty($row['milestone'])): ?>
-                  <?php if (isset($milestones[$row['milestone']])): ?>
-                    <span class="label up-o-label" style="background-color: <?php echo $milestones[$row['milestone']]['color']; ?>"><?php echo $milestones[$row['milestone']]['title']; ?></span>
-                  <?php else: ?>
-                    <i class="s-text-color-darkred"><?php echo $l['MSG_INVALID_MILESTONE']; ?></i>
-                  <?php endif; ?>
-                <?php else: ?>
-                <i class="s-text-color-gray"><?php echo $l['LB_NONE']; ?></i>
-                <?php endif; ?>
-              </td>
-              <?php endif; ?>
-              <td data-column="start_date" data-value="<?php echo $row['start_date']; ?>">
-                <?php if ($row['start_date'] > 0): ?>
-                  <?php echo upstream_convert_UTC_date_to_timezone($row['start_date'], false); ?>
-                <?php else: ?>
-                  <i class="s-text-color-gray"><?php echo $l['LB_NONE']; ?></i>
-                <?php endif; ?>
-              </td>
-              <td data-column="end_date" data-value="<?php echo $row['end_date']; ?>">
-                <?php if ($row['end_date'] > 0): ?>
-                  <?php echo upstream_convert_UTC_date_to_timezone($row['end_date'], false); ?>
-                <?php else: ?>
-                  <i class="s-text-color-gray"><?php echo $l['LB_NONE']; ?></i>
-                <?php endif; ?>
-              </td>
-            </tr>
-            <tr data-parent="<?php echo $row['id']; ?>" style="display: none;">
-              <td colspan="<?php echo $areMilestonesEnabled ? 7 : 6; ?>">
-                <div class="hidden-xs">
-                  <div class="form-group">
-                    <label><?php echo $l['LB_NOTES']; ?></label>
-                    <?php
-                    if (isset($row['notes'])
-                        && strlen($row['notes']) > 0
-                    ): ?>
-                    <blockquote><?php echo $row['notes']; ?></blockquote>
-                    <?php else: ?>
-                    <p>
-                      <i class="s-text-color-gray"><?php echo $l['LB_NONE']; ?></i>
-                    </p>
-                    <?php endif; ?>
-                  </div>
-                  <?php if ($areCommentsEnabled): ?>
-                  <div class="form-group">
-                    <label><?php echo $l['LB_COMMENTS']; ?></label>
-                    <?php echo upstreamRenderCommentsBox($row['id'], 'task', $projectId, false, true); ?>
-                  </div>
-                  <?php endif; ?>
-                </div>
-              </td>
-            </tr>
-            <?php endforeach; ?>
-          </tbody>
-        </table>
+        <?php \UpStream\WIP\renderTable($tableSettings, $columnsSettings, $rowset, 'task', $projectId); ?>
       </div>
     </div>
   </div>

@@ -64,6 +64,101 @@ $l = array(
 );
 
 $areCommentsEnabled = upstreamAreCommentsEnabledOnBugs();
+
+$tableSettings = array(
+    'id'              => 'bugs',
+    'type'            => 'bug',
+    'data-ordered-by' => 'due_date',
+    'data-order-dir'  => 'DESC'
+);
+
+function getBugsTableColumns(&$severities, &$statuses, &$areCommentsEnabled)
+{
+    $tableColumns = array(
+        'title' => array(
+            'type'        => 'raw',
+            'isOrderable' => true,
+            'label'       => __('Title', 'upstream')
+        ),
+        'assigned_to' => array(
+            'type'        => 'user',
+            'isOrderable' => true,
+            'label'       => __('Assigned To', 'upstream')
+        ),
+        'severity'       => array(
+            'type'  => 'custom',
+            'label' => __('Severity', 'upstream'),
+            'isOrderable' => true,
+            'renderCallback' => function($columnName, $columnValue, $column, $row, $rowType, $projectId) use (&$severities) {
+                if (strlen($columnValue) > 0) {
+                    if (isset($severities[$columnValue])) {
+                        $columnValue = sprintf('<span class="label up-o-label" style="background-color: %s;">%s</span>', $severities[$columnValue]['color'], $severities[$columnValue]['name']);
+                    } else {
+                        $columnValue = sprintf('<i class="@todo">%s</i>', __('invalid severity', 'upstream'));
+                    }
+                } else {
+                    $columnValue = sprintf('<i class="s-text-color-gray">%s</i>', __('none', 'upstream'));
+                }
+
+                return $columnValue;
+            }
+        ),
+        'status'       => array(
+            'type'  => 'custom',
+            'label' => __('Status', 'upstream'),
+            'isOrderable' => true,
+            'renderCallback' => function($columnName, $columnValue, $column, $row, $rowType, $projectId) use (&$statuses) {
+                if (strlen($columnValue) > 0) {
+                    if (isset($statuses[$columnValue])) {
+                        $columnValue = sprintf('<span class="label up-o-label" style="background-color: %s;">%s</span>', $statuses[$columnValue]['color'], $statuses[$columnValue]['name']);
+                    } else {
+                        $columnValue = sprintf('<i class="@todo">%s</i>', __('invalid status', 'upstream'));
+                    }
+                } else {
+                    $columnValue = sprintf('<i class="s-text-color-gray">%s</i>', __('none', 'upstream'));
+                }
+
+                return $columnValue;
+            }
+        ),
+        'due_date'  => array(
+            'type'        => 'date',
+            'isOrderable' => true,
+            'label'       => __('Due Date', 'upstream')
+        ),
+        'file'    => array(
+            'type'        => 'file',
+            'isOrderable' => false,
+            'label'       => __('File', 'upstream')
+        )
+    );
+
+    $hiddenTableColumns = array(
+        'description' => array(
+            'type'     => 'wysiwyg',
+            'label'    => __('Description', 'upstream'),
+            'isHidden' => true
+        ),
+        'comments'    => array(
+            'type'     => 'comments',
+            'label'    => __('Comments'),
+            'isHidden' => true
+        )
+    );
+
+    if (!$areCommentsEnabled) {
+        unset($hiddenTableColumns['comments']);
+    }
+
+    $schema = array(
+        'visibleColumns' => $tableColumns,
+        'hiddenColumns'  => $hiddenTableColumns
+    );
+
+    return $schema;
+}
+
+$columnsSettings = getBugsTableColumns($severities, $statuses, $areCommentsEnabled);
 ?>
 <div class="col-md-12 col-sm-12 col-xs-12">
   <div class="x_panel">
@@ -212,141 +307,7 @@ $areCommentsEnabled = upstreamAreCommentsEnabledOnBugs();
             </div>
           </div>
         </form>
-        <table
-          id="bugs"
-          class="o-data-table table table-hover table-bordered table-responsive is-orderable"
-          cellspacing="0"
-          width="100%"
-          data-type="bug"
-          data-ordered-by="start_date"
-          data-order-dir="DESC">
-          <thead>
-            <tr scope="row">
-              <th scope="col" class="is-clickable is-orderable" data-column="title" role="button" style="width: 25%;">
-                <?php _e('Title', "Task's title", 'upstream'); ?>
-                <span class="pull-right o-order-direction">
-                  <i class="fa fa-sort"></i>
-                </span>
-              </th>
-              <th scope="col" class="is-orderable" data-column="assigned_to" role="button">
-                <?php _e('Assigned To', 'upstream'); ?>
-                <span class="pull-right o-order-direction">
-                  <i class="fa fa-sort"></i>
-                </span>
-              </th>
-              <th scope="col" class="is-orderable" data-column="severity" role="button">
-                <?php _e('Severity', 'upstream'); ?>
-                <span class="pull-right o-order-direction">
-                  <i class="fa fa-sort"></i>
-                </span>
-              </th>
-              <th scope="col" class="is-orderable" data-column="status" role="button">
-                <?php _e('Status', 'upstream'); ?>
-                <span class="pull-right o-order-direction">
-                  <i class="fa fa-sort"></i>
-                </span>
-              </th>
-              <th scope="col" class="is-orderable" data-column="due_date" role="button">
-                <?php _e('Due Date', 'upstream'); ?>
-                <span class="pull-right o-order-direction">
-                  <i class="fa fa-sort"></i>
-                </span>
-              </th>
-              <th scope="col" data-column="file" data-type="file">
-                <?php _e('File', 'upstream'); ?>
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            <?php foreach ($rowset as $row): ?>
-            <tr class="is-expandable is-filtered" data-id="<?php echo $row['id']; ?>" aria-expanded="false">
-              <td class="is-clickable" role="button">
-                <i class="fa fa-angle-right"></i>&nbsp;
-                <span data-column="title" data-value="<?php echo $row['title']; ?>"><?php echo $row['title']; ?></span>
-              </td>
-              <td data-column="assigned_to" data-value="<?php echo (int)$row['assigned_to'] > 0 ? $row['assigned_to'] : '__none__'; ?>">
-                <?php if ((int)$row['assigned_to'] > 0): ?>
-                    <?php if (isset($users[$row['assigned_to']])): ?>
-                    <?php echo $users[$row['assigned_to']]; ?>
-                    <?php else: ?>
-                    <i class="s-text-color-darkred"><?php echo $l['MSG_INVALID_USER']; ?></i>
-                    <?php endif; ?>
-                <?php else: ?>
-                <i class="s-text-color-gray"><?php echo $l['LB_NONE']; ?></i>
-                <?php endif; ?>
-              </td>
-              <td data-column="severity" data-value="<?php echo !empty($row['severity']) ? $row['severity'] : '__none__'; ?>">
-                <?php if (!empty($row['severity']) && isset($severities[$row['severity']])): ?>
-                  <span class="label up-o-label" style="background-color: <?php echo $severities[$row['severity']]['color']; ?>"><?php echo $row['severity']; ?></span>
-                <?php else: ?>
-                <i class="s-text-color-gray"><?php echo $l['LB_NONE']; ?></i>
-                <?php endif; ?>
-              </td>
-              <td data-column="status" data-value="<?php echo !empty($row['status']) ? $row['status'] : '__none__'; ?>">
-                <?php if (!empty($row['status']) && isset($statuses[$row['status']])): ?>
-                  <span class="label up-o-label" style="background-color: <?php echo $statuses[$row['status']]['color']; ?>"><?php echo $row['status']; ?></span>
-                <?php else: ?>
-                  <i class="s-text-color-gray"><?php echo $l['LB_NONE']; ?></i>
-                <?php endif; ?>
-              </td>
-              <td data-column="due_date" data-value="<?php echo $row['due_date']; ?>">
-                <?php if ($row['due_date'] > 0): ?>
-                  <?php echo upstream_convert_UTC_date_to_timezone($row['due_date'], false); ?>
-                <?php else: ?>
-                  <i class="s-text-color-gray"><?php echo $l['LB_NONE']; ?></i>
-                <?php endif; ?>
-              </td>
-              <td data-column="file">
-                <?php
-                if (isset($row['file']) && strlen($row['file']) > 0) {
-                  if (@is_array(getimagesize($row['file']))) {
-                    printf(
-                      '<a href="%s" target="_blank">
-                        <img class="avatar itemfile" width="32" height="32" src="%1$s">
-                      </a>',
-                      $row['file']
-                    );
-                  } else {
-                    printf(
-                      '<a href="%s" target="_blank">%s</a>',
-                      $row['file'],
-                      basename($row['file'])
-                    );
-                  }
-                } else {
-                  echo '<i class="s-text-color-gray">'. $l['LB_NONE'] .'</i>';
-                }
-                ?>
-              </td>
-            </tr>
-            <tr data-parent="<?php echo $row['id']; ?>" style="display: none;">
-              <td colspan="6">
-                <div class="hidden-xs">
-                  <div class="form-group">
-                    <label><?php echo $l['LB_DESCRIPTION']; ?></label>
-                    <?php
-                    if (isset($row['description'])
-                        && strlen($row['description']) > 0
-                    ): ?>
-                    <blockquote><?php echo $row['description']; ?></blockquote>
-                    <?php else: ?>
-                    <p>
-                      <i class="s-text-color-gray"><?php echo $l['LB_NONE']; ?></i>
-                    </p>
-                    <?php endif; ?>
-                  </div>
-                  <?php if ($areCommentsEnabled): ?>
-                  <div class="form-group">
-                    <label><?php echo $l['LB_COMMENTS']; ?></label>
-                    <?php echo upstreamRenderCommentsBox($row['id'], 'bug', $projectId, false, true); ?>
-                  </div>
-                  <?php endif; ?>
-                </div>
-              </td>
-            </tr>
-            <?php endforeach; ?>
-          </tbody>
-        </table>
+        <?php \UpStream\WIP\renderTable($tableSettings, $columnsSettings, $rowset, 'bug', $projectId); ?>
       </div>
     </div>
   </div>

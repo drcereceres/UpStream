@@ -180,6 +180,23 @@ function renderTableColumnValue($columnName, $columnValue, $column, $row, $rowTy
         if (isset($column['renderCallback']) && is_callable($column['renderCallback'])) {
             $html = call_user_func($column['renderCallback'], $columnName, $columnValue, $column, $row, $rowType, $projectId);
         }
+    } else if ($columnType === 'file') {
+        if (strlen($columnValue) > 0) {
+          if (@is_array(getimagesize($columnValue))) {
+            $html = sprintf(
+              '<a href="%s" target="_blank">
+                <img class="avatar itemfile" width="32" height="32" src="%1$s">
+              </a>',
+              $columnValue
+            );
+          } else {
+            $html = sprintf(
+              '<a href="%s" target="_blank">%s</a>',
+              $columnValue,
+              basename($columnValue)
+            );
+          }
+        }
     } else {
         $columnValue = trim($columnValue);
         if (strlen($columnValue) > 0) {
