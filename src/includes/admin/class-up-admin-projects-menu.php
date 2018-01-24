@@ -51,75 +51,90 @@ class UpStream_Admin_Projects_Menu {
         add_submenu_page('edit.php?post_type=project', upstream_client_label_plural(), upstream_client_label_plural(), 'edit_clients', 'edit.php?post_type=client');
     }
 
-
     public function submenu_order($menu)
     {
         global $submenu;
 
         $subMenuIdentifier = 'edit.php?post_type=project';
-        if (isset($submenu[$subMenuIdentifier]) && !empty($submenu[$subMenuIdentifier])) {
-            $ourSubmenu = &$submenu[$subMenuIdentifier];
+        if (isset($submenu[$subMenuIdentifier])
+            && !empty($submenu[$subMenuIdentifier])
+        ) {
+            $upstreamSubmenu = &$submenu[$subMenuIdentifier];
+            $newUpStreamSubmenu = array();
 
-            // Projects
-            $newSubmenu = array($ourSubmenu[5]);
-            if (!self::$userIsUpStreamUser) {
-                if (is_project_categorization_disabled()) {
-                    // Tasks
-                    if (isset($ourSubmenu[12])) {
-                        $newSubmenu[] = $ourSubmenu[12];
-                    }
-
-                    // Bugs
-                    if (isset($ourSubmenu[13])) {
-                        $newSubmenu[] = $ourSubmenu[13];
-                    }
-
-                    // Clients
-                    if (!is_clients_disabled() && isset($ourSubmenu[11])) {
-                        $newSubmenu[] = $ourSubmenu[11];
-                    }
-                } else {
-                    // Tasks
-                    if (isset($ourSubmenu[17])) {
-                        $newSubmenu[] = $ourSubmenu[17];
-                    }
-
-                    // Bugs
-                    if (isset($ourSubmenu[18])) {
-                        $newSubmenu[] = $ourSubmenu[18];
-                    }
-
-                    // Clients
-                    if (!is_clients_disabled() && isset($ourSubmenu[16])) {
-                        $newSubmenu[] = $ourSubmenu[16];
-                    }
-
-                    // Categories
-                    if (isset($ourSubmenu[15])) {
-                        $newSubmenu[] = $ourSubmenu[15];
+            $searchSubmenuItem = function($needle) use (&$upstreamSubmenu) {
+                foreach ($upstreamSubmenu as $submenuIndex => $submenu) {
+                    $regexp = '/'. $needle .'/i';
+                    if (preg_match($regexp, $submenu[2])) {
+                        return $submenu;
                     }
                 }
+
+                return null;
+            };
+
+            $submenuProjects = $searchSubmenuItem('^edit\.php\?post_type=project$');
+            if ($submenuProjects !== null) {
+                $newUpStreamSubmenu[] = $submenuProjects;
+            }
+            unset($submenuProjects);
+
+            if (self::$userIsUpStreamUser) {
+                $submenuTasks = $searchSubmenuItem('^tasks$');
+                if ($submenuTasks !== null
+                    && strpos($submenuTasks[0], 'update-count' !== false)
+                ) {
+                    $newUpStreamSubmenu[] = $submenuTasks;
+                }
+                unset($submenuTasks);
+
+                $submenuBugs = $searchSubmenuItem('^bugs$');
+                if ($submenuBugs !== null
+                    && strpos($submenuBugs[0], 'update-count' !== false)
+                ) {
+                    $newUpStreamSubmenu[] = $submenuBugs;
+                }
+                unset($submenuBugs);
             } else {
-                if (is_project_categorization_disabled()) {
-                    if (isset($ourSubmenu[12]) && strpos($ourSubmenu[12][0], 'update-count') !== false) {
-                        $newSubmenu[] = $ourSubmenu[12];
-                    }
+                $areCategoriesEnabled = !is_project_categorization_disabled();
+                $areClientsEnabled = !is_clients_disabled();
 
-                    if (isset($ourSubmenu[13]) && strpos($ourSubmenu[13][0], 'update-count') !== false) {
-                        $newSubmenu[] = $ourSubmenu[13];
-                    }
-                } else {
-                    if (isset($ourSubmenu[17]) && strpos($ourSubmenu[17][0], 'update-count') !== false) {
-                        $newSubmenu[] = $ourSubmenu[17];
-                    }
+                $submenuTasks = $searchSubmenuItem('^tasks$');
+                if ($submenuTasks !== null) {
+                    $newUpStreamSubmenu[] = $submenuTasks;
+                }
+                unset($submenuTasks);
 
-                    if (isset($ourSubmenu[18]) && strpos($ourSubmenu[18][0], 'update-count') !== false) {
-                        $newSubmenu[] = $ourSubmenu[18];
+                $submenuBugs = $searchSubmenuItem('^bugs$');
+                if ($submenuBugs !== null) {
+                    $newUpStreamSubmenu[] = $submenuBugs;
+                }
+                unset($submenuBugs);
+
+                if ($areClientsEnabled) {
+                    $submenuClients = $searchSubmenuItem('^edit\.php\?post_type=client$');
+                    if ($submenuClients !== null) {
+                        $newUpStreamSubmenu[] = $submenuClients;
                     }
+                    unset($submenuClients);
+                }
+
+                if ($areCategoriesEnabled) {
+                    $submenuCategories = $searchSubmenuItem('^edit\-tags\.php\?taxonomy\=project_category\&amp;post_type=project$');
+                    if (!$submenuCategories !== null) {
+                        $newUpStreamSubmenu[] = $submenuCategories;
+                    }
+                    unset($submenuCategories);
+
+                    $submenuTags = $searchSubmenuItem('^edit\-tags\.php\?taxonomy\=upstream_tag\&amp;post_type=project$');
+                    if (!$submenuTags !== null) {
+                        $newUpStreamSubmenu[] = $submenuTags;
+                    }
+                    unset($submenuTags);
                 }
             }
 
-            $ourSubmenu = $newSubmenu;
+            $upstreamSubmenu = $newUpStreamSubmenu;
         }
 
         return $menu;
