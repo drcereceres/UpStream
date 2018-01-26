@@ -81,15 +81,6 @@ final class UpStream_Metaboxes_Clients
 
         // Render all inner metaboxes.
         self::renderMetaboxes();
-
-        $namespace = get_class(self::$instance);
-        // Starting from v1.13.6 UpStream Users cannot be added through here anymore.
-        $noticeIdentifier = 'upstream:notices.client.add_new_users_changes';
-        $shouldDisplayNotice = (bool)get_option($noticeIdentifier);
-        if (!$shouldDisplayNotice) {
-            add_action('admin_notices', array($namespace, 'renderAddingClientUsersChangesNotice'));
-            update_option($noticeIdentifier, 1);
-        }
     }
 
     /**
@@ -934,45 +925,6 @@ final class UpStream_Metaboxes_Clients
         echo wp_json_encode($response);
 
         wp_die();
-    }
-
-    /**
-     * Add notice to users warning about Client Users creation changes.
-     *
-     * @since   1.13.6
-     * @static
-     */
-    public static function renderAddingClientUsersChangesNotice()
-    {
-        ?>
-        <div class="notice notice-info is-dismissible">
-          <h3><?php _e('Important notice', 'upstream'); ?></h3>
-          <p><?php _e('New users can no longer be added through here.', 'upstream'); ?></p>
-          <p><?php _e('From now on, to ensure newly created users are listed on the Existing Users table, do the following:', 'upstream'); ?></p>
-          <ol>
-            <li>
-              <?php printf(
-                  'Go to the %s page',
-                  sprintf(
-                      '<a href="%s" target="_blank">%s</a>',
-                      admin_url('user-new.php'),
-                      __('Users')
-                  )
-              ); ?>
-            </li>
-            <li><?php _e("Add the users as you need if you haven't already", 'upstream'); ?></li>
-            <li>
-              <?php printf(
-                  'Make sure they have the %s role assigned to them',
-                  sprintf(
-                      '<code>%s</code>',
-                      __('UpStream Client User', 'upstream')
-                  )
-              ); ?>
-            </li>
-          </ol>
-        </div>
-        <?php
     }
 
     /**
