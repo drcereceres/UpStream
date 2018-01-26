@@ -138,6 +138,9 @@ and this project adheres to [Semantic Versioning](http://semver.org).
 
 = [@todo: WIP] =
 
+Removed:
+* Remove notice about recent changes made on Clients
+
 = [1.13.6] - 2018-01-15 =
 
 Changed:
