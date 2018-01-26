@@ -50,7 +50,7 @@ function upstream_get_template_part( $part ) {
 // output list of the client users avatars
 function upstream_output_client_users($id = null)
 {
-    $users = (array)upstream_project_client_users($id);
+    $users = array_filter((array)upstream_project_client_users($id));
 
     if (count($users) > 0): ?>
         <ul class="list-inline">
@@ -61,14 +61,14 @@ function upstream_output_client_users($id = null)
             <?php endforeach; ?>
         </ul>
     <?php else: ?>
-        <span class="text-muted"><i><?php echo '(' . __('none') .')'; ?></i></span>
+    <?php printf('<i class="s-text-color-gray">%s</i>', __('none', 'upstream')); ?>
     <?php endif;
 }
 
 // output list of the project members avatars
 function upstream_output_project_members($id = null)
 {
-    $users = (array)upstream_project_users($id);
+    $users = array_filter((array)upstream_project_users($id));
 
     if (count($users) > 0): ?>
         <ul class="list-inline">
@@ -79,7 +79,7 @@ function upstream_output_project_members($id = null)
             <?php endforeach; ?>
         </ul>
     <?php else: ?>
-        <span class="text-muted"><i><?php echo '(' . __('none') .')'; ?></i></span>
+    <?php printf('<i class="s-text-color-gray">%s</i>', __('none', 'upstream')); ?>
     <?php endif;
 }
 

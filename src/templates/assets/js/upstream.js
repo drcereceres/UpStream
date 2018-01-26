@@ -1,69 +1,3 @@
-function getTableDefaultOptions() {
-    return {
-        dom: "Bfrtip",
-        buttons: [
-            {
-                text: upstream.langs['LB_COPY'],
-                extend: "copy",
-                className: "btn-sm"
-            },
-            {
-                text: upstream.langs['LB_CSV'],
-                extend: "csv",
-                className: "btn-sm"
-            },
-        ],
-        responsive: true,
-        paging: false,
-        info: false,
-        columnDefs: [
-            {
-                orderable: false,
-                searchable: false
-            }
-        ],
-        language: {
-            emptyTable: upstream.langs['MSG_TABLE_NO_DATA_FOUND'],
-            search: upstream.langs['LB_SEARCH']
-        }
-    };
-}
-/*
-// @todo
-var milestonesTableOptions = getTableDefaultOptions();
-milestonesTableOptions.columnDefs[0].targets = (function() {
-    return [(jQuery('#milestones thead tr th').length - 1)];
-})();
-milestonesTableOptions.language.emptyTable = upstream.langs.MSG_NO_MILESTONES_YET;
-var tableMilestones = jQuery('#milestones').DataTable(milestonesTableOptions);
-
-var tasksTableOptions = getTableDefaultOptions();
-tasksTableOptions.language.emptyTable = upstream.langs.MSG_NO_TASKS_YET;
-tasksTableOptions.columnDefs[0].targets = (function() {
-    return [(jQuery('#tasks thead tr th').length - 1)];
-})();
-var tableTasks = jQuery('#tasks').DataTable(tasksTableOptions);
-var tableMyTasks = jQuery('#my-tasks').DataTable(tasksTableOptions);
-
-
-var bugsTableOptions = getTableDefaultOptions();
-bugsTableOptions.columnDefs[0].targets = (function() {
-    var lastIndex = jQuery('#bugs thead tr th').length;
-    return [lastIndex - 1, lastIndex - 2];
-})();
-bugsTableOptions.language.emptyTable = upstream.langs.MSG_NO_BUGS_YET;
-var tableBugs = jQuery('#bugs').DataTable(bugsTableOptions);
-var tableMyBugs = jQuery('#my-bugs').DataTable(bugsTableOptions);
-
-
-var filesTableOptions = getTableDefaultOptions();
-filesTableOptions.columnDefs[0].targets = (function() {
-    var lastIndex = jQuery('#files thead tr th').length;
-    return [lastIndex - 1, lastIndex - 2];
-})();
-filesTableOptions.language.emptyTable = upstream.langs.MSG_NO_FILES_YET;
-var tableFiles = jQuery('#files').DataTable(filesTableOptions);
-*/
 /**
  * Resize function without multiple trigger
  *
@@ -344,7 +278,7 @@ jQuery(document).ready(function($){
       $('> tbody > tr', table).remove();
 
       $.each(data, function(trNewIndex) {
-        var tr = $(trs.get(this.index));
+        var tr = $(trs.get(this.index), table);
 
         $('> tbody', table).append(tr);
 
@@ -356,7 +290,7 @@ jQuery(document).ready(function($){
       table.attr('data-order-dir', direction)
         .attr('data-ordered-by', columnName);
 
-      var th = $('thead tr th[data-column="'+ columnName +'"]');
+      var th = $('thead tr th[data-column="'+ columnName +'"]', table);
       $('.o-order-direction', th).remove();
 
       th.append(createOrderDirectionEl(direction));
@@ -397,7 +331,14 @@ jQuery(document).ready(function($){
       filters.each(function() {
         var self = $(this);
 
-        var value = self.val().trim();
+        var value = self.val();
+        if (typeof value === 'string') {
+          value = value.trim();
+        } else if (value) {
+          value = value.filter(function(elValue) { return elValue.length > 0; });
+        } else {
+          value = '';
+        }
 
         filtersMap[self.attr('data-column')] = value.length  > 0 ? value : null;
         filtersMap.push({
@@ -407,7 +348,7 @@ jQuery(document).ready(function($){
         });
       });
 
-      console.log(filtersMap);
+      console.debug(filtersMap);
 
       $('tbody tr[data-empty-row]', table).remove();
 
@@ -432,10 +373,34 @@ jQuery(document).ready(function($){
           columnValue = $('[data-column="'+ filter.column +'"]', tr).attr('data-value');
 
           if (filter.comparator === 'contains') {
-            comparator = new RegExp(filter.value, 'i');
-            shouldDisplay = comparator.test(columnValue);
+            if (typeof filter.value === 'string') {
+              comparator = new RegExp(filter.value, 'i');
+              shouldDisplay = comparator.test(columnValue);
+            } else {
+              for (var valueIndex in filter.value) {
+                comparator = new RegExp(filter.value[valueIndex], 'i');
+                if (comparator.test(columnValue)) {
+                  shouldDisplay = true;
+                  break;
+                }
+              }
+            }
           } else if (filter.comparator === 'exact') {
-            shouldDisplay = columnValue === filter.value;
+            if (typeof filter.value === 'string') {
+              shouldDisplay = shouldDisplay = columnValue === filter.value;
+            } else {
+              for (var valueIndex in filter.value) {
+                if (filter.value[valueIndex] === '__none__') {
+                  shouldDisplay = !columnValue || columnValue === '__none__';
+                } else {
+                  shouldDisplay = columnValue === filter.value[valueIndex];
+                }
+
+                if (shouldDisplay) {
+                  break;
+                }
+              }
+            }
           } else if (filter.comparator === '>') {
             shouldDisplay = columnValue > filter.value;
           } else if (filter.comparator === '>=') {
@@ -447,7 +412,21 @@ jQuery(document).ready(function($){
           } else if (filter.value === '__none__') {
             shouldDisplay = !columnValue || columnValue === '__none__';
           } else {
-            shouldDisplay = columnValue.localeCompare(filter.value) === 0;
+            if (typeof filter.value === 'string') {
+              shouldDisplay = columnValue.localeCompare(filter.value) === 0;
+            } else {
+              for (var valueIndex in filter.value) {
+                if (filter.value[valueIndex] === '__none__') {
+                  shouldDisplay = !columnValue || columnValue === '__none__';
+                } else {
+                  shouldDisplay = columnValue.localeCompare(filter.value[valueIndex]) === 0;
+                }
+
+                if (shouldDisplay) {
+                  break;
+                }
+              }
+            }
           }
 
           if (filtersHasChanged && !shouldDisplay) {
@@ -480,16 +459,23 @@ jQuery(document).ready(function($){
 
       var self = $(this);
 
-      sortTable(self.attr('data-column'), self.val(), $(self.parents('form').get(0)));
+      var filterColumn = self.attr('data-column');
+      var filterValue = self.val() || [];
+
+      sortTable(filterColumn, filterValue || '', $(self.parents('form').get(0)));
     });
 
     $('.c-data-table .c-data-table__filters input[type="search"]').on('keyup', function(e) {
       e.preventDefault();
 
       var self = $(this);
+      var filterColumn = self.attr('data-column');
       var value = self.val().trim();
 
-      sortTable(self.attr('data-column'), value, $(self.parents('form').get(0)));
+      var wrapper = $(self.parents('.c-data-table__filters'));
+      $('.form-control[data-column="'+ filterColumn +'"]', wrapper).val(value);
+
+      sortTable(filterColumn, value, $(self.parents('form').get(0)));
     });
 
     // Expand rows in tables.
@@ -543,9 +529,13 @@ jQuery(document).ready(function($){
     $('.c-data-table .c-data-table__filters .o-datepicker').on('change', function() {
       var self = $(this);
 
+      var filterColumn = self.attr('data-column');
+      var wrapper = $(self.parents('.c-data-table__filters'));
+      var value = self.val();
+
       var hiddenField = $('#' + self.attr('id') + '_timestamp');
       if (hiddenField.length > 0) {
-        sortTable(hiddenField.attr('data-column'), '', $(self.parents('form').get(0)));
+        sortTable(hiddenField.attr('data-column'), value, $(self.parents('form').get(0)));
       }
     });
 
@@ -649,8 +639,12 @@ jQuery(document).ready(function($){
       }
     });
 
-    $('.c-data-table select.form-control').select2({
+    $('.c-data-table select.form-control:not([multiple])').select2({
       allowClear: true
+    });
+
+    $('.c-data-table select.form-control[multiple]').select2({
+      allowClear: false
     });
 
     $('.c-data-table').each(function() {
@@ -664,5 +658,69 @@ jQuery(document).ready(function($){
         orderTable(order_by, order_dir, table);
       }
     });
+
+    (function() {
+      function generateContrastColor(baseColor) {
+        var d = 0;
+
+        // Counting the perceptive luminance - human eye favors green color.
+        var a = 1 - (0.299 * baseColor.r + 0.587 * baseColor.g + 0.114 * baseColor.b) / 255;
+        if (a >= 0.4) {
+          // Base color is dark, so we'll use white
+          d = 255;
+        }
+
+        var newColor = {
+          r: d,
+          g: d,
+          b: d
+        };
+
+        return newColor;
+      }
+
+      function hexToRGB(hexColor) {
+        var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hexColor);
+        var rgb = result ? {
+          r: parseInt(result[1], 16),
+          g: parseInt(result[2], 16),
+          b: parseInt(result[3], 16)
+        } : null;
+
+        var color = new Color(rgb);
+
+        return color;
+      }
+
+      function componentToHex(c) {
+          var hex = c.toString(16);
+          return hex.length == 1 ? "0" + hex : hex;
+      }
+
+      function rgbToHex(r, g, b) {
+          return "#" + componentToHex(r) + componentToHex(g) + componentToHex(b);
+      }
+
+      $('.up-o-label').each(function() {
+        var self = $(this);
+
+        var bgColor = self.css('background-color');
+        if (bgColor) {
+          bgColor = bgColor.replace(/rgb\(|\)/ig, '').replace(/\s+/g, '').split(',');
+          if (bgColor.length === 3) {
+            bgColor = {
+              r: bgColor[0],
+              g: bgColor[1],
+              b: bgColor[2]
+            };
+
+            var constrastColor = generateContrastColor(bgColor);
+            var contrastColorHex = rgbToHex(constrastColor.r, constrastColor.g, constrastColor.b);
+
+            self.css('color', contrastColorHex);
+          }
+        }
+      });
+    })();
   });
 })(window, window.document, jQuery || {}, upstream || {}, TableExport);

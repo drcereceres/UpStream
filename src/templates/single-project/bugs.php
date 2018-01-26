@@ -10,7 +10,17 @@ $collapseBox = isset($pluginOptions['collapse_project_bugs'])
 
 $bugsSettings = get_option('upstream_bugs');
 $bugsStatuses = $bugsSettings['statuses'];
+$statuses = array();
+foreach ($bugsStatuses as $status) {
+    $statuses[$status['name']] = $status;
+}
+
 $bugsSeverities = $bugsSettings['severities'];
+$severities = array();
+foreach ($bugsSeverities as $severity) {
+    $severities[$severity['name']] = $severity;
+}
+unset($bugsSeverities);
 
 $itemType = 'bug';
 $currentUserId = get_current_user_id();
@@ -54,6 +64,101 @@ $l = array(
 );
 
 $areCommentsEnabled = upstreamAreCommentsEnabledOnBugs();
+
+$tableSettings = array(
+    'id'              => 'bugs',
+    'type'            => 'bug',
+    'data-ordered-by' => 'due_date',
+    'data-order-dir'  => 'DESC'
+);
+
+function getBugsTableColumns(&$severities, &$statuses, &$areCommentsEnabled)
+{
+    $tableColumns = array(
+        'title' => array(
+            'type'        => 'raw',
+            'isOrderable' => true,
+            'label'       => __('Title', 'upstream')
+        ),
+        'assigned_to' => array(
+            'type'        => 'user',
+            'isOrderable' => true,
+            'label'       => __('Assigned To', 'upstream')
+        ),
+        'severity'       => array(
+            'type'  => 'custom',
+            'label' => __('Severity', 'upstream'),
+            'isOrderable' => true,
+            'renderCallback' => function($columnName, $columnValue, $column, $row, $rowType, $projectId) use (&$severities) {
+                if (strlen($columnValue) > 0) {
+                    if (isset($severities[$columnValue])) {
+                        $columnValue = sprintf('<span class="label up-o-label" style="background-color: %s;">%s</span>', $severities[$columnValue]['color'], $severities[$columnValue]['name']);
+                    } else {
+                        $columnValue = sprintf('<i class="@todo">%s</i>', __('invalid severity', 'upstream'));
+                    }
+                } else {
+                    $columnValue = sprintf('<i class="s-text-color-gray">%s</i>', __('none', 'upstream'));
+                }
+
+                return $columnValue;
+            }
+        ),
+        'status'       => array(
+            'type'  => 'custom',
+            'label' => __('Status', 'upstream'),
+            'isOrderable' => true,
+            'renderCallback' => function($columnName, $columnValue, $column, $row, $rowType, $projectId) use (&$statuses) {
+                if (strlen($columnValue) > 0) {
+                    if (isset($statuses[$columnValue])) {
+                        $columnValue = sprintf('<span class="label up-o-label" style="background-color: %s;">%s</span>', $statuses[$columnValue]['color'], $statuses[$columnValue]['name']);
+                    } else {
+                        $columnValue = sprintf('<i class="@todo">%s</i>', __('invalid status', 'upstream'));
+                    }
+                } else {
+                    $columnValue = sprintf('<i class="s-text-color-gray">%s</i>', __('none', 'upstream'));
+                }
+
+                return $columnValue;
+            }
+        ),
+        'due_date'  => array(
+            'type'        => 'date',
+            'isOrderable' => true,
+            'label'       => __('Due Date', 'upstream')
+        ),
+        'file'    => array(
+            'type'        => 'file',
+            'isOrderable' => false,
+            'label'       => __('File', 'upstream')
+        )
+    );
+
+    $hiddenTableColumns = array(
+        'description' => array(
+            'type'     => 'wysiwyg',
+            'label'    => __('Description', 'upstream'),
+            'isHidden' => true
+        ),
+        'comments'    => array(
+            'type'     => 'comments',
+            'label'    => __('Comments'),
+            'isHidden' => true
+        )
+    );
+
+    if (!$areCommentsEnabled) {
+        unset($hiddenTableColumns['comments']);
+    }
+
+    $schema = array(
+        'visibleColumns' => $tableColumns,
+        'hiddenColumns'  => $hiddenTableColumns
+    );
+
+    return $schema;
+}
+
+$columnsSettings = getBugsTableColumns($severities, $statuses, $areCommentsEnabled);
 ?>
 <div class="col-md-12 col-sm-12 col-xs-12">
   <div class="x_panel">
@@ -74,229 +179,135 @@ $areCommentsEnabled = upstreamAreCommentsEnabledOnBugs();
     <div class="x_content" style="display: <?php echo $collapseBox ? 'none' : 'block'; ?>;">
       <div class="c-data-table table-responsive">
         <form class="form-inline c-data-table__filters" data-target="#bugs">
-          <div class="form-group">
-            <div class="input-group">
-              <div class="input-group-addon">
-                <i class="fa fa-search"></i>
+          <div class="hidden-xs">
+            <div class="form-group">
+              <div class="input-group">
+                <div class="input-group-addon">
+                  <i class="fa fa-search"></i>
+                </div>
+                <input type="search" class="form-control" placeholder="<?php echo $l['LB_TITLE']; ?>" data-column="title" data-compare-operator="contains">
               </div>
-              <input type="search" class="form-control" placeholder="<?php echo $l['LB_TITLE']; ?>" data-column="title" data-compare-operator="contains">
+            </div>
+            <div class="form-group">
+              <div class="btn-group">
+                <a href="#bugs-filters" role="button" class="btn btn-default" data-toggle="collapse" aria-expanded="false" aria-controls="bugs-filters">
+                  <i class="fa fa-filter"></i> <?php _e('Toggle Filters', 'upstream'); ?>
+                </a>
+                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  <i class="fa fa-download"></i> <?php _e('Export', 'upstream'); ?>
+                  <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu dropdown-menu-right">
+                  <li>
+                    <a href="#" data-action="export" data-type="txt">
+                      <i class="fa fa-file-text-o"></i>&nbsp;&nbsp;<?php _e('Plain Text', 'upstream'); ?>
+                    </a>
+                  </li>
+                  <li>
+                    <a href="#" data-action="export" data-type="csv">
+                      <i class="fa fa-file-code-o"></i>&nbsp;&nbsp;<?php _e('CSV', 'upstream'); ?>
+                    </a>
+                  </li>
+                </ul>
+              </div>
             </div>
           </div>
-          <div class="form-group">
-            <div class="input-group">
-              <div class="input-group-addon">
-                <i class="fa fa-user"></i>
+          <div class="visible-xs">
+            <div>
+              <a href="#bugs-filters" role="button" class="btn btn-default" data-toggle="collapse" aria-expanded="false" aria-controls="bugs-filters">
+                <i class="fa fa-filter"></i> <?php _e('Toggle Filters', 'upstream'); ?>
+              </a>
+              <div class="btn-group">
+                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  <i class="fa fa-download"></i> <?php _e('Export', 'upstream'); ?>
+                  <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu dropdown-menu-right">
+                  <li>
+                    <a href="#" data-action="export" data-type="txt">
+                      <i class="fa fa-file-text-o"></i>&nbsp;&nbsp;<?php _e('Plain Text', 'upstream'); ?>
+                    </a>
+                  </li>
+                  <li>
+                    <a href="#" data-action="export" data-type="csv">
+                      <i class="fa fa-file-code-o"></i>&nbsp;&nbsp;<?php _e('CSV', 'upstream'); ?>
+                    </a>
+                  </li>
+                </ul>
               </div>
-              <select class="form-control o-select2" data-column="assigned_to" data-placeholder="<?php _e('Assignee', 'upstream'); ?>">
-                <option value></option>
-                <option value="__none__"><?php _e('Nobody', 'upstream'); ?></option>
-                <option value="<?php echo $currentUserId; ?>"><?php _e('Me', 'upstream'); ?></option>
-                <optgroup label="<?php _e('Users'); ?>">
-                  <?php foreach ($users as $user_id => $userName): ?>
-                    <?php if ($user_id === $currentUserId) continue; ?>
-                    <option value="<?php echo $user_id; ?>"><?php echo $userName; ?></option>
+            </div>
+          </div>
+          <div id="bugs-filters" class="collapse">
+            <div class="form-group visible-xs">
+              <div class="input-group">
+                <div class="input-group-addon">
+                  <i class="fa fa-search"></i>
+                </div>
+                <input type="search" class="form-control" placeholder="<?php echo $l['LB_TITLE']; ?>" data-column="title" data-compare-operator="contains">
+              </div>
+            </div>
+            <div class="form-group">
+              <div class="input-group">
+                <div class="input-group-addon">
+                  <i class="fa fa-user"></i>
+                </div>
+                <select class="form-control o-select2" data-column="assigned_to" data-placeholder="<?php _e('Assignee', 'upstream'); ?>" multiple>
+                  <option value></option>
+                  <option value="__none__"><?php _e('Nobody', 'upstream'); ?></option>
+                  <option value="<?php echo $currentUserId; ?>"><?php _e('Me', 'upstream'); ?></option>
+                  <optgroup label="<?php _e('Users'); ?>">
+                    <?php foreach ($users as $user_id => $userName): ?>
+                      <?php if ($user_id === $currentUserId) continue; ?>
+                      <option value="<?php echo $user_id; ?>"><?php echo $userName; ?></option>
+                      <?php endforeach; ?>
+                  </optgroup>
+                </select>
+              </div>
+            </div>
+            <div class="form-group">
+              <div class="input-group">
+                <div class="input-group-addon">
+                  <i class="fa fa-asterisk"></i>
+                </div>
+                <select class="form-control o-select2" data-column="severity" data-placeholder="<?php _e('Severity', 'upstream'); ?>" multiple>
+                  <option value></option>
+                  <option value="__none__"><?php _e('None', 'upstream'); ?></option>
+                  <optgroup label="<?php _e('Severity', 'upstream'); ?>">
+                    <?php foreach ($severities as $severity): ?>
+                    <option value="<?php echo $severity['name']; ?>"><?php echo $severity['name']; ?></option>
                     <?php endforeach; ?>
-                </optgroup>
-              </select>
-            </div>
-          </div>
-          <div class="form-group">
-            <div class="input-group">
-              <div class="input-group-addon">
-                <i class="fa fa-asterisk"></i>
+                  </optgroup>
+                </select>
               </div>
-              <select class="form-control o-select2" data-column="severity" data-placeholder="<?php _e('Severity', 'upstream'); ?>">
-                <option value></option>
-                <option value="__none__"><?php _e('None', 'upstream'); ?></option>
-                <optgroup label="<?php _e('Severity', 'upstream'); ?>">
-                  <?php foreach ($bugsSeverities as $severity): ?>
-                  <option value="<?php echo $severity['name']; ?>"><?php echo $severity['name']; ?></option>
-                  <?php endforeach; ?>
-                </optgroup>
-              </select>
             </div>
-          </div>
-          <div class="form-group">
-            <div class="input-group">
-              <div class="input-group-addon">
-                <i class="fa fa-bookmark"></i>
+            <div class="form-group">
+              <div class="input-group">
+                <div class="input-group-addon">
+                  <i class="fa fa-bookmark"></i>
+                </div>
+                <select class="form-control o-select2" data-column="status" data-placeholder="<?php _e('Status', 'upstream'); ?>" multiple>
+                  <option value></option>
+                  <option value="__none__"><?php _e('None', 'upstream'); ?></option>
+                  <optgroup label="<?php _e('Status', 'upstream'); ?>">
+                    <?php foreach ($statuses as $status): ?>
+                    <option value="<?php echo $status['name']; ?>"><?php echo $status['name']; ?></option>
+                    <?php endforeach; ?>
+                  </optgroup>
+                </select>
               </div>
-              <select class="form-control o-select2" data-column="status" data-placeholder="<?php _e('Status', 'upstream'); ?>">
-                <option value></option>
-                <option value="__none__"><?php _e('None', 'upstream'); ?></option>
-                <optgroup label="<?php _e('Status', 'upstream'); ?>">
-                  <?php foreach ($bugsStatuses as $status): ?>
-                  <option value="<?php echo $status['name']; ?>"><?php echo $status['name']; ?></option>
-                  <?php endforeach; ?>
-                </optgroup>
-              </select>
             </div>
-          </div>
-          <div class="form-group">
-            <div class="input-group">
-              <div class="input-group-addon">
-                <i class="fa fa-calendar"></i>
+            <div class="form-group">
+              <div class="input-group">
+                <div class="input-group-addon">
+                  <i class="fa fa-calendar"></i>
+                </div>
+                <input type="text" class="form-control o-datepicker" placeholder="<?php echo $l['LB_DUE_DATE']; ?>" id="tasks-filter-due_date_from">
               </div>
-              <input type="text" class="form-control o-datepicker" placeholder="<?php echo $l['LB_DUE_DATE']; ?> <?php echo $l['LB_DUE_DATE']; ?>" id="tasks-filter-due_date_from">
-            </div>
-            <input type="hidden" id="tasks-filter-due_date_from_timestamp" data-column="due_date" data-compare-operator=">=">
-          </div>
-          <div class="form-group">
-            <div class="btn-group">
-              <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                <i class="fa fa-download"></i>
-                <span class="caret"></span>
-              </button>
-              <ul class="dropdown-menu dropdown-menu-right">
-                <li>
-                  <a href="#" data-action="export" data-type="txt">
-                    <i class="fa fa-file-text-o"></i>&nbsp;&nbsp;<?php _e('Plain Text', 'upstream'); ?>
-                  </a>
-                </li>
-                <li>
-                  <a href="#" data-action="export" data-type="csv">
-                    <i class="fa fa-file-code-o"></i>&nbsp;&nbsp;<?php _e('CSV', 'upstream'); ?>
-                  </a>
-                </li>
-              </ul>
+              <input type="hidden" id="tasks-filter-due_date_from_timestamp" data-column="due_date" data-compare-operator=">=">
             </div>
           </div>
         </form>
-        <table
-          id="bugs"
-          class="o-data-table table table-striped table-bordered table-responsive is-orderable"
-          cellspacing="0"
-          width="100%"
-          data-type="bug"
-          data-ordered-by="start_date"
-          data-order-dir="DESC">
-          <thead>
-            <tr scope="row">
-              <th scope="col" class="is-clickable is-orderable" data-column="title" role="button" style="width: 25%;">
-                <?php _e('Title', "Task's title", 'upstream'); ?>
-                <span class="pull-right o-order-direction">
-                  <i class="fa fa-sort"></i>
-                </span>
-              </th>
-              <th scope="col" class="is-orderable" data-column="assigned_to" role="button">
-                <?php _e('Assigned To', 'upstream'); ?>
-                <span class="pull-right o-order-direction">
-                  <i class="fa fa-sort"></i>
-                </span>
-              </th>
-              <th scope="col" class="is-orderable" data-column="severity" role="button">
-                <?php _e('Severity', 'upstream'); ?>
-                <span class="pull-right o-order-direction">
-                  <i class="fa fa-sort"></i>
-                </span>
-              </th>
-              <th scope="col" class="is-orderable" data-column="status" role="button">
-                <?php _e('Status', 'upstream'); ?>
-                <span class="pull-right o-order-direction">
-                  <i class="fa fa-sort"></i>
-                </span>
-              </th>
-              <th scope="col" class="is-orderable" data-column="due_date" role="button">
-                <?php _e('Due Date', 'upstream'); ?>
-                <span class="pull-right o-order-direction">
-                  <i class="fa fa-sort"></i>
-                </span>
-              </th>
-              <th scope="col" data-column="file" data-type="file">
-                <?php _e('File', 'upstream'); ?>
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            <?php foreach ($rowset as $row): ?>
-            <tr class="is-expandable is-filtered" data-id="<?php echo $row['id']; ?>" aria-expanded="false">
-              <td class="is-clickable" role="button">
-                <i class="fa fa-angle-right"></i>&nbsp;
-                <span data-column="title" data-value="<?php echo $row['title']; ?>"><?php echo $row['title']; ?></span>
-              </td>
-              <td data-column="assigned_to" data-value="<?php echo (int)$row['assigned_to'] > 0 ? $row['assigned_to'] : '__none__'; ?>">
-                <?php if ((int)$row['assigned_to'] > 0): ?>
-                    <?php if (isset($users[$row['assigned_to']])): ?>
-                    <?php echo $users[$row['assigned_to']]; ?>
-                    <?php else: ?>
-                    <i class="s-text-color-darkred"><?php echo $l['MSG_INVALID_USER']; ?></i>
-                    <?php endif; ?>
-                <?php else: ?>
-                <i class="s-text-color-gray"><?php echo $l['LB_NONE']; ?></i>
-                <?php endif; ?>
-              </td>
-              <td data-column="severity" data-value="<?php echo !empty($row['severity']) ? $row['severity'] : '__none__'; ?>">
-                <?php if (!empty($row['severity'])): ?>
-                <?php echo $row['severity']; ?>
-                <?php else: ?>
-                <i class="s-text-color-gray"><?php echo $l['LB_NONE']; ?></i>
-                <?php endif; ?>
-              </td>
-              <td data-column="status" data-value="<?php echo !empty($row['status']) ? $row['status'] : '__none__'; ?>">
-                <?php if (!empty($row['status'])): ?>
-                <?php echo $row['status']; ?>
-                <?php else: ?>
-                <i class="s-text-color-gray"><?php echo $l['LB_NONE']; ?></i>
-                <?php endif; ?>
-              </td>
-              <td data-column="due_date" data-value="<?php echo $row['due_date']; ?>">
-                <?php if ($row['due_date'] > 0): ?>
-                  <?php echo upstream_convert_UTC_date_to_timezone($row['due_date'], false); ?>
-                <?php else: ?>
-                  <i class="s-text-color-gray"><?php echo $l['LB_NONE']; ?></i>
-                <?php endif; ?>
-              </td>
-              <td data-column="file">
-                <?php
-                if (strlen($row['file']) > 0) {
-                  if (@is_array(getimagesize($row['file']))) {
-                    printf(
-                      '<a href="%s" target="_blank">
-                        <img class="avatar itemfile" width="32" height="32" src="%1$s">
-                      </a>',
-                      $row['file']
-                    );
-                  } else {
-                    printf(
-                      '<a href="%s" target="_blank">%s</a>',
-                      $row['file'],
-                      basename($row['file'])
-                    );
-                  }
-                } else {
-                  echo '<i class="s-text-color-gray">'. $l['LB_NONE'] .'</i>';
-                }
-                ?>
-              </td>
-            </tr>
-            <tr data-parent="<?php echo $row['id']; ?>" style="display: none;">
-              <td colspan="6">
-                <div class="hidden-xs">
-                  <div class="form-group">
-                    <label><?php echo $l['LB_DESCRIPTION']; ?></label>
-                    <?php
-                    if (isset($row['description'])
-                        && strlen($row['description']) > 0
-                    ): ?>
-                    <blockquote><?php echo $row['description']; ?></blockquote>
-                    <?php else: ?>
-                    <p>
-                      <i class="s-text-color-gray"><?php echo $l['LB_NONE']; ?></i>
-                    </p>
-                    <?php endif; ?>
-                  </div>
-                  <?php if ($areCommentsEnabled): ?>
-                  <div class="form-group">
-                    <label><?php echo $l['LB_COMMENTS']; ?></label>
-                    <?php echo upstreamRenderCommentsBox($row['id'], 'bug', $projectId, false, true); ?>
-                  </div>
-                  <?php endif; ?>
-                </div>
-              </td>
-            </tr>
-            <?php endforeach; ?>
-          </tbody>
-        </table>
+        <?php \UpStream\WIP\renderTable($tableSettings, $columnsSettings, $rowset, 'bug', $projectId); ?>
       </div>
     </div>
   </div>
