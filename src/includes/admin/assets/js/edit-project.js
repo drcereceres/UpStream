@@ -1149,6 +1149,16 @@
     });
 
     function fetchAllComments() {
+      // Fix misplaced comments wrappers.
+      $('.up-o-tab-content.up-c-tab-content-data .up-c-tab-content-comments').each(function() {
+        var self = $(this);
+        var tabsWrapper = $(self.parents('.up-c-tabs-content'));
+
+        if (tabsWrapper.length > 0) {
+          tabsWrapper.append(self);
+        }
+      });
+
       $.ajax({
         type    : 'GET',
         url     : ajaxurl,

@@ -139,6 +139,7 @@ and this project adheres to [Semantic Versioning](http://semver.org).
 = [1.13.7] - @todo =
 
 Fixed:
+* Fixed some Comments tabs not working on admin
 * Fixed some potential PHP errors and warnings
 
 Removed:
