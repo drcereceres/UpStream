@@ -198,19 +198,6 @@ final class UpStream_Metaboxes_Clients
     }
 
     /**
-     * Renders the modal's html which is used to migrate legacy client users.
-     *
-     * @since   1.11.0
-     * @access  private
-     * @static
-     * @deprecated  1.13.6
-     */
-    private static function renderMigrateUserModal()
-    {
-        _doing_it_wrong(__FUNCTION__, 'This method is deprecated and it will be removed on future releases.', '1.13.5');
-    }
-
-    /**
      * Renders the users metabox.
      * This is where all client users are listed.
      *
@@ -299,22 +286,6 @@ final class UpStream_Metaboxes_Clients
             self::$postType,
             'normal'
         );
-    }
-
-    /**
-     * It defines the Legacy Users metabox.
-     * This metabox lists all legacy client users that couldn't be automatically
-     * migrated for some reason, which is also displayed here.
-     *
-     * If there's no legacy user to be migrated, the box is not shown.
-     *
-     * @since   1.11.0
-     * @static
-     * @deprecated  1.13.6
-     */
-    public static function createLegacyUsersMetabox()
-    {
-        _doing_it_wrong(__FUNCTION__, 'This method is deprecated and it will be removed on future releases.', '1.13.5');
     }
 
     /**
@@ -682,77 +653,6 @@ final class UpStream_Metaboxes_Clients
             }
 
             $response['success'] = true;
-        } catch (\Exception $e) {
-            $response['err'] = $e->getMessage();
-        }
-
-        echo wp_json_encode($response);
-
-        wp_die();
-    }
-
-    /**
-     * Ajax endpoint responsible for migrating a given Legacy Client User.
-     *
-     * @since   1.11.0
-     * @static
-     * @deprecated  1.13.6
-     */
-    public static function migrateLegacyUser()
-    {
-        header('Content-Type: application/json');
-
-        global $wpdb;
-
-        $response = array(
-            'success' => false,
-            'data'    => array(),
-            'err'     => null
-        );
-
-        try {
-            if (!upstream_admin_permissions('edit_clients')) {
-                throw new \Exception(__("You're not allowed to do this.", 'upstream'));
-            }
-
-            _doing_it_wrong(__FUNCTION__, 'This method is deprecated and it will be removed on future releases.', '1.13.5');
-        } catch (\Exception $e) {
-            $response['err'] = $e->getMessage();
-        }
-
-        echo wp_json_encode($response);
-
-        wp_die();
-    }
-
-    /**
-     * Ajax endpoint responsible for discard a given Legacy Client User.
-     *
-     * @since   1.11.0
-     * @static
-     * @deprecated  1.13.6
-     */
-    public static function discardLegacyUser()
-    {
-        header('Content-Type: application/json');
-
-        global $wpdb;
-
-        $response = array(
-            'success' => false,
-            'err'     => null
-        );
-
-        try {
-            if (!upstream_admin_permissions('edit_clients')) {
-                throw new \Exception(__("You're not allowed to do this.", 'upstream'));
-            }
-
-            if (empty($_POST) || !isset($_POST['client'])) {
-                throw new \Exception(__("Invalid UpStream Client ID.", 'upstream'));
-            }
-
-            _doing_it_wrong(__FUNCTION__, 'This method is deprecated and it will be removed on future releases.', '1.13.5');
         } catch (\Exception $e) {
             $response['err'] = $e->getMessage();
         }

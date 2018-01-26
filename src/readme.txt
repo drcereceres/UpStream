@@ -138,12 +138,13 @@ and this project adheres to [Semantic Versioning](http://semver.org).
 
 = [1.13.7] - @todo =
 
+Removed:
+* Remove notice about recent changes made on Clients
+* Remove deprecated code
+
 Fixed:
 * Fixed some Comments tabs not working on admin
 * Fixed some potential PHP errors and warnings
-
-Removed:
-* Remove notice about recent changes made on Clients
 
 = [1.13.6] - 2018-01-15 =
 
