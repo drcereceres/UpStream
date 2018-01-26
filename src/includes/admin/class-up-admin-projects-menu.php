@@ -134,7 +134,7 @@ class UpStream_Admin_Projects_Menu {
                 }
             }
 
-            $upstreamSubmenu = $newUpStreamSubmenu;
+            $upstreamSubmenu = apply_filters('upstream:custom_menu_order', $newUpStreamSubmenu);
         }
 
         return $menu;
