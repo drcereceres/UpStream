@@ -138,6 +138,9 @@ and this project adheres to [Semantic Versioning](http://semver.org).
 
 = [@todo: WIP] =
 
+Fixed:
+* Fixed potential PHP errors and warnings
+
 = [1.13.6] - 2018-01-15 =
 
 Changed:
