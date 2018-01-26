@@ -1677,7 +1677,7 @@ class UpStream_Metaboxes_Projects {
             $itemsTypes = array('milestones', 'tasks', 'bugs', 'files');
             foreach ($itemsTypes as $itemType) {
                 $itemTypeSingular = rtrim($itemType, 's');
-                $rowset = aray_filter((array)get_post_meta($project_id, '_upstream_project_' . $itemType, true));
+                $rowset = array_filter((array)get_post_meta($project_id, '_upstream_project_' . $itemType, true));
                 if (count($rowset) > 0) {
                     foreach ($rowset as $row) {
                         if (!is_array($row)
