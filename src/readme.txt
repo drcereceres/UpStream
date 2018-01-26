@@ -136,6 +136,11 @@ UpStream does not use the existing styling of your theme. The features and the v
 The format is based on [Keep a Changelog](http://keepachangelog.com)
 and this project adheres to [Semantic Versioning](http://semver.org).
 
+= [@todo: WIP] =
+
+Fixed:
+* Fixed some Comments tabs not working on admin
+
 = [1.13.6] - 2018-01-15 =
 
 Changed:
