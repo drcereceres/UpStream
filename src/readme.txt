@@ -4,7 +4,7 @@ Tags: project, manage, management, project management, project manager, wordpres
 Requires at least: 4.5
 Tested up to: 4.9
 Requires PHP: 5.6
-Stable tag: 1.13.6
+Stable tag: 1.13.7
 License: GPL-3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -155,6 +155,16 @@ Deprecated:
 
 Removed:
 * Frontend tables no longer use Datatable lib due lack of flexibility and performance issues
+
+= [1.13.7] - 2018-01-26 =
+
+Removed:
+* Remove notice about recent changes made on Clients
+* Remove deprecated code
+
+Fixed:
+* Fixed some Comments tabs not working on admin
+* Fixed some potential PHP errors and warnings
 
 = [1.13.6] - 2018-01-15 =
 
