@@ -196,9 +196,15 @@ function upstream_user_data( $data = 0, $ignore_current = false ) {
     $isBuddyPressRunning = is_plugin_active('buddypress/bp-loader.php') && class_exists('BuddyPress') && function_exists('bp_core_fetch_avatar');
 
     if( $wp_user && is_object( $wp_user ) ) {
+        $role = '';
 
-        // get the role
-        $role = ucwords( $wp_user->roles[0] );
+        if (isset($wp_user->roles)
+            && is_array($wp_user->roles)
+            && count($wp_user->roles) > 0
+        ) {
+            $role = ucwords(array_values($wp_user->roles)[0]);
+        }
+
         if( in_array( 'upstream_user', $wp_user->roles ) ) {
             $role = sprintf( __( '%s User', 'upstream' ), upstream_project_label() );
         }
