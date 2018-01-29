@@ -1,691 +1,315 @@
 <?php
+namespace UpStream\WIP;
 
-// Exit if accessed directly
-if ( ! defined( 'ABSPATH' ) ) exit;
+function arrayToAttrs($data)
+{
+    $attrs = array();
 
+    foreach ($data as $attrKey => $attrValue) {
+        $attrs[] = sprintf('%s="%s"', $attrKey, esc_attr($attrValue));
+    }
 
-/*
- * Data Types: text, name, date, textarea, select, radio, checkbox, id, actions, files, tasks
- * Note that these are not actual field 'types', but rather a way
- * to format the output of data correctly.
- */
+    return implode(' ', $attrs);
+}
 
-/*
- * The frontend table settings for milestones.
- * These settings alter the output for each row and column in the table.
- */
-function upstream_milestone_table_settings() {
-
-    /*
-     * display | bool | True to show this column in the table
-     * type | string | The type of data this column has. This ensures we format the data correctly
-     * heading | string | The text to be displayed as the column heading
-     * heading_class | string | A custom class for the column heading
-     * row_class | string | A custom class for the row
-     */
-
-    $columnsSchema = array(
-        'id' => array(
-            'display'       => false,
-            'type'          => 'text',
-            'heading'       => '',
-            'heading_class' => '',
-            'row_class'     => '',
-        ),
-        'created_by' => array(
-            'display'       => false,
-            'type'          => 'name',
-            'heading'       => '',
-            'heading_class' => '',
-            'row_class'     => '',
-        ),
-        'created_time' => array(
-            'display'       => false,
-            'type'          => 'text',
-            'heading'       => '',
-            'heading_class' => '',
-            'row_class'     => '',
-        ),
-        'milestone' => array(
-            'display'       => true,
-            'type'          => 'text',
-            'heading'       => upstream_milestone_label(),
-            'heading_class' => '',
-            'row_class'     => 'test',
+function getMilestonesTableColumns()
+{
+    $tableColumns = array(
+        'milestone'   => array(
+            'type'        => 'raw',
+            'isOrderable' => true,
+            'label'       => upstream_milestone_label()
         ),
         'assigned_to' => array(
-            'display'       => true,
-            'type'          => 'name',
-            'heading'       => __( 'Assigned To', 'upstream' ),
-            'heading_class' => '',
-            'row_class'     => '',
+            'type'        => 'user',
+            'isOrderable' => true,
+            'label'       => __('Assigned To', 'upstream')
         ),
-        'tasks' => array(
-            'display'       => true,
-            'type'          => 'tasks',
-            'heading'       => upstream_task_label_plural(),
-            'heading_class' => '',
-            'row_class'     => '',
+        'tasks'       => array(
+            'type'  => 'custom',
+            'label' => upstream_task_label_plural(),
+            'renderCallback' => function($columnName, $columnValue, $column, $row, $rowType, $projectId) {
+                $tasksOpenCount = isset($row['task_open']) ? (int)$row['task_open'] : 0;
+                $tasksCount = isset($row['task_count']) ? (int)$row['task_count'] : 0;
+
+                return sprintf(
+                    '%d %s / %d %s',
+                    $tasksOpenCount,
+                    _x('Open', '@todo', 'upstream'),
+                    $tasksCount,
+                    _x('Total', '@todo', 'upstream')
+                );
+            }
         ),
-        'progress' => array(
-            'display'       => true,
-            'type'          => 'text',
-            'heading'       => __( 'Progress', 'upstream' ),
-            'heading_class' => '',
-            'row_class'     => '',
+        'progress'    => array(
+            'type'        => 'percentage',
+            'isOrderable' => true,
+            'label'       => __('Progress', 'upstream')
         ),
-        'start_date' => array(
-            'display'       => true,
-            'type'          => 'date',
-            'heading'       => __( 'Start Date', 'upstream' ),
-            'heading_class' => '',
-            'row_class'     => '',
+        'start_date'  => array(
+            'type'        => 'date',
+            'isOrderable' => true,
+            'label'       => __('Start Date', 'upstream')
         ),
-        'end_date' => array(
-            'display'       => true,
-            'type'          => 'date',
-            'heading'       => __( 'End Date', 'upstream' ),
-            'heading_class' => '',
-            'row_class'     => '',
-        ),
-        'notes' => array(
-            'display'       => true,
-            'type'          => 'textarea',
-            'heading'       => __( 'Notes', 'upstream' ),
-            'heading_class' => 'none',
-            'row_class'     => '',
+        'end_date'    => array(
+            'type'        => 'date',
+            'isOrderable' => true,
+            'label'       => __('End Date', 'upstream')
         )
     );
 
-    if (upstream_disable_tasks()) {
-        unset($columnsSchema['tasks']);
-    }
-
-    $allowComments = upstreamAreCommentsEnabledOnMilestones();
-    if ($allowComments) {
-        $columnsSchema['comments'] = array(
-            'display'       => true,
-            'type'          => 'comments',
-            'heading'       => __('Comments'),
-            'heading_class' => 'none',
-            'row_class'     => "",
-            'item_type'     => "milestone"
-        );
-    }
-
-    $settings = apply_filters( 'upstream_milestone_table_settings', $columnsSchema);
-
-    return $settings;
-
-}
-
-/*
- * The frontend table settings for tasks.
- * These settings alter the output for each row and column in the table.
- */
-function upstream_task_table_settings() {
-
-    /*
-     * display | bool | True to show this column in the table
-     * type | string | The type of data this column has. This ensures we format the data correctly
-     * heading | string | The text to be displayed as the column heading
-     * heading_class | string | A custom class for the column heading
-     * row_class | string | A custom class for the row
-     */
-    $tableSettings = array(
-        'id' => array(
-            'display'       => false,
-            'type'          => 'text',
-            'heading'       => '',
-            'heading_class' => '',
-            'row_class'     => '',
+    $hiddenTableColumns = array(
+        'notes'       => array(
+            'type'     => 'wysiwyg',
+            'label'    => __('Notes', 'upstream'),
+            'isHidden' => true
         ),
-        'created_by' => array(
-            'display'       => false,
-            'type'          => 'name',
-            'heading'       => '',
-            'heading_class' => '',
-            'row_class'     => '',
-        ),
-        'created_time' => array(
-            'display'       => false,
-            'type'          => 'text',
-            'heading'       => '',
-            'heading_class' => '',
-            'row_class'     => '',
-        ),
-        'title' => array(
-            'display'       => true,
-            'type'          => 'text',
-            'heading'       => __('Title', 'upstream'),
-            'heading_class' => '',
-            'row_class'     => '',
-        ),
-        'assigned_to' => array(
-            'display'       => true,
-            'type'          => 'name',
-            'heading'       => __( 'Assigned To', 'upstream' ),
-            'heading_class' => '',
-            'row_class'     => '',
-        ),
-        'status' => array(
-            'display'       => true,
-            'type'          => 'text',
-            'heading'       => __( 'Status', 'upstream' ),
-            'heading_class' => '',
-            'row_class'     => '',
-        ),
-        'progress' => array(
-            'display'       => true,
-            'type'          => 'text',
-            'heading'       => __( 'Progress', 'upstream' ),
-            'heading_class' => '',
-            'row_class'     => '',
-        ),
-        'milestone' => array(
-            'display'       => true,
-            'type'          => 'id',
-            'heading'       => upstream_milestone_label(),
-            'heading_class' => '',
-            'row_class'     => '',
-        ),
-        'start_date' => array(
-            'display'       => true,
-            'type'          => 'date',
-            'heading'       => __( 'Start Date', 'upstream' ),
-            'heading_class' => '',
-            'row_class'     => '',
-        ),
-        'end_date' => array(
-            'display'       => true,
-            'type'          => 'date',
-            'heading'       => __( 'End Date', 'upstream' ),
-            'heading_class' => '',
-            'row_class'     => '',
-        ),
-        'notes' => array(
-            'display'       => true,
-            'type'          => 'textarea',
-            'heading'       => __( 'Notes', 'upstream' ),
-            'heading_class' => 'none',
-            'row_class'     => '',
+        'comments'    => array(
+            'type'     => 'comments',
+            'label'    => __('Comments'),
+            'isHidden' => true
         )
     );
 
-    if (upstream_are_milestones_disabled() || upstream_disable_milestones()) {
-        unset($tableSettings['milestone']);
-    }
-
-    $allowComments = upstreamAreCommentsEnabledOnTasks();
-    if ($allowComments) {
-        $tableSettings['comments'] = array(
-            'display'       => true,
-            'type'          => 'comments',
-            'heading'       => __('Comments'),
-            'heading_class' => 'none',
-            'row_class'     => "",
-            'item_type'     => "task"
-        );
-    }
-
-    $settings = apply_filters('upstream_task_table_settings', $tableSettings);
-
-    return $settings;
-}
-
-/*
- * The frontend table settings for bugs.
- * These settings alter the output for each row and column in the table.
- */
-function upstream_bug_table_settings() {
-
-    /*
-     * display | bool | True to show this column in the table
-     * type | string | The type of data this column has. This ensures we format the data correctly
-     * heading | string | The text to be displayed as the column heading
-     * heading_class | string | A custom class for the column heading
-     * row_class | string | A custom class for the row
-     */
-
-    $columnsSchema = array(
-        'id' => array(
-            'display'       => false,
-            'type'          => 'text',
-            'heading'       => '',
-            'heading_class' => '',
-            'row_class'     => '',
-        ),
-        'created_by' => array(
-            'display'       => false,
-            'type'          => 'name',
-            'heading'       => '',
-            'heading_class' => '',
-            'row_class'     => '',
-        ),
-        'created_time' => array(
-            'display'       => false,
-            'type'          => 'text',
-            'heading'       => '',
-            'heading_class' => '',
-            'row_class'     => '',
-        ),
-        'title' => array(
-            'display'       => true,
-            'type'          => 'text',
-            'heading'       => __('Title', 'upstream'),
-            'heading_class' => '',
-            'row_class'     => '',
-        ),
-        'assigned_to' => array(
-            'display'       => true,
-            'type'          => 'name',
-            'heading'       => __( 'Assigned To', 'upstream' ),
-            'heading_class' => '',
-            'row_class'     => '',
-        ),
-        'severity' => array(
-            'display'       => true,
-            'type'          => 'text',
-            'heading'       => __( 'Severity', 'upstream' ),
-            'heading_class' => '',
-            'row_class'     => '',
-        ),
-        'status' => array(
-            'display'       => true,
-            'type'          => 'text',
-            'heading'       => __( 'Status', 'upstream' ),
-            'heading_class' => '',
-            'row_class'     => '',
-        ),
-        'due_date' => array(
-            'display'       => true,
-            'type'          => 'date',
-            'heading'       => __( 'Due Date', 'upstream' ),
-            'heading_class' => '',
-            'row_class'     => '',
-        ),
-        'description' => array(
-            'display'       => true,
-            'type'          => 'textarea',
-            'heading'       => __( 'Description', 'upstream' ),
-            'heading_class' => 'none',
-            'row_class'     => '',
-        ),
-        'file' => array(
-            'display'       => true,
-            'type'          => 'file',
-            'heading'       => __( 'File', 'upstream' ),
-            'heading_class' => '',
-            'row_class'     => '',
-        )
+    $schema = array(
+        'visibleColumns' => $tableColumns,
+        'hiddenColumns'  => $hiddenTableColumns
     );
 
-    if (upstream_disable_files()) {
-        unset($columnsSchema['file']);
-    }
-
-    $allowComments = upstreamAreCommentsEnabledOnBugs();
-    if ($allowComments) {
-        $columnsSchema['comments'] = array(
-            'display'       => true,
-            'type'          => 'comments',
-            'heading'       => __('Comments'),
-            'heading_class' => 'none',
-            'row_class'     => "",
-            'item_type'     => "bug"
-        );
-    }
-
-    $settings = apply_filters( 'upstream_bug_table_settings', $columnsSchema);
-
-    return $settings;
-
+    return $schema;
 }
 
-
-/*
- * The frontend table settings for files.
- * These settings alter the output for each row and column in the table.
- */
-function upstream_file_table_settings() {
-
-    /*
-     * display | bool | True to show this column in the table
-     * type | string | The type of data this column has. This ensures we format the data correctly
-     * heading | string | The text to be displayed as the column heading
-     * heading_class | string | A custom class for the column heading
-     * row_class | string | A custom class for the row
-     */
-    $settings = array(
-        'id' => array(
-            'display'       => false,
-            'type'          => 'text',
-            'heading'       => '',
-            'heading_class' => '',
-            'row_class'     => '',
-        ),
-        'created_by' => array(
-            'display'       => false,
-            'type'          => 'name',
-            'heading'       => '',
-            'heading_class' => '',
-            'row_class'     => '',
-        ),
-        'created_time' => array(
-            'display'       => false,
-            'type'          => 'text',
-            'heading'       => '',
-            'heading_class' => '',
-            'row_class'     => '',
-        ),
-        'title' => array(
-            'display'       => true,
-            'type'          => 'text',
-            'heading'       => __( 'Title', 'upstream' ),
-            'heading_class' => '',
-            'row_class'     => '',
-        ),
-        'description' => array(
-            'display'       => true,
-            'type'          => 'textarea',
-            'heading'       => __( 'Description', 'upstream' ),
-            'heading_class' => '',
-            'row_class'     => '',
-        ),
-        'file' => array(
-            'display'       => true,
-            'type'          => 'file',
-            'heading'       => __( 'File', 'upstream' ),
-            'heading_class' => '',
-            'row_class'     => '',
-        )
+function renderTableHeaderColumn($identifier, $data)
+{
+    $attrs = array(
+        'data-column' => $identifier,
+        'class'       => isset($data['class']) ? (is_array($data['class']) ? implode(' ', $data['class']) : $data['class']) : '',
     );
 
-    $allowComments = upstreamAreCommentsEnabledOnFiles();
-    if ($allowComments) {
-        $settings['comments'] = array(
-            'display'       => true,
-            'type'          => 'comments',
-            'heading'       => __('Comments'),
-            'heading_class' => 'none',
-            'row_class'     => "",
-            'item_type'     => "file"
-        );
+    $isHidden = isset($data['isHidden']) && (bool)$data['isHidden'];
+    if ($isHidden) return;
+
+    $isOrderable = isset($data['isOrderable']) && (bool)$data['isOrderable'];
+    if ($isOrderable) {
+        $attrs['class'] .= ' is-clickable is-orderable';
+        $attrs['role'] = 'button';
+        $attrs['scope'] = 'col';
     }
 
-    $settings = apply_filters('upstream_file_table_settings', $settings);
-
-    return $settings;
-
+    // @todo
+    // $attrs = apply_filters('', $attrs, $identifier);
+    ?>
+    <th <?php echo arrayToAttrs($attrs); ?>>
+      <?php echo isset($data['label']) ? $data['label'] : ''; ?>
+      <?php if ($isOrderable): ?>
+        <span class="pull-right o-order-direction">
+          <i class="fa fa-sort"></i>
+        </span>
+      <?php endif; ?>
+    </th>
+    <?php
 }
-
 
 /*
- * Outputs the table header data for each group,
- * depending on the settings for each group.
- */
-function upstream_output_table_header( $table ) {
+$table = array(
+    'id'              => 'milestones',
+    'type'            => 'milestone',
+    'data-ordered-by' => 'start_date',
+    'data-order-dir'  => 'DESC'
+);
+*/
 
-    $output = null;
-
-    switch ( $table ) {
-        case 'milestones':
-            $settings   = upstream_milestone_table_settings();
-            break;
-        case 'tasks':
-            $settings   = upstream_task_table_settings();
-            break;
-        case 'bugs':
-            $settings   = upstream_bug_table_settings();
-            break;
-        case 'files':
-            $settings   = upstream_file_table_settings();
-            break;
-    }
-
-    if( isset( $settings ) ) :
-
-        $output .= '<tr>';
-        foreach ($settings as $key => $setting) {
-
-            if( isset( $setting['display'] ) && ! $setting['display'] )
-                continue;
-
-            $attrs = array();
-            if (isset($setting['attributes'])
-                && is_array($setting['attributes'])
-            ) {
-                foreach ($setting['attributes'] as $attrKey => $attrValue) {
-                    $attrs[] = sprintf('%s="%s"', $attrKey, esc_attr($attrValue));
-                }
-            }
-
-            $output .= "<th class='" . esc_attr( $setting['heading_class'] ) . "'" . (count($attrs) > 0 ? implode(' ', $attrs) : '') . ">" . $setting['heading'] . "</th>";
-
+function renderTableHeader($columns = array())
+{
+    ob_start(); ?>
+    <thead>
+      <?php if (!empty($columns)): ?>
+      <tr scope="row">
+        <?php
+        foreach ($columns as $columnIdentifier => $column) {
+            echo renderTableHeaderColumn($columnIdentifier, $column);
         }
-        $output .= '</tr>';
+        ?>
+      </tr>
+      <?php endif; ?>
+    </thead>
+    <?php
+    $html = ob_get_contents();
+    ob_end_clean();
 
-    endif;
-
-    return $output;
-
+    echo $html;
 }
 
-function upstream_output_table_rows( $id, $table, $filterRowsetByCurrentUser = false ) {
-    // Make sure we're dealing with a bool-typed var.
-    $filterRowsetByCurrentUser = (bool)$filterRowsetByCurrentUser;
+function renderTableColumnValue($columnName, $columnValue, $column, $row, $rowType, $projectId)
+{
+    $html = sprintf('<i class="s-text-color-gray">%s</i>', __('none', 'upstream'));
 
-    // Check if we should try to filter data by the current logged in user (comparing with `assigned_to` column).
-    if ($filterRowsetByCurrentUser) {
-        $currentUserId = (int)get_current_user_id();
-        // Check if the user was logged via backend or frontend.
-        if ($currentUserId <= 0 && isset($_SESSION['upstream']['user_id'])) {
-            $currentUserId = (int)$_SESSION['upstream']['user_id'];
+    $columnType = isset($column['type']) ? $column['type'] : 'raw';
+    if ($columnType === 'user') {
+        $columnValue = (int)$columnValue;
+
+        if ($columnValue > 0) {
+            // @todo: cache?
+            $user = get_userdata($columnValue);
+
+            if ($user instanceof \WP_User) {
+                $html = esc_html($user->display_name);
+            } else {
+                $html = sprintf('<i class="@todo">%s</i>', __('invalid user', 'upstream'));
+            }
+
+            unset($user);
         }
-    }
-
-    switch ( $table ) {
-        case 'milestones':
-            $data       = upstream_are_milestones_disabled($id) || upstream_disable_milestones() ? array() : upstream_project_milestones($id);
-            $settings   = upstream_milestone_table_settings();
-            break;
-        case 'tasks':
-            $data       = upstream_are_tasks_disabled($id) || upstream_disable_tasks() ? array() : upstream_project_tasks($id);
-            $settings   = upstream_task_table_settings();
-            $status_c   = upstream_project_task_statuses_colors();
-            break;
-        case 'bugs':
-            $data       = upstream_are_bugs_disabled($id) || upstream_disable_bugs() ? array() : upstream_project_bugs($id);
-            $settings   = upstream_bug_table_settings();
-            $status_c   = upstream_project_bug_statuses_colors();
-            $severity_c = upstream_project_bug_severity_colors();
-            break;
-        case 'files':
-            $data       = upstream_disable_files() ? array() : upstream_project_files($id);
-            $settings   = upstream_file_table_settings();
-            break;
-    }
-
-    if( empty( $data[0] ) )
-        return;
-
-    $data = array_reverse( $data );
-    $output = null;
-
-    foreach ( $data as $item ) {
-        // Check if $item should be skipped if we want to filter data by the current logged in user.
-        if ($filterRowsetByCurrentUser && (!isset($item['assigned_to']) || ($currentUserId > 0 && (int)$item['assigned_to'] !== $currentUserId))) {
-            continue;
+    } else if ($columnType === 'percentage') {
+        $html = sprintf('%d%%', (int)$columnValue);
+    } else if ($columnType === 'date') {
+        $columnValue = (int)$columnValue;
+        if ($columnValue > 0) {
+            $html = upstream_convert_UTC_date_to_timezone($columnValue, false);
         }
-
-        $tr = '<tr>';
-        foreach ($settings as $key => $setting) {
-            if( isset( $setting['display'] ) && ! $setting['display'] )
-                continue;
-
-            if( ! isset( $item[$key] ) )
-                $item[$key] = '';
-
-            $order = null;
-
-            if (is_array($item[$key])) {
-                $item[$key] = implode('#', $item[$key]);
-            }
-
-            // get the raw value before formatting
-            // will be used with the frontend edit plugin for getting actual values via JS
-            $data_value = maybe_serialize( $item[$key] );
-
-            // if we have a date field, set the data-order attribute to allow proper ordering in the table
-            if( $setting['type'] == 'date' ) {
-                $order = 'data-order="' . esc_attr( $data_value ) . '"';
-            }
-            if( $setting['type'] == 'file' ) {
-                $data_value = '';
-            }
-
-            // now process and format the data for proper output
-            $field_data = upstream_format_table_data( $item, $key, $setting );
-
-            $isValueEmpty = strlen($field_data) === 0;
-
-            if ($key === 'status'
-                || $key === 'severity'
-            ) {
-                $collectionKeyName = $key . '_c';
-                $color = isset(${$collectionKeyName}[$field_data])
-                    ? ${$collectionKeyName}[$field_data]
-                    : 'transparent';
-                if (!$isValueEmpty) {
-                    $field_data = sprintf(
-                        '<span class="btn btn-xs" style="background: %s">%s</span>',
-                        esc_attr($color),
-                        esc_html($field_data)
-                    );
-                }
-            }
-
-            if ($isValueEmpty) {
-                $field_data = '<i>' . __('none', 'upstream') . '</i>';
-            }
-
-            $td = '<td data-name="' . esc_attr( $key ) . '" ' . $order . ' data-value="' . esc_attr( $data_value ) . '" class="' . esc_attr( $setting['row_class'] ) . '">' . $field_data . '</td>';
-
-            $tr .= apply_filters('upstream:frontend:renderGridDataRowColumn', $td, $key, $setting, $item, $table);
-        }
-
-        $tr .= '</tr>';
-
-        $tr = apply_filters('upstream:frontend:renderGridDataRow', $tr, $item, $table);
-
-        $output .= $tr;
-
-    }
-
-    return $output;
-
-}
-
-
-
-/**
- * format the data for output on the frontend tables
- *
- * @param  $item array contains the meta key => value pairs for the item being formatted
- * @param  $key string the column key (such as progress, assigned_to, id, end_date etc )
- * @param  $setting array the table settings for this field
- */
-function upstream_format_table_data( $item, $key, $setting ) {
-
-    $field_data = isset( $item[$key] ) ? $item[$key] : null;
-    $output     = '';
-    $project_id = upstream_post_id();
-
-    // type: name
-    if ($setting['type'] === 'name') {
-        if (empty($field_data)) {
-            $output = '<i>' . __('none', 'upstream') . '</i>';
+    } else if ($columnType === 'wysiwyg') {
+        $columnValue = trim((string)$columnValue);
+        if (strlen($columnValue) > 0) {
+            $html = sprintf('<blockquote>%s</blockquote>', $columnValue);
         } else {
-            $user = upstream_user_data( $field_data, true );
-            $output = $user['display_name'];
+            $html = '<br>' . $html;
+        }
+    } else if ($columnType === 'comments') {
+        $html = upstreamRenderCommentsBox($row['id'], $rowType, $projectId, false, true);
+    } else if ($columnType === 'custom') {
+        if (isset($column['renderCallback']) && is_callable($column['renderCallback'])) {
+            $html = call_user_func($column['renderCallback'], $columnName, $columnValue, $column, $row, $rowType, $projectId);
+        }
+    } else if ($columnType === 'file') {
+        if (strlen($columnValue) > 0) {
+          if (@is_array(getimagesize($columnValue))) {
+            $html = sprintf(
+              '<a href="%s" target="_blank">
+                <img class="avatar itemfile" width="32" height="32" src="%1$s">
+              </a>',
+              $columnValue
+            );
+          } else {
+            $html = sprintf(
+              '<a href="%s" target="_blank">%s</a>',
+              $columnValue,
+              basename($columnValue)
+            );
+          }
+        }
+    } else {
+        $columnValue = trim($columnValue);
+        if (strlen($columnValue) > 0) {
+            $html = esc_html($columnValue);
         }
     }
 
-    // type: date
-    if ($setting['type'] === 'date') {
-        $output = empty($field_data) ? '<i>' . __('none', 'upstream') . '</i>' : upstream_format_date($field_data);
-    }
+    // @todo: filter?
 
-    // type: text
-    if( $setting['type'] == 'text' && ! empty( $field_data ) ) {
-        $output = esc_html( $field_data );
-    }
+    echo $html;
+}
 
-    // type: radio
-    if( $setting['type'] == 'radio' && ! empty( $field_data ) ) {
-        $output = esc_html( $field_data );
-    }
+function renderTableBody($data, $visibleColumnsSchema, $hiddenColumnsSchema, $rowType, $projectId)
+{
+    $visibleColumnsSchemaCount = count($visibleColumnsSchema);
+    ob_start(); ?>
+    <tbody>
+      <?php if (count($data) > 0): ?>
+        <?php foreach ($data as $id => $row):
+        $rowAttrs = array(
+            'class'   => 'is-filtered',
+            'data-id' => $id
+        );
 
-    // type: checkbox
-    if( $setting['type'] == 'checkbox' && ! empty( $field_data ) ) {
-        $output = esc_html( $field_data );
-    }
-
-    // type: multicheck
-    if( $setting['type'] == 'multicheck' && ! empty( $field_data ) ) {
-        foreach ( $field_data as $key => $value ) {
-            $output .= esc_html( $value ) . '<br>';
+        if (!empty($hiddenColumnsSchema)) {
+            $rowAttrs['class'] .= ' is-expandable';
+            $rowAttrs['aria-expanded'] = 'false';
         }
-    }
 
-    // type: textarea
-    if( $setting['type'] == 'textarea' && ! empty( $field_data ) ) {
-        $field_data = preg_replace('/([^>]) *\r?\n(?! *<)/', '<br>', $field_data);
-        $output = wp_kses_post( $field_data );
-    }
+        $isFirst = true;
+        ?>
+        <tr <?php echo arrayToAttrs($rowAttrs); ?>>
+          <?php foreach ($visibleColumnsSchema as $columnName => $column):
+          $columnValue = isset($row[$columnName]) ? $row[$columnName] : null;
 
-    // type: id
-    if( $setting['type'] === 'id'){// && ! empty( $field_data ) ) {
-        if (empty($field_data)) {
-            $output = '<i>' . __('none', 'upstream') . '</i>';
-        } else {
-            $item = upstream_project_item_by_id( $project_id, $field_data );
-            $output = isset( $item['title'] ) ? $item['title'] :  $item['milestone'];
-        }
-    }
+          $columnAttrs = array(
+              'data-column' => $columnName,
+              'data-value'  => $columnValue
+          );
 
-    // type: tasks
-    if( $setting['type'] == 'tasks' ) {
-        $open = isset( $item['task_open'] ) ? $item['task_open'] : '0';
-        $output = sprintf( __( '%d %s / %d Open', 'upstream' ), $item['task_count'], upstream_task_label_plural(), $open );
-    }
+          if ($isFirst) {
+              $columnAttrs['class'] = 'is-clickable';
+              $columnAttrs['role'] = 'button';
+          }
 
-    // type: file
-    if ($setting['type'] === 'file') {
-        if (empty($field_data)) {
-            $output = '<i>' . __('none', 'upstream') . '</i>';
-        } else {
-            if( isset( $item['file'] ) && isset( $item['file_id'] ) && $item['file'] != '' ) {
-                $output .= upstream_get_file_preview( $item['file_id'], $item['file'], false );
-            }
-        }
-    }
+          // @todo: filter
+          ?>
+          <td <?php echo arrayToAttrs($columnAttrs); ?>>
+            <?php if ($isFirst): ?>
+            <i class="fa fa-angle-right"></i>&nbsp;
+            <?php endif; ?>
 
-    // type: progress
-    if( $key == 'progress' ) {
-        $output = $field_data == 0 ? '0' : $field_data;
-        $output .= '%';
-    }
+            <?php renderTableColumnValue($columnName, $columnValue, $column, $row, $rowType, $projectId); ?>
+          </td>
+          <?php $isFirst = false; ?>
+          <?php endforeach; ?>
+        </tr>
 
+        <?php if (!empty($hiddenColumnsSchema)): ?>
+        <tr data-parent="<?php echo $id; ?>" aria-expanded="false" style="display: none;">
+          <td colspan="<?php echo $visibleColumnsSchemaCount; ?>">
+            <div class="hidden-xs">
+              <?php foreach ($hiddenColumnsSchema as $columnName => $column):
+              $columnValue = isset($row[$columnName]) ? $row[$columnName] : null;
+              ?>
+              <div class="form-group">
+                <label><?php echo isset($column['label']) ? $column['label'] : ''; ?></label>
+                <?php renderTableColumnValue($columnName, $columnValue, $column, $row, $rowType, $projectId); ?>
+              </div>
+              <?php endforeach; ?>
+            </div>
+          </td>
+        </tr>
+        <?php endif; ?>
+        <?php endforeach; ?>
+      <?php else: ?>
+      <tr data-empty>
+        <td colspan="<?php echo $visibleColumnsSchemaCount; ?>">
+          <?php _e('@todo', 'upstream'); ?>
+        </td>
+      </tr>
+      <?php endif; ?>
+    </tbody>
+    <?php
+    $html = ob_get_contents();
+    ob_end_clean();
 
-    if ($setting['type'] === "comments") {
-        $output = upstreamRenderCommentsBox($item['id'], $setting['item_type'], $project_id, false, true);
-    }
+    echo $html;
+}
 
-    // allows us to add extra checks for different data and field formatting
-    $output = apply_filters( 'upstream_format_table_data', $output, $item, $key, $setting );
+function renderTable($tableAttrs = array(), $columns = array(), $data = array(), $itemType = '', $projectId = 0)
+{
+    $tableAttrs['class'] = array_filter(isset($tableAttrs['class']) ? (!is_array($tableAttrs['class']) ? explode(' ', $tableAttrs['class']) : (array)$tableAttrs['class']) : array());
+    $tableAttrs['class'] = array_unique(array_merge($tableAttrs['class'], array(
+        'o-data-table', 'table', 'table-bordered', 'table-responsive', 'table-hover', 'is-orderable'
+    )));
 
+    $tableAttrs['cellspacing'] = 0;
+    $tableAttrs['width'] = '100%';
 
-    return $output;
+    // $tableAttrs = apply_filters('@todo', $tableAttrs);
 
+    $visibleColumnsSchema = $columns['visibleColumns'];
+    $hiddenColumnsSchema = $columns['hiddenColumns'];
+
+    // $visibleColumnsSchema = apply_filters('@todo', $visibleColumnsSchema);
+    // $hiddenColumnsSchema = apply_filters('@todo', $hiddenColumnsSchema);
+
+    $tableAttrs['class'] = implode(' ', $tableAttrs['class']);
+    ?>
+    <table <?php echo arrayToAttrs($tableAttrs); ?>>
+      <?php renderTableHeader($visibleColumnsSchema); ?>
+      <?php renderTableBody($data, $visibleColumnsSchema, $hiddenColumnsSchema, $itemType, $projectId); ?>
+    </table>
+    <?php
 }

@@ -1229,3 +1229,46 @@ body.upstream_page_upstream_extensions #upstream_extensions input[type="submit"]
 .up-s-hidden {
   display: none;
 }
+
+.upstream-filters-wrapper {
+  margin-top: 15px;
+}
+
+.cmb2-wrap .up-c-filters {
+  margin-top: 10px;
+}
+
+.cmb2-wrap .up-c-filters .up-c-filter {
+  display: inline-block;
+}
+
+.cmb2-wrap .up-c-filters .up-c-filter label {
+  font-weight: bold;
+  display: block;
+}
+
+.cmb2-wrap .up-c-filters .up-c-filter .select2.select2-container {
+  margin-top: -2px;
+}
+
+.cmb2-wrap .up-c-filters .up-c-filter .select2-selection {
+  border-color: #DDD;
+  box-shadow: inherit;
+  border-radius: inherit;
+}
+
+.cmb2-wrap .up-c-filters .up-c-filter .select2-selection .select2-selection__choice {
+  border-radius: 0;
+}
+
+.cmb2-wrap .up-c-filters .up-c-filter .select2-selection .select2-search {
+  margin-bottom: 0;
+}
+
+input.up-o-filter {
+  padding: 6px 5px;
+}
+
+.up-s-mb-2 {
+  margin-bottom: 2px;
+}

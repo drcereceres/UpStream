@@ -4,7 +4,7 @@ Tags: project, manage, management, project management, project manager, wordpres
 Requires at least: 4.5
 Tested up to: 4.9
 Requires PHP: 5.6
-Stable tag: 1.13.6
+Stable tag: 1.13.7
 License: GPL-3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -139,7 +139,33 @@ and this project adheres to [Semantic Versioning](http://semver.org).
 = [@todo: WIP] =
 
 Added:
+* Added Categories, Status, Clients, Title filters for Projects on frontend
+* Added Milestone, Assignee, Star and End Dates filters for Milestones
+* Added Title, Assignee, Status, Milestone, Star and End Dates filters for Tasks
+* Added Title, Assignee, Severity, Status, Due Date filters for Bugs
+* Added Title, Uploader, Upload Date filters for Files
 * Tags can now be assigned to Projects
+
+Changed:
+* Users can now filter metaboxes/tables data using multiple filters at once
+* We're slowly moving towards using Select2 lib across the whole plugin
+* Frontend Date filters now use a new Date Picker js lib
+
+Deprecated:
+* Within UpStream_Metaboxes_Projects class: getStatusFilterHtml, getSeverityFilterHtml, getFiltersHeaderHtml, getFiltersFooterHtml, getMilestoneFilterHtml
+
+Removed:
+* Frontend tables no longer use Datatable lib due lack of flexibility and performance issues
+
+= [1.13.7] - 2018-01-26 =
+
+Removed:
+* Remove notice about recent changes made on Clients
+* Remove deprecated code
+
+Fixed:
+* Fixed some Comments tabs not working on admin
+* Fixed some potential PHP errors and warnings
 
 = [1.13.6] - 2018-01-15 =
 

@@ -514,6 +514,8 @@
         }
     });
 
+    /*
+    // @todo: remove
     $('.upstream-filter').on('change', function onFilterChangeCallback(e) {
         var self = $(this);
         var targetColumn = self.data('column');
@@ -561,6 +563,7 @@
             }
         }
     });
+    */
 
     var titleHasFocus = false;
     $(document)
@@ -1149,6 +1152,16 @@
     });
 
     function fetchAllComments() {
+      // Fix misplaced comments wrappers.
+      $('.up-o-tab-content.up-c-tab-content-data .up-c-tab-content-comments').each(function() {
+        var self = $(this);
+        var tabsWrapper = $(self.parents('.up-c-tabs-content'));
+
+        if (tabsWrapper.length > 0) {
+          tabsWrapper.append(self);
+        }
+      });
+
       $.ajax({
         type    : 'GET',
         url     : ajaxurl,
@@ -1256,5 +1269,203 @@
 
       wrapper.prepend($('.cmb-td > div.wp-editor-wrap', self));
     });
+
+    $('.up-o-filter-date').datepicker({
+      dateFormat: 'yy-mm-dd',
+      beforeShow: function(input, instance) {
+        $('#ui-datepicker-div').addClass('cmb2-element');
+      }
+    });
+
+    $('select.up-o-filter:not(.up-o-filter-date)').on('change', function(e) {
+      e.preventDefault();
+      e.stopPropagation();
+
+      var self = $(this);
+      var filterColumn = self.attr('data-column');
+      var filterValue = self.val();
+
+      var metabox = $(self.parents('.cmb2-metabox').get(0));
+
+      filterMetaboxTableBy(metabox, filterColumn, filterValue, 'contains');
+    });
+
+    $('.up-o-filter-date.up-o-filter').on('change', function(e) {
+      e.preventDefault();
+      e.stopPropagation();
+
+      var self = $(this);
+      var filterColumn = self.attr('data-column');
+      var filterValue = self.val();
+
+      if (filterValue.length > 0) {
+        filterValue = +new Date(filterValue);
+      }
+
+      var metabox = $(self.parents('.cmb2-metabox').get(0));
+
+      filterMetaboxTableBy(metabox, filterColumn, filterValue, self.attr('data-compare-operator'));
+    });
+
+    function filterMetaboxTableBy(metabox, columnName, filterValue, operator) {
+      console.log('filterMetaboxTableBy()', {
+        metabox: metabox,
+        columnName: columnName,
+        filterValue: filterValue,
+        operator: operator
+      });
+
+      var table = metabox.find('.cmb-nested.cmb-field-list.cmb-repeatable-group');
+      var filtersWrapper = metabox.find('.up-c-filters');
+      var filtersMap = [];
+
+      var filters = $('[data-column]', filtersWrapper);
+      filters.each(function() {
+        var self = $(this);
+
+        var value = self.val();
+        if (typeof value === 'string') {
+          value = value.trim();
+        } else if (value) {
+          value = value.filter(function(elValue) { return elValue.length > 0; });
+        } else {
+          value = '';
+        }
+
+        filtersMap[self.attr('data-column')] = value.length  > 0 ? value : null;
+        filtersMap.push({
+          column    : self.attr('data-column'),
+          value     : value.length  > 0 ? value : null,
+          comparator: self.attr('data-compare-operator') || 'exact'
+        });
+      });
+
+      $('.cmb-row.postbox[data-empty-row]', table).remove();
+
+      var filtersHasChanged = false;
+      var rows = $('.cmb-row.postbox[data-iterator]', table);
+
+      rows.removeClass('is-filtered');
+
+      rows.each(function(trIndex) {
+        var tr = $(this);
+        var shouldDisplay = false;
+
+        var filter, filterIndex, filterColumnValue, columnValue, comparator, theColumn;
+        for (filterIndex =  0; filterIndex < filtersMap.length; filterIndex++) {
+          filter = filtersMap[filterIndex];
+          if (filter.value === null) {
+            continue;
+          }
+
+          filtersHasChanged = true;
+
+          theColumn = $('[name$="['+ filter.column +']"]', tr);
+          columnValue = theColumn.val();
+
+          if (theColumn.hasClass('hasDatepicker') && columnValue.length > 0) {
+            filter.value = +new Date(filter.value);
+            columnValue = +new Date(columnValue);
+          }
+
+          if (filter.comparator === 'contains') {
+            if (typeof filter.value === 'string') {
+              comparator = new RegExp(filter.value, 'i');
+              shouldDisplay = comparator.test(columnValue);
+            } else {
+              for (var valueIndex in filter.value) {
+                comparator = new RegExp(filter.value[valueIndex], 'i');
+                if (comparator.test(columnValue)) {
+                  shouldDisplay = true;
+                  break;
+                }
+              }
+            }
+          } else if (filter.comparator === 'exact') {
+            if (typeof filter.value === 'string') {
+              if (filter.value === '__none__') {
+                shouldDisplay = !columnValue || columnValue === '__none__';
+              } else {
+                shouldDisplay = columnValue === filter.value;
+              }
+            } else {
+              for (var valueIndex in filter.value) {
+                if (filter.value[valueIndex] === '__none__') {
+                  shouldDisplay = !columnValue || columnValue === '__none__';
+                } else {
+                  shouldDisplay = columnValue === filter.value[valueIndex];
+                }
+
+                if (shouldDisplay) {
+                  break;
+                }
+              }
+            }
+          } else if (filter.comparator === '>') {
+            shouldDisplay = columnValue > filter.value;
+          } else if (filter.comparator === '>=') {
+            shouldDisplay = columnValue >= filter.value;
+          } else if (filter.comparator === '<') {
+            shouldDisplay = columnValue < filter.value;
+          } else if (filter.comparator === '<=') {
+            shouldDisplay = columnValue <= filter.value;
+          } else if (filter.value === '__none__') {
+            shouldDisplay = !columnValue || columnValue === '__none__';
+          } else {
+            if (typeof filter.value === 'string') {
+              shouldDisplay = columnValue.localeCompare(filter.value) === 0;
+            } else {
+              for (var valueIndex in filter.value) {
+                if (filter.value[valueIndex] === '__none__') {
+                  shouldDisplay = !columnValue || columnValue === '__none__';
+                } else {
+                  shouldDisplay = columnValue.localeCompare(filter.value[valueIndex]) === 0;
+                }
+
+                if (shouldDisplay) {
+                  break;
+                }
+              }
+            }
+          }
+
+          if (filtersHasChanged && !shouldDisplay) {
+            break;
+          }
+        }
+
+        if (shouldDisplay) {
+          tr.addClass('is-filtered').show();
+        } else {
+          tr.hide();
+        }
+      });
+
+      if (!filtersHasChanged) {
+        rows.show();
+      }
+
+      var filteredRows = $('.cmb-row.postbox[data-iterator]:visible', table);
+      if (filteredRows.length === 0) {
+        $('.cmb-row:last-child', table).prepend($('<div class="postbox cmb-row cmb-repeatable-grouping" data-empty-row><p>No results</p></div>'));
+      } else {
+        $('.cmb-row.postbox:visible', table).addClass('is-filtered');
+      }
+    }
+
+    $('.up-o-filter[data-trigger_on="keyup"]').on('keyup', function(e) {
+      e.preventDefault();
+      e.stopPropagation();
+
+      var self = $(this);
+      var filterColumn = self.attr('data-column');
+      var filterValue = self.val().trim();
+
+      var metabox = $(self.parents('.cmb2-metabox').get(0));
+
+      filterMetaboxTableBy(metabox, filterColumn, filterValue, 'contains');
+    });
+
+    $('.o-select2').select2();
   });
 })(window, window.document, jQuery, upstream_project || {});
