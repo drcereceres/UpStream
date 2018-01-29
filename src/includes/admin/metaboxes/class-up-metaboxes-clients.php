@@ -81,6 +81,15 @@ final class UpStream_Metaboxes_Clients
 
         // Render all inner metaboxes.
         self::renderMetaboxes();
+
+        $namespace = get_class(self::$instance);
+        // Starting from v1.13.6 UpStream Users cannot be added through here anymore.
+        $noticeIdentifier = 'upstream:notices.client.add_new_users_changes';
+        $shouldDisplayNotice = (bool)get_option($noticeIdentifier);
+        if (!$shouldDisplayNotice) {
+            add_action('admin_notices', array($namespace, 'renderAddingClientUsersChangesNotice'));
+            update_option($noticeIdentifier, 1);
+        }
     }
 
     /**
@@ -198,6 +207,19 @@ final class UpStream_Metaboxes_Clients
     }
 
     /**
+     * Renders the modal's html which is used to migrate legacy client users.
+     *
+     * @since   1.11.0
+     * @access  private
+     * @static
+     * @deprecated  1.13.6
+     */
+    private static function renderMigrateUserModal()
+    {
+        _doing_it_wrong(__FUNCTION__, 'This method is deprecated and it will be removed on future releases.', '1.13.5');
+    }
+
+    /**
      * Renders the users metabox.
      * This is where all client users are listed.
      *
@@ -286,6 +308,22 @@ final class UpStream_Metaboxes_Clients
             self::$postType,
             'normal'
         );
+    }
+
+    /**
+     * It defines the Legacy Users metabox.
+     * This metabox lists all legacy client users that couldn't be automatically
+     * migrated for some reason, which is also displayed here.
+     *
+     * If there's no legacy user to be migrated, the box is not shown.
+     *
+     * @since   1.11.0
+     * @static
+     * @deprecated  1.13.6
+     */
+    public static function createLegacyUsersMetabox()
+    {
+        _doing_it_wrong(__FUNCTION__, 'This method is deprecated and it will be removed on future releases.', '1.13.5');
     }
 
     /**
@@ -663,6 +701,77 @@ final class UpStream_Metaboxes_Clients
     }
 
     /**
+     * Ajax endpoint responsible for migrating a given Legacy Client User.
+     *
+     * @since   1.11.0
+     * @static
+     * @deprecated  1.13.6
+     */
+    public static function migrateLegacyUser()
+    {
+        header('Content-Type: application/json');
+
+        global $wpdb;
+
+        $response = array(
+            'success' => false,
+            'data'    => array(),
+            'err'     => null
+        );
+
+        try {
+            if (!upstream_admin_permissions('edit_clients')) {
+                throw new \Exception(__("You're not allowed to do this.", 'upstream'));
+            }
+
+            _doing_it_wrong(__FUNCTION__, 'This method is deprecated and it will be removed on future releases.', '1.13.5');
+        } catch (\Exception $e) {
+            $response['err'] = $e->getMessage();
+        }
+
+        echo wp_json_encode($response);
+
+        wp_die();
+    }
+
+    /**
+     * Ajax endpoint responsible for discard a given Legacy Client User.
+     *
+     * @since   1.11.0
+     * @static
+     * @deprecated  1.13.6
+     */
+    public static function discardLegacyUser()
+    {
+        header('Content-Type: application/json');
+
+        global $wpdb;
+
+        $response = array(
+            'success' => false,
+            'err'     => null
+        );
+
+        try {
+            if (!upstream_admin_permissions('edit_clients')) {
+                throw new \Exception(__("You're not allowed to do this.", 'upstream'));
+            }
+
+            if (empty($_POST) || !isset($_POST['client'])) {
+                throw new \Exception(__("Invalid UpStream Client ID.", 'upstream'));
+            }
+
+            _doing_it_wrong(__FUNCTION__, 'This method is deprecated and it will be removed on future releases.', '1.13.5');
+        } catch (\Exception $e) {
+            $response['err'] = $e->getMessage();
+        }
+
+        echo wp_json_encode($response);
+
+        wp_die();
+    }
+
+    /**
      * Renders the modal's html which is used to manage a given Client User's permissions.
      *
      * @since   1.11.0
@@ -825,6 +934,45 @@ final class UpStream_Metaboxes_Clients
         echo wp_json_encode($response);
 
         wp_die();
+    }
+
+    /**
+     * Add notice to users warning about Client Users creation changes.
+     *
+     * @since   1.13.6
+     * @static
+     */
+    public static function renderAddingClientUsersChangesNotice()
+    {
+        ?>
+        <div class="notice notice-info is-dismissible">
+          <h3><?php _e('Important notice', 'upstream'); ?></h3>
+          <p><?php _e('New users can no longer be added through here.', 'upstream'); ?></p>
+          <p><?php _e('From now on, to ensure newly created users are listed on the Existing Users table, do the following:', 'upstream'); ?></p>
+          <ol>
+            <li>
+              <?php printf(
+                  'Go to the %s page',
+                  sprintf(
+                      '<a href="%s" target="_blank">%s</a>',
+                      admin_url('user-new.php'),
+                      __('Users')
+                  )
+              ); ?>
+            </li>
+            <li><?php _e("Add the users as you need if you haven't already", 'upstream'); ?></li>
+            <li>
+              <?php printf(
+                  'Make sure they have the %s role assigned to them',
+                  sprintf(
+                      '<code>%s</code>',
+                      __('UpStream Client User', 'upstream')
+                  )
+              ); ?>
+            </li>
+          </ol>
+        </div>
+        <?php
     }
 
     /**
