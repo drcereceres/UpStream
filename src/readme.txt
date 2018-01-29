@@ -144,6 +144,7 @@ Added:
 * Added Title, Assignee, Status, Milestone, Star and End Dates filters for Tasks
 * Added Title, Assignee, Severity, Status, Due Date filters for Bugs
 * Added Title, Uploader, Upload Date filters for Files
+* Tags can now be assigned to Projects
 
 Changed:
 * Users can now filter metaboxes/tables data using multiple filters at once

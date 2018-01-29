@@ -152,5 +152,45 @@ function upstream_setup_taxonomies() {
     register_taxonomy( 'project_category', array('project'), $category_args );
     register_taxonomy_for_object_type( 'project_category', 'project' );
 
+    /** Tags **/
+    $tagsLabels = array(
+        'name'                       => _x('Tags', 'taxonomy (tag) general name', 'upstream'),
+        'singular_name'              => _x('Tag', 'taxonomy (tag) singular name', 'upstream'),
+        'search_items'               => __('Search Tags', 'upstream'),
+        'popular_items'              => __( 'Popular Tags' ),
+        'all_items'                  => __('All Tags', 'upstream'),
+        'parent_item'                => null,
+        'parent_item_colon'          => null,
+        'edit_item'                  => __('Edit Tag', 'upstream'),
+        'update_item'                => __('Update Tag', 'upstream'),
+        'add_new_item'               => __('Add New Tag', 'upstream'),
+        'new_item_name'              => __('New Tag Name', 'upstream'),
+        'add_or_remove_items'        => __('Add or remove tags'),
+        'separate_items_with_commas' => __('Separate tags with commas'),
+        'choose_from_most_used'      => __('Choose from the most used tags'),
+        'menu_name'                  => __('Tags', 'upstream')
+    );
+
+    $tagsArgs = array(
+        'hierarchical'      => false,
+        'labels'            => apply_filters('_upstream_project_tags_labels', $tagsLabels),
+        'show_ui'           => true,
+        'show_admin_column' => true,
+        'query_var'         => 'upstream_tag',
+        'rewrite'           => array(
+            'slug'         => 'upstream/tag',
+            'with_front'   => false,
+            'hierarchical' => false
+        ),
+        'capabilities' => array(
+            'manage_terms' => 'manage_project_terms',
+            'edit_terms'   => 'edit_project_terms',
+            'assign_terms' => 'assign_project_terms',
+            'delete_terms' => 'delete_project_terms'
+        )
+    );
+
+    register_taxonomy('upstream_tag', array('project'), $tagsArgs);
+    register_taxonomy_for_object_type('upstream_tag', 'project');
 }
 add_action( 'init', 'upstream_setup_taxonomies', 0 );
