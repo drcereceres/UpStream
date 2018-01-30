@@ -491,7 +491,7 @@ jQuery(document).ready(function($){
             .attr('aria-expanded', 'true');
           trChild.show();
 
-          $('.fa', self)
+          $('.fa.fa-angle-right', self)
             .removeClass('fa-angle-right')
             .addClass('fa-angle-down');
         } else {
@@ -499,7 +499,7 @@ jQuery(document).ready(function($){
             .attr('aria-expanded', 'false');
           trChild.hide();
 
-          $('.fa', self)
+          $('.fa.fa-angle-down', self)
             .removeClass('fa-angle-down')
             .addClass('fa-angle-right');
         }
