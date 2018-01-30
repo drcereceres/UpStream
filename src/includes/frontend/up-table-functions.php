@@ -234,7 +234,8 @@ function renderTableBody($data, $visibleColumnsSchema, $hiddenColumnsSchema, $ro
 
           $columnAttrs = array(
               'data-column' => $columnName,
-              'data-value'  => $columnValue
+              'data-value'  => $columnValue,
+              'data-type'   => $column['type']
           );
 
           if ($isFirst) {
