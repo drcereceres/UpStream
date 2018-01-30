@@ -204,7 +204,7 @@ function renderTableColumnValue($columnName, $columnValue, $column, $row, $rowTy
         }
     }
 
-    // @todo: filter?
+    $html = apply_filters('upstream:frontend:project.table.body.td_value', $html, $columnName, $columnValue, $column, $row, $rowType, $projectId);
 
     echo $html;
 }
