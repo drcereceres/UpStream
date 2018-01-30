@@ -576,8 +576,8 @@ class Comments
             }
 
             // Verify nonce.
-            if (!wp_verify_nonce($_GET['nonce'], $nonceIdentifier)) {
-                throw new \Exception(__("Invalid request.", 'upstream'));
+            if (!check_ajax_referer($nonceIdentifier, 'nonce', false)) {
+                throw new \Exception(__("Invalid nonce.", 'upstream'));
             }
 
             // Check if commenting is disabled on the given project.
