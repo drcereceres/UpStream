@@ -61,7 +61,7 @@ function upstream_output_client_users($id = null)
             <?php endforeach; ?>
         </ul>
     <?php else: ?>
-        <span class="text-muted"><i><?php echo '(' . __('none') .')'; ?></i></span>
+        <span class="text-muted"><i><?php echo '(' . __('none', 'upstream') . ')'; ?></i></span>
     <?php endif;
 }
 
@@ -79,7 +79,7 @@ function upstream_output_project_members($id = null)
             <?php endforeach; ?>
         </ul>
     <?php else: ?>
-        <span class="text-muted"><i><?php echo '(' . __('none') .')'; ?></i></span>
+        <span class="text-muted"><i><?php echo '(' . __('none', 'upstream') . ')'; ?></i></span>
     <?php endif;
 }
 
