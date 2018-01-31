@@ -141,6 +141,9 @@ and this project adheres to [Semantic Versioning](http://semver.org).
 Added:
 * Tags can now be assigned to Projects
 
+Fixed:
+* Fixed a couple of strings not being translated as they should
+
 = [1.13.7] - 2018-01-26 =
 
 Removed:
