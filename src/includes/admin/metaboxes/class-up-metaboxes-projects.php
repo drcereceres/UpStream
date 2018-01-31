@@ -1524,7 +1524,7 @@ class UpStream_Metaboxes_Projects {
 
         $metabox = new_cmb2_box( array(
             'id'            => $this->prefix . 'discussions',
-            'title'         => '<span class="dashicons dashicons-format-chat"></span> ' . __('Discussion'),
+            'title'         => '<span class="dashicons dashicons-format-chat"></span> ' . __('Discussion', 'upstream'),
             'object_types'  => array( $this->type ),
             'priority'      => 'low',
         ) );

@@ -345,3 +345,10 @@ table.dataTable>tbody>tr.child .dtr-data ul {
   overflow: hidden;
   text-overflow: ellipsis;
 }
+
+.c-comments .o-comment.s-highlighted > .o-comment__body {
+  background-color: rgba(116, 185, 255, .25);
+  color: #000;
+  -webkit-transition: all 0.25s ease-out;
+  transition: all 0.25s ease-out;
+}
