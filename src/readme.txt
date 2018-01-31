@@ -142,6 +142,7 @@ Added:
 * Tags can now be assigned to Projects
 * Added "Disable Project Overview" option
 * Added "Disable Project Details" option
+* Auto scroll to particular comments via URL
 
 Changed:
 * "Comments on <section>" options labels were renamed to "Disable Discussion on <section>"
