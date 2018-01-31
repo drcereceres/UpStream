@@ -138,6 +138,9 @@ and this project adheres to [Semantic Versioning](http://semver.org).
 
 = [1.14.0] - @todo =
 
+Added:
+* Tags can now be assigned to Projects
+
 = [1.13.7] - 2018-01-26 =
 
 Removed:
