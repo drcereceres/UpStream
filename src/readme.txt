@@ -144,6 +144,7 @@ Added:
 
 Changed:
 * "Comments on <section>" options labels were renamed to "Disable Discussion on <section>"
+* Some options were grouped for better UX
 
 Fixed:
 * Fixed a couple of strings not being translated as they should

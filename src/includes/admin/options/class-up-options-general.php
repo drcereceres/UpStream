@@ -125,6 +125,7 @@ class UpStream_Options_General {
                     'id'   => 'client_area_title',
                     'type' => 'title',
                     'desc' => sprintf( __( 'Various options for the %1s login page and the frontend view. <br>%2s can view their projects by visiting %3s (URL is available after adding a %s).', 'upstream' ), upstream_client_label(), upstream_client_label_plural(), $project_url, upstream_project_label() ),
+                    'before_row' => '<hr>'
                 ),
                 array(
                     'name' => __( 'Login Page Heading', 'upstream' ),
@@ -180,6 +181,13 @@ class UpStream_Options_General {
                     'type'    => 'text',
                     'desc'    => __( 'Link to contact form or knowledgebase to help clients obtain support.', 'upstream' ),
                     'default' => 'mailto:' . upstream_admin_email()
+                ),
+                array(
+                    'name' => __( 'Collapse Sections', 'upstream' ),
+                    'id'   => 'frontend_collapse_sections',
+                    'type' => 'title',
+                    'desc' => __('Options to collapse different sections on the client area on frontend.', 'upstream'),
+                    'before_row' => '<hr>'
                 ),
                 array(
                     'name'    => __( 'Collapse Project Details box', 'upstream' ),
@@ -246,6 +254,13 @@ class UpStream_Options_General {
                         0 => __('No', 'upstream'),
                         1 => __('Yes', 'upstream')
                     )
+                ),
+                array(
+                    'name' => __( 'Toggle Features', 'upstream' ),
+                    'id'   => 'toggle_features',
+                    'type' => 'title',
+                    'desc' => __('Options to toggle different sections and features.', 'upstream'),
+                    'before_row' => '<hr>'
                 ),
                 array(
                     'name'    => __( 'Disable Clients and Client Users', 'upstream' ),
@@ -388,7 +403,8 @@ class UpStream_Options_General {
                     'options' => array(
                         'yes' => __('Remove all data on uninstall?', 'upstream')
                     ),
-                    'select_all_button' => false
+                    'select_all_button' => false,
+                    'before_row' => '<hr>'
                 ),
 
             ) )
