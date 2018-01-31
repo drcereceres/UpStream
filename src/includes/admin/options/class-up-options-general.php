@@ -125,6 +125,7 @@ class UpStream_Options_General {
                     'id'   => 'client_area_title',
                     'type' => 'title',
                     'desc' => sprintf( __( 'Various options for the %1s login page and the frontend view. <br>%2s can view their projects by visiting %3s (URL is available after adding a %s).', 'upstream' ), upstream_client_label(), upstream_client_label_plural(), $project_url, upstream_project_label() ),
+                    'before_row' => '<hr>'
                 ),
                 array(
                     'name' => __( 'Login Page Heading', 'upstream' ),
@@ -180,6 +181,13 @@ class UpStream_Options_General {
                     'type'    => 'text',
                     'desc'    => __( 'Link to contact form or knowledgebase to help clients obtain support.', 'upstream' ),
                     'default' => 'mailto:' . upstream_admin_email()
+                ),
+                array(
+                    'name' => __( 'Collapse Sections', 'upstream' ),
+                    'id'   => 'frontend_collapse_sections',
+                    'type' => 'title',
+                    'desc' => __('Options to collapse different sections on the client area on frontend.', 'upstream'),
+                    'before_row' => '<hr>'
                 ),
                 array(
                     'name'    => __( 'Collapse Project Details box', 'upstream' ),
@@ -248,6 +256,13 @@ class UpStream_Options_General {
                     )
                 ),
                 array(
+                    'name' => __( 'Toggle Features', 'upstream' ),
+                    'id'   => 'toggle_features',
+                    'type' => 'title',
+                    'desc' => __('Options to toggle different sections and features.', 'upstream'),
+                    'before_row' => '<hr>'
+                ),
+                array(
                     'name'    => __( 'Disable Clients and Client Users', 'upstream' ),
                     'id'      => 'disable_clients',
                     'type'    => 'radio_inline',
@@ -263,6 +278,28 @@ class UpStream_Options_General {
                     'id'      => 'disable_categories',
                     'type'    => 'radio_inline',
                     'desc'    => __( 'Choose whether Projects can be sorted into categories by managers and users.', 'upstream' ),
+                    'default' => '0',
+                    'options' => array(
+                        0 => __('No', 'upstream'),
+                        1 => __('Yes', 'upstream')
+                    )
+                ),
+                array(
+                    'name'    => __( 'Disable Project Overview', 'upstream' ),
+                    'id'      => 'disable_project_overview',
+                    'type'    => 'radio_inline',
+                    'desc'    => __( 'Choose whether to display the Project Overview section on frontend.', 'upstream' ),
+                    'default' => '0',
+                    'options' => array(
+                        0 => __('No', 'upstream'),
+                        1 => __('Yes', 'upstream')
+                    )
+                ),
+                array(
+                    'name'    => __( 'Disable Project Details', 'upstream' ),
+                    'id'      => 'disable_project_details',
+                    'type'    => 'radio_inline',
+                    'desc'    => __( 'Choose whether to display the Project Details section on frontend.', 'upstream' ),
                     'default' => '0',
                     'options' => array(
                         0 => __('No', 'upstream'),
@@ -314,58 +351,58 @@ class UpStream_Options_General {
                     'select_all_button' => false
                 ),
                 array(
-                    'name'    => __('Comments on Projects', 'upstream'),
+                    'name'    => __('Disable Discussion on Projects', 'upstream'),
                     'id'      => 'disable_project_comments',
                     'type'    => 'radio_inline',
                     'desc'    => __('Either allow comments on projects on both the frontend and the admin area or hide the section.', 'upstream'),
                     'default' => '1',
                     'options' => array(
                         '1' => __('Allow comments on projects', 'upstream'),
-                        '0' => __('Hide section', 'upstream')
+                        '0' => __('Disable section', 'upstream')
                     )
                 ),
                 array(
-                    'name'    => __('Comments on Milestones', 'upstream'),
+                    'name'    => __('Disable Discussion on Milestones', 'upstream'),
                     'id'      => 'disable_comments_on_milestones',
                     'type'    => 'radio_inline',
                     'desc'    => sprintf(__('Either allow comments on %s or hide the section.', 'upstream'), __('Milestones', 'upstream')),
                     'default' => '1',
                     'options' => array(
                         '1' => __('Allow comments on Milestones', 'upstream'),
-                        '0' => __('Hide section', 'upstream')
+                        '0' => __('Disable section', 'upstream')
                     )
                 ),
                 array(
-                    'name'    => __('Comments on Tasks', 'upstream'),
+                    'name'    => __('Disable Discussion on Tasks', 'upstream'),
                     'id'      => 'disable_comments_on_tasks',
                     'type'    => 'radio_inline',
                     'desc'    => sprintf(__('Either allow comments on %s or hide the section.', 'upstream'), __('Tasks', 'upstream')),
                     'default' => '1',
                     'options' => array(
                         '1' => __('Allow comments on Tasks', 'upstream'),
-                        '0' => __('Hide section', 'upstream')
+                        '0' => __('Disable section', 'upstream')
                     )
                 ),
                 array(
-                    'name'    => __('Comments on Bugs', 'upstream'),
+                    'name'    => __('Disable Discussion on Bugs', 'upstream'),
                     'id'      => 'disable_comments_on_bugs',
                     'type'    => 'radio_inline',
                     'desc'    => sprintf(__('Either allow comments on %s or hide the section.', 'upstream'), __('Bugs', 'upstream')),
                     'default' => '1',
                     'options' => array(
                         '1' => __('Allow comments on Bugs', 'upstream'),
-                        '0' => __('Hide section', 'upstream')
+                        '0' => __('Disable section', 'upstream')
                     )
                 ),
                 array(
-                    'name'    => __('Comments on Files', 'upstream'),
+                    'name'    => __('Disable Discussion on Files', 'upstream'),
                     'id'      => 'disable_comments_on_files',
                     'type'    => 'radio_inline',
                     'desc'    => sprintf(__('Either allow comments on %s or hide the section.', 'upstream'), __('Files', 'upstream')),
                     'default' => '1',
                     'options' => array(
                         '1' => __('Allow comments on Files', 'upstream'),
-                        '0' => __('Hide section', 'upstream')
+                        '0' => __('Disable section', 'upstream')
                     )
                 ),
                 array(
@@ -377,7 +414,8 @@ class UpStream_Options_General {
                     'options' => array(
                         'yes' => __('Remove all data on uninstall?', 'upstream')
                     ),
-                    'select_all_button' => false
+                    'select_all_button' => false,
+                    'before_row' => '<hr>'
                 ),
 
             ) )

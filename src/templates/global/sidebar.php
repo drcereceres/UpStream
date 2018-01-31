@@ -153,7 +153,7 @@ $pluginOptions = get_option('upstream_general');
                         <li>
                           <a href="#discussion">
                             <i class="fa fa-comments"></i>
-                            <?php _e('Discussion'); ?>
+                            <?php _e('Discussion', 'upstream'); ?>
                           </a>
                         </li>
                         <?php endif; ?>

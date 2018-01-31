@@ -4,7 +4,7 @@
  * Description: A WordPress Project Management plugin by UpStream.
  * Author: UpStream
  * Author URI: https://upstreamplugin.com
- * Version: 1.13.7-dev
+ * Version: 1.14.0
  * Text Domain: upstream
  * Domain Path: /languages
  */
@@ -187,7 +187,7 @@ final class UpStream
         $this->define( 'UPSTREAM_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
         $this->define( 'UPSTREAM_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
         $this->define( 'UPSTREAM_PLUGIN_BASENAME', plugin_basename( __FILE__ ) );
-        $this->define( 'UPSTREAM_VERSION', '1.13.7-dev' );
+        $this->define( 'UPSTREAM_VERSION', '1.14.0' );
     }
 
     /**
@@ -278,7 +278,6 @@ final class UpStream
             include_once( 'includes/frontend/up-enqueues.php' );
             include_once( 'includes/frontend/up-template-functions.php' );
             include_once( 'includes/frontend/up-table-functions.php' );
-            include_once( 'includes/frontend/class-up-view.php' );
         }
 
         include_once( 'includes/up-general-functions.php' );

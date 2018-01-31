@@ -29,6 +29,11 @@ do_action( 'upstream_single_project_before' );
 
 $user = upstream_user_data();
 
+$options = (array)get_option('upstream_general');
+$displayOverviewSection = !isset($options['disable_project_overview']) || (bool)$options['disable_project_overview'] === false;
+$displayDetailsSection = !isset($options['disable_project_details']) || (bool)$options['disable_project_details'] === false;
+unset($options);
+
 while ( have_posts() ) : the_post(); ?>
 
 <!-- page content -->
@@ -43,16 +48,18 @@ while ( have_posts() ) : the_post(); ?>
                 <h3 style="display: inline-block;"><?php echo get_the_title( get_the_ID() ); ?></h3>
                 <?php $status = upstream_project_status_color($id); ?>
                 <?php if (!empty($status['status'])): ?>
-                &nbsp;<span class="label up-o-label" style="background-color:<?php echo esc_attr($status['color']); ?>"><?php echo $status['status'] ?></span>
+                <button type="button" class="btn btn-success btn-xs" style="border: none;background-color:<?php echo esc_attr( $status['color'] ); ?>"><?php echo $status['status'] ?></button>
                 <?php endif; ?>
             </div>
 
+            <?php if ($displayOverviewSection): ?>
             <?php include 'single-project/overview.php'; ?>
+            <?php endif; ?>
 
-
+            <?php if ($displayDetailsSection): ?>
             <?php do_action( 'upstream_single_project_before_details' ); ?>
-
             <?php upstream_get_template_part( 'single-project/details.php' ); ?>
+            <?php endif; ?>
         </div>
 
         <div class="clearfix"></div>
