@@ -29,6 +29,10 @@ do_action( 'upstream_single_project_before' );
 
 $user = upstream_user_data();
 
+$options = (array)get_option('upstream_general');
+$displayOverviewSection = !isset($options['disable_project_overview']) || (bool)$options['disable_project_overview'] === false;
+unset($options);
+
 while ( have_posts() ) : the_post(); ?>
 
 <!-- page content -->
@@ -47,8 +51,9 @@ while ( have_posts() ) : the_post(); ?>
                 <?php endif; ?>
             </div>
 
+            <?php if ($displayOverviewSection): ?>
             <?php include 'single-project/overview.php'; ?>
-
+            <?php endif; ?>
 
             <?php do_action( 'upstream_single_project_before_details' ); ?>
 

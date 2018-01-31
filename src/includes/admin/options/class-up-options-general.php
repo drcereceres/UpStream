@@ -270,6 +270,17 @@ class UpStream_Options_General {
                     )
                 ),
                 array(
+                    'name'    => __( 'Disable Project Overview', 'upstream' ),
+                    'id'      => 'disable_project_overview',
+                    'type'    => 'radio_inline',
+                    'desc'    => __( 'Choose whether to display the Project Overview section on frontend.', 'upstream' ),
+                    'default' => '0',
+                    'options' => array(
+                        0 => __('No', 'upstream'),
+                        1 => __('Yes', 'upstream')
+                    )
+                ),
+                array(
                     'name' => __( 'Disable Bugs', 'upstream' ),
                     'id'   => 'disable_bugs',
                     'type' => 'multicheck',
