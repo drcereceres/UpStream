@@ -314,58 +314,58 @@ class UpStream_Options_General {
                     'select_all_button' => false
                 ),
                 array(
-                    'name'    => __('Comments on Projects', 'upstream'),
+                    'name'    => __('Disable Discussion on Projects', 'upstream'),
                     'id'      => 'disable_project_comments',
                     'type'    => 'radio_inline',
                     'desc'    => __('Either allow comments on projects on both the frontend and the admin area or hide the section.', 'upstream'),
                     'default' => '1',
                     'options' => array(
                         '1' => __('Allow comments on projects', 'upstream'),
-                        '0' => __('Hide section', 'upstream')
+                        '0' => __('Disable section', 'upstream')
                     )
                 ),
                 array(
-                    'name'    => __('Comments on Milestones', 'upstream'),
+                    'name'    => __('Disable Discussion on Milestones', 'upstream'),
                     'id'      => 'disable_comments_on_milestones',
                     'type'    => 'radio_inline',
                     'desc'    => sprintf(__('Either allow comments on %s or hide the section.', 'upstream'), __('Milestones', 'upstream')),
                     'default' => '1',
                     'options' => array(
                         '1' => __('Allow comments on Milestones', 'upstream'),
-                        '0' => __('Hide section', 'upstream')
+                        '0' => __('Disable section', 'upstream')
                     )
                 ),
                 array(
-                    'name'    => __('Comments on Tasks', 'upstream'),
+                    'name'    => __('Disable Discussion on Tasks', 'upstream'),
                     'id'      => 'disable_comments_on_tasks',
                     'type'    => 'radio_inline',
                     'desc'    => sprintf(__('Either allow comments on %s or hide the section.', 'upstream'), __('Tasks', 'upstream')),
                     'default' => '1',
                     'options' => array(
                         '1' => __('Allow comments on Tasks', 'upstream'),
-                        '0' => __('Hide section', 'upstream')
+                        '0' => __('Disable section', 'upstream')
                     )
                 ),
                 array(
-                    'name'    => __('Comments on Bugs', 'upstream'),
+                    'name'    => __('Disable Discussion on Bugs', 'upstream'),
                     'id'      => 'disable_comments_on_bugs',
                     'type'    => 'radio_inline',
                     'desc'    => sprintf(__('Either allow comments on %s or hide the section.', 'upstream'), __('Bugs', 'upstream')),
                     'default' => '1',
                     'options' => array(
                         '1' => __('Allow comments on Bugs', 'upstream'),
-                        '0' => __('Hide section', 'upstream')
+                        '0' => __('Disable section', 'upstream')
                     )
                 ),
                 array(
-                    'name'    => __('Comments on Files', 'upstream'),
+                    'name'    => __('Disable Discussion on Files', 'upstream'),
                     'id'      => 'disable_comments_on_files',
                     'type'    => 'radio_inline',
                     'desc'    => sprintf(__('Either allow comments on %s or hide the section.', 'upstream'), __('Files', 'upstream')),
                     'default' => '1',
                     'options' => array(
                         '1' => __('Allow comments on Files', 'upstream'),
-                        '0' => __('Hide section', 'upstream')
+                        '0' => __('Disable section', 'upstream')
                     )
                 ),
                 array(

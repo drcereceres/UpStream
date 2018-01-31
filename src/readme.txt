@@ -141,6 +141,9 @@ and this project adheres to [Semantic Versioning](http://semver.org).
 Added:
 * Tags can now be assigned to Projects
 
+Changed:
+* "Comments on <section>" options labels were renamed to "Disable Discussion on <section>"
+
 Fixed:
 * Fixed a couple of strings not being translated as they should
 
