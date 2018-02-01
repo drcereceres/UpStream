@@ -975,6 +975,8 @@ function getUserAvatarURL($user_id)
     }
 
     // Check if the ID is valid.
+    // @todo
+    /*
     global $wpdb;
     $idIsValid = (int)$wpdb->get_var(sprintf('
         SELECT COUNT(`ID`)
@@ -983,6 +985,8 @@ function getUserAvatarURL($user_id)
         $wpdb->prefix . 'users',
         $user_id
     ));
+    */
+    $idIsValid = 1;
 
     if ($idIsValid !== 1) {
         return false;
