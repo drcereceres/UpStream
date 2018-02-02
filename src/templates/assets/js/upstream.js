@@ -514,10 +514,16 @@ jQuery(document).ready(function($){
       format: $data.datepickerDateFormat
     }).on('change', function(e) {
       var self = $(this);
-      var value = self.datepicker('getUTCDate');
 
+      var value = self.datepicker('getDate');
+      /*
       if (value) {
         value /= 1000;
+      }
+      */
+
+      if (value) {
+        value = (+new Date(value)) / 1000;
       }
 
       var hiddenField = $('#' + self.attr('id') + '_timestamp');
