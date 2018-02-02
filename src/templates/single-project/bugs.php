@@ -72,93 +72,7 @@ $tableSettings = array(
     'data-order-dir'  => 'DESC'
 );
 
-function getBugsTableColumns(&$severities, &$statuses, &$areCommentsEnabled)
-{
-    $tableColumns = array(
-        'title' => array(
-            'type'        => 'raw',
-            'isOrderable' => true,
-            'label'       => __('Title', 'upstream')
-        ),
-        'assigned_to' => array(
-            'type'        => 'user',
-            'isOrderable' => true,
-            'label'       => __('Assigned To', 'upstream')
-        ),
-        'severity'       => array(
-            'type'  => 'custom',
-            'label' => __('Severity', 'upstream'),
-            'isOrderable' => true,
-            'renderCallback' => function($columnName, $columnValue, $column, $row, $rowType, $projectId) use (&$severities) {
-                if (strlen($columnValue) > 0) {
-                    if (isset($severities[$columnValue])) {
-                        $columnValue = sprintf('<span class="label up-o-label" style="background-color: %s;">%s</span>', $severities[$columnValue]['color'], $severities[$columnValue]['name']);
-                    } else {
-                        $columnValue = sprintf('<i class="@todo">%s</i>', __('invalid severity', 'upstream'));
-                    }
-                } else {
-                    $columnValue = sprintf('<i class="s-text-color-gray">%s</i>', __('none', 'upstream'));
-                }
-
-                return $columnValue;
-            }
-        ),
-        'status'       => array(
-            'type'  => 'custom',
-            'label' => __('Status', 'upstream'),
-            'isOrderable' => true,
-            'renderCallback' => function($columnName, $columnValue, $column, $row, $rowType, $projectId) use (&$statuses) {
-                if (strlen($columnValue) > 0) {
-                    if (isset($statuses[$columnValue])) {
-                        $columnValue = sprintf('<span class="label up-o-label" style="background-color: %s;">%s</span>', $statuses[$columnValue]['color'], $statuses[$columnValue]['name']);
-                    } else {
-                        $columnValue = sprintf('<i class="@todo">%s</i>', __('invalid status', 'upstream'));
-                    }
-                } else {
-                    $columnValue = sprintf('<i class="s-text-color-gray">%s</i>', __('none', 'upstream'));
-                }
-
-                return $columnValue;
-            }
-        ),
-        'due_date'  => array(
-            'type'        => 'date',
-            'isOrderable' => true,
-            'label'       => __('Due Date', 'upstream')
-        ),
-        'file'    => array(
-            'type'        => 'file',
-            'isOrderable' => false,
-            'label'       => __('File', 'upstream')
-        )
-    );
-
-    $hiddenTableColumns = array(
-        'description' => array(
-            'type'     => 'wysiwyg',
-            'label'    => __('Description', 'upstream'),
-            'isHidden' => true
-        ),
-        'comments'    => array(
-            'type'     => 'comments',
-            'label'    => __('Comments'),
-            'isHidden' => true
-        )
-    );
-
-    if (!$areCommentsEnabled) {
-        unset($hiddenTableColumns['comments']);
-    }
-
-    $schema = array(
-        'visibleColumns' => $tableColumns,
-        'hiddenColumns'  => $hiddenTableColumns
-    );
-
-    return $schema;
-}
-
-$columnsSettings = getBugsTableColumns($severities, $statuses, $areCommentsEnabled);
+$columnsSchema = \UpStream\WIP\getBugsFields($severities, $statuses, $areCommentsEnabled);
 ?>
 <div class="col-md-12 col-sm-12 col-xs-12">
   <div class="x_panel">
@@ -307,7 +221,7 @@ $columnsSettings = getBugsTableColumns($severities, $statuses, $areCommentsEnabl
             </div>
           </div>
         </form>
-        <?php \UpStream\WIP\renderTable($tableSettings, $columnsSettings, $rowset, 'bug', $projectId); ?>
+        <?php \UpStream\WIP\renderTable($tableSettings, $columnsSchema, $rowset, 'bug', $projectId); ?>
       </div>
     </div>
   </div>

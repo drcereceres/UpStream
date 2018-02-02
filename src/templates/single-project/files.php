@@ -50,57 +50,7 @@ $tableSettings = array(
     'data-order-dir'  => 'DESC'
 );
 
-function getFilesTableColumns(&$areCommentsEnabled)
-{
-    $tableColumns = array(
-        'title' => array(
-            'type'        => 'raw',
-            'isOrderable' => true,
-            'label'       => __('Title', 'upstream')
-        ),
-        'created_by' => array(
-            'type'        => 'user',
-            'isOrderable' => true,
-            'label'       => __('Uploaded by', 'upstream')
-        ),
-        'created_at'  => array(
-            'type'        => 'date',
-            'isOrderable' => true,
-            'label'       => __('Upload Date', 'upstream')
-        ),
-        'file'    => array(
-            'type'        => 'file',
-            'isOrderable' => false,
-            'label'       => __('File', 'upstream')
-        )
-    );
-
-    $hiddenTableColumns = array(
-        'description' => array(
-            'type'     => 'wysiwyg',
-            'label'    => __('Description', 'upstream'),
-            'isHidden' => true
-        ),
-        'comments'    => array(
-            'type'     => 'comments',
-            'label'    => __('Comments'),
-            'isHidden' => true
-        )
-    );
-
-    if (!$areCommentsEnabled) {
-        unset($hiddenTableColumns['comments']);
-    }
-
-    $schema = array(
-        'visibleColumns' => $tableColumns,
-        'hiddenColumns'  => $hiddenTableColumns
-    );
-
-    return $schema;
-}
-
-$columnsSettings = getFilesTableColumns($areCommentsEnabled);
+$columnsSchema = \UpStream\WIP\getFilesFields($areCommentsEnabled);
 ?>
 <div class="col-md-12 col-sm-12 col-xs-12">
   <div class="x_panel">
@@ -216,7 +166,7 @@ $columnsSettings = getFilesTableColumns($areCommentsEnabled);
             </div>
           </div>
         </form>
-        <?php \UpStream\WIP\renderTable($tableSettings, $columnsSettings, $rowset, 'file', $projectId); ?>
+        <?php \UpStream\WIP\renderTable($tableSettings, $columnsSchema, $rowset, 'file', $projectId); ?>
       </div>
     </div>
   </div>

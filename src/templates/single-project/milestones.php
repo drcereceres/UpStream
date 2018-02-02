@@ -36,7 +36,7 @@ $tableSettings = array(
     'data-ordered-by' => 'start_date',
     'data-order-dir'  => 'DESC'
 );
-$columnsSettings = \UpStream\WIP\getMilestonesTableColumns();
+$columnsSchema = \UpStream\WIP\getMilestonesFields();
 ?>
 <div class="col-md-12 col-sm-12 col-xs-12">
   <div class="x_panel">
@@ -162,7 +162,7 @@ $columnsSettings = \UpStream\WIP\getMilestonesTableColumns();
             </div>
           </div>
         </form>
-        <?php \UpStream\WIP\renderTable($tableSettings, $columnsSettings, $milestones, 'milestone', $projectId); ?>
+        <?php \UpStream\WIP\renderTable($tableSettings, $columnsSchema, $milestones, 'milestone', $projectId); ?>
       </div>
     </div>
   </div>

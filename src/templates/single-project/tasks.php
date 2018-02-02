@@ -97,101 +97,7 @@ $tableSettings = array(
     'data-order-dir'  => 'DESC'
 );
 
-function getTasksTableColumns(&$statuses, &$milestones, &$areMilestonesEnabled, &$areCommentsEnabled)
-{
-    $tableColumns = array(
-        'title' => array(
-            'type'        => 'raw',
-            'isOrderable' => true,
-            'label'       => __('Title', 'upstream')
-        ),
-        'assigned_to' => array(
-            'type'        => 'user',
-            'isOrderable' => true,
-            'label'       => __('Assigned To', 'upstream')
-        ),
-        'status'       => array(
-            'type'  => 'custom',
-            'label' => __('Status', 'upstream'),
-            'renderCallback' => function($columnName, $columnValue, $column, $row, $rowType, $projectId) use (&$statuses) {
-                if (strlen($columnValue) > 0) {
-                    if (isset($statuses[$columnValue])) {
-                        $columnValue = sprintf('<span class="label up-o-label" style="background-color: %s;">%s</span>', $statuses[$columnValue]['color'], $statuses[$columnValue]['name']);
-                    } else {
-                        $columnValue = sprintf('<i class="@todo">%s</i>', __('invalid status', 'upstream'));
-                    }
-                } else {
-                    $columnValue = sprintf('<i class="s-text-color-gray">%s</i>', __('none', 'upstream'));
-                }
-
-                return $columnValue;
-            }
-        ),
-        'progress'    => array(
-            'type'        => 'percentage',
-            'isOrderable' => true,
-            'label'       => __('Progress', 'upstream')
-        ),
-        'milestone'   => array(
-            'type'        => 'custom',
-            'isOrderable' => true,
-            'label'       => upstream_milestone_label(),
-            'renderCallback' => function($columnName, $columnValue, $column, $row, $rowType, $projectId) use (&$milestones) {
-                if (strlen($columnValue) > 0) {
-                    if (isset($milestones[$columnValue])) {
-                        $columnValue = sprintf('<span class="label up-o-label" style="background-color: %s;">%s</span>', $milestones[$columnValue]['color'], $milestones[$columnValue]['title']);
-                    } else {
-                        $columnValue = sprintf('<i class="@todo">%s</i>', __('invalid milestone', 'upstream'));
-                    }
-                } else {
-                    $columnValue = sprintf('<i class="s-text-color-gray">%s</i>', __('none', 'upstream'));
-                }
-
-                return $columnValue;
-            }
-        ),
-        'start_date'  => array(
-            'type'        => 'date',
-            'isOrderable' => true,
-            'label'       => __('Start Date', 'upstream')
-        ),
-        'end_date'    => array(
-            'type'        => 'date',
-            'isOrderable' => true,
-            'label'       => __('End Date', 'upstream')
-        )
-    );
-
-    $hiddenTableColumns = array(
-        'notes'       => array(
-            'type'     => 'wysiwyg',
-            'label'    => __('Notes', 'upstream'),
-            'isHidden' => true
-        ),
-        'comments'    => array(
-            'type'     => 'comments',
-            'label'    => __('Comments'),
-            'isHidden' => true
-        )
-    );
-
-    if (!$areMilestonesEnabled) {
-        unset($visibleColumns['milestone']);
-    }
-
-    if (!$areCommentsEnabled) {
-        unset($hiddenTableColumns['comments']);
-    }
-
-    $schema = array(
-        'visibleColumns' => $tableColumns,
-        'hiddenColumns'  => $hiddenTableColumns
-    );
-
-    return $schema;
-}
-
-$columnsSettings = getTasksTableColumns($statuses, $milestones, $areMilestonesEnabled, $areCommentsEnabled);
+$columnsSchema = \UpStream\WIP\getTasksFields($statuses, $milestones, $areMilestonesEnabled, $areCommentsEnabled);
 ?>
 <div class="col-md-12 col-sm-12 col-xs-12">
   <div class="x_panel">
@@ -352,7 +258,7 @@ $columnsSettings = getTasksTableColumns($statuses, $milestones, $areMilestonesEn
             </div>
           </div>
         </form>
-        <?php \UpStream\WIP\renderTable($tableSettings, $columnsSettings, $rowset, 'task', $projectId); ?>
+        <?php \UpStream\WIP\renderTable($tableSettings, $columnsSchema, $rowset, 'task', $projectId); ?>
       </div>
     </div>
   </div>

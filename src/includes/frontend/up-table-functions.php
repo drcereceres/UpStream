@@ -12,9 +12,9 @@ function arrayToAttrs($data)
     return implode(' ', $attrs);
 }
 
-function getMilestonesTableColumns()
+function getMilestonesFields($areCommentsEnabled = null)
 {
-    $tableColumns = array(
+    $schema = array(
         'milestone'   => array(
             'type'        => 'raw',
             'isOrderable' => true,
@@ -28,6 +28,7 @@ function getMilestonesTableColumns()
         'tasks'       => array(
             'type'  => 'custom',
             'label' => upstream_task_label_plural(),
+            'isEditable' => false,
             'renderCallback' => function($columnName, $columnValue, $column, $row, $rowType, $projectId) {
                 $tasksOpenCount = isset($row['task_open']) ? (int)$row['task_open'] : 0;
                 $tasksCount = isset($row['task_count']) ? (int)$row['task_count'] : 0;
@@ -44,7 +45,8 @@ function getMilestonesTableColumns()
         'progress'    => array(
             'type'        => 'percentage',
             'isOrderable' => true,
-            'label'       => __('Progress', 'upstream')
+            'label'       => __('Progress', 'upstream'),
+            'isEditable'  => false
         ),
         'start_date'  => array(
             'type'        => 'date',
@@ -55,10 +57,132 @@ function getMilestonesTableColumns()
             'type'        => 'date',
             'isOrderable' => true,
             'label'       => __('End Date', 'upstream')
+        ),
+        'notes'       => array(
+            'type'     => 'wysiwyg',
+            'label'    => __('Notes', 'upstream'),
+            'isHidden' => true
+        ),
+        'comments'    => array(
+            'type'       => 'comments',
+            'label'      => __('Comments'),
+            'isHidden'   => true,
+            'isEditable' => false
         )
     );
 
-    $hiddenTableColumns = array(
+    if ($areCommentsEnabled === null) {
+        $areCommentsEnabled = upstreamAreCommentsEnabledOnMilestones();
+    }
+
+    if (!$areCommentsEnabled) {
+        unset($schema['comments']);
+    }
+
+    return apply_filters('upstream:project.milestones.fields', $schema);
+}
+
+function getTasksFields($statuses = array(), $milestones = array(), $areMilestonesEnabled = null, $areCommentsEnabled = null)
+{
+    if ($areMilestonesEnabled === null) {
+        $areMilestonesEnabled = !upstream_are_milestones_disabled() && !upstream_disable_milestones();
+    }
+
+    $options = array();
+
+    $schema = array(
+        'title' => array(
+            'type'        => 'raw',
+            'isOrderable' => true,
+            'label'       => __('Title', 'upstream')
+        ),
+        'assigned_to' => array(
+            'type'        => 'user',
+            'isOrderable' => true,
+            'label'       => __('Assigned To', 'upstream')
+        ),
+        'status'       => array(
+            'type'  => 'custom',
+            'label' => __('Status', 'upstream'),
+            'renderCallback' => function($columnName, $columnValue, $column, $row, $rowType, $projectId) use (&$statuses, &$options) {
+                if (strlen($columnValue) > 0) {
+                    if ($statuses === null) {
+                        if ($options === null) {
+                            $options = get_option('upstream_tasks');
+                        }
+
+                        $tasksStatuses = $options['statuses'];
+                        $statuses = array();
+                        foreach ($tasksStatuses as $status) {
+                            $statuses[$status['name']] = $status;
+                        }
+                        unset($tasksStatuses);
+                    }
+
+                    if (isset($statuses[$columnValue])) {
+                        $columnValue = sprintf('<span class="label up-o-label" style="background-color: %s;">%s</span>', $statuses[$columnValue]['color'], $statuses[$columnValue]['name']);
+                    } else {
+                        $columnValue = sprintf('<i class="@todo">%s</i>', __('invalid status', 'upstream'));
+                    }
+                } else {
+                    $columnValue = sprintf('<i class="s-text-color-gray">%s</i>', __('none', 'upstream'));
+                }
+
+                return $columnValue;
+            }
+        ),
+        'progress'    => array(
+            'type'        => 'percentage',
+            'isOrderable' => true,
+            'label'       => __('Progress', 'upstream')
+        ),
+        'milestone'   => array(
+            'type'        => 'custom',
+            'isOrderable' => true,
+            'label'       => upstream_milestone_label(),
+            'renderCallback' => function($columnName, $columnValue, $column, $row, $rowType, $projectId) use (&$milestones) {
+                if (strlen($columnValue) > 0) {
+                    if ($milestones === null) {
+                        $milestones = array();
+                        $meta = (array)get_post_meta(upstream_post_id(), '_upstream_project_milestones', true);
+                        foreach ($meta as $data) {
+                            if (!isset($data['id'])
+                                || !isset($data['created_by'])
+                                || !isset($data['milestone'])
+                            ) {
+                                continue;
+                            }
+
+                            $milestones[$data['id']] = array(
+                                'title' => $data['milestone'],
+                                'color' => $milestonesColors[$data['milestone']],
+                                'id'    => $data['id']
+                            );
+                        }
+                    }
+
+                    if (isset($milestones[$columnValue])) {
+                        $columnValue = sprintf('<span class="label up-o-label" style="background-color: %s;">%s</span>', $milestones[$columnValue]['color'], $milestones[$columnValue]['title']);
+                    } else {
+                        $columnValue = sprintf('<i class="@todo">%s</i>', __('invalid milestone', 'upstream'));
+                    }
+                } else {
+                    $columnValue = sprintf('<i class="s-text-color-gray">%s</i>', __('none', 'upstream'));
+                }
+
+                return $columnValue;
+            }
+        ),
+        'start_date'  => array(
+            'type'        => 'date',
+            'isOrderable' => true,
+            'label'       => __('Start Date', 'upstream')
+        ),
+        'end_date'    => array(
+            'type'        => 'date',
+            'isOrderable' => true,
+            'label'       => __('End Date', 'upstream')
+        ),
         'notes'       => array(
             'type'     => 'wysiwyg',
             'label'    => __('Notes', 'upstream'),
@@ -67,16 +191,190 @@ function getMilestonesTableColumns()
         'comments'    => array(
             'type'     => 'comments',
             'label'    => __('Comments'),
-            'isHidden' => true
+            'isHidden' => true,
+            'isEditable' => false
         )
     );
 
+    if ($areCommentsEnabled === null) {
+        $areCommentsEnabled = upstreamAreCommentsEnabledOnTasks();
+    }
+
+    if (!$areCommentsEnabled) {
+        unset($schema['comments']);
+    }
+
+    return apply_filters('upstream:project.tasks.fields', $schema);
+}
+
+function getBugsFields($severities = array(), $statuses = array(), $areCommentsEnabled = null)
+{
+    if (empty($severities)) {
+        $severities = null;
+    }
+
+    if (empty($statuses)) {
+        $statuses = null;
+    }
+
+    $options = null;
+
+    // @todo: check for & vars
     $schema = array(
-        'visibleColumns' => $tableColumns,
-        'hiddenColumns'  => $hiddenTableColumns
+        'title' => array(
+            'type'        => 'raw',
+            'isOrderable' => true,
+            'label'       => __('Title', 'upstream')
+        ),
+        'assigned_to' => array(
+            'type'        => 'user',
+            'isOrderable' => true,
+            'label'       => __('Assigned To', 'upstream')
+        ),
+        'severity'       => array(
+            'type'  => 'custom',
+            'label' => __('Severity', 'upstream'),
+            'isOrderable' => true,
+            'renderCallback' => function($columnName, $columnValue, $column, $row, $rowType, $projectId) use (&$severities, &$options) {
+                if (strlen($columnValue) > 0) {
+                    if ($severities === null) {
+                        if ($options === null) {
+                            $options = get_option('upstream_bugs');
+                        }
+
+                        $bugsSeverities = $options['severities'];
+                        $severities = array();
+                        foreach ($bugsSeverities as $severity) {
+                            $severities[$severity['name']] = $severity;
+                        }
+                        unset($bugsSeverities);
+                    }
+
+                    if (isset($severities[$columnValue])) {
+                        $columnValue = sprintf('<span class="label up-o-label" style="background-color: %s;">%s</span>', $severities[$columnValue]['color'], $severities[$columnValue]['name']);
+                    } else {
+                        $columnValue = sprintf('<i class="@todo">%s</i>', __('invalid severity', 'upstream'));
+                    }
+                } else {
+                    $columnValue = sprintf('<i class="s-text-color-gray">%s</i>', __('none', 'upstream'));
+                }
+
+                return $columnValue;
+            }
+        ),
+        'status'       => array(
+            'type'  => 'custom',
+            'label' => __('Status', 'upstream'),
+            'isOrderable' => true,
+            'renderCallback' => function($columnName, $columnValue, $column, $row, $rowType, $projectId) use (&$statuses, &$options) {
+                if (strlen($columnValue) > 0) {
+                    if ($statuses === null) {
+                        if ($options === null) {
+                            $options = get_option('upstream_bugs');
+                        }
+
+                        $bugsStatuses = $options['statuses'];
+                        $statuses = array();
+                        foreach ($bugsStatuses as $status) {
+                            $statuses[$status['name']] = $status;
+                        }
+                        unset($bugsStatuses);
+                    }
+
+                    if (isset($statuses[$columnValue])) {
+                        $columnValue = sprintf('<span class="label up-o-label" style="background-color: %s;">%s</span>', $statuses[$columnValue]['color'], $statuses[$columnValue]['name']);
+                    } else {
+                        $columnValue = sprintf('<i class="@todo">%s</i>', __('invalid status', 'upstream'));
+                    }
+                } else {
+                    $columnValue = sprintf('<i class="s-text-color-gray">%s</i>', __('none', 'upstream'));
+                }
+
+                return $columnValue;
+            }
+        ),
+        'due_date'  => array(
+            'type'        => 'date',
+            'isOrderable' => true,
+            'label'       => __('Due Date', 'upstream')
+        ),
+        'file'    => array(
+            'type'        => 'file',
+            'isOrderable' => false,
+            'label'       => __('File', 'upstream')
+        ),
+        'description' => array(
+            'type'     => 'wysiwyg',
+            'label'    => __('Description', 'upstream'),
+            'isHidden' => true
+        ),
+        'comments'    => array(
+            'type'     => 'comments',
+            'label'    => __('Comments'),
+            'isHidden' => true,
+            'isEditable' => false
+        )
     );
 
-    return $schema;
+    if ($areCommentsEnabled === null) {
+        $areCommentsEnabled = upstreamAreCommentsEnabledOnBugs();
+    }
+
+    if (!$areCommentsEnabled) {
+        unset($schema['comments']);
+    }
+
+    return apply_filters('upstream:project.bugs.fields', $schema);
+}
+
+function getFilesFields($areCommentsEnabled = null)
+{
+    // @todo check & var
+    $schema = array(
+        'title' => array(
+            'type'        => 'raw',
+            'isOrderable' => true,
+            'label'       => __('Title', 'upstream')
+        ),
+        'created_by' => array(
+            'type'        => 'user',
+            'isOrderable' => true,
+            'label'       => __('Uploaded by', 'upstream'),
+            'isEditable'  => false
+        ),
+        'created_at'  => array(
+            'type'        => 'date',
+            'isOrderable' => true,
+            'label'       => __('Upload Date', 'upstream'),
+            'isEditable'  => false
+        ),
+        'file'    => array(
+            'type'        => 'file',
+            'isOrderable' => false,
+            'label'       => __('File', 'upstream')
+        ),
+        'description' => array(
+            'type'     => 'wysiwyg',
+            'label'    => __('Description', 'upstream'),
+            'isHidden' => true
+        ),
+        'comments'    => array(
+            'type'     => 'comments',
+            'label'    => __('Comments'),
+            'isHidden' => true,
+            'isEditable' => false
+        )
+    );
+
+    if ($areCommentsEnabled === null) {
+        $areCommentsEnabled = upstreamAreCommentsEnabledOnFiles();
+    }
+
+    if (!$areCommentsEnabled) {
+        unset($schema['comments']);
+    }
+
+    return apply_filters('upstream:project.files.fields', $schema);
 }
 
 function renderTableHeaderColumn($identifier, $data)
@@ -288,7 +586,7 @@ function renderTableBody($data, $visibleColumnsSchema, $hiddenColumnsSchema, $ro
     echo $html;
 }
 
-function renderTable($tableAttrs = array(), $columns = array(), $data = array(), $itemType = '', $projectId = 0)
+function renderTable($tableAttrs = array(), $columnsSchema = array(), $data = array(), $itemType = '', $projectId = 0)
 {
     $tableAttrs['class'] = array_filter(isset($tableAttrs['class']) ? (!is_array($tableAttrs['class']) ? explode(' ', $tableAttrs['class']) : (array)$tableAttrs['class']) : array());
     $tableAttrs['class'] = array_unique(array_merge($tableAttrs['class'], array(
@@ -300,8 +598,16 @@ function renderTable($tableAttrs = array(), $columns = array(), $data = array(),
 
     // $tableAttrs = apply_filters('@todo', $tableAttrs);
 
-    $visibleColumnsSchema = $columns['visibleColumns'];
-    $hiddenColumnsSchema = $columns['hiddenColumns'];
+    $visibleColumnsSchema = array();
+    $hiddenColumnsSchema = array();
+
+    foreach ($columnsSchema as $columnName => $columnArgs) {
+        if (isset($columnArgs['isHidden']) && (bool)$columnArgs['isHidden'] === true) {
+            $hiddenColumnsSchema[$columnName] = $columnArgs;
+        } else {
+            $visibleColumnsSchema[$columnName] = $columnArgs;
+        }
+    }
 
     // $visibleColumnsSchema = apply_filters('@todo', $visibleColumnsSchema);
     // $hiddenColumnsSchema = apply_filters('@todo', $hiddenColumnsSchema);
