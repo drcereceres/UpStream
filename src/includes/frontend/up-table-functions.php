@@ -640,7 +640,7 @@ function upstream_format_table_data( $item, $key, $setting ) {
 
     // type: textarea
     if( $setting['type'] == 'textarea' && ! empty( $field_data ) ) {
-        $field_data = preg_replace('/([^>]) *\r?\n(?! *<)/', '<br>', $field_data);
+        $field_data = preg_replace('/([^>]) *\r?\n(?! *<)/', '$1<br>', $field_data);
         $output = wp_kses_post( $field_data );
     }
 
