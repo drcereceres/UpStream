@@ -408,15 +408,6 @@ function renderTableHeaderColumn($identifier, $data)
     <?php
 }
 
-/*
-$table = array(
-    'id'              => 'milestones',
-    'type'            => 'milestone',
-    'data-ordered-by' => 'start_date',
-    'data-order-dir'  => 'DESC'
-);
-*/
-
 function renderTableHeader($columns = array())
 {
     ob_start(); ?>
