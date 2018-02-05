@@ -459,7 +459,7 @@ function renderTableColumnValue($columnName, $columnValue, $column, $row, $rowTy
     } else if ($columnType === 'wysiwyg') {
         $columnValue = trim((string)$columnValue);
         if (strlen($columnValue) > 0) {
-            $html = sprintf('<blockquote>%s</blockquote>', $columnValue);
+            $html = sprintf('<blockquote>%s</blockquote>', html_entity_decode($columnValue));
         } else {
             $html = '<br>' . $html;
         }
