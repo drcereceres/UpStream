@@ -1272,3 +1272,7 @@ input.up-o-filter {
 .up-s-mb-2 {
   margin-bottom: 2px;
 }
+
+div[id^="_upstream_project_"].cmb2-postbox .select2 {
+  min-width: 120px;
+}

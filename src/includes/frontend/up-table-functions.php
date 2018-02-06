@@ -521,6 +521,12 @@ function renderTableBody($data, $visibleColumnsSchema, $hiddenColumnsSchema, $ro
           <?php foreach ($visibleColumnsSchema as $columnName => $column):
           $columnValue = isset($row[$columnName]) ? $row[$columnName] : null;
 
+            if ($column['type'] === 'user') {
+                if ((int)$columnValue <= 0) {
+                    $columnValue = '';
+                }
+            }
+
           $columnAttrs = array(
               'data-column' => $columnName,
               'data-value'  => $columnValue,

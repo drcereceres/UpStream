@@ -38,7 +38,7 @@ $l = array(
     'LB_DESCRIPTION' => __('Description', 'upstream'),
     'LB_COMMENTS'    => __('Comments', 'upstream'),
     'LB_FILE'        => __('File', 'upstream'),
-    'LB_UPLOADED_AT' => __('Uploaded at', 'upstream')
+    'LB_UPLOADED_AT' => __('Upload Date', 'upstream')
 );
 
 $areCommentsEnabled = upstreamAreCommentsEnabledOnFiles();
