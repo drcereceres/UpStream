@@ -585,7 +585,7 @@ class Comments
 
             // Verify nonce.
             if (!check_ajax_referer($nonceIdentifier, 'nonce', false)) {
-                throw new \Exception(__("Invalid request.", 'upstream'));
+                throw new \Exception(__("Invalid nonce.", 'upstream'));
             }
 
             // Check if commenting is disabled on the given project.

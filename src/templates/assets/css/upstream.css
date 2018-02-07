@@ -346,6 +346,10 @@ table.dataTable>tbody>tr.child .dtr-data ul {
   text-overflow: ellipsis;
 }
 
+.c-data-table__filters select.o-select2[multiple] + .select2-container .select2-selection__rendered {
+  padding-left: 0 !important;
+}
+
 .c-comments .o-comment.s-highlighted > .o-comment__body {
   background-color: rgba(116, 185, 255, .25);
   color: #000;
