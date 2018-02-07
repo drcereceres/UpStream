@@ -486,8 +486,8 @@ function renderTableColumnValue($columnName, $columnValue, $column, $row, $rowTy
             );
           }
         }
-    } else {
-        $columnValue = trim($columnValue);
+    } else if (!is_array($columnValue)) {
+        $columnValue = trim((string)$columnValue);
         if (strlen($columnValue) > 0) {
             $html = esc_html($columnValue);
         }
