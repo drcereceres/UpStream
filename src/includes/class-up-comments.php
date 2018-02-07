@@ -77,8 +77,6 @@ class Comments
      *
      * @since   1.13.0
      * @static
-     *
-     * @todo    Replace wp_verify_nonce with check_ajax_referer.
      */
     public static function storeComment()
     {
@@ -173,8 +171,6 @@ class Comments
      *
      * @since   1.13.0
      * @static
-     *
-     * @todo    Replace wp_verify_nonce with check_ajax_referer.
      */
     public static function storeCommentReply()
     {
@@ -271,8 +267,6 @@ class Comments
      *
      * @since   1.13.0
      * @static
-     *
-     * @todo    Replace wp_verify_nonce with check_ajax_referer.
      */
     public static function trashComment()
     {
@@ -350,8 +344,6 @@ class Comments
      * @since   1.13.0
      * @access  private
      * @static
-     *
-     * @todo    Replace wp_verify_nonce with check_ajax_referer.
      *
      * @throws  \Exception when something went wrong or failed on validations.
      *

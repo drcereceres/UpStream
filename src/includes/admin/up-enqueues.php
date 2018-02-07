@@ -29,6 +29,11 @@ function upstream_load_admin_scripts($hook)
         if ($postType === 'project') {
             global $post_type_object;
 
+            $globalAssetsPath = UPSTREAM_PLUGIN_URL . 'templates/assets/';
+            wp_enqueue_style( 'up-select2', $globalAssetsPath . 'css/vendor/select2.min.css', array(), UPSTREAM_VERSION, 'all');
+            wp_enqueue_script('up-select2', $globalAssetsPath . 'js/vendor/select2.full.min.js', array(), UPSTREAM_VERSION, true);
+            unset($globalAssetsPath);
+
             wp_register_script( 'upstream-project', $assetsDir . 'js/edit-project.js', $admin_deps, UPSTREAM_VERSION, false );
             wp_enqueue_script( 'upstream-project' );
             wp_localize_script( 'upstream-project', 'upstream_project', apply_filters( 'upstream_project_script_vars', array(
