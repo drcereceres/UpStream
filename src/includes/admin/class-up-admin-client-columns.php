@@ -94,7 +94,7 @@ class UpStream_Admin_Client_Columns {
             return;
         }
 
-        echo !empty($columnValue) ? $columnValue : '<i>none</i>';
+        echo !empty($columnValue) ? $columnValue : '<i>' . __('none', 'upstream') . '</i>';
     }
 
 }

@@ -187,18 +187,74 @@ jQuery(document).ready(function($){
         }, 750);
       });
     });
+
+    function highlighComment(comment_selector) {
+      var comment = $(comment_selector);
+      if (comment.length === 0) return;
+
+      var wrapper = $($(comment.parents('.c-comments')).get(0));
+      if (wrapper.length === 0) return;
+
+      var SCROLL_DURATION = 250;
+      var HIGHLIGH_CLASS = 's-highlighted';
+
+      var scrollElToOffset = function(subject, offset, onSuccessCallback) {
+        subject.animate({
+          scrollTop: offset,
+          duration: SCROLL_DURATION
+        }, onSuccessCallback);
+      };
+
+      var doHighlighComment = function(comment) {
+        comment.addClass(HIGHLIGH_CLASS);
+        setTimeout(function() {
+          comment.removeClass(HIGHLIGH_CLASS);
+        }, 750);
+      };
+
+      var wrapperDataType = wrapper.attr('data-type');
+      if (wrapperDataType === 'project') {
+        var bodyHasScrolled = false;
+        scrollElToOffset($('html, body'), comment.offset().top, function() {
+          if (bodyHasScrolled) return;
+
+          bodyHasScrolled = true;
+
+          scrollElToOffset(wrapper, comment.get(0).offsetTop, function() {
+            doHighlighComment(comment);
+          });
+        });
+      } else {
+        var tr = $($(wrapper.parents('tr')).get(0));
+
+        $('> td[data-name]', tr).trigger('click');
+
+        var bodyHasScrolled = false;
+        scrollElToOffset($('html, body'), tr.offset().top, function() {
+          if (bodyHasScrolled) return;
+
+          bodyHasScrolled = true;
+
+          comment = $('tr.child ' + comment_selector, tr.parent());
+          wrapper = $($(comment.parents('.c-comments')).get(0));
+
+          scrollElToOffset(wrapper, comment.get(0).offsetTop - comment.height(), function() {
+            doHighlighComment(comment);
+          });
+        });
+      }
+    }
+
+    setTimeout(function() {
+      var commentIdRegexp = new RegExp(/^\#comment\-\d+/i);
+      if (commentIdRegexp.test(window.location.hash)) {
+        highlighComment(window.location.hash);
+      }
+    }, 250);
   });
 })(window, window.document, jQuery || {});
 
-
-
-
-
-
-
 (function(window, document, $, $data, TableExport, undefined) {
-
-
   $(document).ready(function() {
     $('.o-data-table tr[data-id] a[data-toggle="up-modal"]').on('click', function(e) {
       e.preventDefault();

@@ -4,7 +4,7 @@ Tags: project, manage, management, project management, project manager, wordpres
 Requires at least: 4.5
 Tested up to: 4.9
 Requires PHP: 5.6
-Stable tag: 1.13.7
+Stable tag: 1.14.0
 License: GPL-3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -136,25 +136,20 @@ UpStream does not use the existing styling of your theme. The features and the v
 The format is based on [Keep a Changelog](http://keepachangelog.com)
 and this project adheres to [Semantic Versioning](http://semver.org).
 
-= [@todo: WIP] =
+= [1.14.0] - 2018-01-31 =
 
 Added:
-* Added Categories, Status, Clients, Title filters for Projects on frontend
-* Added Milestone, Assignee, Star and End Dates filters for Milestones
-* Added Title, Assignee, Status, Milestone, Star and End Dates filters for Tasks
-* Added Title, Assignee, Severity, Status, Due Date filters for Bugs
-* Added Title, Uploader, Upload Date filters for Files
+* Tags can now be assigned to Projects
+* Added "Disable Project Overview" option
+* Added "Disable Project Details" option
+* Auto scroll to particular comments via URL
 
 Changed:
-* Users can now filter metaboxes/tables data using multiple filters at once
-* We're slowly moving towards using Select2 lib across the whole plugin
-* Frontend Date filters now use a new Date Picker js lib
+* "Comments on <section>" options labels were renamed to "Disable Discussion on <section>"
+* Some options were grouped for better UX
 
-Deprecated:
-* Within UpStream_Metaboxes_Projects class: getStatusFilterHtml, getSeverityFilterHtml, getFiltersHeaderHtml, getFiltersFooterHtml, getMilestoneFilterHtml
-
-Removed:
-* Frontend tables no longer use Datatable lib due lack of flexibility and performance issues
+Fixed:
+* Fixed a couple of strings not being translated as they should
 
 = [1.13.7] - 2018-01-26 =
 

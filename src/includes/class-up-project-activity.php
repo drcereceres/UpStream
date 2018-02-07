@@ -302,7 +302,7 @@ class UpStream_Project_Activity {
                 break;
         }
 
-        $the_val = empty( $the_val ) ? __( '(none)', 'upstream' ) : $the_val;
+        $the_val = empty( $the_val ) ? '(' . __( 'none', 'upstream' ) . ')' : $the_val;
         return $the_val;
 
     }
