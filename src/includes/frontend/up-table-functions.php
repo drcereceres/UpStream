@@ -617,3 +617,87 @@ function renderTable($tableAttrs = array(), $columnsSchema = array(), $data = ar
     </table>
     <?php
 }
+
+function renderTableFilter($filterType, $columnName, $args = array(), $renderFormGroup = true)
+{
+    if (!in_array($filterType, array('search', 'select'))
+        || empty($columnName)
+    ) {
+        return false;
+    }
+
+    $renderFormGroup = (bool)$renderFormGroup;
+
+    // @todo
+    $isHidden = !isset($args['hidden']) || (isset($args['hidden']) && (bool)$args['hidden'] === true);
+
+    ob_start();
+
+    if ($renderFormGroup) {
+        echo '<div class="form-group">';
+    }
+
+    if ($filterType === 'search') {
+        $inputAttrs = array(
+            'type'                  => 'search',
+            'class'                 => 'form-control',
+            'data-column'           => $columnName,
+            'data-compare-operator' => isset($args['operator']) ? $args['operator'] : 'contains'
+        );
+
+        if (isset($args['attrs']) && !empty($args['attrs'])) {
+            $inputAttrs = array_merge($args['attrs'], $inputAttrs);
+        }
+        ?>
+        <div class="input-group">
+          <div class="input-group-addon">
+            <i class="fa fa-search"></i>
+          </div>
+          <input <?php echo arrayToAttrs($inputAttrs); ?>>
+        </div>
+        <?php
+    } else if ($filterType === 'select') {
+        $inputAttrs = array(
+            'class'       => 'form-control o-select2',
+            'data-column' => $columnName,
+            'multiple'    => 'multiple',
+            'data-compare-operator' => isset($args['operator']) ? $args['operator'] : 'contains'
+        );
+
+        if (isset($args['attrs']) && !empty($args['attrs'])) {
+            $inputAttrs = array_merge($args['attrs'], $inputAttrs);
+        }
+
+        $hasIcon = isset($args['icon']) && !empty($args['icon']);
+        if ($hasIcon): ?>
+        <div class="input-group">
+          <div class="input-group-addon">
+            <i class="fa fa-user"></i>
+          </div>
+        <?php endif; ?>
+
+        <select <?php echo arrayToAttrs($inputAttrs); ?>>
+          <option value></option>
+          <option value="__none__"><?php _e('None', 'upstream'); ?></option>
+          <?php
+          if (isset($args['options']) && is_array($args['options']) && count($args['options'])): ?>
+            <?php foreach ($args['options'] as $optionValue => $optionLabel): ?>
+            <option value="<?php echo (string)$optionValue; ?>"><?php echo $optionLabel; ?></option>
+            <?php endforeach; ?>
+          <?php endif; ?>
+        </select>
+
+        <?php if ($hasIcon): ?>
+        </div>
+        <?php endif;
+    }
+
+    if ($renderFormGroup) {
+        echo '</div>';
+    }
+
+    $filterHtml = ob_get_contents();
+    ob_end_clean();
+
+    echo $filterHtml;
+}
