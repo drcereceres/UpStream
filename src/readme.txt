@@ -150,6 +150,7 @@ Changed:
 * We're slowly moving towards using Select2 lib across the whole plugin
 * Frontend Date filters now use a new Date Picker js lib
 * Replaced wp_verify_nonce in favor of check_ajax_referer on the comments AJAX endpoints
+* Minor text changes
 
 Deprecated:
 * Within UpStream_Metaboxes_Projects class: getStatusFilterHtml, getSeverityFilterHtml, getFiltersHeaderHtml, getFiltersFooterHtml, getMilestoneFilterHtml

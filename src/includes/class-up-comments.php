@@ -109,7 +109,7 @@ class Comments
                     !isset($_POST['item_id'])
                     || empty($_POST['item_id'])
                 ) {
-                    throw new \Exception(__("Invalid request.", 'upstream'));
+                    throw new \Exception(__("Invalid item.", 'upstream'));
                 }
 
                 $item_id = $_POST['item_id'];
@@ -120,8 +120,8 @@ class Comments
             }
 
             // Verify nonce.
-                throw new \Exception(__("Invalid request.", 'upstream'));
             if (!check_ajax_referer($nonceIdentifier, 'nonce', false)) {
+                throw new \Exception(__("Invalid nonce.", 'upstream'));
             }
 
             // Check if the user has enough permissions to insert a new comment.
