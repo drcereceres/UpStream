@@ -162,6 +162,8 @@ $columnsSchema = \UpStream\WIP\getMilestonesFields();
               </div>
               <input type="hidden" id="milestones-filter-end_date_timestamp" data-column="end_date" data-compare-operator="<=">
             </div>
+
+            <?php do_action('upstream:project.milestones.filters', $tableSettings, $columnsSchema, $projectId); ?>
           </div>
         </form>
         <?php \UpStream\WIP\renderTable($tableSettings, $columnsSchema, $milestones, 'milestone', $projectId); ?>

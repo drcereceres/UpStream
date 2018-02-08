@@ -164,6 +164,8 @@ $columnsSchema = \UpStream\WIP\getFilesFields($areCommentsEnabled);
               </div>
               <input type="hidden" id="files-filter-uploaded_at_from_timestamp" data-column="created_time" data-compare-operator=">=">
             </div>
+
+            <?php do_action('upstream:project.files.filters', $tableSettings, $columnsSchema, $projectId); ?>
           </div>
         </form>
         <?php \UpStream\WIP\renderTable($tableSettings, $columnsSchema, $rowset, 'file', $projectId); ?>

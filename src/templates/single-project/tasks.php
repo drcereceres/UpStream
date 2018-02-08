@@ -256,6 +256,8 @@ $columnsSchema = \UpStream\WIP\getTasksFields($statuses, $milestones, $areMilest
               </div>
               <input type="hidden" id="tasks-filter-end_date_timestamp" data-column="end_date" data-compare-operator="<=">
             </div>
+
+            <?php do_action('upstream:project.tasks.filters', $tableSettings, $columnsSchema, $projectId); ?>
           </div>
         </form>
         <?php \UpStream\WIP\renderTable($tableSettings, $columnsSchema, $rowset, 'task', $projectId); ?>

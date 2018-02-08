@@ -219,6 +219,8 @@ $columnsSchema = \UpStream\WIP\getBugsFields($severities, $statuses, $areComment
               </div>
               <input type="hidden" id="tasks-filter-due_date_from_timestamp" data-column="due_date" data-compare-operator=">=">
             </div>
+
+            <?php do_action('upstream:project.bugs.filters', $tableSettings, $columnsSchema, $projectId); ?>
           </div>
         </form>
         <?php \UpStream\WIP\renderTable($tableSettings, $columnsSchema, $rowset, 'bug', $projectId); ?>
