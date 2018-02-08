@@ -120,8 +120,8 @@ class Comments
             }
 
             // Verify nonce.
-            if (!wp_verify_nonce($_POST['nonce'], $nonceIdentifier)) {
                 throw new \Exception(__("Invalid request.", 'upstream'));
+            if (!check_ajax_referer($nonceIdentifier, 'nonce', false)) {
             }
 
             // Check if the user has enough permissions to insert a new comment.
@@ -194,7 +194,7 @@ class Comments
                 || !isset($_POST['content'])
                 || !isset($_POST['parent_id'])
                 || !is_numeric($_POST['parent_id'])
-                || !wp_verify_nonce($_POST['nonce'], 'upstream:project.add_comment_reply:' . $_POST['parent_id'])
+                || !check_ajax_referer('upstream:project.add_comment_reply:' . $_POST['parent_id'], 'nonce', false)
             ) {
                 throw new \Exception(__("Invalid request.", 'upstream'));
             }
@@ -286,7 +286,7 @@ class Comments
                 || !isset($_POST['nonce'])
                 || !isset($_POST['project_id'])
                 || !isset($_POST['comment_id'])
-                || !wp_verify_nonce($_POST['nonce'], 'upstream:project.trash_comment:' . $_POST['comment_id'])
+                || !check_ajax_referer('upstream:project.trash_comment:' . $_POST['comment_id'], 'nonce', false)
             ) {
                 throw new \Exception(__("Invalid request.", 'upstream'));
             }
@@ -362,7 +362,7 @@ class Comments
             || !isset($_POST['nonce'])
             || !isset($_POST['project_id'])
             || !isset($_POST['comment_id'])
-            || !wp_verify_nonce($_POST['nonce'], 'upstream:project.' . ($isApproved ? 'approve_comment' : 'unapprove_comment') . ':' . $_POST['comment_id'])
+            || !check_ajax_referer('upstream:project.' . ($isApproved ? 'approve_comment' : 'unapprove_comment') . ':' . $_POST['comment_id'], 'nonce', false)
         ) {
             throw new \Exception(__('Invalid request.', 'upstream'));
         }
