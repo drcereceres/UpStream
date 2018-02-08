@@ -58,14 +58,14 @@ $columnsSchema = \UpStream\WIP\getMilestonesFields();
       <div class="c-data-table table-responsive">
         <form class="form-inline c-data-table__filters" data-target="#milestones">
           <div class="hidden-xs">
-            <div class="form-group">
-              <div class="input-group">
-                <div class="input-group-addon">
-                  <i class="fa fa-search"></i>
-                </div>
-                <input type="search" class="form-control" placeholder="<?php echo $l['LB_MILESTONE']; ?>" data-column="milestone" data-compare-operator="contains" width="200">
-              </div>
-            </div>
+            <?php
+            \UpStream\WIP\renderTableFilter('search', 'milestone', array(
+                'attrs' => array(
+                    'placeholder' => $l['LB_MILESTONE'],
+                    'width'       => 200
+                )
+            ));
+            ?>
             <div class="form-group">
               <div class="btn-group">
                 <a href="#milestones-filters" role="button" class="btn btn-default" data-toggle="collapse" aria-expanded="false" aria-controls="milestones-filters">
@@ -117,12 +117,14 @@ $columnsSchema = \UpStream\WIP\getMilestonesFields();
           </div>
           <div id="milestones-filters" class="collapse">
             <div class="form-group visible-xs">
-              <div class="input-group">
-                <div class="input-group-addon">
-                  <i class="fa fa-search"></i>
-                </div>
-                <input type="search" class="form-control" placeholder="<?php echo $l['LB_MILESTONE']; ?>" data-column="milestone" data-compare-operator="contains">
-              </div>
+              <?php
+              \UpStream\WIP\renderTableFilter('search', 'milestone', array(
+                  'attrs' => array(
+                      'placeholder' => $l['LB_MILESTONE'],
+                      'width'       => 200
+                  )
+              ), false);
+              ?>
             </div>
             <div class="form-group">
               <div class="input-group">
