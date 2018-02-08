@@ -417,7 +417,7 @@ jQuery(document).ready(function($){
         var tr = $(this);
         var shouldDisplay = false;
 
-        var filter, filterIndex, filterColumnValue, columnValue, comparator;
+        var filter, filterIndex, filterColumnValue, columnValue, comparator, dataWrapper;
         for (filterIndex =  0; filterIndex < filtersMap.length; filterIndex++) {
           filter = filtersMap[filterIndex];
           if (filter.value === null) {
@@ -426,7 +426,17 @@ jQuery(document).ready(function($){
 
           filtersHasChanged = true;
 
-          columnValue = $('[data-column="'+ filter.column +'"]', tr).attr('data-value');
+          dataWrapper = $('[data-column="'+ filter.column +'"]', tr);
+          if (dataWrapper.length === 0) {
+            dataWrapper = $('[data-column="'+ filter.column +'"]', $('tbody tr[data-parent="'+ tr.attr('data-id') +'"]'));
+            if (dataWrapper.length === 0) {
+              continue;
+            } else {
+              dataWrapper = $('[data-value]', dataWrapper);
+            }
+          }
+
+          columnValue = dataWrapper.attr('data-value');
 
           if (filter.comparator === 'contains') {
             if (typeof filter.value === 'string') {

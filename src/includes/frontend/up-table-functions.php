@@ -1,5 +1,6 @@
 <?php
 namespace UpStream\WIP;
+// @todo
 
 function arrayToAttrs($data)
 {
@@ -431,6 +432,8 @@ function renderTableHeader($columns = array())
 
 function renderTableColumnValue($columnName, $columnValue, $column, $row, $rowType, $projectId)
 {
+    $isHidden = isset($column['isHidden']) && (bool)$column['isHidden'] === true;
+
     $html = sprintf('<i class="s-text-color-gray">%s</i>', __('none', 'upstream'));
 
     $columnType = isset($column['type']) ? $column['type'] : 'raw';
@@ -486,10 +489,40 @@ function renderTableColumnValue($columnName, $columnValue, $column, $row, $rowTy
             );
           }
         }
-    } else if (!is_array($columnValue)) {
+    } else if ($columnType === 'array') {
+        $columnValue = array_filter((array)$columnValue);
+
+        if (isset($column['options'])) {
+            $values = array();
+
+            if (is_array($column['options'])) {
+                foreach ($columnValue as $value) {
+                    if (isset($column['options'][$value])) {
+                        $values[] = $column['options'][$value];
+                    }
+                }
+            }
+
+            $values = implode(', ', $values);
+        } else if (!empty($columnValue)) {
+            $values = implode(', ', $columnValue);
+        }
+
+        if (!empty($values)) {
+            if ($isHidden) {
+                $html = '<br><span data-value="' . implode(',', $columnValue) . '">' . $values . '</span>';
+            } else {
+                $html = '<br><span>' . implode(',', $columnValue) . '</span>';
+            }
+        }
+    } else {
         $columnValue = trim((string)$columnValue);
         if (strlen($columnValue) > 0) {
             $html = esc_html($columnValue);
+        }
+
+        if ($isHidden) {
+            $html = '<span data-value="'. esc_attr($columnValue) .'">' . $html . '</span>';
         }
     }
 
@@ -558,7 +591,7 @@ function renderTableBody($data, $visibleColumnsSchema, $hiddenColumnsSchema, $ro
               <?php foreach ($hiddenColumnsSchema as $columnName => $column):
               $columnValue = isset($row[$columnName]) ? $row[$columnName] : null;
               ?>
-              <div class="form-group">
+              <div class="form-group" data-column="<?php echo $columnName; ?>">
                 <label><?php echo isset($column['label']) ? $column['label'] : ''; ?></label>
                 <?php renderTableColumnValue($columnName, $columnValue, $column, $row, $rowType, $projectId); ?>
               </div>
