@@ -435,7 +435,6 @@ function renderTableColumnValue($columnName, $columnValue, $column, $row, $rowTy
     $isHidden = isset($column['isHidden']) && (bool)$column['isHidden'] === true;
 
     $html = sprintf('<i class="s-text-color-gray">%s</i>', __('none', 'upstream'));
-
     $columnType = isset($column['type']) ? $column['type'] : 'raw';
     if ($columnType === 'user') {
         $columnValue = (int)$columnValue;
@@ -488,6 +487,8 @@ function renderTableColumnValue($columnName, $columnValue, $column, $row, $rowTy
               basename($columnValue)
             );
           }
+        } else if ($isHidden) {
+            $html = '<br>' . $html;
         }
     } else if ($columnType === 'array') {
         $columnValue = array_filter((array)$columnValue);
@@ -514,6 +515,8 @@ function renderTableColumnValue($columnName, $columnValue, $column, $row, $rowTy
             } else {
                 $html = '<br><span>' . implode(',', $columnValue) . '</span>';
             }
+        } else {
+            $html = '<br>' . $html;
         }
     } else {
         $columnValue = trim((string)$columnValue);
