@@ -974,8 +974,7 @@ function getUserAvatarURL($user_id)
         return false;
     }
 
-    // Check if the ID is valid.
-    // @todo
+    // Is this really needed?
     /*
     global $wpdb;
     $idIsValid = (int)$wpdb->get_var(sprintf('

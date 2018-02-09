@@ -440,7 +440,6 @@ function renderTableColumnValue($columnName, $columnValue, $column, $row, $rowTy
         $columnValue = (int)$columnValue;
 
         if ($columnValue > 0) {
-            // @todo: cache?
             $user = get_userdata($columnValue);
 
             if ($user instanceof \WP_User) {
@@ -573,8 +572,6 @@ function renderTableBody($data, $visibleColumnsSchema, $hiddenColumnsSchema, $ro
               $columnAttrs['class'] = 'is-clickable';
               $columnAttrs['role'] = 'button';
           }
-
-          // @todo: filter
           ?>
           <td <?php echo arrayToAttrs($columnAttrs); ?>>
             <?php if ($isFirst): ?>
@@ -629,8 +626,6 @@ function renderTable($tableAttrs = array(), $columnsSchema = array(), $data = ar
     $tableAttrs['cellspacing'] = 0;
     $tableAttrs['width'] = '100%';
 
-    // $tableAttrs = apply_filters('@todo', $tableAttrs);
-
     $visibleColumnsSchema = array();
     $hiddenColumnsSchema = array();
 
@@ -641,9 +636,6 @@ function renderTable($tableAttrs = array(), $columnsSchema = array(), $data = ar
             $visibleColumnsSchema[$columnName] = $columnArgs;
         }
     }
-
-    // $visibleColumnsSchema = apply_filters('@todo', $visibleColumnsSchema);
-    // $hiddenColumnsSchema = apply_filters('@todo', $hiddenColumnsSchema);
 
     $tableAttrs['class'] = implode(' ', $tableAttrs['class']);
     ?>
@@ -664,7 +656,6 @@ function renderTableFilter($filterType, $columnName, $args = array(), $renderFor
 
     $renderFormGroup = (bool)$renderFormGroup;
 
-    // @todo
     $isHidden = !isset($args['hidden']) || (isset($args['hidden']) && (bool)$args['hidden'] === true);
 
     ob_start();

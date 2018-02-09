@@ -12,10 +12,8 @@ class UpStream_View
     use Singleton;
 
     protected static $project = null;
-
     protected static $milestones = array();
     protected static $tasks = array();
-
     protected static $users = array();
 
     public function __construct()

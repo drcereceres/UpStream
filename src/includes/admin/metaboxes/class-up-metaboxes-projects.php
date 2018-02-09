@@ -399,7 +399,14 @@ class UpStream_Metaboxes_Projects {
         }
     }
 
-    // @todo
+    /**
+     * Return HTML of all admin filters for Milestones.
+     *
+     * @since   @todo
+     * @access  private
+     *
+     * @return  string
+     */
     private function getMilestonesFiltersHtml()
     {
         $users = upstream_admin_get_all_project_users();
@@ -443,7 +450,14 @@ class UpStream_Metaboxes_Projects {
         return $html;
     }
 
-    // @todo
+    /**
+     * Return HTML of all admin filters for Tasks.
+     *
+     * @since   @todo
+     * @access  private
+     *
+     * @return  string
+     */
     private function getTasksFiltersHtml()
     {
         $users = upstream_admin_get_all_project_users();
@@ -532,7 +546,14 @@ class UpStream_Metaboxes_Projects {
         return $html;
     }
 
-    // @todo
+    /**
+     * Return HTML of all admin filters for Bugs.
+     *
+     * @since   @todo
+     * @access  private
+     *
+     * @return  string
+     */
     private function getBugsFiltersHtml()
     {
         $users = upstream_admin_get_all_project_users();
@@ -600,7 +621,14 @@ class UpStream_Metaboxes_Projects {
         return $html;
     }
 
-    // @todo
+    /**
+     * Return HTML of all admin filters for Files.
+     *
+     * @since   @todo
+     * @access  private
+     *
+     * @return  string
+     */
     private function getFilesFiltersHtml()
     {
         $users = upstream_admin_get_all_project_users();
@@ -639,69 +667,25 @@ class UpStream_Metaboxes_Projects {
     /**
      * Return the Status filter HTML.
      *
-     * @since   1.0.0
-     * @access  private
+     * @since       1.0.0
+     * @access      private
      * @deprecated  @todo
-     *
-     * @return  string
      */
     private function getStatusFilterHtml()
     {
-        $upstreamStatusList = upstream_admin_get_task_statuses();
-        $statusOptionsHtml = '<option>- ' . __('Show All', 'upstream') . ' -</option>';
-        foreach ($upstreamStatusList as $statusId => $statusTitle) {
-            $statusOptionsHtml .= sprintf('<option value="%s">%s</option>', $statusId, $statusTitle);
-        }
-
-        $html = sprintf('
-            <div class="col-md-4">
-                <div>
-                    <label>%s</label>
-                    <select class="cmb-type-select upstream-filter upstream-filter-status" data-disabled="false" data-owner="true" data-no-items-found-message="%s" data-column="status">
-                        %s
-                    </select>
-                </div>
-            </div>',
-            __('Status', 'upstream'),
-            __('No items found.', 'upstream'),
-            $statusOptionsHtml
-        );
-
-        return $html;
+        _doing_it_wrong(__FUNCTION__, 'Deprecated function.', '@todo');
     }
 
     /**
      * Return the Severity filter HTML.
      *
-     * @since   1.0.0
-     * @access  private
+     * @since       1.0.0
+     * @access      private
      * @deprecated  @todo
-     *
-     * @return  string
      */
     private function getSeverityFilterHtml()
     {
-        $upstreamSeveritiesList = upstream_admin_get_bug_severities();
-        $statusOptionsHtml = '<option>- ' . __('Show All', 'upstream') . ' -</option>';
-        foreach ($upstreamSeveritiesList as $severityId => $severityTitle) {
-            $statusOptionsHtml .= sprintf('<option value="%s">%s</option>', $severityId, $severityTitle);
-        }
-
-        $html = sprintf('
-            <div class="col-md-4">
-                <div>
-                    <label>%s</label>
-                    <select class="cmb-type-select upstream-filter upstream-filter-severity" data-disabled="false" data-owner="true" data-column="severity" data-no-items-found-message="%s">
-                        %s
-                    </select>
-                </div>
-            </div>',
-            __('Severity', 'upstream'),
-            __('No items found.', 'upstream'),
-            $statusOptionsHtml
-        );
-
-        return $html;
+        _doing_it_wrong(__FUNCTION__, 'Deprecated function.', '@todo');
     }
 
     /**
@@ -710,14 +694,10 @@ class UpStream_Metaboxes_Projects {
      * @since       1.0.0
      * @access      private
      * @deprecated  @todo
-     *
-     * @return      string
      */
     private function getFiltersHeaderHtml()
     {
-        $html = '<div class="row upstream-filters-wrapper">';
-
-        return $html;
+        _doing_it_wrong(__FUNCTION__, 'Deprecated function.', '@todo');
     }
 
     /**
@@ -726,48 +706,22 @@ class UpStream_Metaboxes_Projects {
      * @since       1.0.0
      * @access      private
      * @deprecated  @todo
-     *
-     * @return      string
      */
     private function getFiltersFooterHtml()
     {
-        $html = '</div>';
-
-        return $html;
+        _doing_it_wrong(__FUNCTION__, 'Deprecated function.', '@todo');
     }
 
     /**
      * Return the Milestone filter HTML.
      *
-     * @since   1.0.0
-     * @access  private
+     * @since       1.0.0
+     * @access      private
      * @deprecated  @todo
-     *
-     * @return  string
      */
     private function getMilestoneFilterHtml()
     {
-        $upstreamMilestonesList = upstream_admin_get_options_milestones();
-        $milestonesOptionsHtml = '<option>- ' . __('Show All', 'upstream') . ' -</option>';
-        foreach ($upstreamMilestonesList as $milestoneId => $milestoneTitle) {
-            $milestonesOptionsHtml .= sprintf('<option value="%s">%s</option>', $milestoneId, $milestoneTitle);
-        }
-
-        $html = sprintf('
-            <div class="col-md-4">
-                <div>
-                    <label>%s</label>
-                    <select class="cmb-type-select upstream-filter upstream-filter-milestone" data-disabled="false" data-owner="true" data-no-items-found-message="%s" data-column="milestone">
-                        %s
-                    </select>
-                </div>
-            </div>',
-            __('Milestone', 'upstream'),
-            __('No items found.', 'upstream'),
-            $milestonesOptionsHtml
-        );
-
-        return $html;
+        _doing_it_wrong(__FUNCTION__, 'Deprecated function.', '@todo');
     }
 
 
