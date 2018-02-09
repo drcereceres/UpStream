@@ -9,7 +9,7 @@ if (!defined('ABSPATH')) exit;
  */
 
 upstream_get_template_part('global/header.php');
-// upstream_get_template_part('global/sidebar.php'); // @todo
+upstream_get_template_part('global/sidebar.php');
 upstream_get_template_part('global/top-nav.php');
 
 $user = upstream_user_data(@$_SESSION['upstream']['user_id']);

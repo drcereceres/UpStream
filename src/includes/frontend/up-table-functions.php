@@ -219,7 +219,6 @@ function getBugsFields($severities = array(), $statuses = array(), $areCommentsE
 
     $options = null;
 
-    // @todo: check for & vars
     $schema = array(
         'title' => array(
             'type'        => 'raw',
@@ -329,7 +328,6 @@ function getBugsFields($severities = array(), $statuses = array(), $areCommentsE
 
 function getFilesFields($areCommentsEnabled = null)
 {
-    // @todo check & var
     $schema = array(
         'title' => array(
             'type'        => 'raw',
@@ -393,9 +391,6 @@ function renderTableHeaderColumn($identifier, $data)
         $attrs['role'] = 'button';
         $attrs['scope'] = 'col';
     }
-
-    // @todo
-    // $attrs = apply_filters('', $attrs, $identifier);
     ?>
     <th <?php echo arrayToAttrs($attrs); ?>>
       <?php echo isset($data['label']) ? $data['label'] : ''; ?>
