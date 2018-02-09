@@ -278,6 +278,7 @@ final class UpStream
             include_once( 'includes/frontend/up-enqueues.php' );
             include_once( 'includes/frontend/up-template-functions.php' );
             include_once( 'includes/frontend/up-table-functions.php' );
+            include_once( 'includes/frontend/class-up-view.php' );
         }
 
         include_once( 'includes/up-general-functions.php' );

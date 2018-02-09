@@ -138,6 +138,26 @@ and this project adheres to [Semantic Versioning](http://semver.org).
 
 = [1.15.0] - @todo =
 
+Added:
+* Added Categories, Status, Clients, Title filters for Projects on frontend
+* Added Milestone, Assignee, Star and End Dates filters for Milestones
+* Added Title, Assignee, Status, Milestone, Star and End Dates filters for Tasks
+* Added Title, Assignee, Severity, Status, Due Date filters for Bugs
+* Added Title, Uploader, Upload Date filters for Files
+
+Changed:
+* Users can now filter metaboxes/tables data using multiple filters at once
+* We're slowly moving towards using Select2 lib across the whole plugin
+* Frontend Date filters now use a new Date Picker js lib
+* Replaced wp_verify_nonce in favor of check_ajax_referer on the comments AJAX endpoints
+* Minor text changes
+
+Deprecated:
+* Within UpStream_Metaboxes_Projects class: getStatusFilterHtml, getSeverityFilterHtml, getFiltersHeaderHtml, getFiltersFooterHtml, getMilestoneFilterHtml
+
+Removed:
+* Frontend tables no longer use Datatable lib due lack of flexibility and performance issues
+
 = [1.14.0] - 2018-01-31 =
 
 Added:
