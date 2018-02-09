@@ -336,6 +336,14 @@ jQuery(document).ready(function($){
       $.each(data, function(trNewIndex) {
         var tr = $(trs.get(this.index), table);
 
+        tr.removeClass('t-row-odd t-row-even');
+
+        if ((trNewIndex + 1) % 2 === 0) {
+          tr.addClass('t-row-even');
+        } else {
+          tr.addClass('t-row-odd');
+        }
+
         $('> tbody', table).append(tr);
 
         if (this.children.length > 0) {
