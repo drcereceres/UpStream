@@ -266,8 +266,10 @@ $categories = (array)get_terms(array(
                 </tr>
               </thead>
               <tbody>
-                <?php foreach ($projects as $project): ?>
-                <tr data-id="<?php echo $project->id; ?>">
+                <?php
+                $isProjectIndexOdd = true;
+                foreach ($projects as $projectIndex => $project): ?>
+                <tr class="t-row-<?php echo $isProjectIndexOdd ? 'odd' : 'even'; ?>" data-id="<?php echo $project->id; ?>">
                   <td data-column="title" data-value="<?php echo esc_attr($project->title); ?>">
                     <a href="<?php echo $project->permalink; ?>">
                       <i class="fa fa-link"></i>
@@ -313,7 +315,9 @@ $categories = (array)get_terms(array(
                     <?php endif;?>
                   </td>
                 </tr>
-                <?php endforeach; ?>
+                <?php
+                $isProjectIndexOdd = !$isProjectIndexOdd;
+                endforeach; ?>
               </tbody>
             </table>
           </div>

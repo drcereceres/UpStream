@@ -532,10 +532,11 @@ function renderTableBody($data, $visibleColumnsSchema, $hiddenColumnsSchema, $ro
     $visibleColumnsSchemaCount = count($visibleColumnsSchema);
     ob_start(); ?>
     <tbody>
-      <?php if (count($data) > 0): ?>
+      <?php if (count($data) > 0):
+        $isRowIndexOdd = true; ?>
         <?php foreach ($data as $id => $row):
         $rowAttrs = array(
-            'class'   => 'is-filtered',
+            'class'   => 'is-filtered t-row-' . ($isRowIndexOdd ? 'odd' : 'even'),
             'data-id' => $id
         );
 
@@ -593,7 +594,8 @@ function renderTableBody($data, $visibleColumnsSchema, $hiddenColumnsSchema, $ro
             </div>
           </td>
         </tr>
-        <?php endif; ?>
+        <?php endif;
+        $isRowIndexOdd = !$isRowIndexOdd; ?>
         <?php endforeach; ?>
       <?php else: ?>
       <tr data-empty>
