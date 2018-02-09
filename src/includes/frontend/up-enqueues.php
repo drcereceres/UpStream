@@ -89,6 +89,7 @@ function upstream_enqueue_styles_scripts(){
         'upload_url'        => admin_url('async-upload.php'),
         'security'          => wp_create_nonce( 'upstream-nonce' ),
         'js_date_format'    => upstream_php_to_js_dateformat(),
+        'datepickerDateFormat' => upstreamGetDateFormatForJsDatepicker(),
         'langs'             => array(
             'LB_COPY'                 => __('Copy', 'upstream'),
             'LB_CSV'                  => __('CSV', 'upstream'),
