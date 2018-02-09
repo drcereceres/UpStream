@@ -1,6 +1,5 @@
 <?php
-namespace UpStream\WIP;
-// @todo
+namespace UpStream\Frontend;
 
 function arrayToAttrs($data)
 {

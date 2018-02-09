@@ -50,7 +50,7 @@ $tableSettings = array(
     'data-order-dir'  => 'DESC'
 );
 
-$columnsSchema = \UpStream\WIP\getFilesFields($areCommentsEnabled);
+$columnsSchema = \UpStream\Frontend\getFilesFields($areCommentsEnabled);
 ?>
 <div class="col-md-12 col-sm-12 col-xs-12">
   <div class="x_panel">
@@ -168,7 +168,7 @@ $columnsSchema = \UpStream\WIP\getFilesFields($areCommentsEnabled);
             <?php do_action('upstream:project.files.filters', $tableSettings, $columnsSchema, $projectId); ?>
           </div>
         </form>
-        <?php \UpStream\WIP\renderTable($tableSettings, $columnsSchema, $rowset, 'file', $projectId); ?>
+        <?php \UpStream\Frontend\renderTable($tableSettings, $columnsSchema, $rowset, 'file', $projectId); ?>
       </div>
     </div>
   </div>

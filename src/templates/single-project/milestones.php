@@ -36,7 +36,7 @@ $tableSettings = array(
     'data-ordered-by' => 'start_date',
     'data-order-dir'  => 'DESC'
 );
-$columnsSchema = \UpStream\WIP\getMilestonesFields();
+$columnsSchema = \UpStream\Frontend\getMilestonesFields();
 ?>
 <div class="col-md-12 col-sm-12 col-xs-12">
   <div class="x_panel">
@@ -59,7 +59,7 @@ $columnsSchema = \UpStream\WIP\getMilestonesFields();
         <form class="form-inline c-data-table__filters" data-target="#milestones">
           <div class="hidden-xs">
             <?php
-            \UpStream\WIP\renderTableFilter('search', 'milestone', array(
+            \UpStream\Frontend\renderTableFilter('search', 'milestone', array(
                 'attrs' => array(
                     'placeholder' => $l['LB_MILESTONE'],
                     'width'       => 200
@@ -118,7 +118,7 @@ $columnsSchema = \UpStream\WIP\getMilestonesFields();
           <div id="milestones-filters" class="collapse">
             <div class="form-group visible-xs">
               <?php
-              \UpStream\WIP\renderTableFilter('search', 'milestone', array(
+              \UpStream\Frontend\renderTableFilter('search', 'milestone', array(
                   'attrs' => array(
                       'placeholder' => $l['LB_MILESTONE'],
                       'width'       => 200
@@ -166,7 +166,7 @@ $columnsSchema = \UpStream\WIP\getMilestonesFields();
             <?php do_action('upstream:project.milestones.filters', $tableSettings, $columnsSchema, $projectId); ?>
           </div>
         </form>
-        <?php \UpStream\WIP\renderTable($tableSettings, $columnsSchema, $milestones, 'milestone', $projectId); ?>
+        <?php \UpStream\Frontend\renderTable($tableSettings, $columnsSchema, $milestones, 'milestone', $projectId); ?>
       </div>
     </div>
   </div>

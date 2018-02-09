@@ -97,7 +97,7 @@ $tableSettings = array(
     'data-order-dir'  => 'DESC'
 );
 
-$columnsSchema = \UpStream\WIP\getTasksFields($statuses, $milestones, $areMilestonesEnabled, $areCommentsEnabled);
+$columnsSchema = \UpStream\Frontend\getTasksFields($statuses, $milestones, $areMilestonesEnabled, $areCommentsEnabled);
 ?>
 <div class="col-md-12 col-sm-12 col-xs-12">
   <div class="x_panel">
@@ -260,7 +260,7 @@ $columnsSchema = \UpStream\WIP\getTasksFields($statuses, $milestones, $areMilest
             <?php do_action('upstream:project.tasks.filters', $tableSettings, $columnsSchema, $projectId); ?>
           </div>
         </form>
-        <?php \UpStream\WIP\renderTable($tableSettings, $columnsSchema, $rowset, 'task', $projectId); ?>
+        <?php \UpStream\Frontend\renderTable($tableSettings, $columnsSchema, $rowset, 'task', $projectId); ?>
       </div>
     </div>
   </div>

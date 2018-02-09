@@ -72,7 +72,7 @@ $tableSettings = array(
     'data-order-dir'  => 'DESC'
 );
 
-$columnsSchema = \UpStream\WIP\getBugsFields($severities, $statuses, $areCommentsEnabled);
+$columnsSchema = \UpStream\Frontend\getBugsFields($severities, $statuses, $areCommentsEnabled);
 ?>
 <div class="col-md-12 col-sm-12 col-xs-12">
   <div class="x_panel">
@@ -223,7 +223,7 @@ $columnsSchema = \UpStream\WIP\getBugsFields($severities, $statuses, $areComment
             <?php do_action('upstream:project.bugs.filters', $tableSettings, $columnsSchema, $projectId); ?>
           </div>
         </form>
-        <?php \UpStream\WIP\renderTable($tableSettings, $columnsSchema, $rowset, 'bug', $projectId); ?>
+        <?php \UpStream\Frontend\renderTable($tableSettings, $columnsSchema, $rowset, 'bug', $projectId); ?>
       </div>
     </div>
   </div>
