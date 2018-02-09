@@ -402,7 +402,7 @@ class UpStream_Metaboxes_Projects {
     /**
      * Return HTML of all admin filters for Milestones.
      *
-     * @since   @todo
+     * @since   1.15.0
      * @access  private
      *
      * @return  string
@@ -453,7 +453,7 @@ class UpStream_Metaboxes_Projects {
     /**
      * Return HTML of all admin filters for Tasks.
      *
-     * @since   @todo
+     * @since   1.15.0
      * @access  private
      *
      * @return  string
@@ -549,7 +549,7 @@ class UpStream_Metaboxes_Projects {
     /**
      * Return HTML of all admin filters for Bugs.
      *
-     * @since   @todo
+     * @since   1.15.0
      * @access  private
      *
      * @return  string
@@ -624,7 +624,7 @@ class UpStream_Metaboxes_Projects {
     /**
      * Return HTML of all admin filters for Files.
      *
-     * @since   @todo
+     * @since   1.15.0
      * @access  private
      *
      * @return  string
@@ -669,11 +669,11 @@ class UpStream_Metaboxes_Projects {
      *
      * @since       1.0.0
      * @access      private
-     * @deprecated  @todo
+     * @deprecated  1.15.0
      */
     private function getStatusFilterHtml()
     {
-        _doing_it_wrong(__FUNCTION__, 'Deprecated function.', '@todo');
+        _doing_it_wrong(__FUNCTION__, 'Deprecated function.', '1.15.0');
     }
 
     /**
@@ -681,11 +681,11 @@ class UpStream_Metaboxes_Projects {
      *
      * @since       1.0.0
      * @access      private
-     * @deprecated  @todo
+     * @deprecated  1.15.0
      */
     private function getSeverityFilterHtml()
     {
-        _doing_it_wrong(__FUNCTION__, 'Deprecated function.', '@todo');
+        _doing_it_wrong(__FUNCTION__, 'Deprecated function.', '1.15.0');
     }
 
     /**
@@ -693,11 +693,11 @@ class UpStream_Metaboxes_Projects {
      *
      * @since       1.0.0
      * @access      private
-     * @deprecated  @todo
+     * @deprecated  1.15.0
      */
     private function getFiltersHeaderHtml()
     {
-        _doing_it_wrong(__FUNCTION__, 'Deprecated function.', '@todo');
+        _doing_it_wrong(__FUNCTION__, 'Deprecated function.', '1.15.0');
     }
 
     /**
@@ -705,11 +705,11 @@ class UpStream_Metaboxes_Projects {
      *
      * @since       1.0.0
      * @access      private
-     * @deprecated  @todo
+     * @deprecated  1.15.0
      */
     private function getFiltersFooterHtml()
     {
-        _doing_it_wrong(__FUNCTION__, 'Deprecated function.', '@todo');
+        _doing_it_wrong(__FUNCTION__, 'Deprecated function.', '1.15.0');
     }
 
     /**
@@ -717,11 +717,11 @@ class UpStream_Metaboxes_Projects {
      *
      * @since       1.0.0
      * @access      private
-     * @deprecated  @todo
+     * @deprecated  1.15.0
      */
     private function getMilestoneFilterHtml()
     {
-        _doing_it_wrong(__FUNCTION__, 'Deprecated function.', '@todo');
+        _doing_it_wrong(__FUNCTION__, 'Deprecated function.', '1.15.0');
     }
 
 

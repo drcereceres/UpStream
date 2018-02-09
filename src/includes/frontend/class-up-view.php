@@ -5,7 +5,7 @@ if (!defined('ABSPATH')) exit;
 use UpStream\Traits\Singleton;
 
 /**
- * @since   @todo
+ * @since   1.15.0
  */
 class UpStream_View
 {
