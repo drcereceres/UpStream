@@ -82,10 +82,10 @@ $columnsSchema = \UpStream\Frontend\getFilesFields($areCommentsEnabled);
             </div>
             <div class="form-group">
               <div class="btn-group">
-                <a href="#files-filters" role="button" class="btn btn-default" data-toggle="collapse" aria-expanded="false" aria-controls="files-filters">
+                <a href="#files-filters" role="button" class="btn btn-default btn-xs" data-toggle="collapse" aria-expanded="false" aria-controls="files-filters">
                   <i class="fa fa-filter"></i> <?php _e('Toggle Filters', 'upstream'); ?>
                 </a>
-                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <button type="button" class="btn btn-default dropdown-toggle btn-xs" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                   <i class="fa fa-download"></i> <?php _e('Export', 'upstream'); ?>
                   <span class="caret"></span>
                 </button>
@@ -106,11 +106,11 @@ $columnsSchema = \UpStream\Frontend\getFilesFields($areCommentsEnabled);
           </div>
           <div class="visible-xs">
             <div>
-              <a href="#files-filters" role="button" class="btn btn-default" data-toggle="collapse" aria-expanded="false" aria-controls="files-filters">
+              <a href="#files-filters" role="button" class="btn btn-default btn-xs" data-toggle="collapse" aria-expanded="false" aria-controls="files-filters">
                 <i class="fa fa-filter"></i> <?php _e('Toggle Filters', 'upstream'); ?>
               </a>
               <div class="btn-group">
-                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <button type="button" class="btn btn-default dropdown-toggle btn-xs" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                   <i class="fa fa-download"></i> <?php _e('Export', 'upstream'); ?>
                   <span class="caret"></span>
                 </button>
