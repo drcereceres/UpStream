@@ -1276,3 +1276,7 @@ input.up-o-filter {
 div[id^="_upstream_project_"].cmb2-postbox .select2 {
   min-width: 120px;
 }
+
+.wp-list-table thead tr th .s-hidden-on-tables {
+  display: none;
+}

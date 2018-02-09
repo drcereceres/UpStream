@@ -158,6 +158,9 @@ Deprecated:
 Removed:
 * Frontend tables no longer use Datatable lib due lack of flexibility and performance issues
 
+Fixed:
+* Fix Comments label missing from Screen Options pulldown in the Projects page
+
 = [1.14.0] - 2018-01-31 =
 
 Added:

@@ -126,7 +126,7 @@ class UpStream_Admin_Project_Columns {
             $defaults['bugs']       = upstream_bug_label_plural();
         }
         $defaults['progress']   = __( 'Progress', 'upstream' );
-        $defaults['messages']   = '<span class="dashicons dashicons-admin-comments"></span>';
+        $defaults['messages']   = '<span class="dashicons dashicons-admin-comments"></span><span class="s-hidden-on-tables">' . __('Comments') . '</span>';
 
         $defaults = array( 'project-status' => '' ) + $defaults;
 
