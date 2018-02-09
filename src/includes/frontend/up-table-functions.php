@@ -122,7 +122,7 @@ function getTasksFields($statuses = array(), $milestones = array(), $areMileston
                     if (isset($statuses[$columnValue])) {
                         $columnValue = sprintf('<span class="label up-o-label" style="background-color: %s;">%s</span>', $statuses[$columnValue]['color'], $statuses[$columnValue]['name']);
                     } else {
-                        $columnValue = sprintf('<i class="@todo">%s</i>', __('invalid status', 'upstream'));
+                        $columnValue = sprintf('<i class="s-text-color-darkred">%s</i>', __('invalid status', 'upstream'));
                     }
                 } else {
                     $columnValue = sprintf('<i class="s-text-color-gray">%s</i>', __('none', 'upstream'));
@@ -164,7 +164,7 @@ function getTasksFields($statuses = array(), $milestones = array(), $areMileston
                     if (isset($milestones[$columnValue])) {
                         $columnValue = sprintf('<span class="label up-o-label" style="background-color: %s;">%s</span>', $milestones[$columnValue]['color'], $milestones[$columnValue]['title']);
                     } else {
-                        $columnValue = sprintf('<i class="@todo">%s</i>', __('invalid milestone', 'upstream'));
+                        $columnValue = sprintf('<i class="s-text-color-darkred">%s</i>', __('invalid milestone', 'upstream'));
                     }
                 } else {
                     $columnValue = sprintf('<i class="s-text-color-gray">%s</i>', __('none', 'upstream'));
@@ -253,7 +253,7 @@ function getBugsFields($severities = array(), $statuses = array(), $areCommentsE
                     if (isset($severities[$columnValue])) {
                         $columnValue = sprintf('<span class="label up-o-label" style="background-color: %s;">%s</span>', $severities[$columnValue]['color'], $severities[$columnValue]['name']);
                     } else {
-                        $columnValue = sprintf('<i class="@todo">%s</i>', __('invalid severity', 'upstream'));
+                        $columnValue = sprintf('<i class="s-text-color-darkred">%s</i>', __('invalid severity', 'upstream'));
                     }
                 } else {
                     $columnValue = sprintf('<i class="s-text-color-gray">%s</i>', __('none', 'upstream'));
@@ -284,7 +284,7 @@ function getBugsFields($severities = array(), $statuses = array(), $areCommentsE
                     if (isset($statuses[$columnValue])) {
                         $columnValue = sprintf('<span class="label up-o-label" style="background-color: %s;">%s</span>', $statuses[$columnValue]['color'], $statuses[$columnValue]['name']);
                     } else {
-                        $columnValue = sprintf('<i class="@todo">%s</i>', __('invalid status', 'upstream'));
+                        $columnValue = sprintf('<i class="s-text-color-darkred">%s</i>', __('invalid status', 'upstream'));
                     }
                 } else {
                     $columnValue = sprintf('<i class="s-text-color-gray">%s</i>', __('none', 'upstream'));
@@ -444,7 +444,7 @@ function renderTableColumnValue($columnName, $columnValue, $column, $row, $rowTy
             if ($user instanceof \WP_User) {
                 $html = esc_html($user->display_name);
             } else {
-                $html = sprintf('<i class="@todo">%s</i>', __('invalid user', 'upstream'));
+                $html = sprintf('<i class="s-text-color-darkred">%s</i>', __('invalid user', 'upstream'));
             }
 
             unset($user);
