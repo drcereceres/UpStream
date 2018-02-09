@@ -36,9 +36,9 @@ function getMilestonesFields($areCommentsEnabled = null)
                 return sprintf(
                     '%d %s / %d %s',
                     $tasksOpenCount,
-                    _x('Open', '@todo', 'upstream'),
+                    _x('Open', 'Open Tasks', 'upstream'),
                     $tasksCount,
-                    _x('Total', '@todo', 'upstream')
+                    _x('Total', 'Total number of Tasks', 'upstream')
                 );
             }
         ),
@@ -603,7 +603,7 @@ function renderTableBody($data, $visibleColumnsSchema, $hiddenColumnsSchema, $ro
       <?php else: ?>
       <tr data-empty>
         <td colspan="<?php echo $visibleColumnsSchemaCount; ?>">
-          <?php _e('@todo', 'upstream'); ?>
+          <?php _e('No results found.', 'upstream'); ?>
         </td>
       </tr>
       <?php endif; ?>
