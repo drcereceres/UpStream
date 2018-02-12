@@ -4,7 +4,7 @@
  * Description: A WordPress Project Management plugin by UpStream.
  * Author: UpStream
  * Author URI: https://upstreamplugin.com
- * Version: 1.14.0
+ * Version: 1.14.1
  * Text Domain: upstream
  * Domain Path: /languages
  */
@@ -187,7 +187,7 @@ final class UpStream
         $this->define( 'UPSTREAM_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
         $this->define( 'UPSTREAM_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
         $this->define( 'UPSTREAM_PLUGIN_BASENAME', plugin_basename( __FILE__ ) );
-        $this->define( 'UPSTREAM_VERSION', '1.14.0' );
+        $this->define( 'UPSTREAM_VERSION', '1.14.1' );
     }
 
     /**
@@ -238,30 +238,34 @@ final class UpStream
         if ( $this->is_request( 'admin' ) ) {
             global $pagenow;
 
-            if ($pagenow === 'post.php'
-                || $pagenow === 'post-new.php'
-            ) {
-                $post_id = isset($_GET['post']) ? (int)$_GET['post'] : 0;
-                $postType = get_post_type($post_id);
+            $isMultisite = (bool)is_multisite();
+            $loadCmb2 = false;
+
+            if ($isMultisite) {
+                $currentPage = isset($_SERVER['PHP_SELF']) ? preg_replace('/^\/wp-admin\//i', '', $_SERVER['PHP_SELF']) : '';
+            } else {
+                $currentPage = (string)$pagenow;
+            }
+
+            if (in_array($currentPage, array('post.php', 'post-new.php'))) {
+                $postType = isset($_REQUEST['post_type']) ? $_REQUEST['post_type'] : null;
                 if (empty($postType)) {
-                    $postType = isset($_GET['post_type']) ? $_GET['post_type'] : '';
-                    if (empty($postType)
-                        && isset($_POST['post_type'])
-                    ) {
-                        $postType = $_POST['post_type'];
-                    }
+                    $projectId = isset($_REQUEST['post']) ? (int)$_REQUEST['post'] : 0;
+                    $postType = get_post_type($projectId);
                 }
 
-                $postTypesUsingCmb2 = apply_filters('upstream:post_types_using_cmb2', array('project', 'client'));
-
-                if (in_array($postType, $postTypesUsingCmb2)) {
-                    include_once('includes/libraries/cmb2/init.php');
-                    include_once('includes/libraries/cmb2-grid/Cmb2GridPlugin.php');
+                if (!empty($postType)) {
+                    $postTypesUsingCmb2 = apply_filters('upstream:post_types_using_cmb2', array('project', 'client'));
+                    $loadCmb2 = in_array($postType, $postTypesUsingCmb2);
                 }
-            } else if ($pagenow === 'admin.php'
-                && isset($_GET['page'])
-                && preg_match('/^upstream_/i', $_GET['page'])
+            } else if ($currentPage === 'admin.php'
+                && isset($_REQUEST['page'])
+                && preg_match('/^upstream_/i', $_REQUEST['page'])
             ) {
+                $loadCmb2 = true;
+            }
+
+            if ($loadCmb2) {
                 include_once('includes/libraries/cmb2/init.php');
                 include_once('includes/libraries/cmb2-grid/Cmb2GridPlugin.php');
             }

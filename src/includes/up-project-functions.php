@@ -322,10 +322,8 @@ function getUpStreamProjectDetailsById($project_id)
             }
         }
 
-        $usersRowset = $wpdb->get_results(sprintf('
-            SELECT `ID`, `display_name`
-              FROM `%s`',
-            $wpdb->prefix . 'users'
+        $usersRowset = (array)get_users(array(
+            'fields' => array('ID', 'display_name')
         ));
 
         $users = array();
