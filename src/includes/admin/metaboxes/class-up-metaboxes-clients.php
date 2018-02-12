@@ -120,11 +120,8 @@ final class UpStream_Metaboxes_Clients
         }
 
         // Let's cache all users basic info so we don't have to query each one of them later.
-        global $wpdb;
-        $rowset = $wpdb->get_results(sprintf('
-            SELECT `ID`, `display_name`, `user_login`, `user_email`
-            FROM `%s`',
-            $wpdb->prefix . 'users'
+        $rowset = (array)get_users(array(
+            'fields' => array('ID', 'display_name', 'user_login', 'user_email')
         ));
 
         // Create our users hash map.
@@ -537,7 +534,7 @@ final class UpStream_Metaboxes_Clients
                 }
             }
 
-            $rowset = get_users(array(
+            $rowset = (array)get_users(array(
                 'exclude'  => $excludeTheseIds,
                 'role__in' => array('upstream_client_user'),
                 'orderby'  => 'ID'
@@ -605,7 +602,7 @@ final class UpStream_Metaboxes_Clients
             $now = date('Y-m-d H:i:s', $nowTimestamp);
 
             $clientUsersMetaKey = '_upstream_new_client_users';
-            $clientUsersList = (array)get_post_meta($clientId, $clientUsersMetaKey, true);
+            $clientUsersList = array_filter((array)get_post_meta($clientId, $clientUsersMetaKey, true));
             $clientNewUsersList = array();
 
             $usersIdsList = (array)$_POST['users'];
@@ -632,12 +629,9 @@ final class UpStream_Metaboxes_Clients
 
             global $wpdb;
 
-            $rowset = (array)$wpdb->get_results(sprintf('
-                SELECT `ID`, `display_name`, `user_login`, `user_email`
-                FROM `%s`
-                WHERE `ID` IN ("%s")',
-                $wpdb->prefix . 'users',
-                implode('", "', $usersIdsList)
+            $rowset = (array)get_users(array(
+                'fields'  => array('ID', 'display_name', 'user_login', 'user_email'),
+                'include' => $usersIdsList
             ));
 
             $assignedAt = upstream_convert_UTC_date_to_timezone($now);

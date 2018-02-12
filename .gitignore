@@ -5,6 +5,7 @@
 !.editorconfig
 !.github
 node_modules
+builds
 
 # General exclusion of system files #
 #####################################
