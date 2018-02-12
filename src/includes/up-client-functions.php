@@ -96,33 +96,27 @@ function upstream_get_client_users($client_id)
         return false;
     }
 
-    $clientUsersList = (array)get_post_meta($client_id, '_upstream_new_client_users');
-    if (empty($clientUsersList) || empty($clientUsersList[0])) {
-        return array();
-    }
-
-    $usersIdsList = array();
-    foreach ($clientUsersList[0] as $clientUser) {
-        if (isset($clientUser['user_id'])) {
-            array_push($usersIdsList, $clientUser['user_id']);
+    $clientUsersList = array_filter((array)get_post_meta($client_id, '_upstream_new_client_users', true));
+    if (count($clientUsersList) > 0) {
+        $usersIdsList = array();
+        foreach ($clientUsersList as $clientUser) {
+            if (isset($clientUser['user_id'])) {
+                array_push($usersIdsList, (int)$clientUser['user_id']);
+            }
         }
-    }
 
-    global $wpdb;
-    $rowset = $wpdb->get_results(sprintf('
-        SELECT `ID`, `display_name`
-        FROM `%s`
-        WHERE `ID` IN ("%s")',
-        $wpdb->prefix . 'users',
-        implode('", "', $usersIdsList)
-    ));
+        $rowset = (array)get_users(array(
+            'fields'  => array('ID', 'display_name'),
+            'include' => $usersIdsList
+        ));
 
-    $usersList = array();
-    foreach ($rowset as $row) {
-        $usersList[(int)$row->ID] = array(
-            'id'   => (int)$row->ID,
-            'name' => $row->display_name
-        );
+        $usersList = array();
+        foreach ($rowset as $row) {
+            $usersList[(int)$row->ID] = array(
+                'id'   => (int)$row->ID,
+                'name' => $row->display_name
+            );
+        }
     }
 
     return $usersList;

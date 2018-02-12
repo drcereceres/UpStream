@@ -974,23 +974,6 @@ function getUserAvatarURL($user_id)
         return false;
     }
 
-    // Is this really needed?
-    /*
-    global $wpdb;
-    $idIsValid = (int)$wpdb->get_var(sprintf('
-        SELECT COUNT(`ID`)
-        FROM `%s`
-        WHERE `ID` = "%s"',
-        $wpdb->prefix . 'users',
-        $user_id
-    ));
-    */
-    $idIsValid = 1;
-
-    if ($idIsValid !== 1) {
-        return false;
-    }
-
     if (!function_exists('is_plugin_active')) {
         include_once ABSPATH .'wp-admin/includes/plugin.php';
     }

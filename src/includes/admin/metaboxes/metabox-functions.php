@@ -898,7 +898,7 @@ function upstream_admin_get_all_clients_users($field, $client_id = 0)
 
     if ($client_id > 0) {
         $usersList = array();
-        $clientUsersList = (array)get_post_meta($client_id, '_upstream_new_client_users', true);
+        $clientUsersList = array_filter((array)get_post_meta($client_id, '_upstream_new_client_users', true));
 
         $clientUsersIdsList = array();
         foreach ($clientUsersList as $clientUser) {
@@ -908,13 +908,9 @@ function upstream_admin_get_all_clients_users($field, $client_id = 0)
         }
 
         if (count($clientUsersIdsList) > 0) {
-            global $wpdb;
-            $rowset = $wpdb->get_results(sprintf('
-                SELECT `ID`, `display_name`, `user_email`
-                FROM `%s`
-                WHERE `ID` IN ("%s")',
-                $wpdb->prefix . 'users',
-                implode('", "', $clientUsersIdsList)
+            $rowset = (array)get_users(array(
+                'fields'  => array('ID', 'display_name', 'user_email'),
+                'include' => $clientUsersIdsList
             ));
 
             foreach ($rowset as $user) {

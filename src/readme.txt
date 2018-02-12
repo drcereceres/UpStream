@@ -161,6 +161,12 @@ Removed:
 Fixed:
 * Fix Comments label missing from Screen Options pulldown in the Projects page
 
+= [1.14.1] - 2018-02-12 =
+
+Fixed:
+* Fixed CMB2 not being loaded correctly in a multisite environment
+* Fixed some DB calls triggering errors in multisite environments
+
 = [1.14.0] - 2018-01-31 =
 
 Added:
