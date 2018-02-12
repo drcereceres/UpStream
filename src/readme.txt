@@ -4,7 +4,7 @@ Tags: project, manage, management, project management, project manager, wordpres
 Requires at least: 4.5
 Tested up to: 4.9
 Requires PHP: 5.6
-Stable tag: 1.14.1
+Stable tag: 1.15.0
 License: GPL-3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -135,6 +135,31 @@ UpStream does not use the existing styling of your theme. The features and the v
 
 The format is based on [Keep a Changelog](http://keepachangelog.com)
 and this project adheres to [Semantic Versioning](http://semver.org).
+
+= [1.15.0] - @todo =
+
+Added:
+* Added Categories, Status, Clients, Title filters for Projects on frontend
+* Added Milestone, Assignee, Star and End Dates filters for Milestones
+* Added Title, Assignee, Status, Milestone, Star and End Dates filters for Tasks
+* Added Title, Assignee, Severity, Status, Due Date filters for Bugs
+* Added Title, Uploader, Upload Date filters for Files
+
+Changed:
+* Users can now filter metaboxes/tables data using multiple filters at once
+* We're slowly moving towards using Select2 lib across the whole plugin
+* Frontend Date filters now use a new Date Picker js lib
+* Replaced wp_verify_nonce in favor of check_ajax_referer on the comments AJAX endpoints
+* Minor text changes
+
+Deprecated:
+* Within UpStream_Metaboxes_Projects class: getStatusFilterHtml, getSeverityFilterHtml, getFiltersHeaderHtml, getFiltersFooterHtml, getMilestoneFilterHtml
+
+Removed:
+* Frontend tables no longer use Datatable lib due lack of flexibility and performance issues
+
+Fixed:
+* Fix Comments label missing from Screen Options pulldown in the Projects page
 
 = [1.14.1] - 2018-02-12 =
 

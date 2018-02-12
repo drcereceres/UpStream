@@ -77,8 +77,6 @@ class Comments
      *
      * @since   1.13.0
      * @static
-     *
-     * @todo    Replace wp_verify_nonce with check_ajax_referer.
      */
     public static function storeComment()
     {
@@ -111,7 +109,7 @@ class Comments
                     !isset($_POST['item_id'])
                     || empty($_POST['item_id'])
                 ) {
-                    throw new \Exception(__("Invalid request.", 'upstream'));
+                    throw new \Exception(__("Invalid item.", 'upstream'));
                 }
 
                 $item_id = $_POST['item_id'];
@@ -122,8 +120,8 @@ class Comments
             }
 
             // Verify nonce.
-            if (!wp_verify_nonce($_POST['nonce'], $nonceIdentifier)) {
-                throw new \Exception(__("Invalid request.", 'upstream'));
+            if (!check_ajax_referer($nonceIdentifier, 'nonce', false)) {
+                throw new \Exception(__("Invalid nonce.", 'upstream'));
             }
 
             // Check if the user has enough permissions to insert a new comment.
@@ -173,8 +171,6 @@ class Comments
      *
      * @since   1.13.0
      * @static
-     *
-     * @todo    Replace wp_verify_nonce with check_ajax_referer.
      */
     public static function storeCommentReply()
     {
@@ -198,7 +194,7 @@ class Comments
                 || !isset($_POST['content'])
                 || !isset($_POST['parent_id'])
                 || !is_numeric($_POST['parent_id'])
-                || !wp_verify_nonce($_POST['nonce'], 'upstream:project.add_comment_reply:' . $_POST['parent_id'])
+                || !check_ajax_referer('upstream:project.add_comment_reply:' . $_POST['parent_id'], 'nonce', false)
             ) {
                 throw new \Exception(__("Invalid request.", 'upstream'));
             }
@@ -271,8 +267,6 @@ class Comments
      *
      * @since   1.13.0
      * @static
-     *
-     * @todo    Replace wp_verify_nonce with check_ajax_referer.
      */
     public static function trashComment()
     {
@@ -292,7 +286,7 @@ class Comments
                 || !isset($_POST['nonce'])
                 || !isset($_POST['project_id'])
                 || !isset($_POST['comment_id'])
-                || !wp_verify_nonce($_POST['nonce'], 'upstream:project.trash_comment:' . $_POST['comment_id'])
+                || !check_ajax_referer('upstream:project.trash_comment:' . $_POST['comment_id'], 'nonce', false)
             ) {
                 throw new \Exception(__("Invalid request.", 'upstream'));
             }
@@ -351,8 +345,6 @@ class Comments
      * @access  private
      * @static
      *
-     * @todo    Replace wp_verify_nonce with check_ajax_referer.
-     *
      * @throws  \Exception when something went wrong or failed on validations.
      *
      * @param   int     $comment_id         Comment ID being edited.
@@ -370,7 +362,7 @@ class Comments
             || !isset($_POST['nonce'])
             || !isset($_POST['project_id'])
             || !isset($_POST['comment_id'])
-            || !wp_verify_nonce($_POST['nonce'], 'upstream:project.' . ($isApproved ? 'approve_comment' : 'unapprove_comment') . ':' . $_POST['comment_id'])
+            || !check_ajax_referer('upstream:project.' . ($isApproved ? 'approve_comment' : 'unapprove_comment') . ':' . $_POST['comment_id'], 'nonce', false)
         ) {
             throw new \Exception(__('Invalid request.', 'upstream'));
         }
@@ -585,7 +577,7 @@ class Comments
 
             // Verify nonce.
             if (!check_ajax_referer($nonceIdentifier, 'nonce', false)) {
-                throw new \Exception(__("Invalid request.", 'upstream'));
+                throw new \Exception(__("Invalid nonce.", 'upstream'));
             }
 
             // Check if commenting is disabled on the given project.
