@@ -970,20 +970,6 @@ function getUserAvatarURL($user_id)
         return false;
     }
 
-    // Check if the ID is valid.
-    global $wpdb;
-    $idIsValid = (int)$wpdb->get_var(sprintf('
-        SELECT COUNT(`ID`)
-        FROM `%s`
-        WHERE `ID` = "%s"',
-        $wpdb->prefix . 'users',
-        $user_id
-    ));
-
-    if ($idIsValid !== 1) {
-        return false;
-    }
-
     if (!function_exists('is_plugin_active')) {
         include_once ABSPATH .'wp-admin/includes/plugin.php';
     }
