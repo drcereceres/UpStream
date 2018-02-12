@@ -200,6 +200,10 @@ function getTasksFields($statuses = array(), $milestones = array(), $areMileston
         $areCommentsEnabled = upstreamAreCommentsEnabledOnTasks();
     }
 
+    if ($areMilestonesEnabled === false) {
+        unset($schema['milestone']);
+    }
+
     if (!$areCommentsEnabled) {
         unset($schema['comments']);
     }
