@@ -21,27 +21,34 @@ $users = upstreamGetUsersMap();
 $rowset = array();
 $projectId = upstream_post_id();
 
-$milestonesList = get_option('upstream_milestones');
+$areCommentsEnabled = upstreamAreCommentsEnabledOnTasks();
+
+$areMilestonesEnabled = !upstream_are_milestones_disabled() && !upstream_disable_milestones();
 $milestonesColors = array();
-foreach ($milestonesList['milestones'] as $milestone) {
-    $milestonesColors[$milestone['title']] = $milestone['color'];
-}
-
 $milestones = array();
-$meta = (array)get_post_meta($projectId, '_upstream_project_milestones', true);
-foreach ($meta as $data) {
-    if (!isset($data['id'])
-        || !isset($data['created_by'])
-        || !isset($data['milestone'])
-    ) {
-        continue;
-    }
 
-    $milestones[$data['id']] = array(
-        'title' => $data['milestone'],
-        'color' => $milestonesColors[$data['milestone']],
-        'id'    => $data['id']
-    );
+if ($areMilestonesEnabled) {
+    $milestonesList = get_option('upstream_milestones');
+    foreach ($milestonesList['milestones'] as $milestone) {
+        $milestonesColors[$milestone['title']] = $milestone['color'];
+    }
+    unset($milestonesList);
+
+    $meta = (array)get_post_meta($projectId, '_upstream_project_milestones', true);
+    foreach ($meta as $data) {
+        if (!isset($data['id'])
+            || !isset($data['created_by'])
+            || !isset($data['milestone'])
+        ) {
+            continue;
+        }
+
+        $milestones[$data['id']] = array(
+            'title' => $data['milestone'],
+            'color' => $milestonesColors[$data['milestone']],
+            'id'    => $data['id']
+        );
+    }
 }
 
 $meta = (array)get_post_meta($projectId, '_upstream_project_tasks', true);
@@ -86,9 +93,6 @@ $l['MSG_INVALID_MILESTONE'] = sprintf(
     _x('invalid %s', '%s: column name. Error message when data reference is not found', 'upstream'),
     strtolower($l['LB_MILESTONE'])
 );
-
-$areMilestonesEnabled = !upstream_are_milestones_disabled() && !upstream_disable_milestones();
-$areCommentsEnabled = upstreamAreCommentsEnabledOnTasks();
 
 $tableSettings = array(
     'id'              => 'tasks',
