@@ -160,6 +160,7 @@ Removed:
 
 Fixed:
 * Fix Comments label missing from Screen Options pulldown in the Projects page
+* Fixed Status filter in Projects admin list getting reseted after being selected
 
 = [1.14.1] - 2018-02-12 =
 

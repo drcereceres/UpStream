@@ -268,29 +268,36 @@ class UpStream_Admin_Project_Columns {
         return $vars;
     }
 
+    public function table_filtering()
+    {
+        global $pagenow;
 
-    function table_filtering() {
-
-        $type = 'project';
-        if (isset($_GET['post_type'])) {
-            $type = $_GET['post_type'];
+        $isMultisite = is_multisite();
+        if ($isMultisite) {
+            $currentPage = isset($_SERVER['PHP_SELF']) ? preg_replace('/^\/wp-admin\//i', '', $_SERVER['PHP_SELF']) : '';
+        } else {
+            $currentPage = $pagenow;
         }
 
-        //only add filter to post type you want
-        if ( 'project' == $type ){
-            //change this to the list of values you want to show
-            //in 'label' => 'value' format
-            $option = get_option( 'upstream_projects' );
-            $statuses = $option['statuses'];
+        $postType = isset($_GET['post_type']) ? $_GET['post_type'] : null;
+        if ($currentPage === 'edit.php'
+            && $postType === 'project'
+        ) {
+            $projectOptions = get_option('upstream_projects');
+            $statuses = $projectOptions['statuses'];
+
+            $selectedStatus = isset($_GET['project-status']) ? $_GET['project-status'] : '';
             ?>
-
-            <select name='project-status' id='project-status' class='postform'>
-                <option value=''><?php printf( __( 'Show all %s', 'upstream' ), 'statuses' ) ?></option>
-                <?php foreach ( $statuses as $status ) { ?>
-                    <option value="<?php echo strtolower( $status['name'] ) ?>" <?php isset( $_GET['project-status'] ) ? selected( $_GET['project-status'], $status['name'] ) : ''; ?>><?php echo $status['name'] ?></option>
-                <?php } ?>
+            <select name="project-status" id="project-status" class="postform">
+                <option value="">
+                    <?php printf(__('Show all %s', 'upstream'), 'statuses') ?>
+                </option>
+                <?php foreach ($statuses as $status): ?>
+                <option value="<?php echo $status['name']; ?>" <?php selected($selectedStatus, $status['name']); ?>>
+                    <?php echo $status['name'] ?>
+                </option>
+                <?php endforeach; ?>
             </select>
-
             <?php
         }
     }
