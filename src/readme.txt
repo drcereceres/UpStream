@@ -138,6 +138,9 @@ and this project adheres to [Semantic Versioning](http://semver.org).
 
 = [1.14.1] - @todo =
 
+Fixed:
+* Fixed CMB2 not being loaded correctly in multisites environment
+
 = [1.14.0] - 2018-01-31 =
 
 Added:
