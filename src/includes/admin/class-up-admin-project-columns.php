@@ -321,53 +321,67 @@ class UpStream_Admin_Project_Columns {
         }
     }
 
-    function filter( $query ){
-        global $pagenow;
+    public function filter($query)
+    {
+        $isAdmin = is_admin();
+        if (!$isAdmin) {
+            return;
+        }
 
         $postType = isset($_GET['post_type']) ? $_GET['post_type'] : 'post';
+        if ($postType !== 'project') {
+            return;
+        }
 
-        if ($postType === 'project' && is_admin()) {
-            if (!$this->allowAllProjects && $query->filterAllowedProjects) {
-                $query->query_vars = array_merge($query->query_vars, array(
-                    'post__in' => count($this->allowedProjects) === 0 ? array('making_sure_no_project_is_returned') : $this->allowedProjects
-                ));
-                $query->filterAllowedProjects = null;
+        if (!$this->allowAllProjects && $query->filterAllowedProjects) {
+            $query->query_vars = array_merge($query->query_vars, array(
+                'post__in' => count($this->allowedProjects) === 0 ? array('making_sure_no_project_is_returned') : $this->allowedProjects
+            ));
+            $query->filterAllowedProjects = null;
+        }
+
+        $isMultisite = is_multisite();
+        if ($isMultisite) {
+            $currentPage = isset($_SERVER['PHP_SELF']) ? preg_replace('/^\/wp-admin\//i', '', $_SERVER['PHP_SELF']) : '';
+        } else {
+            global $pagenow;
+
+            $currentPage = $pagenow;
+        }
+
+        if ($currentPage === 'edit.php') {
+            $metaQuery = array();
+
+            $projectStatus = isset($_GET['project-status']) ? (string)$_GET['project-status'] : '';
+            if (strlen($projectStatus) > 0) {
+                $metaQuery[] = array(
+                    'key'     => '_upstream_project_status',
+                    'value'   => $projectStatus,
+                    'compare' => '='
+                );
             }
 
-            if ($pagenow === 'edit.php') {
-                $metaQuery = array();
+            $projectOwner = isset($_GET['project-owner']) ? (int)$_GET['project-owner'] : 0;
+            if ($projectOwner > 0) {
+                $metaQuery[] = array(
+                    'key'     => '_upstream_project_owner',
+                    'value'   => $projectOwner,
+                    'compare' => '='
+                );
+            }
 
-                $projectStatus = isset($_GET['project-status']) ? (string)$_GET['project-status'] : '';
-                if (strlen($projectStatus) > 0) {
-                    $metaQuery[] = array(
-                        'key'     => '_upstream_project_status',
-                        'value'   => $projectStatus,
-                        'compare' => '='
-                    );
+            $metaQueryCount = count($metaQuery);
+            if ($metaQueryCount > 0) {
+                if ($metaQueryCount === 1) {
+                    $query->query_vars['meta_key'] = $metaQuery[0]['key'];
+                    $query->query_vars['meta_value'] = $metaQuery[0]['value'];
+                } else {
+                    $metaQuery['relation'] = 'AND';
+
+                    $query->query_vars['meta_query'] = $metaQuery;
                 }
 
-                $projectOwner = isset($_GET['project-owner']) ? (int)$_GET['project-owner'] : 0;
-                if ($projectOwner > 0) {
-                    $metaQuery[] = array(
-                        'key'     => '_upstream_project_owner',
-                        'value'   => $projectOwner,
-                        'compare' => '='
-                    );
-                }
-
-                $metaQueryCount = count($metaQuery);
-                if ($metaQueryCount > 0) {
-                    if ($metaQueryCount === 1) {
-                        $query->query_vars['meta_key'] = $metaQuery[0]['key'];
-                        $query->query_vars['meta_value'] = $metaQuery[0]['value'];
-                    } else {
-                        $metaQuery['relation'] = 'AND';
-
-                        $query->query_vars['meta_query'] = $metaQuery;
-                    }
-
-                    $query->meta_query = $metaQuery;
-                }
+                $query->meta_query = $metaQuery;
             }
         }
     }
