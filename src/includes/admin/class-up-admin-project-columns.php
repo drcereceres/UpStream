@@ -285,6 +285,7 @@ class UpStream_Admin_Project_Columns {
         ) {
             $projectOptions = get_option('upstream_projects');
             $statuses = $projectOptions['statuses'];
+            unset($projectOptions);
 
             $selectedStatus = isset($_GET['project-status']) ? $_GET['project-status'] : '';
             ?>
@@ -298,6 +299,24 @@ class UpStream_Admin_Project_Columns {
                 </option>
                 <?php endforeach; ?>
             </select>
+
+            <?php
+            // Filter by Project Owner.
+            $users = upstream_admin_get_all_project_users();
+
+            $selectedOwner = isset($_GET['project-owner']) ? (int)$_GET['project-owner'] : -1;
+            ?>
+            <select name="project-owner" id="project-owner" class="postform">
+                <option value="">
+                    <?php printf(__('Show all %s', 'upstream'), 'owners') ?>
+                </option>
+                <?php foreach ($users as $ownerId => $ownerName): ?>
+                <option value="<?php echo $ownerId; ?>" <?php echo $selectedOwner === $ownerId ? ' selected' : ''; ?>>
+                    <?php echo $ownerName; ?>
+                </option>
+                <?php endforeach; ?>
+            </select>
+
             <?php
         }
     }
@@ -315,9 +334,40 @@ class UpStream_Admin_Project_Columns {
                 $query->filterAllowedProjects = null;
             }
 
-            if ($pagenow === 'edit.php' && isset($_GET['project-status']) && $_GET['project-status'] !== '') {
-                $query->query_vars['meta_key'] = '_upstream_project_status';
-                $query->query_vars['meta_value'] = $_GET['project-status'];
+            if ($pagenow === 'edit.php') {
+                $metaQuery = array();
+
+                $projectStatus = isset($_GET['project-status']) ? (string)$_GET['project-status'] : '';
+                if (strlen($projectStatus) > 0) {
+                    $metaQuery[] = array(
+                        'key'     => '_upstream_project_status',
+                        'value'   => $projectStatus,
+                        'compare' => '='
+                    );
+                }
+
+                $projectOwner = isset($_GET['project-owner']) ? (int)$_GET['project-owner'] : 0;
+                if ($projectOwner > 0) {
+                    $metaQuery[] = array(
+                        'key'     => '_upstream_project_owner',
+                        'value'   => $projectOwner,
+                        'compare' => '='
+                    );
+                }
+
+                $metaQueryCount = count($metaQuery);
+                if ($metaQueryCount > 0) {
+                    if ($metaQueryCount === 1) {
+                        $query->query_vars['meta_key'] = $metaQuery[0]['key'];
+                        $query->query_vars['meta_value'] = $metaQuery[0]['value'];
+                    } else {
+                        $metaQuery['relation'] = 'AND';
+
+                        $query->query_vars['meta_query'] = $metaQuery;
+                    }
+
+                    $query->meta_query = $metaQuery;
+                }
             }
         }
     }
