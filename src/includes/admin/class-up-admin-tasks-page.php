@@ -257,7 +257,7 @@ class Upstream_Task_List extends WP_List_Table {
                     }
                 }
 
-                return '<span><i>('. __('none', 'upstream') .')</i></span>';
+                return '<span><i style="color: #CCC;">'. __('none', 'upstream') .'</i></span>';
 
             case 'assigned_to':
 
@@ -271,19 +271,19 @@ class Upstream_Task_List extends WP_List_Table {
                     }
                     return $output;
                 } else {
-                    return '<span><i>('. __('none', 'upstream') .')</i></span>';
+                    return '<span><i style="color: #CCC;">'. __('none', 'upstream') .'</i></span>';
                 }
 
             case 'end_date':
                 if (isset($item['end_date']) && (int)$item['end_date'] > 0) {
                     return '<span class="end-date">' . upstream_format_date($item['end_date']) . '</span>';
                 } else {
-                    return '<span><i>('. __('none', 'upstream') .')</i></span>';
+                    return '<span><i style="color: #CCC;">'. __('none', 'upstream') .'</i></span>';
                 }
 
             case 'status':
                 if (!isset($item['status']) || empty($item['status'])) {
-                    return '<span><i>('. __('none', 'upstream') .')</i></span>';
+                    return '<span><i style="color: #CCC;">'. __('none', 'upstream') .'</i></span>';
                 }
 
                 $color  = upstream_project_task_status_color( $item['project_id'], $item['id'] );
