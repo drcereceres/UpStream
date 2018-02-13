@@ -144,6 +144,9 @@ Added:
 * Added Title, Assignee, Status, Milestone, Star and End Dates filters for Tasks
 * Added Title, Assignee, Severity, Status, Due Date filters for Bugs
 * Added Title, Uploader, Upload Date filters for Files
+* Added "Owner" and "Client" filter to the admin Projects list
+* Project Owners will receive comment notifications
+* Assigned users and creators now receive notifications about comments on their item
 
 Changed:
 * Users can now filter metaboxes/tables data using multiple filters at once
@@ -161,6 +164,7 @@ Removed:
 Fixed:
 * Fix Comments label missing from Screen Options pulldown in the Projects page
 * Fixed Status filter in Projects admin list getting reseted after being selected
+* Fixed Project author not receiving comment notifications
 
 = [1.14.1] - 2018-02-12 =
 
