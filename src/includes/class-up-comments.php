@@ -155,6 +155,9 @@ class Comments
                 update_comment_meta($comment->id, 'id', $item_id);
             }
 
+            wp_new_comment_notify_moderator($comment->id);
+            wp_notify_postauthor($comment->id);
+
             $useAdminLayout = !isset($_POST['teeny']) ? true : (bool)$_POST['teeny'] === false;
 
             $response['comment_html'] = $comment->render(true, $useAdminLayout);
@@ -253,6 +256,9 @@ class Comments
             );
 
             $response['comment_html'] = $comment->render(true, $useAdminLayout, $commentsCache);
+
+            wp_new_comment_notify_moderator($comment->id);
+            wp_notify_postauthor($comment->id);
 
             $response['success'] = true;
         } catch (\Exception $e) {
