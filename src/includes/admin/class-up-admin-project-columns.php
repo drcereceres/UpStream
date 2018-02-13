@@ -291,7 +291,7 @@ class UpStream_Admin_Project_Columns {
             ?>
             <select name="project-status" id="project-status" class="postform">
                 <option value="">
-                    <?php printf(__('Show all %s', 'upstream'), 'statuses') ?>
+                    <?php printf(__('Show all %s', 'upstream'), 'statuses'); ?>
                 </option>
                 <?php foreach ($statuses as $status): ?>
                 <option value="<?php echo $status['name']; ?>" <?php selected($selectedStatus, $status['name']); ?>>
@@ -308,11 +308,27 @@ class UpStream_Admin_Project_Columns {
             ?>
             <select name="project-owner" id="project-owner" class="postform">
                 <option value="">
-                    <?php printf(__('Show all %s', 'upstream'), 'owners') ?>
+                    <?php printf(__('Show all %s', 'upstream'), 'owners'); ?>
                 </option>
                 <?php foreach ($users as $ownerId => $ownerName): ?>
                 <option value="<?php echo $ownerId; ?>" <?php echo $selectedOwner === $ownerId ? ' selected' : ''; ?>>
                     <?php echo $ownerName; ?>
+                </option>
+                <?php endforeach; ?>
+            </select>
+
+            <?php
+            // Filter by Project Client.
+            $clients = upstream_wp_get_clients();
+            $selectedClientId = isset($_GET['project-client']) ? (int)$_GET['project-client'] : -1;
+            ?>
+            <select name="project-client" id="project-client" class="postform">
+                <option value="">
+                    <?php printf(__('Show all %s', 'upstream'), upstream_client_label_plural(true)); ?>
+                </option>
+                <?php foreach ($clients as $clientId => $clientName): ?>
+                <option value="<?php echo $clientId; ?>" <?php echo $selectedClientId === (int)$clientId ? ' selected' : ''; ?>>
+                    <?php echo $clientName; ?>
                 </option>
                 <?php endforeach; ?>
             </select>
@@ -333,13 +349,6 @@ class UpStream_Admin_Project_Columns {
             return;
         }
 
-        if (!$this->allowAllProjects && $query->filterAllowedProjects) {
-            $query->query_vars = array_merge($query->query_vars, array(
-                'post__in' => count($this->allowedProjects) === 0 ? array('making_sure_no_project_is_returned') : $this->allowedProjects
-            ));
-            $query->filterAllowedProjects = null;
-        }
-
         $isMultisite = is_multisite();
         if ($isMultisite) {
             $currentPage = isset($_SERVER['PHP_SELF']) ? preg_replace('/^\/wp-admin\//i', '', $_SERVER['PHP_SELF']) : '';
@@ -349,40 +358,72 @@ class UpStream_Admin_Project_Columns {
             $currentPage = $pagenow;
         }
 
-        if ($currentPage === 'edit.php') {
-            $metaQuery = array();
+        if ($currentPage !== 'edit.php') {
+            return;
+        }
 
-            $projectStatus = isset($_GET['project-status']) ? (string)$_GET['project-status'] : '';
-            if (strlen($projectStatus) > 0) {
-                $metaQuery[] = array(
-                    'key'     => '_upstream_project_status',
-                    'value'   => $projectStatus,
-                    'compare' => '='
-                );
+        $shouldExit = true;
+        $filters = array('status', 'owner', 'client');
+        foreach ($filters as $filterName) {
+            $filterKey = 'project-' . $filterName;
+
+            if (isset($_GET[$filterKey]) && !empty($_GET[$filterKey])) {
+                $shouldExit = false;
+            }
+        }
+
+        if ($shouldExit) {
+            return;
+        }
+
+        if (!$this->allowAllProjects && $query->filterAllowedProjects) {
+            $query->query_vars = array_merge($query->query_vars, array(
+                'post__in' => count($this->allowedProjects) === 0 ? array('making_sure_no_project_is_returned') : $this->allowedProjects
+            ));
+            $query->filterAllowedProjects = null;
+        }
+
+        $metaQuery = array();
+
+        $projectStatus = isset($_GET['project-status']) ? (string)$_GET['project-status'] : '';
+        if (strlen($projectStatus) > 0) {
+            $metaQuery[] = array(
+                'key'     => '_upstream_project_status',
+                'value'   => $projectStatus,
+                'compare' => '='
+            );
+        }
+
+        $projectOwnerId = isset($_GET['project-owner']) ? (int)$_GET['project-owner'] : 0;
+        if ($projectOwnerId > 0) {
+            $metaQuery[] = array(
+                'key'     => '_upstream_project_owner',
+                'value'   => $projectOwnerId,
+                'compare' => '='
+            );
+        }
+
+        $projectClientId = isset($_GET['project-client']) ? (int)$_GET['project-client'] : 0;
+        if ($projectClientId > 0) {
+            $metaQuery[] = array(
+                'key'     => '_upstream_project_client',
+                'value'   => $projectClientId,
+                'compare' => '='
+            );
+        }
+
+        $metaQueryCount = count($metaQuery);
+        if ($metaQueryCount > 0) {
+            if ($metaQueryCount === 1) {
+                $query->query_vars['meta_key'] = $metaQuery[0]['key'];
+                $query->query_vars['meta_value'] = $metaQuery[0]['value'];
+            } else {
+                $metaQuery['relation'] = 'AND';
+
+                $query->query_vars['meta_query'] = $metaQuery;
             }
 
-            $projectOwner = isset($_GET['project-owner']) ? (int)$_GET['project-owner'] : 0;
-            if ($projectOwner > 0) {
-                $metaQuery[] = array(
-                    'key'     => '_upstream_project_owner',
-                    'value'   => $projectOwner,
-                    'compare' => '='
-                );
-            }
-
-            $metaQueryCount = count($metaQuery);
-            if ($metaQueryCount > 0) {
-                if ($metaQueryCount === 1) {
-                    $query->query_vars['meta_key'] = $metaQuery[0]['key'];
-                    $query->query_vars['meta_value'] = $metaQuery[0]['value'];
-                } else {
-                    $metaQuery['relation'] = 'AND';
-
-                    $query->query_vars['meta_query'] = $metaQuery;
-                }
-
-                $query->meta_query = $metaQuery;
-            }
+            $query->meta_query = $metaQuery;
         }
     }
 }

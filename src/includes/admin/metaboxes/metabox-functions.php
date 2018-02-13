@@ -969,3 +969,24 @@ function upstream_admin_ajax_get_clients_users()
         }
     }
 }
+
+function upstream_wp_get_clients()
+{
+    global $wpdb;
+
+    $rowset = $wpdb->get_results(sprintf('
+        SELECT `ID`, `post_title`
+        FROM `%s`
+        WHERE `post_type` = "client"
+        AND `post_status` = "publish"',
+        $wpdb->prefix . 'posts'
+    ));
+
+    $data = array();
+
+    foreach ($rowset as $row) {
+        $data[$row->ID] = $row->post_title;
+    }
+
+    return $data;
+}
