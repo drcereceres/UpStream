@@ -18,6 +18,8 @@ class UpStream_Admin_Project_Columns {
     public function __construct() {
         $this->hooks();
         $this->filterAllowedProjects();
+
+        self::$noneTag = '<i style="color: #CCC;">'. __('none', 'upstream') .'</i>';
     }
 
     /**
@@ -126,93 +128,154 @@ class UpStream_Admin_Project_Columns {
             $defaults['bugs']       = upstream_bug_label_plural();
         }
         $defaults['progress']   = __( 'Progress', 'upstream' );
-        $defaults['messages']   = '<span class="dashicons dashicons-admin-comments"></span><span class="s-hidden-on-tables">' . __('Comments') . '</span>';
+        $defaults['messages']   = '<div style="text-align: center;"><span class="dashicons dashicons-admin-comments"></span><span class="s-hidden-on-tables">' . __('Comments') . '</span></div>';
 
         $defaults = array( 'project-status' => '' ) + $defaults;
 
         return $defaults;
     }
 
+
+    private static $noneTag = '';
+    private static $usersCache = array();
+    private static $clientsCache = array();
+    private static $statusesColorsCache = array();
+    private static $bugsColorsCache = array();
+
     public function project_data( $column_name, $post_id ) {
+        if ($column_name === 'project-status') {
+            $status = upstream_project_status_color($post_id);
 
-        if ( $column_name == 'project-status' ) {
-
-            $status = upstream_project_status_color( $post_id );
-            if( ! $status['status'] )
-                return;
-
-                echo '<div title="' . esc_attr( $status['status'] ) . '" style="width: 100%; position: absolute; top: 0px; left: 0px; overflow: hidden; height: 100%; border-left: 2px solid ' . esc_attr( $status['color'] ) . '" class="' . esc_attr( strtolower( $status['status'] ) ) . '"></div>';
-
-        }
-
-        if ( $column_name == 'owner' ) {
-            echo upstream_project_owner_name( $post_id );
-        }
-
-        if ( $column_name == 'client' ) {
-            echo upstream_project_client_name( $post_id );
-        }
-
-        if ( $column_name == 'start' ) {
-            $start = upstream_project_start_date( $post_id );
-            echo $start ? '<span class="start-date">' . upstream_format_date( $start ) . '</span>' : '';
-        }
-
-        if ( $column_name == 'end' ) {
-            $end = upstream_project_end_date( $post_id );
-            echo $end ? '<span class="end-date">' . upstream_format_date( $end ) . '</span>' : '';
-        }
-
-        if ( $column_name == 'tasks' ) {
-            if (upstream_are_tasks_disabled()) {
-                return;
+            if (!empty($status['status'])) {
+                echo '<div title="' . esc_attr($status['status']) . '" style="width: 100%; position: absolute; top: 0px; left: 0px; overflow: hidden; height: 100%; border-left: 2px solid ' . esc_attr($status['color']) . '" class="' . esc_attr(strtolower($status['status'])) . '"></div>';
             }
 
-            $counts = upstream_project_tasks_counts( $post_id );
-            $colors = upstream_project_task_statuses_colors();
-
-            if( ! $counts )
-                return;
-
-            foreach ($counts as $status => $count) {
-                $color = isset( $colors[$status] ) ? $colors[$status] : '#aaaaaa';
-                echo '<span style="border-color:' . esc_attr( $color ) . '" class="status ' . esc_attr( strtolower( $status ) ) . '"><span class="count" style="background-color:' . esc_attr( $color ) . '">' . $count . '</span>' . $status . '</span>';
-            }
-
+            return;
         }
 
-        if ( $column_name == 'bugs' ) {
-            if (upstream_are_bugs_disabled()) {
-                return;
-            }
+        if ($column_name === 'owner') {
+            $owner_id = (int)upstream_project_owner_id($post_id);
+            if ($owner_id > 0) {
+                if (!isset(self::$usersCache[$owner_id])) {
+                    $user = get_user_by('id', $owner_id);
+                    self::$usersCache[$user->ID] = $user->display_name;
+                    unset($user);
+                }
 
-            $counts = upstream_project_bugs_counts( $post_id );
-            $colors = upstream_project_bug_statuses_colors( $post_id );
-
-            if( ! $counts )
-                return;
-
-            foreach ($counts as $status => $count) {
-                $color = isset( $colors[$status] ) ? $colors[$status] : '#aaaaaa';
-                echo '<span style="border-color:' . esc_attr( $color ) . '" class="status ' . esc_attr( strtolower( $status ) ) . '"><span class="count" style="background-color:' . esc_attr( $color ) . '">' . $count . '</span>' . $status . '</span>';
-            }
-
-        }
-
-        if ( $column_name == 'progress' ) {
-            echo upstream_project_progress( $post_id ) . '%';
-        }
-
-        if ( $column_name == 'messages' ) {
-            $count = getProjectCommentsCount($post_id);
-            if( $count > 0 ) {
-                echo '<a href="' . esc_url( get_edit_post_link( $post_id ) .'#_upstream_project_discussions' ) . '"><span>' . esc_html( $count ) . '</a></span>';
+                echo self::$usersCache[$owner_id];
             } else {
-                echo '—';
+                echo self::$noneTag;
             }
 
+            return;
         }
 
+        if ($column_name === 'client') {
+            $client_id = (int)upstream_project_client_id($post_id);
+            if ($client_id > 0) {
+                if (!isset($clientsCache[$client_id])) {
+                    $client = get_post($client_id);
+                    self::$clientsCache[$client_id] = $client->post_title;
+                    unset($client);
+                }
+
+                echo self::$clientsCache[$client_id];
+            } else {
+                echo self::$noneTag;
+            }
+
+            return;
+        }
+
+        if ($column_name === 'start') {
+            $startDate = (int)upstream_project_start_date($post_id);
+            if ($startDate > 0) {
+                echo '<span class="start-date">' . upstream_format_date($startDate) . '</span>';
+            } else {
+                echo self::$noneTag;
+            }
+
+            return;
+        }
+
+        if ($column_name === 'end') {
+            $endDate = (int)upstream_project_end_date($post_id);
+            if ($endDate > 0) {
+                echo '<span class="end-date">' . upstream_format_date($endDate) . '</span>';
+            } else {
+                echo self::$noneTag;
+            }
+
+            return;
+        }
+
+        if ($column_name === 'tasks') {
+            $areTasksDisabled = upstream_are_tasks_disabled();
+            if (!$areTasksDisabled) {
+                $counts = upstream_project_tasks_counts($post_id);
+
+                if (empty($counts)) {
+                    echo self::$noneTag;
+                } else {
+                    if (empty(self::$statusesColorsCache)) {
+                        self::$statusesColorsCache = upstream_project_task_statuses_colors();
+                    }
+
+                    foreach ($counts as $status => $count) {
+                        $color = isset(self::$statusesColorsCache[$status]) ? self::$statusesColorsCache[$status] : '#aaaaaa';
+                        $color = esc_attr($color);
+
+                        echo '<span style="border-color:' . $color . '" class="status ' . esc_attr(strtolower($status)) . '"><span class="count" style="background-color:' . $color . '">' . $count . '</span>' . $status . '</span>';
+                    }
+                }
+            }
+
+            return;
+        }
+
+        if ($column_name === 'bugs') {
+            $areBugsDisabled = upstream_are_bugs_disabled();
+            if (!$areBugsDisabled) {
+                $counts = upstream_project_bugs_counts($post_id);
+                if (empty($counts)) {
+                    echo self::$noneTag;
+                } else {
+                    if (empty(self::$bugsColorsCache)) {
+                        self::$bugsColorsCache = upstream_project_bug_statuses_colors($post_id);
+                    }
+
+                    foreach ($counts as $status => $count) {
+                        $color = isset(self::$bugsColorsCache[$status]) ? self::$bugsColorsCache[$status] : '#aaaaaa';
+                        $color = esc_attr($color);
+
+                        echo '<span style="border-color:' . $color . '" class="status ' . esc_attr(strtolower($status)) . '"><span class="count" style="background-color:' . $color . '">' . $count . '</span>' . $status . '</span>';
+                    }
+                }
+            }
+
+            return;
+        }
+
+        if ($column_name === 'progress') {
+            $progress = (int)upstream_project_progress($post_id);
+
+            echo '<div style="text-align: center;">' . $progress . '%</div>';
+
+            return;
+        }
+
+        if ($column_name === 'messages') {
+            echo '<div style="text-align: center;">';
+
+            $count = (int)getProjectCommentsCount($post_id);
+            if ( $count > 0 ) {
+                echo '<a href="' . esc_url(get_edit_post_link($post_id) .'#_upstream_project_discussions') . '"><span>' . esc_html($count) . '</a></span>';
+            } else {
+                echo self::$noneTag;
+            }
+
+            echo '</div>';
+        }
     }
 
 
