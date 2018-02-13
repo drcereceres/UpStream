@@ -70,6 +70,9 @@ class Comments
         add_action('wp_ajax_upstream:project.unapprove_comment', array(self::$namespace, 'unapproveComment'));
         add_action('wp_ajax_upstream:project.approve_comment', array(self::$namespace, 'approveComment'));
         add_action('wp_ajax_upstream:project.fetch_comments', array(self::$namespace, 'fetchComments'));
+
+        add_filter('comment_notification_subject', array(self::$namespace, 'defineNotificationHeader'), 10, 2);
+        add_filter('comment_notification_recipients', array(self::$namespace, 'defineNotificationRecipients'), 10, 2);
     }
 
     /**
@@ -721,5 +724,215 @@ class Comments
         }
 
         wp_send_json($response);
+    }
+
+
+
+
+
+
+
+
+
+    // @todo
+    public static function defineNotificationRecipients($recipients, $comment_id)
+    {
+        // 2 minutes.
+        $transientExpiration = 60 * 2;
+
+        $comment = get_comment($comment_id);
+        $comment = (object)array(
+            'id'         => (int)$comment->comment_ID,
+            'project_id' => (int)$comment->comment_post_ID,
+            'parent'     => (int)$comment->comment_parent,
+            'created_by' => (int)$comment->user_id,
+            'target'     => get_comment_meta($comment_id, 'type', true),
+            'target_id'  => (int)$comment->comment_post_ID
+        );
+
+        $comment->target_label = call_user_func('upstream_'. $comment->target .'_label');
+
+        if ($comment->target !== 'project') {
+            $comment->target_id = get_comment_meta($comment_id, 'id', true);
+        }
+
+        set_transient('upstream:comment_notification.comment:' . $comment_id, $comment, $transientExpiration);
+
+        $getUser = function($user_id) use ($transientExpiration) {
+            if ($user_id <= 0) {
+                return null;
+            }
+
+            // Check if the user is cached.
+            $user = get_transient('upstream:comment_notification.user:' . $user_id);
+            if (empty($user)) {
+                // Check if the user exists.
+                $user = get_user_by('id', $user_id);
+                if ($user === false) {
+                    return null;
+                }
+
+                // Prepare user data.
+                $user = (object)array(
+                    'id'    => (int)$user->ID,
+                    'name'  => (string)$user->display_name,
+                    'email' => (string)$user->user_email
+                );
+
+                // Cache user.
+                set_transient('upstream:comment_notification.user:' . $user->id, $user, $transientExpiration);
+            }
+
+            return $user;
+        };
+
+        $fetchProjectMetaAsMap = function($project_id, $key, &$map) use ($transientExpiration, $getUser) {
+            $rowset = (array)get_post_meta($project_id, '_upstream_project_' . $key . 's', true);
+            foreach ($rowset as $row) {
+                $titleKey = $key !== 'milestone' ? 'title' : 'milestone';
+
+                if (isset($row['id'])
+                    && !empty($row['id'])
+                    && isset($row[$titleKey])
+                    && !empty($row[$titleKey])
+                ) {
+                    $item = (object)array(
+                        'id'          => $row['id'],
+                        'title'       => $row[$titleKey],
+                        'assigned_to' => isset($row['assigned_to']) ? (int)$row['assigned_to'] : 0,
+                        'created_by'  => isset($row['created_by']) ? (int)$row['created_by'] : 0,
+                        'type'        => $key
+                    );
+
+                    if ($item->assigned_to > 0) {
+                        $user = $getUser($item->assigned_to);
+                        if (empty($user)) {
+                            $item->assigned_to = 0;
+                        } else {
+                            $item->assigned_to = $user->id;
+                        }
+                    }
+
+                    if ($item->created_by > 0) {
+                        $user = $getUser($item->created_by);
+                        if (empty($user)) {
+                            $item->created_by = 0;
+                        } else {
+                            $item->created_by = $user->id;
+                        }
+                    }
+
+                    $map[$item->id] = $item;
+                }
+            }
+        };
+
+        $project = get_transient('upstream:comment_notification.project:' . $comment->project_id);
+        if (empty($project)||1) {
+            $project = get_post($comment->project_id);
+            $project = (object)array(
+                'id'          => (int)$project->ID,
+                'title'       => $project->post_title,
+                'created_by'  => (int)$project->post_author,
+                'owner_id'    => (int)get_post_meta($project->ID, '_upstream_project_owner', true),
+                'owner_email' => '',
+                'milestones'  => array(),
+                'tasks'       => array(),
+                'bugs'        => array(),
+                'files'       => array()
+            );
+
+            if ($project->owner_id > 0) {
+                $owner = get_transient('upstream:comment_notification.user:' . $project->owner_id);
+                if (empty($owner)) {
+                    $owner = get_user_by('id', $project->owner_id);
+                    $owner = (object)array(
+                        'id'    => $project->owner_id,
+                        'name'  => (string)$owner->display_name,
+                        'email' => (string)$owner->user_email
+                    );
+
+                    set_transient('upstream:comment_notification.user:' . $owner->id, $owner, $transientExpiration);
+                }
+
+                $recipients[] = $owner->email;
+            }
+
+            if ($comment->target !== 'project') {
+                $fetchProjectMetaAsMap($project->id, $comment->target, $project->{$comment->target . 's'});
+                foreach ($project->{$comment->target . 's'} as $item) {
+                    if ($item->id === $comment->target_id) {
+                        if ($item->assigned_to > 0) {
+                            $user = $getUser($item->assigned_to);
+                            $recipients[] = $user->email;
+                        }
+
+                        if ($item->created_by > 0) {
+                            $user = $getUser($item->created_by);
+                            $recipients[] = $user->email;
+                        }
+                    }
+                }
+            }
+
+            set_transient('upstream:comment_notification.project:' . $comment->project_id, $project, $transientExpiration);
+        } else {
+            if ($comment->target !== 'project'
+                && empty($project->{$comment->target . 's'})
+            ) {
+                $fetchProjectMetaAsMap($project->id, $comment->target, $project->{$comment->target . 's'});
+
+                set_transient('upstream:comment_notification.project:' . $comment->project_id, $project, $transientExpiration);
+            }
+        }
+
+        $recipients = array_unique(array_filter($recipients));
+
+        // @todo: remove
+        // error_log('Setting notification recipients...');
+        // error_log(json_encode($recipients));
+
+        return $recipients;
+    }
+
+    // @todo
+    public static function defineNotificationHeader($subject, $comment_id)
+    {
+        $comment = get_transient('upstream:comment_notification.comment:' . $comment_id);
+        $project = get_transient('upstream:comment_notification.project:' . $comment->project_id);
+
+        $siteName = get_bloginfo('name');
+
+        $subject = sprintf(
+            '[%s][%s] %s',
+            $siteName,
+            $project->title,
+            sprintf(
+                _x('New comment on %s', 'Comment notification subject', 'upstream'),
+                $comment->target_label
+            )
+        );
+
+        if ($comment->target !== 'project') {
+            $meta = (array)get_post_meta($project->id, '_upstream_project_' . $comment->target . 's', true);
+            foreach ($meta as $item) {
+                if (isset($item['id']) && $item['id'] === $comment->target_id) {
+                    $titleKey = $comment->target === 'milestone' ? 'milestone' : 'title';
+                    if (isset($item[$titleKey])) {
+                        $subject .= sprintf(': "%s"', $item[$titleKey]);
+                    }
+
+                    break;
+                }
+            }
+        }
+
+        // @todo: remove
+        // error_log('Setting notification subject...');
+        // error_log($subject);
+
+        // die();
+
+        return $subject;
     }
 }
