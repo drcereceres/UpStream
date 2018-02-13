@@ -726,14 +726,6 @@ class Comments
         wp_send_json($response);
     }
 
-
-
-
-
-
-
-
-
     // @todo
     public static function defineNotificationRecipients($recipients, $comment_id)
     {
@@ -888,9 +880,7 @@ class Comments
 
         $recipients = array_unique(array_filter($recipients));
 
-        // @todo: remove
-        // error_log('Setting notification recipients...');
-        // error_log(json_encode($recipients));
+        $recipients = apply_filters('upstream:comment_notification.recipients', $recipients, $comment);
 
         return $recipients;
     }
@@ -927,11 +917,7 @@ class Comments
             }
         }
 
-        // @todo: remove
-        // error_log('Setting notification subject...');
-        // error_log($subject);
-
-        // die();
+        $subject = apply_filters('upstream:comment_notification.subject', $subject, $comment, $project);
 
         return $subject;
     }
