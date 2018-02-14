@@ -752,6 +752,11 @@ class Comments
             'target_id'  => (int)$comment->comment_post_ID
         );
 
+        // Check if we need to skip further data processing.
+        if (in_array($comment->target, array('project', 'milestone', 'task', 'bug', 'file'))) {
+            return $recipients;
+        }
+
         $comment->target_label = call_user_func('upstream_'. $comment->target .'_label');
 
         if ($comment->target !== 'project') {
@@ -909,6 +914,13 @@ class Comments
     public static function defineNotificationHeader($subject, $comment_id)
     {
         $comment = get_transient('upstream:comment_notification.comment:' . $comment_id);
+        // Check if we need to skip further data processing in case of comments written outside UpStream's scope.
+        if (empty($comment)
+            || in_array($comment->target, array('project', 'milestone', 'task', 'bug', 'file'))
+        ) {
+            return $subject;
+        }
+
         $project = get_transient('upstream:comment_notification.project:' . $comment->project_id);
 
         $siteName = get_bloginfo('name');
