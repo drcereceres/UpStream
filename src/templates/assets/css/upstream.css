@@ -409,3 +409,9 @@ td .btn {
 .up-o-label {
   border: none;
 }
+
+.c-data-table__filters .select2-search__field {
+  width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
