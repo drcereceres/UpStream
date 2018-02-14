@@ -726,7 +726,17 @@ class Comments
         wp_send_json($response);
     }
 
-    // @todo
+    /**
+     * Set additional notification recipients as needed for newly added comments.
+     *
+     * @since   1.15.0
+     * @static
+     *
+     * @param   array   $recipients     Recipients list.
+     * @param   int     $comment_id     The new comment ID.
+     *
+     * @return  array
+     */
     public static function defineNotificationRecipients($recipients, $comment_id)
     {
         // 2 minutes.
@@ -885,7 +895,17 @@ class Comments
         return $recipients;
     }
 
-    // @todo
+    /**
+     * Add additional info to comment notifications subject.
+     *
+     * @since   1.15.0
+     * @static
+     *
+     * @param   string  $subject    The original subject.
+     * @param   int     $comment_id The new comment ID.
+     *
+     * @return  string
+     */
     public static function defineNotificationHeader($subject, $comment_id)
     {
         $comment = get_transient('upstream:comment_notification.comment:' . $comment_id);
