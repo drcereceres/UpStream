@@ -85,8 +85,8 @@ $l = array(
         strtolower(__('User'))
     ),
     'MSG_INVALID_MILESTONE' => __('invalid milestone', 'upstream'),
-    'LB_START_DATE'    => __('Start Date', 'upstream'),
-    'LB_END_DATE'      => __('End Date', 'upstream')
+    'LB_START_DATE'    => __('Starting at', 'upstream'),
+    'LB_END_DATE'      => __('Ending at', 'upstream')
 );
 
 $l['MSG_INVALID_MILESTONE'] = sprintf(
