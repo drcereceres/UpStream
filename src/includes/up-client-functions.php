@@ -96,6 +96,7 @@ function upstream_get_client_users($client_id)
         return false;
     }
 
+    $usersList = array();
     $clientUsersList = array_filter((array)get_post_meta($client_id, '_upstream_new_client_users', true));
     if (count($clientUsersList) > 0) {
         $usersIdsList = array();
@@ -110,7 +111,6 @@ function upstream_get_client_users($client_id)
             'include' => $usersIdsList
         ));
 
-        $usersList = array();
         foreach ($rowset as $row) {
             $usersList[(int)$row->ID] = array(
                 'id'   => (int)$row->ID,

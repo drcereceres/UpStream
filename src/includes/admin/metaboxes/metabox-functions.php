@@ -564,7 +564,7 @@ function upstreamRenderCommentsBox($item_id = "", $itemType = "project", $projec
     if ($commentsCacheCount === 0
         && !is_admin()
     ) {
-        printf('<p data-empty>%s</>', sprintf(_x("You haven't created any %s yet", '%s: item name, ie Milestones, Tasks, Bugs, Files, Discussion', 'upstream'), __('Discussion', 'upstream')));
+        printf('<p data-empty><i class="s-text-color-gray">%s</i></>', __('none', 'upstream'));
     }
     ?>
 
@@ -968,4 +968,25 @@ function upstream_admin_ajax_get_clients_users()
             wp_send_json_success($output);
         }
     }
+}
+
+function upstream_wp_get_clients()
+{
+    global $wpdb;
+
+    $rowset = $wpdb->get_results(sprintf('
+        SELECT `ID`, `post_title`
+        FROM `%s`
+        WHERE `post_type` = "client"
+        AND `post_status` = "publish"',
+        $wpdb->prefix . 'posts'
+    ));
+
+    $data = array();
+
+    foreach ($rowset as $row) {
+        $data[$row->ID] = $row->post_title;
+    }
+
+    return $data;
 }

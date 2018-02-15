@@ -10,7 +10,7 @@ if (!defined('ABSPATH')) exit;
  * @package     UpStream
  * @subpackage  Traits
  * @author      UpStream <https://upstreamplugin.com>
- * @copyright   Copyright (c) 2017 UpStream Project Management
+ * @copyright   Copyright (c) 2018 UpStream Project Management
  * @license     GPL-3
  * @since       1.11.0
  */
