@@ -250,19 +250,19 @@ class Upstream_Bug_List extends WP_List_Table {
                     }
                     return $output;
                 } else {
-                    return '<span><i>('. __('none', 'upstream') .')</i></span>';
+                    return '<span><i style="color: #CCC;">'. __('none', 'upstream') .'</i></span>';
                 }
 
             case 'due_date':
                 if (isset($item['due_date']) && (int)$item['due_date'] > 0) {
                     return '<span class="end-date">' . upstream_format_date($item['due_date']) . '</span>';
                 } else {
-                    return '<span><i>('. __('none', 'upstream') .')</i></span>';
+                    return '<span><i style="color: #CCC;">'. __('none', 'upstream') .'</i></span>';
                 }
 
             case 'status':
                 if (!isset($item['status']) || empty($item['status'])) {
-                    return '<span><i>('. __('none', 'upstream') .')</i></span>';
+                    return '<span><i style="color: #CCC;">'. __('none', 'upstream') .'</i></span>';
                 }
 
                 $colors = upstream_project_bug_statuses_colors( $item['project_id'] );
@@ -273,7 +273,7 @@ class Upstream_Bug_List extends WP_List_Table {
 
             case 'severity':
                 if (!isset($item['severity']) || empty($item['severity'])) {
-                    return '<span><i>('. __('none', 'upstream') .')</i></span>';
+                    return '<span><i style="color: #CCC;">'. __('none', 'upstream') .'</i></span>';
                 }
 
                 $colors = upstream_project_bug_severity_colors( $item['project_id'] );

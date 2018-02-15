@@ -18,6 +18,8 @@ class UpStream_Admin_Project_Columns {
     public function __construct() {
         $this->hooks();
         $this->filterAllowedProjects();
+
+        self::$noneTag = '<i style="color: #CCC;">'. __('none', 'upstream') .'</i>';
     }
 
     /**
@@ -126,93 +128,154 @@ class UpStream_Admin_Project_Columns {
             $defaults['bugs']       = upstream_bug_label_plural();
         }
         $defaults['progress']   = __( 'Progress', 'upstream' );
-        $defaults['messages']   = '<span class="dashicons dashicons-admin-comments"></span>';
+        $defaults['messages']   = '<div style="text-align: center;"><span class="dashicons dashicons-admin-comments"></span><span class="s-hidden-on-tables">' . __('Comments') . '</span></div>';
 
         $defaults = array( 'project-status' => '' ) + $defaults;
 
         return $defaults;
     }
 
+
+    private static $noneTag = '';
+    private static $usersCache = array();
+    private static $clientsCache = array();
+    private static $statusesColorsCache = array();
+    private static $bugsColorsCache = array();
+
     public function project_data( $column_name, $post_id ) {
+        if ($column_name === 'project-status') {
+            $status = upstream_project_status_color($post_id);
 
-        if ( $column_name == 'project-status' ) {
-
-            $status = upstream_project_status_color( $post_id );
-            if( ! $status['status'] )
-                return;
-
-                echo '<div title="' . esc_attr( $status['status'] ) . '" style="width: 100%; position: absolute; top: 0px; left: 0px; overflow: hidden; height: 100%; border-left: 2px solid ' . esc_attr( $status['color'] ) . '" class="' . esc_attr( strtolower( $status['status'] ) ) . '"></div>';
-
-        }
-
-        if ( $column_name == 'owner' ) {
-            echo upstream_project_owner_name( $post_id );
-        }
-
-        if ( $column_name == 'client' ) {
-            echo upstream_project_client_name( $post_id );
-        }
-
-        if ( $column_name == 'start' ) {
-            $start = upstream_project_start_date( $post_id );
-            echo $start ? '<span class="start-date">' . upstream_format_date( $start ) . '</span>' : '';
-        }
-
-        if ( $column_name == 'end' ) {
-            $end = upstream_project_end_date( $post_id );
-            echo $end ? '<span class="end-date">' . upstream_format_date( $end ) . '</span>' : '';
-        }
-
-        if ( $column_name == 'tasks' ) {
-            if (upstream_are_tasks_disabled()) {
-                return;
+            if (!empty($status['status'])) {
+                echo '<div title="' . esc_attr($status['status']) . '" style="width: 100%; position: absolute; top: 0px; left: 0px; overflow: hidden; height: 100%; border-left: 2px solid ' . esc_attr($status['color']) . '" class="' . esc_attr(strtolower($status['status'])) . '"></div>';
             }
 
-            $counts = upstream_project_tasks_counts( $post_id );
-            $colors = upstream_project_task_statuses_colors();
-
-            if( ! $counts )
-                return;
-
-            foreach ($counts as $status => $count) {
-                $color = isset( $colors[$status] ) ? $colors[$status] : '#aaaaaa';
-                echo '<span style="border-color:' . esc_attr( $color ) . '" class="status ' . esc_attr( strtolower( $status ) ) . '"><span class="count" style="background-color:' . esc_attr( $color ) . '">' . $count . '</span>' . $status . '</span>';
-            }
-
+            return;
         }
 
-        if ( $column_name == 'bugs' ) {
-            if (upstream_are_bugs_disabled()) {
-                return;
-            }
+        if ($column_name === 'owner') {
+            $owner_id = (int)upstream_project_owner_id($post_id);
+            if ($owner_id > 0) {
+                if (!isset(self::$usersCache[$owner_id])) {
+                    $user = get_user_by('id', $owner_id);
+                    self::$usersCache[$user->ID] = $user->display_name;
+                    unset($user);
+                }
 
-            $counts = upstream_project_bugs_counts( $post_id );
-            $colors = upstream_project_bug_statuses_colors( $post_id );
-
-            if( ! $counts )
-                return;
-
-            foreach ($counts as $status => $count) {
-                $color = isset( $colors[$status] ) ? $colors[$status] : '#aaaaaa';
-                echo '<span style="border-color:' . esc_attr( $color ) . '" class="status ' . esc_attr( strtolower( $status ) ) . '"><span class="count" style="background-color:' . esc_attr( $color ) . '">' . $count . '</span>' . $status . '</span>';
-            }
-
-        }
-
-        if ( $column_name == 'progress' ) {
-            echo upstream_project_progress( $post_id ) . '%';
-        }
-
-        if ( $column_name == 'messages' ) {
-            $count = getProjectCommentsCount($post_id);
-            if( $count > 0 ) {
-                echo '<a href="' . esc_url( get_edit_post_link( $post_id ) .'#_upstream_project_discussions' ) . '"><span>' . esc_html( $count ) . '</a></span>';
+                echo self::$usersCache[$owner_id];
             } else {
-                echo '—';
+                echo self::$noneTag;
             }
 
+            return;
         }
 
+        if ($column_name === 'client') {
+            $client_id = (int)upstream_project_client_id($post_id);
+            if ($client_id > 0) {
+                if (!isset($clientsCache[$client_id])) {
+                    $client = get_post($client_id);
+                    self::$clientsCache[$client_id] = $client->post_title;
+                    unset($client);
+                }
+
+                echo self::$clientsCache[$client_id];
+            } else {
+                echo self::$noneTag;
+            }
+
+            return;
+        }
+
+        if ($column_name === 'start') {
+            $startDate = (int)upstream_project_start_date($post_id);
+            if ($startDate > 0) {
+                echo '<span class="start-date">' . upstream_format_date($startDate) . '</span>';
+            } else {
+                echo self::$noneTag;
+            }
+
+            return;
+        }
+
+        if ($column_name === 'end') {
+            $endDate = (int)upstream_project_end_date($post_id);
+            if ($endDate > 0) {
+                echo '<span class="end-date">' . upstream_format_date($endDate) . '</span>';
+            } else {
+                echo self::$noneTag;
+            }
+
+            return;
+        }
+
+        if ($column_name === 'tasks') {
+            $areTasksDisabled = upstream_are_tasks_disabled();
+            if (!$areTasksDisabled) {
+                $counts = upstream_project_tasks_counts($post_id);
+
+                if (empty($counts)) {
+                    echo self::$noneTag;
+                } else {
+                    if (empty(self::$statusesColorsCache)) {
+                        self::$statusesColorsCache = upstream_project_task_statuses_colors();
+                    }
+
+                    foreach ($counts as $status => $count) {
+                        $color = isset(self::$statusesColorsCache[$status]) ? self::$statusesColorsCache[$status] : '#aaaaaa';
+                        $color = esc_attr($color);
+
+                        echo '<span style="border-color:' . $color . '" class="status ' . esc_attr(strtolower($status)) . '"><span class="count" style="background-color:' . $color . '">' . $count . '</span>' . $status . '</span>';
+                    }
+                }
+            }
+
+            return;
+        }
+
+        if ($column_name === 'bugs') {
+            $areBugsDisabled = upstream_are_bugs_disabled();
+            if (!$areBugsDisabled) {
+                $counts = upstream_project_bugs_counts($post_id);
+                if (empty($counts)) {
+                    echo self::$noneTag;
+                } else {
+                    if (empty(self::$bugsColorsCache)) {
+                        self::$bugsColorsCache = upstream_project_bug_statuses_colors($post_id);
+                    }
+
+                    foreach ($counts as $status => $count) {
+                        $color = isset(self::$bugsColorsCache[$status]) ? self::$bugsColorsCache[$status] : '#aaaaaa';
+                        $color = esc_attr($color);
+
+                        echo '<span style="border-color:' . $color . '" class="status ' . esc_attr(strtolower($status)) . '"><span class="count" style="background-color:' . $color . '">' . $count . '</span>' . $status . '</span>';
+                    }
+                }
+            }
+
+            return;
+        }
+
+        if ($column_name === 'progress') {
+            $progress = (int)upstream_project_progress($post_id);
+
+            echo '<div style="text-align: center;">' . $progress . '%</div>';
+
+            return;
+        }
+
+        if ($column_name === 'messages') {
+            echo '<div style="text-align: center;">';
+
+            $count = (int)getProjectCommentsCount($post_id);
+            if ( $count > 0 ) {
+                echo '<a href="' . esc_url(get_edit_post_link($post_id) .'#_upstream_project_discussions') . '"><span>' . esc_html($count) . '</a></span>';
+            } else {
+                echo self::$noneTag;
+            }
+
+            echo '</div>';
+        }
     }
 
 
@@ -268,50 +331,162 @@ class UpStream_Admin_Project_Columns {
         return $vars;
     }
 
+    public function table_filtering()
+    {
+        global $pagenow;
 
-    function table_filtering() {
-
-        $type = 'project';
-        if (isset($_GET['post_type'])) {
-            $type = $_GET['post_type'];
+        $isMultisite = is_multisite();
+        if ($isMultisite) {
+            $currentPage = isset($_SERVER['PHP_SELF']) ? preg_replace('/^\/wp-admin\//i', '', $_SERVER['PHP_SELF']) : '';
+        } else {
+            $currentPage = $pagenow;
         }
 
-        //only add filter to post type you want
-        if ( 'project' == $type ){
-            //change this to the list of values you want to show
-            //in 'label' => 'value' format
-            $option = get_option( 'upstream_projects' );
-            $statuses = $option['statuses'];
-            ?>
+        $postType = isset($_GET['post_type']) ? $_GET['post_type'] : null;
+        if ($currentPage === 'edit.php'
+            && $postType === 'project'
+        ) {
+            $projectOptions = get_option('upstream_projects');
+            $statuses = $projectOptions['statuses'];
+            unset($projectOptions);
 
-            <select name='project-status' id='project-status' class='postform'>
-                <option value=''><?php printf( __( 'Show all %s', 'upstream' ), 'statuses' ) ?></option>
-                <?php foreach ( $statuses as $status ) { ?>
-                    <option value="<?php echo strtolower( $status['name'] ) ?>" <?php isset( $_GET['project-status'] ) ? selected( $_GET['project-status'], $status['name'] ) : ''; ?>><?php echo $status['name'] ?></option>
-                <?php } ?>
+            $selectedStatus = isset($_GET['project-status']) ? $_GET['project-status'] : '';
+            ?>
+            <select name="project-status" id="project-status" class="postform">
+                <option value="">
+                    <?php printf(__('Show all %s', 'upstream'), 'statuses'); ?>
+                </option>
+                <?php foreach ($statuses as $status): ?>
+                <option value="<?php echo $status['name']; ?>" <?php selected($selectedStatus, $status['name']); ?>>
+                    <?php echo $status['name'] ?>
+                </option>
+                <?php endforeach; ?>
+            </select>
+
+            <?php
+            // Filter by Project Owner.
+            $users = upstream_admin_get_all_project_users();
+
+            $selectedOwner = isset($_GET['project-owner']) ? (int)$_GET['project-owner'] : -1;
+            ?>
+            <select name="project-owner" id="project-owner" class="postform">
+                <option value="">
+                    <?php printf(__('Show all %s', 'upstream'), 'owners'); ?>
+                </option>
+                <?php foreach ($users as $ownerId => $ownerName): ?>
+                <option value="<?php echo $ownerId; ?>" <?php echo $selectedOwner === $ownerId ? ' selected' : ''; ?>>
+                    <?php echo $ownerName; ?>
+                </option>
+                <?php endforeach; ?>
+            </select>
+
+            <?php
+            // Filter by Project Client.
+            $clients = upstream_wp_get_clients();
+            $selectedClientId = isset($_GET['project-client']) ? (int)$_GET['project-client'] : -1;
+            ?>
+            <select name="project-client" id="project-client" class="postform">
+                <option value="">
+                    <?php printf(__('Show all %s', 'upstream'), upstream_client_label_plural(true)); ?>
+                </option>
+                <?php foreach ($clients as $clientId => $clientName): ?>
+                <option value="<?php echo $clientId; ?>" <?php echo $selectedClientId === (int)$clientId ? ' selected' : ''; ?>>
+                    <?php echo $clientName; ?>
+                </option>
+                <?php endforeach; ?>
             </select>
 
             <?php
         }
     }
 
-    function filter( $query ){
-        global $pagenow;
+    public function filter($query)
+    {
+        $isAdmin = is_admin();
+        if (!$isAdmin) {
+            return;
+        }
 
         $postType = isset($_GET['post_type']) ? $_GET['post_type'] : 'post';
+        if ($postType !== 'project') {
+            return;
+        }
 
-        if ($postType === 'project' && is_admin()) {
-            if (!$this->allowAllProjects && $query->filterAllowedProjects) {
-                $query->query_vars = array_merge($query->query_vars, array(
-                    'post__in' => count($this->allowedProjects) === 0 ? array('making_sure_no_project_is_returned') : $this->allowedProjects
-                ));
-                $query->filterAllowedProjects = null;
+        $isMultisite = is_multisite();
+        if ($isMultisite) {
+            $currentPage = isset($_SERVER['PHP_SELF']) ? preg_replace('/^\/wp-admin\//i', '', $_SERVER['PHP_SELF']) : '';
+        } else {
+            global $pagenow;
+
+            $currentPage = $pagenow;
+        }
+
+        if ($currentPage !== 'edit.php') {
+            return;
+        }
+
+        $shouldExit = true;
+        $filters = array('status', 'owner', 'client');
+        foreach ($filters as $filterName) {
+            $filterKey = 'project-' . $filterName;
+
+            if (isset($_GET[$filterKey]) && !empty($_GET[$filterKey])) {
+                $shouldExit = false;
+            }
+        }
+
+        if ($shouldExit) {
+            return;
+        }
+
+        if (!$this->allowAllProjects && $query->filterAllowedProjects) {
+            $query->query_vars = array_merge($query->query_vars, array(
+                'post__in' => count($this->allowedProjects) === 0 ? array('making_sure_no_project_is_returned') : $this->allowedProjects
+            ));
+            $query->filterAllowedProjects = null;
+        }
+
+        $metaQuery = array();
+
+        $projectStatus = isset($_GET['project-status']) ? (string)$_GET['project-status'] : '';
+        if (strlen($projectStatus) > 0) {
+            $metaQuery[] = array(
+                'key'     => '_upstream_project_status',
+                'value'   => $projectStatus,
+                'compare' => '='
+            );
+        }
+
+        $projectOwnerId = isset($_GET['project-owner']) ? (int)$_GET['project-owner'] : 0;
+        if ($projectOwnerId > 0) {
+            $metaQuery[] = array(
+                'key'     => '_upstream_project_owner',
+                'value'   => $projectOwnerId,
+                'compare' => '='
+            );
+        }
+
+        $projectClientId = isset($_GET['project-client']) ? (int)$_GET['project-client'] : 0;
+        if ($projectClientId > 0) {
+            $metaQuery[] = array(
+                'key'     => '_upstream_project_client',
+                'value'   => $projectClientId,
+                'compare' => '='
+            );
+        }
+
+        $metaQueryCount = count($metaQuery);
+        if ($metaQueryCount > 0) {
+            if ($metaQueryCount === 1) {
+                $query->query_vars['meta_key'] = $metaQuery[0]['key'];
+                $query->query_vars['meta_value'] = $metaQuery[0]['value'];
+            } else {
+                $metaQuery['relation'] = 'AND';
+
+                $query->query_vars['meta_query'] = $metaQuery;
             }
 
-            if ($pagenow === 'edit.php' && isset($_GET['project-status']) && $_GET['project-status'] !== '') {
-                $query->query_vars['meta_key'] = '_upstream_project_status';
-                $query->query_vars['meta_value'] = $_GET['project-status'];
-            }
+            $query->meta_query = $metaQuery;
         }
     }
 }

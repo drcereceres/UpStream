@@ -11,7 +11,7 @@ use \Cmb2Grid\Grid\Cmb2Grid;
  * @package     UpStream
  * @subpackage  Admin\Metaboxes
  * @author      UpStream <https://upstreamplugin.com>
- * @copyright   Copyright (c) 2017 UpStream Project Management
+ * @copyright   Copyright (c) 2018 UpStream Project Management
  * @license     GPL-3
  * @since       1.11.0
  * @final

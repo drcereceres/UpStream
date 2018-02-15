@@ -90,11 +90,14 @@ class UpStream_Admin_Client_Columns {
                 $columnValue = wp_kses_post(wpautop($address));
             }
         } else if ($column_name === 'users') {
-            upstream_client_render_users_column(upstream_get_client_users($post_id));
-            return;
+            $clientUsers = (array)upstream_get_client_users($post_id);
+            if (count($clientUsers) > 0) {
+                upstream_client_render_users_column(upstream_get_client_users($post_id));
+                return;
+            }
         }
 
-        echo !empty($columnValue) ? $columnValue : '<i>' . __('none', 'upstream') . '</i>';
+        echo !empty($columnValue) ? $columnValue : '<i style="color: #CCC;">' . __('none', 'upstream') . '</i>';
     }
 
 }
