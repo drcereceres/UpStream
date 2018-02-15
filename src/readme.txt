@@ -136,7 +136,7 @@ UpStream does not use the existing styling of your theme. The features and the v
 The format is based on [Keep a Changelog](http://keepachangelog.com)
 and this project adheres to [Semantic Versioning](http://semver.org).
 
-= [1.15.0] - @todo =
+= [1.15.0] - 2018-02-15 =
 
 Added:
 * Added Categories, Status, Clients, Title filters for Projects on frontend
@@ -154,6 +154,7 @@ Changed:
 * Frontend Date filters now use a new Date Picker js lib
 * Replaced wp_verify_nonce in favor of check_ajax_referer on the comments AJAX endpoints
 * Minor text changes
+* Update year in copyright info
 
 Deprecated:
 * Within UpStream_Metaboxes_Projects class: getStatusFilterHtml, getSeverityFilterHtml, getFiltersHeaderHtml, getFiltersFooterHtml, getMilestoneFilterHtml
