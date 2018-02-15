@@ -165,6 +165,7 @@ Fixed:
 * Fix Comments label missing from Screen Options pulldown in the Projects page
 * Fixed Status filter in Projects admin list getting reseted after being selected
 * Fixed Project author not receiving comment notifications
+* Fixed Start/End Dates intervals
 
 = [1.14.1] - 2018-02-12 =
 

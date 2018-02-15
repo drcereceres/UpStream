@@ -512,6 +512,77 @@
                 }
             });
         }
+
+        // Check if Start/End dates intervals are valid.
+        var stopSubmit = false;
+
+        var validateIntervalBetweenDatesFields = function(startDateEl, endDateEl) {
+          if (!startDateEl || !endDateEl) return true;
+
+          var startDate = new Date(startDateEl.val());
+          var endDate = new Date(endDateEl.val());
+
+          if (!startDate
+            || !endDate
+            || !startDate.toJSON()
+            || !endDate.toJSON()
+          )  {
+            return true;
+          }
+
+          return (+startDate) <= (+endDate);
+        }
+
+        var validateIntervalBetweenDatesFieldsInSection = function(section) {
+          var isValid = true;
+
+          if (section.length > 0) {
+            var rowsList = $('> .postbox.cmb-row[data-iterator]', section);
+            if (rowsList.length) {
+              rowsList.each(function() {
+                var row = $(this);
+
+                var startDateEl = $('[name$="[start_date]"]', row);
+                var endDateEl = $('[name$="[end_date]"]', row);
+
+                if (!validateIntervalBetweenDatesFields(startDateEl, endDateEl)) {
+                  isValid = false;
+
+                  startDateEl.addClass('has-error');
+                  endDateEl.addClass('has-error');
+
+                  row.removeClass('closed');
+                  $('.up-o-tab', row).removeClass('nav-tab-active');
+                  $('.up-o-tab.up-o-tab-data', row).addClass('nav-tab-active');
+
+                  $('.up-o-tab-content', row).removeClass('is-active');
+                  $('.up-o-tab-content.up-c-tab-content-data').addClass('is-active');
+
+                  return false;
+                } else {
+                  startDateEl.removeClass('has-error');
+                  endDateEl.removeClass('has-error');
+                }
+              });
+            }
+          }
+
+          return isValid;
+        };
+
+        // Check if Milestones section exists.
+        if (!validateIntervalBetweenDatesFieldsInSection($('#_upstream_project_milestones_repeat'))
+          || !validateIntervalBetweenDatesFieldsInSection($('#_upstream_project_tasks_repeat'))
+        ) {
+          stopSubmit = true;
+        }
+
+        if (stopSubmit) {
+          e.preventDefault();
+          e.stopPropagation();
+
+          return false;
+        }
     });
 
     var titleHasFocus = false;
