@@ -63,6 +63,11 @@ class UpStream_Metaboxes_Projects {
             // Add select2 field type.
             add_action('cmb2_render_select2', array($this, 'renderSelect2Field'), 10, 5);
         }
+
+        if (!isset($wp_filter['cmb2_sanitize_select2'])) {
+            // Add select2 field type sanitization callback.
+            add_action('cmb2_sanitize_select2', array($this, 'sanitizeSelect2Field'), 10, 5);
+        }
     }
 
     /**
@@ -285,29 +290,14 @@ class UpStream_Metaboxes_Projects {
                 )
             );
 
-            /*
             $fields[11] = array(
-                'name'              => __( "Assigned To", 'upstream' ),
-                'id'                => 'assigned_to',
-                'type'              => 'select',
-                'permissions'       => 'milestone_assigned_to_field',
-                'before'            => 'upstream_add_field_attributes',
-                'show_option_none'  => true,
-                'options_cb'        => 'upstream_admin_get_all_project_users',
-            );
-            */
-            $fields[11] = array(
-                'name' => __('Assigned To', 'upstream'),
-                'id'   => 'assigned_to',
-                'type' => 'select2',
-                'permissions' => 'milestone_assigned_to_field',
-                'before' => 'upstream_add_field_attributes',
+                'name'             => __('Assigned To', 'upstream'),
+                'id'               => 'assigned_to',
+                'type'             => 'select2',
+                'permissions'      => 'milestone_assigned_to_field',
+                'before'           => 'upstream_add_field_attributes',
                 'show_option_none' => true,
-                'options' => array(
-                    'one' => 'One',
-                    'two' => 'Two',
-                    'three' => 'Three'
-                )
+                'options_cb'       => 'upstream_admin_get_all_project_users'
             );
 
 
@@ -1952,10 +1942,57 @@ class UpStream_Metaboxes_Projects {
      */
     public static function renderSelect2Field($field, $value, $object_id, $objectType, $fieldType)
     {
-        echo $fieldType->select(array(
-            'class' => 'o-select2',
-            'multiple' => 'multiple'
-        ));
+        if (!is_array($value)) {
+            $value = explode('#', (string)$value);
+        }
+
+        $value = array_filter(array_unique($value));
+
+        $fieldName = $field->args['_name'];
+        if (!preg_match('/\[\]$/', $fieldName)) {
+            $fieldName .= '[]';
+        }
+
+        $options = array();
+        if (count($field->args['options']) === 0) {
+            if (!empty($field->args['options_cb']) && is_callable($field->args['options_cb'])) {
+                $options = call_user_func($field->args['options_cb']);
+            }
+        }
+        ?>
+        <select
+            id="<?php echo $field->args['id']; ?>"
+            name="<?php echo esc_attr($fieldName); ?>"
+            class="o-select2"
+            multiple
+            data-placeholder="<?php _e('None', 'upstream'); ?>"
+            tabindex="-1">
+            <?php foreach ($options as $optionValue => $optionTitle): ?>
+            <option value="<?php echo esc_attr($optionValue); ?>"<?php echo in_array($optionValue, $value) ? ' selected' : ''; ?>><?php echo esc_html($optionTitle); ?></option>
+            <?php endforeach; ?>
+        </select>
+        <?php
+    }
+
+    /**
+     * Sanitizes select2 fields before they're saved.
+     *
+     * @since   @todo
+     * @static
+     *
+     * @param   mixed           $overrideValue  Sanitization override value to return.
+     * @param   mixed           $value          Actual field value.
+     * @param   int             $object_id      Project ID.
+     * @param   string          $object_type    Current object type.
+     * @param   \CMB2_Sanitize  $sanitizer      Current sanitization object.
+     */
+    public static function sanitizeSelect2Field($overrideValue, $value, $object_id, $object_type, $sanitizer)
+    {
+        $value = array_filter(array_unique((array)$value));
+
+        $value = implode('#', $value);
+
+        return $value;
     }
 }
 
