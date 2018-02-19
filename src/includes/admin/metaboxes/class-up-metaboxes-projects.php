@@ -56,6 +56,13 @@ class UpStream_Metaboxes_Projects {
         add_action('edit_form_after_title', array($this, 'makeProjectPrivateOnceAgain'));
 
         add_action('cmb2_render_comments', array($this, 'renderCommentsField'), 10, 5);
+
+        // Prevent action being hooked twice.
+        global $wp_filter;
+        if (!isset($wp_filter['cmb2_render_select2'])) {
+            // Add select2 field type.
+            add_action('cmb2_render_select2', array($this, 'renderSelect2Field'), 10, 5);
+        }
     }
 
     /**
@@ -278,6 +285,7 @@ class UpStream_Metaboxes_Projects {
                 )
             );
 
+            /*
             $fields[11] = array(
                 'name'              => __( "Assigned To", 'upstream' ),
                 'id'                => 'assigned_to',
@@ -286,6 +294,20 @@ class UpStream_Metaboxes_Projects {
                 'before'            => 'upstream_add_field_attributes',
                 'show_option_none'  => true,
                 'options_cb'        => 'upstream_admin_get_all_project_users',
+            );
+            */
+            $fields[11] = array(
+                'name' => __('Assigned To', 'upstream'),
+                'id'   => 'assigned_to',
+                'type' => 'select2',
+                'permissions' => 'milestone_assigned_to_field',
+                'before' => 'upstream_add_field_attributes',
+                'show_option_none' => true,
+                'options' => array(
+                    'one' => 'One',
+                    'two' => 'Two',
+                    'three' => 'Three'
+                )
             );
 
 
@@ -1914,6 +1936,26 @@ class UpStream_Metaboxes_Projects {
         }
 
         wp_send_json($response);
+    }
+
+    /**
+     * Define select2 CMB2 field settings.
+     *
+     * @since   @todo
+     * @static
+     *
+     * @param   \CMB2_Field     $field      Current CMB2_Field object.
+     * @param   string          $value      Current escaped field value.
+     * @param   int             $object_id  Project ID.
+     * @param   string          $objectType Current object type.
+     * @param   \CMB2_Types     $fieldType  Current field type object.
+     */
+    public static function renderSelect2Field($field, $value, $object_id, $objectType, $fieldType)
+    {
+        echo $fieldType->select(array(
+            'class' => 'o-select2',
+            'multiple' => 'multiple'
+        ));
     }
 }
 
