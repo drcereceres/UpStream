@@ -117,17 +117,17 @@ class Upstream_Bug_List extends WP_List_Table {
 
         <?php }
 
-        $assigned_to = $this->get_assigned_to_unique();
-        if ( ! empty( $assigned_to ) ) { ?>
-
-            <select name='assigned_to' id='assigned_to' class='postform'>
-                <option value=''><?php printf( __( 'Show all %s', 'upstream' ), 'users' ) ?></option>
-                <?php foreach ( $assigned_to as $user_id => $user ) { ?>
-                    <option value="<?php echo $user_id ?>" <?php isset( $_GET['assigned_to'] ) ? selected( $_GET['assigned_to'], $user_id ) : ''; ?>><?php echo esc_html( $user ) ?></option>
-                <?php } ?>
+        $users = $this->get_assigned_to_unique();
+        if (count($users) > 0) {
+            $assigned_to = isset($_REQUEST['assigned_to']) ? (int)$_REQUEST['assigned_to'] : 0; ?>
+            <select id="assigned_to" name="assigned_to" class="postform">
+                <option value=""><?php printf(__('Show all %s', 'upstream' ), 'users'); ?></option>
+                <?php foreach ($users as $userId => $userName): ?>
+                <option value="<?php echo esc_attr($userId); ?>" <?php echo $assigned_to === $userId ? 'selected' : ''; ?>><?php echo esc_html($userName) ?></option>
+                <?php endforeach; ?>
             </select>
-
-        <?php }
+            <?php
+        }
 
         $status = $this->get_status_unique();
         if ( ! empty( $status ) ) { ?>
