@@ -1,4 +1,4 @@
-(function($){
+(function($, $data){
     function initProject() {
         var $box = $( document.getElementById( 'post-body' ) );
 
@@ -200,9 +200,7 @@
 
         $group.find( '.cmb-repeatable-grouping' ).each( function() {
             var $this           = $( this );
-            var user_assigned   = $this.find( '[data-user_assigned]' ).attr( 'data-user_assigned' );
             var user_created    = $this.find( '[data-user_created_by]' ).attr( 'data-user_created_by' );
-            var av_assigned     = $this.find( '[data-avatar_assigned]' ).attr( 'data-avatar_assigned' );
             var av_created      = $this.find( '[data-avatar_created_by]' ).attr( 'data-avatar_created_by' );
 
             // create the boxes to hold the images first
@@ -214,10 +212,35 @@
                 $this.find( '.av-created' ).hide();
             }
 
-            if( av_assigned && $this.attr( 'id' ) != '_upstream_project_files' ) {
-                $this.find( '.av-assigned' ).html( '<img title="Assigned to: ' + user_assigned + '" src="' + av_assigned + '" height="25" width="25" />' ).show();
-            } else {
-                $this.find( '.av-assigned' ).hide();
+            var assigneesWrapper = $this.find('.av-assigned');
+            assigneesWrapper.html('');
+
+            var assignees = $this.find('[data-assignees]').attr('data-assignees');
+            if (assignees) {
+                try {
+                    var assigneesNames = [];
+
+                    assignees = JSON.parse(assignees);
+                    if (assignees
+                        && assignees.data
+                        && assignees.data.length > 0
+                    ) {
+                        var assignee = assignees.data[0];
+                        assigneesWrapper.html('<img src="' + assignee.avatar + '" height="25" width="25" />');
+
+                        if (assignees.data.length > 1) {
+                            assigneesWrapper.append($('<span class="o-badge">+'+ (assignees.data.length - 1) +'</span>'));
+                        }
+
+                        for (var assigneeIndex = 0; assigneeIndex < assignees.data.length; assigneeIndex++) {
+                            assigneesNames.push(assignees.data[assigneeIndex].name);
+                        }
+                    }
+
+                    assigneesWrapper.attr('title', $data.l.LB_ASSIGNED_TO + ': '+ assigneesNames.join(', ')).show();
+                } catch (e) {
+                    // Do nothing.
+                }
             }
         });
     };
@@ -606,7 +629,7 @@
                 );
             }
         });
-})(jQuery);
+})(jQuery, upstream_project);
 
 (function(window, document, $, upstream_project, undefined) {
   $(document).ready(function() {
