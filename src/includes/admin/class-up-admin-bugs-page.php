@@ -175,18 +175,33 @@ class Upstream_Bug_List extends WP_List_Table {
     }
 
     private function get_assigned_to_unique() {
-        $bugs = self::get_bugs();
-        if ( empty( $bugs ) )
+        $bugs = (array)self::get_bugs();
+        if (count($bugs) === 0) {
             return;
-
-        $items = wp_list_pluck( $bugs, 'assigned_to' );
-        $items = array_unique( $items );
-        $items = array_filter( $items );
-        $new_items = array();
-        foreach ($items as $k => $v) {
-            $new_items[$v] = upstream_users_name( $v );
         }
-        return $new_items;
+
+        $rowset = wp_list_pluck($bugs, 'assigned_to');
+
+        $data = array();
+
+        $setUserNameIntoData = function($user_id) use (&$data) {
+            if (!isset($data[$user_id])) {
+                $data[$user_id] = upstream_users_name($user_id);
+            }
+        };
+
+        foreach ($rowset as $assignees) {
+            if (!is_array($assignees)) {
+                $assignees = (array)$assignees;
+            }
+
+            $assignees = array_unique(array_filter(array_map('intval', $assignees)));
+            foreach ($assignees as $assignee_id) {
+                $setUserNameIntoData($assignee_id);
+            }
+        }
+
+        return $data;
     }
 
     private function get_status_unique() {
@@ -239,20 +254,30 @@ class Upstream_Bug_List extends WP_List_Table {
                 return $output;
 
             case 'assigned_to':
+                $assignees = isset($item['assigned_to']) ? array_filter((array)$item['assigned_to']) : array();
+                if (count($assignees) > 0) {
+                    $users = get_users(array(
+                        'fields' => array(
+                            'ID', 'display_name'
+                        ),
+                        'include' => $assignees
+                    ));
 
-                $assigned_to = isset( $item['assigned_to'] ) && $item['assigned_to'] ? $item['assigned_to'] : '';
-                if (!empty($assigned_to)) {
-                    $user = upstream_user_data( $assigned_to, true );
-                    $output = $user['display_name'];
+                    $html = array();
 
-                    if ( $assigned_to == get_current_user_id() ){
-                        $output = '<span class="mine">' . esc_html( $output ) . '</span>';
+                    $currentUserId = get_current_user_id();
+                    foreach ($users as $user) {
+                        if ((int)$user->ID === $currentUserId) {
+                            $html[] = '<span class="mine">' . esc_html($user->display_name) . '</span>';
+                        } else {
+                            $html[] = '<span>' . esc_html($user->display_name) . '</span>';
+                        }
                     }
-                    return $output;
+
+                    return implode(',<br>', $html);
                 } else {
                     return '<span><i style="color: #CCC;">'. __('none', 'upstream') .'</i></span>';
                 }
-
             case 'due_date':
                 if (isset($item['due_date']) && (int)$item['due_date'] > 0) {
                     return '<span class="end-date">' . upstream_format_date($item['due_date']) . '</span>';
@@ -427,7 +452,11 @@ class Upstream_Bug_List extends WP_List_Table {
 
     }
 
-    public static function sort_filter( $bugs = array() ) {
+    public static function sort_filter($bugs = array())
+    {
+        if (count($bugs) === 0) {
+            return array();
+        }
 
         // filtering
         $the_bugs = $bugs; // store the bugs array
@@ -447,6 +476,7 @@ class Upstream_Bug_List extends WP_List_Table {
                 }
             }
         }
+
         $severity = ( isset( $_REQUEST['severity']) ? $_REQUEST['severity'] : 'all' );
         if( $severity != 'all' ) {
             if ( ! empty( $the_bugs ) ) {
@@ -457,13 +487,15 @@ class Upstream_Bug_List extends WP_List_Table {
                 }
             }
         }
-        $mine = ( isset( $_REQUEST['view'] ) ? $_REQUEST['view'] : 'all' );
-        if( $mine == 'mine' ) {
-            $user_id = get_current_user_id();
-            if ( ! empty( $bugs ) ) {
-                foreach( $bugs as $key => $bug ) {
-                    if( $bug['assigned_to'] != $user_id )
-                        unset( $bugs[$key] );
+
+        $preset = isset($_REQUEST['view']) ? $_REQUEST['view'] : 'all';
+        if ($preset === 'mine') {
+            $currentUserId = (int)get_current_user_id();
+
+            foreach ($bugs as $rowIndex => $row) {
+                $assignees = isset($row['assigned_to']) ? array_map('intval', (array)$row['assigned_to']) : array();
+                if (!in_array($currentUserId, $assignees)) {
+                    unset($bugs[$rowIndex]);
                 }
             }
         }
@@ -475,11 +507,15 @@ class Upstream_Bug_List extends WP_List_Table {
                     unset( $bugs[$key] );
             }
         }
-        $assigned_to = ( isset( $_REQUEST['assigned_to'] ) ? (int)$_REQUEST['assigned_to'] : 0 );
-        if ( ! empty( $bugs ) && $assigned_to > 0 ) {
-            foreach( $bugs as $key => $bug ) {
-                if(!isset($bug['assigned_to']) || (int)$bug['assigned_to'] !== $assigned_to )
-                    unset( $bugs[$key] );
+
+        $assigned_to = isset($_REQUEST['assigned_to']) ? (int)$_REQUEST['assigned_to'] : 0;
+        if ($assigned_to > 0) {
+            foreach ($bugs as $rowIndex => $row) {
+                $assignees = isset($row['assigned_to']) ? array_map('intval', (array)$row['assigned_to']) : array();
+
+                if (!in_array($assigned_to, $assignees)) {
+                    unset($bugs[$rowIndex]);
+                }
             }
         }
 
@@ -499,7 +535,14 @@ class Upstream_Bug_List extends WP_List_Table {
             }
         }
 
-        return $bugs;
+        $rowset = array();
+        foreach ($bugs as $bug) {
+            if (!isset($rowset[$bug['id']])) {
+                $rowset[$bug['id']] = $bug;
+            }
+        }
+
+        return array_values($rowset);
 
     }
 
