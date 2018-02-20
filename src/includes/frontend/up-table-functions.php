@@ -435,19 +435,34 @@ function renderTableColumnValue($columnName, $columnValue, $column, $row, $rowTy
     $html = sprintf('<i class="s-text-color-gray">%s</i>', __('none', 'upstream'));
     $columnType = isset($column['type']) ? $column['type'] : 'raw';
     if ($columnType === 'user') {
-        $columnValue = (int)$columnValue;
+        if (!is_array($columnValue)) {
+            $columnValue = (array)$columnValue;
+        }
 
-        if ($columnValue > 0) {
-            $user = get_userdata($columnValue);
+        $usersIds = array_filter(array_unique($columnValue));
+        $usersCount = count($usersIds);
 
-            if ($user instanceof \WP_User) {
-                $html = esc_html($user->display_name);
-            } else {
-                $html = sprintf('<i class="s-text-color-darkred">%s</i>', __('invalid user', 'upstream'));
+        if ($usersCount > 1) {
+            $users = get_users(array(
+                'include' => $usersIds
+            ));
+
+            $columnValue = array();
+            foreach ($users as $user) {
+                $columnValue[] = $user->display_name;
             }
+            unset($user, $users);
+
+            $html = implode(',<br>', $columnValue);
+        } else if ($usersCount === 1) {
+            $user = get_user_by('id', $usersIds[0]);
+
+            $html = $user->display_name;
 
             unset($user);
         }
+
+        unset($usersCount, $usersIds);
     } else if ($columnType === 'percentage') {
         $html = sprintf('%d%%', (int)$columnValue);
     } else if ($columnType === 'date') {
@@ -556,14 +571,14 @@ function renderTableBody($data, $visibleColumnsSchema, $hiddenColumnsSchema, $ro
           $columnValue = isset($row[$columnName]) ? $row[$columnName] : null;
 
             if ($column['type'] === 'user') {
-                if ((int)$columnValue <= 0) {
-                    $columnValue = '';
+                if (!is_array($columnValue)) {
+                    $columnValue = array((int)$columnValue);
                 }
             }
 
           $columnAttrs = array(
               'data-column' => $columnName,
-              'data-value'  => $columnValue,
+              'data-value'  => $column['type'] === 'user' ? implode(',', $columnValue) : $columnValue,
               'data-type'   => $column['type']
           );
 

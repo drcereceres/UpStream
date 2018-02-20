@@ -1990,8 +1990,6 @@ class UpStream_Metaboxes_Projects {
     {
         $value = array_filter(array_unique((array)$value));
 
-        $value = implode('#', $value);
-
         return $value;
     }
 }

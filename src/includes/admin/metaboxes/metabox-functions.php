@@ -766,12 +766,19 @@ function upstream_add_field_attributes( $args, $field ) {
     if( isset( $field->group->args['repeatable'] ) && $field->group->args['repeatable'] == '1' ) :
 
         $i              = filter_var( $field->args['id'], FILTER_SANITIZE_NUMBER_INT );
-        $assigned_to    = isset( $field->group->value[$i]['assigned_to'] ) ? $field->group->value[$i]['assigned_to'] : null;
-        $created_by     = isset( $field->group->value[$i]['created_by'] ) ? $field->group->value[$i]['created_by'] : null;
+        $created_by     = isset( $field->group->value[$i]['created_by'] ) ? (int)$field->group->value[$i]['created_by'] : 0;
+        $assignees = isset($field->group->value[$i]['assigned_to']) ? $field->group->value[$i]['assigned_to'] : array();
+        if (!is_array($assignees)) {
+            $assignees = (array)$assignees;
+        }
 
+        $assignees = array_map('intval', array_unique(array_filter($assignees)));
+
+        $currentUserId = (int)upstream_current_user_id();
         // if the user is assigned to or item is created by
-        if( $assigned_to == upstream_current_user_id() || $created_by == upstream_current_user_id() ) {
-
+        if ($created_by === $currentUserId
+            || in_array($currentUserId, $assignees)
+        ) {
             // clear the disabled attributes
             unset( $field->args['attributes']['disabled'] );
             unset( $field->args['attributes']['readonly'] );
@@ -789,13 +796,26 @@ function upstream_add_field_attributes( $args, $field ) {
         }
 
         // add users avatars
-        $user_assigned  = upstream_user_data( $assigned_to, true );
         $user_createdby = upstream_user_data( $created_by, true );
         if( $field->args['_id'] == 'id' ) {
-            $field->args['attributes']['data-user_assigned']        = $user_assigned['full_name'];
             $field->args['attributes']['data-user_created_by']      = $user_createdby['full_name'];
-            $field->args['attributes']['data-avatar_assigned']      = $user_assigned['avatar'];
             $field->args['attributes']['data-avatar_created_by']    = $user_createdby['avatar'];
+
+            $field->args['attributes']['data-user_assigned'] = '';
+            $field->args['attributes']['data-avatar_assigned'] = '';
+            if (count($assignees) > 0) {
+                $usersData = array();
+                foreach ($assignees as $user_id) {
+                    $userData = upstream_user_data($user_id, true);
+
+                    $usersData[] = array(
+                        'name'   => $userData['full_name'],
+                        'avatar' => $userData['avatar']
+                    );
+                }
+
+                $field->args['attributes']['data-assignees'] = json_encode(array('data' => $usersData));
+            }
         }
 
     endif;

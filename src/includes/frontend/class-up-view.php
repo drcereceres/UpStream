@@ -46,7 +46,14 @@ class UpStream_View
             foreach ($rowset as $row) {
                 $row['created_by'] = (int)$row['created_by'];
                 $row['created_time'] = isset($row['created_time']) ? (int)$row['created_time'] : 0;
-                $row['assigned_to'] = isset($row['assigned_to']) ? (int)$row['assigned_to'] : 0;
+
+                $assignees = array();
+                if (isset($row['assigned_to'])) {
+                    $assignees = array_map('intval', !is_array($row['assigned_to']) ? (array)$row['assigned_to'] : $row['assigned_to']);
+                }
+
+                $row['assigned_to'] = $assignees;
+
                 $row['progress'] = isset($row['progress']) ? (float)$row['progress'] : 0.00;
                 $row['notes'] = isset($row['notes']) ? (string)$row['notes'] : '';
                 $row['start_date'] = !isset($row['start_date']) || !is_numeric($row['start_date']) || $row['start_date'] < 0 ? 0 : (int)$row['start_date'];
