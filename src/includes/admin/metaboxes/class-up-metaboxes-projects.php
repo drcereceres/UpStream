@@ -846,13 +846,13 @@ class UpStream_Metaboxes_Projects {
             );
 
             $fields[11] = array(
-                'name'              => __( "Assigned To", 'upstream' ),
-                'id'                => 'assigned_to',
-                'type'              => 'select',
-                'permissions'       => 'task_assigned_to_field',
-                'before'            => 'upstream_add_field_attributes',
-                'show_option_none'  => true,
-                'options_cb'        => 'upstream_admin_get_all_project_users',
+                'name'             => __('Assigned To', 'upstream'),
+                'id'               => 'assigned_to',
+                'type'             => 'select2',
+                'permissions'      => 'task_assigned_to_field',
+                'before'           => 'upstream_add_field_attributes',
+                'show_option_none' => true,
+                'options_cb'       => 'upstream_admin_get_all_project_users'
             );
 
             // start row
@@ -1164,13 +1164,13 @@ class UpStream_Metaboxes_Projects {
             );
 
             $fields[11] = array(
-                'name'              => __( "Assigned To", 'upstream' ),
-                'id'                => 'assigned_to',
-                'type'              => 'select',
-                'permissions'       => 'bug_assigned_to_field',
-                'before'            => 'upstream_add_field_attributes',
-                'show_option_none'  => true,
-                'options_cb'        => 'upstream_admin_get_all_project_users',
+                'name'             => __('Assigned To', 'upstream'),
+                'id'               => 'assigned_to',
+                'type'             => 'select2',
+                'permissions'      => 'bug_assigned_to_field',
+                'before'           => 'upstream_add_field_attributes',
+                'show_option_none' => true,
+                'options_cb'       => 'upstream_admin_get_all_project_users'
             );
 
             // start row
