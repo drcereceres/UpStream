@@ -132,7 +132,8 @@ class Upstream_Counts {
         $assignedItemsCount = 0;
 
         foreach ($rowset as $row) {
-            if (isset($row['assigned_to']) && (int)$row['assigned_to'] === $currentUserId) {
+            $assignees = isset($row['assigned_to']) ? array_unique(array_filter(array_map('intval', (array)$row['assigned_to']))) : array();
+            if (in_array($currentUserId, $assignees)) {
                 $assignedItemsCount++;
             }
         }
