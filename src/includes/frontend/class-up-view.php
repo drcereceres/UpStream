@@ -85,9 +85,9 @@ class UpStream_View
     {
         $project = self::getProject($projectId);
 
-        if (count(self::$milestones) === 0) {
+        if (count(self::$tasks) === 0) {
             $data = array();
-            $rowset = array_filter((array)$project->get_meta('milestones'));
+            $rowset = array_filter((array)$project->get_meta('tasks'));
 
             foreach ($rowset as $row) {
                 $row['created_by'] = (int)$row['created_by'];
@@ -103,9 +103,9 @@ class UpStream_View
 
             $data = apply_filters('upstream_project_milestones', $data, $projectId);
 
-            self::$milestones = $data;
+            self::$tasks = $data;
         } else {
-            $data = self::$milestones;
+            $data = self::$tasks;
         }
 
         return $data;
