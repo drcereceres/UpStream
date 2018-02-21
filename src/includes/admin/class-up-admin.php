@@ -316,6 +316,8 @@ class UpStream_Admin {
      * @param   mixed               $objectId       The object id.
      * @param   string              $objectType     The type of object being handled.
      * @param   \CMB2_Sanitizer     $sanitizer      Sanitizer's instance.
+     *
+     * @return  mixed
      */
     public static function sanitizeCmb2TimestampField($overrideValue, $value, $objectId, $fieldArgs, $sanitizer)
     {
