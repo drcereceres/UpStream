@@ -139,7 +139,7 @@ and this project adheres to [Semantic Versioning](http://semver.org).
 = [@todo: WIP] =
 
 Changed:
-* "Assigned To" field can be assigned to multiple users
+* Managers can now assign multiple users to Milestones, Tasks and Bugs
 
 = [1.15.0] - 2018-02-15 =
 
