@@ -136,6 +136,11 @@ UpStream does not use the existing styling of your theme. The features and the v
 The format is based on [Keep a Changelog](http://keepachangelog.com)
 and this project adheres to [Semantic Versioning](http://semver.org).
 
+= [@todo: WIP] =
+
+Fixed:
+* Fixed Start/End/Due Date fields not always being stored as GMT/UTC
+
 = [1.15.0] - 2018-02-15 =
 
 Added:
