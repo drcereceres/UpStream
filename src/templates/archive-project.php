@@ -103,6 +103,7 @@ $categories = (array)get_terms(array(
                   <i class="fa fa-chevron-up"></i>
                 </a>
               </li>
+              <?php do_action('upstream_project_project_top_right'); ?>
             </ul>
           <div class="clearfix"></div>
         </div>
