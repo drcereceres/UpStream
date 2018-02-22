@@ -4,7 +4,7 @@ Tags: project, manage, management, project management, project manager, wordpres
 Requires at least: 4.5
 Tested up to: 4.9
 Requires PHP: 5.6
-Stable tag: 1.15.0
+Stable tag: 1.15.1
 License: GPL-3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -136,9 +136,13 @@ UpStream does not use the existing styling of your theme. The features and the v
 The format is based on [Keep a Changelog](http://keepachangelog.com)
 and this project adheres to [Semantic Versioning](http://semver.org).
 
-= [@todo: WIP] =
+= [1.15.1] - @todo =
+
+Changed:
+* "Title" search fields placeholders are not individually i18n scoped anymore
 
 Fixed:
+* Fixed 404 redirects after login/logout in some environments
 * Fixed Start/End/Due Date fields not always being stored as GMT/UTC
 
 = [1.15.0] - 2018-02-15 =
