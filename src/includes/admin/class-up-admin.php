@@ -291,7 +291,7 @@ class UpStream_Admin {
      * Render a modified 'text_date_timestamp' that will always use
      * its date's time being as 12:00:00 AM.
      *
-     * @since   @todo
+     * @since   1.15.1
      * @static
      *
      * @param   \CMB2_Field     $field          The current CMB2_Field object.
@@ -308,7 +308,7 @@ class UpStream_Admin {
     /**
      * Ensure 'up_timestamp' fields date's time are set to 12:00:00 AM before it is stored AS GMT/UTC.
      *
-     * @since   @todo
+     * @since   1.15.1
      * @static
      *
      * @param   null                $overrideValue  Sanitization override value to return.

@@ -362,7 +362,7 @@ class UpStream_Project {
                 if (!isset($data[$i]['created_time'])
                     || empty($data[$i]['created_time'])
                 ) {
-                    // Prior to v@todo, 'created_time' was stored as a non-gmt timestamp,
+                    // Prior to v1.15.1, 'created_time' was stored as a non-gmt timestamp,
                     // which doesn't make sense since local time might change.
 
                     // Stores 'created_time' as a UTC/GMT value.
