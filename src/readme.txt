@@ -136,7 +136,7 @@ UpStream does not use the existing styling of your theme. The features and the v
 The format is based on [Keep a Changelog](http://keepachangelog.com)
 and this project adheres to [Semantic Versioning](http://semver.org).
 
-= [1.15.1] - @todo =
+= [1.15.1] - 2018-02-22 =
 
 Changed:
 * "Title" search fields placeholders are not individually i18n scoped anymore
