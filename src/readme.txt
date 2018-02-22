@@ -143,6 +143,7 @@ Changed:
 
 Fixed:
 * Fixed 404 redirects after login/logout in some environments
+* Fixed Start/End/Due Date fields not always being stored as GMT/UTC
 
 = [1.15.0] - 2018-02-15 =
 

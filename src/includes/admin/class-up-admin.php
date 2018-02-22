@@ -33,6 +33,9 @@ class UpStream_Admin {
         }
 
         add_action('wp_ajax_upstream:project.get_all_items_comments', array('UpStream_Metaboxes_Projects', 'fetchAllItemsComments'));
+
+        add_action('cmb2_render_up_timestamp', array($this, 'renderCmb2TimestampField'), 10, 5);
+        add_action('cmb2_sanitize_up_timestamp', array($this, 'sanitizeCmb2TimestampField'), 10, 5);
     }
 
     public function limitUpStreamUserAccess()
@@ -282,6 +285,63 @@ class UpStream_Admin {
         }
 
         return $links;
+    }
+
+    /**
+     * Render a modified 'text_date_timestamp' that will always use
+     * its date's time being as 12:00:00 AM.
+     *
+     * @since   @todo
+     * @static
+     *
+     * @param   \CMB2_Field     $field          The current CMB2_Field object.
+     * @param   string          $value          The field value passed through the escaping filter.
+     * @param   mixed           $objectId       The object id.
+     * @param   string          $objectType     The type of object being handled.
+     * @param   \CMB2_Types     $fieldType      Instance of the correspondent CMB2_Types object.
+     */
+    public static function renderCmb2TimestampField($field, $value, $objectId, $objectType, $fieldType)
+    {
+        echo $fieldType->text_date_timestamp();
+    }
+
+    /**
+     * Ensure 'up_timestamp' fields date's time are set to 12:00:00 AM before it is stored AS GMT/UTC.
+     *
+     * @since   @todo
+     * @static
+     *
+     * @param   null                $overrideValue  Sanitization override value to return.
+     * @param   mixed               $value          The actual field value.
+     * @param   mixed               $objectId       The object id.
+     * @param   string              $objectType     The type of object being handled.
+     * @param   \CMB2_Sanitizer     $sanitizer      Sanitizer's instance.
+     *
+     * @return  mixed
+     */
+    public static function sanitizeCmb2TimestampField($overrideValue, $value, $objectId, $fieldArgs, $sanitizer)
+    {
+        $value = trim((string)$value);
+
+        if (strlen($value) > 0) {
+            $instanceTimezone = upstreamGetTimeZone();
+
+            try {
+                $date = DateTime::createFromFormat($fieldArgs['date_format'], $value, $instanceTimezone);
+
+                if ($date !== false) {
+                    $date->setTime(0, 0, 0);
+                    $value = (string)$date->format('U');
+                    $overrideValue = $value;
+                } else {
+                    $value = '';
+                }
+            } catch (\Exception $e) {
+                $value = '';
+            }
+        }
+
+        return $value;
     }
 }
 
