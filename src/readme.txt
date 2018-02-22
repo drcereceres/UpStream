@@ -138,6 +138,9 @@ and this project adheres to [Semantic Versioning](http://semver.org).
 
 = [1.15.1] - @todo =
 
+Fixed:
+* Fixed 404 redirects after login/logout in some environments
+
 = [1.15.0] - 2018-02-15 =
 
 Added:
