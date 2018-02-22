@@ -96,7 +96,7 @@ $categories = (array)get_terms(array(
       <div class="col-md-12">
         <div class="x_panel">
           <div class="x_title">
-            <h2><?php echo $l['LB_PROJECTS']; ?></h2>
+            <h2><i class="fa fa-briefcase"></i> <?php echo $l['LB_PROJECTS']; ?></h2>
             <ul class="nav navbar-right panel_toolbox">
               <li>
                 <a class="collapse-link">
