@@ -27,7 +27,6 @@ class UpStream_Template_Loader {
      * @return string
      */
     public function template_loader( $template ) {
-
         $file = '';
 
         if( get_post_type() != 'project' )
@@ -42,7 +41,7 @@ class UpStream_Template_Loader {
             $project_id = upstream_post_id();
 
             if (!upstream_user_can_access_project($user_id, $project_id)) {
-                wp_redirect(site_url('projects'));
+                wp_redirect(get_post_type_archive_link('project'));
                 exit;
             }
         }
@@ -53,9 +52,8 @@ class UpStream_Template_Loader {
 
         if (isset($_GET['action']) && $_GET['action'] === 'logout' && !isset($_POST['login'])) {
             UpStream_Login::doDestroySession();
-
             if (preg_match('/^\/projects/i', $_SERVER['REQUEST_URI'])) {
-                $redirectTo = wp_login_url(site_url('projects'));
+                $redirectTo = wp_login_url(get_post_type_archive_link('project'));
             } else {
                 $redirectTo = get_permalink();
             }

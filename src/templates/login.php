@@ -2,7 +2,7 @@
 if (!defined('ABSPATH')) exit;
 
 if (is_archive() && (empty($_SESSION) || empty($_SESSION['upstream']) || empty($_SESSION['upstream']['user_id'])) && !is_user_logged_in()) {
-    wp_redirect(wp_login_url(site_url('projects')));
+    wp_redirect(wp_login_url(get_post_type_archive_link('project')));
     exit;
 }
 
