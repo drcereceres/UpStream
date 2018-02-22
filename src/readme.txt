@@ -138,6 +138,9 @@ and this project adheres to [Semantic Versioning](http://semver.org).
 
 = [1.15.1] - @todo =
 
+Changed:
+* "Title" search fields placeholders are not individually i18n scoped anymore
+
 Fixed:
 * Fixed 404 redirects after login/logout in some environments
 
