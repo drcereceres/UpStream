@@ -2,7 +2,7 @@
 # This file is distributed under the same license as the UpStream package.
 msgid ""
 msgstr ""
-"Project-Id-Version: UpStream v1.15.0\n"
+"Project-Id-Version: UpStream v1.15.1\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -494,7 +494,7 @@ msgstr ""
 msgid "Tags"
 msgstr ""
 
-#: ../templates/archive-project.php:26, ../includes/frontend/up-table-functions.php:97, ../includes/frontend/up-table-functions.php:230, ../includes/frontend/up-table-functions.php:339, ../includes/admin/metaboxes/class-up-metaboxes-projects.php:488, ../includes/admin/metaboxes/class-up-metaboxes-projects.php:571, ../includes/admin/metaboxes/class-up-metaboxes-projects.php:642, ../includes/admin/metaboxes/class-up-metaboxes-projects.php:825, ../includes/admin/metaboxes/class-up-metaboxes-projects.php:1144, ../includes/admin/metaboxes/class-up-metaboxes-projects.php:1522, ../includes/admin/options/class-up-options-milestones.php:106
+#: ../templates/archive-project.php:26, ../includes/frontend/up-table-functions.php:97, ../includes/frontend/up-table-functions.php:230, ../includes/frontend/up-table-functions.php:339, ../templates/single-project/bugs.php:55, ../templates/single-project/files.php:36, ../templates/single-project/tasks.php:79, ../includes/admin/metaboxes/class-up-metaboxes-projects.php:488, ../includes/admin/metaboxes/class-up-metaboxes-projects.php:571, ../includes/admin/metaboxes/class-up-metaboxes-projects.php:642, ../includes/admin/metaboxes/class-up-metaboxes-projects.php:825, ../includes/admin/metaboxes/class-up-metaboxes-projects.php:1144, ../includes/admin/metaboxes/class-up-metaboxes-projects.php:1522, ../includes/admin/options/class-up-options-milestones.php:106
 msgid "Title"
 msgstr ""
 
@@ -948,11 +948,6 @@ msgstr ""
 msgid "Log Out"
 msgstr ""
 
-#: ../templates/single-project/bugs.php:55
-msgctxt "Bug's title"
-msgid "Title"
-msgstr ""
-
 #: ../templates/single-project/bugs.php:58, ../templates/single-project/files.php:39, ../templates/single-project/milestones.php:27, ../templates/single-project/tasks.php:82
 msgid "Comments"
 msgstr ""
@@ -988,11 +983,6 @@ msgstr ""
 
 #: ../templates/single-project/details.php:77
 msgid "Members"
-msgstr ""
-
-#: ../templates/single-project/files.php:36
-msgctxt "File's title"
-msgid "Title"
 msgstr ""
 
 #: ../templates/single-project/files.php:146
@@ -1034,11 +1024,6 @@ msgstr ""
 
 #: ../templates/single-project/overview.php:198, ../templates/single-project/overview.php:223, ../includes/admin/options/class-up-options-bugs.php:125, ../includes/admin/options/class-up-options-projects.php:126, ../includes/admin/options/class-up-options-tasks.php:126
 msgid "Closed"
-msgstr ""
-
-#: ../templates/single-project/tasks.php:79
-msgctxt "Task's title"
-msgid "Title"
 msgstr ""
 
 #: ../includes/admin/metaboxes/class-up-metaboxes-clients.php:172
