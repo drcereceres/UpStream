@@ -48,7 +48,8 @@ while ( have_posts() ) : the_post(); ?>
                 <h3 style="display: inline-block;"><?php echo get_the_title( get_the_ID() ); ?></h3>
                 <?php $status = upstream_project_status_color($id); ?>
                 <?php if (!empty($status['status'])): ?>
-                <button type="button" class="btn btn-success btn-xs" style="border: none;background-color:<?php echo esc_attr( $status['color'] ); ?>"><?php echo $status['status'] ?></button>
+                <span class="label up-o-label" style="background-color: <?php echo esc_attr($status['color']); ?>"><?php echo $status['status']; ?>
+                </span>
                 <?php endif; ?>
             </div>
 
