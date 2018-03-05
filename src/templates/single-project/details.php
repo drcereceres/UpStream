@@ -27,7 +27,10 @@ $isClientsDisabled = is_clients_disabled();
 <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
   <div class="x_panel details-panel">
     <div class="x_title">
-      <h2><?php printf('<i class="fa fa-info-circle"></i> ' . __('%s Details', 'upstream'), upstream_project_label()); ?></h2>
+      <h2>
+        <?php printf('<i class="fa fa-info-circle"></i> ' . __('%s Details', 'upstream'), upstream_project_label()); ?>
+        <?php do_action('upstream:frontend.project.details.after_title'); ?>
+      </h2>
       <ul class="nav navbar-right panel_toolbox">
         <li>
           <a class="collapse-link"><i class="fa fa-chevron-<?php echo $collapseDetails ? 'down' : 'up'; ?>"></i></a>
