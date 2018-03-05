@@ -86,7 +86,7 @@ $isClientsDisabled = is_clients_disabled();
       <?php if (!empty($project->description)): ?>
       <div>
         <p class="title"><?php _e('Description'); ?></p>
-        <blockquote style="font-size: 1em;"><?php echo $project->description; ?></blockquote>
+        <blockquote style="font-size: 1em;"><?php echo htmlspecialchars_decode($project->description); ?></blockquote>
       </div>
       <?php endif; ?>
     </div>
