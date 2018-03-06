@@ -412,8 +412,6 @@ jQuery(document).ready(function($){
         });
       });
 
-      console.debug(filtersMap);
-
       $('tbody tr[data-empty-row]', table).remove();
 
       var filtersHasChanged = false;

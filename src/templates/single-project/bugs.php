@@ -31,7 +31,7 @@ $projectId = upstream_post_id();
 $rowset = UpStream_View::getBugs($projectId);
 
 $l = array(
-    'LB_TITLE'         => _x('Title', "Bug's title", 'upstream'),
+    'LB_TITLE'         => __('Title', 'upstream'),
     'LB_NONE'          => __('none', 'upstream'),
     'LB_DESCRIPTION'   => __('Description', 'upstream'),
     'LB_COMMENTS'      => __('Comments', 'upstream'),

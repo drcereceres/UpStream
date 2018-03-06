@@ -305,7 +305,7 @@ class UpStream_Metaboxes_Projects {
             $fields[20] = array(
                 'name'              => __( "Start Date", 'upstream' ),
                 'id'                => 'start_date',
-                'type'              => 'text_date_timestamp',
+                'type'              => 'up_timestamp',
                 'date_format'       => 'Y-m-d',
                 'permissions'       => 'milestone_start_date_field',
                 'before'            => 'upstream_add_field_attributes',
@@ -316,7 +316,7 @@ class UpStream_Metaboxes_Projects {
             $fields[21] = array(
                 'name'              => __( "End Date", 'upstream' ),
                 'id'                => 'end_date',
-                'type'              => 'text_date_timestamp',
+                'type'              => 'up_timestamp',
                 'date_format'       => 'Y-m-d',
                 'permissions'       => 'milestone_end_date_field',
                 'before'            => 'upstream_add_field_attributes',
@@ -886,7 +886,7 @@ class UpStream_Metaboxes_Projects {
             $fields[30] = array(
                 'name'              => __( "Start Date", 'upstream' ),
                 'id'                => 'start_date',
-                'type'              => 'text_date_timestamp',
+                'type'              => 'up_timestamp',
                 'date_format'       => 'Y-m-d',
                 'permissions'       => 'task_start_date_field',
                 'before'            => 'upstream_add_field_attributes'
@@ -894,7 +894,7 @@ class UpStream_Metaboxes_Projects {
             $fields[31] = array(
                 'name'              => __( "End Date", 'upstream' ),
                 'id'                => 'end_date',
-                'type'              => 'text_date_timestamp',
+                'type'              => 'up_timestamp',
                 'date_format'       => 'Y-m-d',
                 'permissions'       => 'task_end_date_field',
                 'before'            => 'upstream_add_field_attributes'
@@ -1230,7 +1230,7 @@ class UpStream_Metaboxes_Projects {
             $fields[41] = array(
                 'name'              => __( "Due Date", 'upstream' ),
                 'id'                => 'due_date',
-                'type'              => 'text_date_timestamp',
+                'type'              => 'up_timestamp',
                 'date_format'       => 'Y-m-d',
                 'permissions'       => 'bug_due_date_field',
                 'before'            => 'upstream_add_field_attributes'
@@ -1386,7 +1386,7 @@ class UpStream_Metaboxes_Projects {
             'name'              => __( 'Start Date', 'upstream' ),
             'desc'              => '',
             'id'                => $this->prefix . 'start',
-            'type'              => 'text_date_timestamp',
+            'type'              => 'up_timestamp',
             'date_format'       => 'Y-m-d',
             'permissions'       => 'project_start_date_field',
             'before'            => 'upstream_add_field_attributes',
@@ -1397,7 +1397,7 @@ class UpStream_Metaboxes_Projects {
             'name'              => __( 'End Date', 'upstream' ),
             'desc'              => '',
             'id'                => $this->prefix . 'end',
-            'type'              => 'text_date_timestamp',
+            'type'              => 'up_timestamp',
             'date_format'       => 'Y-m-d',
             'permissions'       => 'project_end_date_field',
             'before'            => 'upstream_add_field_attributes',

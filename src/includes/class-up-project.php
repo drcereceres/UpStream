@@ -359,20 +359,18 @@ class UpStream_Project {
                     $data[$i]['created_by'] = upstream_current_user_id();
 
                 // add the created date
-                if( ! isset( $data[$i]['created_time'] ) || empty( $data[$i]['created_time'] ) )
-                    $data[$i]['created_time'] = current_time( 'timestamp', false ); // true to get GMT time
+                if (!isset($data[$i]['created_time'])
+                    || empty($data[$i]['created_time'])
+                ) {
+                    // Prior to v1.15.1, 'created_time' was stored as a non-gmt timestamp,
+                    // which doesn't make sense since local time might change.
 
-                // convert all date fields to a timestamp
-                // TODO: need to make this more bulletproof
-                if( $value ) :
-                    foreach ( $value as $key => $v ) {
-                        if ( strpos($key, 'date') !== false ) {
-                            if ( isset( $v ) && ! empty( $v ) && !$frontend ) {
-                                $data[$i][$key] = upstream_timestamp_from_date( $v );
-                            }
-                        }
-                    }
-                endif;
+                    // Stores 'created_time' as a UTC/GMT value.
+                    $data[$i]['created_time'] = (int)current_time('timestamp', true);
+                    // Flag indicating that 'created_time' is in UTC.
+                    // Useful to convert old 'created_time' data into UTC/GMT in the future.
+                    $data[$i]['created_time__in_utc'] = '1';
+                }
             }
         }
 

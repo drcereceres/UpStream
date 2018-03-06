@@ -54,7 +54,7 @@ $rowset = UpStream_View::getTasks($projectId);
 
 $l = array(
     'LB_MILESTONE' => upstream_milestone_label(),
-    'LB_TITLE' => _x('Title', "Task's title", 'upstream'),
+    'LB_TITLE' => __('Title', 'upstream'),
     'LB_NONE'  => __('none', 'upstream'),
     'LB_NOTES'         => __('Notes', 'upstream'),
     'LB_COMMENTS'      => __('Comments', 'upstream'),
