@@ -18,7 +18,6 @@ $itemType = 'task';
 $currentUserId = get_current_user_id();
 $users = upstreamGetUsersMap();
 
-$rowset = array();
 $projectId = upstream_post_id();
 
 $areCommentsEnabled = upstreamAreCommentsEnabledOnTasks();
@@ -51,28 +50,7 @@ if ($areMilestonesEnabled) {
     }
 }
 
-$meta = (array)get_post_meta($projectId, '_upstream_project_tasks', true);
-foreach ($meta as $data) {
-    if (!isset($data['id'])
-        || !isset($data['created_by'])
-    ) {
-        continue;
-    }
-
-    $data['created_by'] = (int)$data['created_by'];
-    $data['created_time'] = isset($data['created_time']) ? (int)$data['created_time'] : 0;
-    $data['assigned_to'] = isset($data['assigned_to']) ? (int)$data['assigned_to'] : 0;
-    $data['assigned_to_name'] = isset($users[$data['assigned_to']]) ? $users[$data['assigned_to']] : '';
-    $data['progress'] = isset($data['progress']) ? (float)$data['progress'] : 0.00;
-    $data['notes'] = isset($data['notes']) ? (string)$data['notes'] : '';
-    $data['status'] = isset($data['status']) ? (string)$data['status'] : '';
-    $data['milestone'] = isset($data['milestone']) ? (string)$data['milestone'] : '';
-    $data['start_date'] = !isset($data['start_date']) || !is_numeric($data['start_date']) || $data['start_date'] < 0 ? 0 : (int)$data['start_date'];
-    $data['end_date'] = !isset($data['end_date']) || !is_numeric($data['end_date']) || $data['end_date'] < 0 ? 0 : (int)$data['end_date'];
-
-    $rowset[$data['id']] = $data;
-}
-unset($data, $meta);
+$rowset = UpStream_View::getTasks($projectId);
 
 $l = array(
     'LB_MILESTONE' => upstream_milestone_label(),

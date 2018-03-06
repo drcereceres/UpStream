@@ -138,6 +138,9 @@ and this project adheres to [Semantic Versioning](http://semver.org).
 
 = [1.16.0] - @todo =
 
+Changed:
+* Managers can now assign multiple users to Milestones, Tasks and Bugs
+
 = [1.15.1] - 2018-02-22 =
 
 Changed:

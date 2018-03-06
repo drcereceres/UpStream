@@ -480,8 +480,13 @@ class UpStream_Project {
             foreach( $tasks as $task ) {
                 if( isset( $task['created_by'] ) )
                     $users[] = $task['created_by'];
-                if( isset( $task['assigned_to'] ) )
-                    $users[] = $task['assigned_to'];
+                if (isset($task['assigned_to'])) {
+                    if (is_array($task['assigned_to'])) {
+                        $users = array_merge($users, $task['assigned_to']);
+                    } else {
+                        $users[] = $task['assigned_to'];
+                    }
+                }
             }
         endif;
 
@@ -489,8 +494,13 @@ class UpStream_Project {
             foreach( $milestones as $milestone ) {
                 if( isset( $milestone['created_by'] ) )
                     $users[] = $milestone['created_by'];
-                if( isset( $milestone['assigned_to'] ) )
-                    $users[] = $milestone['assigned_to'];
+                if (isset($milestone['assigned_to'])) {
+                    if (is_array($milestone['assigned_to'])) {
+                        $users = array_merge($users, $milestone['assigned_to']);
+                    } else {
+                        $users[] = $milestone['assigned_to'];
+                    }
+                }
             }
         endif;
 
@@ -498,8 +508,13 @@ class UpStream_Project {
             foreach( $bugs as $bug ) {
                 if( isset( $bug['created_by'] ) )
                     $users[] = $bug['created_by'];
-                if( isset( $bug['assigned_to'] ) )
-                    $users[] = $bug['assigned_to'];
+                if (isset($bug['assigned_to'])) {
+                    if (is_array($bug['assigned_to'])) {
+                        $users = array_merge($users, $bug['assigned_to']);
+                    } else {
+                        $users[] = $bug['assigned_to'];
+                    }
+                }
             }
         endif;
 
@@ -507,8 +522,13 @@ class UpStream_Project {
             foreach( $files as $file ) {
                 if( isset( $file['created_by'] ) )
                     $users[] = $file['created_by'];
-                if( isset( $file['assigned_to'] ) )
-                    $users[] = $file['assigned_to'];
+                if (isset($file['assigned_to'])) {
+                    if (is_array($file['assigned_to'])) {
+                        $users = array_merge($users, $file['assigned_to']);
+                    } else {
+                        $users[] = $file['assigned_to'];
+                    }
+                }
             }
         endif;
 
