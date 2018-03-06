@@ -1540,7 +1540,18 @@ class UpStream_Metaboxes_Projects {
                     'class'             => 'file-title',
                 )
             );
+
             $fields[11] = array(
+                'name'             => __('Assigned To', 'upstream'),
+                'id'               => 'assigned_to',
+                'type'             => 'select2',
+                'permissions'      => 'file_assigned_to_field',
+                'before'           => 'upstream_add_field_attributes',
+                'show_option_none' => true,
+                'options_cb'       => 'upstream_admin_get_all_project_users'
+            );
+
+            $fields[20] = array(
                 'name'              => esc_html( $label ),
                 'desc'              => '',
                 'id'                => 'file',
@@ -1553,7 +1564,7 @@ class UpStream_Metaboxes_Projects {
             );
 
             // start row
-            $fields[20] = array(
+            $fields[30] = array(
                 'name'              => __( "Description", 'upstream' ),
                 'id'                => 'description',
                 'type'              => 'wysiwyg',
@@ -1566,7 +1577,7 @@ class UpStream_Metaboxes_Projects {
             );
 
             if ($allowComments) {
-                $fields[30] = array(
+                $fields[40] = array(
                     'name' => '&nbsp;',
                     'id'   => 'comments',
                     'type' => 'comments',
@@ -1578,7 +1589,7 @@ class UpStream_Metaboxes_Projects {
             $cmb2GroupGrid = $cmb2Grid->addCmb2GroupGrid( $group_field_id );
 
             // define nuber of rows
-            $rows = apply_filters( 'upstream_file_metabox_rows', 3 );
+            $rows = apply_filters( 'upstream_file_metabox_rows', 4 );
 
             // filter the fields & sort numerically
             $fields = apply_filters( 'upstream_file_metabox_fields', $fields );

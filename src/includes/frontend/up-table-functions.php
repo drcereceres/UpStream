@@ -350,6 +350,11 @@ function getFilesFields($areCommentsEnabled = null)
             'label'       => __('Upload Date', 'upstream'),
             'isEditable'  => false
         ),
+        'assigned_to' => array(
+            'type'        => 'user',
+            'isOrderable' => false,
+            'label'       => __('Assigned To', 'upstream')
+        ),
         'file'    => array(
             'type'        => 'file',
             'isOrderable' => false,

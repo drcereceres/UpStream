@@ -158,6 +158,24 @@ $columnsSchema = \UpStream\Frontend\getFilesFields($areCommentsEnabled);
             <div class="form-group">
               <div class="input-group">
                 <div class="input-group-addon">
+                  <i class="fa fa-user"></i>
+                </div>
+                <select class="form-control o-select2" data-column="assigned_to" data-placeholder="<?php _e('Assignee', 'upstream'); ?>" multiple>
+                  <option value></option>
+                  <option value="__none__"><?php _e('Nobody', 'upstream'); ?></option>
+                  <option value="<?php echo $currentUserId; ?>"><?php _e('Me', 'upstream'); ?></option>
+                  <optgroup label="<?php _e('Users'); ?>">
+                    <?php foreach ($users as $user_id => $userName): ?>
+                      <?php if ($user_id === $currentUserId) continue; ?>
+                      <option value="<?php echo $user_id; ?>"><?php echo $userName; ?></option>
+                      <?php endforeach; ?>
+                  </optgroup>
+                </select>
+              </div>
+            </div>
+            <div class="form-group">
+              <div class="input-group">
+                <div class="input-group-addon">
                   <i class="fa fa-calendar"></i>
                 </div>
                 <input type="text" class="form-control o-datepicker" placeholder="<?php echo $l['LB_UPLOADED_AT']; ?>" id="files-filter-uploaded_at_from">
