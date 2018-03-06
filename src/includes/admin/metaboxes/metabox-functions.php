@@ -864,7 +864,23 @@ function upstream_admin_get_project_statuses() {
  * For use in dropdowns.
  */
 function upstream_admin_get_all_project_users() {
+    $projectClientUsers = array();
+    $projectId = upstream_post_id();
+    if ($projectId > 0) {
+        $projectClientId = (int)get_post_meta($projectId, '_upstream_project_client', true);
+        if ($projectClientId > 0) {
+            $projectClientUsersIds = array_filter(array_map('intval', (array)get_post_meta($projectId, '_upstream_project_client_users', true)));
+            if (count($projectClientUsersIds) > 0) {
+                $projectClientUsers = (array)get_users(array(
+                    'include' => $projectClientUsersIds,
+                    'fields'  => array('ID', 'display_name')
+                ));
+            }
+        }
+    }
+
     $args = apply_filters('upstream_user_roles_for_projects', array(
+        'fields'   => array('ID', 'display_name'),
         'role__in' => array(
             'upstream_manager',
             'upstream_user',
@@ -875,8 +891,10 @@ function upstream_admin_get_all_project_users() {
     $users = array();
 
     $systemUsers = get_users($args);
-    if (count($systemUsers) > 0) {
-        foreach ($systemUsers as $user) {
+
+    $rowset = array_merge($systemUsers, $projectClientUsers);
+    if (count($rowset) > 0) {
+        foreach ($rowset as $user) {
             $users[(int)$user->ID] = $user->display_name;
         }
     }

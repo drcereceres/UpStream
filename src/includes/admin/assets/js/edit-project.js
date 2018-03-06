@@ -441,6 +441,36 @@
         });
     }
 
+    /**
+     * Add or remove users to "Assigned To" fields dynamically.
+     */
+    function toggleClientUsersFromAssignedToFields(e) {
+      var self = $(this);
+      var isChecked = self.is(':checked');
+
+      var user_id = self.val();
+
+      var fields = $('#post select.o-select2[name$="[assigned_to][]"]');
+      var existentOptions = fields.find('option[value="'+ user_id +'"]');
+
+      if (isChecked) {
+        if (existentOptions.length === 0) {
+          var user_name = $('label', self.parent()).text().trim();
+
+          var newOption = new Option(user_name, user_id, false, false);
+
+          fields.append(newOption).trigger('change');
+        }
+      } else {
+        if (existentOptions.length > 0) {
+          existentOptions.remove();
+          fields.trigger('change');
+        }
+      }
+    }
+
+    $('.cmb-row.cmb2-id--upstream-project-client-users').on('change', 'input[type="checkbox"]', toggleClientUsersFromAssignedToFields);
+
     /*
      * Shows a clients users dynamically via AJAX
      */

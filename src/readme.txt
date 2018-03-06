@@ -140,6 +140,7 @@ and this project adheres to [Semantic Versioning](http://semver.org).
 
 Added:
 * Users can be assigned to Files
+* Client Users can also be assigned to Milestones/Tasks/Bugs/Files
 
 Changed:
 * Managers can now assign multiple users to Milestones, Tasks and Bugs

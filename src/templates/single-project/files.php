@@ -10,7 +10,7 @@ $collapseBox = isset($pluginOptions['collapse_project_files'])
 
 $itemType = 'file';
 $currentUserId = get_current_user_id();
-$users = upstreamGetUsersMap();
+$users = upstream_admin_get_all_project_users();
 
 $rowset = array();
 $projectId = upstream_post_id();

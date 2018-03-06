@@ -10,7 +10,7 @@ $collapseBox = isset($pluginOptions['collapse_project_milestones'])
 
 $itemType = 'milestone';
 $currentUserId = get_current_user_id();
-$users = upstreamGetUsersMap();
+$users = upstream_admin_get_all_project_users();
 
 $projectId = upstream_post_id();
 
