@@ -61,7 +61,7 @@ function upstream_load_admin_scripts($hook)
                 )
             ) ) );
         } else if ($postType === 'client') {
-            wp_enqueue_script('up-metabox-client', $assetsDir . 'js/metabox-client.js', array('jquery'), UPSTREAM_VERSION, true);
+            wp_enqueue_script('up-metabox-client', $assetsDir . 'js/metabox-client.js', $admin_deps, UPSTREAM_VERSION, true);
             wp_localize_script('up-metabox-client', 'upstreamMetaboxClientLangStrings', array(
                 'ERR_JQUERY_NOT_FOUND'     => __('UpStream requires jQuery.', 'upstream'),
                 'MSG_NO_ASSIGNED_USERS'    => __("There's no users assigned yet.", 'upstream'),

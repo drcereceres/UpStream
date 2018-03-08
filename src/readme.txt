@@ -148,6 +148,7 @@ Changed:
 
 Fixed:
 * Fixed error message shown on frontend after changing Severity/Status/Milestone names
+* Fixed errors while adding/changing Client logo in admin
 
 = [1.15.1] - 2018-02-22 =
 
