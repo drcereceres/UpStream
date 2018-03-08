@@ -640,7 +640,7 @@ class Comments
                         }
                     }
 
-                    $comments = get_comments(array(
+                    $comments = (array)get_comments(array(
                         'post_id'    => $project_id,
                         'status'     => $commentsStatuses,
                         'meta_query' => array(

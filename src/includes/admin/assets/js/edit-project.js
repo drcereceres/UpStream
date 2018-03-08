@@ -1,4 +1,4 @@
-(function($){
+(function($, $data){
     function initProject() {
         var $box = $( document.getElementById( 'post-body' ) );
 
@@ -200,9 +200,7 @@
 
         $group.find( '.cmb-repeatable-grouping' ).each( function() {
             var $this           = $( this );
-            var user_assigned   = $this.find( '[data-user_assigned]' ).attr( 'data-user_assigned' );
             var user_created    = $this.find( '[data-user_created_by]' ).attr( 'data-user_created_by' );
-            var av_assigned     = $this.find( '[data-avatar_assigned]' ).attr( 'data-avatar_assigned' );
             var av_created      = $this.find( '[data-avatar_created_by]' ).attr( 'data-avatar_created_by' );
 
             // create the boxes to hold the images first
@@ -214,10 +212,35 @@
                 $this.find( '.av-created' ).hide();
             }
 
-            if( av_assigned && $this.attr( 'id' ) != '_upstream_project_files' ) {
-                $this.find( '.av-assigned' ).html( '<img title="Assigned to: ' + user_assigned + '" src="' + av_assigned + '" height="25" width="25" />' ).show();
-            } else {
-                $this.find( '.av-assigned' ).hide();
+            var assigneesWrapper = $this.find('.av-assigned');
+            assigneesWrapper.html('');
+
+            var assignees = $this.find('[data-assignees]').attr('data-assignees');
+            if (assignees) {
+                try {
+                    var assigneesNames = [];
+
+                    assignees = JSON.parse(assignees);
+                    if (assignees
+                        && assignees.data
+                        && assignees.data.length > 0
+                    ) {
+                        var assignee = assignees.data[0];
+                        assigneesWrapper.html('<img src="' + assignee.avatar + '" height="25" width="25" />');
+
+                        if (assignees.data.length > 1) {
+                            assigneesWrapper.append($('<span class="o-badge">+'+ (assignees.data.length - 1) +'</span>'));
+                        }
+
+                        for (var assigneeIndex = 0; assigneeIndex < assignees.data.length; assigneeIndex++) {
+                            assigneesNames.push(assignees.data[assigneeIndex].name);
+                        }
+                    }
+
+                    assigneesWrapper.attr('title', $data.l.LB_ASSIGNED_TO + ': '+ assigneesNames.join(', ')).show();
+                } catch (e) {
+                    // Do nothing.
+                }
             }
         });
     };
@@ -418,6 +441,36 @@
         });
     }
 
+    /**
+     * Add or remove users to "Assigned To" fields dynamically.
+     */
+    function toggleClientUsersFromAssignedToFields(e) {
+      var self = $(this);
+      var isChecked = self.is(':checked');
+
+      var user_id = self.val();
+
+      var fields = $('#post select.o-select2[name$="[assigned_to][]"]');
+      var existentOptions = fields.find('option[value="'+ user_id +'"]');
+
+      if (isChecked) {
+        if (existentOptions.length === 0) {
+          var user_name = $('label', self.parent()).text().trim();
+
+          var newOption = new Option(user_name, user_id, false, false);
+
+          fields.append(newOption).trigger('change');
+        }
+      } else {
+        if (existentOptions.length > 0) {
+          existentOptions.remove();
+          fields.trigger('change');
+        }
+      }
+    }
+
+    $('.cmb-row.cmb2-id--upstream-project-client-users').on('change', 'input[type="checkbox"]', toggleClientUsersFromAssignedToFields);
+
     /*
      * Shows a clients users dynamically via AJAX
      */
@@ -606,7 +659,7 @@
                 );
             }
         });
-})(jQuery);
+})(jQuery, upstream_project);
 
 (function(window, document, $, upstream_project, undefined) {
   $(document).ready(function() {
@@ -1487,5 +1540,19 @@
     });
 
     $('.o-select2').select2();
+
+    $('.cmb-add-group-row').on('click', function(e) {
+      var self = $(this);
+
+      setTimeout(function() {
+        var wrapper = $(self.parents('div.cmb-repeatable-group[data-groupid]'));
+
+        var dataWrapper = $('.up-o-tab-content', $('.postbox.cmb-row[data-iterator]', wrapper));
+
+        $('input[type="text"],select', dataWrapper).val('').trigger('change');
+        $('.select2.select2-container', dataWrapper).remove();
+        $('select.o-select2').select2();
+      }, 100)
+    });
   });
 })(window, window.document, jQuery, upstream_project || {});

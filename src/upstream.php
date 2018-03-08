@@ -4,7 +4,7 @@
  * Description: A WordPress Project Management plugin by UpStream.
  * Author: UpStream
  * Author URI: https://upstreamplugin.com
- * Version: 1.15.1
+ * Version: 1.16.0
  * Text Domain: upstream
  * Domain Path: /languages
  */
@@ -187,7 +187,7 @@ final class UpStream
         $this->define( 'UPSTREAM_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
         $this->define( 'UPSTREAM_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
         $this->define( 'UPSTREAM_PLUGIN_BASENAME', plugin_basename( __FILE__ ) );
-        $this->define( 'UPSTREAM_VERSION', '1.15.1' );
+        $this->define( 'UPSTREAM_VERSION', '1.16.0' );
     }
 
     /**
@@ -478,7 +478,7 @@ final class UpStream
 
             $user = wp_get_current_user();
             if (in_array('upstream_user', $user->roles) || in_array('upstream_client_user', $user->roles)) {
-                $projects = upstream_get_users_projects($user);
+                $projects = (array)upstream_get_users_projects($user);
                 if (count($projects) === 0) {
                     $queryArgs['where'] = "(post.ID = -1)";
                 } else {
