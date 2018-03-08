@@ -26,7 +26,7 @@ foreach ($meta as $data) {
     $data['created_by'] = (int)$data['created_by'];
     $data['created_time'] = isset($data['created_time']) ? (int)$data['created_time'] : 0;
     $data['title'] = isset($data['title']) ? (string)$data['title'] : '';
-    $data['file_id'] = (int)$data['file_id'];
+    $data['file_id'] = isset($data['file_id']) ? (int)$data['file_id'] : 0;
     $data['description'] = isset($data['description']) ? (string)$data['description'] : '';
 
     $rowset[$data['id']] = $data;

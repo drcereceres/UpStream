@@ -443,8 +443,9 @@ class UpStream_Project {
         // do it down here out of the way
         $project_progress = 0;
         if( $totals ) {
+            $totalsCount = count((array)$totals);
             foreach ( $totals as $milestone ) {
-                $project_progress += $milestone['progress'] / ( count( $totals ) * 100 ) * 100;
+                $project_progress += $milestone['progress'] / ( $totalsCount * 100 ) * 100;
             }
         }
         update_post_meta( $this->ID, '_upstream_project_progress', round( $project_progress, 1 ) );

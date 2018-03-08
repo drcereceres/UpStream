@@ -478,7 +478,7 @@ final class UpStream
 
             $user = wp_get_current_user();
             if (in_array('upstream_user', $user->roles) || in_array('upstream_client_user', $user->roles)) {
-                $projects = upstream_get_users_projects($user);
+                $projects = (array)upstream_get_users_projects($user);
                 if (count($projects) === 0) {
                     $queryArgs['where'] = "(post.ID = -1)";
                 } else {
