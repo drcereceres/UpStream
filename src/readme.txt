@@ -144,6 +144,7 @@ Added:
 
 Changed:
 * Managers can now assign multiple users to Milestones, Tasks and Bugs
+* Minor text changes on Start/End Date filters
 
 = [1.15.1] - 2018-02-22 =
 
