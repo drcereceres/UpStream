@@ -146,6 +146,9 @@ Changed:
 * Managers can now assign multiple users to Milestones, Tasks and Bugs
 * Minor text changes on Start/End Date filters
 
+Fixed:
+* Fixed error message shown on frontend after changing Severity/Status/Milestone names
+
 = [1.15.1] - 2018-02-22 =
 
 Changed:

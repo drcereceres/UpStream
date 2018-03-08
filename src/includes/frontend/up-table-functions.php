@@ -122,7 +122,12 @@ function getTasksFields($statuses = array(), $milestones = array(), $areMileston
                     if (isset($statuses[$columnValue])) {
                         $columnValue = sprintf('<span class="label up-o-label" style="background-color: %s;">%s</span>', $statuses[$columnValue]['color'], $statuses[$columnValue]['name']);
                     } else {
-                        $columnValue = sprintf('<i class="s-text-color-darkred">%s</i>', __('invalid status', 'upstream'));
+                        $columnValue = sprintf(
+                            '<span class="label up-o-label" title="%s" style="background-color: %s;">%s <i class="fa fa-ban"></i></span>',
+                            __("This Status doesn't exist anymore.", 'upstream'),
+                            '#bdc3c7',
+                            $columnValue
+                        );
                     }
                 } else {
                     $columnValue = sprintf('<i class="s-text-color-gray">%s</i>', __('none', 'upstream'));
@@ -164,7 +169,12 @@ function getTasksFields($statuses = array(), $milestones = array(), $areMileston
                     if (isset($milestones[$columnValue])) {
                         $columnValue = sprintf('<span class="label up-o-label" style="background-color: %s;">%s</span>', $milestones[$columnValue]['color'], $milestones[$columnValue]['title']);
                     } else {
-                        $columnValue = sprintf('<i class="s-text-color-darkred">%s</i>', __('invalid milestone', 'upstream'));
+                        $columnValue = sprintf(
+                            '<span class="label up-o-label" title="%s" style="background-color: %s;">%s <i class="fa fa-ban"></i></span>',
+                            __("This Milestone doesn't exist anymore.", 'upstream'),
+                            '#bdc3c7',
+                            $columnValue
+                        );
                     }
                 } else {
                     $columnValue = sprintf('<i class="s-text-color-gray">%s</i>', __('none', 'upstream'));
@@ -256,7 +266,12 @@ function getBugsFields($severities = array(), $statuses = array(), $areCommentsE
                     if (isset($severities[$columnValue])) {
                         $columnValue = sprintf('<span class="label up-o-label" style="background-color: %s;">%s</span>', $severities[$columnValue]['color'], $severities[$columnValue]['name']);
                     } else {
-                        $columnValue = sprintf('<i class="s-text-color-darkred">%s</i>', __('invalid severity', 'upstream'));
+                        $columnValue = sprintf(
+                            '<span class="label up-o-label" title="%s" style="background-color: %s;">%s <i class="fa fa-ban"></i></span>',
+                            __("This Severity doesn't exist anymore.", 'upstream'),
+                            '#bdc3c7',
+                            $columnValue
+                        );
                     }
                 } else {
                     $columnValue = sprintf('<i class="s-text-color-gray">%s</i>', __('none', 'upstream'));
@@ -287,7 +302,12 @@ function getBugsFields($severities = array(), $statuses = array(), $areCommentsE
                     if (isset($statuses[$columnValue])) {
                         $columnValue = sprintf('<span class="label up-o-label" style="background-color: %s;">%s</span>', $statuses[$columnValue]['color'], $statuses[$columnValue]['name']);
                     } else {
-                        $columnValue = sprintf('<i class="s-text-color-darkred">%s</i>', __('invalid status', 'upstream'));
+                        $columnValue = sprintf(
+                            '<span class="label up-o-label" title="%s" style="background-color: %s;">%s <i class="fa fa-ban"></i></span>',
+                            __("This Status doesn't exist anymore.", 'upstream'),
+                            '#bdc3c7',
+                            $columnValue
+                        );
                     }
                 } else {
                     $columnValue = sprintf('<i class="s-text-color-gray">%s</i>', __('none', 'upstream'));
