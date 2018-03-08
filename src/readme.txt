@@ -136,7 +136,7 @@ UpStream does not use the existing styling of your theme. The features and the v
 The format is based on [Keep a Changelog](http://keepachangelog.com)
 and this project adheres to [Semantic Versioning](http://semver.org).
 
-= [1.16.0] - @todo =
+= [1.16.0] - 2018-03-08 =
 
 Added:
 * Users can be assigned to Files

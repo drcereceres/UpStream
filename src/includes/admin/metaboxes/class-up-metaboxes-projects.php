@@ -1942,7 +1942,7 @@ class UpStream_Metaboxes_Projects {
     /**
      * Define select2 CMB2 field settings.
      *
-     * @since   @todo
+     * @since   1.16.0
      * @static
      *
      * @param   \CMB2_Field     $field      Current CMB2_Field object.
@@ -1988,7 +1988,7 @@ class UpStream_Metaboxes_Projects {
     /**
      * Sanitizes select2 fields before they're saved.
      *
-     * @since   @todo
+     * @since   1.16.0
      * @static
      *
      * @param   mixed           $overrideValue  Sanitization override value to return.
