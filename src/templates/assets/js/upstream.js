@@ -465,7 +465,7 @@ jQuery(document).ready(function($){
                 if (filter.value[valueIndex] === '__none__') {
                   shouldDisplay = !columnValue || columnValue === '__none__';
                 } else {
-                  shouldDisplay = columnValue === filter.value[valueIndex];
+                  shouldDisplay = columnValue === filter.value[valueIndex] || columnValue.split(',').indexOf(filter.value[valueIndex]) >= 0;
                 }
 
                 if (shouldDisplay) {

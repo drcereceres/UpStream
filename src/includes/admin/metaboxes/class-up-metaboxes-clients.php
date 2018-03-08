@@ -419,21 +419,21 @@ final class UpStream_Metaboxes_Clients
     public static function renderLogoMetabox()
     {
         $metabox = new_cmb2_box(array(
-            'id'           => self::$prefix . 'logo',
+            'id'           => self::$prefix . 'client_logo',
             'title'        => '<span class="dashicons dashicons-format-image"></span>' . __("Logo", 'upstream'),
             'object_types' => array(self::$postType),
             'context'      => 'side',
             'priority'     => 'core'
         ));
 
-        $logoField = $metabox->add_field(array(
+        $metabox->add_field(array(
             'id'   => self::$prefix . 'logo',
             'type' => 'file',
-            'name' => __('Image URL', 'upstream')
+            'name' => __('Image URL', 'upstream'),
+            'query_args' => array(
+                'type' => 'image/*'
+            )
         ));
-
-        $metaboxGrid = new Cmb2Grid($metabox);
-        $metaboxGridRow = $metaboxGrid->addRow(array($logoField));
     }
 
     /**

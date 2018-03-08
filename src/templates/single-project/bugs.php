@@ -24,32 +24,11 @@ unset($bugsSeverities);
 
 $itemType = 'bug';
 $currentUserId = get_current_user_id();
-$users = upstreamGetUsersMap();
+$users = upstream_admin_get_all_project_users();
 
-$rowset = array();
 $projectId = upstream_post_id();
 
-$meta = (array)get_post_meta($projectId, '_upstream_project_bugs', true);
-foreach ($meta as $data) {
-    if (!isset($data['id'])
-        || !isset($data['created_by'])
-    ) {
-        continue;
-    }
-
-    $data['created_by'] = (int)$data['created_by'];
-    $data['created_time'] = isset($data['created_time']) ? (int)$data['created_time'] : 0;
-    $data['assigned_to'] = isset($data['assigned_to']) ? (int)$data['assigned_to'] : 0;
-    $data['assigned_to_name'] = isset($users[$data['assigned_to']]) ? $users[$data['assigned_to']] : '';
-    $data['description'] = isset($data['description']) ? (string)$data['description'] : '';
-    $data['severity'] = isset($data['severity']) ? (string)$data['severity'] : '';
-    $data['status'] = isset($data['status']) ? (string)$data['status'] : '';
-    $data['start_date'] = !isset($data['start_date']) || !is_numeric($data['start_date']) || $data['start_date'] < 0 ? 0 : (int)$data['start_date'];
-    $data['end_date'] = !isset($data['end_date']) || !is_numeric($data['end_date']) || $data['end_date'] < 0 ? 0 : (int)$data['end_date'];
-
-    $rowset[$data['id']] = $data;
-}
-unset($data, $meta);
+$rowset = UpStream_View::getBugs($projectId);
 
 $l = array(
     'LB_TITLE'         => __('Title', 'upstream'),
