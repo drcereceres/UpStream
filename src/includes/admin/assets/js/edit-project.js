@@ -1540,5 +1540,19 @@
     });
 
     $('.o-select2').select2();
+
+    $('.cmb-add-group-row').on('click', function(e) {
+      var self = $(this);
+
+      setTimeout(function() {
+        var wrapper = $(self.parents('div.cmb-repeatable-group[data-groupid]'));
+
+        var dataWrapper = $('.up-o-tab-content', $('.postbox.cmb-row[data-iterator]', wrapper));
+
+        $('input[type="text"],select', dataWrapper).val('').trigger('change');
+        $('.select2.select2-container', dataWrapper).remove();
+        $('select.o-select2').select2();
+      }, 100)
+    });
   });
 })(window, window.document, jQuery, upstream_project || {});
