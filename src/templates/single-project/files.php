@@ -10,7 +10,7 @@ $collapseBox = isset($pluginOptions['collapse_project_files'])
 
 $itemType = 'file';
 $currentUserId = get_current_user_id();
-$users = upstreamGetUsersMap();
+$users = upstream_admin_get_all_project_users();
 
 $rowset = array();
 $projectId = upstream_post_id();
@@ -26,7 +26,7 @@ foreach ($meta as $data) {
     $data['created_by'] = (int)$data['created_by'];
     $data['created_time'] = isset($data['created_time']) ? (int)$data['created_time'] : 0;
     $data['title'] = isset($data['title']) ? (string)$data['title'] : '';
-    $data['file_id'] = (int)$data['file_id'];
+    $data['file_id'] = isset($data['file_id']) ? (int)$data['file_id'] : 0;
     $data['description'] = isset($data['description']) ? (string)$data['description'] : '';
 
     $rowset[$data['id']] = $data;
@@ -145,6 +145,24 @@ $columnsSchema = \UpStream\Frontend\getFilesFields($areCommentsEnabled);
                 </div>
                 <select class="form-control o-select2" data-column="created_by" data-placeholder="<?php _e('Uploader', 'upstream'); ?>" multiple>
                   <option value></option>
+                  <option value="<?php echo $currentUserId; ?>"><?php _e('Me', 'upstream'); ?></option>
+                  <optgroup label="<?php _e('Users'); ?>">
+                    <?php foreach ($users as $user_id => $userName): ?>
+                      <?php if ($user_id === $currentUserId) continue; ?>
+                      <option value="<?php echo $user_id; ?>"><?php echo $userName; ?></option>
+                      <?php endforeach; ?>
+                  </optgroup>
+                </select>
+              </div>
+            </div>
+            <div class="form-group">
+              <div class="input-group">
+                <div class="input-group-addon">
+                  <i class="fa fa-user"></i>
+                </div>
+                <select class="form-control o-select2" data-column="assigned_to" data-placeholder="<?php _e('Assignee', 'upstream'); ?>" multiple>
+                  <option value></option>
+                  <option value="__none__"><?php _e('Nobody', 'upstream'); ?></option>
                   <option value="<?php echo $currentUserId; ?>"><?php _e('Me', 'upstream'); ?></option>
                   <optgroup label="<?php _e('Users'); ?>">
                     <?php foreach ($users as $user_id => $userName): ?>

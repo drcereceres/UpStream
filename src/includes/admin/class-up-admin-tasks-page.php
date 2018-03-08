@@ -170,18 +170,33 @@ class Upstream_Task_List extends WP_List_Table {
     }
 
     private function get_assigned_to_unique() {
-        $tasks = self::get_tasks();
-        if ( empty( $tasks ) )
+        $tasks = (array)self::get_tasks();
+        if (count($tasks) === 0) {
             return;
-
-        $items = wp_list_pluck( $tasks, 'assigned_to' );
-        $items = array_unique( $items );
-        $items = array_filter( $items );
-        $new_items = array();
-        foreach ($items as $k => $v) {
-            $new_items[$v] = upstream_users_name( $v );
         }
-        return $new_items;
+
+        $rowset = wp_list_pluck($tasks, 'assigned_to');
+
+        $data = array();
+
+        $setUserNameIntoData = function($user_id) use (&$data) {
+            if (!isset($data[$user_id])) {
+                $data[$user_id] = upstream_users_name($user_id);
+            }
+        };
+
+        foreach ($rowset as $assignees) {
+            if (!is_array($assignees)) {
+                $assignees = (array)$assignees;
+            }
+
+            $assignees = array_unique(array_filter(array_map('intval', $assignees)));
+            foreach ($assignees as $assignee_id) {
+                $setUserNameIntoData($assignee_id);
+            }
+        }
+
+        return $data;
     }
 
     private function get_status_unique() {
@@ -260,20 +275,30 @@ class Upstream_Task_List extends WP_List_Table {
                 return '<span><i style="color: #CCC;">'. __('none', 'upstream') .'</i></span>';
 
             case 'assigned_to':
+                $assignees = isset($item['assigned_to']) ? array_filter((array)$item['assigned_to']) : array();
+                if (count($assignees) > 0) {
+                    $users = get_users(array(
+                        'fields' => array(
+                            'ID', 'display_name'
+                        ),
+                        'include' => $assignees
+                    ));
 
-                $assigned_to = isset( $item['assigned_to'] ) && $item['assigned_to'] ? $item['assigned_to'] : '';
-                if (!empty($assigned_to)) {
-                    $user = upstream_user_data( $assigned_to, true );
-                    $output = $user['display_name'];
+                    $html = array();
 
-                    if ( $assigned_to == get_current_user_id() ){
-                        $output = '<span class="mine">' . esc_html( $output ) . '</span>';
+                    $currentUserId = get_current_user_id();
+                    foreach ($users as $user) {
+                        if ((int)$user->ID === $currentUserId) {
+                            $html[] = '<span class="mine">' . esc_html($user->display_name) . '</span>';
+                        } else {
+                            $html[] = '<span>' . esc_html($user->display_name) . '</span>';
+                        }
                     }
-                    return $output;
+
+                    return implode(',<br>', $html);
                 } else {
                     return '<span><i style="color: #CCC;">'. __('none', 'upstream') .'</i></span>';
                 }
-
             case 'end_date':
                 if (isset($item['end_date']) && (int)$item['end_date'] > 0) {
                     return '<span class="end-date">' . upstream_format_date($item['end_date']) . '</span>';
@@ -449,6 +474,9 @@ class Upstream_Task_List extends WP_List_Table {
     }
 
     public static function sort_filter( $tasks = array() ) {
+        if (count($tasks) === 0) {
+            return array();
+        }
 
         // filtering
         $the_tasks = $tasks; // store the tasks array
@@ -463,14 +491,16 @@ class Upstream_Task_List extends WP_List_Table {
                 }
             }
         }
-        $mine = ( isset( $_REQUEST['view'] ) ? $_REQUEST['view'] : 'all' );
-        if( $mine == 'mine' ) {
-            $user_id = get_current_user_id();
-            if ( ! empty( $tasks ) ) {
-                foreach( $tasks as $key => $task ) {
-                    $assigned_to = isset( $task['assigned_to'] ) ? $task['assigned_to'] : null;
-                    if( $assigned_to != $user_id )
-                        unset( $tasks[$key] );
+
+        $preset = isset($_REQUEST['view']) ? $_REQUEST['view'] : 'all';
+        if ($preset === 'mine') {
+            $currentUserId = (int)get_current_user_id();
+
+            foreach ($tasks as $rowIndex => $row) {
+                $assignees = isset($row['assigned_to']) ? array_map('intval', (array)$row['assigned_to']) : array();
+
+                if (!in_array($currentUserId, $assignees)) {
+                    unset($tasks[$rowIndex]);
                 }
             }
         }
@@ -482,12 +512,15 @@ class Upstream_Task_List extends WP_List_Table {
                     unset( $tasks[$key] );
             }
         }
-        $assigned_to = ( isset( $_REQUEST['assigned_to'] ) ? $_REQUEST['assigned_to'] : '' );
-        if ( ! empty( $tasks ) && ! empty( $assigned_to ) ) {
-            foreach( $tasks as $key => $task ) {
-                $assigned = isset( $task['assigned_to'] ) ? $task['assigned_to'] : null;
-                if( $assigned != $assigned_to )
-                    unset( $tasks[$key] );
+
+        $assigned_to = isset($_REQUEST['assigned_to']) ? (int)$_REQUEST['assigned_to'] : 0;
+        if ($assigned_to > 0) {
+            foreach ($tasks as $rowIndex => $row) {
+                $assignees = isset($row['assigned_to']) ? array_map('intval', (array)$row['assigned_to']) : array();
+
+                if (!in_array($assigned_to, $assignees)) {
+                    unset($tasks[$rowIndex]);
+                }
             }
         }
 

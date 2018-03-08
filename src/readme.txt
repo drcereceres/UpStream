@@ -4,7 +4,7 @@ Tags: project, manage, management, project management, project manager, wordpres
 Requires at least: 4.5
 Tested up to: 4.9
 Requires PHP: 5.6
-Stable tag: 1.15.1
+Stable tag: 1.16.0
 License: GPL-3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -135,6 +135,20 @@ UpStream does not use the existing styling of your theme. The features and the v
 
 The format is based on [Keep a Changelog](http://keepachangelog.com)
 and this project adheres to [Semantic Versioning](http://semver.org).
+
+= [1.16.0] - 2018-03-08 =
+
+Added:
+* Users can be assigned to Files
+* Client Users can also be assigned to Milestones/Tasks/Bugs/Files
+
+Changed:
+* Managers can now assign multiple users to Milestones, Tasks and Bugs
+* Minor text changes on Start/End Date filters
+
+Fixed:
+* Fixed error message shown on frontend after changing Severity/Status/Milestone names
+* Fixed errors while adding/changing Client logo in admin
 
 = [1.15.1] - 2018-02-22 =
 

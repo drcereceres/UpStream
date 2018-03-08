@@ -289,7 +289,21 @@ class UpStream_Project_Activity {
                 break;
 
             case 'assigned_to': case 'owner':
-                $the_val = upstream_users_name( $val );
+                if (!is_array($val)) {
+                    $val = (array)$val;
+                }
+
+                $val = array_unique(array_filter($val));
+                $the_val = array();
+                foreach ($val as $user_id) {
+                    $user_id = (int)$user_id;
+                    if ($user_id > 0) {
+                        $the_val[] = upstream_users_name($user_id);
+                    }
+                }
+
+                $the_val = implode(', ', $the_val);
+
                 break;
 
             case 'milestone':

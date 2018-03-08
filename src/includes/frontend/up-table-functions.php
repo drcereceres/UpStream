@@ -122,7 +122,12 @@ function getTasksFields($statuses = array(), $milestones = array(), $areMileston
                     if (isset($statuses[$columnValue])) {
                         $columnValue = sprintf('<span class="label up-o-label" style="background-color: %s;">%s</span>', $statuses[$columnValue]['color'], $statuses[$columnValue]['name']);
                     } else {
-                        $columnValue = sprintf('<i class="s-text-color-darkred">%s</i>', __('invalid status', 'upstream'));
+                        $columnValue = sprintf(
+                            '<span class="label up-o-label" title="%s" style="background-color: %s;">%s <i class="fa fa-ban"></i></span>',
+                            __("This Status doesn't exist anymore.", 'upstream'),
+                            '#bdc3c7',
+                            $columnValue
+                        );
                     }
                 } else {
                     $columnValue = sprintf('<i class="s-text-color-gray">%s</i>', __('none', 'upstream'));
@@ -164,7 +169,12 @@ function getTasksFields($statuses = array(), $milestones = array(), $areMileston
                     if (isset($milestones[$columnValue])) {
                         $columnValue = sprintf('<span class="label up-o-label" style="background-color: %s;">%s</span>', $milestones[$columnValue]['color'], $milestones[$columnValue]['title']);
                     } else {
-                        $columnValue = sprintf('<i class="s-text-color-darkred">%s</i>', __('invalid milestone', 'upstream'));
+                        $columnValue = sprintf(
+                            '<span class="label up-o-label" title="%s" style="background-color: %s;">%s <i class="fa fa-ban"></i></span>',
+                            __("This Milestone doesn't exist anymore.", 'upstream'),
+                            '#bdc3c7',
+                            $columnValue
+                        );
                     }
                 } else {
                     $columnValue = sprintf('<i class="s-text-color-gray">%s</i>', __('none', 'upstream'));
@@ -256,7 +266,12 @@ function getBugsFields($severities = array(), $statuses = array(), $areCommentsE
                     if (isset($severities[$columnValue])) {
                         $columnValue = sprintf('<span class="label up-o-label" style="background-color: %s;">%s</span>', $severities[$columnValue]['color'], $severities[$columnValue]['name']);
                     } else {
-                        $columnValue = sprintf('<i class="s-text-color-darkred">%s</i>', __('invalid severity', 'upstream'));
+                        $columnValue = sprintf(
+                            '<span class="label up-o-label" title="%s" style="background-color: %s;">%s <i class="fa fa-ban"></i></span>',
+                            __("This Severity doesn't exist anymore.", 'upstream'),
+                            '#bdc3c7',
+                            $columnValue
+                        );
                     }
                 } else {
                     $columnValue = sprintf('<i class="s-text-color-gray">%s</i>', __('none', 'upstream'));
@@ -287,7 +302,12 @@ function getBugsFields($severities = array(), $statuses = array(), $areCommentsE
                     if (isset($statuses[$columnValue])) {
                         $columnValue = sprintf('<span class="label up-o-label" style="background-color: %s;">%s</span>', $statuses[$columnValue]['color'], $statuses[$columnValue]['name']);
                     } else {
-                        $columnValue = sprintf('<i class="s-text-color-darkred">%s</i>', __('invalid status', 'upstream'));
+                        $columnValue = sprintf(
+                            '<span class="label up-o-label" title="%s" style="background-color: %s;">%s <i class="fa fa-ban"></i></span>',
+                            __("This Status doesn't exist anymore.", 'upstream'),
+                            '#bdc3c7',
+                            $columnValue
+                        );
                     }
                 } else {
                     $columnValue = sprintf('<i class="s-text-color-gray">%s</i>', __('none', 'upstream'));
@@ -349,6 +369,11 @@ function getFilesFields($areCommentsEnabled = null)
             'isOrderable' => true,
             'label'       => __('Upload Date', 'upstream'),
             'isEditable'  => false
+        ),
+        'assigned_to' => array(
+            'type'        => 'user',
+            'isOrderable' => false,
+            'label'       => __('Assigned To', 'upstream')
         ),
         'file'    => array(
             'type'        => 'file',
@@ -435,19 +460,34 @@ function renderTableColumnValue($columnName, $columnValue, $column, $row, $rowTy
     $html = sprintf('<i class="s-text-color-gray">%s</i>', __('none', 'upstream'));
     $columnType = isset($column['type']) ? $column['type'] : 'raw';
     if ($columnType === 'user') {
-        $columnValue = (int)$columnValue;
+        if (!is_array($columnValue)) {
+            $columnValue = (array)$columnValue;
+        }
 
-        if ($columnValue > 0) {
-            $user = get_userdata($columnValue);
+        $usersIds = array_filter(array_unique($columnValue));
+        $usersCount = count($usersIds);
 
-            if ($user instanceof \WP_User) {
-                $html = esc_html($user->display_name);
-            } else {
-                $html = sprintf('<i class="s-text-color-darkred">%s</i>', __('invalid user', 'upstream'));
+        if ($usersCount > 1) {
+            $users = get_users(array(
+                'include' => $usersIds
+            ));
+
+            $columnValue = array();
+            foreach ($users as $user) {
+                $columnValue[] = $user->display_name;
             }
+            unset($user, $users);
+
+            $html = implode(',<br>', $columnValue);
+        } else if ($usersCount === 1) {
+            $user = get_user_by('id', $usersIds[0]);
+
+            $html = $user->display_name;
 
             unset($user);
         }
+
+        unset($usersCount, $usersIds);
     } else if ($columnType === 'percentage') {
         $html = sprintf('%d%%', (int)$columnValue);
     } else if ($columnType === 'date') {
@@ -556,14 +596,14 @@ function renderTableBody($data, $visibleColumnsSchema, $hiddenColumnsSchema, $ro
           $columnValue = isset($row[$columnName]) ? $row[$columnName] : null;
 
             if ($column['type'] === 'user') {
-                if ((int)$columnValue <= 0) {
-                    $columnValue = '';
+                if (!is_array($columnValue)) {
+                    $columnValue = array((int)$columnValue);
                 }
             }
 
           $columnAttrs = array(
               'data-column' => $columnName,
-              'data-value'  => $columnValue,
+              'data-value'  => $column['type'] === 'user' ? implode(',', $columnValue) : $columnValue,
               'data-type'   => $column['type']
           );
 

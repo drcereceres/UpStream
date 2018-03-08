@@ -10,7 +10,7 @@ $collapseBox = isset($pluginOptions['collapse_project_milestones'])
 
 $itemType = 'milestone';
 $currentUserId = get_current_user_id();
-$users = upstreamGetUsersMap();
+$users = upstream_admin_get_all_project_users();
 
 $projectId = upstream_post_id();
 
@@ -19,8 +19,8 @@ $milestones = UpStream_View::getMilestones($projectId);
 $l = array(
     'LB_MILESTONE'     => upstream_milestone_label(),
     'LB_TASKS'         => upstream_task_label_plural(),
-    'LB_START_DATE'    => __('Starting at', 'upstream'),
-    'LB_END_DATE'      => __('Ending at', 'upstream'),
+    'LB_START_DATE'    => __('Starting after', 'upstream'),
+    'LB_END_DATE'      => __('Ending before', 'upstream'),
     'LB_NONE'          => __('none', 'upstream'),
     'LB_OPEN'          => _x('Open', 'Task status', 'upstream'),
     'LB_NOTES'         => __('Notes', 'upstream'),

@@ -56,11 +56,12 @@ function upstream_load_admin_scripts($hook)
                     'LB_APPROVE'          => __('Approve'),
                     'LB_APPROVING'        => __('Approving...', 'upstream'),
                     'MSG_ARE_YOU_SURE'    => __('Are you sure? This action cannot be undone.', 'upstream'),
-                    'MSG_COMMENT_NOT_VIS' => __('This comment is not visible by regular users.', 'upstream')
+                    'MSG_COMMENT_NOT_VIS' => __('This comment is not visible by regular users.', 'upstream'),
+                    'LB_ASSIGNED_TO'      => __('Assigned To', 'upstream')
                 )
             ) ) );
         } else if ($postType === 'client') {
-            wp_enqueue_script('up-metabox-client', $assetsDir . 'js/metabox-client.js', array('jquery'), UPSTREAM_VERSION, true);
+            wp_enqueue_script('up-metabox-client', $assetsDir . 'js/metabox-client.js', $admin_deps, UPSTREAM_VERSION, true);
             wp_localize_script('up-metabox-client', 'upstreamMetaboxClientLangStrings', array(
                 'ERR_JQUERY_NOT_FOUND'     => __('UpStream requires jQuery.', 'upstream'),
                 'MSG_NO_ASSIGNED_USERS'    => __("There's no users assigned yet.", 'upstream'),
