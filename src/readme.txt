@@ -138,6 +138,9 @@ and this project adheres to [Semantic Versioning](http://semver.org).
 
 = [1.16.1] - @todo =
 
+Fixed:
+* Fixed avatar infinite multiplication after adding new items to a Project in wp-admin
+
 = [1.16.0] - 2018-03-08 =
 
 Added:
