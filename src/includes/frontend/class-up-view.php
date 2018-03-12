@@ -18,7 +18,11 @@ class UpStream_View
 
     public function __construct()
     {
-        self::$namespace = get_class(self::$instance);
+        self::$namespace = get_class(
+            empty(self::$instance)
+            ? $this
+            : self::$instance
+        );
     }
 
     public static function setProject($id = 0)

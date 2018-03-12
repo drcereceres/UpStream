@@ -95,10 +95,9 @@ final class UpStream_Metaboxes_Clients
         self::renderDetailsMetabox();
         self::renderLogoMetabox();
 
-        $namespace = get_class(self::$instance);
         $metaboxesCallbacksList = array('createUsersMetabox');
         foreach ($metaboxesCallbacksList as $callbackName) {
-            add_action('add_meta_boxes', array($namespace, $callbackName));
+            add_action('add_meta_boxes', array(__CLASS__, $callbackName));
         }
     }
 
@@ -204,7 +203,7 @@ final class UpStream_Metaboxes_Clients
     public static function renderUsersMetabox()
     {
         $client_id = get_the_id();
-        $usersList = self::getUsersFromClient($client_id);
+        $usersList = (array)self::getUsersFromClient($client_id);
         ?>
 
         <div class="upstream-row">
@@ -279,7 +278,7 @@ final class UpStream_Metaboxes_Clients
         add_meta_box(
             self::$prefix . 'users',
             '<span class="dashicons dashicons-groups"></span>' . __("Users", 'upstream'),
-            array(get_class(self::$instance), 'renderUsersMetabox'),
+            array(__CLASS__, 'renderUsersMetabox'),
             self::$postType,
             'normal'
         );
@@ -526,7 +525,7 @@ final class UpStream_Metaboxes_Clients
                 throw new \Exception(__('Invalid Client ID.', 'upstream'));
             }
 
-            $clientUsers = self::getUsersFromClient($clientId);
+            $clientUsers = (array)self::getUsersFromClient($clientId);
             $excludeTheseIds = array(get_current_user_id());
             if (count($clientUsers) > 0) {
                 foreach ($clientUsers as $clientUser) {
@@ -840,9 +839,8 @@ final class UpStream_Metaboxes_Clients
             'update_user_permissions' => 'updateUserPermissions'
         );
 
-        $namespace = get_class(self::$instance);
         foreach ($ajaxEndpointsSchema as $endpoint => $callbackName) {
-            add_action('wp_ajax_upstream:client.' . $endpoint, array($namespace, $callbackName));
+            add_action('wp_ajax_upstream:client.' . $endpoint, array(__CLASS__, $callbackName));
         }
     }
 }

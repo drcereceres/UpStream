@@ -136,6 +136,11 @@ UpStream does not use the existing styling of your theme. The features and the v
 The format is based on [Keep a Changelog](http://keepachangelog.com)
 and this project adheres to [Semantic Versioning](http://semver.org).
 
+= [@todo: WIP] =
+
+Fixed:
+* Fixed recent PHP warnings thrown under PHP 7.2
+
 = [1.16.0] - 2018-03-08 =
 
 Added:
