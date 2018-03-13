@@ -140,6 +140,7 @@ and this project adheres to [Semantic Versioning](http://semver.org).
 
 Fixed:
 * Fixed avatar infinite multiplication after adding new items to a Project in wp-admin
+* Fixed recent PHP warnings thrown under PHP 7.2
 
 = [1.16.0] - 2018-03-08 =
 

@@ -181,7 +181,7 @@ function upstream_user_can_access_project($user_id, $project_id)
         return false;
     }
 
-    $userIsAdmin = count(array_intersect($user->roles, array('administrator', 'upstream_manager'))) > 0;
+    $userIsAdmin = count(array_intersect((array)$user->roles, array('administrator', 'upstream_manager'))) > 0;
     if ($userIsAdmin) {
         return true;
     }

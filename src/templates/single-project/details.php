@@ -65,7 +65,7 @@ $isClientsDisabled = is_clients_disabled();
         <?php if (!$isClientsDisabled && $project->client_id > 0): ?>
         <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
           <p class="title"><?php printf(__('%s Users', 'upstream'), upstream_client_label()); ?></p>
-          <?php if (count($project->clientUsers) > 0): ?>
+          <?php if (is_array($project->clientUsers) && count($project->clientUsers) > 0): ?>
           <?php upstream_output_client_users() ?>
           <?php else: ?>
           <span><i class="text-muted">(<?php _e('none', 'upstream'); ?>)</i></span>

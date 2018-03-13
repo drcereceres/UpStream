@@ -75,7 +75,7 @@ class UpStream_Admin_Project_Columns {
         // Fetch current user.
         $user = wp_get_current_user();
 
-        $this->allowAllProjects = count(array_intersect($user->roles, array('administrator', 'upstream_manager'))) > 0;
+        $this->allowAllProjects = count(array_intersect((array)$user->roles, array('administrator', 'upstream_manager'))) > 0;
         if (!$this->allowAllProjects) {
             // Retrieve all projects current user can access.
             $allowedProjects = upstream_get_users_projects($user);

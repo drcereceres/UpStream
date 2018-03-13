@@ -429,7 +429,7 @@ function upstream_get_users_projects($user)
 
     $data = array();
 
-    $rowset = get_posts(array(
+    $rowset = (array)get_posts(array(
         'post_type'      => "project",
         'post_status'    => "publish",
         'posts_per_page' => -1
