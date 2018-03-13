@@ -676,67 +676,6 @@ class UpStream_Metaboxes_Projects {
         return $html;
     }
 
-    /**
-     * Return the Status filter HTML.
-     *
-     * @since       1.0.0
-     * @access      private
-     * @deprecated  1.15.0
-     */
-    private function getStatusFilterHtml()
-    {
-        _doing_it_wrong(__FUNCTION__, 'Deprecated function.', '1.15.0');
-    }
-
-    /**
-     * Return the Severity filter HTML.
-     *
-     * @since       1.0.0
-     * @access      private
-     * @deprecated  1.15.0
-     */
-    private function getSeverityFilterHtml()
-    {
-        _doing_it_wrong(__FUNCTION__, 'Deprecated function.', '1.15.0');
-    }
-
-    /**
-     * Return the HTML that opens the Filters wrapper.
-     *
-     * @since       1.0.0
-     * @access      private
-     * @deprecated  1.15.0
-     */
-    private function getFiltersHeaderHtml()
-    {
-        _doing_it_wrong(__FUNCTION__, 'Deprecated function.', '1.15.0');
-    }
-
-    /**
-     * Return the HTML that closes the Filters wrapper.
-     *
-     * @since       1.0.0
-     * @access      private
-     * @deprecated  1.15.0
-     */
-    private function getFiltersFooterHtml()
-    {
-        _doing_it_wrong(__FUNCTION__, 'Deprecated function.', '1.15.0');
-    }
-
-    /**
-     * Return the Milestone filter HTML.
-     *
-     * @since       1.0.0
-     * @access      private
-     * @deprecated  1.15.0
-     */
-    private function getMilestoneFilterHtml()
-    {
-        _doing_it_wrong(__FUNCTION__, 'Deprecated function.', '1.15.0');
-    }
-
-
 /* ======================================================================================
                                         TASKS
    ====================================================================================== */
