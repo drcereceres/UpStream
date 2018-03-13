@@ -45,7 +45,7 @@ class UpStream_Admin {
         }
 
         $user = wp_get_current_user();
-        $userIsUpStreamUser = count(array_intersect($user->roles, array('administrator', 'upstream_manager'))) === 0;
+        $userIsUpStreamUser = count(array_intersect((array)$user->roles, array('administrator', 'upstream_manager'))) === 0;
 
         if ($userIsUpStreamUser) {
             global $pagenow;

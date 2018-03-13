@@ -285,10 +285,10 @@ class UpStream_Options_General {
                     )
                 ),
                 array(
-                    'name'    => __( 'Disable Project Overview', 'upstream' ),
+                    'name'    => __( 'Project Progress Icons', 'upstream' ),
                     'id'      => 'disable_project_overview',
                     'type'    => 'radio_inline',
-                    'desc'    => __( 'Choose whether to display the Project Overview section on frontend.', 'upstream' ),
+                    'desc'    => __( 'Choose whether to display the Project Progress Icons section on frontend.', 'upstream' ),
                     'default' => '0',
                     'options' => array(
                         0 => __('No', 'upstream'),

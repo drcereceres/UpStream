@@ -14,7 +14,7 @@ class Upstream_Counts {
 
     /** Class constructor */
     public function __construct( $id ) {
-        $this->projects = $this->get_projects( $id );
+        $this->projects = (array)$this->get_projects( $id );
         $this->user = upstream_user_data();
     }
 
@@ -34,9 +34,9 @@ class Upstream_Counts {
             $args['include'] = $id;
         }
 
-        $projects = get_posts( $args );
-        if ( $projects )
-            return $projects;
+        $projects = (array)get_posts( $args );
+
+        return $projects;
     }
 
     /**
@@ -45,25 +45,24 @@ class Upstream_Counts {
      * @return array
      */
     public function get_items( $type ) {
-        if( ! $this->projects )
-            return;
-
         $items = array();
-        foreach ( $this->projects as $i => $project ) {
-            // Check if the items are disabled.
-            $meta = get_post_meta($project->ID, '_upstream_project_disable_' . $type, true);
-            if ($meta === 'on') {
-                continue;
-            }
 
-            $meta = get_post_meta( $project->ID, '_upstream_project_' . $type, true );
-            if( $meta && is_array( $meta ) ) {
-                foreach ($meta as $key => $value) {
-                    array_push($items, $value);
+        if (count($this->projects) > 0) {
+            foreach ( $this->projects as $i => $project ) {
+                // Check if the items are disabled.
+                $meta = get_post_meta($project->ID, '_upstream_project_disable_' . $type, true);
+                if ($meta === 'on') {
+                    continue;
                 }
-            }
 
-        };
+                $meta = get_post_meta( $project->ID, '_upstream_project_' . $type, true );
+                if( $meta && is_array( $meta ) ) {
+                    foreach ($meta as $key => $value) {
+                        array_push($items, $value);
+                    }
+                }
+            };
+        }
 
         return $items;
     }
@@ -73,7 +72,10 @@ class Upstream_Counts {
      *
      */
     public function total( $type ) {
-        return count( $this->get_items( $type ) );
+        $items = (array)$this->get_items($type);
+        $itemsCount = count($items);
+
+        return $itemsCount;
     }
 
     /**
@@ -81,34 +83,38 @@ class Upstream_Counts {
      *
      * @return null|int
      */
-    public function total_open( $type ) {
-        $items = $this->get_items( $type );
-        if( ! $items )
-            return '0';
+    public function total_open($type)
+    {
+        $itemsOpenCount = 0;
 
-        $option     = get_option( 'upstream_' . $type );
-        $statuses   = isset( $option['statuses'] ) ? $option['statuses'] : '';
+        $items = $this->get_items($type);
+        if (count($items) > 0) {
+            $option = (array)get_option("upstream_{$type}");
+            $statuses = isset($option['statuses']) ? $option['statuses'] : '';
 
-        if( ! $statuses ) {
-            if( $type == 'milestones' ) {
-                return $this->total( $type );
-            } else {
+            if (!empty($statuses)) {
+                if ($type === 'milestones') {
+                    return $this->total($type);
+                }
+
                 return null;
+            }
+
+            $types = wp_list_pluck($statuses, 'type', 'name');
+
+            foreach ($items as $item) {
+                if (!isset($item['status'])) {
+                    continue;
+
+                    $itemStatus = $item['status'];
+                    if (isset($types[$itemStatus]) && $types[$itemStatus] === 'open') {
+                        $itemsOpenCount++;
+                    }
+                }
             }
         }
 
-        $types = wp_list_pluck( $statuses, 'type', 'name' );
-
-        $count = 0;
-        foreach ($items as $key => $item) {
-            if( !isset( $item['status'] ) )
-                continue;
-            $item_status = $item['status'];
-            if( isset( $types[$item_status] ) && $types[$item_status] == 'open' )
-                $count += 1;
-        }
-
-        return $count;
+        return $itemsOpenCount;
     }
 
     /**
