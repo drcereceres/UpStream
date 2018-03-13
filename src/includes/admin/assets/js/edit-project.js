@@ -1547,11 +1547,12 @@
       setTimeout(function() {
         var wrapper = $(self.parents('div.cmb-repeatable-group[data-groupid]'));
 
-        var dataWrapper = $('.up-o-tab-content', $('.postbox.cmb-row[data-iterator]', wrapper));
+        var dataWrapper = $('.up-c-tab-content-data', $('.postbox.cmb-row[data-iterator]', wrapper));
+        dataWrapper = $(dataWrapper.get(dataWrapper.length - 1));
 
         $('input[type="text"],select', dataWrapper).val('').trigger('change');
         $('.select2.select2-container', dataWrapper).remove();
-        $('select.o-select2').select2();
+        $('select.o-select2', dataWrapper).select2();
       }, 100)
     });
   });

@@ -27,7 +27,10 @@ $isClientsDisabled = is_clients_disabled();
 <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
   <div class="x_panel details-panel">
     <div class="x_title">
-      <h2><?php printf('<i class="fa fa-info-circle"></i> ' . __('%s Details', 'upstream'), upstream_project_label()); ?></h2>
+      <h2>
+        <?php printf('<i class="fa fa-info-circle"></i> ' . __('%s Details', 'upstream'), upstream_project_label()); ?>
+        <?php do_action('upstream:frontend.project.details.after_title'); ?>
+      </h2>
       <ul class="nav navbar-right panel_toolbox">
         <li>
           <a class="collapse-link"><i class="fa fa-chevron-<?php echo $collapseDetails ? 'down' : 'up'; ?>"></i></a>
@@ -65,7 +68,7 @@ $isClientsDisabled = is_clients_disabled();
         <?php if (!$isClientsDisabled && $project->client_id > 0): ?>
         <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
           <p class="title"><?php printf(__('%s Users', 'upstream'), upstream_client_label()); ?></p>
-          <?php if (count($project->clientUsers) > 0): ?>
+          <?php if (is_array($project->clientUsers) && count($project->clientUsers) > 0): ?>
           <?php upstream_output_client_users() ?>
           <?php else: ?>
           <span><i class="text-muted">(<?php _e('none', 'upstream'); ?>)</i></span>
@@ -83,7 +86,7 @@ $isClientsDisabled = is_clients_disabled();
       <?php if (!empty($project->description)): ?>
       <div>
         <p class="title"><?php _e('Description'); ?></p>
-        <blockquote style="font-size: 1em;"><?php echo $project->description; ?></blockquote>
+        <blockquote style="font-size: 1em;"><?php echo htmlspecialchars_decode($project->description); ?></blockquote>
       </div>
       <?php endif; ?>
     </div>

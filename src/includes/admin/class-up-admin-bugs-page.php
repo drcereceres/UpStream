@@ -105,7 +105,7 @@ class Upstream_Bug_List extends WP_List_Table {
         <?php
         if ( ! is_singular() ) {
 
-        $projects = $this->get_projects_unique();
+        $projects = (array)$this->get_projects_unique();
         if ( ! empty( $projects ) ) { ?>
 
             <select name='project' id='project' class='postform'>
@@ -117,7 +117,7 @@ class Upstream_Bug_List extends WP_List_Table {
 
         <?php }
 
-        $users = $this->get_assigned_to_unique();
+        $users = (array)$this->get_assigned_to_unique();
         if (count($users) > 0) {
             $assigned_to = isset($_REQUEST['assigned_to']) ? (int)$_REQUEST['assigned_to'] : 0; ?>
             <select id="assigned_to" name="assigned_to" class="postform">
@@ -129,7 +129,7 @@ class Upstream_Bug_List extends WP_List_Table {
             <?php
         }
 
-        $status = $this->get_status_unique();
+        $status = (array)$this->get_status_unique();
         if ( ! empty( $status ) ) { ?>
 
             <select name='status' id='status' class='postform'>
@@ -141,7 +141,7 @@ class Upstream_Bug_List extends WP_List_Table {
 
         <?php }
 
-        $severity = $this->get_severity_unique();
+        $severity = (array)$this->get_severity_unique();
         if ( ! empty( $severity ) ) { ?>
 
             <select name='severity' id='severity' class='postform'>
@@ -454,7 +454,7 @@ class Upstream_Bug_List extends WP_List_Table {
 
     public static function sort_filter($bugs = array())
     {
-        if (count($bugs) === 0) {
+        if (!is_array($bugs) || count($bugs) === 0) {
             return array();
         }
 
