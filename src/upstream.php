@@ -341,6 +341,8 @@ final class UpStream
             update_option('upstream:role_upstream_users:drop_edit_others_projects', 1);
         }
 
+        self::createMilestonesIds();
+
         Comments::instantiate();
 
         // Init action.
@@ -502,6 +504,53 @@ final class UpStream
         }
 
         return $queryArgs;
+    }
+
+    /**
+     * Create ids for all existent milestones.
+     *
+     * @since   @todo
+     * @static
+     */
+    public static function createMilestonesIds()
+    {
+        $continue = !(bool)get_option('upstream:created_milestones_slugs');
+        if (!$continue) return;
+
+        $milestones = get_option('upstream_milestones');
+        if (isset($milestones['milestones'])) {
+            $indexesMissingSlug = array();
+            $slugsMap = array();
+
+            foreach ($milestones as $milestoneIndex => $milestone) {
+                if (!isset($milestone['slug'])
+                    || empty($milestone['slug'])
+                ) {
+                    $indexesMissingSlug[] = $milestoneIndex;
+                } else {
+                    $slugsMap[$milestone['slug']] = $milestoneIndex;
+                }
+            }
+
+            if (count($indexesMissingSlug) > 0) {
+                $newSlugsLength = 5;
+                $newSlugsCharsPool = '0123456789abcdefghijklmnopqrstuvwxyz';
+                foreach ($indexesMissingSlug as $milestoneIndex) {
+                    do {
+                        $slug = upstreamGenerateRandomString($newSlugsLength, $newSlugsCharsPool);
+                    } while (isset($slugsMap[$slug]));
+
+                    $milestones[$milestoneIndex]['slug'] = $slug;
+                    $slugsMap[$slug] = $milestoneIndex;
+                }
+            }
+
+            update_option('upstream_milestones', array(
+                'milestones' => $milestones
+            ));
+
+            update_option('upstream:created_milestones_slugs', 1);
+        }
     }
 }
 endif;
