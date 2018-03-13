@@ -138,6 +138,9 @@ and this project adheres to [Semantic Versioning](http://semver.org).
 
 = [1.16.1] - @todo =
 
+Changed:
+* Changed "Disable Project Overview" option label to "Project Progress Icons"
+
 Fixed:
 * Fixed avatar infinite multiplication after adding new items to a Project in wp-admin
 * Fixed recent PHP warnings thrown under PHP 7.2
