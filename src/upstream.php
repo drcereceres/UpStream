@@ -514,42 +514,15 @@ final class UpStream
      */
     public static function createMilestonesIds()
     {
-        $continue = !(bool)get_option('upstream:created_milestones_slugs');
+        $continue = !(bool)get_option('upstream:created_milestones_ids');
         if (!$continue) return;
 
         $milestones = get_option('upstream_milestones');
         if (isset($milestones['milestones'])) {
-            $indexesMissingSlug = array();
-            $slugsMap = array();
+            $milestones['milestones'] = UpStream_Options_Milestones::createMissingIdsInSet($milestones['milestones']);
 
-            foreach ($milestones as $milestoneIndex => $milestone) {
-                if (!isset($milestone['slug'])
-                    || empty($milestone['slug'])
-                ) {
-                    $indexesMissingSlug[] = $milestoneIndex;
-                } else {
-                    $slugsMap[$milestone['slug']] = $milestoneIndex;
-                }
-            }
-
-            if (count($indexesMissingSlug) > 0) {
-                $newSlugsLength = 5;
-                $newSlugsCharsPool = '0123456789abcdefghijklmnopqrstuvwxyz';
-                foreach ($indexesMissingSlug as $milestoneIndex) {
-                    do {
-                        $slug = upstreamGenerateRandomString($newSlugsLength, $newSlugsCharsPool);
-                    } while (isset($slugsMap[$slug]));
-
-                    $milestones[$milestoneIndex]['slug'] = $slug;
-                    $slugsMap[$slug] = $milestoneIndex;
-                }
-            }
-
-            update_option('upstream_milestones', array(
-                'milestones' => $milestones
-            ));
-
-            update_option('upstream:created_milestones_slugs', 1);
+            update_option('upstream_milestones', $milestones);
+            update_option('upstream:created_milestones_ids', 1);
         }
     }
 }
