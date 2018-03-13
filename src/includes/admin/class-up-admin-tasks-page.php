@@ -474,7 +474,7 @@ class Upstream_Task_List extends WP_List_Table {
     }
 
     public static function sort_filter( $tasks = array() ) {
-        if (count($tasks) === 0) {
+        if (!is_array($tasks) || count($tasks) === 0) {
             return array();
         }
 

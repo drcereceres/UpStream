@@ -26,7 +26,7 @@ class UpStream_Admin_Pointers {
     public function first_project() {
         // Make sure First Steps tutorial are not shown to Client Users first time they enter a project.
         $user = wp_get_current_user();
-        if (count(array_intersect($user->roles, array('administrator', 'upstream_manager'))) === 0 &&
+        if (count(array_intersect((array)$user->roles, array('administrator', 'upstream_manager'))) === 0 &&
             !current_user_can('edit_projects')
         ) {
             return;
