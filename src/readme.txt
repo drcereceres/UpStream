@@ -4,7 +4,7 @@ Tags: project, manage, management, project management, project manager, wordpres
 Requires at least: 4.5
 Tested up to: 4.9
 Requires PHP: 5.6
-Stable tag: 1.16.0
+Stable tag: 1.16.1
 License: GPL-3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -144,6 +144,18 @@ Added:
 Fixed:
 * Fixed Project status color on frontend not being dynamic
 * Fixed description of some Projects not being rendered as HTML
+
+= [1.16.1] - 2018-03-13 =
+
+Changed:
+* Changed "Disable Project Overview" option label to "Project Progress Icons"
+
+Removed:
+* Removed deprecated methods on v1.15.0
+
+Fixed:
+* Fixed avatar infinite multiplication after adding new items to a Project in wp-admin
+* Fixed recent PHP warnings thrown under PHP 7.2
 
 = [1.16.0] - 2018-03-08 =
 

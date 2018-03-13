@@ -34,7 +34,11 @@ class Comments
      */
     public function __construct()
     {
-        self::$namespace = get_class(self::$instance);
+        self::$namespace = get_class(
+            empty(self::$instance)
+            ? $this
+            : self::$instance
+        );
 
         $this->attachHooks();
     }
