@@ -546,20 +546,22 @@ final class UpStream
                     return false;
                 };
 
+                $replaceMilestoneWithItsId = function($milestone) use (&$milestones, &$getMilestoneIdByTitle) {
+                    if (isset($milestone['milestone'])) {
+                        $milestoneId = $getMilestoneIdByTitle($milestone['milestone']);
+                        if ($milestoneId !== false) {
+                            $milestone['milestone'] = $milestoneId;
+                        }
+                    }
+
+                    return $milestone;
+                };
+
                 foreach ($metas as $meta) {
                     $projectId = (int)$meta->post_id;
 
                     $data = array_filter(maybe_unserialize((string)$meta->meta_value));
-                    $data = array_map(function($milestone) use (&$milestones, &$getMilestoneIdByTitle) {
-                        if (isset($milestone['milestone'])) {
-                            $milestoneId = $getMilestoneIdByTitle($milestone['milestone']);
-                            if ($milestoneId !== false) {
-                                $milestone['milestone'] = $milestoneId;
-                            }
-                        }
-
-                        return $milestone;
-                    }, $data);
+                    $data = array_map($replaceMilestoneWithItsId, $data);
 
                     update_post_meta($projectId, '_upstream_project_milestones', $data);
                 }
