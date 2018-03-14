@@ -522,6 +522,49 @@ final class UpStream
             $milestones['milestones'] = UpStream_Options_Milestones::createMissingIdsInSet($milestones['milestones']);
 
             update_option('upstream_milestones', $milestones);
+
+            $milestones = $milestones['milestones'];
+
+            // Update existent Milestone data across all Projects.
+            global $wpdb;
+
+            $metas = $wpdb->get_results(sprintf(
+                'SELECT `post_id`, `meta_value`
+                FROM `%s`
+                WHERE `meta_key` = "_upstream_project_milestones"',
+                $wpdb->prefix . 'postmeta'
+            ));
+
+            if (count($metas) > 0) {
+                $getMilestoneIdByTitle = function($needle) use (&$milestones) {
+                    foreach ($milestones as $milestone) {
+                        if ($needle === $milestone['title']) {
+                            return $milestone['id'];
+                        }
+                    }
+
+                    return false;
+                };
+
+                foreach ($metas as $meta) {
+                    $projectId = (int)$meta->post_id;
+
+                    $data = array_filter(maybe_unserialize((string)$meta->meta_value));
+                    $data = array_map(function($milestone) use (&$milestones, &$getMilestoneIdByTitle) {
+                        if (isset($milestone['milestone'])) {
+                            $milestoneId = $getMilestoneIdByTitle($milestone['milestone']);
+                            if ($milestoneId !== false) {
+                                $milestone['milestone'] = $milestoneId;
+                            }
+                        }
+
+                        return $milestone;
+                    }, $data);
+
+                    update_post_meta($projectId, '_upstream_project_milestones', $data);
+                }
+            }
+
             update_option('upstream:created_milestones_ids', 1);
         }
     }
