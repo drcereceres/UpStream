@@ -157,6 +157,15 @@ function upstream_add_default_options() {
         update_option( 'upstream_general', $general );
     }
 
+    $cachedIds = array();
+    $generateRandomId = function() use (&$cachedIds) {
+        do {
+            $randomId = upstreamGenerateRandomString(5, 'abcdefghijklmnopqrstuvwxyz0123456789');
+        } while (in_array($randomId, $cachedIds));
+
+        return $randomId;
+    };
+
     // project options
     $projects = get_option( 'upstream_projects' );
     if ( ! $projects || empty( $projects ) ) {
@@ -182,18 +191,23 @@ function upstream_add_default_options() {
 
         $milestones['milestones'][0]['title'] = 'Wireframe';
         $milestones['milestones'][0]['color'] = '#3ca9c4';
+        $milestones['milestones'][0]['id'] = $generateRandomId();
 
         $milestones['milestones'][1]['title'] = 'Development';
         $milestones['milestones'][1]['color'] = '#1e73be';
+        $milestones['milestones'][1]['id'] = $generateRandomId();
 
         $milestones['milestones'][2]['title'] = 'Design';
         $milestones['milestones'][2]['color'] = '#21c6e0';
+        $milestones['milestones'][2]['id'] = $generateRandomId();
 
         $milestones['milestones'][3]['title'] = 'Testing';
         $milestones['milestones'][3]['color'] = '#146791';
+        $milestones['milestones'][3]['id'] = $generateRandomId();
 
         $milestones['milestones'][4]['title'] = 'Launch';
         $milestones['milestones'][4]['color'] = '#1fc1b1';
+        $milestones['milestones'][4]['id'] = $generateRandomId();
 
         update_option( 'upstream_milestones', $milestones );
     }
