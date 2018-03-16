@@ -27,11 +27,10 @@ $milestonesColors = array();
 $milestones = array();
 
 if ($areMilestonesEnabled) {
-    $milestonesList = get_option('upstream_milestones');
-    foreach ($milestonesList['milestones'] as $milestone) {
-        $milestonesColors[$milestone['title']] = $milestone['color'];
+    $milestonesList = getMilestones();
+    foreach ($milestonesList as $milestoneId => $milestone) {
+        $milestonesColors[$milestoneId] = $milestone['color'];
     }
-    unset($milestonesList);
 
     $meta = (array)get_post_meta($projectId, '_upstream_project_milestones', true);
     foreach ($meta as $data) {
@@ -43,10 +42,16 @@ if ($areMilestonesEnabled) {
         }
 
         $milestones[$data['id']] = array(
-            'title' => $data['milestone'],
-            'color' => $milestonesColors[$data['milestone']],
-            'id'    => $data['id']
+            'id'    => $data['id'],
+            'title' => '',
+            'color' => ''
         );
+
+        $milestone = isset($milestonesList[$data['milestone']]) ? $milestonesList[$data['milestone']] : null;
+        if ($milestone !== null) {
+            $milestones[$data['id']]['title'] = $milestone['title'];
+            $milestones[$data['id']]['color'] = $milestone['color'];
+        }
     }
 }
 
