@@ -1504,3 +1504,47 @@ function upFetchTags()
 
     return $terms;
 }
+
+/**
+ * Retrieve a list of Milestones available on this instance.
+ *
+ * @since   @todo
+ *
+ * @return  array
+ */
+function getMilestones()
+{
+    $data = array();
+
+    $milestones = (array)get_option('upstream_milestones');
+    if (isset($milestones['milestones'])) {
+        foreach ($milestones['milestones'] as $milestone) {
+            if (isset($milestone['id'])) {
+                $data[$milestone['id']] = $milestone;
+            }
+        }
+    }
+
+    return $data;
+}
+
+/**
+ * Retrieve a list of Milestones titles available on this instance.
+ *
+ * @since   @todo
+ *
+ * @return  array
+ */
+function getMilestonesTitles()
+{
+    $data = array();
+
+    $milestones = getMilestones();
+    foreach ($milestones as $milestone) {
+        if (isset($milestone['id'])) {
+            $data[$milestone['id']] = $milestone['title'];
+        }
+    }
+
+    return $data;
+}
