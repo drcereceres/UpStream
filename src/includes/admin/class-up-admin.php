@@ -343,6 +343,31 @@ class UpStream_Admin {
 
         return $value;
     }
+
+    private static $wpTimeZone = null;
+    private static $utcTimeZone = null;
+
+    public static function escapeCmb2TimestampField($value, $args, $field)
+    {
+        if (self::$wpTimeZone === null) {
+            self::$wpTimeZone = upstreamGetTimeZone();
+        }
+
+        if (self::$utcTimeZone === null) {
+            self::$utcTimeZone = new \DateTimeZone('UTC');
+        }
+
+        $value = (int)$value;
+        if ($value > 0) {
+            $date = new \DateTime('now', self::$utcTimeZone);
+            $date->setTimestamp($value);
+            $date->setTimeZone(self::$wpTimeZone);
+
+            $value = $date->format($args['date_format']);
+        }
+
+        return $value;
+    }
 }
 
 return new UpStream_Admin();

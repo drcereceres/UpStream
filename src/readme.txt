@@ -136,6 +136,12 @@ UpStream does not use the existing styling of your theme. The features and the v
 The format is based on [Keep a Changelog](http://keepachangelog.com)
 and this project adheres to [Semantic Versioning](http://semver.org).
 
+= [@todo: WIP] =
+
+Fixed:
+* Fixed yet another error with malconversion of some time zones
+
+
 = [1.16.1] - 2018-03-13 =
 
 Changed:

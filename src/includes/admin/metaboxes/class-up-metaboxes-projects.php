@@ -309,6 +309,7 @@ class UpStream_Metaboxes_Projects {
                 'date_format'       => 'Y-m-d',
                 'permissions'       => 'milestone_start_date_field',
                 'before'            => 'upstream_add_field_attributes',
+                'escape_cb'         => array('UpStream_Admin', 'escapeCmb2TimestampField'),
                 'attributes'        => array(
                     //'data-validation'     => 'required',
                 )
@@ -320,6 +321,7 @@ class UpStream_Metaboxes_Projects {
                 'date_format'       => 'Y-m-d',
                 'permissions'       => 'milestone_end_date_field',
                 'before'            => 'upstream_add_field_attributes',
+                'escape_cb'         => array('UpStream_Admin', 'escapeCmb2TimestampField'),
                 'attributes'        => array(
                     //'data-validation'     => 'required',
                 )
@@ -828,7 +830,8 @@ class UpStream_Metaboxes_Projects {
                 'type'              => 'up_timestamp',
                 'date_format'       => 'Y-m-d',
                 'permissions'       => 'task_start_date_field',
-                'before'            => 'upstream_add_field_attributes'
+                'before'            => 'upstream_add_field_attributes',
+                'escape_cb'         => array('UpStream_Admin', 'escapeCmb2TimestampField')
             );
             $fields[31] = array(
                 'name'              => __( "End Date", 'upstream' ),
@@ -836,7 +839,8 @@ class UpStream_Metaboxes_Projects {
                 'type'              => 'up_timestamp',
                 'date_format'       => 'Y-m-d',
                 'permissions'       => 'task_end_date_field',
-                'before'            => 'upstream_add_field_attributes'
+                'before'            => 'upstream_add_field_attributes',
+                'escape_cb'         => array('UpStream_Admin', 'escapeCmb2TimestampField'),
             );
 
             $fields[40] = array(
@@ -1172,7 +1176,8 @@ class UpStream_Metaboxes_Projects {
                 'type'              => 'up_timestamp',
                 'date_format'       => 'Y-m-d',
                 'permissions'       => 'bug_due_date_field',
-                'before'            => 'upstream_add_field_attributes'
+                'before'            => 'upstream_add_field_attributes',
+                'escape_cb'         => array('UpStream_Admin', 'escapeCmb2TimestampField'),
             );
 
             if ($allowComments) {
@@ -1330,7 +1335,8 @@ class UpStream_Metaboxes_Projects {
             'permissions'       => 'project_start_date_field',
             'before'            => 'upstream_add_field_attributes',
             'show_on_cb'        => 'upstream_show_project_start_date_field',
-            'save_field'        => upstream_admin_permissions('upstream_start_date_field')
+            'save_field'        => upstream_admin_permissions('upstream_start_date_field'),
+            'escape_cb'         => array('UpStream_Admin', 'escapeCmb2TimestampField')
         );
         $fields[11] = array(
             'name'              => __( 'End Date', 'upstream' ),
@@ -1341,7 +1347,8 @@ class UpStream_Metaboxes_Projects {
             'permissions'       => 'project_end_date_field',
             'before'            => 'upstream_add_field_attributes',
             'show_on_cb'        => 'upstream_show_project_end_date_field',
-            'save_field'        => upstream_admin_permissions('project_end_date_field')
+            'save_field'        => upstream_admin_permissions('project_end_date_field'),
+            'escape_cb'         => array('UpStream_Admin', 'escapeCmb2TimestampField'),
         );
 
         $fields[12] = array(
