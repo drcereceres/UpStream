@@ -757,7 +757,7 @@ class Comments
         );
 
         // Check if we need to skip further data processing.
-        if (in_array($comment->target, array('project', 'milestone', 'task', 'bug', 'file'))) {
+        if (!in_array($comment->target, array('project', 'milestone', 'task', 'bug', 'file'))) {
             return $recipients;
         }
 
@@ -839,7 +839,7 @@ class Comments
         };
 
         $project = get_transient('upstream:comment_notification.project:' . $comment->project_id);
-        if (empty($project)||1) {
+        if (empty($project)) {
             $project = get_post($comment->project_id);
             $project = (object)array(
                 'id'          => (int)$project->ID,
