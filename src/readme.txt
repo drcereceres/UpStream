@@ -4,7 +4,7 @@ Tags: project, manage, management, project management, project manager, wordpres
 Requires at least: 4.5
 Tested up to: 4.9
 Requires PHP: 5.6
-Stable tag: 1.16.1
+Stable tag: 1.16.2
 License: GPL-3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -141,6 +141,10 @@ and this project adheres to [Semantic Versioning](http://semver.org).
 Fixed:
 * Fixed yet another error with malconversion of some time zones
 
+= [1.16.2] - 2018-03-26 =
+
+Fixed:
+* Enhanced support for timezone changing
 
 = [1.16.1] - 2018-03-13 =
 
