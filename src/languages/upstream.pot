@@ -53,16 +53,16 @@ msgstr ""
 msgid "UpStream User"
 msgstr ""
 
-#: ../includes/class-up-comment.php:338
+#: ../includes/class-up-comment.php:340
 msgctxt "Comment was very recently added."
 msgid "just now"
 msgstr ""
 
-#: ../includes/class-up-comment.php:342, ../includes/class-up-comment.php:352, ../includes/class-up-comments.php:406
+#: ../includes/class-up-comment.php:344, ../includes/class-up-comment.php:354, ../includes/class-up-comments.php:406
 msgid "Unable to save the data into database."
 msgstr ""
 
-#: ../includes/class-up-comment.php:448, ../includes/class-up-comments.php:679, ../includes/admin/metaboxes/class-up-metaboxes-projects.php:1843, ../includes/admin/metaboxes/metabox-functions.php:529
+#: ../includes/class-up-comment.php:450, ../includes/class-up-comments.php:679, ../includes/admin/metaboxes/class-up-metaboxes-projects.php:1843, ../includes/admin/metaboxes/metabox-functions.php:529
 msgctxt "%s = human-readable time difference"
 msgid "%s ago"
 msgstr ""
@@ -112,7 +112,7 @@ msgstr ""
 msgid "Comment not found."
 msgstr ""
 
-#: ../includes/class-up-comments.php:937
+#: ../includes/class-up-comments.php:965
 msgctxt "Comment notification subject"
 msgid "New comment on %s"
 msgstr ""
@@ -630,7 +630,7 @@ msgstr ""
 msgid "user"
 msgstr ""
 
-#: ../includes/admin/class-up-admin-options.php:57
+#: ../includes/admin/class-up-admin-options.php:57, ../includes/admin/class-up-admin.php:400
 msgid "UpStream"
 msgstr ""
 
@@ -755,6 +755,14 @@ msgstr ""
 
 #: ../includes/admin/class-up-admin-tasks-page.php:261, ../includes/admin/class-up-admin-tasks-page.php:271
 msgid "Complete"
+msgstr ""
+
+#: ../includes/admin/class-up-admin.php:405
+msgid "Comment reply notifications"
+msgstr ""
+
+#: ../includes/admin/class-up-admin.php:419
+msgid "Whether to be notified when someone reply to your comments within %s."
 msgstr ""
 
 #: ../includes/admin/up-enqueues.php:45
