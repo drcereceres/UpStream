@@ -131,20 +131,21 @@ UpStream does not use the existing styling of your theme. The features and the v
 9. Close up of Project Timeline (premium extension)
 
 
+== Upgrade Notice ==
+
+= 1.16.2 =
+If you were having date issues within Projects, please clear your cache and re-save any item that was being affected by it.
+
+
 == Changelog ==
 
 The format is based on [Keep a Changelog](http://keepachangelog.com)
 and this project adheres to [Semantic Versioning](http://semver.org).
 
-= [@todo: WIP] =
-
-Fixed:
-* Fixed yet another error with malconversion of some time zones
-
 = [1.16.2] - 2018-03-26 =
 
 Fixed:
-* Enhanced support for timezone changing
+* Fixed yet another error with malconversion of some time zones
 
 = [1.16.1] - 2018-03-13 =
 
