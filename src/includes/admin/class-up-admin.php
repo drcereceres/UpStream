@@ -26,6 +26,11 @@ class UpStream_Admin {
         add_filter( 'ajax_query_attachments_args', array( $this, 'filter_user_attachments' ), 10, 1 );
         add_action('admin_menu', array($this, 'limitUpStreamUserAccess'));
 
+        add_action('show_user_profile', array($this, 'renderAdditionalUserFields'), 10, 1);
+        add_action('edit_user_profile', array($this, 'renderAdditionalUserFields'), 10, 1);
+        add_action('personal_options_update', array($this, 'saveAdditionalUserFields'), 10, 1);
+        add_action('edit_user_profile_update', array($this, 'saveAdditionalUserFields'), 10, 1);
+
         global $pagenow;
         if ($pagenow === 'edit-comments.php') {
             add_filter('comment_status_links', array($this, 'commentStatusLinks'), 10, 1);
@@ -367,6 +372,58 @@ class UpStream_Admin {
         }
 
         return $value;
+    }
+
+    public static function saveAdditionalUserFields($user_id)
+    {
+        if (!current_user_can('edit_user', $user_id)
+            || !isset($_POST['upstream'])
+        ) {
+            return false;
+        }
+
+        $data = &$_POST['upstream'];
+
+        if (isset($data['comment_replies_notification'])) {
+            $receiveNotifications = $data['comment_replies_notification'] !== 'no';
+
+            update_user_meta($user_id, 'upstream_comment_replies_notification', $receiveNotifications ? 'yes' : 'no');
+
+            unset($receiveNotifications);
+        }
+    }
+
+    public static function renderAdditionalUserFields($user)
+    {
+        $receiveNotifications = userCanReceiveCommentRepliesNotification($user->ID);
+        ?>
+        <h2><?php _e('UpStream', 'upstream'); ?></h2>
+        <table class="form-table">
+            <tbody>
+                <tr>
+                    <th>
+                        <label for="upstream_comment_reply_notifications"><?php _e('Comment reply notifications', 'upstream'); ?></label>
+                    </th>
+                    <td>
+                        <div>
+                            <label>
+                                <?php _e('Yes'); ?>
+                                <input type="radio" name="upstream[comment_replies_notification]" value="1"<?php echo $receiveNotifications ? ' checked' : ''; ?>>
+                            </label>
+                            <label>
+                                <?php _e('No'); ?>
+                                <input type="radio" name="upstream[comment_replies_notification]" value="no"<?php echo $receiveNotifications ? '' : ' checked'; ?>>
+                            </label>
+                        </div>
+                        <p class="description"><?php printf(
+                            __('Whether to be notified when someone reply to your comments within %s.', 'upstream'),
+                            upstream_project_label_plural(true)
+                        ); ?></p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <?php
     }
 }
 

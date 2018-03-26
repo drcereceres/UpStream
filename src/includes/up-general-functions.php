@@ -1358,3 +1358,18 @@ function upstreamGetDateFormatForJsDatepicker()
     return $format;
 
 }
+
+function userCanReceiveCommentRepliesNotification($user_id = 0)
+{
+    if (!is_numeric($user_id)) {
+        return false;
+    }
+
+    if ((int)$user_id <= 0) {
+        $user_id = get_current_user_id();
+    }
+
+    $receiveNotifications = get_user_meta(1, 'upstream_comment_replies_notification', true) !== 'no';
+
+    return $receiveNotifications;
+}
