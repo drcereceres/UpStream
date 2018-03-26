@@ -900,13 +900,26 @@ class Comments
         if ($comment->parent > 0) {
             $parent_id = $comment->parent;
 
+            $usersCache = array();
+
             do {
                 $parentComment = get_comment($parent_id);
 
                 $parentExists = !empty($parentComment);
                 if ($parentExists) {
+                    if (!isset($usersCache[$parentComment->user_id])) {
+                        $usersCache[$parentComment->user_id] = $getUser($parentComment->user_id);
+                        $usersCache[$parentComment->user_id]->notify = userCanReceiveCommentRepliesNotification($parentComment->user_id);
+                    }
+
+                    $user = &$usersCache[$parentComment->user_id];
+
                     $parentCommentAuthor = $getUser($parentComment->user_id);
-                    $recipients[] = $parentCommentAuthor->email;
+
+                    if ($user->notify) {
+                        $recipients[] = $parentCommentAuthor->email;
+                    }
+
                     $parent_id = (int)$parentComment->comment_parent;
                 }
             } while ($parentExists);
