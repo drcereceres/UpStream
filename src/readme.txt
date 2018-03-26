@@ -144,6 +144,9 @@ and this project adheres to [Semantic Versioning](http://semver.org).
 
 = [1.16.2] - 2018-03-26 =
 
+Changed:
+* Users are now notified about comment replies
+
 Fixed:
 * Fixed yet another error with malconversion of some time zones
 
