@@ -897,6 +897,21 @@ class Comments
             }
         }
 
+        if ($comment->parent > 0) {
+            $parent_id = $comment->parent;
+
+            do {
+                $parentComment = get_comment($parent_id);
+
+                $parentExists = !empty($parentComment);
+                if ($parentExists) {
+                    $parentCommentAuthor = $getUser($parentComment->user_id);
+                    $recipients[] = $parentCommentAuthor->email;
+                    $parent_id = (int)$parentComment->comment_parent;
+                }
+            } while ($parentExists);
+        }
+
         $recipients = array_unique(array_filter($recipients));
 
         $recipients = apply_filters('upstream:comment_notification.recipients', $recipients, $comment);
