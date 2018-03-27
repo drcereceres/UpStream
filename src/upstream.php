@@ -187,7 +187,7 @@ final class UpStream
         $this->define( 'UPSTREAM_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
         $this->define( 'UPSTREAM_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
         $this->define( 'UPSTREAM_PLUGIN_BASENAME', plugin_basename( __FILE__ ) );
-        $this->define( 'UPSTREAM_VERSION', '1.16.1' );
+        $this->define( 'UPSTREAM_VERSION', '1.16.2' );
     }
 
     /**
