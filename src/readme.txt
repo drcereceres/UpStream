@@ -142,7 +142,7 @@ If you were having date issues within Projects, please clear your cache and re-s
 The format is based on [Keep a Changelog](http://keepachangelog.com)
 and this project adheres to [Semantic Versioning](http://semver.org).
 
-= [1.16.2] - 2018-03-26 =
+= [1.16.2] - 2018-03-27 =
 
 Added:
 * Added option under user's profile to choose whether to be notified when someone replies to his comments
