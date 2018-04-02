@@ -171,7 +171,8 @@ class Comment extends Struct
             'comment_content'      => null,
             'comment_agent'        => "",
             'user_id'              => 0,
-            'comment_approved'     => 1
+            'comment_approved'     => 1,
+            'comment_type'         => 'comment'
         );
 
         $data = array_merge($defaultData, (array)$customData);
@@ -199,7 +200,8 @@ class Comment extends Struct
             'comment_approved'     => self::convertStateToWpPatterns($this->state),
             'comment_author_IP'    => isset($this->created_by->ip) ? $this->created_by->ip : "",
             'comment_agent'        => isset($this->created_by->agent) ? $this->created_by->agent : "",
-            'comment_parent'       => (int)$this->parent_id > 0 ? $this->parent_id : 0
+            'comment_parent'       => (int)$this->parent_id > 0 ? $this->parent_id : 0,
+            'comment_type'         => 'comment'
         );
 
         return $data;
