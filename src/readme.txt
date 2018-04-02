@@ -1,10 +1,10 @@
 === WordPress Project Management by UpStream ===
-Contributors: upstreamplugin
+Contributors: upstreamplugin, deenison
 Tags: project, manage, management, project management, project manager, wordpress project management, crm, client, client manager, tasks, issue tracker, bug tracker, task manager
 Requires at least: 4.5
 Tested up to: 4.9
 Requires PHP: 5.6
-Stable tag: 1.16.1
+Stable tag: 1.16.2
 License: GPL-3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -131,10 +131,27 @@ UpStream does not use the existing styling of your theme. The features and the v
 9. Close up of Project Timeline (premium extension)
 
 
+== Upgrade Notice ==
+
+= 1.16.2 =
+If you were having date issues within Projects, please clear your cache and re-save any item that was being affected by it.
+
+
 == Changelog ==
 
 The format is based on [Keep a Changelog](http://keepachangelog.com)
 and this project adheres to [Semantic Versioning](http://semver.org).
+
+= [1.16.2] - 2018-03-27 =
+
+Added:
+* Added option under user's profile to choose whether to be notified when someone replies to his comments
+
+Changed:
+* Users are now notified about comment replies
+
+Fixed:
+* Fixed yet another error with malconversion of some time zones
 
 = [1.16.1] - 2018-03-13 =
 
