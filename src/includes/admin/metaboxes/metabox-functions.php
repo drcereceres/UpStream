@@ -475,6 +475,7 @@ function upstreamRenderCommentsBox($item_id = "", $itemType = "project", $projec
         'post_id' => $project_id,
         'orderby' => 'comment_date_gmt',
         'order'   => 'DESC',
+        'type'    => '',
         'status'  => $commentsStatuses
     );
 
