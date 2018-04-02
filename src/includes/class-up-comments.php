@@ -991,7 +991,7 @@ class Comments
     /**
      * Empties the comment_type="comment" column from UpStream comments.
      *
-     * @since   @todo
+     * @since   1.16.3
      * @static
      */
     public static function removeCommentType()
