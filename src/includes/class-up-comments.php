@@ -41,6 +41,8 @@ class Comments
         );
 
         $this->attachHooks();
+
+        self::removeCommentType();
     }
 
     /**
@@ -984,5 +986,32 @@ class Comments
         $subject = apply_filters('upstream:comment_notification.subject', $subject, $comment, $project);
 
         return $subject;
+    }
+
+    /**
+     * Empties the comment_type="comment" column from UpStream comments.
+     *
+     * @since   1.16.3
+     * @static
+     */
+    public static function removeCommentType()
+    {
+        $didRemoveCommentsType = (bool)get_option('upstream:remove_comments_type');
+        if (!$didRemoveCommentsType) {
+            global $wpdb;
+
+            $wpdb->query(sprintf(
+                'UPDATE `%s` AS `comment`
+                   LEFT JOIN `%s` AS `post`
+                     ON `post`.`ID` = `comment`.`comment_post_ID`
+                 SET `comment_type` = ""
+                 WHERE `comment_type` = "comment"
+                   AND `post_type` = "project"',
+                $wpdb->prefix . 'comments',
+                $wpdb->prefix . 'posts'
+            ));
+
+            update_option('upstream:remove_comments_type', 1);
+        }
     }
 }
