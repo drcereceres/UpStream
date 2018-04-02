@@ -122,7 +122,7 @@ function upstream_project_milestone_by_id( $id = 0, $milestone_id = 0 ) {
 }
 function upstream_project_milestone_colors() {
     $option     = get_option( 'upstream_milestones' );
-    $colors     = wp_list_pluck( $option['milestones'], 'color', 'title' );
+    $colors     = wp_list_pluck( $option['milestones'], 'color', 'id' );
     return apply_filters( 'upstream_project_milestone_colors', $colors );
 }
 /* ------------ TASKS -------------- */
