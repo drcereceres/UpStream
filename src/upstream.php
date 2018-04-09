@@ -342,6 +342,7 @@ final class UpStream
         }
 
         self::createMilestonesIds();
+        self::createTasksIds();
 
         Comments::instantiate();
 
@@ -568,6 +569,68 @@ final class UpStream
             }
 
             update_option('upstream:created_milestones_ids', 1);
+        }
+    }
+
+    // @todo
+    private static function createTasksIds()
+    {
+        $continue = !(bool)get_option('upstream:created_tasks_ids');
+        if (!$continue) return;
+
+        $tasks = get_option('upstream_tasks');
+        if (isset($tasks['statuses'])) {
+            $tasks['statuses'] = UpStream_Options_Tasks::createMissingIdsInSet($tasks['statuses']);
+
+            update_option('upstream_tasks', $tasks);
+
+            $tasks = $tasks['statuses'];
+
+            // Update existent Tasks status across all Projects.
+            global $wpdb;
+
+            $metas = $wpdb->get_results(sprintf(
+                'SELECT `post_id`, `meta_value`
+                FROM `%s`
+                WHERE `meta_key` = "_upstream_project_tasks"',
+                $wpdb->prefix . 'postmeta'
+            ));
+
+            if (count($metas) > 0) {
+                $getTaskStatusIdByTitle = function($needle) use (&$tasks) {
+                    foreach ($tasks as $task) {
+                        if ($needle === $task['name']) {
+                            return $task['id'];
+                        }
+                    }
+
+                    return false;
+                };
+
+                $replaceTaskStatusWithItsId = function($task) use (&$getTaskStatusIdByTitle) {
+                    if (isset($task['status'])) {
+                        $taskId = $getTaskStatusIdByTitle($task['status']);
+                        if ($taskId !== false) {
+                            $task['status'] = $taskId;
+                        }
+                    }
+
+                    return $task;
+                };
+
+                foreach ($metas as $meta) {
+                    if (empty($meta->meta_value)) continue;
+
+                    $projectId = (int)$meta->post_id;
+
+                    $data = array_filter(maybe_unserialize((string)$meta->meta_value));
+                    $data = array_map($replaceTaskStatusWithItsId, $data);
+
+                    update_post_meta($projectId, '_upstream_project_tasks', $data);
+                }
+            }
+
+            update_option('upstream:created_tasks_ids', 1);
         }
     }
 }

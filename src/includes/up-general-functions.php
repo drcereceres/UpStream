@@ -1563,3 +1563,47 @@ function getMilestonesTitles()
 
     return $data;
 }
+
+/**
+ * Retrieve a list of Tasks available on this instance.
+ *
+ * @since   @todo
+ *
+ * @return  array
+ */
+function getTasksStatuses()
+{
+    $data = array();
+
+    $tasks = (array)get_option('upstream_statuses');
+    if (isset($tasks['statuses'])) {
+        foreach ($tasks['statuses'] as $task) {
+            if (isset($task['id'])) {
+                $data[$task['id']] = $task;
+            }
+        }
+    }
+
+    return $data;
+}
+
+/**
+ * Retrieve a list of Task statuses titles available on this instance.
+ *
+ * @since   @todo
+ *
+ * @return  array
+ */
+function getTasksStatusesTitles()
+{
+    $data = array();
+
+    $tasks = getTasksStatuses();
+    foreach ($tasks as $task) {
+        if (isset($task['id'])) {
+            $data[$task['id']] = $task['name'];
+        }
+    }
+
+    return $data;
+}

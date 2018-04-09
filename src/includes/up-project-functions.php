@@ -147,7 +147,7 @@ function upstream_project_tasks_counts( $id = 0 ) {
 
 function upstream_project_task_statuses_colors() {
     $option     = get_option( 'upstream_tasks' );
-    $colors     = wp_list_pluck( $option['statuses'], 'color', 'name' );
+    $colors     = wp_list_pluck( $option['statuses'], 'color', 'id' );
     return apply_filters( 'upstream_project_tasks_statuses_colors', $colors );
 }
 function upstream_project_task_status_color( $id = 0, $item_id ) {

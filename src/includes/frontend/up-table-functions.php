@@ -97,6 +97,7 @@ function getTasksFields($statuses = array(), $milestones = array(), $areMileston
         $areMilestonesEnabled = !upstream_are_milestones_disabled() && !upstream_disable_milestones();
     }
 
+    $statuses = empty($statuses) ? getTasksStatuses() : $statuses;
     $options = array();
 
     $schema = array(
@@ -115,19 +116,6 @@ function getTasksFields($statuses = array(), $milestones = array(), $areMileston
             'label' => __('Status', 'upstream'),
             'renderCallback' => function($columnName, $columnValue, $column, $row, $rowType, $projectId) use (&$statuses, &$options) {
                 if (strlen($columnValue) > 0) {
-                    if ($statuses === null) {
-                        if ($options === null) {
-                            $options = get_option('upstream_tasks');
-                        }
-
-                        $tasksStatuses = $options['statuses'];
-                        $statuses = array();
-                        foreach ($tasksStatuses as $status) {
-                            $statuses[$status['name']] = $status;
-                        }
-                        unset($tasksStatuses);
-                    }
-
                     if (isset($statuses[$columnValue])) {
                         $columnValue = sprintf('<span class="label up-o-label" style="background-color: %s;">%s</span>', $statuses[$columnValue]['color'], $statuses[$columnValue]['name']);
                     } else {

@@ -11,7 +11,7 @@ $collapseBox = isset($pluginOptions['collapse_project_tasks'])
 $tasksStatuses = get_option('upstream_tasks');
 $statuses = array();
 foreach ($tasksStatuses['statuses'] as $status) {
-    $statuses[$status['name']] = $status;
+    $statuses[$status['id']] = $status;
 }
 
 $itemType = 'task';
