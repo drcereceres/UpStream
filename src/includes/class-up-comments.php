@@ -41,6 +41,8 @@ class Comments
         );
 
         $this->attachHooks();
+
+        self::removeCommentType();
     }
 
     /**
@@ -757,7 +759,7 @@ class Comments
         );
 
         // Check if we need to skip further data processing.
-        if (in_array($comment->target, array('project', 'milestone', 'task', 'bug', 'file'))) {
+        if (!in_array($comment->target, array('project', 'milestone', 'task', 'bug', 'file'))) {
             return $recipients;
         }
 
@@ -839,7 +841,7 @@ class Comments
         };
 
         $project = get_transient('upstream:comment_notification.project:' . $comment->project_id);
-        if (empty($project)||1) {
+        if (empty($project)) {
             $project = get_post($comment->project_id);
             $project = (object)array(
                 'id'          => (int)$project->ID,
@@ -895,6 +897,34 @@ class Comments
 
                 set_transient('upstream:comment_notification.project:' . $comment->project_id, $project, $transientExpiration);
             }
+        }
+
+        if ($comment->parent > 0) {
+            $parent_id = $comment->parent;
+
+            $usersCache = array();
+
+            do {
+                $parentComment = get_comment($parent_id);
+
+                $parentExists = !empty($parentComment);
+                if ($parentExists) {
+                    if (!isset($usersCache[$parentComment->user_id])) {
+                        $usersCache[$parentComment->user_id] = $getUser($parentComment->user_id);
+                        $usersCache[$parentComment->user_id]->notify = userCanReceiveCommentRepliesNotification($parentComment->user_id);
+                    }
+
+                    $user = &$usersCache[$parentComment->user_id];
+
+                    $parentCommentAuthor = $getUser($parentComment->user_id);
+
+                    if ($user->notify) {
+                        $recipients[] = $parentCommentAuthor->email;
+                    }
+
+                    $parent_id = (int)$parentComment->comment_parent;
+                }
+            } while ($parentExists);
         }
 
         $recipients = array_unique(array_filter($recipients));
@@ -956,5 +986,32 @@ class Comments
         $subject = apply_filters('upstream:comment_notification.subject', $subject, $comment, $project);
 
         return $subject;
+    }
+
+    /**
+     * Empties the comment_type="comment" column from UpStream comments.
+     *
+     * @since   1.16.3
+     * @static
+     */
+    public static function removeCommentType()
+    {
+        $didRemoveCommentsType = (bool)get_option('upstream:remove_comments_type');
+        if (!$didRemoveCommentsType) {
+            global $wpdb;
+
+            $wpdb->query(sprintf(
+                'UPDATE `%s` AS `comment`
+                   LEFT JOIN `%s` AS `post`
+                     ON `post`.`ID` = `comment`.`comment_post_ID`
+                 SET `comment_type` = ""
+                 WHERE `comment_type` = "comment"
+                   AND `post_type` = "project"',
+                $wpdb->prefix . 'comments',
+                $wpdb->prefix . 'posts'
+            ));
+
+            update_option('upstream:remove_comments_type', 1);
+        }
     }
 }
