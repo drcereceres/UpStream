@@ -511,9 +511,10 @@ final class UpStream
      * Create ids for all existent milestones.
      *
      * @since   @todo
+     * @access  private
      * @static
      */
-    public static function createMilestonesIds()
+    private static function createMilestonesIds()
     {
         $continue = !(bool)get_option('upstream:created_milestones_ids');
         if (!$continue) return;
