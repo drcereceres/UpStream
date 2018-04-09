@@ -1575,7 +1575,7 @@ function getTasksStatuses()
 {
     $data = array();
 
-    $tasks = (array)get_option('upstream_statuses');
+    $tasks = (array)get_option('upstream_tasks');
     if (isset($tasks['statuses'])) {
         foreach ($tasks['statuses'] as $task) {
             if (isset($task['id'])) {
