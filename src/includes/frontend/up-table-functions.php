@@ -14,11 +14,20 @@ function arrayToAttrs($data)
 
 function getMilestonesFields($areCommentsEnabled = null)
 {
+    $milestones = getMilestonesTitles();
+
     $schema = array(
         'milestone'   => array(
-            'type'        => 'raw',
+            'type'        => 'custom',
             'isOrderable' => true,
-            'label'       => upstream_milestone_label()
+            'label'       => upstream_milestone_label(),
+            'renderCallback' => function($columnName, $columnValue, $column, $row, $rowType, $projectId) use (&$milestones) {
+                $milestone = !isset($milestones[$columnValue])
+                    ? '<span title="'. __("This Milestone doesn't exist anymore.", 'upstream') .'">'. $columnValue .' <small><i class="fa fa-ban"></i></small></span>'
+                    : $milestones[$columnValue];
+
+                return $milestone;
+            }
         ),
         'assigned_to' => array(
             'type'        => 'user',

@@ -255,7 +255,7 @@ function upstream_admin_get_options_milestones() {
     $array = array();
     if( $milestones ) {
         foreach ($milestones as $milestone) {
-            $array[$milestone['title']] = $milestone['title'];
+            $array[$milestone['id']] = $milestone['title'];
         }
     }
     return $array;

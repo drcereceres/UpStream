@@ -7,6 +7,11 @@
  * Version: 1.16.3
  * Text Domain: upstream
  * Domain Path: /languages
+ *
+ * @todo: create ids if needed to milestones/tasks statuses/bugs statuses and bugs severities - in upstream.php
+ * @todo: create ids in install.php
+ * @todo: if some of them is changed, track down all projects and switch the item with the correspondent id
+ * @todo: add support for these ids everywhere
  */
 
 use \UpStream\Comments;
@@ -336,6 +341,8 @@ final class UpStream
             update_option('upstream:role_upstream_users:drop_edit_others_projects', 1);
         }
 
+        self::createMilestonesIds();
+
         Comments::instantiate();
 
         // Init action.
@@ -497,6 +504,71 @@ final class UpStream
         }
 
         return $queryArgs;
+    }
+
+    /**
+     * Create ids for all existent milestones.
+     *
+     * @since   @todo
+     * @static
+     */
+    public static function createMilestonesIds()
+    {
+        $continue = !(bool)get_option('upstream:created_milestones_ids');
+        if (!$continue) return;
+
+        $milestones = get_option('upstream_milestones');
+        if (isset($milestones['milestones'])) {
+            $milestones['milestones'] = UpStream_Options_Milestones::createMissingIdsInSet($milestones['milestones']);
+
+            update_option('upstream_milestones', $milestones);
+
+            $milestones = $milestones['milestones'];
+
+            // Update existent Milestone data across all Projects.
+            global $wpdb;
+
+            $metas = $wpdb->get_results(sprintf(
+                'SELECT `post_id`, `meta_value`
+                FROM `%s`
+                WHERE `meta_key` = "_upstream_project_milestones"',
+                $wpdb->prefix . 'postmeta'
+            ));
+
+            if (count($metas) > 0) {
+                $getMilestoneIdByTitle = function($needle) use (&$milestones) {
+                    foreach ($milestones as $milestone) {
+                        if ($needle === $milestone['title']) {
+                            return $milestone['id'];
+                        }
+                    }
+
+                    return false;
+                };
+
+                $replaceMilestoneWithItsId = function($milestone) use (&$milestones, &$getMilestoneIdByTitle) {
+                    if (isset($milestone['milestone'])) {
+                        $milestoneId = $getMilestoneIdByTitle($milestone['milestone']);
+                        if ($milestoneId !== false) {
+                            $milestone['milestone'] = $milestoneId;
+                        }
+                    }
+
+                    return $milestone;
+                };
+
+                foreach ($metas as $meta) {
+                    $projectId = (int)$meta->post_id;
+
+                    $data = array_filter(maybe_unserialize((string)$meta->meta_value));
+                    $data = array_map($replaceMilestoneWithItsId, $data);
+
+                    update_post_meta($projectId, '_upstream_project_milestones', $data);
+                }
+            }
+
+            update_option('upstream:created_milestones_ids', 1);
+        }
     }
 }
 endif;
