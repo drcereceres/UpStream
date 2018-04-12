@@ -576,7 +576,7 @@ final class UpStream
     // @todo
     private static function createTasksIds()
     {
-        $continue = !(bool)get_option('upstream:created_tasks_ids');
+        $continue = !(bool)get_option('upstream:created_tasks_args_ids');
         if (!$continue) return;
 
         $tasks = get_option('upstream_tasks');
@@ -631,7 +631,7 @@ final class UpStream
                 }
             }
 
-            update_option('upstream:created_tasks_ids', 1);
+            update_option('upstream:created_tasks_args_ids', 1);
         }
     }
 }
