@@ -343,6 +343,7 @@ final class UpStream
 
         self::createMilestonesIds();
         self::createTasksStatusesIds();
+        self::createBugsStatusesIds();
 
         Comments::instantiate();
 
@@ -632,6 +633,78 @@ final class UpStream
             }
 
             update_option('upstream:created_tasks_args_ids', 1);
+        }
+    }
+
+    // @todo
+    private static function createBugsStatusesIds()
+    {
+        $continue = !(bool)get_option('upstream:created_bugs_args_ids');
+        if (!$continue) return;
+
+        $bugs = get_option('upstream_bugs');
+        if (isset($bugs['statuses']) && isset($bugs['severities'])) {
+            $bugs['statuses'] = UpStream_Options_Bugs::createMissingIdsInSet($bugs['statuses']);
+            $bugs['severities'] = UpStream_Options_Bugs::createMissingIdsInSet($bugs['severities']);
+
+            update_option('upstream_bugs', $bugs);
+
+            // Update existent Bugs statuses/severities across all Projects.
+            global $wpdb;
+
+            $metas = $wpdb->get_results(sprintf(
+                'SELECT `post_id`, `meta_value`
+                FROM `%s`
+                WHERE `meta_key` = "_upstream_project_bugs"',
+                $wpdb->prefix . 'postmeta'
+            ));
+
+            if (count($metas) > 0) {
+                $getBugArgIdByTitle = function($needle, $argName = 'statuses') use (&$bugs) {
+                    foreach ($bugs[$argName] as $bug) {
+                        if ($needle === $bug['name']) {
+                            return $bug['id'];
+                        }
+                    }
+
+                    return false;
+                };
+
+                $replaceBugArgsWithItsIds = function($bug) use (&$getBugArgIdByTitle) {
+                    if (isset($bug['status'])
+                        && !empty($bug['status'])
+                    ) {
+                        $bugArgId = $getBugArgIdByTitle($bug['status']);
+                        if ($bugArgId !== false) {
+                            $bug['status'] = $bugArgId;
+                        }
+                    }
+
+                    if (isset($bug['severity'])
+                        && !empty($bug['severity'])
+                    ) {
+                        $bugArgId = $getBugArgIdByTitle($bug['severity'], 'severities');
+                        if ($bugArgId !== false) {
+                            $bug['severity'] = $bugArgId;
+                        }
+                    }
+
+                    return $bug;
+                };
+
+                foreach ($metas as $meta) {
+                    if (empty($meta->meta_value)) continue;
+
+                    $projectId = (int)$meta->post_id;
+
+                    $data = array_filter(maybe_unserialize((string)$meta->meta_value));
+                    $data = array_map($replaceBugArgsWithItsIds, $data);
+
+                    update_post_meta($projectId, '_upstream_project_bugs', $data);
+                }
+            }
+
+            update_option('upstream:created_bugs_args_ids', 1);
         }
     }
 }
