@@ -228,6 +228,10 @@ function getBugsFields($severities = array(), $statuses = array(), $areCommentsE
         $statuses = null;
     }
 
+    // @todo
+    $severities = getBugsSeverities();
+    $statuses = getBugsStatuses();
+
     $options = null;
 
     $schema = array(
@@ -247,19 +251,6 @@ function getBugsFields($severities = array(), $statuses = array(), $areCommentsE
             'isOrderable' => true,
             'renderCallback' => function($columnName, $columnValue, $column, $row, $rowType, $projectId) use (&$severities, &$options) {
                 if (strlen($columnValue) > 0) {
-                    if ($severities === null) {
-                        if ($options === null) {
-                            $options = get_option('upstream_bugs');
-                        }
-
-                        $bugsSeverities = $options['severities'];
-                        $severities = array();
-                        foreach ($bugsSeverities as $severity) {
-                            $severities[$severity['name']] = $severity;
-                        }
-                        unset($bugsSeverities);
-                    }
-
                     if (isset($severities[$columnValue])) {
                         $columnValue = sprintf('<span class="label up-o-label" style="background-color: %s;">%s</span>', $severities[$columnValue]['color'], $severities[$columnValue]['name']);
                     } else {
@@ -283,19 +274,6 @@ function getBugsFields($severities = array(), $statuses = array(), $areCommentsE
             'isOrderable' => true,
             'renderCallback' => function($columnName, $columnValue, $column, $row, $rowType, $projectId) use (&$statuses, &$options) {
                 if (strlen($columnValue) > 0) {
-                    if ($statuses === null) {
-                        if ($options === null) {
-                            $options = get_option('upstream_bugs');
-                        }
-
-                        $bugsStatuses = $options['statuses'];
-                        $statuses = array();
-                        foreach ($bugsStatuses as $status) {
-                            $statuses[$status['name']] = $status;
-                        }
-                        unset($bugsStatuses);
-                    }
-
                     if (isset($statuses[$columnValue])) {
                         $columnValue = sprintf('<span class="label up-o-label" style="background-color: %s;">%s</span>', $statuses[$columnValue]['color'], $statuses[$columnValue]['name']);
                     } else {
