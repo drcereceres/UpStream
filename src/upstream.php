@@ -342,7 +342,7 @@ final class UpStream
         }
 
         self::createMilestonesIds();
-        self::createTasksIds();
+        self::createTasksStatusesIds();
 
         Comments::instantiate();
 
@@ -574,7 +574,7 @@ final class UpStream
     }
 
     // @todo
-    private static function createTasksIds()
+    private static function createTasksStatusesIds()
     {
         $continue = !(bool)get_option('upstream:created_tasks_args_ids');
         if (!$continue) return;
