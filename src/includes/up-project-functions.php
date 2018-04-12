@@ -178,13 +178,13 @@ function upstream_project_bugs_counts( $id = 0 ) {
 
 function upstream_project_bug_statuses_colors() {
     $option     = get_option( 'upstream_bugs' );
-    $colors     = wp_list_pluck( $option['statuses'], 'color', 'name' );
+    $colors     = wp_list_pluck( $option['statuses'], 'color', 'id' );
     return apply_filters( 'upstream_project_bugs_statuses_colors', $colors );
 }
 
 function upstream_project_bug_severity_colors() {
     $option     = get_option( 'upstream_bugs' );
-    $colors     = wp_list_pluck( $option['severities'], 'color', 'name' );
+    $colors     = wp_list_pluck( $option['severities'], 'color', 'id' );
     return apply_filters( 'upstream_project_bugs_severity_colors', $colors );
 }
 
