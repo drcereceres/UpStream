@@ -516,7 +516,7 @@ final class UpStream
      */
     private static function createMilestonesIds()
     {
-        $continue = !(bool)get_option('upstream:created_milestones_ids');
+        $continue = !(bool)get_option('upstream:created_milestones_args_ids');
         if (!$continue) return;
 
         $milestones = get_option('upstream_milestones');
@@ -569,7 +569,7 @@ final class UpStream
                 }
             }
 
-            update_option('upstream:created_milestones_ids', 1);
+            update_option('upstream:created_milestones_args_ids', 1);
         }
     }
 
