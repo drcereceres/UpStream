@@ -1607,3 +1607,36 @@ function getTasksStatusesTitles()
 
     return $data;
 }
+
+
+function getBugsStatuses()
+{
+    $data = array();
+
+    $bugs = (array)get_option('upstream_bugs');
+    if (isset($bugs['statuses'])) {
+        foreach ($bugs['statuses'] as $bugStatus) {
+            if (isset($bugStatus['id'])) {
+                $data[$bugStatus['id']] = $bugStatus;
+            }
+        }
+    }
+
+    return $data;
+}
+
+function getBugsSeverities()
+{
+    $data = array();
+
+    $bugs = (array)get_option('upstream_bugs');
+    if (isset($bugs['severities'])) {
+        foreach ($bugs['severities'] as $bugSeverity) {
+            if (isset($bugSeverity['id'])) {
+                $data[$bugSeverity['id']] = $bugSeverity;
+            }
+        }
+    }
+
+    return $data;
+}
