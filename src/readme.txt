@@ -144,6 +144,9 @@ and this project adheres to [Semantic Versioning](http://semver.org).
 
 = [1.16.4] - @todo =
 
+Fixed:
+* Fixed uncommon bug where jQuery UI DatePicker plugin was being loaded on frontend
+
 = [1.16.3] - 2018-04-02 =
 
 Fixed:
