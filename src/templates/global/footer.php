@@ -1,12 +1,11 @@
 <?php
 if (!defined('ABSPATH')) exit;
 
-$text = '&copy; ' . get_bloginfo('name') . ' ' . date('Y');
-$footer_text = apply_filters('upstream_footer_text', $text);
+$footerText = sprintf('&copy %s %s', $pageTitle, date('Y'));
+$footerText = apply_filters('upstream_footer_text', $footerText);
 ?>
-
                 <footer>
-                    <div class="pull-right"><?php echo esc_html($footer_text); ?></div>
+                    <div class="pull-right"><?php echo esc_html($footerText); ?></div>
                     <div class="clearfix"></div>
                 </footer>
             </div>
