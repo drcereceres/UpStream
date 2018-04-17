@@ -18,8 +18,46 @@ if (!upstream_user_can_access_project(get_current_user_id(), upstream_post_id())
 }
 
 
+$_startTime = new \DateTime();
+
+
+
+$pluginOptions = get_option('upstream_general');
+$pageTitle = get_bloginfo('name');
+$siteUrl = get_bloginfo('url');
+$projectsListUrl = get_post_type_archive_link('project');
+$supportUrl = upstream_admin_support($pluginOptions);
+$logOutUrl = upstream_logout_url();
+$areClientsEnabled = !is_clients_disabled();
+
+$currentUser = (object)upstream_user_data();
+
+$i18n = array(
+    'LB_PROJECT'        => upstream_project_label(),
+    'LB_PROJECTS'       => upstream_project_label_plural(),
+    'LB_TASKS'          => upstream_task_label_plural(),
+    'LB_BUGS'           => upstream_bug_label_plural(),
+    'LB_LOGOUT'         => __('Log Out', 'upstream'),
+    'LB_ENDS_AT'        => __('Ends at', 'upstream'),
+    'MSG_SUPPORT'       => upstream_admin_support_label($pluginOptions),
+    'LB_TITLE'          => __('Title', 'upstream'),
+    'LB_TOGGLE_FILTERS' => __('Toggle Filters', 'upstream'),
+    'LB_EXPORT'         => __('Export', 'upstream'),
+    'LB_PLAIN_TEXT'     => __('Plain Text', 'upstream'),
+    'LB_CSV'            => __('CSV', 'upstream'),
+    'LB_CLIENT'         => upstream_client_label(),
+    'LB_CLIENTS'        => upstream_client_label_plural(),
+    'LB_STATUS'         => __('Status', 'upstream'),
+    'LB_STATUSES'       => __('Statuses', 'upstream'),
+    'LB_CATEGORIES'     => __('Categories'),
+    'LB_PROGRESS'       => __('Progress', 'upstream'),
+    'LB_NONE_UCF'       => __('None', 'upstream'),
+    'LB_NONE'           => __('none', 'upstream'),
+    'LB_COMPLETE'       => __('%s Complete', 'upstream')
+);
+
 upstream_get_template_part( 'global/header.php' );
-upstream_get_template_part( 'global/sidebar.php' );
+include_once 'global/sidebar.php';
 upstream_get_template_part( 'global/top-nav.php' );
 
 /*
@@ -80,7 +118,7 @@ while ( have_posts() ) : the_post(); ?>
             <div class="row">
                 <?php do_action( 'upstream_single_project_before_tasks' ); ?>
 
-                <?php upstream_get_template_part( 'single-project/tasks.php' ); ?>
+                <?php // upstream_get_template_part( 'single-project/tasks.php' ); ?>
             </div>
             <?php endif; ?>
 
@@ -88,7 +126,7 @@ while ( have_posts() ) : the_post(); ?>
             <div class="row">
                 <?php do_action( 'upstream_single_project_before_bugs' ); ?>
 
-                <?php upstream_get_template_part( 'single-project/bugs.php' ); ?>
+                <?php // upstream_get_template_part( 'single-project/bugs.php' ); ?>
             </div>
             <?php endif; ?>
 
@@ -96,7 +134,7 @@ while ( have_posts() ) : the_post(); ?>
             <div class="row">
                 <?php do_action( 'upstream_single_project_before_files' ); ?>
 
-                <?php upstream_get_template_part( 'single-project/files.php' ); ?>
+                <?php // upstream_get_template_part( 'single-project/files.php' ); ?>
             </div>
             <?php endif; ?>
 
@@ -104,7 +142,7 @@ while ( have_posts() ) : the_post(); ?>
             <div class="row">
                 <?php do_action( 'upstream_single_project_before_discussion' ); ?>
 
-                <?php upstream_get_template_part( 'single-project/discussion.php' ); ?>
+                <?php // upstream_get_template_part( 'single-project/discussion.php' ); ?>
             </div>
             <?php endif; ?>
     </div>
@@ -117,5 +155,15 @@ while ( have_posts() ) : the_post(); ?>
      */
     do_action( 'upstream_after_project_content' );
 
-    upstream_get_template_part( 'global/footer.php' );
+    include_once 'global/footer.php';
+
+
+
+
+    $_endTime = new \DateTime();
+$_elapsedTime = $_startTime->diff($_endTime);
+$_elapsedTime = $_elapsedTime->format('%H:%I:%S');
+var_dump('Elapsed Time: ' . $_elapsedTime);
+
     ?>
+
