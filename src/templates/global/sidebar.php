@@ -3,16 +3,17 @@ if (!defined('ABSPATH')) exit;
 // @todo
 // return;
 
-/*
-$areMilestonesDisabledAtAll = upstream_disable_milestones();
-$areMilestonesDisabledForThisProject = upstream_are_milestones_disabled();
-$areTasksDisabledAtAll = upstream_disable_tasks();
-$areTasksDisabledForThisProject = upstream_are_tasks_disabled();
-$areBugsDisabledAtAll = upstream_disable_bugs();
-$areBugsDisabledForThisProject = upstream_are_bugs_disabled();
-$areFilesDisabledForThisProject = upstream_are_files_disabled();
-$areCommentsDisabled = upstream_are_comments_disabled();
-*/
+$isSingle = is_single();
+if ($isSingle) {
+    $areMilestonesDisabledAtAll = upstream_disable_milestones();
+    $areMilestonesDisabledForThisProject = upstream_are_milestones_disabled();
+    $areTasksDisabledAtAll = upstream_disable_tasks();
+    $areTasksDisabledForThisProject = upstream_are_tasks_disabled();
+    $areBugsDisabledAtAll = upstream_disable_bugs();
+    $areBugsDisabledForThisProject = upstream_are_bugs_disabled();
+    $areFilesDisabledForThisProject = upstream_are_files_disabled();
+    $areCommentsDisabled = upstream_are_comments_disabled();
+}
 ?>
 
 <?php do_action('upstream_before_sidebar'); ?>
@@ -53,7 +54,7 @@ $areCommentsDisabled = upstream_are_comments_disabled();
                                     <?php printf(__('All %s', 'upstream'), $i18n['LB_PROJECTS']); ?>
                                 </a>
                             </li>
-                            <?php /*if ($projectsListCount > 0): ?>
+                            <?php if ($projectsListCount > 0): ?>
                                 <?php foreach ($projectsList as $project_id => $project): ?>
                                 <li>
                                     <a href="<?php echo esc_url($project->permalink); ?>">
@@ -61,12 +62,12 @@ $areCommentsDisabled = upstream_are_comments_disabled();
                                     </a>
                                 </li>
                                 <?php endforeach; ?>
-                            <?php endif; */ ?>
+                            <?php endif; ?>
                         </ul>
                     </li>
                 </ul>
             </div>
-            <?php /* // @todo if (is_single() && get_post_type() === 'project'): ?>
+            <?php if ($isSingle && get_post_type() === 'project'): ?>
                 <?php $project_id = get_the_ID(); ?>
                 <div class="menu_section">
                     <h3><?php echo get_the_title($project_id); ?></h3>
@@ -149,7 +150,7 @@ $areCommentsDisabled = upstream_are_comments_disabled();
                         <?php do_action( 'upstream_sidebar_after_single_menu' );  ?>
                     </ul>
                 </div>
-            <?php endif; */ ?>
+            <?php endif; ?>
         </div>
         <!-- /sidebar menu -->
         <!-- /menu footer buttons -->

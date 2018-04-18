@@ -120,7 +120,7 @@ while ( have_posts() ) : the_post(); ?>
             <div class="row">
                 <?php do_action( 'upstream_single_project_before_tasks' ); ?>
 
-                <?php // upstream_get_template_part( 'single-project/tasks.php' ); ?>
+                <?php upstream_get_template_part( 'single-project/tasks.php' ); ?>
             </div>
             <?php endif; ?>
 
@@ -128,7 +128,7 @@ while ( have_posts() ) : the_post(); ?>
             <div class="row">
                 <?php do_action( 'upstream_single_project_before_bugs' ); ?>
 
-                <?php // upstream_get_template_part( 'single-project/bugs.php' ); ?>
+                <?php upstream_get_template_part( 'single-project/bugs.php' ); ?>
             </div>
             <?php endif; ?>
 
@@ -136,7 +136,7 @@ while ( have_posts() ) : the_post(); ?>
             <div class="row">
                 <?php do_action( 'upstream_single_project_before_files' ); ?>
 
-                <?php // upstream_get_template_part( 'single-project/files.php' ); ?>
+                <?php upstream_get_template_part( 'single-project/files.php' ); ?>
             </div>
             <?php endif; ?>
 
@@ -144,28 +144,19 @@ while ( have_posts() ) : the_post(); ?>
             <div class="row">
                 <?php do_action( 'upstream_single_project_before_discussion' ); ?>
 
-                <?php // upstream_get_template_part( 'single-project/discussion.php' ); ?>
+                <?php upstream_get_template_part( 'single-project/discussion.php' ); ?>
             </div>
             <?php endif; ?>
     </div>
 </div>
-
+<input type="hidden" id="project_id" value="<?php echo upstream_post_id(); ?>">
 <?php endwhile;
-    /**
-     * upstream_after_project_content hook.
-     *
-     */
-    do_action( 'upstream_after_project_content' );
+/**
+ * upstream_after_project_content hook.
+ *
+ */
+do_action( 'upstream_after_project_content' );
 
-    include_once 'global/footer.php';
-
-
-
-
-    $_endTime = new \DateTime();
-$_elapsedTime = $_startTime->diff($_endTime);
-$_elapsedTime = $_elapsedTime->format('%H:%I:%S');
-var_dump('Elapsed Time: ' . $_elapsedTime);
-
-    ?>
+include_once 'global/footer.php';
+?>
 
