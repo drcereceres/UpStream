@@ -151,6 +151,7 @@ Changed:
 Fixed:
 * Fixed uncommon bug where jQuery UI DatePicker plugin was being loaded on frontend
 * Fixed filters on admin project page that can have multiple values
+* Fixed permissions check failing for items having multiple assignees
 * Fixed PHP warnings
 
 = [1.16.3] - 2018-04-02 =
