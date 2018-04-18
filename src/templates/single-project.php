@@ -34,6 +34,32 @@ $areClientsEnabled = !is_clients_disabled();
 
 $currentUser = (object)upstream_user_data();
 
+$projectsList = array();
+if (isset($currentUser->projects)) {
+    if (is_array($currentUser->projects) && count($currentUser->projects) > 0) {
+        foreach ($currentUser->projects as $project_id => $project) {
+            $data = (object)array(
+                'id'                 => $project_id,
+                'author'             => (int)$project->post_author,
+                'created_at'         => (string)$project->post_date_gmt,
+                'modified_at'        => (string)$project->post_modified_gmt,
+                'title'              => $project->post_title,
+                'slug'               => $project->post_name,
+                'status'             => $project->post_status,
+                'permalink'          => get_permalink($project_id)
+            );
+
+            $projectsList[$project_id] = $data;
+        }
+
+        unset($project, $project_id);
+    }
+
+    unset($currentUser->projects);
+}
+
+$projectsListCount = count($projectsList);
+
 $i18n = array(
     'LB_PROJECT'        => upstream_project_label(),
     'LB_PROJECTS'       => upstream_project_label_plural(),
