@@ -75,9 +75,9 @@ function upstream_permissions( $capability = null, $item_id = null ) {
     // used for the 'Actions' column to allow editing/deleting buttons
     if( isset( $item_id ) ) {
         $item = upstream_project_item_by_id( upstream_post_id(), $item_id );
-        $assigned_to  = isset( $item['assigned_to'] ) ? $item['assigned_to'] : null;
+        $assigned_to  = isset( $item['assigned_to'] ) ? ( array )$item['assigned_to'] : array();
         $created_by   = isset( $item['created_by'] ) ? $item['created_by'] : null;
-        if( $assigned_to == $current_user || $created_by == $current_user )
+        if( in_array( $current_user, $assigned_to ) || $created_by == $current_user )
             $return = true;
     }
 
