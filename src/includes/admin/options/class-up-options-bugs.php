@@ -96,7 +96,13 @@ class UpStream_Options_Bugs {
                         'remove_button' => __( 'Remove Entry', 'upstream' ),
                         'sortable'      => true, // beta
                     ),
+                    'sanitization_cb' => array($this, 'onBeforeSave'),
                     'fields'     => array(
+                        array(
+                            'name' => __( 'Hidden', 'upstream' ),
+                            'id'   => 'id',
+                            'type' => 'hidden',
+                        ),
                         array(
                             'name'      => __( 'Status Color', 'upstream' ),
                             'id'        => 'color',
@@ -146,6 +152,11 @@ class UpStream_Options_Bugs {
                     ),
                     'fields'     => array(
                         array(
+                            'name' => __( 'Hidden', 'upstream' ),
+                            'id'   => 'id',
+                            'type' => 'hidden',
+                        ),
+                        array(
                             'name'      => __( 'Severity Color', 'upstream' ),
                             'id'        => 'color',
                             'type'      => 'colorpicker',
@@ -174,7 +185,75 @@ class UpStream_Options_Bugs {
 
     }
 
+    /**
+     * Create missing id in a Bugs set.
+     *
+     * @since   @todo
+     * @static
+     *
+     * @param   array   $bugs     Array of Bugs.
+     *
+     * @return  array
+     */
+    public static function createMissingIdsInSet($bugs)
+    {
+        if (!is_array($bugs)) {
+            return false;
+        }
 
+        if (count($bugs) > 0) {
+            $indexesMissingId = array();
+            $idsMap = array();
+
+            foreach ($bugs as $bugIndex => $bug) {
+                if (!isset($bug['id'])
+                    || empty($bug['id'])
+                ) {
+                    $indexesMissingId[] = $bugIndex;
+                } else {
+                    $idsMap[$bug['id']] = $bugIndex;
+                }
+            }
+
+            if (count($indexesMissingId) > 0) {
+                $newIdsLength = 5;
+                $newIdsCharsPool = 'abcdefghijklmnopqrstuvwxyz0123456789';
+
+                foreach ($indexesMissingId as $bugIndex) {
+                    do {
+                        $id = upstreamGenerateRandomString($newIdsLength, $newIdsCharsPool);
+                    } while (isset($idsMap[$id]));
+
+                    $bugs[$bugIndex]['id'] = $id;
+                    $idsMap[$id] = $bugIndex;
+                }
+            }
+        }
+
+        return $bugs;
+    }
+
+    /**
+     * Create id for newly added bugs statuses/severities.
+     * This method is called right before field data is saved to db.
+     *
+     * @since   @todo
+     * @static
+     *
+     * @param   array           $value  Array of the new set of Bug statuses/severities.
+     * @param   array           $args   Field arguments.
+     * @param   \CMB2_Field     $field  The field object.
+     *
+     * @return  array           $value
+     */
+    public static function onBeforeSave($value, $args, $field)
+    {
+        if (is_array($value)) {
+            $value = self::createMissingIdsInSet($value);
+        }
+
+        return $value;
+    }
 }
 
 

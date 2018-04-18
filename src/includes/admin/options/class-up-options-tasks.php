@@ -97,7 +97,13 @@ class UpStream_Options_Tasks {
                         'remove_button' => __( 'Remove Entry', 'upstream' ),
                         'sortable'      => true, // beta
                     ),
+                    'sanitization_cb' => array($this, 'onBeforeSave'),
                     'fields'     => array(
+                        array(
+                            'name' => __( 'Hidden', 'upstream' ),
+                            'id'   => 'id',
+                            'type' => 'hidden',
+                        ),
                         array(
                             'name'      => __( 'Status Color', 'upstream' ),
                             'id'        => 'color',
@@ -138,8 +144,75 @@ class UpStream_Options_Tasks {
 
     }
 
+    /**
+     * Create missing id in a Tasks set.
+     *
+     * @since   @todo
+     * @static
+     *
+     * @param   array   $tasks     Array of Tasks.
+     *
+     * @return  array
+     */
+    public static function createMissingIdsInSet($tasks)
+    {
+        if (!is_array($tasks)) {
+            return false;
+        }
 
+        if (count($tasks) > 0) {
+            $indexesMissingId = array();
+            $idsMap = array();
 
+            foreach ($tasks as $taskIndex => $task) {
+                if (!isset($task['id'])
+                    || empty($task['id'])
+                ) {
+                    $indexesMissingId[] = $taskIndex;
+                } else {
+                    $idsMap[$task['id']] = $taskIndex;
+                }
+            }
+
+            if (count($indexesMissingId) > 0) {
+                $newIdsLength = 5;
+                $newIdsCharsPool = 'abcdefghijklmnopqrstuvwxyz0123456789';
+
+                foreach ($indexesMissingId as $taskIndex) {
+                    do {
+                        $id = upstreamGenerateRandomString($newIdsLength, $newIdsCharsPool);
+                    } while (isset($idsMap[$id]));
+
+                    $tasks[$taskIndex]['id'] = $id;
+                    $idsMap[$id] = $taskIndex;
+                }
+            }
+        }
+
+        return $tasks;
+    }
+
+    /**
+     * Create id for newly added tasks statuses.
+     * This method is called right before field data is saved to db.
+     *
+     * @since   @todo
+     * @static
+     *
+     * @param   array           $value  Array of the new set of Task statuses.
+     * @param   array           $args   Field arguments.
+     * @param   \CMB2_Field     $field  The field object.
+     *
+     * @return  array           $value
+     */
+    public static function onBeforeSave($value, $args, $field)
+    {
+        if (is_array($value)) {
+            $value = self::createMissingIdsInSet($value);
+        }
+
+        return $value;
+    }
 }
 
 

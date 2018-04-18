@@ -139,8 +139,10 @@ class UpStream_Admin_Project_Columns {
     private static $noneTag = '';
     private static $usersCache = array();
     private static $clientsCache = array();
-    private static $statusesColorsCache = array();
-    private static $bugsColorsCache = array();
+    private static $tasksStatuses = array();
+    private static $bugsStatuses = array();
+    private static $areTasksDisabled = null;
+    private static $areBugsDisabled = null;
 
     public function project_data( $column_name, $post_id ) {
         if ($column_name === 'project-status') {
@@ -210,22 +212,37 @@ class UpStream_Admin_Project_Columns {
         }
 
         if ($column_name === 'tasks') {
-            $areTasksDisabled = upstream_are_tasks_disabled();
-            if (!$areTasksDisabled) {
+            if (self::$areTasksDisabled === null) {
+                self::$areTasksDisabled = (bool)upstream_are_tasks_disabled();
+            }
+
+            if (!self::$areTasksDisabled) {
                 $counts = upstream_project_tasks_counts($post_id);
 
                 if (empty($counts)) {
                     echo self::$noneTag;
                 } else {
-                    if (empty(self::$statusesColorsCache)) {
-                        self::$statusesColorsCache = upstream_project_task_statuses_colors();
+                    if (empty(self::$tasksStatuses)) {
+                        self::$tasksStatuses = getTasksStatuses();
                     }
 
-                    foreach ($counts as $status => $count) {
-                        $color = isset(self::$statusesColorsCache[$status]) ? self::$statusesColorsCache[$status] : '#aaaaaa';
-                        $color = esc_attr($color);
+                    foreach ($counts as $taskStatusId => $count) {
+                        $taskStatus = isset(self::$tasksStatuses[$taskStatusId])
+                            ? self::$tasksStatuses[$taskStatusId]
+                            : array(
+                                'color' => '#aaaaaa',
+                                'name'  => $taskStatusId
+                            );
 
-                        echo '<span style="border-color:' . $color . '" class="status ' . esc_attr(strtolower($status)) . '"><span class="count" style="background-color:' . $color . '">' . $count . '</span>' . $status . '</span>';
+                        printf(
+                            '<span class="status %s" style="border-color: %s">
+                                <span class="count" style="background-color: %2$s">%3$s</span> %4$s
+                            </span>',
+                            esc_attr(strtolower($taskStatus['name'])),
+                            esc_attr($taskStatus['color']),
+                            $count,
+                            $taskStatus['name']
+                        );
                     }
                 }
             }
@@ -234,21 +251,36 @@ class UpStream_Admin_Project_Columns {
         }
 
         if ($column_name === 'bugs') {
-            $areBugsDisabled = upstream_are_bugs_disabled();
-            if (!$areBugsDisabled) {
+            if (self::$areBugsDisabled === null) {
+                self::$areBugsDisabled = (bool)upstream_are_bugs_disabled();
+            }
+
+            if (!self::$areBugsDisabled) {
                 $counts = upstream_project_bugs_counts($post_id);
                 if (empty($counts)) {
                     echo self::$noneTag;
                 } else {
-                    if (empty(self::$bugsColorsCache)) {
-                        self::$bugsColorsCache = upstream_project_bug_statuses_colors($post_id);
+                    if (empty(self::$bugsStatuses)) {
+                        self::$bugsStatuses = getBugsStatuses();
                     }
 
-                    foreach ($counts as $status => $count) {
-                        $color = isset(self::$bugsColorsCache[$status]) ? self::$bugsColorsCache[$status] : '#aaaaaa';
-                        $color = esc_attr($color);
+                    foreach ($counts as $bugStatusId => $count) {
+                        $bugStatus = isset(self::$bugsStatuses[$bugStatusId])
+                            ? self::$bugsStatuses[$bugStatusId]
+                            : array(
+                                'color' => '#aaaaaa',
+                                'name'  => $bugStatusId
+                            );
 
-                        echo '<span style="border-color:' . $color . '" class="status ' . esc_attr(strtolower($status)) . '"><span class="count" style="background-color:' . $color . '">' . $count . '</span>' . $status . '</span>';
+                        printf(
+                            '<span class="status %s" style="border-color: %s">
+                                <span class="count" style="background-color: %2$s">%3$s</span> %4$s
+                            </span>',
+                            esc_attr(strtolower($bugStatus['name'])),
+                            esc_attr($bugStatus['color']),
+                            $count,
+                            $bugStatus['name']
+                        );
                     }
                 }
             }

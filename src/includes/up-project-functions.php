@@ -122,7 +122,7 @@ function upstream_project_milestone_by_id( $id = 0, $milestone_id = 0 ) {
 }
 function upstream_project_milestone_colors() {
     $option     = get_option( 'upstream_milestones' );
-    $colors     = wp_list_pluck( $option['milestones'], 'color', 'title' );
+    $colors     = wp_list_pluck( $option['milestones'], 'color', 'id' );
     return apply_filters( 'upstream_project_milestone_colors', $colors );
 }
 /* ------------ TASKS -------------- */
@@ -147,7 +147,7 @@ function upstream_project_tasks_counts( $id = 0 ) {
 
 function upstream_project_task_statuses_colors() {
     $option     = get_option( 'upstream_tasks' );
-    $colors     = wp_list_pluck( $option['statuses'], 'color', 'name' );
+    $colors     = wp_list_pluck( $option['statuses'], 'color', 'id' );
     return apply_filters( 'upstream_project_tasks_statuses_colors', $colors );
 }
 function upstream_project_task_status_color( $id = 0, $item_id ) {
@@ -178,13 +178,13 @@ function upstream_project_bugs_counts( $id = 0 ) {
 
 function upstream_project_bug_statuses_colors() {
     $option     = get_option( 'upstream_bugs' );
-    $colors     = wp_list_pluck( $option['statuses'], 'color', 'name' );
+    $colors     = wp_list_pluck( $option['statuses'], 'color', 'id' );
     return apply_filters( 'upstream_project_bugs_statuses_colors', $colors );
 }
 
 function upstream_project_bug_severity_colors() {
     $option     = get_option( 'upstream_bugs' );
-    $colors     = wp_list_pluck( $option['severities'], 'color', 'name' );
+    $colors     = wp_list_pluck( $option['severities'], 'color', 'id' );
     return apply_filters( 'upstream_project_bugs_severity_colors', $colors );
 }
 

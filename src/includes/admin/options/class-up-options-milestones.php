@@ -96,7 +96,13 @@ class UpStream_Options_Milestones {
                         'remove_button' => sprintf( __( 'Remove %s', 'upstream' ), upstream_milestone_label() ),
                         'sortable'      => true, // beta
                     ),
+                    'sanitization_cb' => array($this, 'onBeforeSave'),
                     'fields'     => array(
+                        array(
+                            'name' => __( 'Hidden', 'upstream' ),
+                            'id'   => 'id',
+                            'type' => 'hidden',
+                        ),
                         array(
                             'name' => __( 'Color', 'upstream' ),
                             'id'   => 'color',
@@ -117,6 +123,75 @@ class UpStream_Options_Milestones {
 
     }
 
+    /**
+     * Create missing id in a Milestones set.
+     *
+     * @since   @todo
+     * @static
+     *
+     * @param   array   $milestones     Array of Milestones.
+     *
+     * @return  array
+     */
+    public static function createMissingIdsInSet($milestones)
+    {
+        if (!is_array($milestones)) {
+            return false;
+        }
+
+        if (count($milestones) > 0) {
+            $indexesMissingId = array();
+            $idsMap = array();
+
+            foreach ($milestones as $milestoneIndex => $milestone) {
+                if (!isset($milestone['id'])
+                    || empty($milestone['id'])
+                ) {
+                    $indexesMissingId[] = $milestoneIndex;
+                } else {
+                    $idsMap[$milestone['id']] = $milestoneIndex;
+                }
+            }
+
+            if (count($indexesMissingId) > 0) {
+                $newIdsLength = 5;
+                $newIdsCharsPool = 'abcdefghijklmnopqrstuvwxyz0123456789';
+
+                foreach ($indexesMissingId as $milestoneIndex) {
+                    do {
+                        $id = upstreamGenerateRandomString($newIdsLength, $newIdsCharsPool);
+                    } while (isset($idsMap[$id]));
+
+                    $milestones[$milestoneIndex]['id'] = $id;
+                    $idsMap[$id] = $milestoneIndex;
+                }
+            }
+        }
+
+        return $milestones;
+    }
+
+    /**
+     * Create id for newly added milestones.
+     * This method is called right before field data is saved to db.
+     *
+     * @since   @todo
+     * @static
+     *
+     * @param   array           $value  Array of the new set of Milestones.
+     * @param   array           $args   Field arguments.
+     * @param   \CMB2_Field     $field  The field object.
+     *
+     * @return  array           $value
+     */
+    public static function onBeforeSave($value, $args, $field)
+    {
+        if (is_array($value)) {
+            $value = self::createMissingIdsInSet($value);
+        }
+
+        return $value;
+    }
 }
 
 endif;

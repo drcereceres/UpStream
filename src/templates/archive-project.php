@@ -124,13 +124,14 @@ $categories = (array)get_terms(array(
       <div class="col-md-12">
         <div class="x_panel">
           <div class="x_title">
-            <h2><?php echo esc_html($i18n['LB_PROJECTS']); ?></h2>
+            <h2><i class="fa fa-briefcase"></i> <?php echo esc_html($i18n['LB_PROJECTS']); ?></h2>
             <ul class="nav navbar-right panel_toolbox">
               <li>
                 <a class="collapse-link">
                   <i class="fa fa-chevron-up"></i>
                 </a>
               </li>
+              <?php do_action('upstream_project_project_top_right'); ?>
             </ul>
           <div class="clearfix"></div>
         </div>

@@ -255,7 +255,7 @@ function upstream_admin_get_options_milestones() {
     $array = array();
     if( $milestones ) {
         foreach ($milestones as $milestone) {
-            $array[$milestone['title']] = $milestone['title'];
+            $array[$milestone['id']] = $milestone['title'];
         }
     }
     return $array;
@@ -297,21 +297,20 @@ function upstream_admin_output_milestone_hidden_data( $field_args, $field ) {
  */
 function upstream_admin_get_project_milestones( $field ) {
 
-    // get the current saved milestones
-    $milestones = get_post_meta( $field->object_id, '_upstream_project_milestones', true );
-    // if we have a milestone
-    if( $milestones ) {
-        $array = array();
-        foreach ($milestones as $milestone) {
-            if( isset( $milestone['milestone'] ) && isset( $milestone['id'] ) ) {
-                $array[$milestone['id']] = $milestone['milestone'];
+    $milestonesTitles = getMilestonesTitles();
+    $projectMilestones = (array)get_post_meta((int)$field->object_id, '_upstream_project_milestones', true);
+
+    $data = array();
+
+    if (count($projectMilestones) > 0) {
+        foreach ($projectMilestones as $milestone) {
+            if (isset($milestone['milestone'])) {
+                $data[$milestone['id']] = isset($milestonesTitles[$milestone['milestone']]) ? $milestonesTitles[$milestone['milestone']] : $milestone['milestone'];
             }
         }
-        return $array;
     }
 
-    return null;
-
+    return $data;
 }
 
 /* ======================================================================================
@@ -329,7 +328,7 @@ function upstream_admin_get_task_statuses() {
     $array = array();
     if( $statuses ) {
         foreach ($statuses as $status) {
-            $array[$status['name']] = $status['name'];
+            $array[$status['id']] = $status['name'];
         }
     }
     return $array;
@@ -370,7 +369,7 @@ function upstream_admin_get_bug_statuses() {
     $array = array();
     if( $statuses ) {
         foreach ($statuses as $status) {
-            $array[$status['name']] = $status['name'];
+            $array[$status['id']] = $status['name'];
         }
     }
     return $array;
@@ -387,7 +386,7 @@ function upstream_admin_get_bug_severities() {
     $array = array();
     if( $severities ) {
         foreach ($severities as $severity) {
-            $array[$severity['name']] = $severity['name'];
+            $array[$severity['id']] = $severity['name'];
         }
     }
     return $array;

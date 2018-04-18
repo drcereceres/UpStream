@@ -4,9 +4,14 @@
  * Description: A WordPress Project Management plugin by UpStream.
  * Author: UpStream
  * Author URI: https://upstreamplugin.com
- * Version: 1.16.4
+ * Version: 1.16.4@issue/413
  * Text Domain: upstream
  * Domain Path: /languages
+ *
+ * @todo: create ids if needed to milestones/tasks statuses/bugs statuses and bugs severities - in upstream.php
+ * @todo: create ids in install.php
+ * @todo: if some of them is changed, track down all projects and switch the item with the correspondent id
+ * @todo: add support for these ids everywhere
  */
 
 use \UpStream\Comments;
@@ -187,7 +192,7 @@ final class UpStream
         $this->define( 'UPSTREAM_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
         $this->define( 'UPSTREAM_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
         $this->define( 'UPSTREAM_PLUGIN_BASENAME', plugin_basename( __FILE__ ) );
-        $this->define( 'UPSTREAM_VERSION', '1.16.4' );
+        $this->define( 'UPSTREAM_VERSION', '1.16.4@issue/413' );
     }
 
     /**
@@ -335,6 +340,10 @@ final class UpStream
 
             update_option('upstream:role_upstream_users:drop_edit_others_projects', 1);
         }
+
+        self::createMilestonesIds();
+        self::createTasksStatusesIds();
+        self::createBugsStatusesIds();
 
         Comments::instantiate();
 
@@ -497,6 +506,206 @@ final class UpStream
         }
 
         return $queryArgs;
+    }
+
+    /**
+     * Create ids for all existent milestones.
+     *
+     * @since   @todo
+     * @access  private
+     * @static
+     */
+    private static function createMilestonesIds()
+    {
+        $continue = !(bool)get_option('upstream:created_milestones_args_ids');
+        if (!$continue) return;
+
+        $milestones = get_option('upstream_milestones');
+        if (isset($milestones['milestones'])) {
+            $milestones['milestones'] = UpStream_Options_Milestones::createMissingIdsInSet($milestones['milestones']);
+
+            update_option('upstream_milestones', $milestones);
+
+            $milestones = $milestones['milestones'];
+
+            // Update existent Milestone data across all Projects.
+            global $wpdb;
+
+            $metas = $wpdb->get_results(sprintf(
+                'SELECT `post_id`, `meta_value`
+                FROM `%s`
+                WHERE `meta_key` = "_upstream_project_milestones"',
+                $wpdb->prefix . 'postmeta'
+            ));
+
+            if (count($metas) > 0) {
+                $getMilestoneIdByTitle = function($needle) use (&$milestones) {
+                    foreach ($milestones as $milestone) {
+                        if ($needle === $milestone['title']) {
+                            return $milestone['id'];
+                        }
+                    }
+
+                    return false;
+                };
+
+                $replaceMilestoneWithItsId = function($milestone) use (&$milestones, &$getMilestoneIdByTitle) {
+                    if (isset($milestone['milestone'])) {
+                        $milestoneId = $getMilestoneIdByTitle($milestone['milestone']);
+                        if ($milestoneId !== false) {
+                            $milestone['milestone'] = $milestoneId;
+                        }
+                    }
+
+                    return $milestone;
+                };
+
+                foreach ($metas as $meta) {
+                    $projectId = (int)$meta->post_id;
+
+                    $data = array_filter(maybe_unserialize((string)$meta->meta_value));
+                    $data = array_map($replaceMilestoneWithItsId, $data);
+
+                    update_post_meta($projectId, '_upstream_project_milestones', $data);
+                }
+            }
+
+            update_option('upstream:created_milestones_args_ids', 1);
+        }
+    }
+
+    // @todo
+    private static function createTasksStatusesIds()
+    {
+        $continue = !(bool)get_option('upstream:created_tasks_args_ids');
+        if (!$continue) return;
+
+        $tasks = get_option('upstream_tasks');
+        if (isset($tasks['statuses'])) {
+            $tasks['statuses'] = UpStream_Options_Tasks::createMissingIdsInSet($tasks['statuses']);
+
+            update_option('upstream_tasks', $tasks);
+
+            $tasks = $tasks['statuses'];
+
+            // Update existent Tasks status across all Projects.
+            global $wpdb;
+
+            $metas = $wpdb->get_results(sprintf(
+                'SELECT `post_id`, `meta_value`
+                FROM `%s`
+                WHERE `meta_key` = "_upstream_project_tasks"',
+                $wpdb->prefix . 'postmeta'
+            ));
+
+            if (count($metas) > 0) {
+                $getTaskStatusIdByTitle = function($needle) use (&$tasks) {
+                    foreach ($tasks as $task) {
+                        if ($needle === $task['name']) {
+                            return $task['id'];
+                        }
+                    }
+
+                    return false;
+                };
+
+                $replaceTaskStatusWithItsId = function($task) use (&$getTaskStatusIdByTitle) {
+                    if (isset($task['status'])) {
+                        $taskId = $getTaskStatusIdByTitle($task['status']);
+                        if ($taskId !== false) {
+                            $task['status'] = $taskId;
+                        }
+                    }
+
+                    return $task;
+                };
+
+                foreach ($metas as $meta) {
+                    if (empty($meta->meta_value)) continue;
+
+                    $projectId = (int)$meta->post_id;
+
+                    $data = array_filter(maybe_unserialize((string)$meta->meta_value));
+                    $data = array_map($replaceTaskStatusWithItsId, $data);
+
+                    update_post_meta($projectId, '_upstream_project_tasks', $data);
+                }
+            }
+
+            update_option('upstream:created_tasks_args_ids', 1);
+        }
+    }
+
+    // @todo
+    private static function createBugsStatusesIds()
+    {
+        $continue = !(bool)get_option('upstream:created_bugs_args_ids');
+        if (!$continue) return;
+
+        $bugs = get_option('upstream_bugs');
+        if (isset($bugs['statuses']) && isset($bugs['severities'])) {
+            $bugs['statuses'] = UpStream_Options_Bugs::createMissingIdsInSet($bugs['statuses']);
+            $bugs['severities'] = UpStream_Options_Bugs::createMissingIdsInSet($bugs['severities']);
+
+            update_option('upstream_bugs', $bugs);
+
+            // Update existent Bugs statuses/severities across all Projects.
+            global $wpdb;
+
+            $metas = $wpdb->get_results(sprintf(
+                'SELECT `post_id`, `meta_value`
+                FROM `%s`
+                WHERE `meta_key` = "_upstream_project_bugs"',
+                $wpdb->prefix . 'postmeta'
+            ));
+
+            if (count($metas) > 0) {
+                $getBugArgIdByTitle = function($needle, $argName = 'statuses') use (&$bugs) {
+                    foreach ($bugs[$argName] as $bug) {
+                        if ($needle === $bug['name']) {
+                            return $bug['id'];
+                        }
+                    }
+
+                    return false;
+                };
+
+                $replaceBugArgsWithItsIds = function($bug) use (&$getBugArgIdByTitle) {
+                    if (isset($bug['status'])
+                        && !empty($bug['status'])
+                    ) {
+                        $bugArgId = $getBugArgIdByTitle($bug['status']);
+                        if ($bugArgId !== false) {
+                            $bug['status'] = $bugArgId;
+                        }
+                    }
+
+                    if (isset($bug['severity'])
+                        && !empty($bug['severity'])
+                    ) {
+                        $bugArgId = $getBugArgIdByTitle($bug['severity'], 'severities');
+                        if ($bugArgId !== false) {
+                            $bug['severity'] = $bugArgId;
+                        }
+                    }
+
+                    return $bug;
+                };
+
+                foreach ($metas as $meta) {
+                    if (empty($meta->meta_value)) continue;
+
+                    $projectId = (int)$meta->post_id;
+
+                    $data = array_filter(maybe_unserialize((string)$meta->meta_value));
+                    $data = array_map($replaceBugArgsWithItsIds, $data);
+
+                    update_post_meta($projectId, '_upstream_project_bugs', $data);
+                }
+            }
+
+            update_option('upstream:created_bugs_args_ids', 1);
+        }
     }
 }
 endif;

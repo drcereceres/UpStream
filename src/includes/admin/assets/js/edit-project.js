@@ -253,10 +253,9 @@
     function replaceTitles( $group ) {
 
         if( $group && $group.attr( 'id' ) == '_upstream_project_milestones' ) {
-
             $group.find( '.cmb-group-title' ).each( function() {
                 var $this   = $( this );
-                var title   = $this.next().find( '[id$="milestone"]' ).val();
+                var title   = $this.next().find( '[id$="milestone"] option[selected]' ).text();
                 var start   = $this.next().find( '[id$="start_date"]' ).val();
                 var end     = $this.next().find( '[id$="end_date"]' ).val();
                 var dates   = '<div class="dates">' + start + ' - ' + end + '</div>';
