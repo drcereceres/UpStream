@@ -19,11 +19,6 @@ if (!upstream_user_can_access_project(get_current_user_id(), upstream_post_id())
 
 set_time_limit(120);
 
-
-$_startTime = new \DateTime();
-
-
-
 $pluginOptions = get_option('upstream_general');
 $pageTitle = get_bloginfo('name');
 $siteUrl = get_bloginfo('url');
@@ -185,4 +180,3 @@ do_action( 'upstream_after_project_content' );
 
 include_once 'global/footer.php';
 ?>
-
