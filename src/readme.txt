@@ -144,6 +144,9 @@ and this project adheres to [Semantic Versioning](http://semver.org).
 
 = [1.16.4] - @todo =
 
+Changed:
+* Increased maximum execution time for frontend scripts 
+
 Fixed:
 * Fixed uncommon bug where jQuery UI DatePicker plugin was being loaded on frontend
 

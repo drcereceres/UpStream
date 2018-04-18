@@ -8,6 +8,7 @@ if (!defined('ABSPATH')) exit;
  * This template can be overridden by copying it to wp-content/themes/yourtheme/upstream/archive-project.php.
  */
 
+set_time_limit(120);
 
 $pluginOptions = get_option('upstream_general');
 $pageTitle = get_bloginfo('name');

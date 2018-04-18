@@ -17,6 +17,8 @@ if (!upstream_user_can_access_project(get_current_user_id(), upstream_post_id())
     exit;
 }
 
+set_time_limit(120);
+
 
 $_startTime = new \DateTime();
 
