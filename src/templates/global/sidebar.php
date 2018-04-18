@@ -1,7 +1,5 @@
 <?php
 if (!defined('ABSPATH')) exit;
-// @todo
-// return;
 
 $isSingle = is_single();
 if ($isSingle) {
