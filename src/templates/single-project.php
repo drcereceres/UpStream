@@ -17,9 +17,75 @@ if (!upstream_user_can_access_project(get_current_user_id(), upstream_post_id())
     exit;
 }
 
+set_time_limit(120);
+
+
+$_startTime = new \DateTime();
+
+
+
+$pluginOptions = get_option('upstream_general');
+$pageTitle = get_bloginfo('name');
+$siteUrl = get_bloginfo('url');
+$projectsListUrl = get_post_type_archive_link('project');
+$supportUrl = upstream_admin_support($pluginOptions);
+$logOutUrl = upstream_logout_url();
+$areClientsEnabled = !is_clients_disabled();
+
+$currentUser = (object)upstream_user_data();
+
+$projectsList = array();
+if (isset($currentUser->projects)) {
+    if (is_array($currentUser->projects) && count($currentUser->projects) > 0) {
+        foreach ($currentUser->projects as $project_id => $project) {
+            $data = (object)array(
+                'id'                 => $project_id,
+                'author'             => (int)$project->post_author,
+                'created_at'         => (string)$project->post_date_gmt,
+                'modified_at'        => (string)$project->post_modified_gmt,
+                'title'              => $project->post_title,
+                'slug'               => $project->post_name,
+                'status'             => $project->post_status,
+                'permalink'          => get_permalink($project_id)
+            );
+
+            $projectsList[$project_id] = $data;
+        }
+
+        unset($project, $project_id);
+    }
+
+    unset($currentUser->projects);
+}
+
+$projectsListCount = count($projectsList);
+
+$i18n = array(
+    'LB_PROJECT'        => upstream_project_label(),
+    'LB_PROJECTS'       => upstream_project_label_plural(),
+    'LB_TASKS'          => upstream_task_label_plural(),
+    'LB_BUGS'           => upstream_bug_label_plural(),
+    'LB_LOGOUT'         => __('Log Out', 'upstream'),
+    'LB_ENDS_AT'        => __('Ends at', 'upstream'),
+    'MSG_SUPPORT'       => upstream_admin_support_label($pluginOptions),
+    'LB_TITLE'          => __('Title', 'upstream'),
+    'LB_TOGGLE_FILTERS' => __('Toggle Filters', 'upstream'),
+    'LB_EXPORT'         => __('Export', 'upstream'),
+    'LB_PLAIN_TEXT'     => __('Plain Text', 'upstream'),
+    'LB_CSV'            => __('CSV', 'upstream'),
+    'LB_CLIENT'         => upstream_client_label(),
+    'LB_CLIENTS'        => upstream_client_label_plural(),
+    'LB_STATUS'         => __('Status', 'upstream'),
+    'LB_STATUSES'       => __('Statuses', 'upstream'),
+    'LB_CATEGORIES'     => __('Categories'),
+    'LB_PROGRESS'       => __('Progress', 'upstream'),
+    'LB_NONE_UCF'       => __('None', 'upstream'),
+    'LB_NONE'           => __('none', 'upstream'),
+    'LB_COMPLETE'       => __('%s Complete', 'upstream')
+);
 
 upstream_get_template_part( 'global/header.php' );
-upstream_get_template_part( 'global/sidebar.php' );
+include_once 'global/sidebar.php';
 upstream_get_template_part( 'global/top-nav.php' );
 
 /*
@@ -109,13 +175,14 @@ while ( have_posts() ) : the_post(); ?>
             <?php endif; ?>
     </div>
 </div>
-
+<input type="hidden" id="project_id" value="<?php echo upstream_post_id(); ?>">
 <?php endwhile;
-    /**
-     * upstream_after_project_content hook.
-     *
-     */
-    do_action( 'upstream_after_project_content' );
+/**
+ * upstream_after_project_content hook.
+ *
+ */
+do_action( 'upstream_after_project_content' );
 
-    upstream_get_template_part( 'global/footer.php' );
-    ?>
+include_once 'global/footer.php';
+?>
+

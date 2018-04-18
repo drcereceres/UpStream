@@ -1,25 +1,19 @@
 <?php
 if (!defined('ABSPATH')) exit;
+// @todo
+// return;
 
-$blogInfoUrl = get_bloginfo('url');
-
-$projectsListURL = get_post_type_archive_link('project');
-
-$labelProjectPlural = upstream_project_label_plural();
-$labelTaskPlural = upstream_task_label_plural();
-$labelBugPlural = upstream_bug_label_plural();
-
-$areMilestonesDisabledAtAll = upstream_disable_milestones();
-$areMilestonesDisabledForThisProject = upstream_are_milestones_disabled();
-$areTasksDisabledAtAll = upstream_disable_tasks();
-$areTasksDisabledForThisProject = upstream_are_tasks_disabled();
-$areBugsDisabledAtAll = upstream_disable_bugs();
-$areBugsDisabledForThisProject = upstream_are_bugs_disabled();
-$areFilesDisabledForThisProject = upstream_are_files_disabled();
-$areCommentsDisabled = upstream_are_comments_disabled();
-
-$user = upstream_user_data();
-$pluginOptions = get_option('upstream_general');
+$isSingle = is_single();
+if ($isSingle) {
+    $areMilestonesDisabledAtAll = upstream_disable_milestones();
+    $areMilestonesDisabledForThisProject = upstream_are_milestones_disabled();
+    $areTasksDisabledAtAll = upstream_disable_tasks();
+    $areTasksDisabledForThisProject = upstream_are_tasks_disabled();
+    $areBugsDisabledAtAll = upstream_disable_bugs();
+    $areBugsDisabledForThisProject = upstream_are_bugs_disabled();
+    $areFilesDisabledForThisProject = upstream_are_files_disabled();
+    $areCommentsDisabled = upstream_are_comments_disabled();
+}
 ?>
 
 <?php do_action('upstream_before_sidebar'); ?>
@@ -27,27 +21,23 @@ $pluginOptions = get_option('upstream_general');
 <div class="col-md-3 left_col">
     <div class="left_col scroll-view">
         <div class="navbar nav_title">
-            <a href="<?php echo $blogInfoUrl; ?>" class="site_title">
-                <span><?php echo get_bloginfo('name'); ?></span>
+            <a href="<?php echo esc_url($siteUrl); ?>" class="site_title">
+                <span><?php echo esc_html($pageTitle); ?></span>
             </a>
         </div>
-
         <div class="clearfix"></div>
-
         <!-- menu profile quick info -->
         <div class="profile">
             <div class="profile_pic">
-                <img src="<?php echo upstream_current_user('avatar'); ?>" alt="" class="img-circle profile_img">
+                <img src="<?php echo esc_url($currentUser->avatar); ?>" alt="" class="img-circle profile_img">
             </div>
             <div class="profile_info">
-                <h2><?php echo esc_html(upstream_current_user('display_name')); ?></h2>
-                <p><?php echo esc_html(upstream_current_user('role')); ?></p>
+                <h2><?php echo esc_html($currentUser->display_name); ?></h2>
+                <p><?php echo esc_html($currentUser->role); ?></p>
             </div>
         </div>
         <!-- /menu profile quick info -->
-
         <br />
-
         <!-- sidebar menu -->
         <div id="sidebar-menu" class="main_menu_side hidden-print main_menu">
             <div class="menu_section">
@@ -55,20 +45,20 @@ $pluginOptions = get_option('upstream_general');
                 <ul class="nav side-menu">
                     <li>
                         <a>
-                            <i class="fa fa-home"></i> <?php echo $labelProjectPlural; ?>
+                            <i class="fa fa-home"></i> <?php echo esc_html($i18n['LB_PROJECTS']); ?>
                             <span class="fa fa-chevron-down"></span>
                         </a>
                         <ul class="nav child_menu">
                             <li>
-                                <a href="<?php echo $projectsListURL; ?>">
-                                    <?php printf(__('All %s', 'upstream'), $labelProjectPlural); ?>
+                                <a href="<?php echo esc_attr($projectsListUrl); ?>">
+                                    <?php printf(__('All %s', 'upstream'), $i18n['LB_PROJECTS']); ?>
                                 </a>
                             </li>
-                            <?php if (upstream_current_user('projects')): ?>
-                                <?php foreach (upstream_current_user('projects') as $key => $project_id): ?>
+                            <?php if ($projectsListCount > 0): ?>
+                                <?php foreach ($projectsList as $project_id => $project): ?>
                                 <li>
-                                    <a href="<?php echo get_permalink($project_id); ?>">
-                                        <?php echo get_the_title($project_id); ?>
+                                    <a href="<?php echo esc_url($project->permalink); ?>">
+                                        <?php echo esc_html($project->title); ?>
                                     </a>
                                 </li>
                                 <?php endforeach; ?>
@@ -77,8 +67,7 @@ $pluginOptions = get_option('upstream_general');
                     </li>
                 </ul>
             </div>
-
-            <?php if (is_single() && get_post_type() === 'project'): ?>
+            <?php if ($isSingle && get_post_type() === 'project'): ?>
                 <?php $project_id = get_the_ID(); ?>
                 <div class="menu_section">
                     <h3><?php echo get_the_title($project_id); ?></h3>
@@ -106,7 +95,7 @@ $pluginOptions = get_option('upstream_general');
                         <?php if (!$areTasksDisabledForThisProject && !$areTasksDisabledAtAll): ?>
                         <li>
                             <a href="#tasks">
-                                <i class="fa fa-wrench"></i> <?php echo $labelTaskPlural; ?>
+                                <i class="fa fa-wrench"></i> <?php echo $i18n['LB_TASKS']; ?>
                                 <?php
                                 if (function_exists('countItemsForUserOnProject')) {
                                     $itemsCount = countItemsForUserOnProject('tasks', get_current_user_id(), upstream_post_id());
@@ -125,7 +114,7 @@ $pluginOptions = get_option('upstream_general');
                         <?php if (!$areBugsDisabledAtAll && !$areBugsDisabledForThisProject): ?>
                         <li>
                             <a href="#bugs">
-                                <i class="fa fa-bug"></i> <?php echo $labelBugPlural; ?>
+                                <i class="fa fa-bug"></i> <?php echo $i18n['LB_BUGS']; ?>
                                 <?php
                                 if (function_exists('countItemsForUserOnProject')) {
                                     $itemsCount = countItemsForUserOnProject('bugs', get_current_user_id(), upstream_post_id());
@@ -162,19 +151,17 @@ $pluginOptions = get_option('upstream_general');
                     </ul>
                 </div>
             <?php endif; ?>
-
         </div>
         <!-- /sidebar menu -->
-
         <!-- /menu footer buttons -->
         <div class="sidebar-footer hidden-small">
-            <a href="<?php echo $projectsListURL; ?>" data-toggle="tooltip" data-placement="top" title="<?php printf(__('My %s', 'upstream'), $labelProjectPlural); ?>">
+            <a href="<?php echo esc_attr($projectsListUrl); ?>" data-toggle="tooltip" data-placement="top" title="<?php printf(__('My %s', 'upstream'), $i18n['LB_PROJECTS']); ?>">
                 <i class="fa fa-home"></i>
             </a>
-            <a href="<?php echo esc_url( upstream_admin_support($pluginOptions) ); ?>" data-toggle="tooltip" data-placement="top" title="<?php echo upstream_admin_support_label($pluginOptions) ?>" target="_blank" rel="noreferrer noopener">
+            <a href="<?php echo esc_url($supportUrl); ?>" data-toggle="tooltip" data-placement="top" title="<?php echo esc_attr($i18n['MSG_SUPPORT']); ?>" target="_blank" rel="noreferrer noopener">
                 <i class="fa fa-question-circle"></i>
             </a>
-            <a href="<?php echo esc_url(upstream_logout_url()); ?>" data-toggle="tooltip" data-placement="top" title="<?php _e('Log Out', 'upstream'); ?>">
+            <a href="<?php echo esc_url($logOutUrl); ?>" data-toggle="tooltip" data-placement="top" title="<?php echo esc_attr($i18n['LB_LOGOUT']); ?>">
                 <i class="fa fa-sign-out"></i>
             </a>
         </div>
