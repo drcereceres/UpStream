@@ -4,7 +4,7 @@ Tags: project, manage, management, project management, project manager, wordpres
 Requires at least: 4.5
 Tested up to: 4.9
 Requires PHP: 5.6
-Stable tag: 1.16.3
+Stable tag: 1.16.4
 License: GPL-3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -141,6 +141,18 @@ If you were having date issues within Projects, please clear your cache and re-s
 
 The format is based on [Keep a Changelog](http://keepachangelog.com)
 and this project adheres to [Semantic Versioning](http://semver.org).
+
+= [1.16.4] - 2018-04-18 =
+
+Changed:
+* Increased maximum execution time for frontend scripts
+* Minor performance enhancements on front end pages
+
+Fixed:
+* Fixed uncommon bug where jQuery UI DatePicker plugin was being loaded on frontend
+* Fixed filters on admin project page that can have multiple values
+* Fixed permissions check failing for items having multiple assignees
+* Fixed PHP warnings
 
 = [1.16.3] - 2018-04-02 =
 

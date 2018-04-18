@@ -436,7 +436,7 @@ class UpStream_Metaboxes_Projects {
           </div>
           <div class="up-c-filter">
             <label for="<?php echo $prefix . 'assignee'; ?>" class="up-s-mb-2"><?php _e('Assignee', 'upstream'); ?></label>
-            <select id="<?php echo $prefix . 'assignee'; ?>" class="up-o-filter o-select2" data-column="assigned_to" data-placeholder="" multiple>
+            <select id="<?php echo $prefix . 'assignee'; ?>" class="up-o-filter o-select2" data-column="assigned_to" data-placeholder="" data-compare-operator="contains" multiple>
               <option></option>
               <option value="<?php echo $currentUserId; ?>"><?php _e('Me', 'upstream'); ?></option>
               <option value="__none__"><?php _e('Nobody', 'upstream'); ?></option>
@@ -504,7 +504,7 @@ class UpStream_Metaboxes_Projects {
           </div>
           <div class="up-c-filter">
             <label for="<?php echo $prefix . 'assignee'; ?>" class="up-s-mb-2"><?php _e('Assignee', 'upstream'); ?></label>
-            <select id="<?php echo $prefix . 'assignee'; ?>" class="up-o-filter o-select2" data-column="assigned_to" multiple data-placeholder="">
+            <select id="<?php echo $prefix . 'assignee'; ?>" class="up-o-filter o-select2" data-column="assigned_to" multiple data-placeholder="" data-compare-operator="contains">
               <option></option>
               <option value="<?php echo $currentUserId; ?>"><?php _e('Me', 'upstream'); ?></option>
               <option value="__none__"><?php _e('Nobody', 'upstream'); ?></option>
@@ -518,7 +518,7 @@ class UpStream_Metaboxes_Projects {
           </div>
           <div class="up-c-filter">
             <label for="<?php echo $prefix . 'status'; ?>" class="up-s-mb-2"><?php _e('Status', 'upstream'); ?></label>
-            <select id="<?php echo $prefix . 'status'; ?>" class="up-o-filter o-select2" data-column="status" data-placeholder="" multiple>
+            <select id="<?php echo $prefix . 'status'; ?>" class="up-o-filter o-select2" data-column="status" data-placeholder="" multiple data-compare-operator="contains">
               <option></option>
               <option value="__none__"><?php _e('None', 'upstream'); ?></option>
               <optgroup label="<?php _e('Statuses', 'upstream'); ?>">
@@ -533,7 +533,7 @@ class UpStream_Metaboxes_Projects {
               && upstream_disable_milestones()): ?>
           <div class="up-c-filter">
             <label for="<?php echo $prefix . 'milestone'; ?>" class="up-s-mb-2"><?php echo upstream_milestone_label(); ?></label>
-            <select id="<?php echo $prefix . 'milestone'; ?>" class="up-o-filter o-select2" data-column="milestone" data-placeholder="" multiple>
+            <select id="<?php echo $prefix . 'milestone'; ?>" class="up-o-filter o-select2" data-column="milestone" data-placeholder="" multiple data-compare-operator="contains">
               <option></option>
               <option value="__none__"><?php _e('None', 'upstream'); ?></option>
               <optgroup label="<?php echo upstream_milestone_label_plural(); ?>">
@@ -587,7 +587,7 @@ class UpStream_Metaboxes_Projects {
           </div>
           <div class="up-c-filter">
             <label for="<?php echo $prefix . 'assignee'; ?>" class="up-s-mb-2"><?php _e('Assignee', 'upstream'); ?></label>
-            <select id="<?php echo $prefix . 'assignee'; ?>" class="up-o-filter o-select2" data-column="assigned_to" data-placeholder="" multiple>
+            <select id="<?php echo $prefix . 'assignee'; ?>" class="up-o-filter o-select2" data-column="assigned_to" data-placeholder="" multiple data-compare-operator="contains">
               <option></option>
               <option value="<?php echo $currentUserId; ?>"><?php _e('Me', 'upstream'); ?></option>
               <option value="__none__"><?php _e('Nobody', 'upstream'); ?></option>
@@ -601,7 +601,7 @@ class UpStream_Metaboxes_Projects {
           </div>
           <div class="up-c-filter">
             <label for="<?php echo $prefix . 'severity'; ?>" class="up-s-mb-2"><?php _e('Severities', 'upstream'); ?></label>
-            <select id="<?php echo $prefix . 'severity'; ?>" class="up-o-filter o-select2" data-column="severity" data-placeholder="" multiple>
+            <select id="<?php echo $prefix . 'severity'; ?>" class="up-o-filter o-select2" data-column="severity" data-placeholder="" multiple data-compare-operator="contains">
               <option></option>
               <option value="__none__"><?php _e('None', 'upstream'); ?></option>
               <optgroup label="<?php _e('Severities', 'upstream'); ?>">
@@ -613,7 +613,7 @@ class UpStream_Metaboxes_Projects {
           </div>
           <div class="up-c-filter">
             <label for="<?php echo $prefix . 'status'; ?>" class="up-s-mb-2"><?php _e('Status', 'upstream'); ?></label>
-            <select id="<?php echo $prefix . 'status'; ?>" class="up-o-filter o-select2" data-column="status" data-placeholder="" multiple>
+            <select id="<?php echo $prefix . 'status'; ?>" class="up-o-filter o-select2" data-column="status" data-placeholder="" multiple data-compare-operator="contains">
               <option></option>
               <option value="__none__"><?php _e('None', 'upstream'); ?></option>
               <optgroup label="<?php _e('Statuses', 'upstream'); ?>">
@@ -658,7 +658,7 @@ class UpStream_Metaboxes_Projects {
           </div>
           <div class="up-c-filter">
             <label for="<?php echo $prefix . 'uploaded_by'; ?>" class="up-s-mb-2"><?php _e('Uploaded by', 'upstream'); ?></label>
-            <select id="<?php echo $prefix . 'uploaded_by'; ?>" class="up-o-filter o-select2" data-column="created_by" data-placeholder="" multiple>
+            <select id="<?php echo $prefix . 'uploaded_by'; ?>" class="up-o-filter o-select2" data-column="created_by" data-placeholder="" multiple data-compare-operator="contains">
               <option></option>
               <option value="<?php echo $currentUserId; ?>"><?php _e('Me', 'upstream'); ?></option>
               <option value="__none__"><?php _e('Nobody', 'upstream'); ?></option>
