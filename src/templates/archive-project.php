@@ -329,16 +329,25 @@ $categories = (array)get_terms(array(
                     </div>
                     <small><?php printf($i18n['LB_COMPLETE'], $project->progress . '%'); ?></small>
                   </td>
-                  <td data-column="status" data-value="<?php echo $project->status !== null ? esc_attr($project->status['status']) : '__none__'; ?>">
+                  <?php
+                  if ($project->status !== null && is_array($project->status)) {
+                      $statusTitle = isset($project->status['status']) ? $project->status['status'] : '';
+                      $statusColor = isset($project->status['color']) ? $project->status['color'] : '#aaa';
+                  } else {
+                      $statusTitle = '';
+                      $statusColor = '#aaa';
+                  }
+                  ?>
+                  <td data-column="status" data-value="<?php echo !empty($statusTitle) ? esc_attr($statusTitle) : '__none__'; ?>">
                     <?php if ($project->status !== null): ?>
-                      <span class="label up-o-label" style="background-color: <?php echo esc_attr($project->status['color']); ?>;"><?php echo esc_html($project->status['status']); ?></span>
+                      <span class="label up-o-label" style="background-color: <?php echo esc_attr($statusColor); ?>;"><?php echo !empty($statusTitle) ? esc_html($statusTitle) : $l['LB_NONE']; ?></span>
                     <?php else: ?>
                       <i class="s-text-color-gray"><?php echo esc_html($i18n['LB_NONE']); ?></i>
                     <?php endif; ?>
                   </td>
-                  <td data-column="categories" data-value="<?php echo count($project->categories) ? esc_attr(implode(',', array_keys($project->categories))) : '__none__'; ?>">
+                  <td data-column="categories" data-value="<?php echo count($project->categories) ? esc_attr(implode(',', array_keys((array)$project->categories))) : '__none__'; ?>">
                     <?php if (count($project->categories) > 0): ?>
-                      <?php echo esc_attr(implode(', ', array_values($project->categories))); ?>
+                      <?php echo esc_attr(implode(', ', array_values((array)$project->categories))); ?>
                     <?php else: ?>
                       <i class="s-text-color-gray"><?php echo esc_html($i18n['LB_NONE']); ?></i>
                     <?php endif;?>

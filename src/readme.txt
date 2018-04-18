@@ -150,6 +150,7 @@ Changed:
 
 Fixed:
 * Fixed uncommon bug where jQuery UI DatePicker plugin was being loaded on frontend
+* Fixed PHP warnings
 
 = [1.16.3] - 2018-04-02 =
 
