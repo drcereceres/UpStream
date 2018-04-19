@@ -107,3 +107,19 @@ add_action( 'wp_enqueue_scripts', 'upstream_enqueue_styles_scripts', 1000 ); // 
 
 // Removes the "next"/"prev" <link rel /> tags. This prevents links to another projects appearing on the HTML code.
 remove_action('wp_head', 'adjacent_posts_rel_link_wp_head');
+
+function upstream_deregister_assets()
+{
+    $isAdmin = is_admin();
+    $postType = get_post_type();
+
+    if ($isAdmin
+        || $postType !== 'project'
+    ) {
+        return;
+    }
+
+    wp_dequeue_script('jquery-ui-datepicker');
+    wp_deregister_script('jquery-ui-datepicker');
+}
+add_action( 'wp_enqueue_scripts', 'upstream_deregister_assets', 10);

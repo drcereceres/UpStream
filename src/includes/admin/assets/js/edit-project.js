@@ -1433,7 +1433,10 @@
           filtersHasChanged = true;
 
           theColumn = $('[name$="['+ filter.column +']"]', tr);
-          columnValue = theColumn.val();
+          if (theColumn.length === 0) {
+            theColumn = $('[name$="['+ filter.column +'][]"]', tr);
+          }
+          columnValue = theColumn.val() || '';
 
           if (theColumn.hasClass('hasDatepicker') && columnValue.length > 0) {
             filter.value = +new Date(filter.value);
@@ -1446,10 +1449,18 @@
               shouldDisplay = comparator.test(columnValue);
             } else {
               for (var valueIndex in filter.value) {
-                comparator = new RegExp(filter.value[valueIndex], 'i');
-                if (comparator.test(columnValue)) {
+                var theValue = filter.value[valueIndex];
+                theValue = theValue.length > 0 && theValue !== '__none__' ? theValue : '';
+
+                if (theValue === columnValue) {
                   shouldDisplay = true;
                   break;
+                } else if (theValue !== '') {
+                  comparator = new RegExp(theValue, 'i');
+                  if (comparator.test(columnValue)) {
+                    shouldDisplay = true;
+                    break;
+                  }
                 }
               }
             }
