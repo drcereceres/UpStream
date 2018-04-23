@@ -7,11 +7,6 @@
  * Version: 1.16.4@issue/413
  * Text Domain: upstream
  * Domain Path: /languages
- *
- * @todo: create ids if needed to milestones/tasks statuses/bugs statuses and bugs severities - in upstream.php
- * @todo: create ids in install.php
- * @todo: if some of them is changed, track down all projects and switch the item with the correspondent id
- * @todo: add support for these ids everywhere
  */
 
 use \UpStream\Comments;
