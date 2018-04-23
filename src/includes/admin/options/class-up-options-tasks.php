@@ -147,7 +147,7 @@ class UpStream_Options_Tasks {
     /**
      * Create ids for all existent tasks statuses.
      *
-     * @since   @todo
+     * @since   1.17.0
      * @static
      */
     public static function createTasksStatusesIds()

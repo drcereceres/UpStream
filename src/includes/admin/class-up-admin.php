@@ -430,7 +430,7 @@ class UpStream_Admin {
      * Create id for newly added project/bugs/tasks statuses.
      * This method is called right before field data is saved to db.
      *
-     * @since   @todo
+     * @since   1.17.0
      * @static
      *
      * @param   array           $value  Array of the new data set.
@@ -451,7 +451,7 @@ class UpStream_Admin {
     /**
      * Create missing id in a rowset.
      *
-     * @since   @todo
+     * @since   1.17.0
      * @static
      *
      * @param   array   $rowset     Data array;

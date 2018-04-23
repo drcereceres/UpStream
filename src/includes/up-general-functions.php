@@ -1377,7 +1377,7 @@ function userCanReceiveCommentRepliesNotification($user_id = 0)
 /**
  * Retrieve a list of UpStream category-terms as associative array.
  *
- * @since   @todo
+ * @since   1.17.0
  *
  * @param   int   $parent_id  The category parent ID.
  *
@@ -1415,7 +1415,7 @@ function upfetchCategories($parent_id = 0)
         /**
          * Nest all children recursively.
          *
-         * @since   @todo
+         * @since   1.17.0
          *
          * @param   stdClass    $needle     The term.
          * @param   array       &$haystack  Terms list.
@@ -1439,7 +1439,7 @@ function upfetchCategories($parent_id = 0)
         /**
          * Prepend "-" as needed indicating depth levels to a list items.
          *
-         * @since   @todo
+         * @since   1.17.0
          *
          * @param   stdClass    $subject      The term.
          * @param   int         $depth        Depth level.
@@ -1497,7 +1497,7 @@ function upfetchCategories($parent_id = 0)
 /**
  * Retrieve a list of UpStream tag-terms as associative array.
  *
- * @since   @todo
+ * @since   1.17.0
  *
  * @return  array
  */
@@ -1523,7 +1523,7 @@ function upFetchTags()
 /**
  * Retrieve a list of Milestones available on this instance.
  *
- * @since   @todo
+ * @since   1.17.0
  *
  * @return  array
  */
@@ -1546,7 +1546,7 @@ function getMilestones()
 /**
  * Retrieve a list of Milestones titles available on this instance.
  *
- * @since   @todo
+ * @since   1.17.0
  *
  * @return  array
  */
@@ -1567,7 +1567,7 @@ function getMilestonesTitles()
 /**
  * Retrieve a list of Tasks available on this instance.
  *
- * @since   @todo
+ * @since   1.17.0
  *
  * @return  array
  */
@@ -1590,7 +1590,7 @@ function getTasksStatuses()
 /**
  * Retrieve a list of Task statuses titles available on this instance.
  *
- * @since   @todo
+ * @since   1.17.0
  *
  * @return  array
  */

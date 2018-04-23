@@ -126,7 +126,7 @@ class UpStream_Options_Milestones {
     /**
      * Create ids for all existent milestones.
      *
-     * @since   @todo
+     * @since   1.17.0
      * @static
      */
     public static function createMilestonesIds()

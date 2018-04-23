@@ -188,7 +188,7 @@ class UpStream_Options_Bugs {
     /**
      * Create ids for all existent bugs statuses/severities.
      *
-     * @since   @todo
+     * @since   1.17.0
      * @static
      */
     public static function createBugsStatusesIds()

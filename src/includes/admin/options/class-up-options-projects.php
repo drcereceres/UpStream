@@ -144,7 +144,7 @@ class UpStream_Options_Projects {
     /**
      * Create ids for all existent project statuses.
      *
-     * @since   @todo
+     * @since   1.17.0
      * @static
      */
     public static function createProjectsStatusesIds()
