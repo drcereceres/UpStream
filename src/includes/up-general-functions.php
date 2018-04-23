@@ -1373,3 +1373,270 @@ function userCanReceiveCommentRepliesNotification($user_id = 0)
 
     return $receiveNotifications;
 }
+
+/**
+ * Retrieve a list of UpStream category-terms as associative array.
+ *
+ * @since   @todo
+ *
+ * @param   int   $parent_id  The category parent ID.
+ *
+ * @return  array
+ */
+function upfetchCategories($parent_id = 0)
+{
+    $options = array();
+
+    $queryArgs = array(
+        'taxonomy'   => 'project_category',
+        'hide_empty' => false
+    );
+
+    if ($parent_id > 0) {
+        $queryArgs['child_of'] = $parent_id;
+    }
+
+    $rowset = (array)get_terms($queryArgs);
+    $termsCount = count($rowset);
+
+    $terms = array();
+    foreach ($rowset as $row) {
+        $terms[] = (object)array(
+            'id'        => (int)$row->term_id,
+            'title'     => $row->name,
+            'parent_id' => (int)$row->parent,
+            'children'  => array()
+        );
+    }
+    unset($row, $rowset);
+
+    $map = array();
+    if ($termsCount > 0) {
+        /**
+         * Nest all children recursively.
+         *
+         * @since   @todo
+         *
+         * @param   stdClass    $needle     The term.
+         * @param   array       &$haystack  Terms list.
+         */
+        $nestChildren = function($needle, &$haystack = array()) use (&$nestChildren) {
+            if ($needle->parent_id > 0) {
+                if (isset($haystack[$needle->parent_id])) {
+                    if (!isset($haystack[$needle->parent_id]->children)) {
+                        $haystack[$needle->parent_id]->children = array();
+                    }
+
+                    $haystack[$needle->parent_id]->children[$needle->id] = $needle;
+                } else if (!empty($haystack)) {
+                    foreach ($haystack as &$row) {
+                        $nestChildren($needle, $row->children);
+                    }
+                }
+            }
+        };
+
+        /**
+         * Prepend "-" as needed indicating depth levels to a list items.
+         *
+         * @since   @todo
+         *
+         * @param   stdClass    $subject      The term.
+         * @param   int         $depth        Depth level.
+         * @param   array       &$options     The resultant options list.
+         * @param   int         &$lastParent  The last parent ID found.
+         */
+        $applyDepthIndicator = function($subject, $depth, &$options, &$lastParent) use (&$applyDepthIndicator) {
+            if ($lastParent !== $subject->parent_id) {
+                $depth++;
+            }
+
+            $value = trim(str_repeat('-', $depth) . ' ' . $subject->title);
+            $options[$subject->id] = $value;
+
+            if (!isset($subject->children)) {
+                return;
+            }
+
+            foreach ($subject->children as $row) {
+                $applyDepthIndicator($row, $depth, $options, $lastParent);
+            }
+        };
+
+        foreach ($terms as $termIndex => $term) {
+            if ($parent_id > 0) {
+                $firstLevel = $parent_id === $term->parent_id;
+            } else {
+                $firstLevel = $term->parent_id === 0;
+            }
+
+            if ($firstLevel) {
+                $map[$term->id] = &$terms[$termIndex];
+            }
+        }
+
+        for ($i = 0; $i < $termsCount; $i++) {
+            foreach ($terms as $termIndex => $term) {
+                if ($term->parent_id > 0) {
+                    $nestChildren($term, $map);
+                }
+            }
+        }
+
+        $options = array();
+        $lastParent = $parent_id;
+
+        foreach ($map as $term) {
+            $applyDepthIndicator($term, 0, $options, $lastParent);
+        }
+    }
+
+    return $options;
+}
+
+/**
+ * Retrieve a list of UpStream tag-terms as associative array.
+ *
+ * @since   @todo
+ *
+ * @return  array
+ */
+function upFetchTags()
+{
+    $queryArgs = array(
+        'taxonomy'   => 'upstream_tag',
+        'hide_empty' => false
+    );
+
+    $rowset = (array)get_terms($queryArgs);
+    $termsCount = count($rowset);
+
+    $terms = array();
+    foreach ($rowset as $row) {
+        $terms[(int)$row->term_id] = $row->name;
+    }
+    unset($row, $rowset);
+
+    return $terms;
+}
+
+/**
+ * Retrieve a list of Milestones available on this instance.
+ *
+ * @since   @todo
+ *
+ * @return  array
+ */
+function getMilestones()
+{
+    $data = array();
+
+    $milestones = (array)get_option('upstream_milestones');
+    if (isset($milestones['milestones'])) {
+        foreach ($milestones['milestones'] as $milestone) {
+            if (isset($milestone['id'])) {
+                $data[$milestone['id']] = $milestone;
+            }
+        }
+    }
+
+    return $data;
+}
+
+/**
+ * Retrieve a list of Milestones titles available on this instance.
+ *
+ * @since   @todo
+ *
+ * @return  array
+ */
+function getMilestonesTitles()
+{
+    $data = array();
+
+    $milestones = getMilestones();
+    foreach ($milestones as $milestone) {
+        if (isset($milestone['id'])) {
+            $data[$milestone['id']] = $milestone['title'];
+        }
+    }
+
+    return $data;
+}
+
+/**
+ * Retrieve a list of Tasks available on this instance.
+ *
+ * @since   @todo
+ *
+ * @return  array
+ */
+function getTasksStatuses()
+{
+    $data = array();
+
+    $tasks = (array)get_option('upstream_tasks');
+    if (isset($tasks['statuses'])) {
+        foreach ($tasks['statuses'] as $task) {
+            if (isset($task['id'])) {
+                $data[$task['id']] = $task;
+            }
+        }
+    }
+
+    return $data;
+}
+
+/**
+ * Retrieve a list of Task statuses titles available on this instance.
+ *
+ * @since   @todo
+ *
+ * @return  array
+ */
+function getTasksStatusesTitles()
+{
+    $data = array();
+
+    $tasks = getTasksStatuses();
+    foreach ($tasks as $task) {
+        if (isset($task['id'])) {
+            $data[$task['id']] = $task['name'];
+        }
+    }
+
+    return $data;
+}
+
+
+function getBugsStatuses()
+{
+    $data = array();
+
+    $bugs = (array)get_option('upstream_bugs');
+    if (isset($bugs['statuses'])) {
+        foreach ($bugs['statuses'] as $bugStatus) {
+            if (isset($bugStatus['id'])) {
+                $data[$bugStatus['id']] = $bugStatus;
+            }
+        }
+    }
+
+    return $data;
+}
+
+function getBugsSeverities()
+{
+    $data = array();
+
+    $bugs = (array)get_option('upstream_bugs');
+    if (isset($bugs['severities'])) {
+        foreach ($bugs['severities'] as $bugSeverity) {
+            if (isset($bugSeverity['id'])) {
+                $data[$bugSeverity['id']] = $bugSeverity;
+            }
+        }
+    }
+
+    return $data;
+}

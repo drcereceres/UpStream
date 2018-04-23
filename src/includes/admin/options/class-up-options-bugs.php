@@ -96,7 +96,13 @@ class UpStream_Options_Bugs {
                         'remove_button' => __( 'Remove Entry', 'upstream' ),
                         'sortable'      => true, // beta
                     ),
+                    'sanitization_cb' => array('UpStream_Admin', 'onBeforeSave'),
                     'fields'     => array(
+                        array(
+                            'name' => __( 'Hidden', 'upstream' ),
+                            'id'   => 'id',
+                            'type' => 'hidden',
+                        ),
                         array(
                             'name'      => __( 'Status Color', 'upstream' ),
                             'id'        => 'color',
@@ -146,6 +152,11 @@ class UpStream_Options_Bugs {
                     ),
                     'fields'     => array(
                         array(
+                            'name' => __( 'Hidden', 'upstream' ),
+                            'id'   => 'id',
+                            'type' => 'hidden',
+                        ),
+                        array(
                             'name'      => __( 'Severity Color', 'upstream' ),
                             'id'        => 'color',
                             'type'      => 'colorpicker',
@@ -174,7 +185,82 @@ class UpStream_Options_Bugs {
 
     }
 
+    /**
+     * Create ids for all existent bugs statuses/severities.
+     *
+     * @since   @todo
+     * @static
+     */
+    public static function createBugsStatusesIds()
+    {
+        $continue = !(bool)get_option('upstream:created_bugs_args_ids');
+        if (!$continue) return;
 
+        $bugs = get_option('upstream_bugs');
+        if (isset($bugs['statuses']) && isset($bugs['severities'])) {
+            $bugs['statuses'] = UpStream_Admin::createMissingIdsInSet($bugs['statuses']);
+            $bugs['severities'] = UpStream_Admin::createMissingIdsInSet($bugs['severities']);
+
+            update_option('upstream_bugs', $bugs);
+
+            // Update existent Bugs statuses/severities across all Projects.
+            global $wpdb;
+
+            $metas = $wpdb->get_results(sprintf(
+                'SELECT `post_id`, `meta_value`
+                FROM `%s`
+                WHERE `meta_key` = "_upstream_project_bugs"',
+                $wpdb->prefix . 'postmeta'
+            ));
+
+            if (count($metas) > 0) {
+                $getBugArgIdByTitle = function($needle, $argName = 'statuses') use (&$bugs) {
+                    foreach ($bugs[$argName] as $bug) {
+                        if ($needle === $bug['name']) {
+                            return $bug['id'];
+                        }
+                    }
+
+                    return false;
+                };
+
+                $replaceBugArgsWithItsIds = function($bug) use (&$getBugArgIdByTitle) {
+                    if (isset($bug['status'])
+                        && !empty($bug['status'])
+                    ) {
+                        $bugArgId = $getBugArgIdByTitle($bug['status']);
+                        if ($bugArgId !== false) {
+                            $bug['status'] = $bugArgId;
+                        }
+                    }
+
+                    if (isset($bug['severity'])
+                        && !empty($bug['severity'])
+                    ) {
+                        $bugArgId = $getBugArgIdByTitle($bug['severity'], 'severities');
+                        if ($bugArgId !== false) {
+                            $bug['severity'] = $bugArgId;
+                        }
+                    }
+
+                    return $bug;
+                };
+
+                foreach ($metas as $meta) {
+                    if (empty($meta->meta_value)) continue;
+
+                    $projectId = (int)$meta->post_id;
+
+                    $data = array_filter(maybe_unserialize((string)$meta->meta_value));
+                    $data = array_map($replaceBugArgsWithItsIds, $data);
+
+                    update_post_meta($projectId, '_upstream_project_bugs', $data);
+                }
+            }
+
+            update_option('upstream:created_bugs_args_ids', 1);
+        }
+    }
 }
 
 

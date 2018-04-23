@@ -336,6 +336,11 @@ final class UpStream
             update_option('upstream:role_upstream_users:drop_edit_others_projects', 1);
         }
 
+        UpStream_Options_Projects::createProjectsStatusesIds();
+        UpStream_Options_Milestones::createMilestonesIds();
+        UpStream_Options_Tasks::createTasksStatusesIds();
+        UpStream_Options_Bugs::createBugsStatusesIds();
+
         Comments::instantiate();
 
         // Init action.

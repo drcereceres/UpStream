@@ -97,7 +97,13 @@ class UpStream_Options_Projects {
                         'remove_button' => __( 'Remove Entry', 'upstream' ),
                         'sortable'      => true, // beta
                     ),
+                    'sanitization_cb' => array('UpStream_Admin', 'onBeforeSave'),
                     'fields'     => array(
+                        array(
+                            'name' => __( 'Hidden', 'upstream' ),
+                            'id'   => 'id',
+                            'type' => 'hidden',
+                        ),
                         array(
                             'name'      => __( 'Status Color', 'upstream' ),
                             'id'        => 'color',
@@ -133,11 +139,57 @@ class UpStream_Options_Projects {
         );
 
         return $options;
-
     }
 
+    /**
+     * Create ids for all existent project statuses.
+     *
+     * @since   @todo
+     * @static
+     */
+    public static function createProjectsStatusesIds()
+    {
+        $continue = !(bool)get_option('upstream:created_projects_args_ids');
+        if (!$continue) return;
 
+        $options = get_option('upstream_projects');
+        if (isset($options['statuses'])) {
+            $options['statuses'] = UpStream_Admin::createMissingIdsInSet($options['statuses']);
 
+            update_option('upstream_projects', $options);
+
+            $statuses = array();
+            foreach ($options['statuses'] as $row) {
+                $statuses[$row['name']] = $row['id'];
+            }
+
+            // Update existent Milestone data across all Projects.
+            global $wpdb;
+
+            $metas = $wpdb->get_results(sprintf(
+                'SELECT `post_id`, `meta_value`
+                FROM `%s`
+                WHERE `meta_key` = "_upstream_project_status"',
+                $wpdb->prefix . 'postmeta'
+            ));
+
+            if (count($metas) > 0) {
+                foreach ($metas as $meta) {
+                    if (empty($meta->meta_value)
+                        || !isset($statuses[$meta->meta_value])
+                    ) {
+                        continue;
+                    }
+
+                    $meta->meta_value = $statuses[$meta->meta_value];
+
+                    update_post_meta($meta->post_id, '_upstream_project_status', $meta->meta_value);
+                }
+            }
+
+            update_option('upstream:created_projects_args_ids', 1);
+        }
+    }
 }
 
 

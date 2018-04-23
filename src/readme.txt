@@ -144,6 +144,13 @@ and this project adheres to [Semantic Versioning](http://semver.org).
 
 = [1.17.0] - @todo =
 
+Added:
+* Added action "upstream:frontend.project.details.after_title"
+
+Fixed:
+* Fixed major architecture flaw where Projects were losing track of Project Statuses, Milestones Statuses, Tasks Statuses, Bugs Statuses/Severities if they were changed through UpStream settings
+* Fixed some Projects description not being rendered as HTML
+
 = [1.16.4] - 2018-04-18 =
 
 Changed:
