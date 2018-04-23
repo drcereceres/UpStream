@@ -221,16 +221,12 @@ function getTasksFields($statuses = array(), $milestones = array(), $areMileston
 function getBugsFields($severities = array(), $statuses = array(), $areCommentsEnabled = null)
 {
     if (empty($severities)) {
-        $severities = null;
+        $severities = getBugsSeverities();
     }
 
     if (empty($statuses)) {
-        $statuses = null;
+        $statuses = getBugsStatuses();
     }
-
-    // @todo
-    $severities = getBugsSeverities();
-    $statuses = getBugsStatuses();
 
     $options = null;
 

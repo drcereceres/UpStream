@@ -12,13 +12,13 @@ $bugsSettings = get_option('upstream_bugs');
 $bugsStatuses = $bugsSettings['statuses'];
 $statuses = array();
 foreach ($bugsStatuses as $status) {
-    $statuses[$status['name']] = $status;
+    $statuses[$status['id']] = $status;
 }
 
 $bugsSeverities = $bugsSettings['severities'];
 $severities = array();
 foreach ($bugsSeverities as $severity) {
-    $severities[$severity['name']] = $severity;
+    $severities[$severity['id']] = $severity;
 }
 unset($bugsSeverities);
 
@@ -167,7 +167,7 @@ $columnsSchema = \UpStream\Frontend\getBugsFields($severities, $statuses, $areCo
                   <option value="__none__"><?php _e('None', 'upstream'); ?></option>
                   <optgroup label="<?php _e('Severity', 'upstream'); ?>">
                     <?php foreach ($severities as $severity): ?>
-                    <option value="<?php echo $severity['name']; ?>"><?php echo $severity['name']; ?></option>
+                    <option value="<?php echo esc_attr($severity['id']); ?>"><?php echo esc_html($severity['name']); ?></option>
                     <?php endforeach; ?>
                   </optgroup>
                 </select>
@@ -183,7 +183,7 @@ $columnsSchema = \UpStream\Frontend\getBugsFields($severities, $statuses, $areCo
                   <option value="__none__"><?php _e('None', 'upstream'); ?></option>
                   <optgroup label="<?php _e('Status', 'upstream'); ?>">
                     <?php foreach ($statuses as $status): ?>
-                    <option value="<?php echo $status['name']; ?>"><?php echo $status['name']; ?></option>
+                    <option value="<?php echo esc_attr($status['id']); ?>"><?php echo esc_html($status['name']); ?></option>
                     <?php endforeach; ?>
                   </optgroup>
                 </select>
