@@ -12,15 +12,46 @@ function upstream_project_status( $id = 0 ) {
 }
 function upstream_project_statuses_colors() {
     $option     = get_option( 'upstream_projects' );
-    $colors     = wp_list_pluck( $option['statuses'], 'color', 'name' );
+    $colors     = wp_list_pluck( $option['statuses'], 'color', 'id' );
     return apply_filters( 'upstream_project_statuses_colors', $colors );
 }
-function upstream_project_status_color( $id = 0 ) {
-    $status = upstream_project_status( $id );
-    $colors = upstream_project_statuses_colors();
-    $color  = isset( $colors[$status] ) ? $colors[$status] : '#aaaaaa';
-    $result = array( 'status' => $status, 'color' => $color );
-    return apply_filters( 'upstream_project_status_color', $result );
+function upstream_get_all_project_statuses()
+{
+    $data = array();
+
+    $rowset = get_option('upstream_projects');
+    foreach ($rowset['statuses'] as $status) {
+        $data[$status['id']] = $status;
+    }
+
+    return $data;
+}
+function upstream_project_status_color($project_id = 0)
+{
+    $status = array(
+        'status' => '',
+        'color'  => '#aaa'
+    );
+
+    $projectStatusId = (string)upstream_project_status($project_id);
+    if (!empty($projectStatusId)) {
+        $rowset = get_option('upstream_projects');
+        if (!empty($rowset)
+            && !empty($rowset['statuses'])
+        ) {
+            foreach ($rowset['statuses'] as $row) {
+                if (isset($row['id'])
+                    && $row['id'] === $projectStatusId
+                ) {
+                    $status['status'] = $row['name'];
+                    $status['color'] = $row['color'];
+                    break;
+                }
+            }
+        }
+    }
+
+    return apply_filters('upstream_project_status_color', $status);
 }
 function upstream_project_status_type( $id = 0 ) {
     $project    = new UpStream_Project( $id );

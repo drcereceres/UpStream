@@ -44,6 +44,8 @@ $i18n = array(
 
 $currentUser = (object)upstream_user_data(@$_SESSION['upstream']['user_id']);
 
+$statuses = upstream_get_all_project_statuses();
+
 $projectsList = array();
 if (isset($currentUser->projects)) {
     if (is_array($currentUser->projects) && count($currentUser->projects) > 0) {
@@ -60,6 +62,7 @@ if (isset($currentUser->projects)) {
                 'startDateTimestamp' => (int)upstream_project_start_date($project_id),
                 'endDateTimestamp'   => (int)upstream_project_end_date($project_id),
                 'progress'           => (float)upstream_project_progress($project_id),
+                'status'             => (string)upstream_project_status($project_id),
                 'clientName'         => null,
                 'categories'         => array(),
                 'features'           => array(
@@ -74,8 +77,9 @@ if (isset($currentUser->projects)) {
                 $data->clientName = trim((string)upstream_project_client_name($project_id));
             }
 
-            $data->status = upstream_project_status_color($project_id);
-            $data->status = is_array($data->status) && !empty($data->status['status']) ? $data->status : null;
+            if (isset($statuses[$data->status])) {
+                $data->status = $statuses[$data->status];
+            }
 
             $data->timeframe = $data->startDate;
             if (!empty($data->endDate)) {
@@ -109,8 +113,6 @@ $projectsListCount = count($projectsList);
 upstream_get_template_part('global/header.php');
 include_once 'global/sidebar.php';
 upstream_get_template_part('global/top-nav.php');
-
-$statuses = upstream_project_statuses_colors();
 
 $categories = (array)get_terms(array(
     'taxonomy'   => 'project_category',
@@ -223,8 +225,8 @@ $categories = (array)get_terms(array(
                       <option value></option>
                       <option value="__none__"><?php echo esc_html($i18n['LB_NONE_UCF']); ?></option>
                       <optgroup label="<?php echo esc_html($i18n['LB_STATUSES']); ?>">
-                        <?php foreach ($statuses as $statusName => $statusColor): ?>
-                        <option value="<?php echo esc_attr($statusName); ?>"><?php echo esc_html($statusName); ?></option>
+                        <?php foreach ($statuses as $status): ?>
+                        <option value="<?php echo esc_attr($status['id']); ?>"><?php echo esc_html($status['name']); ?></option>
                         <?php endforeach; ?>
                       </optgroup>
                     </select>
@@ -332,16 +334,18 @@ $categories = (array)get_terms(array(
                   </td>
                   <?php
                   if ($project->status !== null && is_array($project->status)) {
-                      $statusTitle = isset($project->status['status']) ? $project->status['status'] : '';
-                      $statusColor = isset($project->status['color']) ? $project->status['color'] : '#aaa';
+                      $status = $project->status;
                   } else {
-                      $statusTitle = '';
-                      $statusColor = '#aaa';
+                      $status = array(
+                          'id'    => '',
+                          'name'  => '',
+                          'color' => '#aaa'
+                      );
                   }
                   ?>
-                  <td data-column="status" data-value="<?php echo !empty($statusTitle) ? esc_attr($statusTitle) : '__none__'; ?>">
-                    <?php if ($project->status !== null): ?>
-                      <span class="label up-o-label" style="background-color: <?php echo esc_attr($statusColor); ?>;"><?php echo !empty($statusTitle) ? esc_html($statusTitle) : $l['LB_NONE']; ?></span>
+                  <td data-column="status" data-value="<?php echo !empty($status['id']) ? esc_attr($status['id']) : '__none__'; ?>">
+                    <?php if ($project->status !== null || empty($status['id']) || empty($status['name'])): ?>
+                      <span class="label up-o-label" style="background-color: <?php echo esc_attr($status['color']); ?>;"><?php echo !empty($status['name']) ? esc_html($status['name']) : $i18n['LB_NONE']; ?></span>
                     <?php else: ?>
                       <i class="s-text-color-gray"><?php echo esc_html($i18n['LB_NONE']); ?></i>
                     <?php endif; ?>

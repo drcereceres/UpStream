@@ -97,7 +97,13 @@ class UpStream_Options_Projects {
                         'remove_button' => __( 'Remove Entry', 'upstream' ),
                         'sortable'      => true, // beta
                     ),
+                    'sanitization_cb' => array($this, 'onBeforeSave'),
                     'fields'     => array(
+                        array(
+                            'name' => __( 'Hidden', 'upstream' ),
+                            'id'   => 'id',
+                            'type' => 'hidden',
+                        ),
                         array(
                             'name'      => __( 'Status Color', 'upstream' ),
                             'id'        => 'color',
@@ -133,11 +139,77 @@ class UpStream_Options_Projects {
         );
 
         return $options;
-
     }
 
+    /**
+     * Create id for newly added project statuses.
+     * This method is called right before field data is saved to db.
+     *
+     * @since   @todo
+     * @static
+     *
+     * @param   array           $value  Array of the new set of Project statuses.
+     * @param   array           $args   Field arguments.
+     * @param   \CMB2_Field     $field  The field object.
+     *
+     * @return  array           $value
+     */
+    public static function onBeforeSave($value, $args, $field)
+    {
+        if (is_array($value)) {
+            $value = self::createMissingIdsInSet($value);
+        }
 
+        return $value;
+    }
 
+    /**
+     * Create missing id in a rowset.
+     *
+     * @since   @todo
+     * @static
+     *
+     * @param   array   $rowset     Array of data.
+     *
+     * @return  array
+     */
+    public static function createMissingIdsInSet($rowset)
+    {
+        if (!is_array($rowset)) {
+            return false;
+        }
+
+        if (count($rowset) > 0) {
+            $indexesMissingId = array();
+            $idsMap = array();
+
+            foreach ($rowset as $rowIndex => $row) {
+                if (!isset($row['id'])
+                    || empty($row['id'])
+                ) {
+                    $indexesMissingId[] = $rowIndex;
+                } else {
+                    $idsMap[$row['id']] = $rowIndex;
+                }
+            }
+
+            if (count($indexesMissingId) > 0) {
+                $newIdsLength = 5;
+                $newIdsCharsPool = 'abcdefghijklmnopqrstuvwxyz0123456789';
+
+                foreach ($indexesMissingId as $rowIndex) {
+                    do {
+                        $id = upstreamGenerateRandomString($newIdsLength, $newIdsCharsPool);
+                    } while (isset($idsMap[$id]));
+
+                    $rowset[$rowIndex]['id'] = $id;
+                    $idsMap[$id] = $rowIndex;
+                }
+            }
+        }
+
+        return $rowset;
+    }
 }
 
 
