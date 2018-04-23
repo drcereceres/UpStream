@@ -97,7 +97,7 @@ class UpStream_Options_Projects {
                         'remove_button' => __( 'Remove Entry', 'upstream' ),
                         'sortable'      => true, // beta
                     ),
-                    'sanitization_cb' => array($this, 'onBeforeSave'),
+                    'sanitization_cb' => array('UpStream_Admin', 'onBeforeSave'),
                     'fields'     => array(
                         array(
                             'name' => __( 'Hidden', 'upstream' ),
@@ -142,73 +142,53 @@ class UpStream_Options_Projects {
     }
 
     /**
-     * Create id for newly added project statuses.
-     * This method is called right before field data is saved to db.
+     * Create ids for all existent project statuses.
      *
      * @since   @todo
      * @static
-     *
-     * @param   array           $value  Array of the new set of Project statuses.
-     * @param   array           $args   Field arguments.
-     * @param   \CMB2_Field     $field  The field object.
-     *
-     * @return  array           $value
      */
-    public static function onBeforeSave($value, $args, $field)
+    public static function createProjectsStatusesIds()
     {
-        if (is_array($value)) {
-            $value = self::createMissingIdsInSet($value);
-        }
+        $continue = !(bool)get_option('upstream:created_projects_args_ids');
+        if (!$continue) return;
 
-        return $value;
-    }
+        $options = get_option('upstream_projects');
+        if (isset($options['statuses'])) {
+            $options['statuses'] = UpStream_Admin::createMissingIdsInSet($options['statuses']);
 
-    /**
-     * Create missing id in a rowset.
-     *
-     * @since   @todo
-     * @static
-     *
-     * @param   array   $rowset     Array of data.
-     *
-     * @return  array
-     */
-    public static function createMissingIdsInSet($rowset)
-    {
-        if (!is_array($rowset)) {
-            return false;
-        }
+            update_option('upstream_projects', $options);
 
-        if (count($rowset) > 0) {
-            $indexesMissingId = array();
-            $idsMap = array();
+            $statuses = array();
+            foreach ($options['statuses'] as $row) {
+                $statuses[$row['name']] = $row['id'];
+            }
 
-            foreach ($rowset as $rowIndex => $row) {
-                if (!isset($row['id'])
-                    || empty($row['id'])
-                ) {
-                    $indexesMissingId[] = $rowIndex;
-                } else {
-                    $idsMap[$row['id']] = $rowIndex;
+            // Update existent Milestone data across all Projects.
+            global $wpdb;
+
+            $metas = $wpdb->get_results(sprintf(
+                'SELECT `post_id`, `meta_value`
+                FROM `%s`
+                WHERE `meta_key` = "_upstream_project_status"',
+                $wpdb->prefix . 'postmeta'
+            ));
+
+            if (count($metas) > 0) {
+                foreach ($metas as $meta) {
+                    if (empty($meta->meta_value)
+                        || !isset($statuses[$meta->meta_value])
+                    ) {
+                        continue;
+                    }
+
+                    $meta->meta_value = $statuses[$meta->meta_value];
+
+                    update_post_meta($meta->post_id, '_upstream_project_status', $meta->meta_value);
                 }
             }
 
-            if (count($indexesMissingId) > 0) {
-                $newIdsLength = 5;
-                $newIdsCharsPool = 'abcdefghijklmnopqrstuvwxyz0123456789';
-
-                foreach ($indexesMissingId as $rowIndex) {
-                    do {
-                        $id = upstreamGenerateRandomString($newIdsLength, $newIdsCharsPool);
-                    } while (isset($idsMap[$id]));
-
-                    $rowset[$rowIndex]['id'] = $id;
-                    $idsMap[$id] = $rowIndex;
-                }
-            }
+            update_option('upstream:created_projects_args_ids', 1);
         }
-
-        return $rowset;
     }
 }
 

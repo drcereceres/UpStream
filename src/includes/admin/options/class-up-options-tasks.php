@@ -97,7 +97,7 @@ class UpStream_Options_Tasks {
                         'remove_button' => __( 'Remove Entry', 'upstream' ),
                         'sortable'      => true, // beta
                     ),
-                    'sanitization_cb' => array($this, 'onBeforeSave'),
+                    'sanitization_cb' => array('UpStream_Admin', 'onBeforeSave'),
                     'fields'     => array(
                         array(
                             'name' => __( 'Hidden', 'upstream' ),
@@ -145,73 +145,70 @@ class UpStream_Options_Tasks {
     }
 
     /**
-     * Create missing id in a Tasks set.
+     * Create ids for all existent tasks statuses.
      *
      * @since   @todo
      * @static
-     *
-     * @param   array   $tasks     Array of Tasks.
-     *
-     * @return  array
      */
-    public static function createMissingIdsInSet($tasks)
+    public static function createTasksStatusesIds()
     {
-        if (!is_array($tasks)) {
-            return false;
-        }
+        $continue = !(bool)get_option('upstream:created_tasks_args_ids');
+        if (!$continue) return;
 
-        if (count($tasks) > 0) {
-            $indexesMissingId = array();
-            $idsMap = array();
+        $tasks = get_option('upstream_tasks');
+        if (isset($tasks['statuses'])) {
+            $tasks['statuses'] = UpStream_Admin::createMissingIdsInSet($tasks['statuses']);
 
-            foreach ($tasks as $taskIndex => $task) {
-                if (!isset($task['id'])
-                    || empty($task['id'])
-                ) {
-                    $indexesMissingId[] = $taskIndex;
-                } else {
-                    $idsMap[$task['id']] = $taskIndex;
+            update_option('upstream_tasks', $tasks);
+
+            $tasks = $tasks['statuses'];
+
+            // Update existent Tasks status across all Projects.
+            global $wpdb;
+
+            $metas = $wpdb->get_results(sprintf(
+                'SELECT `post_id`, `meta_value`
+                FROM `%s`
+                WHERE `meta_key` = "_upstream_project_tasks"',
+                $wpdb->prefix . 'postmeta'
+            ));
+
+            if (count($metas) > 0) {
+                $getTaskStatusIdByTitle = function($needle) use (&$tasks) {
+                    foreach ($tasks as $task) {
+                        if ($needle === $task['name']) {
+                            return $task['id'];
+                        }
+                    }
+
+                    return false;
+                };
+
+                $replaceTaskStatusWithItsId = function($task) use (&$getTaskStatusIdByTitle) {
+                    if (isset($task['status'])) {
+                        $taskId = $getTaskStatusIdByTitle($task['status']);
+                        if ($taskId !== false) {
+                            $task['status'] = $taskId;
+                        }
+                    }
+
+                    return $task;
+                };
+
+                foreach ($metas as $meta) {
+                    if (empty($meta->meta_value)) continue;
+
+                    $projectId = (int)$meta->post_id;
+
+                    $data = array_filter(maybe_unserialize((string)$meta->meta_value));
+                    $data = array_map($replaceTaskStatusWithItsId, $data);
+
+                    update_post_meta($projectId, '_upstream_project_tasks', $data);
                 }
             }
 
-            if (count($indexesMissingId) > 0) {
-                $newIdsLength = 5;
-                $newIdsCharsPool = 'abcdefghijklmnopqrstuvwxyz0123456789';
-
-                foreach ($indexesMissingId as $taskIndex) {
-                    do {
-                        $id = upstreamGenerateRandomString($newIdsLength, $newIdsCharsPool);
-                    } while (isset($idsMap[$id]));
-
-                    $tasks[$taskIndex]['id'] = $id;
-                    $idsMap[$id] = $taskIndex;
-                }
-            }
+            update_option('upstream:created_tasks_args_ids', 1);
         }
-
-        return $tasks;
-    }
-
-    /**
-     * Create id for newly added tasks statuses.
-     * This method is called right before field data is saved to db.
-     *
-     * @since   @todo
-     * @static
-     *
-     * @param   array           $value  Array of the new set of Task statuses.
-     * @param   array           $args   Field arguments.
-     * @param   \CMB2_Field     $field  The field object.
-     *
-     * @return  array           $value
-     */
-    public static function onBeforeSave($value, $args, $field)
-    {
-        if (is_array($value)) {
-            $value = self::createMissingIdsInSet($value);
-        }
-
-        return $value;
     }
 }
 
