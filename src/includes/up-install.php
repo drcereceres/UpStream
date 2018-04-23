@@ -175,14 +175,17 @@ function upstream_add_default_options() {
         $projects['statuses'][0]['name']    = 'In Progress';
         $projects['statuses'][0]['color']   = '#5cbfd1';
         $projects['statuses'][0]['type']    = 'open';
+        $projects['statuses'][0]['id'] = $generateRandomId();
 
         $projects['statuses'][1]['name']    = 'Overdue';
         $projects['statuses'][1]['color']   = '#d15d5c';
         $projects['statuses'][1]['type']    = 'open';
+        $projects['statuses'][1]['id'] = $generateRandomId();
 
         $projects['statuses'][2]['name']    = 'Closed';
         $projects['statuses'][2]['color']   = '#6b6b6b';
         $projects['statuses'][2]['type']    = 'closed';
+        $projects['statuses'][2]['id'] = $generateRandomId();
 
         update_option( 'upstream_projects', $projects );
     }
@@ -221,18 +224,22 @@ function upstream_add_default_options() {
         $tasks['statuses'][0]['name']   = 'In Progress';
         $tasks['statuses'][0]['color']  = '#5cbfd1';
         $tasks['statuses'][0]['type']   = 'open';
+        $tasks['statuses'][0]['id'] = $generateRandomId();
 
         $tasks['statuses'][1]['name']   = 'Overdue';
         $tasks['statuses'][1]['color']  = '#d15d5c';
         $tasks['statuses'][1]['type']   = 'open';
+        $tasks['statuses'][1]['id'] = $generateRandomId();
 
         $tasks['statuses'][2]['name']   = 'Completed';
         $tasks['statuses'][2]['color']  = '#5cd165';
         $tasks['statuses'][2]['type']   = 'closed';
+        $tasks['statuses'][2]['id'] = $generateRandomId();
 
         $tasks['statuses'][3]['name']   = 'Closed';
         $tasks['statuses'][3]['color']  = '#6b6b6b';
         $tasks['statuses'][3]['type']   = 'closed';
+        $tasks['statuses'][3]['id'] = $generateRandomId();
 
         update_option( 'upstream_tasks', $tasks );
     }
@@ -244,27 +251,34 @@ function upstream_add_default_options() {
         $bugs['statuses'][0]['name']    = 'In Progress';
         $bugs['statuses'][0]['color']   = '#5cbfd1';
         $bugs['statuses'][0]['type']    = 'open';
+        $bugs['statuses'][0]['id'] = $generateRandomId();
 
         $bugs['statuses'][1]['name']    = 'Overdue';
         $bugs['statuses'][1]['color']   = '#d15d5c';
         $bugs['statuses'][1]['type']    = 'open';
+        $bugs['statuses'][1]['id'] = $generateRandomId();
 
         $bugs['statuses'][2]['name']    = 'Completed';
         $bugs['statuses'][2]['color']   = '#5cd165';
         $bugs['statuses'][2]['type']    = 'closed';
+        $bugs['statuses'][2]['id'] = $generateRandomId();
 
         $bugs['statuses'][3]['name']    = 'Closed';
         $bugs['statuses'][3]['color']   = '#6b6b6b';
         $bugs['statuses'][3]['type']    = 'closed';
+        $bugs['statuses'][3]['id'] = $generateRandomId();
 
         $bugs['severities'][0]['name']  = 'Critical';
         $bugs['severities'][0]['color'] = '#d15d5c';
+        $bugs['severities'][0]['id'] = $generateRandomId();
 
         $bugs['severities'][1]['name']  = 'Standard';
         $bugs['severities'][1]['color'] = '#d17f5c';
+        $bugs['severities'][1]['id'] = $generateRandomId();
 
         $bugs['severities'][2]['name']  = 'Minor';
         $bugs['severities'][2]['color'] = '#d1a65c';
+        $bugs['severities'][2]['id'] = $generateRandomId();
 
         update_option( 'upstream_bugs', $bugs );
     }
