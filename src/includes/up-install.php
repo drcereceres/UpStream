@@ -161,7 +161,9 @@ function upstream_add_default_options() {
     $generateRandomId = function() use (&$cachedIds) {
         do {
             $randomId = upstreamGenerateRandomString(5, 'abcdefghijklmnopqrstuvwxyz0123456789');
-        } while (in_array($randomId, $cachedIds));
+        } while (isset($cachedIds[$randomId])); // Isset is faster than in_array in this case.
+
+        $cachedIds[$randomId] = null;
 
         return $randomId;
     };
