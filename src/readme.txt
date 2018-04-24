@@ -147,6 +147,9 @@ and this project adheres to [Semantic Versioning](http://semver.org).
 Added:
 * Added action "upstream:frontend.project.details.after_title"
 
+Changed:
+* Increased spacing between filters section and data rows within Projects in wp-admin
+
 Fixed:
 * Fixed major architecture flaw where Projects were losing track of Project Statuses, Milestones Statuses, Tasks Statuses, Bugs Statuses/Severities if they were changed through UpStream settings
 * Fixed some Projects description not being rendered as HTML
