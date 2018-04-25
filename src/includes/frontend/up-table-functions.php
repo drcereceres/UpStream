@@ -597,7 +597,7 @@ function renderTableBody($data, $visibleColumnsSchema, $hiddenColumnsSchema, $ro
         <?php if (!empty($hiddenColumnsSchema)): ?>
         <tr data-parent="<?php echo $id; ?>" aria-expanded="false" style="display: none;">
           <td colspan="<?php echo $visibleColumnsSchemaCount; ?>">
-            <div class="hidden-xs">
+            <div>
               <?php foreach ($hiddenColumnsSchema as $columnName => $column):
               $columnValue = isset($row[$columnName]) ? $row[$columnName] : null;
               ?>

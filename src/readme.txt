@@ -155,6 +155,7 @@ Fixed:
 * Fixed some Projects description not being rendered as HTML
 * Small text update on the "Project Progress Icons" options
 * Fixed Notes/Description losing their formatting on frontend
+* Fixed bug where it was impossible to expand table rows on frontend browsing through small-screens
 
 = [1.16.4] - 2018-04-18 =
 
