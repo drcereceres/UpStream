@@ -496,7 +496,7 @@ function renderTableColumnValue($columnName, $columnValue, $column, $row, $rowTy
             $html = upstream_convert_UTC_date_to_timezone($columnValue, false);
         }
     } else if ($columnType === 'wysiwyg') {
-        $columnValue = preg_replace( '/(?!>[\s]*).\r?\n(?![\s]*<)/', '$0<br />',  trim((string)$columnValue) );
+        $columnValue = preg_replace('/(?!>[\s]*).\r?\n(?![\s]*<)/', '$0<br />', trim((string)$columnValue));
         if (strlen($columnValue) > 0) {
             $html = sprintf('<blockquote>%s</blockquote>', html_entity_decode($columnValue));
         } else {
