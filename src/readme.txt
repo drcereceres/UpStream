@@ -154,6 +154,7 @@ Fixed:
 * Fixed major architecture flaw where Projects were losing track of Project Statuses, Milestones Statuses, Tasks Statuses, Bugs Statuses/Severities if they were changed through UpStream settings
 * Fixed some Projects description not being rendered as HTML
 * Small text update on the "Project Progress Icons" options
+* Fixed Notes/Description losing their formatting on frontend
 
 = [1.16.4] - 2018-04-18 =
 
