@@ -136,13 +136,22 @@ class Upstream_Task_List extends WP_List_Table {
 
         <?php }
 
-        $status = $this->get_status_unique();
+        $status = self::getTasksStatuses();
+
         if ( ! empty( $status ) ) { ?>
 
             <select name='status' id='status' class='postform'>
                 <option value=''><?php printf( __( 'Show all %s', 'upstream' ), 'statuses' ) ?></option>
-                <?php foreach ( $status as $stati ) { ?>
-                    <option value="<?php echo strtolower( $stati ) ?>" <?php isset( $_GET['status'] ) ? selected( $_GET['status'], $stati ) : ''; ?>><?php echo esc_html( $stati ) ?></option>
+                <?php foreach ( $status as $stati ) {
+                    if (is_array($stati)) {
+                        $statusTitle = $stati['name'];
+                        $statusId = $stati['id'];
+                    } else {
+                        $statusTitle = $stati;
+                        $statusId = $stati;
+                    }
+                    ?>
+                    <option value="<?php echo $statusId; ?>" <?php isset( $_REQUEST['status'] ) ? selected( $_REQUEST['status'], $statusId ) : ''; ?>><?php echo esc_html( $statusTitle ) ?></option>
                 <?php } ?>
             </select>
 
@@ -199,15 +208,34 @@ class Upstream_Task_List extends WP_List_Table {
         return $data;
     }
 
-    private function get_status_unique() {
-        $tasks = self::get_tasks();
-        if ( empty( $tasks ) )
-            return;
+    private static $tasksStatuses = array();
 
-        $items = wp_list_pluck( $tasks, 'status' );
-        $items = array_unique( $items );
-        $items = array_filter( $items );
-        return $items;
+    private static function getTasksStatuses()
+    {
+        if (empty(self::$tasksStatuses)) {
+            $rowset = self::get_tasks();
+            if (count($rowset) === 0) return;
+
+            $statuses = getTasksStatuses();
+
+            $data = array();
+
+            foreach ($rowset as $row) {
+                if (!empty($row['status'])
+                    && isset($row['status'])
+                ) {
+                    $data[$row['status']] = isset($statuses[$row['status']])
+                        ? $statuses[$row['status']]
+                        : $row['status'];
+                }
+            }
+
+            self::$tasksStatuses = $data;
+        } else {
+            $data = self::$tasksStatuses;
+        }
+
+        return $data;
     }
 
     /**
@@ -216,25 +244,28 @@ class Upstream_Task_List extends WP_List_Table {
      * @return array
      */
     public static function count_statuses() {
+        $statuses = getTasksStatuses();
+        $rowset = self::get_tasks();
+        $data = array();
 
-        $tasks = self::get_tasks();
-        if( ! $tasks )
-            return null;
-
-        $statuses = wp_list_pluck( $tasks, 'status' );
-        $statuses = array_count_values( $statuses );
-
-        // double check so we have no empty keys or values
-        foreach ($statuses as $key => $value) {
-            if( empty( $key ) || is_null( $key ) || empty( $value ) || is_null( $value ) )
-                unset($statuses[$key]);
-            if( empty( $value ) || is_null( $value ) )
-                unset($statuses[$key]);
+        foreach ($rowset as $row) {
+            if (isset($row['status'])
+                && !empty($row['status'])
+                && isset($statuses[$row['status']])
+            ) {
+                $statusTitle = $statuses[$row['status']]['name'];
+                if (isset($data[$statusTitle])) {
+                    $data[$statusTitle]++;
+                } else {
+                    $data[$statusTitle] = 1;
+                }
+            }
         }
 
-        return $statuses;
+        return $data;
     }
 
+    private static $milestones = null;
 
     /**
      * Render a column when no column specific method exist.
@@ -263,12 +294,20 @@ class Upstream_Task_List extends WP_List_Table {
                 return $output;
 
             case 'milestone':
+                if (self::$milestones === null) {
+                    self::$milestones = getMilestones();
+                }
+
                 if (!upstream_are_milestones_disabled($item['project_id'])) {
                     if (isset($item['milestone']) && !empty($item['milestone'])) {
                         $milestone = upstream_project_milestone_by_id( $item['project_id'], $item['milestone'] );
                         $progress = $milestone['progress'] ? $milestone['progress'] : '0';
 
-                        return $milestone ? esc_html( $milestone['milestone'] ) . '<br>' . esc_html( $progress ) . '% ' . __( 'Complete', 'upstream' ) : '';
+                        $milestoneTitle = isset(self::$milestones[$milestone['milestone']])
+                            ? self::$milestones[$milestone['milestone']]['title']
+                            : $milestone['milestone'];
+
+                        return $milestone ? esc_html($milestoneTitle) . '<br>' . esc_html( $progress ) . '% ' . __( 'Complete', 'upstream' ) : '';
                     }
                 }
 
@@ -307,12 +346,30 @@ class Upstream_Task_List extends WP_List_Table {
                 }
 
             case 'status':
-                if (!isset($item['status']) || empty($item['status'])) {
+                if (!isset($item['status'])
+                    || empty($item['status'])
+                ) {
                     return '<span><i style="color: #CCC;">'. __('none', 'upstream') .'</i></span>';
                 }
 
-                $color  = upstream_project_task_status_color( $item['project_id'], $item['id'] );
-                $output = '<span style="border-color:' . esc_attr( $color ) . '" class="status ' . esc_attr( strtolower( $item['status'] ) ) . '"><span class="count" style="background-color:' . esc_attr( $color ) . '">1</span>' . esc_html( $item['status'] ) . '</span>';
+                $status = self::$tasksStatuses[$item['status']];
+
+                if (is_array($status)) {
+                    $statusTitle = $status['name'];
+                    $statusColor = $status['color'];
+                } else {
+                    $statusTitle = $status;
+                    $statusColor = '#aaaaaa';
+                }
+
+                $output = sprintf(
+                    '<span class="status %s" style="border-color: %s">
+                        <span class="count" style="background-color: %2$s">&nbsp;</span> %3$s
+                    </span>',
+                    esc_attr(strtolower($statusTitle)),
+                    esc_attr($statusColor),
+                    esc_html($statusTitle)
+                );
 
                 return $output;
 

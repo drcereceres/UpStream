@@ -4,7 +4,7 @@ Tags: project, manage, management, project management, project manager, wordpres
 Requires at least: 4.5
 Tested up to: 4.9
 Requires PHP: 5.6
-Stable tag: 1.16.4
+Stable tag: 1.17.0
 License: GPL-3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -141,6 +141,21 @@ If you were having date issues within Projects, please clear your cache and re-s
 
 The format is based on [Keep a Changelog](http://keepachangelog.com)
 and this project adheres to [Semantic Versioning](http://semver.org).
+
+= [1.17.0] - 2018-04-26 =
+
+Added:
+* Added action "upstream:frontend.project.details.after_title"
+
+Changed:
+* Increased spacing between filters section and data rows within Projects in wp-admin
+
+Fixed:
+* Fixed major architecture flaw where Projects were losing track of Project Statuses, Milestones Statuses, Tasks Statuses, Bugs Statuses/Severities if they were changed through UpStream settings
+* Fixed some Projects description not being rendered as HTML
+* Small text update on the "Project Progress Icons" options
+* Fixed Notes/Description losing their formatting on frontend
+* Fixed bug where it was impossible to expand table rows on frontend browsing through small-screens
 
 = [1.16.4] - 2018-04-18 =
 

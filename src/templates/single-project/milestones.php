@@ -14,7 +14,7 @@ $users = upstream_admin_get_all_project_users();
 
 $projectId = upstream_post_id();
 
-$milestones = UpStream_View::getMilestones($projectId);
+$projectMilestones = UpStream_View::getMilestones($projectId);
 
 $l = array(
     'LB_MILESTONE'     => upstream_milestone_label(),
@@ -166,7 +166,7 @@ $columnsSchema = \UpStream\Frontend\getMilestonesFields();
             <?php do_action('upstream:project.milestones.filters', $tableSettings, $columnsSchema, $projectId); ?>
           </div>
         </form>
-        <?php \UpStream\Frontend\renderTable($tableSettings, $columnsSchema, $milestones, 'milestone', $projectId); ?>
+        <?php \UpStream\Frontend\renderTable($tableSettings, $columnsSchema, $projectMilestones, 'milestone', $projectId); ?>
       </div>
     </div>
   </div>

@@ -425,6 +425,76 @@ class UpStream_Admin {
         </table>
         <?php
     }
+
+    /**
+     * Create id for newly added project/bugs/tasks statuses.
+     * This method is called right before field data is saved to db.
+     *
+     * @since   1.17.0
+     * @static
+     *
+     * @param   array           $value  Array of the new data set.
+     * @param   array           $args   Field arguments.
+     * @param   \CMB2_Field     $field  The field object.
+     *
+     * @return  array           $value
+     */
+    public static function onBeforeSave($value, $args, $field)
+    {
+        if (is_array($value)) {
+            $value = self::createMissingIdsInSet($value);
+        }
+
+        return $value;
+    }
+
+    /**
+     * Create missing id in a rowset.
+     *
+     * @since   1.17.0
+     * @static
+     *
+     * @param   array   $rowset     Data array;
+     *
+     * @return  array
+     */
+    public static function createMissingIdsInSet($rowset)
+    {
+        if (!is_array($rowset)) {
+            return false;
+        }
+
+        if (count($rowset) > 0) {
+            $indexesMissingId = array();
+            $idsMap = array();
+
+            foreach ($rowset as $rowIndex => $row) {
+                if (!isset($row['id'])
+                    || empty($row['id'])
+                ) {
+                    $indexesMissingId[] = $rowIndex;
+                } else {
+                    $idsMap[$row['id']] = $rowIndex;
+                }
+            }
+
+            if (count($indexesMissingId) > 0) {
+                $newIdsLength = 5;
+                $newIdsCharsPool = 'abcdefghijklmnopqrstuvwxyz0123456789';
+
+                foreach ($indexesMissingId as $rowIndex) {
+                    do {
+                        $id = upstreamGenerateRandomString($newIdsLength, $newIdsCharsPool);
+                    } while (isset($idsMap[$id]));
+
+                    $rowset[$rowIndex]['id'] = $id;
+                    $idsMap[$id] = $rowIndex;
+                }
+            }
+        }
+
+        return $rowset;
+    }
 }
 
 return new UpStream_Admin();

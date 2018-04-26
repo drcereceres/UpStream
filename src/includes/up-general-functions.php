@@ -1373,3 +1373,124 @@ function userCanReceiveCommentRepliesNotification($user_id = 0)
 
     return $receiveNotifications;
 }
+
+/**
+ * Retrieve a list of Milestones available on this instance.
+ *
+ * @since   1.17.0
+ *
+ * @return  array
+ */
+function getMilestones()
+{
+    $data = array();
+
+    $milestones = (array)get_option('upstream_milestones');
+    if (isset($milestones['milestones'])) {
+        foreach ($milestones['milestones'] as $milestone) {
+            if (isset($milestone['id'])) {
+                $data[$milestone['id']] = $milestone;
+            }
+        }
+    }
+
+    return $data;
+}
+
+/**
+ * Retrieve a list of Milestones titles available on this instance.
+ *
+ * @since   1.17.0
+ *
+ * @return  array
+ */
+function getMilestonesTitles()
+{
+    $data = array();
+
+    $milestones = getMilestones();
+    foreach ($milestones as $milestone) {
+        if (isset($milestone['id'])) {
+            $data[$milestone['id']] = $milestone['title'];
+        }
+    }
+
+    return $data;
+}
+
+/**
+ * Retrieve a list of Tasks available on this instance.
+ *
+ * @since   1.17.0
+ *
+ * @return  array
+ */
+function getTasksStatuses()
+{
+    $data = array();
+
+    $tasks = (array)get_option('upstream_tasks');
+    if (isset($tasks['statuses'])) {
+        foreach ($tasks['statuses'] as $task) {
+            if (isset($task['id'])) {
+                $data[$task['id']] = $task;
+            }
+        }
+    }
+
+    return $data;
+}
+
+/**
+ * Retrieve a list of Task statuses titles available on this instance.
+ *
+ * @since   1.17.0
+ *
+ * @return  array
+ */
+function getTasksStatusesTitles()
+{
+    $data = array();
+
+    $tasks = getTasksStatuses();
+    foreach ($tasks as $task) {
+        if (isset($task['id'])) {
+            $data[$task['id']] = $task['name'];
+        }
+    }
+
+    return $data;
+}
+
+
+function getBugsStatuses()
+{
+    $data = array();
+
+    $bugs = (array)get_option('upstream_bugs');
+    if (isset($bugs['statuses'])) {
+        foreach ($bugs['statuses'] as $bugStatus) {
+            if (isset($bugStatus['id'])) {
+                $data[$bugStatus['id']] = $bugStatus;
+            }
+        }
+    }
+
+    return $data;
+}
+
+function getBugsSeverities()
+{
+    $data = array();
+
+    $bugs = (array)get_option('upstream_bugs');
+    if (isset($bugs['severities'])) {
+        foreach ($bugs['severities'] as $bugSeverity) {
+            if (isset($bugSeverity['id'])) {
+                $data[$bugSeverity['id']] = $bugSeverity;
+            }
+        }
+    }
+
+    return $data;
+}

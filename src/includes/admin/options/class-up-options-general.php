@@ -291,8 +291,8 @@ class UpStream_Options_General {
                     'desc'    => __( 'Choose whether to display the Project Progress Icons section on frontend.', 'upstream' ),
                     'default' => '0',
                     'options' => array(
-                        0 => __('No', 'upstream'),
-                        1 => __('Yes', 'upstream')
+                        1 => __('Do not show', 'upstream'),
+                        0 => __('Yes', 'upstream')
                     )
                 ),
                 array(

@@ -96,7 +96,13 @@ class UpStream_Options_Milestones {
                         'remove_button' => sprintf( __( 'Remove %s', 'upstream' ), upstream_milestone_label() ),
                         'sortable'      => true, // beta
                     ),
+                    'sanitization_cb' => array('UpStream_Admin', 'onBeforeSave'),
                     'fields'     => array(
+                        array(
+                            'name' => __( 'Hidden', 'upstream' ),
+                            'id'   => 'id',
+                            'type' => 'hidden',
+                        ),
                         array(
                             'name' => __( 'Color', 'upstream' ),
                             'id'   => 'color',
@@ -117,6 +123,70 @@ class UpStream_Options_Milestones {
 
     }
 
+    /**
+     * Create ids for all existent milestones.
+     *
+     * @since   1.17.0
+     * @static
+     */
+    public static function createMilestonesIds()
+    {
+        $continue = !(bool)get_option('upstream:created_milestones_args_ids');
+        if (!$continue) return;
+
+        $milestones = get_option('upstream_milestones');
+        if (isset($milestones['milestones'])) {
+            $milestones['milestones'] = UpStream_Admin::createMissingIdsInSet($milestones['milestones']);
+
+            update_option('upstream_milestones', $milestones);
+
+            $milestones = $milestones['milestones'];
+
+            // Update existent Milestone data across all Projects.
+            global $wpdb;
+
+            $metas = $wpdb->get_results(sprintf(
+                'SELECT `post_id`, `meta_value`
+                FROM `%s`
+                WHERE `meta_key` = "_upstream_project_milestones"',
+                $wpdb->prefix . 'postmeta'
+            ));
+
+            if (count($metas) > 0) {
+                $getMilestoneIdByTitle = function($needle) use (&$milestones) {
+                    foreach ($milestones as $milestone) {
+                        if ($needle === $milestone['title']) {
+                            return $milestone['id'];
+                        }
+                    }
+
+                    return false;
+                };
+
+                $replaceMilestoneWithItsId = function($milestone) use (&$milestones, &$getMilestoneIdByTitle) {
+                    if (isset($milestone['milestone'])) {
+                        $milestoneId = $getMilestoneIdByTitle($milestone['milestone']);
+                        if ($milestoneId !== false) {
+                            $milestone['milestone'] = $milestoneId;
+                        }
+                    }
+
+                    return $milestone;
+                };
+
+                foreach ($metas as $meta) {
+                    $projectId = (int)$meta->post_id;
+
+                    $data = array_filter(maybe_unserialize((string)$meta->meta_value));
+                    $data = array_map($replaceMilestoneWithItsId, $data);
+
+                    update_post_meta($projectId, '_upstream_project_milestones', $data);
+                }
+            }
+
+            update_option('upstream:created_milestones_args_ids', 1);
+        }
+    }
 }
 
 endif;

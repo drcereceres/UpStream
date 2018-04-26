@@ -129,25 +129,41 @@ class Upstream_Bug_List extends WP_List_Table {
             <?php
         }
 
-        $status = (array)$this->get_status_unique();
+        $status = self::getBugsStatuses();
         if ( ! empty( $status ) ) { ?>
 
             <select name='status' id='status' class='postform'>
                 <option value=''><?php printf( __( 'Show all %s', 'upstream' ), 'statuses' ) ?></option>
-                <?php foreach ( $status as $stati ) { ?>
-                    <option value="<?php echo strtolower( $stati ) ?>" <?php isset( $_GET['status'] ) ? selected( $_GET['status'], $stati ) : ''; ?>><?php echo esc_html( $stati ) ?></option>
+                <?php foreach ( $status as $stati ) {
+                    if (is_array($stati)) {
+                        $statusTitle = $stati['name'];
+                        $statusId = $stati['id'];
+                    } else {
+                        $statusTitle = $stati;
+                        $statusId = $stati;
+                    }
+                    ?>
+                    <option value="<?php echo $statusId; ?>" <?php isset( $_GET['status'] ) ? selected( $_GET['status'], $statusTitle ) : ''; ?>><?php echo esc_html( $statusTitle ) ?></option>
                 <?php } ?>
             </select>
 
         <?php }
 
-        $severity = (array)$this->get_severity_unique();
-        if ( ! empty( $severity ) ) { ?>
+        $severities = self::getBugsSeverities();
+        if ( ! empty( $severities ) ) { ?>
 
             <select name='severity' id='severity' class='postform'>
                 <option value=''><?php printf( __( 'Show all %s', 'upstream' ), 'severities' ) ?></option>
-                <?php foreach ( $severity as $severiti ) { ?>
-                    <option value="<?php echo strtolower( $severiti ) ?>" <?php isset( $_GET['severity'] ) ? selected( $_GET['severity'], $severiti ) : ''; ?>><?php echo $severiti ?></option>
+                <?php foreach ( $severities as $severity ) {
+                    if (is_array($severity)) {
+                        $severityTitle = $severity['name'];
+                        $severityId = $severity['id'];
+                    } else {
+                        $severityTitle = $severity;
+                        $severityId = $severity;
+                    }
+                    ?>
+                    <option value="<?php echo $severityId; ?>" <?php isset( $_GET['severity'] ) ? selected( $_GET['severity'], $severityTitle ) : ''; ?>><?php echo esc_html( $severityTitle ) ?></option>
                 <?php } ?>
             </select>
 
@@ -286,24 +302,58 @@ class Upstream_Bug_List extends WP_List_Table {
                 }
 
             case 'status':
-                if (!isset($item['status']) || empty($item['status'])) {
+                if (!isset($item['status'])
+                    || empty($item['status'])
+                ) {
                     return '<span><i style="color: #CCC;">'. __('none', 'upstream') .'</i></span>';
                 }
 
-                $colors = upstream_project_bug_statuses_colors( $item['project_id'] );
-                $color  = isset( $colors[$item['status']] ) ? $colors[$item['status']] : '#aaaaaa';
-                $output = '<span style="border-color:' . esc_attr( $color ) . '" class="status ' . esc_attr( strtolower( $item['status'] ) ) . '"><span class="count" style="background-color:' . esc_attr( $color ) . '">1</span>' . $item['status'] . '</span>';
+                $status = self::$bugsStatuses[$item['status']];
+
+                if (is_array($status)) {
+                    $statusTitle = $status['name'];
+                    $statusColor = $status['color'];
+                } else {
+                    $statusTitle = $status;
+                    $statusColor = '#aaaaaa';
+                }
+
+                $output = sprintf(
+                    '<span class="status %s" style="border-color: %s">
+                        <span class="count" style="background-color: %2$s">&nbsp;</span> %3$s
+                    </span>',
+                    esc_attr(strtolower($statusTitle)),
+                    esc_attr($statusColor),
+                    esc_html($statusTitle)
+                );
 
                 return $output;
 
             case 'severity':
-                if (!isset($item['severity']) || empty($item['severity'])) {
+                if (!isset($item['severity'])
+                    || empty($item['severity'])
+                ) {
                     return '<span><i style="color: #CCC;">'. __('none', 'upstream') .'</i></span>';
                 }
 
-                $colors = upstream_project_bug_severity_colors( $item['project_id'] );
-                $color  = isset( $colors[$item['severity']] ) ? $colors[$item['severity']] : '#aaaaaa';
-                $output = '<span style="border-color:' . esc_attr( $color ) . '" class="status ' . esc_attr( strtolower( $item['severity'] ) ) . '"><span class="count" style="background-color:' . esc_attr( $color ) . '">1</span>' . $item['severity'] . '</span>';
+                $severity = self::$bugsSeverities[$item['severity']];
+
+                if (is_array($severity)) {
+                    $severityTitle = $severity['name'];
+                    $severityColor = $severity['color'];
+                } else {
+                    $severityTitle = $severity;
+                    $severityColor = '#aaaaaa';
+                }
+
+                $output = sprintf(
+                    '<span class="status %s" style="border-color: %s">
+                        <span class="count" style="background-color: %2$s">&nbsp;</span> %3$s
+                    </span>',
+                    esc_attr(strtolower($severityTitle)),
+                    esc_attr($severityColor),
+                    esc_html($severityTitle)
+                );
 
                 return $output;
 
@@ -461,62 +511,49 @@ class Upstream_Bug_List extends WP_List_Table {
         // filtering
         $the_bugs = $bugs; // store the bugs array
 
-        if (!isset($_REQUEST['status']) || empty($_REQUEST['status'])) {
-            $status = 'all';
-        } else {
-            $status = $_REQUEST['status'];
+        $status = isset($_REQUEST['status']) && !empty($_REQUEST['status']) ? $_REQUEST['status'] : 'all';
+        if (!empty($status) && $status !== 'all') {
+            $bugs = array_filter($the_bugs, function($row) use ($status) {
+                return isset($row['status']) && $row['status'] === $status;
+            });
         }
 
-        if( $status != 'all' ) {
-            if ( ! empty( $the_bugs ) ) {
-                $bugs = array(); // reset the bugs array
-                foreach( $the_bugs as $key => $bug ) {
-                    if( strtolower( $bug['status'] ) == $status )
-                        $bugs[] = $bug;
-                }
-            }
+        $severity = isset($_REQUEST['severity']) && !empty($_REQUEST['severity']) ? $_REQUEST['severity'] : 'all';
+        if (!empty($severity) && $severity !== 'all') {
+            $bugs = array_filter($bugs, function($row) use ($severity) {
+                return isset($row['severity']) && $row['severity'] === $severity;
+            });
         }
 
-        $severity = ( isset( $_REQUEST['severity']) ? $_REQUEST['severity'] : 'all' );
-        if( $severity != 'all' ) {
-            if ( ! empty( $the_bugs ) ) {
-                // $bugs = array(); // reset the bugs array
-                foreach( $the_bugs as $key => $bug ) {
-                    if( strtolower( $bug['severity'] ) == $severity )
-                        $bugs[] = $bug;
-                }
-            }
-        }
-
-        $preset = isset($_REQUEST['view']) ? $_REQUEST['view'] : 'all';
+        $preset = isset($_REQUEST['view']) ? $_REQUEST['view'] : '';
         if ($preset === 'mine') {
             $currentUserId = (int)get_current_user_id();
 
-            foreach ($bugs as $rowIndex => $row) {
-                $assignees = isset($row['assigned_to']) ? array_map('intval', (array)$row['assigned_to']) : array();
-                if (!in_array($currentUserId, $assignees)) {
-                    unset($bugs[$rowIndex]);
+            $bugs = array_filter($bugs, function($row) use ($currentUserId) {
+                if (isset($row['assigned_to'])) {
+                    if ((is_array($row['assigned_to']) && in_array($row['assigned_to']))
+                        || (int)$row['assigned_to'] === $currentUserId
+                    ) {
+                        return true;
+                    }
                 }
+
+                return false;
+            });
+        } else {
+            $assigned_to = isset($_REQUEST['assigned_to']) ? (int)$_REQUEST['assigned_to'] : 0;
+            if ($assigned_to > 0) {
+                $bugs = array_filter($bugs, function($row) use ($assigned_to) {
+                    return isset($row['assigned_to']) && $row['assigned_to'] === $assigned_to;
+                });
             }
         }
 
-        $project = ( isset( $_REQUEST['project'] ) ? $_REQUEST['project'] : '' );
-        if ( ! empty( $bugs ) && ! empty( $project ) ) {
-            foreach( $bugs as $key => $bug ) {
-                if( $bug['project_id'] != $project )
-                    unset( $bugs[$key] );
-            }
-        }
-
-        $assigned_to = isset($_REQUEST['assigned_to']) ? (int)$_REQUEST['assigned_to'] : 0;
-        if ($assigned_to > 0) {
-            foreach ($bugs as $rowIndex => $row) {
-                $assignees = isset($row['assigned_to']) ? array_map('intval', (array)$row['assigned_to']) : array();
-
-                if (!in_array($assigned_to, $assignees)) {
-                    unset($bugs[$rowIndex]);
-                }
-            }
+        $project_id = isset($_REQUEST['project']) && !empty($_REQUEST['project']) ? (int)$_REQUEST['project'] : 0;
+        if ($project_id > 0) {
+            $bugs = array_filter($bugs, function($row) use ($project_id) {
+                return isset($row['project_id']) && $row['project_id'] === $project_id;
+            });
         }
 
         // sorting the bugs
@@ -553,25 +590,28 @@ class Upstream_Bug_List extends WP_List_Table {
      *
      * @return array
      */
-    public static function count_statuses() {
+    public static function count_statuses()
+    {
+        $statuses = getBugsStatuses();
+        $rowset = self::get_bugs();
 
-        $bugs = self::get_bugs();
-        if( ! $bugs )
-            return null;
+        $data = array();
 
-        $statuses = wp_list_pluck( $bugs, 'status' );
-        $statuses = array_count_values( $statuses );
-
-        // double check so we have no empty keys or values
-        foreach ($statuses as $key => $value) {
-            if( empty( $key ) || is_null( $key ) || empty( $value ) || is_null( $value ) )
-                unset($statuses[$key]);
-            if( empty( $value ) || is_null( $value ) )
-                unset($statuses[$key]);
+        foreach ($rowset as $row) {
+            if (isset($row['status'])
+                && !empty($row['status'])
+                && isset($statuses[$row['status']])
+            ) {
+                $statusTitle = $statuses[$row['status']]['name'];
+                if (isset($data[$statusTitle])) {
+                    $data[$statusTitle]++;
+                } else {
+                    $data[$statusTitle] = 1;
+                }
+            }
         }
 
-        return $statuses;
-
+        return $data;
     }
 
 
@@ -602,6 +642,64 @@ class Upstream_Bug_List extends WP_List_Table {
 
     protected function get_table_classes() {
         return array( 'widefat', 'striped', $this->_args['plural'] );
+    }
+
+    private static $bugsStatuses;
+    private static function getBugsStatuses()
+    {
+        if (empty(self::$bugsStatuses)) {
+            $rowset = self::get_bugs();
+            if (count($rowset) === 0) return;
+
+            $statuses = getBugsStatuses();
+
+            $data = array();
+
+            foreach ($rowset as $row) {
+                if (!empty($row['status'])
+                    && isset($row['status'])
+                ) {
+                    $data[$row['status']] = isset($statuses[$row['status']])
+                        ? $statuses[$row['status']]
+                        : $row['status'];
+                }
+            }
+
+            self::$bugsStatuses = $data;
+        } else {
+            $data = self::$bugsStatuses;
+        }
+
+        return $data;
+    }
+
+    private static $bugsSeverities;
+    private static function getBugsSeverities()
+    {
+        if (empty(self::$bugsSeverities)) {
+            $rowset = self::get_bugs();
+            if (count($rowset) === 0) return;
+
+            $statuses = getBugsSeverities();
+
+            $data = array();
+
+            foreach ($rowset as $row) {
+                if (!empty($row['severity'])
+                    && isset($row['severity'])
+                ) {
+                    $data[$row['severity']] = isset($statuses[$row['severity']])
+                        ? $statuses[$row['severity']]
+                        : $row['severity'];
+                }
+            }
+
+            self::$bugsSeverities = $data;
+        } else {
+            $data = self::$bugsSeverities;
+        }
+
+        return $data;
     }
 }
 
@@ -715,7 +813,6 @@ class Upstream_Admin_Bugs_Page {
         </div>
     <?php
     }
-
 }
 
 add_action( 'plugins_loaded', function () {
