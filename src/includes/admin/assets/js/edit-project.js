@@ -253,10 +253,9 @@
     function replaceTitles( $group ) {
 
         if( $group && $group.attr( 'id' ) == '_upstream_project_milestones' ) {
-
             $group.find( '.cmb-group-title' ).each( function() {
                 var $this   = $( this );
-                var title   = $this.next().find( '[id$="milestone"]' ).val();
+                var title   = $this.next().find( '[id$="milestone"] option[selected]' ).text();
                 var start   = $this.next().find( '[id$="start_date"]' ).val();
                 var end     = $this.next().find( '[id$="end_date"]' ).val();
                 var dates   = '<div class="dates">' + start + ' - ' + end + '</div>';
@@ -1381,13 +1380,6 @@
     });
 
     function filterMetaboxTableBy(metabox, columnName, filterValue, operator) {
-      console.log('filterMetaboxTableBy()', {
-        metabox: metabox,
-        columnName: columnName,
-        filterValue: filterValue,
-        operator: operator
-      });
-
       var table = metabox.find('.cmb-nested.cmb-field-list.cmb-repeatable-group');
       var filtersWrapper = metabox.find('.up-c-filters');
       var filtersMap = [];
@@ -1437,7 +1429,18 @@
           if (theColumn.length === 0) {
             theColumn = $('[name$="['+ filter.column +'][]"]', tr);
           }
-          columnValue = theColumn.val() || '';
+
+          if (filter.comparator === 'contains' && theColumn.prop('tagName') === 'SELECT') {
+            columnValue = [];
+
+            var values = $('option[selected]', theColumn);
+            for (var valueIndex = 0; valueIndex < values.length; valueIndex++) {
+              columnValue.push($(values[valueIndex]).text());
+              columnValue.push($(values[valueIndex]).attr('value'));
+            }
+          } else {
+            columnValue = theColumn.val() || '';
+          }
 
           if (theColumn.hasClass('hasDatepicker') && columnValue.length > 0) {
             filter.value = +new Date(filter.value);
@@ -1453,13 +1456,33 @@
                 var theValue = filter.value[valueIndex];
                 theValue = theValue.length > 0 && theValue !== '__none__' ? theValue : '';
 
-                if (theValue === columnValue) {
-                  shouldDisplay = true;
-                  break;
-                } else if (theValue !== '') {
-                  comparator = new RegExp(theValue, 'i');
-                  if (comparator.test(columnValue)) {
+                if (typeof columnValue === 'string') {
+                  if (theValue === columnValue) {
                     shouldDisplay = true;
+                    break;
+                  } else if (theValue !== '') {
+                    comparator = new RegExp(theValue, 'i');
+                    if (comparator.test(columnValue)) {
+                      shouldDisplay = true;
+                      break;
+                    }
+                  }
+                } else {
+                  for (var columnValueIndex = 0; columnValueIndex < columnValue.length; columnValueIndex++) {
+                    var columnValueItem = columnValue[columnValueIndex];
+                    if (theValue === columnValue) {
+                      shouldDisplay = true;
+                      break;
+                    } else if (theValue !== '') {
+                      comparator = new RegExp(theValue, 'i');
+                      if (comparator.test(columnValue)) {
+                        shouldDisplay = true;
+                        break;
+                      }
+                    }
+                  }
+
+                  if (shouldDisplay) {
                     break;
                   }
                 }

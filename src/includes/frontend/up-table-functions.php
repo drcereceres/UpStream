@@ -14,11 +14,20 @@ function arrayToAttrs($data)
 
 function getMilestonesFields($areCommentsEnabled = null)
 {
+    $milestones = getMilestonesTitles();
+
     $schema = array(
         'milestone'   => array(
-            'type'        => 'raw',
+            'type'        => 'custom',
             'isOrderable' => true,
-            'label'       => upstream_milestone_label()
+            'label'       => upstream_milestone_label(),
+            'renderCallback' => function($columnName, $columnValue, $column, $row, $rowType, $projectId) use (&$milestones) {
+                $milestone = !isset($milestones[$columnValue])
+                    ? '<span title="'. __("This Milestone doesn't exist anymore.", 'upstream') .'">'. $columnValue .' <small><i class="fa fa-ban"></i></small></span>'
+                    : $milestones[$columnValue];
+
+                return $milestone;
+            }
         ),
         'assigned_to' => array(
             'type'        => 'user',
@@ -88,6 +97,7 @@ function getTasksFields($statuses = array(), $milestones = array(), $areMileston
         $areMilestonesEnabled = !upstream_are_milestones_disabled() && !upstream_disable_milestones();
     }
 
+    $statuses = empty($statuses) ? getTasksStatuses() : $statuses;
     $options = array();
 
     $schema = array(
@@ -106,19 +116,6 @@ function getTasksFields($statuses = array(), $milestones = array(), $areMileston
             'label' => __('Status', 'upstream'),
             'renderCallback' => function($columnName, $columnValue, $column, $row, $rowType, $projectId) use (&$statuses, &$options) {
                 if (strlen($columnValue) > 0) {
-                    if ($statuses === null) {
-                        if ($options === null) {
-                            $options = get_option('upstream_tasks');
-                        }
-
-                        $tasksStatuses = $options['statuses'];
-                        $statuses = array();
-                        foreach ($tasksStatuses as $status) {
-                            $statuses[$status['name']] = $status;
-                        }
-                        unset($tasksStatuses);
-                    }
-
                     if (isset($statuses[$columnValue])) {
                         $columnValue = sprintf('<span class="label up-o-label" style="background-color: %s;">%s</span>', $statuses[$columnValue]['color'], $statuses[$columnValue]['name']);
                     } else {
@@ -224,11 +221,11 @@ function getTasksFields($statuses = array(), $milestones = array(), $areMileston
 function getBugsFields($severities = array(), $statuses = array(), $areCommentsEnabled = null)
 {
     if (empty($severities)) {
-        $severities = null;
+        $severities = getBugsSeverities();
     }
 
     if (empty($statuses)) {
-        $statuses = null;
+        $statuses = getBugsStatuses();
     }
 
     $options = null;
@@ -250,19 +247,6 @@ function getBugsFields($severities = array(), $statuses = array(), $areCommentsE
             'isOrderable' => true,
             'renderCallback' => function($columnName, $columnValue, $column, $row, $rowType, $projectId) use (&$severities, &$options) {
                 if (strlen($columnValue) > 0) {
-                    if ($severities === null) {
-                        if ($options === null) {
-                            $options = get_option('upstream_bugs');
-                        }
-
-                        $bugsSeverities = $options['severities'];
-                        $severities = array();
-                        foreach ($bugsSeverities as $severity) {
-                            $severities[$severity['name']] = $severity;
-                        }
-                        unset($bugsSeverities);
-                    }
-
                     if (isset($severities[$columnValue])) {
                         $columnValue = sprintf('<span class="label up-o-label" style="background-color: %s;">%s</span>', $severities[$columnValue]['color'], $severities[$columnValue]['name']);
                     } else {
@@ -286,19 +270,6 @@ function getBugsFields($severities = array(), $statuses = array(), $areCommentsE
             'isOrderable' => true,
             'renderCallback' => function($columnName, $columnValue, $column, $row, $rowType, $projectId) use (&$statuses, &$options) {
                 if (strlen($columnValue) > 0) {
-                    if ($statuses === null) {
-                        if ($options === null) {
-                            $options = get_option('upstream_bugs');
-                        }
-
-                        $bugsStatuses = $options['statuses'];
-                        $statuses = array();
-                        foreach ($bugsStatuses as $status) {
-                            $statuses[$status['name']] = $status;
-                        }
-                        unset($bugsStatuses);
-                    }
-
                     if (isset($statuses[$columnValue])) {
                         $columnValue = sprintf('<span class="label up-o-label" style="background-color: %s;">%s</span>', $statuses[$columnValue]['color'], $statuses[$columnValue]['name']);
                     } else {
@@ -496,7 +467,7 @@ function renderTableColumnValue($columnName, $columnValue, $column, $row, $rowTy
             $html = upstream_convert_UTC_date_to_timezone($columnValue, false);
         }
     } else if ($columnType === 'wysiwyg') {
-        $columnValue = trim((string)$columnValue);
+        $columnValue = preg_replace('/(?!>[\s]*).\r?\n(?![\s]*<)/', '$0<br />', trim((string)$columnValue));
         if (strlen($columnValue) > 0) {
             $html = sprintf('<blockquote>%s</blockquote>', html_entity_decode($columnValue));
         } else {
@@ -626,7 +597,7 @@ function renderTableBody($data, $visibleColumnsSchema, $hiddenColumnsSchema, $ro
         <?php if (!empty($hiddenColumnsSchema)): ?>
         <tr data-parent="<?php echo $id; ?>" aria-expanded="false" style="display: none;">
           <td colspan="<?php echo $visibleColumnsSchemaCount; ?>">
-            <div class="hidden-xs">
+            <div>
               <?php foreach ($hiddenColumnsSchema as $columnName => $column):
               $columnValue = isset($row[$columnName]) ? $row[$columnName] : null;
               ?>
