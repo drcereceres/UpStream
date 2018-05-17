@@ -498,15 +498,48 @@ function upstream_get_percentages_for_dropdown() {
 
 }
 
-
 /*
  * Run date formatting through here
  */
-function upstream_format_date( $timestamp ) {
+function upstream_format_date( $timestamp, $dateFormat = null ) {
+    if ( empty( $dateFormat ) ) {
+        $dateFormat = get_option( 'date_format' );
+    }
+
     if ( ! $timestamp ) {
         $date = null;
     } else {
-        $date = date_i18n( get_option( 'date_format' ), $timestamp, false );
+        // Copyright: Anthony Eden (https://mediarealm.com.au/articles/wordpress-timezones-strtotime-date-functions/)
+        // This function behaves a bit like PHP's Date() function, but taking into account the Wordpress site's timezone
+        // CAUTION: It will throw an exception when it receives invalid input - please catch it accordingly
+        // From https://mediarealm.com.au/
+        $tz_string = get_option( 'timezone_string' );
+        $tz_offset = get_option( 'gmt_offset', 0 );
+
+        if ( ! empty( $tz_string ) ) {
+            // If site timezone option string exists, use it
+            $timezone = $tz_string;
+        } elseif ( $tz_offset == 0 ) {
+            // get UTC offset, if it isn’t set then return UTC
+            $timezone = 'UTC';
+        } else {
+            $timezone = $tz_offset;
+            if ( substr( $tz_offset, 0, 1 ) != "-" && substr( $tz_offset, 0, 1 ) != "+" && substr( $tz_offset, 0,
+                    1 ) != "U" ) {
+                $timezone = "+" . $tz_offset;
+            }
+        }
+
+        if ( $timestamp === null ) {
+            $timestamp = time();
+        }
+
+        $datetime = new \DateTime();
+
+        $datetime->setTimestamp( $timestamp );
+        $datetime->setTimezone( new \DateTimeZone( $timezone ) );
+
+        $date = $datetime->format( $dateFormat );
     }
 
     return apply_filters( 'upstream_format_date', $date, $timestamp );
