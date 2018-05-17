@@ -142,6 +142,12 @@ If you were having date issues within Projects, please clear your cache and re-s
 The format is based on [Keep a Changelog](http://keepachangelog.com)
 and this project adheres to [Semantic Versioning](http://semver.org).
 
+= [1.17.1] - UNRELEASED =
+
+Fixed:
+* Fixed a typo in the footer;
+* Fixed the method to format date using the correct timezone;
+
 = [1.17.0] - 2018-04-26 =
 
 Added:
