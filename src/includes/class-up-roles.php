@@ -1,12 +1,15 @@
 <?php
 
 // Exit if accessed directly
-if ( ! defined( 'ABSPATH' ) ) exit;
+if ( ! defined( 'ABSPATH' ) ) {
+    exit;
+}
 
 
 function upstream_hide_meta_boxes() {
     remove_meta_box( 'authordiv', 'project', 'normal' );
 }
+
 add_action( 'admin_menu', 'upstream_hide_meta_boxes' );
 
 /**
@@ -24,11 +27,11 @@ class UpStream_Roles {
      * Called during installation
      *
      * @access public
-     * @since 1.0.0
+     * @since  1.0.0
      * @return void
      */
     public function add_roles() {
-        add_role( 'upstream_manager', __( 'UpStream Manager', 'upstream' ), array(
+        add_role( 'upstream_manager', __( 'UpStream Manager', 'upstream' ), [
             'read'                   => true,
             'edit_posts'             => true,
             'delete_posts'           => true,
@@ -56,15 +59,36 @@ class UpStream_Roles {
             'publish_pages'          => true,
             'publish_posts'          => true,
             'read_private_pages'     => true,
-            'read_private_posts'     => true
-        ) );
-        add_role( 'upstream_user', __( 'UpStream User', 'upstream' ), array(
-            'read'                   => true,
-            'edit_posts'             => true,
-            'upload_files'           => true,
-        ) );
+            'read_private_posts'     => true,
+        ] );
+        add_role( 'upstream_user', __( 'UpStream User', 'upstream' ), [
+            'read'         => true,
+            'edit_posts'   => true,
+            'upload_files' => true,
+        ] );
 
         self::addClientUsersRole();
+    }
+
+    /**
+     * Method responsible for creating the 'upstream_client_user' role if it doesn't exist yet.
+     *
+     * @since   1.11.0
+     * @static
+     *
+     * @global  $wp_roles
+     */
+    public static function addClientUsersRole() {
+        global $wp_roles;
+
+        $theRoleIndetifier = 'upstream_client_user';
+
+        if ( ! $wp_roles->is_role( $theRoleIndetifier ) ) {
+            add_role( $theRoleIndetifier, __( 'UpStream Client User', 'upstream' ), [
+                'read'         => true,
+                'upload_files' => true,
+            ] );
+        }
     }
 
     /**
@@ -79,7 +103,7 @@ class UpStream_Roles {
     public function add_caps() {
         global $wp_roles;
 
-        if ( class_exists('WP_Roles') ) {
+        if ( class_exists( 'WP_Roles' ) ) {
             if ( ! isset( $wp_roles ) ) {
                 $wp_roles = new WP_Roles();
             }
@@ -116,12 +140,12 @@ class UpStream_Roles {
      * @return array $capabilities Core post type capabilities
      */
     public function get_upstream_manager_caps() {
-        $capabilities = array();
+        $capabilities = [];
 
-        $capability_types = array( 'project', 'client' );
+        $capability_types = [ 'project', 'client' ];
 
         foreach ( $capability_types as $capability_type ) {
-            $capabilities[ $capability_type ] = array(
+            $capabilities[ $capability_type ] = [
                 // Post type
                 "edit_{$capability_type}",
                 "read_{$capability_type}",
@@ -146,7 +170,7 @@ class UpStream_Roles {
                 "edit_project_author",
                 "manage_upstream",
 
-            );
+            ];
         }
 
         return $capabilities;
@@ -161,7 +185,7 @@ class UpStream_Roles {
      */
     public function get_upstream_user_caps() {
 
-        $capabilities['project'] = array(
+        $capabilities['project'] = [
             'edit_project',
             'read_project',
             'edit_projects',
@@ -233,9 +257,9 @@ class UpStream_Roles {
             //'sort_project_bugs',
             //'sort_project_files',
 
-        );
+        ];
 
-        $capabilities['client'] = array(
+        $capabilities['client'] = [
             'edit_client',
             'read_client',
             'edit_clients',
@@ -244,17 +268,16 @@ class UpStream_Roles {
             // 'read_private_clients',
             // 'edit_private_clients',
             'edit_published_clients',
-        );
+        ];
 
         return $capabilities;
     }
-
 
     /**
      * Remove core post type capabilities (called on uninstall)
      *
      * @access public
-     * @since 1.5.2
+     * @since  1.5.2
      * @return void
      */
     public function remove_caps() {
@@ -270,27 +293,27 @@ class UpStream_Roles {
         if ( is_object( $wp_roles ) ) {
 
             // Add the main post type capabilities
-            $manager_caps   = $this->get_upstream_manager_caps();
-            $manager_role   = get_role( 'upstream_manager' );
-            $admin_role     = get_role( 'administrator' );
+            $manager_caps = $this->get_upstream_manager_caps();
+            $manager_role = get_role( 'upstream_manager' );
+            $admin_role   = get_role( 'administrator' );
 
             foreach ( $manager_caps as $post_type ) {
                 foreach ( $post_type as $index => $cap ) {
-                    if( $manager_role ) {
+                    if ( $manager_role ) {
                         $manager_role->remove_cap( $cap );
                     }
-                    if( $admin_role ) {
+                    if ( $admin_role ) {
                         $admin_role->remove_cap( $cap );
                     }
                 }
             }
 
             // Add the main post type capabilities
-            $user_caps      = $this->get_upstream_user_caps();
-            $user_role      = get_role( 'upstream_user' );
+            $user_caps = $this->get_upstream_user_caps();
+            $user_role = get_role( 'upstream_user' );
             foreach ( $user_caps as $post_type ) {
                 foreach ( $post_type as $index => $cap ) {
-                    if( $user_role ) {
+                    if ( $user_role ) {
                         $user_role->remove_cap( $cap );
                     }
                 }
@@ -298,27 +321,5 @@ class UpStream_Roles {
 
         }
 
-    }
-
-    /**
-     * Method responsible for creating the 'upstream_client_user' role if it doesn't exist yet.
-     *
-     * @since   1.11.0
-     * @static
-     *
-     * @global  $wp_roles
-     */
-    public static function addClientUsersRole()
-    {
-        global $wp_roles;
-
-        $theRoleIndetifier = 'upstream_client_user';
-
-        if (!$wp_roles->is_role($theRoleIndetifier)) {
-            add_role($theRoleIndetifier, __('UpStream Client User', 'upstream'), array(
-                'read'         => true,
-                'upload_files' => true
-            ));
-        }
     }
 }

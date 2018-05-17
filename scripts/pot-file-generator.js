@@ -15,11 +15,11 @@ TODO:
 */
 
 wpPot({
-  destFile: `./src/languages/${LANGUAGE_DOMAIN}.pot`,
-  domain: LANGUAGE_DOMAIN,
-  package: PLUGIN_NAME,
-  src: [
-    './src/**/*.php',
-    '!./src/includes/libraries'
-  ]
+    destFile: `./src/languages/${LANGUAGE_DOMAIN}.pot`,
+    domain: LANGUAGE_DOMAIN,
+    package: PLUGIN_NAME,
+    src: [
+        './src/**/*.php',
+        '!./src/includes/libraries'
+    ]
 });

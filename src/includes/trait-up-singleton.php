@@ -1,8 +1,11 @@
 <?php
+
 namespace UpStream\Traits;
 
 // Prevent direct access.
-if (!defined('ABSPATH')) exit;
+if ( ! defined( 'ABSPATH' ) ) {
+    exit;
+}
 
 /**
  * Trait that abstracts the Singleton design pattern.
@@ -14,33 +17,15 @@ if (!defined('ABSPATH')) exit;
  * @license     GPL-3
  * @since       1.11.0
  */
-trait Singleton
-{
+trait Singleton {
     /**
-     * @var     \ReflectionClass    $instance   The singleton class's instance.
+     * @var     \ReflectionClass $instance The singleton class's instance.
      *
      * @since   1.11.0
      * @access  private
      * @static
      */
     private static $instance = null;
-
-    /**
-     * Initializes the singleton if it's not loaded yet.
-     *
-     * @since   1.11.0
-     * @static
-     * @final
-     *
-     * @uses    \ReflectionClass
-     */
-    final public static function instantiate()
-    {
-        if (empty(self::$instance)) {
-            $reflection = new \ReflectionClass(__CLASS__);
-            self::$instance = $reflection->newInstanceArgs(func_get_args());
-        }
-    }
 
     /**
      * Retrieve the singleton instance.
@@ -51,12 +36,27 @@ trait Singleton
      *
      * @return  \ReflectionClass
      */
-    public static function getInstance()
-    {
+    public static function getInstance() {
         // Ensure the singleton is loaded.
         self::instantiate();
 
         return self::$instance;
+    }
+
+    /**
+     * Initializes the singleton if it's not loaded yet.
+     *
+     * @since   1.11.0
+     * @static
+     * @final
+     *
+     * @uses    \ReflectionClass
+     */
+    final public static function instantiate() {
+        if ( empty( self::$instance ) ) {
+            $reflection     = new \ReflectionClass( __CLASS__ );
+            self::$instance = $reflection->newInstanceArgs( func_get_args() );
+        }
     }
 
     /**
@@ -67,9 +67,8 @@ trait Singleton
      *
      * @throws  \Exception
      */
-    final public function __sleep()
-    {
-        throw new \Exception("You cannot serialize a singleton.");
+    final public function __sleep() {
+        throw new \Exception( "You cannot serialize a singleton." );
     }
 
     /**
@@ -80,9 +79,8 @@ trait Singleton
      *
      * @throws  \Exception
      */
-    final public function __wakeup()
-    {
-        throw new \Exception("You cannot unserialize a singleton.");
+    final public function __wakeup() {
+        throw new \Exception( "You cannot unserialize a singleton." );
     }
 
     /**
@@ -91,8 +89,7 @@ trait Singleton
      * @since   1.11.0
      * @final
      */
-    final public function __clone()
-    {
+    final public function __clone() {
         // Do nothing.
     }
 }

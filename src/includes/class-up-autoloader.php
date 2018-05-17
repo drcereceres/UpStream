@@ -1,7 +1,9 @@
 <?php
 
 // Exit if accessed directly
-if ( ! defined( 'ABSPATH' ) ) exit;
+if ( ! defined( 'ABSPATH' ) ) {
+    exit;
+}
 
 /**
  * UpStream Autoloader.
@@ -29,7 +31,7 @@ class UpStream_Autoloader {
             spl_autoload_register( "__autoload" );
         }
 
-        spl_autoload_register( array( $this, 'autoload' ) );
+        spl_autoload_register( [ $this, 'autoload' ] );
 
         $this->include_path = untrailingslashit( plugin_dir_path( UPSTREAM_PLUGIN_FILE ) ) . '/includes/';
     }
@@ -60,10 +62,12 @@ class UpStream_Autoloader {
      * Take a class name and turn it into a file name.
      *
      * @param  string $class
+     *
      * @return string
      */
     private function get_file_name_from_class( $class ) {
         $class = str_replace( 'upstream', 'up', $class );
+
         return 'class-' . str_replace( '_', '-', $class ) . '.php';
     }
 
@@ -71,13 +75,16 @@ class UpStream_Autoloader {
      * Include a class file.
      *
      * @param  string $path
+     *
      * @return bool successful or not
      */
     private function load_file( $path ) {
         if ( $path && is_readable( $path ) ) {
             include_once( $path );
+
             return true;
         }
+
         return false;
     }
 

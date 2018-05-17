@@ -9,138 +9,140 @@
  */
 
 // Exit if accessed directly
-if ( ! defined( 'ABSPATH' ) ) exit;
+if ( ! defined( 'ABSPATH' ) ) {
+    exit;
+}
 
 if ( ! class_exists( 'UpStream_Admin_Projects_Menu' ) ) :
 
-/**
- * UpStream_Admin_Menus Class.
- */
-class UpStream_Admin_Projects_Menu {
-    private static $userIsUpStreamUser = null;
-
     /**
-     * Hook in tabs.
+     * UpStream_Admin_Menus Class.
      */
-    public function __construct() {
-        if (self::$userIsUpStreamUser === null) {
-            $user = wp_get_current_user();
-            self::$userIsUpStreamUser = count(array_intersect($user->roles, array('administrator', 'upstream_manager'))) === 0;
-        }
+    class UpStream_Admin_Projects_Menu {
+        private static $userIsUpStreamUser = null;
 
-        add_action( 'admin_menu', array( $this, 'projects_menu' ), 9 );
-        add_filter( 'custom_menu_order', array( $this, 'submenu_order' ) );
-        add_action('admin_head', array($this, 'hideAddNewProjectButtonIfNeeded'));
-    }
-
-    public function hideAddNewProjectButtonIfNeeded()
-    {
-        if (is_admin()) {
-            global $pagenow;
-
-            if ($pagenow === 'edit.php' && isset($_GET['post_type']) && $_GET['post_type'] === 'project' && self::$userIsUpStreamUser) {
-                echo '<style type="text/css">.page-title-action { display: none; }</style>';
-            }
-        }
-    }
-
-    /**
-     * Add menu item.
-     */
-    public function projects_menu() {
-        add_submenu_page('edit.php?post_type=project', upstream_client_label_plural(), upstream_client_label_plural(), 'edit_clients', 'edit.php?post_type=client');
-    }
-
-    public function submenu_order($menu)
-    {
-        global $submenu;
-
-        $subMenuIdentifier = 'edit.php?post_type=project';
-        if (isset($submenu[$subMenuIdentifier])
-            && !empty($submenu[$subMenuIdentifier])
-        ) {
-            $upstreamSubmenu = &$submenu[$subMenuIdentifier];
-            $newUpStreamSubmenu = array();
-
-            $searchSubmenuItem = function($needle) use (&$upstreamSubmenu) {
-                foreach ($upstreamSubmenu as $submenuIndex => $submenu) {
-                    $regexp = '/'. $needle .'/i';
-                    if (preg_match($regexp, $submenu[2])) {
-                        return $submenu;
-                    }
-                }
-
-                return null;
-            };
-
-            $submenuProjects = $searchSubmenuItem('^edit\.php\?post_type=project$');
-            if ($submenuProjects !== null) {
-                $newUpStreamSubmenu[] = $submenuProjects;
-            }
-            unset($submenuProjects);
-
-            if (self::$userIsUpStreamUser) {
-                $submenuTasks = $searchSubmenuItem('^tasks$');
-                if ($submenuTasks !== null
-                    && strpos($submenuTasks[0], 'update-count' !== false)
-                ) {
-                    $newUpStreamSubmenu[] = $submenuTasks;
-                }
-                unset($submenuTasks);
-
-                $submenuBugs = $searchSubmenuItem('^bugs$');
-                if ($submenuBugs !== null
-                    && strpos($submenuBugs[0], 'update-count' !== false)
-                ) {
-                    $newUpStreamSubmenu[] = $submenuBugs;
-                }
-                unset($submenuBugs);
-            } else {
-                $areCategoriesEnabled = !is_project_categorization_disabled();
-                $areClientsEnabled = !is_clients_disabled();
-
-                $submenuTasks = $searchSubmenuItem('^tasks$');
-                if ($submenuTasks !== null) {
-                    $newUpStreamSubmenu[] = $submenuTasks;
-                }
-                unset($submenuTasks);
-
-                $submenuBugs = $searchSubmenuItem('^bugs$');
-                if ($submenuBugs !== null) {
-                    $newUpStreamSubmenu[] = $submenuBugs;
-                }
-                unset($submenuBugs);
-
-                if ($areClientsEnabled) {
-                    $submenuClients = $searchSubmenuItem('^edit\.php\?post_type=client$');
-                    if ($submenuClients !== null) {
-                        $newUpStreamSubmenu[] = $submenuClients;
-                    }
-                    unset($submenuClients);
-                }
-
-                if ($areCategoriesEnabled) {
-                    $submenuCategories = $searchSubmenuItem('^edit\-tags\.php\?taxonomy\=project_category\&amp;post_type=project$');
-                    if (!$submenuCategories !== null) {
-                        $newUpStreamSubmenu[] = $submenuCategories;
-                    }
-                    unset($submenuCategories);
-
-                    $submenuTags = $searchSubmenuItem('^edit\-tags\.php\?taxonomy\=upstream_tag\&amp;post_type=project$');
-                    if (!$submenuTags !== null) {
-                        $newUpStreamSubmenu[] = $submenuTags;
-                    }
-                    unset($submenuTags);
-                }
+        /**
+         * Hook in tabs.
+         */
+        public function __construct() {
+            if ( self::$userIsUpStreamUser === null ) {
+                $user                     = wp_get_current_user();
+                self::$userIsUpStreamUser = count( array_intersect( $user->roles,
+                        [ 'administrator', 'upstream_manager' ] ) ) === 0;
             }
 
-            $upstreamSubmenu = apply_filters('upstream:custom_menu_order', $newUpStreamSubmenu);
+            add_action( 'admin_menu', [ $this, 'projects_menu' ], 9 );
+            add_filter( 'custom_menu_order', [ $this, 'submenu_order' ] );
+            add_action( 'admin_head', [ $this, 'hideAddNewProjectButtonIfNeeded' ] );
         }
 
-        return $menu;
-    }
+        public function hideAddNewProjectButtonIfNeeded() {
+            if ( is_admin() ) {
+                global $pagenow;
 
-}
+                if ( $pagenow === 'edit.php' && isset( $_GET['post_type'] ) && $_GET['post_type'] === 'project' && self::$userIsUpStreamUser ) {
+                    echo '<style type="text/css">.page-title-action { display: none; }</style>';
+                }
+            }
+        }
+
+        /**
+         * Add menu item.
+         */
+        public function projects_menu() {
+            add_submenu_page( 'edit.php?post_type=project', upstream_client_label_plural(),
+                upstream_client_label_plural(), 'edit_clients', 'edit.php?post_type=client' );
+        }
+
+        public function submenu_order( $menu ) {
+            global $submenu;
+
+            $subMenuIdentifier = 'edit.php?post_type=project';
+            if ( isset( $submenu[ $subMenuIdentifier ] )
+                 && ! empty( $submenu[ $subMenuIdentifier ] )
+            ) {
+                $upstreamSubmenu    = &$submenu[ $subMenuIdentifier ];
+                $newUpStreamSubmenu = [];
+
+                $searchSubmenuItem = function ( $needle ) use ( &$upstreamSubmenu ) {
+                    foreach ( $upstreamSubmenu as $submenuIndex => $submenu ) {
+                        $regexp = '/' . $needle . '/i';
+                        if ( preg_match( $regexp, $submenu[2] ) ) {
+                            return $submenu;
+                        }
+                    }
+
+                    return null;
+                };
+
+                $submenuProjects = $searchSubmenuItem( '^edit\.php\?post_type=project$' );
+                if ( $submenuProjects !== null ) {
+                    $newUpStreamSubmenu[] = $submenuProjects;
+                }
+                unset( $submenuProjects );
+
+                if ( self::$userIsUpStreamUser ) {
+                    $submenuTasks = $searchSubmenuItem( '^tasks$' );
+                    if ( $submenuTasks !== null
+                         && strpos( $submenuTasks[0], 'update-count' !== false )
+                    ) {
+                        $newUpStreamSubmenu[] = $submenuTasks;
+                    }
+                    unset( $submenuTasks );
+
+                    $submenuBugs = $searchSubmenuItem( '^bugs$' );
+                    if ( $submenuBugs !== null
+                         && strpos( $submenuBugs[0], 'update-count' !== false )
+                    ) {
+                        $newUpStreamSubmenu[] = $submenuBugs;
+                    }
+                    unset( $submenuBugs );
+                } else {
+                    $areCategoriesEnabled = ! is_project_categorization_disabled();
+                    $areClientsEnabled    = ! is_clients_disabled();
+
+                    $submenuTasks = $searchSubmenuItem( '^tasks$' );
+                    if ( $submenuTasks !== null ) {
+                        $newUpStreamSubmenu[] = $submenuTasks;
+                    }
+                    unset( $submenuTasks );
+
+                    $submenuBugs = $searchSubmenuItem( '^bugs$' );
+                    if ( $submenuBugs !== null ) {
+                        $newUpStreamSubmenu[] = $submenuBugs;
+                    }
+                    unset( $submenuBugs );
+
+                    if ( $areClientsEnabled ) {
+                        $submenuClients = $searchSubmenuItem( '^edit\.php\?post_type=client$' );
+                        if ( $submenuClients !== null ) {
+                            $newUpStreamSubmenu[] = $submenuClients;
+                        }
+                        unset( $submenuClients );
+                    }
+
+                    if ( $areCategoriesEnabled ) {
+                        $submenuCategories = $searchSubmenuItem( '^edit\-tags\.php\?taxonomy\=project_category\&amp;post_type=project$' );
+                        if ( ! $submenuCategories !== null ) {
+                            $newUpStreamSubmenu[] = $submenuCategories;
+                        }
+                        unset( $submenuCategories );
+
+                        $submenuTags = $searchSubmenuItem( '^edit\-tags\.php\?taxonomy\=upstream_tag\&amp;post_type=project$' );
+                        if ( ! $submenuTags !== null ) {
+                            $newUpStreamSubmenu[] = $submenuTags;
+                        }
+                        unset( $submenuTags );
+                    }
+                }
+
+                $upstreamSubmenu = apply_filters( 'upstream:custom_menu_order', $newUpStreamSubmenu );
+            }
+
+            return $menu;
+        }
+
+    }
 
 endif;
 
