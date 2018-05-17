@@ -1,7 +1,7 @@
 <?php
 if (!defined('ABSPATH')) exit;
 
-$footerText = sprintf('&copy %s %s', $pageTitle, date('Y'));
+$footerText = sprintf('&copy; %s %s', $pageTitle, date('Y'));
 $footerText = apply_filters('upstream_footer_text', $footerText);
 ?>
                 <footer>
