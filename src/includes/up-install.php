@@ -85,9 +85,11 @@ function upstream_install( $network_wide = false ) {
         upstream_run_install();
     }
 
+    flush_rewrite_rules();
 }
 
 register_activation_hook( UPSTREAM_PLUGIN_FILE, 'upstream_install' );
+register_deactivation_hook( UPSTREAM_PLUGIN_FILE, 'upstream_uninstall' );
 
 /**
  * Run the UpStream Instsall process
@@ -135,6 +137,13 @@ function upstream_run_install() {
     // Add the transient to redirect
     set_transient( '_upstream_activation_redirect', true, 30 );
 
+}
+
+/**
+ * Runs the UpStream uninstall process.
+ */
+function upstream_uninstall() {
+    flush_rewrite_rules();
 }
 
 
