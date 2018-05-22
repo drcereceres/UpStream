@@ -13,7 +13,7 @@ if (!packageJSON.version) {
     return console.log('Missing "version" parameter.');
 }
 
-const PKG_NAME = 'UpStream';
+const PKG_NAME = 'upstream';
 const FOLDER_NAME = 'upstream';
 const buildCommandParams = `"${PKG_NAME}" "${FOLDER_NAME}" "${packageJSON.version}" ${rootPath}/builds`;
 
