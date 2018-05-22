@@ -142,11 +142,15 @@ If you were having date issues within Projects, please clear your cache and re-s
 The format is based on [Keep a Changelog](http://keepachangelog.com)
 and this project adheres to [Semantic Versioning](http://semver.org).
 
-= [1.17.1] - UNRELEASED =
+= [1.18.0] - UNRELEASED =
 
 Fixed:
-* Fixed a typo in the footer;
+* Fixed the rewrite rules after activating/deactivating the plugin, flushing the rules to refresh;
 * Fixed the method to format date using the correct timezone;
+* Fixed a typo in the footer;
+
+Added:
+* Added option to change the projects and client URL in the front-end;
 
 = [1.17.0] - 2018-04-26 =
 
