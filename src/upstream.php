@@ -228,6 +228,7 @@ if ( ! class_exists( 'UpStream' ) ) :
             include_once( 'includes/class-up-roles.php' );
             include_once( 'includes/class-up-counts.php' );
             include_once( 'includes/class-up-project-activity.php' );
+            include_once( 'includes/up-permalinks.php' );
             include_once( 'includes/up-post-types.php' );
             include_once( 'includes/up-labels.php' );
             include_once( 'includes/trait-up-singleton.php' );

@@ -56,7 +56,9 @@ class UpStream_Template_Loader {
 
         if ( isset( $_GET['action'] ) && $_GET['action'] === 'logout' && ! isset( $_POST['login'] ) ) {
             UpStream_Login::doDestroySession();
-            if ( preg_match( '/^\/projects/i', $_SERVER['REQUEST_URI'] ) ) {
+            $url_base = upstream_get_project_base();
+
+            if ( preg_match( '/^\/' . $url_base . '/i', $_SERVER['REQUEST_URI'] ) ) {
                 $redirectTo = wp_login_url( get_post_type_archive_link( 'project' ) );
             } else {
                 $redirectTo = get_permalink();

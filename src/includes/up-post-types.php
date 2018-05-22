@@ -14,8 +14,8 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 function upstream_setup_post_types() {
 
-    $project_slug = defined( 'UPSTREAM_PROJECT_SLUG' ) ? UPSTREAM_PROJECT_SLUG : 'project';
-    $client_slug  = defined( 'UPSTREAM_CLIENT_SLUG' ) ? UPSTREAM_CLIENT_SLUG : 'client';
+    $project_base = upstream_get_project_base();
+    $client_base  = upstream_get_client_base();
 
     $project_labels = apply_filters( 'upstream_project_labels', [
         'name'                  => _x( '%2$s', 'project post type name', 'upstream' ),
@@ -53,10 +53,10 @@ function upstream_setup_post_types() {
         'menu_icon'          => 'dashicons-arrow-up-alt',
         'menu_position'      => 56,
         'query_var'          => true,
-        'rewrite'            => [ 'slug' => $project_slug, 'with_front' => false ],
+        'rewrite'            => [ 'slug' => $project_base, 'with_front' => false ],
         'capability_type'    => 'project',
         'map_meta_cap'       => true,
-        'has_archive'        => 'projects',
+        'has_archive'        => $project_base,
         'hierarchical'       => false,
         'supports'           => apply_filters( 'upstream_project_supports', [ 'title', 'revisions', 'author' ] ),
     ];
@@ -101,7 +101,7 @@ function upstream_setup_post_types() {
         'show_ui'            => true,
         'show_in_menu'       => false,
         'query_var'          => true,
-        'rewrite'            => [ 'slug' => $client_slug, 'with_front' => false ],
+        'rewrite'            => [ 'slug' => $client_base, 'with_front' => false ],
         'capability_type'    => 'client',
         'map_meta_cap'       => true,
         'has_archive'        => false,
@@ -109,7 +109,6 @@ function upstream_setup_post_types() {
         'supports'           => apply_filters( 'upstream_client_supports', [ 'title', 'revisions' ] ),
     ];
     register_post_type( 'client', apply_filters( 'upstream_client_post_type_args', $client_args ) );
-
 }
 
 add_action( 'init', 'upstream_setup_post_types', 1 );
