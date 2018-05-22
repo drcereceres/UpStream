@@ -946,7 +946,7 @@ function upstream_admin_get_all_project_users() {
  * Returns array of all clients.
  * For use in dropdowns.
  */
-function upstream_admin_get_all_clients( $field ) {
+function upstream_admin_get_all_clients() {
     $args    = [
         'post_type'      => 'client',
         'post_status'    => 'publish',
