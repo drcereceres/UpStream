@@ -26,3 +26,4 @@ $RECYCLE.BIN/
 # Misc files #
 ##############
 config.codekit
+/package-lock.json
