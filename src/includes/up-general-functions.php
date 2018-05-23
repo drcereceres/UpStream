@@ -503,7 +503,7 @@ function upstream_get_percentages_for_dropdown() {
  */
 function upstream_format_date( $timestamp, $dateFormat = null ) {
     if ( empty( $dateFormat ) ) {
-        $dateFormat = get_option( 'date_format' );
+        $dateFormat = get_option( 'date_format', 'Y-m-d' );
     }
 
     if ( ! $timestamp ) {
@@ -543,6 +543,18 @@ function upstream_format_date( $timestamp, $dateFormat = null ) {
     }
 
     return apply_filters( 'upstream_format_date', $date, $timestamp );
+}
+
+/*
+ * Convert date to unixtime format
+ */
+function upstream_date_unixtime( $timestamp ) {
+    $dateFormat = get_option( 'date_format', 'Y-m-d' );
+
+    $date = \DateTime::createFromFormat( $dateFormat, $timestamp );
+    $date = $date->format('U');
+
+    return apply_filters( 'upstream_date_mysql', $date, $timestamp );
 }
 
 /*
