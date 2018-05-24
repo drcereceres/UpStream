@@ -34,7 +34,7 @@ $isClientsDisabled = is_clients_disabled();
             <h2>
                 <?php printf( '<i class="fa fa-info-circle"></i> ' . __( '%s Details', 'upstream' ),
                     upstream_project_label() ); ?>
-                <?php do_action( 'upstream:frontend.project.details.after_title' ); ?>
+                <?php do_action( 'upstream:frontend.project.details.after_title', $project ); ?>
             </h2>
             <ul class="nav navbar-right panel_toolbox">
                 <li>

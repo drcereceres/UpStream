@@ -36,6 +36,7 @@ if ( $isSingle ) {
                 <p><?php echo esc_html( $currentUser->role ); ?></p>
             </div>
         </div>
+
         <!-- /menu profile quick info -->
         <br/>
         <!-- sidebar menu -->
@@ -53,7 +54,12 @@ if ( $isSingle ) {
                                 <a href="<?php echo esc_attr( $projectsListUrl ); ?>">
                                     <?php printf( __( 'All %s', 'upstream' ), $i18n['LB_PROJECTS'] ); ?>
                                 </a>
+
+                                <?php do_action( 'upstream_sidebar_after_all_projects_link' ); ?>
                             </li>
+
+                            <?php do_action( 'upstream_sidebar_before_projects' ); ?>
+
                             <?php if ( $projectsListCount > 0 ): ?>
                                 <?php foreach ( $projectsList as $project_id => $project ): ?>
                                     <li>
@@ -63,6 +69,8 @@ if ( $isSingle ) {
                                     </li>
                                 <?php endforeach; ?>
                             <?php endif; ?>
+
+                            <?php do_action( 'upstream_sidebar_after_projects' ); ?>
                         </ul>
                     </li>
                 </ul>
