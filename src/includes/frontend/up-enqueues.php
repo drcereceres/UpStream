@@ -36,8 +36,9 @@ function upstream_enqueue_styles_scripts() {
         }
     }
 
-    $up_url = UPSTREAM_PLUGIN_URL;
-    $up_ver = UPSTREAM_VERSION;
+    $up_url  = UPSTREAM_PLUGIN_URL;
+    $up_ver  = UPSTREAM_VERSION;
+    $lib_dir = 'templates/assets/lib/';
 
     /*
      * Enqueue styles
@@ -51,6 +52,7 @@ function upstream_enqueue_styles_scripts() {
     wp_enqueue_style( 'up-bootstrap', $up_url . $css_dir . 'bootstrap.min.css', [], $up_ver, 'all' );
     wp_enqueue_style( 'up-tableexport', $up_url . $css_dir . 'vendor/tableexport.min.css', [], $up_ver, 'all' );
     wp_enqueue_style( 'up-select2', $up_url . $css_dir . 'vendor/select2.min.css', [], $up_ver, 'all' );
+    wp_enqueue_style( 'up-chosen', $up_url . $lib_dir . 'chosen/chosen.min.css', [], $up_ver, 'all' );
     wp_enqueue_style( 'up-fontawesome', $up_url . $css_dir . 'fontawesome.min.css', [], $up_ver, 'all' );
     wp_enqueue_style( 'framework', $up_url . $css_dir . 'framework.css', [], $up_ver, 'all' );
     wp_enqueue_style( 'upstream-datepicker', $up_url . $css_dir . 'vendor/bootstrap-datepicker3.min.css', [], $up_ver,
@@ -78,6 +80,7 @@ function upstream_enqueue_styles_scripts() {
     wp_enqueue_script( 'up-filesaver', $up_url . $js_dir . 'vendor/FileSaver.min.js', [], $up_ver, true );
     wp_enqueue_script( 'up-tableexport', $up_url . $js_dir . 'vendor/tableexport.min.js', [], $up_ver, true );
     wp_enqueue_script( 'up-select2', $up_url . $js_dir . 'vendor/select2.full.min.js', [], $up_ver, true );
+    wp_enqueue_script( 'up-chosen', $up_url . $lib_dir . '/chosen/chosen.jquery.min.js', [ 'jquery' ], $up_ver, true );
     wp_enqueue_script( 'up-bootstrap', $up_url . $js_dir . 'bootstrap.min.js', [ 'jquery' ], $up_ver, true );
     wp_enqueue_script( 'up-fastclick', $up_url . $js_dir . 'fastclick.js', [ 'jquery' ], $up_ver, true );
     wp_enqueue_script( 'up-nprogress', $up_url . $js_dir . 'nprogress.js', [ 'jquery' ], $up_ver, true );
