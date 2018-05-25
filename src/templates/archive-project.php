@@ -329,7 +329,8 @@ $categories = (array) get_terms( [
                                             <td data-column="title"
                                                 data-value="<?php echo esc_attr( $project->title ); ?>">
                                                 <a href="<?php echo $project->permalink; ?>">
-                                                    <i class="fa fa-link"></i>
+                                                    <?php do_action( 'upstream:frontend.project.details.title', $project ); ?>
+
                                                     <?php echo esc_html( $project->title ); ?>
                                                 </a>
                                                 <?php do_action( 'upstream:frontend.project.details.after_title', $project ); ?>
