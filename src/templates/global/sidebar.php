@@ -58,8 +58,6 @@ if ( $isSingle ) {
                                 <?php do_action( 'upstream_sidebar_after_all_projects_link' ); ?>
                             </li>
 
-                            <?php do_action( 'upstream_sidebar_before_projects' ); ?>
-
                             <?php if ( $projectsListCount > 0 ): ?>
                                 <?php foreach ( $projectsList as $project_id => $project ): ?>
                                     <li>
