@@ -332,7 +332,6 @@ $categories = (array) get_terms( [
                                                 <a href="<?php echo $project->permalink; ?>">
                                                     <?php echo esc_html( $project->title ); ?>
                                                 </a>
-                                                <?php do_action( 'upstream:frontend.project.details.after_title', $project ); ?>
                                                 <br/>
                                                 <small><?php echo $project->timeframe; ?></small>
                                             </td>
