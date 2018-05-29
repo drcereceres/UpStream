@@ -142,7 +142,7 @@ If you were having date issues within Projects, please clear your cache and re-s
 The format is based on [Keep a Changelog](http://keepachangelog.com)
 and this project adheres to [Semantic Versioning](http://semver.org).
 
-= [1.18.0] - UNRELEASED =
+= [1.18.0] - 2018-05-29 =
 
 Fixed:
 * Fixed the rewrite rules after activating/deactivating the plugin, flushing the rules to refresh;
