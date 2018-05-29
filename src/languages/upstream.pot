@@ -766,7 +766,7 @@ msgid "Activity"
 msgstr ""
 
 #: includes/admin/metaboxes/class-up-metaboxes-projects.php:1694
-#: includes/frontend/up-enqueues.php:111 templates/global/sidebar.php:154
+#: includes/frontend/up-enqueues.php:114 templates/global/sidebar.php:160
 #: templates/single-project/discussion.php:17
 msgid "Discussion"
 msgstr ""
@@ -855,15 +855,15 @@ msgstr ""
 msgid "Not Assigned"
 msgstr ""
 
-#: includes/admin/metaboxes/metabox-functions.php:1017
+#: includes/admin/metaboxes/metabox-functions.php:1059
 msgid "No project selected"
 msgstr ""
 
-#: includes/admin/metaboxes/metabox-functions.php:1021
+#: includes/admin/metaboxes/metabox-functions.php:1063
 msgid "No client selected"
 msgstr ""
 
-#: includes/admin/metaboxes/metabox-functions.php:1031
+#: includes/admin/metaboxes/metabox-functions.php:1073
 msgid "No users found"
 msgstr ""
 
@@ -1168,7 +1168,7 @@ msgid "Label that describes the Admin Support Link."
 msgstr ""
 
 #: includes/admin/options/class-up-options-general.php:191
-#: includes/up-general-functions.php:703
+#: includes/up-general-functions.php:715
 msgid "Contact Admin"
 msgstr ""
 
@@ -1639,17 +1639,17 @@ msgstr ""
 msgid "You were just logged out."
 msgstr ""
 
-#: includes/frontend/up-enqueues.php:92 includes/frontend/up-enqueues.php:105
+#: includes/frontend/up-enqueues.php:95 includes/frontend/up-enqueues.php:108
 #, php-format
 msgctxt "%s: item name, ie Milestones, Tasks, Bugs, Files, Discussion"
 msgid "You haven't created any %s yet"
 msgstr ""
 
-#: includes/frontend/up-enqueues.php:102
+#: includes/frontend/up-enqueues.php:105
 msgid "Copy"
 msgstr ""
 
-#: includes/frontend/up-enqueues.php:103 templates/archive-project.php:35
+#: includes/frontend/up-enqueues.php:106 templates/archive-project.php:35
 #: templates/single-project.php:70 templates/single-project/bugs.php:108
 #: templates/single-project/bugs.php:137 templates/single-project/files.php:107
 #: templates/single-project/files.php:136
@@ -1660,7 +1660,7 @@ msgstr ""
 msgid "CSV"
 msgstr ""
 
-#: includes/frontend/up-enqueues.php:104
+#: includes/frontend/up-enqueues.php:107
 msgid "Search:"
 msgstr ""
 
@@ -2155,19 +2155,19 @@ msgstr ""
 msgid "It seems that you're not participating in any project right now."
 msgstr ""
 
-#: templates/global/sidebar.php:54
+#: templates/global/sidebar.php:55
 #, php-format
 msgid "All %s"
 msgstr ""
 
-#: templates/global/sidebar.php:91 templates/global/sidebar.php:112
-#: templates/global/sidebar.php:134 templates/single-project/overview.php:169
+#: templates/global/sidebar.php:97 templates/global/sidebar.php:118
+#: templates/global/sidebar.php:140 templates/single-project/overview.php:169
 #: templates/single-project/overview.php:198
 #: templates/single-project/overview.php:227
 msgid "Assigned to me"
 msgstr ""
 
-#: templates/global/sidebar.php:168 templates/global/top-nav.php:40
+#: templates/global/sidebar.php:174 templates/global/top-nav.php:40
 #, php-format
 msgid "My %s"
 msgstr ""
