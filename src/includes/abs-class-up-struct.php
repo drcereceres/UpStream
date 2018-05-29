@@ -1,4 +1,5 @@
 <?php
+
 namespace UpStream;
 
 /**
@@ -7,20 +8,18 @@ namespace UpStream;
  * @since       1.13.0
  * @abstract
  */
-abstract class Struct
-{
+abstract class Struct {
     /**
      * Prevent non existent properties from being retrieved.
      *
      * @since   1.13.0
      *
-     * @param   string  $property   Property being retrieved.
+     * @param   string $property Property being retrieved.
      *
      * @throws  \RuntimeException
      */
-    public function __get($property)
-    {
-        throw new \RuntimeException(sprintf('Trying to get non-existing property "%s".', $property));
+    public function __get( $property ) {
+        throw new \RuntimeException( sprintf( 'Trying to get non-existing property "%s".', $property ) );
     }
 
     /**
@@ -28,14 +27,13 @@ abstract class Struct
      *
      * @since   1.13.0
      *
-     * @param   string  $property   Property being set.
-     * @param   mixed   $value      Value being set.
+     * @param   string $property Property being set.
+     * @param   mixed  $value    Value being set.
      *
      * @throws  \RuntimeException
      */
-    public function __set($property, $value)
-    {
-        throw new \RuntimeException(sprintf('Trying to set non-existing property "%s".', $property));
+    public function __set( $property, $value ) {
+        throw new \RuntimeException( sprintf( 'Trying to set non-existing property "%s".', $property ) );
     }
 
     /**
@@ -43,10 +41,9 @@ abstract class Struct
      *
      * @since   1.13.0
      */
-    public function __clone()
-    {
-        foreach ($this as $property => $value) {
-            if (is_object($value)) {
+    public function __clone() {
+        foreach ( $this as $property => $value ) {
+            if ( is_object( $value ) ) {
                 $this->{$property} = clone $value;
             }
         }

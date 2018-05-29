@@ -1,153 +1,155 @@
 <?php
 // Prevent direct access.
-if (!defined('ABSPATH')) exit;
+if ( ! defined( 'ABSPATH' ) ) {
+    exit;
+}
 
-$user_id = (int)get_current_user_id();
-$project_id = (int)upstream_post_id();
-$progressValue = upstream_project_progress();
+$user_id          = (int) get_current_user_id();
+$project_id       = (int) upstream_post_id();
+$progressValue    = upstream_project_progress();
 $currentTimestamp = time();
 
-$areMilestonesEnabled = !upstream_are_milestones_disabled() && !upstream_disable_milestones();
-if ($areMilestonesEnabled) {
-    $milestonesCounts = array(
+$areMilestonesEnabled = ! upstream_are_milestones_disabled() && ! upstream_disable_milestones();
+if ( $areMilestonesEnabled ) {
+    $milestonesCounts = [
         'open'     => 0,
         'mine'     => 0,
         'overdue'  => 0,
         'finished' => 0,
-        'total'    => 0
-    );
+        'total'    => 0,
+    ];
 
-    $milestones = get_post_meta($project_id, '_upstream_project_milestones');
-    $milestones = !empty($milestones) ? (array)$milestones[0] : array();
+    $milestones = get_post_meta( $project_id, '_upstream_project_milestones' );
+    $milestones = ! empty( $milestones ) ? (array) $milestones[0] : [];
 
-    if (isset($milestones[0]) && !isset($milestones[0]['id'])) {
-        $milestones = (array)$milestones[0];
+    if ( isset( $milestones[0] ) && ! isset( $milestones[0]['id'] ) ) {
+        $milestones = (array) $milestones[0];
     }
 
-    $milestonesCounts['total'] = count($milestones);
-    if ($milestonesCounts['total'] > 0) {
-        foreach ($milestones as $milestone) {
-            if (isset($milestone['assigned_to']) && (int)$milestone['assigned_to'] === $user_id) {
-                $milestonesCounts['mine']++;
+    $milestonesCounts['total'] = count( $milestones );
+    if ( $milestonesCounts['total'] > 0 ) {
+        foreach ( $milestones as $milestone ) {
+            if ( isset( $milestone['assigned_to'] ) && (int) $milestone['assigned_to'] === $user_id ) {
+                $milestonesCounts['mine'] ++;
             }
 
-            $progress = isset($milestone['progress']) ? (float)$milestone['progress'] : 0;
-            if ($progress < 100) {
-                $milestonesCounts['open']++;
+            $progress = isset( $milestone['progress'] ) ? (float) $milestone['progress'] : 0;
+            if ( $progress < 100 ) {
+                $milestonesCounts['open'] ++;
 
-                if (isset($milestone['end_date'])
-                    && (int)$milestone['end_date'] > 0
-                    && (int)$milestone['end_date'] < $currentTimestamp
+                if ( isset( $milestone['end_date'] )
+                     && (int) $milestone['end_date'] > 0
+                     && (int) $milestone['end_date'] < $currentTimestamp
                 ) {
-                    $milestonesCounts['overdue']++;
+                    $milestonesCounts['overdue'] ++;
                 }
             } else {
-                $milestonesCounts['finished']++;
+                $milestonesCounts['finished'] ++;
             }
         }
     }
 }
 
-$areTasksEnabled = !upstream_are_tasks_disabled() && !upstream_disable_tasks();
-if ($areTasksEnabled) {
-    $tasksCounts = array(
+$areTasksEnabled = ! upstream_are_tasks_disabled() && ! upstream_disable_tasks();
+if ( $areTasksEnabled ) {
+    $tasksCounts = [
         'open'    => 0,
         'mine'    => 0,
         'overdue' => 0,
         'closed'  => 0,
-        'total'   => 0
-    );
+        'total'   => 0,
+    ];
 
-    $tasksOptions = get_option('upstream_tasks');
-    $tasksMap = array();
-    foreach ($tasksOptions['statuses'] as $task) {
-        $tasksMap[$task['name']] = $task['type'];
+    $tasksOptions = get_option( 'upstream_tasks' );
+    $tasksMap     = [];
+    foreach ( $tasksOptions['statuses'] as $task ) {
+        $tasksMap[ $task['name'] ] = $task['type'];
     }
-    unset($tasksOptions);
+    unset( $tasksOptions );
 
-    $tasks = get_post_meta($project_id, '_upstream_project_tasks');
-    $tasks = !empty($tasks) ? (array)$tasks[0] : array();
+    $tasks = get_post_meta( $project_id, '_upstream_project_tasks' );
+    $tasks = ! empty( $tasks ) ? (array) $tasks[0] : [];
 
-    if (isset($tasks[0]) && !isset($tasks[0]['id'])) {
-        $tasks = (array)$tasks[0];
+    if ( isset( $tasks[0] ) && ! isset( $tasks[0]['id'] ) ) {
+        $tasks = (array) $tasks[0];
     }
 
-    $tasksCounts['total'] = count($tasks);
-    if ($tasksCounts['total'] > 0) {
-        foreach ($tasks as $task) {
-            if (isset($task['assigned_to']) && (int)$task['assigned_to'] === $user_id) {
-                $tasksCounts['mine']++;
+    $tasksCounts['total'] = count( $tasks );
+    if ( $tasksCounts['total'] > 0 ) {
+        foreach ( $tasks as $task ) {
+            if ( isset( $task['assigned_to'] ) && (int) $task['assigned_to'] === $user_id ) {
+                $tasksCounts['mine'] ++;
             }
 
-            $progress = isset($task['progress']) ? (float)$task['progress'] : 0;
-            if ($progress < 100) {
-                if (isset($task['status'])
-                    && isset($tasksMap[$task['status']])
-                    && $tasksMap[$task['status']] === "closed"
+            $progress = isset( $task['progress'] ) ? (float) $task['progress'] : 0;
+            if ( $progress < 100 ) {
+                if ( isset( $task['status'] )
+                     && isset( $tasksMap[ $task['status'] ] )
+                     && $tasksMap[ $task['status'] ] === "closed"
                 ) {
-                    $tasksCounts['closed']++;
+                    $tasksCounts['closed'] ++;
                 } else {
-                    $tasksCounts['open']++;
+                    $tasksCounts['open'] ++;
 
-                    if (isset($task['end_date'])
-                        && (int)$task['end_date'] > 0
-                        && (int)$task['end_date'] < $currentTimestamp
+                    if ( isset( $task['end_date'] )
+                         && (int) $task['end_date'] > 0
+                         && (int) $task['end_date'] < $currentTimestamp
                     ) {
-                        $tasksCounts['overdue']++;
+                        $tasksCounts['overdue'] ++;
                     }
                 }
             } else {
-                $tasksCounts['closed']++;
+                $tasksCounts['closed'] ++;
             }
         }
     }
 }
 
-$areBugsEnabled = !upstream_disable_bugs() && !upstream_are_bugs_disabled();
-if ($areBugsEnabled) {
-    $bugsCounts = array(
+$areBugsEnabled = ! upstream_disable_bugs() && ! upstream_are_bugs_disabled();
+if ( $areBugsEnabled ) {
+    $bugsCounts = [
         'open'    => 0,
         'mine'    => 0,
         'overdue' => 0,
         'closed'  => 0,
-        'total'   => 0
-    );
+        'total'   => 0,
+    ];
 
-    $bugsOptions = get_option('upstream_bugs');
-    $bugsMap = array();
-    foreach ($bugsOptions['statuses'] as $bug) {
-        $bugsMap[$bug['name']] = $bug['type'];
+    $bugsOptions = get_option( 'upstream_bugs' );
+    $bugsMap     = [];
+    foreach ( $bugsOptions['statuses'] as $bug ) {
+        $bugsMap[ $bug['name'] ] = $bug['type'];
     }
-    unset($bugsOptions);
+    unset( $bugsOptions );
 
-    $bugs = get_post_meta($project_id, '_upstream_project_bugs');
-    $bugs = !empty($bugs) ? (array)$bugs[0] : array();
+    $bugs = get_post_meta( $project_id, '_upstream_project_bugs' );
+    $bugs = ! empty( $bugs ) ? (array) $bugs[0] : [];
 
-    if (isset($bugs[0]) && !isset($bugs[0]['id'])) {
-        $bugs = (array)$bugs[0];
+    if ( isset( $bugs[0] ) && ! isset( $bugs[0]['id'] ) ) {
+        $bugs = (array) $bugs[0];
     }
 
-    $bugsCounts['total'] = count($bugs);
-    if ($bugsCounts['total'] > 0) {
-        foreach ($bugs as $bug) {
-            if (isset($bug['assigned_to']) && (int)$bug['assigned_to'] === $user_id) {
-                $bugsCounts['mine']++;
+    $bugsCounts['total'] = count( $bugs );
+    if ( $bugsCounts['total'] > 0 ) {
+        foreach ( $bugs as $bug ) {
+            if ( isset( $bug['assigned_to'] ) && (int) $bug['assigned_to'] === $user_id ) {
+                $bugsCounts['mine'] ++;
             }
 
-            if (isset($bug['status'])
-                && !empty($bug['status'])
-                && isset($bugsMap[$bug['status']])
-                && $bugsMap[$bug['status']] === "closed"
+            if ( isset( $bug['status'] )
+                 && ! empty( $bug['status'] )
+                 && isset( $bugsMap[ $bug['status'] ] )
+                 && $bugsMap[ $bug['status'] ] === "closed"
             ) {
-                $bugsCounts['closed']++;
+                $bugsCounts['closed'] ++;
             } else {
-                $bugsCounts['open']++;
+                $bugsCounts['open'] ++;
 
-                if (isset($bug['due_date'])
-                    && (int)$bug['due_date'] > 0
-                    && (int)$bug['due_date'] < $currentTimestamp
+                if ( isset( $bug['due_date'] )
+                     && (int) $bug['due_date'] > 0
+                     && (int) $bug['due_date'] < $currentTimestamp
                 ) {
-                    $bugsCounts['overdue']++;
+                    $bugsCounts['overdue'] ++;
                 }
             }
         }
@@ -156,80 +158,92 @@ if ($areBugsEnabled) {
 ?>
 
 <div class="col-xs-12 col-sm-12 col-md-12 col-lg-7 c-upstream-overview">
-  <?php if ($areMilestonesEnabled || $areTasksEnabled || $areBugsEnabled): ?>
-    <?php if ($areMilestonesEnabled): ?>
-    <div class="hidden-xs hidden-sm col-md-4 col-lg-4" style="min-width: 185px;">
-      <div class="panel panel-default" style="margin-bottom: 10px;">
-        <div class="panel-body" style="display: flex; position: relative;">
-          <div data-toggle="tooltip" title="<?php _e('Open', 'upstream'); ?>">
-            <span class="label label-primary" ><?php echo $milestonesCounts['open']; ?></span>
-          </div>
-          <div data-toggle="tooltip" title="<?php _e('Assigned to me', 'upstream'); ?>">
-            <span class="label label-info"><?php echo $milestonesCounts['mine']; ?></span>
-          </div>
-          <div data-toggle="tooltip" title="<?php _e('Overdue', 'upstream'); ?>">
-            <span class="label label-danger"><?php echo $milestonesCounts['overdue']; ?></span>
-          </div>
-          <div data-toggle="tooltip" title="<?php _e('Completed', 'upstream'); ?>">
-            <span class="label label-success"><?php echo $milestonesCounts['finished']; ?></span>
-          </div>
-          <div data-toggle="tooltip" title="<?php _e('Total', 'upstream'); ?>">
-            <span class="label" style="background-color: #ecf0f1; color: #3A4E66;"><?php echo $milestonesCounts['total']; ?></span>
-          </div>
-          <i class="fa fa-flag fa-2x" data-toggle="tooltip" title="<?php printf('%s %s', upstream_milestone_label_plural(), __('Overview', 'upstream')); ?>" style="position: absolute; color: #ECF0F1; right: 8px; margin-top: -2px"></i>
-        </div>
-      </div>
-    </div>
-    <?php endif; ?>
+    <?php if ( $areMilestonesEnabled || $areTasksEnabled || $areBugsEnabled ): ?>
+        <?php if ( $areMilestonesEnabled ): ?>
+            <div class="hidden-xs hidden-sm col-md-4 col-lg-4" style="min-width: 185px;">
+                <div class="panel panel-default" style="margin-bottom: 10px;">
+                    <div class="panel-body" style="display: flex; position: relative;">
+                        <div data-toggle="tooltip" title="<?php _e( 'Open', 'upstream' ); ?>">
+                            <span class="label label-primary"><?php echo $milestonesCounts['open']; ?></span>
+                        </div>
+                        <div data-toggle="tooltip" title="<?php _e( 'Assigned to me', 'upstream' ); ?>">
+                            <span class="label label-info"><?php echo $milestonesCounts['mine']; ?></span>
+                        </div>
+                        <div data-toggle="tooltip" title="<?php _e( 'Overdue', 'upstream' ); ?>">
+                            <span class="label label-danger"><?php echo $milestonesCounts['overdue']; ?></span>
+                        </div>
+                        <div data-toggle="tooltip" title="<?php _e( 'Completed', 'upstream' ); ?>">
+                            <span class="label label-success"><?php echo $milestonesCounts['finished']; ?></span>
+                        </div>
+                        <div data-toggle="tooltip" title="<?php _e( 'Total', 'upstream' ); ?>">
+                            <span class="label"
+                                  style="background-color: #ecf0f1; color: #3A4E66;"><?php echo $milestonesCounts['total']; ?></span>
+                        </div>
+                        <i class="fa fa-flag fa-2x" data-toggle="tooltip"
+                           title="<?php printf( '%s %s', upstream_milestone_label_plural(),
+                               __( 'Overview', 'upstream' ) ); ?>"
+                           style="position: absolute; color: #ECF0F1; right: 8px; margin-top: -2px"></i>
+                    </div>
+                </div>
+            </div>
+        <?php endif; ?>
 
-    <?php if ($areTasksEnabled): ?>
-    <div class="hidden-xs hidden-sm col-md-4 col-lg-4" style="min-width: 185px;">
-      <div class="panel panel-default" style="margin-bottom: 10px;">
-        <div class="panel-body" style="display: flex; position: relative;">
-          <div data-toggle="tooltip" title="<?php _e('Open', 'upstream'); ?>">
-            <span class="label label-primary" ><?php echo $tasksCounts['open']; ?></span>
-          </div>
-          <div data-toggle="tooltip" title="<?php _e('Assigned to me', 'upstream'); ?>">
-            <span class="label label-info"><?php echo $tasksCounts['mine']; ?></span>
-          </div>
-          <div data-toggle="tooltip" title="<?php _e('Overdue', 'upstream'); ?>">
-            <span class="label label-danger"><?php echo $tasksCounts['overdue']; ?></span>
-          </div>
-          <div data-toggle="tooltip" title="<?php _e('Closed', 'upstream'); ?>">
-            <span class="label label-success"><?php echo $tasksCounts['closed']; ?></span>
-          </div>
-          <div data-toggle="tooltip" title="<?php _e('Total', 'upstream'); ?>">
-            <span class="label" style="background-color: #ecf0f1; color: #3A4E66;"><?php echo $tasksCounts['total']; ?></span>
-          </div>
-          <i class="fa fa-wrench fa-2x" data-toggle="tooltip" title="<?php printf('%s %s', upstream_task_label_plural(), __('Overview', 'upstream')); ?>" style="position: absolute; color: #ECF0F1; right: 8px; margin-top: -2px"></i>
-        </div>
-      </div>
-    </div>
-    <?php endif; ?>
+        <?php if ( $areTasksEnabled ): ?>
+            <div class="hidden-xs hidden-sm col-md-4 col-lg-4" style="min-width: 185px;">
+                <div class="panel panel-default" style="margin-bottom: 10px;">
+                    <div class="panel-body" style="display: flex; position: relative;">
+                        <div data-toggle="tooltip" title="<?php _e( 'Open', 'upstream' ); ?>">
+                            <span class="label label-primary"><?php echo $tasksCounts['open']; ?></span>
+                        </div>
+                        <div data-toggle="tooltip" title="<?php _e( 'Assigned to me', 'upstream' ); ?>">
+                            <span class="label label-info"><?php echo $tasksCounts['mine']; ?></span>
+                        </div>
+                        <div data-toggle="tooltip" title="<?php _e( 'Overdue', 'upstream' ); ?>">
+                            <span class="label label-danger"><?php echo $tasksCounts['overdue']; ?></span>
+                        </div>
+                        <div data-toggle="tooltip" title="<?php _e( 'Closed', 'upstream' ); ?>">
+                            <span class="label label-success"><?php echo $tasksCounts['closed']; ?></span>
+                        </div>
+                        <div data-toggle="tooltip" title="<?php _e( 'Total', 'upstream' ); ?>">
+                            <span class="label"
+                                  style="background-color: #ecf0f1; color: #3A4E66;"><?php echo $tasksCounts['total']; ?></span>
+                        </div>
+                        <i class="fa fa-wrench fa-2x" data-toggle="tooltip"
+                           title="<?php printf( '%s %s', upstream_task_label_plural(),
+                               __( 'Overview', 'upstream' ) ); ?>"
+                           style="position: absolute; color: #ECF0F1; right: 8px; margin-top: -2px"></i>
+                    </div>
+                </div>
+            </div>
+        <?php endif; ?>
 
-    <?php if ($areBugsEnabled): ?>
-    <div class="hidden-xs hidden-sm col-md-4 col-lg-4" style="min-width: 185px;">
-      <div class="panel panel-default" style="margin-bottom: 10px;">
-        <div class="panel-body" style="display: flex; position: relative;">
-          <div data-toggle="tooltip" title="<?php _e('Open', 'upstream'); ?>">
-            <span class="label label-primary" ><?php echo $bugsCounts['open']; ?></span>
-          </div>
-          <div data-toggle="tooltip" title="<?php _e('Assigned to me', 'upstream'); ?>">
-            <span class="label label-info"><?php echo $bugsCounts['mine']; ?></span>
-          </div>
-          <div data-toggle="tooltip" title="<?php _e('Overdue', 'upstream'); ?>">
-            <span class="label label-danger"><?php echo $bugsCounts['overdue']; ?></span>
-          </div>
-          <div data-toggle="tooltip" title="<?php _e('Closed', 'upstream'); ?>">
-            <span class="label label-success"><?php echo $bugsCounts['closed']; ?></span>
-          </div>
-          <div data-toggle="tooltip" title="<?php _e('Total', 'upstream'); ?>">
-            <span class="label" style="background-color: #ecf0f1; color: #3A4E66;"><?php echo $bugsCounts['total']; ?></span>
-          </div>
-          <i class="fa fa-bug fa-2x" data-toggle="tooltip" title="<?php printf('%s %s', upstream_bug_label_plural(), __('Overview', 'upstream')); ?>" style="position: absolute; color: #ECF0F1; right: 8px; margin-top: -2px"></i>
-        </div>
-      </div>
-    </div>
+        <?php if ( $areBugsEnabled ): ?>
+            <div class="hidden-xs hidden-sm col-md-4 col-lg-4" style="min-width: 185px;">
+                <div class="panel panel-default" style="margin-bottom: 10px;">
+                    <div class="panel-body" style="display: flex; position: relative;">
+                        <div data-toggle="tooltip" title="<?php _e( 'Open', 'upstream' ); ?>">
+                            <span class="label label-primary"><?php echo $bugsCounts['open']; ?></span>
+                        </div>
+                        <div data-toggle="tooltip" title="<?php _e( 'Assigned to me', 'upstream' ); ?>">
+                            <span class="label label-info"><?php echo $bugsCounts['mine']; ?></span>
+                        </div>
+                        <div data-toggle="tooltip" title="<?php _e( 'Overdue', 'upstream' ); ?>">
+                            <span class="label label-danger"><?php echo $bugsCounts['overdue']; ?></span>
+                        </div>
+                        <div data-toggle="tooltip" title="<?php _e( 'Closed', 'upstream' ); ?>">
+                            <span class="label label-success"><?php echo $bugsCounts['closed']; ?></span>
+                        </div>
+                        <div data-toggle="tooltip" title="<?php _e( 'Total', 'upstream' ); ?>">
+                            <span class="label"
+                                  style="background-color: #ecf0f1; color: #3A4E66;"><?php echo $bugsCounts['total']; ?></span>
+                        </div>
+                        <i class="fa fa-bug fa-2x" data-toggle="tooltip"
+                           title="<?php printf( '%s %s', upstream_bug_label_plural(),
+                               __( 'Overview', 'upstream' ) ); ?>"
+                           style="position: absolute; color: #ECF0F1; right: 8px; margin-top: -2px"></i>
+                    </div>
+                </div>
+            </div>
+        <?php endif; ?>
     <?php endif; ?>
-  <?php endif; ?>
 </div>

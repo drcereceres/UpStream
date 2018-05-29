@@ -1,14 +1,15 @@
 <?php
 
 // Exit if accessed directly
-if ( ! defined( 'ABSPATH' ) ) exit;
+if ( ! defined( 'ABSPATH' ) ) {
+    exit;
+}
 
 /**
  * UpStream_Client Class
  *
  * @since 1.0
  */
-
 class UpStream_Client {
 
     /**
@@ -20,14 +21,14 @@ class UpStream_Client {
 
     public $meta_prefix = '_upstream_client_';
 
-    public $meta = array(
+    public $meta = [
         'logo',
         'logo_id',
         'address',
         'phone',
         'website',
         'users',
-    );
+    ];
 
     /**
      * Declare the default properties in WP_Post as we can't extend it
@@ -61,16 +62,16 @@ class UpStream_Client {
      *
      * @since 1.0
      */
-    public function __construct( $_id = false, $_args = array() ) {
+    public function __construct( $_id = false, $_args = [] ) {
 
         // if no id is sent, then go through the varous ways of getting the id
         // may need to check the order more closely to ensure we get it right
-        if( ! $_id ) {
+        if ( ! $_id ) {
             $user_id = upstream_current_user_id();
-            $_id = upstream_get_users_client_id( $user_id );
+            $_id     = upstream_get_users_client_id( $user_id );
         }
 
-        if( ! $_id ) {
+        if ( ! $_id ) {
             $_id = upstream_project_client_id();
         }
 
@@ -85,19 +86,24 @@ class UpStream_Client {
      * Given the client data, let's set the variables
      *
      * @since  2.3.6
+     *
      * @param  object $client The Client Object
+     *
      * @return bool             If the setup was successful or not
      */
     private function setup_client( $client ) {
 
-        if( ! is_object( $client ) )
+        if ( ! is_object( $client ) ) {
             return false;
+        }
 
-        if( ! is_a( $client, 'WP_Post' ) )
+        if ( ! is_a( $client, 'WP_Post' ) ) {
             return false;
+        }
 
-        if( 'client' !== $client->post_type )
+        if ( 'client' !== $client->post_type ) {
             return false;
+        }
 
         // sets the value of each key
         foreach ( $client as $key => $value ) {
@@ -113,7 +119,7 @@ class UpStream_Client {
     }
 
     public function init() {
-        add_action( 'init', array( $this, 'hooks') );
+        add_action( 'init', [ $this, 'hooks' ] );
     }
 
     public function hooks() {
@@ -124,14 +130,19 @@ class UpStream_Client {
 
     /**
      * Get a meta value
+     *
      * @since 1.0.0
+     *
      * @param string $meta the meta field (without prefix)
+     *
      * @return mixed
      */
     public function get_meta( $meta ) {
         $result = get_post_meta( $this->ID, $this->meta_prefix . $meta, true );
-        if( ! $result )
+        if ( ! $result ) {
             $result = null;
+        }
+
         return $result;
     }
 

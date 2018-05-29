@@ -4,29 +4,35 @@
  */
 
 // Exit if accessed directly.
-if ( ! defined( 'WP_UNINSTALL_PLUGIN' ) ) exit;
+if ( ! defined( 'WP_UNINSTALL_PLUGIN' ) ) {
+    exit;
+}
 
 // Load UpStream file.
 include_once( 'upstream.php' );
 
 global $wpdb, $wp_roles;
 
-$options    = (array)get_option( 'upstream_general' );
-$remove     = !empty($options['remove_data']) && !empty($options['remove_data'][0]) ? (string)$options['remove_data'][0] === 'yes' : false;
+$options = (array) get_option( 'upstream_general' );
+$remove  = ! empty( $options['remove_data'] ) && ! empty( $options['remove_data'][0] ) ? (string) $options['remove_data'][0] === 'yes' : false;
 
-if($remove) {
+if ( $remove ) {
 
     /** Delete All the Custom Post Types */
-    $upstream_taxonomies = array( 'project_category' );
-    $upstream_post_types = array( 'project', 'client' );
+    $upstream_taxonomies = [ 'project_category' ];
+    $upstream_post_types = [ 'project', 'client' ];
     foreach ( $upstream_post_types as $post_type ) {
 
         $upstream_taxonomies = array_merge( $upstream_taxonomies, get_object_taxonomies( $post_type ) );
-        $items = get_posts( array( 'post_type' => $post_type, 'post_status' => 'any', 'numberposts' => -1, 'fields' => 'ids' ) );
+        $items               = get_posts( [ 'post_type'   => $post_type,
+                                            'post_status' => 'any',
+                                            'numberposts' => - 1,
+                                            'fields'      => 'ids',
+        ] );
 
         if ( $items ) {
             foreach ( $items as $item ) {
-                wp_delete_post( $item, true);
+                wp_delete_post( $item, true );
             }
         }
     }
@@ -34,18 +40,19 @@ if($remove) {
     /** Delete All the Terms & Taxonomies */
     foreach ( array_unique( array_filter( $upstream_taxonomies ) ) as $taxonomy ) {
 
-        $terms = $wpdb->get_results( $wpdb->prepare( "SELECT t.*, tt.* FROM $wpdb->terms AS t INNER JOIN $wpdb->term_taxonomy AS tt ON t.term_id = tt.term_id WHERE tt.taxonomy IN ('%s') ORDER BY t.name ASC", $taxonomy ) );
+        $terms = $wpdb->get_results( $wpdb->prepare( "SELECT t.*, tt.* FROM $wpdb->terms AS t INNER JOIN $wpdb->term_taxonomy AS tt ON t.term_id = tt.term_id WHERE tt.taxonomy IN ('%s') ORDER BY t.name ASC",
+            $taxonomy ) );
 
         // Delete Terms.
         if ( $terms ) {
             foreach ( $terms as $term ) {
-                $wpdb->delete( $wpdb->term_taxonomy, array( 'term_taxonomy_id' => $term->term_taxonomy_id ) );
-                $wpdb->delete( $wpdb->terms, array( 'term_id' => $term->term_id ) );
+                $wpdb->delete( $wpdb->term_taxonomy, [ 'term_taxonomy_id' => $term->term_taxonomy_id ] );
+                $wpdb->delete( $wpdb->terms, [ 'term_id' => $term->term_id ] );
             }
         }
 
         // Delete Taxonomies.
-        $wpdb->delete( $wpdb->term_taxonomy, array( 'taxonomy' => $taxonomy ), array( '%s' ) );
+        $wpdb->delete( $wpdb->term_taxonomy, [ 'taxonomy' => $taxonomy ], [ '%s' ] );
     }
 
     /** Delete all the Plugin Options */
@@ -63,7 +70,7 @@ if($remove) {
     $roles->remove_caps();
 
     /** Delete the Roles */
-    $upstream_roles = array( 'upstream_manager', 'upstream_user', 'upstream_client_user' );
+    $upstream_roles = [ 'upstream_manager', 'upstream_user', 'upstream_client_user' ];
     foreach ( $upstream_roles as $role ) {
         remove_role( $role );
     }
