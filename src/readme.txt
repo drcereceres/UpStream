@@ -151,6 +151,14 @@ Fixed:
 
 Added:
 * Added option to change the projects and client URL in the front-end;
+* Added new JS library for select fields, chosen - available for add-ons;
+* Added method to convert date to unixtime: upstream_date_unixtime;
+* Added method to return an array with a list of client's users: upstream_get_all_client_users
+* Added new actions;
+
+Changed:
+* Updated the .pot file;
+* Removed little chain icon from the list of projects;
 
 = [1.17.0] - 2018-04-26 =
 
