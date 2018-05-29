@@ -38,7 +38,7 @@ function upstream_enqueue_styles_scripts() {
 
     $up_url  = UPSTREAM_PLUGIN_URL;
     $up_ver  = UPSTREAM_VERSION;
-    $lib_dir = 'templates/assets/lib/';
+    $lib_dir = 'templates/assets/libraries/';
 
     /*
      * Enqueue styles
