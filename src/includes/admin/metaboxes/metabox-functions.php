@@ -1002,6 +1002,48 @@ function upstream_admin_get_all_clients_users( $field, $client_id = 0 ) {
     return [];
 }
 
+/**
+ * Returns the current saved clients users as an array.
+ *
+ * @return array
+ */
+function upstream_get_all_client_users( $client_id = 0 ) {
+    // Get the currently selected client id.
+    if ( empty( $client_id ) || $client_id < 0 ) {
+        $client_id = (int) get_post_meta( $field->object_id, '_upstream_project_client', true );
+    }
+
+    if ( $client_id > 0 ) {
+        $usersList       = [];
+        $clientUsersList = array_filter( (array) get_post_meta( $client_id, '_upstream_new_client_users', true ) );
+
+        $clientUsersIdsList = [];
+        foreach ( $clientUsersList as $clientUser ) {
+            if ( ! empty( $clientUser ) ) {
+                array_push( $clientUsersIdsList, $clientUser['user_id'] );
+            }
+        }
+
+        if ( count( $clientUsersIdsList ) > 0 ) {
+            $rowset = (array) get_users( [
+                'fields'  => [ 'ID', 'display_name', 'user_email' ],
+                'include' => $clientUsersIdsList,
+            ] );
+
+            foreach ( $rowset as $user ) {
+                $usersList[] = [
+                    'id'           => $user->ID,
+                    'display_name' => $user->display_name,
+                    'email'        => esc_html( $user->user_email ),
+                ];
+            }
+
+            return $usersList;
+        }
+    }
+
+    return [];
+}
 
 /**
  * AJAX function to return all selected clients users.
