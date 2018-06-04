@@ -636,7 +636,7 @@ class Upstream_Bug_List extends WP_List_Table {
 
             $bugs = array_filter( $bugs, function ( $row ) use ( $currentUserId ) {
                 if ( isset( $row['assigned_to'] ) ) {
-                    if ( ( is_array( $row['assigned_to'] ) && in_array( $row['assigned_to'] ) )
+                    if ( ( is_array( $row['assigned_to'] ) && in_array( $currentUserId, $row['assigned_to'] ) )
                          || (int) $row['assigned_to'] === $currentUserId
                     ) {
                         return true;
