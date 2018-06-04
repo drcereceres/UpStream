@@ -411,6 +411,7 @@ td .btn {
     text-overflow: ellipsis;
 }
 
-.c-calendar__header .btn-group .btn, .btn-group-vertical .btn {
-    height: 29px;
+.c-calendar__header .btn-group .btn, .btn-group-vertical .btn,
+.c-calendar__header button.btn.btn-default.btn-sm {
+    height: 29px !important;
 }
