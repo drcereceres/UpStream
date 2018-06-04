@@ -410,3 +410,7 @@ td .btn {
     overflow: hidden;
     text-overflow: ellipsis;
 }
+
+.c-calendar__header .btn-group .btn, .btn-group-vertical .btn {
+    height: 29px;
+}
