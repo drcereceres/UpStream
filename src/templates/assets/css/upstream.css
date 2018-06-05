@@ -415,3 +415,18 @@ td .btn {
 .c-calendar__header button.btn.btn-default.btn-sm {
     height: 29px !important;
 }
+
+.menu_section,
+.nav.side-menu > li > a {
+    margin-bottom: 0;
+}
+
+.menu_section > ul.side-menu {
+    margin-top: 0;
+    border-bottom: 1px solid #dedede;
+    border-top: 1px solid #dedede;
+}
+
+.child_menu .fa {
+    font-size: 14px;
+}

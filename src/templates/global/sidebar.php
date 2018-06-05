@@ -45,8 +45,9 @@ if ( $isSingle ) {
                 <h3>&nbsp;</h3>
                 <ul class="nav side-menu">
                     <li>
-                        <a>
-                            <i class="fa fa-home"></i> <?php echo esc_html( $i18n['LB_PROJECTS'] ); ?>
+                        <a href="#">
+                            <i class="fa fa-home"></i>
+                            <?php echo esc_html( $i18n['LB_PROJECTS'] ); ?>
                             <span class="fa fa-chevron-down"></span>
                         </a>
                         <ul class="nav child_menu">
@@ -57,112 +58,109 @@ if ( $isSingle ) {
 
                                 <?php do_action( 'upstream_sidebar_after_all_projects_link' ); ?>
                             </li>
-
-                            <?php if ( $projectsListCount > 0 ): ?>
-                                <?php foreach ( $projectsList as $project_id => $project ): ?>
-                                    <li>
-                                        <a href="<?php echo esc_url( $project->permalink ); ?>">
-                                            <?php echo esc_html( $project->title ); ?>
-                                        </a>
-                                    </li>
-                                <?php endforeach; ?>
-                            <?php endif; ?>
-
-                            <?php do_action( 'upstream_sidebar_after_projects' ); ?>
                         </ul>
                     </li>
                 </ul>
             </div>
             <?php if ( $isSingle && get_post_type() === 'project' ): ?>
                 <?php $project_id = get_the_ID(); ?>
-                <div class="menu_section">
-                    <h3><?php echo get_the_title( $project_id ); ?></h3>
+                <div class="menu_section active">
                     <ul class="nav side-menu">
-                        <?php do_action( 'upstream_sidebar_before_single_menu' ); ?>
+                        <li class="current-page active">
+                            <a href="#">
+                                <i class="fa fa-info"></i>
+                                <?php echo get_the_title( $project_id ); ?>
+                                <span class="fa fa-chevron-down"></span>
+                            </a>
 
-                        <?php if ( ! $areMilestonesDisabledForThisProject && ! $areMilestonesDisabledAtAll ): ?>
-                            <li>
-                                <a href="#milestones">
-                                    <i class="fa fa-flag"></i> <?php echo upstream_milestone_label_plural(); ?>
-                                    <?php
-                                    if ( function_exists( 'countItemsForUserOnProject' ) ) {
-                                        $itemsCount = countItemsForUserOnProject( 'milestones', get_current_user_id(),
-                                            upstream_post_id() );
-                                    } else {
-                                        $itemsCount = (int) upstream_count_assigned_to( 'milestones' );
-                                    }
+                            <ul class="nav child_menu" style="display: block;">
+                                <?php do_action( 'upstream_sidebar_before_single_menu' ); ?>
 
-                                    if ( $itemsCount > 0 ): ?>
-                                        <span class="label label-info pull-right" data-toggle="tooltip"
-                                              title="<?php _e( 'Assigned to me', 'upstream' ); ?>"
-                                              style="margin-top: 3px;"><?php echo $itemsCount; ?></span>
-                                    <?php endif; ?>
-                                </a>
-                            </li>
-                        <?php endif; ?>
+                                <?php if ( ! $areMilestonesDisabledForThisProject && ! $areMilestonesDisabledAtAll ): ?>
+                                    <li>
+                                        <a href="#milestones">
+                                            <i class="fa fa-flag"></i> <?php echo upstream_milestone_label_plural(); ?>
+                                            <?php
+                                            if ( function_exists( 'countItemsForUserOnProject' ) ) {
+                                                $itemsCount = countItemsForUserOnProject( 'milestones', get_current_user_id(),
+                                                    upstream_post_id() );
+                                            } else {
+                                                $itemsCount = (int) upstream_count_assigned_to( 'milestones' );
+                                            }
 
-                        <?php if ( ! $areTasksDisabledForThisProject && ! $areTasksDisabledAtAll ): ?>
-                            <li>
-                                <a href="#tasks">
-                                    <i class="fa fa-wrench"></i> <?php echo $i18n['LB_TASKS']; ?>
-                                    <?php
-                                    if ( function_exists( 'countItemsForUserOnProject' ) ) {
-                                        $itemsCount = countItemsForUserOnProject( 'tasks', get_current_user_id(),
-                                            upstream_post_id() );
-                                    } else {
-                                        $itemsCount = (int) upstream_count_assigned_to( 'tasks' );
-                                    }
+                                            if ( $itemsCount > 0 ): ?>
+                                                <span class="label label-info pull-right" data-toggle="tooltip"
+                                                      title="<?php _e( 'Assigned to me', 'upstream' ); ?>"
+                                                      style="margin-top: 3px;"><?php echo $itemsCount; ?></span>
+                                            <?php endif; ?>
+                                        </a>
+                                    </li>
+                                <?php endif; ?>
 
-                                    if ( $itemsCount > 0 ): ?>
-                                        <span class="label label-info pull-right" data-toggle="tooltip"
-                                              title="<?php _e( 'Assigned to me', 'upstream' ); ?>"
-                                              style="margin-top: 3px;"><?php echo $itemsCount; ?></span>
-                                    <?php endif; ?>
-                                    <?php do_action( 'upstream_sidebar_after_tasks_menu' ); ?>
-                                </a>
-                            </li>
-                        <?php endif; ?>
+                                <?php if ( ! $areTasksDisabledForThisProject && ! $areTasksDisabledAtAll ): ?>
+                                    <li>
+                                        <a href="#tasks">
+                                            <i class="fa fa-wrench"></i> <?php echo $i18n['LB_TASKS']; ?>
+                                            <?php
+                                            if ( function_exists( 'countItemsForUserOnProject' ) ) {
+                                                $itemsCount = countItemsForUserOnProject( 'tasks', get_current_user_id(),
+                                                    upstream_post_id() );
+                                            } else {
+                                                $itemsCount = (int) upstream_count_assigned_to( 'tasks' );
+                                            }
 
-                        <?php if ( ! $areBugsDisabledAtAll && ! $areBugsDisabledForThisProject ): ?>
-                            <li>
-                                <a href="#bugs">
-                                    <i class="fa fa-bug"></i> <?php echo $i18n['LB_BUGS']; ?>
-                                    <?php
-                                    if ( function_exists( 'countItemsForUserOnProject' ) ) {
-                                        $itemsCount = countItemsForUserOnProject( 'bugs', get_current_user_id(),
-                                            upstream_post_id() );
-                                    } else {
-                                        $itemsCount = (int) upstream_count_assigned_to( 'bugs' );
-                                    }
+                                            if ( $itemsCount > 0 ): ?>
+                                                <span class="label label-info pull-right" data-toggle="tooltip"
+                                                      title="<?php _e( 'Assigned to me', 'upstream' ); ?>"
+                                                      style="margin-top: 3px;"><?php echo $itemsCount; ?></span>
+                                            <?php endif; ?>
+                                            <?php do_action( 'upstream_sidebar_after_tasks_menu' ); ?>
+                                        </a>
+                                    </li>
+                                <?php endif; ?>
 
-                                    if ( $itemsCount > 0 ): ?>
-                                        <span class="label label-info pull-right" data-toggle="tooltip"
-                                              title="<?php _e( 'Assigned to me', 'upstream' ); ?>"
-                                              style="margin-top: 3px;"><?php echo $itemsCount; ?></span>
-                                    <?php endif; ?>
-                                    <?php do_action( 'upstream_sidebar_after_bugs_menu' ); ?>
-                                </a>
-                            </li>
-                        <?php endif; ?>
+                                <?php if ( ! $areBugsDisabledAtAll && ! $areBugsDisabledForThisProject ): ?>
+                                    <li>
+                                        <a href="#bugs">
+                                            <i class="fa fa-bug"></i> <?php echo $i18n['LB_BUGS']; ?>
+                                            <?php
+                                            if ( function_exists( 'countItemsForUserOnProject' ) ) {
+                                                $itemsCount = countItemsForUserOnProject( 'bugs', get_current_user_id(),
+                                                    upstream_post_id() );
+                                            } else {
+                                                $itemsCount = (int) upstream_count_assigned_to( 'bugs' );
+                                            }
 
-                        <?php if ( ! $areFilesDisabledForThisProject && ! upstream_disable_files() ): ?>
-                            <li>
-                                <a href="#files">
-                                    <i class="fa fa-file"></i> <?php echo upstream_file_label_plural(); ?>
-                                </a>
-                            </li>
-                        <?php endif; ?>
+                                            if ( $itemsCount > 0 ): ?>
+                                                <span class="label label-info pull-right" data-toggle="tooltip"
+                                                      title="<?php _e( 'Assigned to me', 'upstream' ); ?>"
+                                                      style="margin-top: 3px;"><?php echo $itemsCount; ?></span>
+                                            <?php endif; ?>
+                                            <?php do_action( 'upstream_sidebar_after_bugs_menu' ); ?>
+                                        </a>
+                                    </li>
+                                <?php endif; ?>
 
-                        <?php if ( ! $areCommentsDisabled ): ?>
-                            <li>
-                                <a href="#discussion">
-                                    <i class="fa fa-comments"></i>
-                                    <?php _e( 'Discussion', 'upstream' ); ?>
-                                </a>
-                            </li>
-                        <?php endif; ?>
+                                <?php if ( ! $areFilesDisabledForThisProject && ! upstream_disable_files() ): ?>
+                                    <li>
+                                        <a href="#files">
+                                            <i class="fa fa-file"></i> <?php echo upstream_file_label_plural(); ?>
+                                        </a>
+                                    </li>
+                                <?php endif; ?>
 
-                        <?php do_action( 'upstream_sidebar_after_single_menu' ); ?>
+                                <?php if ( ! $areCommentsDisabled ): ?>
+                                    <li>
+                                        <a href="#discussion">
+                                            <i class="fa fa-comments"></i>
+                                            <?php _e( 'Discussion', 'upstream' ); ?>
+                                        </a>
+                                    </li>
+                                <?php endif; ?>
+
+                                <?php do_action( 'upstream_sidebar_after_single_menu' ); ?>
+                            </ul>
+                        </li>
                     </ul>
                 </div>
             <?php endif; ?>
