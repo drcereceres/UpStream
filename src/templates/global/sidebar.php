@@ -68,7 +68,7 @@ if ( $isSingle ) {
                     <ul class="nav side-menu">
                         <li class="current-page active">
                             <a href="#">
-                                <i class="fa fa-info"></i>
+                                <i class="fa fa-folder"></i>
                                 <?php echo get_the_title( $project_id ); ?>
                                 <span class="fa fa-chevron-down"></span>
                             </a>
