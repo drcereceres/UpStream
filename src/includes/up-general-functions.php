@@ -552,7 +552,7 @@ function upstream_date_unixtime( $timestamp ) {
     $dateFormat = get_option( 'date_format', 'Y-m-d' );
 
     $date = \DateTime::createFromFormat( $dateFormat, $timestamp );
-    $date = $date->format('U');
+    $date = $date->format( 'U' );
 
     return apply_filters( 'upstream_date_mysql', $date, $timestamp );
 }
