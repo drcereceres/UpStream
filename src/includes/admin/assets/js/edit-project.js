@@ -522,9 +522,38 @@
     initProject();
     showClientUsers();
 
+    var showValidationError = function (errorMessage) {
+        if ($('.has-error').length == 0 || errorMessage == '') {
+            return;
+        }
+
+        var box = $('<div>')
+            .addClass('upstream_validation_error_box')
+            .text(errorMessage)
+            .appendTo($('#submitdiv'));
+
+        var icon = $('<span>')
+            .addClass('dashicons dashicons-warning')
+            .appendTo(box);
+
+        window.setTimeout(function () {
+            hideValidationError();
+        }, 8000);
+    };
+
+    var hideValidationError = function () {
+        var box = $('.upstream_validation_error_box');
+        var removeBox = function () {
+            box.remove();
+        };
+
+        box.fadeOut(400, removeBox);
+    };
+
     $('form#post').on('submit', function (e) {
         var tasksWrapper = $('#_upstream_project_tasks_repeat');
         var tasks = $('.postbox.cmb-row.cmb-repeatable-grouping', tasksWrapper);
+
         for (var t = 0; t < tasks.length; t++) {
             var taskWrapper = $(tasks[t]);
             if (taskWrapper.css('display') !== 'none') {
@@ -539,6 +568,7 @@
                     e.stopPropagation();
 
                     taskTitleField.focus();
+                    showValidationError(upstream_project.l.MSG_TITLE_CANT_BE_EMPTY);
 
                     return false;
                 }
@@ -605,6 +635,10 @@
 
                             $('.up-o-tab-content', row).removeClass('is-active');
                             $('.up-o-tab-content.up-c-tab-content-data').addClass('is-active');
+
+                            startDateEl.focus();
+
+                            showValidationError(upstream_project.l.MSG_INVALID_INTERVAL_BETWEEN_DATE);
 
                             return false;
                         } else {

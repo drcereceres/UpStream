@@ -1306,3 +1306,21 @@ div[id^="_upstream_project_"].cmb2-postbox .select2 {
 .cmb-field-list .postbox .row .select2 .select2-selection__rendered .select2-selection__choice {
   border-radius: 0;
 }
+
+.upstream_validation_error_box {
+    display: block;
+    position: relative;
+    box-sizing: border-box;
+    width: 100%;
+    height: auto;
+    padding: 10px;
+    padding-left: 35px;
+    background: #c64e4e;
+    color: #ffffff;
+}
+
+.upstream_validation_error_box .dashicons {
+    position: absolute;
+    left: 10px;
+    top: 6px;
+}
