@@ -63,7 +63,7 @@ if ( $areTasksEnabled ) {
     $tasksOptions = get_option( 'upstream_tasks' );
     $tasksMap     = [];
     foreach ( $tasksOptions['statuses'] as $task ) {
-        $tasksMap[ $task['name'] ] = $task['type'];
+        $tasksMap[ $task['id'] ] = $task['type'];
     }
     unset( $tasksOptions );
 
@@ -118,7 +118,7 @@ if ( $areBugsEnabled ) {
     $bugsOptions = get_option( 'upstream_bugs' );
     $bugsMap     = [];
     foreach ( $bugsOptions['statuses'] as $bug ) {
-        $bugsMap[ $bug['name'] ] = $bug['type'];
+        $bugsMap[ $bug['id'] ] = $bug['type'];
     }
     unset( $bugsOptions );
 
