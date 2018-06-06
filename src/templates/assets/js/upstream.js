@@ -54,6 +54,7 @@ jQuery(document).ready(function ($) {
 
         $('.right_col').css('min-height', contentHeight);
     };
+    window.setContentHeight = setContentHeight;
 
     $('#sidebar-menu').find('a').on('click', function (ev) {
 
