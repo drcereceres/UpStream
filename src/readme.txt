@@ -142,6 +142,21 @@ If you were having date issues within Projects, please clear your cache and re-s
 The format is based on [Keep a Changelog](http://keepachangelog.com)
 and this project adheres to [Semantic Versioning](http://semver.org).
 
+= UNRELEASED =
+
+Fixed:
+* Fixed a PHP warning when there is no client users in the project;
+* Fixed a PHP warning about wrong data type on the second param in the in_array function;
+* Fixed the height of navigation buttons buttons of the calendar;
+* Fixed the count of tasks and bugs in the project in the admin and front-end;
+* Fixed the form validation error highlighting displaying more relevant and visible error message;
+* Fixed hardcoded labels for "Discussion" and added field to customize the string;
+* Fixed hardcoded labels for "Client"
+
+Changed:
+* Removed the list of projects from the sidebar;
+* Added new icon for the project in the sidebar;
+
 = [1.18.1] - 2018-05-29 =
 
 Changed:
