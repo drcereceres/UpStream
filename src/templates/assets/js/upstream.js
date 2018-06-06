@@ -118,6 +118,8 @@ jQuery(document).ready(function ($) {
             mouseWheel: {preventDefault: true}
         });
     }
+
+    $(window).trigger('upstream-sidebar');
 });
 // /Sidebar
 

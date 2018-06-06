@@ -58,6 +58,8 @@ if ( $isSingle ) {
 
                                 <?php do_action( 'upstream_sidebar_after_all_projects_link' ); ?>
                             </li>
+
+                            <?php do_action( 'upstream_sidebar_projects_submenu' ); ?>
                         </ul>
                     </li>
                 </ul>
