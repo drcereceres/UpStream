@@ -53,7 +53,7 @@ if ( $isSingle ) {
                         <ul class="nav child_menu">
                             <li>
                                 <a href="<?php echo esc_attr( $projectsListUrl ); ?>">
-                                    <?php printf( __( 'All %s', 'upstream' ), $i18n['LB_PROJECTS'] ); ?>
+                                    <i class="fa fa-columns"></i> <?php printf( __( 'All %s', 'upstream' ), $i18n['LB_PROJECTS'] ); ?>
                                 </a>
 
                                 <?php do_action( 'upstream_sidebar_after_all_projects_link' ); ?>
