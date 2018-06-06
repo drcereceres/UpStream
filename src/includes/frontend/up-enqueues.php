@@ -111,7 +111,7 @@ function upstream_enqueue_styles_scripts() {
             'MSG_NO_TASKS_YET'        => sprintf( $noDataStringTemplate, upstream_task_label_plural() ),
             'MSG_NO_BUGS_YET'         => sprintf( $noDataStringTemplate, upstream_bug_label_plural() ),
             'MSG_NO_FILES_YET'        => sprintf( $noDataStringTemplate, upstream_file_label_plural() ),
-            'MSG_NO_DISCUSSION_YET'   => sprintf( $noDataStringTemplate, __( 'Discussion', 'upstream' ) ),
+            'MSG_NO_DISCUSSION_YET'   => sprintf( $noDataStringTemplate, upstream_discussion_label() ),
         ],
     ] ) );
 }

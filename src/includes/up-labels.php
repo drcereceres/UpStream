@@ -47,7 +47,10 @@ function upstream_get_default_labels() {
             'singular' => isset( $option['file']['single'] ) ? $option['file']['single'] : __( 'File', 'upstream' ),
             'plural'   => isset( $option['file']['plural'] ) ? $option['file']['plural'] : __( 'Files', 'upstream' ),
         ],
-
+        'discussion'      => [
+            'singular' => isset( $option['Discussion']['single'] ) ? $option['Discussion']['single'] : __( 'Discussion', 'upstream' ),
+            'plural'   => isset( $option['Discussion']['plural'] ) ? $option['Discussion']['plural'] : __( 'Discussions', 'upstream' ),
+        ],
     ];
 
     return apply_filters( 'upstream_default_labels', $defaults );
@@ -179,6 +182,26 @@ function upstream_file_label_plural( $lowercase = false ) {
     return ( $lowercase ) ? strtolower( $defaults['files']['plural'] ) : $defaults['files']['plural'];
 }
 
+/**
+ * Get discussion Label
+ *
+ * @since 1.0.0
+ *
+ * @param bool $lowercase
+ *
+ * @return string $defaults['singular'] Singular label
+ */
+function upstream_discussion_label( $lowercase = false ) {
+    $defaults = upstream_get_default_labels();
+
+    return ( $lowercase ) ? strtolower( $defaults['discussion']['singular'] ) : $defaults['discussion']['singular'];
+}
+
+function upstream_discussion_label_plural( $lowercase = false ) {
+    $defaults = upstream_get_default_labels();
+
+    return ( $lowercase ) ? strtolower( $defaults['discussion']['plural'] ) : $defaults['discussion']['plural'];
+}
 
 /**
  * Change default "Enter title here" input

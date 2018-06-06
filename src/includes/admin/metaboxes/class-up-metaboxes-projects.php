@@ -1691,7 +1691,7 @@ if ( ! class_exists( 'UpStream_Metaboxes_Projects' ) ) :
 
             $metabox = new_cmb2_box( [
                 'id'           => $this->prefix . 'discussions',
-                'title'        => '<span class="dashicons dashicons-format-chat"></span> ' . __( 'Discussion' ),
+                'title'        => '<span class="dashicons dashicons-format-chat"></span> ' . upstream_discussion_label(),
                 'object_types' => [ $this->type ],
                 'priority'     => 'low',
             ] );

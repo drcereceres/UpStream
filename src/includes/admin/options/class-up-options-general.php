@@ -130,6 +130,11 @@ if ( ! class_exists( 'UpStream_Options_General' ) ) :
                             'id'   => 'file',
                             'type' => 'labels',
                         ],
+                        [
+                            'name' => __( 'Discussion Label', 'upstream' ),
+                            'id'   => 'discussion',
+                            'type' => 'labels',
+                        ],
 
                         [
                             'name'       => sprintf( __( '%s Area', 'upstream' ), upstream_client_label() ),

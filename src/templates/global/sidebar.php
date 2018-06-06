@@ -153,7 +153,7 @@ if ( $isSingle ) {
                                     <li>
                                         <a href="#discussion">
                                             <i class="fa fa-comments"></i>
-                                            <?php _e( 'Discussion', 'upstream' ); ?>
+                                            <?php echo upstream_discussion_label(); ?>
                                         </a>
                                     </li>
                                 <?php endif; ?>
