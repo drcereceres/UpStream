@@ -198,7 +198,7 @@ function upstream_user_can_access_project( $user_id, $project_id ) {
     if ( in_array( 'upstream_client_user', $user->roles ) ) {
         // Check if client user is allowed on this project.
         $meta = (array) get_post_meta( $project_id, '_upstream_project_client_users' );
-        $meta = ! empty( $meta ) ? $meta[0] : [];
+        $meta = ! empty( $meta ) ? (array) $meta[0] : [];
         $meta = empty( $meta ) ? [] : $meta;
 
         if ( in_array( $user->ID, $meta ) ) {
