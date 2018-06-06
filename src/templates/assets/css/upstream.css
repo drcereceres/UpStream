@@ -430,3 +430,8 @@ td .btn {
 .child_menu .fa {
     font-size: 14px;
 }
+
+.upstream-front-end table#projects,
+.upstream-front-end table.o-calendar {
+    font-size: 13px;
+}
