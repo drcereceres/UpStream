@@ -142,7 +142,7 @@ If you were having date issues within Projects, please clear your cache and re-s
 The format is based on [Keep a Changelog](http://keepachangelog.com)
 and this project adheres to [Semantic Versioning](http://semver.org).
 
-= UNRELEASED =
+= [1.8.2] - 2018-06-07 =
 
 Fixed:
 * Fixed a PHP warning when there is no client users in the project;
