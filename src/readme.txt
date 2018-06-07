@@ -151,11 +151,18 @@ Fixed:
 * Fixed the count of tasks and bugs in the project in the admin and front-end;
 * Fixed the form validation error highlighting displaying more relevant and visible error message;
 * Fixed hardcoded labels for "Discussion" and added field to customize the string;
-* Fixed hardcoded labels for "Client"
+* Fixed hardcoded labels for "Client";
+* Fixed the milestone titles in the activity box;
 
 Changed:
 * Removed the list of projects from the sidebar;
+* Removed the vertical line from the menu in the sidebar;
 * Added new icon for the project in the sidebar;
+* Declared the method setContentHeight in the global scope in JS for add-ons;
+* Removed arrow icon from menus in the sidebar;
+
+Added:
+* Added new hooks to display specific views in the front-end, for add-ons;
 
 = [1.18.1] - 2018-05-29 =
 
