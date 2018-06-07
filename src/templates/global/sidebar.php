@@ -48,7 +48,6 @@ if ( $isSingle ) {
                         <a href="#">
                             <i class="fa fa-home"></i>
                             <?php echo esc_html( $i18n['LB_PROJECTS'] ); ?>
-                            <span class="fa fa-chevron-down"></span>
                         </a>
                         <ul class="nav child_menu">
                             <li>
@@ -72,7 +71,6 @@ if ( $isSingle ) {
                             <a href="#">
                                 <i class="fa fa-folder"></i>
                                 <?php echo get_the_title( $project_id ); ?>
-                                <span class="fa fa-chevron-down"></span>
                             </a>
 
                             <ul class="nav child_menu" style="display: block;">
