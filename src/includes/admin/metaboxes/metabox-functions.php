@@ -170,7 +170,8 @@ function upstream_output_overview_counts( $field_args, $field ) {
     } elseif ( is_array( $rowset ) && count( $rowset ) > 0 ) {
         $options  = get_option( 'upstream_' . $itemType );
         $statuses = isset( $options['statuses'] ) ? $options['statuses'] : [];
-        $statuses = wp_list_pluck( $statuses, 'type', 'name' );
+
+        $statuses = wp_list_pluck( $statuses, 'type', 'id' );
 
         foreach ( $rowset as $row ) {
             if ( isset( $row['assigned_to'] ) && (int) $row['assigned_to'] === $user_id ) {

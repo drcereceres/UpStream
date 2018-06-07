@@ -20,6 +20,6 @@ global $doctype;
     <?php wp_head(); ?>
     <?php do_action( 'upstream_head' ); ?>
 </head>
-<body class="nav-md">
+<body class="nav-md upstream-front-end">
 <div class="container body">
     <div class="main_container">

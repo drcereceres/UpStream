@@ -55,7 +55,7 @@ $isClientsDisabled = is_clients_disabled();
 
                 <?php if ( ! $isClientsDisabled && $project->client_id > 0 ): ?>
                     <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
-                        <p class="title"><?php _e( 'Client', 'upstream' ); ?></p>
+                        <p class="title"><?php echo upstream_client_label(); ?></p>
                         <span><?php echo $project->client_id > 0 && ! empty( $project->clientName ) ? $project->clientName : '<i class="text-muted">(' . __( 'none',
                                     'upstream' ) . ')</i>'; ?></span>
                     </div>
