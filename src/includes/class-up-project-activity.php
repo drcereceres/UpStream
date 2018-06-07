@@ -355,6 +355,8 @@ class UpStream_Project_Activity {
 
         $activity = array_slice( $activity, 0, $this->number_of_items(), true );
 
+        $milestones = getMilestonesTitles();
+
         // loop through each timestamp
         foreach ( $activity as $time => $update ) {
 
@@ -417,7 +419,7 @@ class UpStream_Project_Activity {
                                     continue;
                                 }
 
-                                $title        = isset( $item['title'] ) ? $item['title'] : ( isset( $item['milestone'] ) ? $item['milestone'] : "" );
+                                $title        = isset( $item['title'] ) ? $item['title'] : ( isset( $item['milestone'] ) ? $milestones[ $item['milestone'] ] : "" );
                                 $item_removed .= '<span class="item">' . sprintf( __( 'Deleted: %s', 'upstream' ),
                                         '<span class="highlight">' . $title . '</span>' ) . '</span>';
                             }
@@ -440,7 +442,7 @@ class UpStream_Project_Activity {
                                     continue;
                                 }
 
-                                $title      = isset( $item['title'] ) ? $item['title'] : ( isset( $item['milestone'] ) ? $item['milestone'] : "" );
+                                $title      = isset( $item['title'] ) ? $item['title'] : ( isset( $item['milestone'] ) ? $milestones[ $item['milestone'] ] : "" );
                                 $item_added .= '<span class="item">' . sprintf( __( 'New Item: %s', 'upstream' ),
                                         '<span class="highlight">' . $title . '</span>' ) . '</span>';
                             }
@@ -461,7 +463,7 @@ class UpStream_Project_Activity {
                                 $field_output = '';
                                 if ( isset( $field_data['add'] ) ) {
                                     $item         = upstream_project_item_by_id( $this->ID, $item_id );
-                                    $title        = isset( $item['title'] ) ? $item['title'] : $item['milestone'];
+                                    $title        = isset( $item['title'] ) ? $item['title'] : $milestones[ $item['milestone'] ];
                                     $the_val      = $this->format_fields( $field_id, $field_data['add'] );
                                     $field_output .= '<span class="item">' . sprintf( __( 'New: %s - %s on %s',
                                             'upstream' ), $field_name,
@@ -471,7 +473,7 @@ class UpStream_Project_Activity {
 
                                 if ( isset( $field_data['from'] ) ) {
                                     $item  = upstream_project_item_by_id( $this->ID, $item_id );
-                                    $title = isset( $item['title'] ) ? $item['title'] : $item['milestone'];
+                                    $title = isset( $item['title'] ) ? $item['title'] : $milestones[ $item['milestone'] ];
                                     $from  = $this->format_fields( $field_id, $field_data['from'] );
                                     $to    = $this->format_fields( $field_id, $field_data['to'] );
 
