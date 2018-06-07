@@ -431,7 +431,6 @@ td .btn {
     font-size: 14px;
 }
 
-.upstream-front-end table#projects,
-.upstream-front-end table.o-calendar {
+.upstream-front-end table {
     font-size: 13px;
 }
