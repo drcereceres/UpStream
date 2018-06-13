@@ -142,6 +142,11 @@ If you were having date issues within Projects, please clear your cache and re-s
 The format is based on [Keep a Changelog](http://keepachangelog.com)
 and this project adheres to [Semantic Versioning](http://semver.org).
 
+= UNRELEASED =
+
+Changed:
+* Removed code that was hiding the admin bar. It is displayed in the front-end now;
+
 = [1.18.2] - 2018-06-07 =
 
 Fixed:
