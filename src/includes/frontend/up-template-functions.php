@@ -13,21 +13,6 @@ function upstream_template_path() {
     return apply_filters( 'upstream_template_path', 'upstream/' );
 }
 
-
-/**
- * Hide admin bar
- */
-function upstream_hide_admin_bar( $show ) {
-    if ( get_post_type() == 'project' ) :
-        return false;
-    endif;
-
-    return $show;
-}
-
-add_filter( 'show_admin_bar', 'upstream_hide_admin_bar' );
-
-
 /*
  * Check relevant directories for template parts.
  * Looks in child theme first, then parent theme, then plugin.
