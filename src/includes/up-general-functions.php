@@ -972,6 +972,15 @@ function upstream_convert_UTC_date_to_timezone( $subject, $includeTime = true ) 
  * @return  bool
  */
 function upstream_are_comments_disabled( $post_id = 0 ) {
+    // General settings
+    $pluginOptions = get_option( 'upstream_general' );
+    $disabled      = isset( $pluginOptions['disable_project_comments'] ) && (bool) $pluginOptions['disable_project_comments'] === false;
+
+    if ($disabled) {
+        return true;
+    }
+
+    // Project's settings
     $areCommentsDisabled = false;
     $post_id             = (int) $post_id;
 
