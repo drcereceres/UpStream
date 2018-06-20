@@ -144,8 +144,12 @@ and this project adheres to [Semantic Versioning](http://semver.org).
 
 = [1.18.3] - 2018-06-20 =
 
+Fixed:
+* Fixed the admin bar, removing code that was hiding it. It is displayed in the front-end now;
+* Fixed the discussion menu item in the sidebar when discussion is disabled;
+
 Changed:
-* Removed code that was hiding the admin bar. It is displayed in the front-end now;
+* Updated cmb2 library;
 
 = [1.18.2] - 2018-06-07 =
 
