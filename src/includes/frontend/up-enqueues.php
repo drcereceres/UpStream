@@ -57,7 +57,7 @@ function upstream_enqueue_styles_scripts() {
     wp_enqueue_style( 'framework', $up_url . $css_dir . 'framework.css', [], $up_ver, 'all' );
     wp_enqueue_style( 'upstream-datepicker', $up_url . $css_dir . 'vendor/bootstrap-datepicker3.min.css', [], $up_ver,
         'all' );
-    wp_enqueue_style( 'upstream', $up_url . $css_dir . 'upstream.css', [], $up_ver, 'all' );
+    wp_enqueue_style( 'upstream', $up_url . $css_dir . 'upstream.css', [ 'admin-bar' ], $up_ver, 'all' );
 
     if ( isset( $GLOBALS['login_template'] ) ) {
         wp_enqueue_style( 'up-login', $up_url . $css_dir . 'login.css', [], $up_ver, 'all' );
@@ -70,6 +70,11 @@ function upstream_enqueue_styles_scripts() {
     if ( file_exists( $maintheme ) ) {
         $custom = trailingslashit( get_template_directory_uri() ) . $dir . 'assets/css/upstream-custom.css';
         wp_enqueue_style( 'theme-custom', $custom, [], $up_ver, 'all' );
+    }
+
+    // Enqueue style for poopy sandbox to complement the admin bar.
+    if ( file_exists( ABSPATH . 'wp-content/plugins/' . plugin_dir_path( 'sandbox/sandbox.php' ) . 'static/css/poopy.css' ) ) {
+        wp_enqueue_style( 'poopy', plugin_dir_url( 'sandbox/sandbox.php' ) . '/static/css/poopy.css', [], $up_ver );
     }
 
     /*
@@ -89,7 +94,7 @@ function upstream_enqueue_styles_scripts() {
         [ 'jquery', 'up-bootstrap' ], $up_ver, true );
     wp_enqueue_script( 'up-modal', $up_url . $js_dir . 'vendor/modal.min.js', [ 'jquery' ], $up_ver, true );
 
-    wp_enqueue_script( 'upstream', $up_url . $js_dir . 'upstream.js', [ 'jquery', 'up-modal' ], $up_ver, true );
+    wp_enqueue_script( 'upstream', $up_url . $js_dir . 'upstream.js', [ 'jquery', 'up-modal', 'admin-bar' ], $up_ver, true );
 
 
     $noDataStringTemplate = _x( "You haven't created any %s yet",
