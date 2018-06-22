@@ -319,7 +319,7 @@ if ( ! class_exists( 'UpStream_Options_Extensions' ) ) :
                         <p>
                             <?php _e( 'Looks like you have acquired all of our currently available extensions.',
                                 'upstream' ); ?> <br/>
-                            <?php _e( '<strong>Thank you</strong> for your support, and stay tunned for more.',
+                            <?php _e( '<strong>Thank you</strong> for your support, and stay tuned for more.',
                                 'upstream' ); ?>
                         </p>
                     <?php else: ?>
