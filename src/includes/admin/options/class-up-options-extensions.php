@@ -94,6 +94,7 @@ if ( ! class_exists( 'UpStream_Options_Extensions' ) ) :
                         'upstream' ),
                     'product_id'       => 4051,
                     'options_key_slug' => 'upstream_customizer',
+                    'icon'             => 'paint-brush',
                 ],
                 [
                     'id'               => 'email-notifications',
@@ -102,6 +103,7 @@ if ( ! class_exists( 'UpStream_Options_Extensions' ) ) :
                         'upstream' ),
                     'product_id'       => 4996,
                     'options_key_slug' => 'email-notifications',
+                    'icon'             => 'envelope',
                 ],
                 [
                     'id'               => 'frontend-edit',
@@ -109,6 +111,7 @@ if ( ! class_exists( 'UpStream_Options_Extensions' ) ) :
                     'description'      => __( 'Allow users to add and edit items on the frontend.', 'upstream' ),
                     'product_id'       => 3925,
                     'options_key_slug' => 'upstream_frontend_edit',
+                    'icon'             => 'pencil-square-o',
                 ],
                 [
                     'id'               => 'project-timeline',
@@ -116,6 +119,7 @@ if ( ! class_exists( 'UpStream_Options_Extensions' ) ) :
                     'description'      => __( 'Add a Gantt style chart to visualize your projects.', 'upstream' ),
                     'product_id'       => 3920,
                     'options_key_slug' => 'project-timeline',
+                    'icon'             => 'align-left',
                 ],
                 [
                     'id'               => 'copy-project',
@@ -124,6 +128,7 @@ if ( ! class_exists( 'UpStream_Options_Extensions' ) ) :
                         'upstream' ),
                     'product_id'       => 5471,
                     'options_key_slug' => 'copy-project',
+                    'icon'             => 'clone',
                 ],
                 [
                     'id'               => 'calendar-view',
@@ -132,6 +137,7 @@ if ( ! class_exists( 'UpStream_Options_Extensions' ) ) :
                         'upstream' ),
                     'product_id'       => 6798,
                     'options_key_slug' => 'calendar-view',
+                    'icon'             => 'calendar',
                 ],
                 [
                     'id'               => 'custom-fields',
@@ -140,6 +146,7 @@ if ( ! class_exists( 'UpStream_Options_Extensions' ) ) :
                         'upstream' ),
                     'product_id'       => 8409,
                     'options_key_slug' => 'custom-fields',
+                    'icon'             => 'plus-square-o',
                 ],
             ];
 
@@ -161,7 +168,7 @@ if ( ! class_exists( 'UpStream_Options_Extensions' ) ) :
                     'status' => 'inactive',
                     'key'    => "",
                 ];
-                $extension['url']         = 'https://upstreamplugin.com/extensions/' . $extension['id'] . '?utm_source=extensions&utm_campaign=plugin&utm_medium=settings_extensions&utm_content=' . $extension['id'];
+                $extension['url']         = 'https://upstreamplugin.com/pricing/' . '?utm_source=extensions&utm_campaign=plugin&utm_medium=settings_extensions&utm_content=' . $extension['id'];
                 $extension['cover']       = $assetsCoversURLPrefix . $extension['id'] . '.jpg';
 
                 $license = isset( $licenses[ $extension['id'] ] ) ? $licenses[ $extension['id'] ] : null;
@@ -243,67 +250,70 @@ if ( ! class_exists( 'UpStream_Options_Extensions' ) ) :
             ?>
 
             <section id="extensions-wrapper">
-                <h2 class="nav-tab-wrapper">
-                    <a href="#"
-                       class="nav-tab<?php echo $rowsetInstalledCount > 0 ? ' nav-tab-active' : ''; ?>"><?php _e( 'Installed Extensions',
-                            'upstream' ); ?></a>
-                    <a href="#"
-                       class="nav-tab<?php echo $rowsetInstalledCount === 0 ? ' nav-tab-active' : ''; ?>"><?php _e( 'Browse More Extensions',
-                            'upstream' ); ?></a>
-                </h2>
+                <?php if ( $rowsetInstalledCount > 0 ): ?>
+                    <h2 class="nav-tab-wrapper">
+                        <a href="#"
+                           class="nav-tab<?php echo $rowsetInstalledCount > 0 ? ' nav-tab-active' : ''; ?>"><?php _e( 'Installed Extensions',
+                                'upstream' ); ?></a>
+                        <a href="#"
+                           class="nav-tab<?php echo $rowsetInstalledCount === 0 ? ' nav-tab-active' : ''; ?>"><?php _e( 'Browse More Extensions',
+                                'upstream' ); ?></a>
+                    </h2>
+                <?php endif; ?>
+
+                <?php if ( $rowsetInstalledCount > 0 ): ?>
                 <div id="installed-extensions-list"
                      style="display: <?php echo $rowsetInstalledCount > 0 ? 'flex' : 'none'; ?>;">
-                    <?php if ( $rowsetInstalledCount === 0 ): ?>
-                        <p><?php _e( "No installed extensions yet.", 'upstream' ); ?></p>
-                    <?php else: ?>
-                        <?php foreach ( $rowsetInstalled as $row ): ?>
-                            <article class="license-<?php echo $row->license->status; ?>"
-                                     data-id="<?php echo $row->id; ?>">
-                                <div>
-                                    <a href="<?php echo $row->url; ?>" target="_blank" rel="noopener noreferer">
-                                        <img src="<?php echo $row->cover; ?>" alt="<?php echo $row->title; ?>"/>
-                                    </a>
+
+                    <?php foreach ( $rowsetInstalled as $row ): ?>
+                        <article class="license-<?php echo $row->license->status; ?>"
+                                 data-id="<?php echo $row->id; ?>">
+                            <div>
+                                <a href="<?php echo $row->url; ?>" target="_blank" rel="noopener noreferer">
+                                    <img src="<?php echo $row->cover; ?>" alt="<?php echo $row->title; ?>"/>
+                                </a>
+                            </div>
+                            <div>
+                                <header>
+                                    <h3 class="u-title"><?php echo $row->title; ?></h3>
+                                    <p class="u-description"><?php echo $row->description; ?></p>
+                                </header>
+                                <div class="u-license">
+                                    <?php if ( $row->license->status !== 'valid' ): ?>
+                                        <input type="text" size="40"
+                                               placeholder="<?php echo __( 'Enter your License Key',
+                                                   'upstream' ); ?>" maxlength="32" autocomplete="false"
+                                               value="<?php echo $row->license->key; ?>"/>
+                                        <button type="button" class="button button-primary"
+                                                data-action="upstream:extension:activate"><?php echo __( 'Activate',
+                                                'upstream' ); ?></button>
+                                    <?php else: ?>
+                                        <strong><?php _e( 'License Key', 'upstream' ); ?>:</strong>&nbsp;
+                                        <code><?php echo $row->license->key; ?></code> - <a href="#"
+                                                                                            data-action="upstream:extension:change"><?php _e( 'Change',
+                                                'upstream' ); ?></a>
+                                    <?php endif; ?>
                                 </div>
-                                <div>
-                                    <header>
-                                        <h3 class="u-title"><?php echo $row->title; ?></h3>
-                                        <p class="u-description"><?php echo $row->description; ?></p>
-                                    </header>
-                                    <div class="u-license">
-                                        <?php if ( $row->license->status !== 'valid' ): ?>
-                                            <input type="text" size="40"
-                                                   placeholder="<?php echo __( 'Enter your License Key',
-                                                       'upstream' ); ?>" maxlength="32" autocomplete="false"
-                                                   value="<?php echo $row->license->key; ?>"/>
-                                            <button type="button" class="button button-primary"
-                                                    data-action="upstream:extension:activate"><?php echo __( 'Activate',
-                                                    'upstream' ); ?></button>
-                                        <?php else: ?>
-                                            <strong><?php _e( 'License Key', 'upstream' ); ?>:</strong>&nbsp;
-                                            <code><?php echo $row->license->key; ?></code> - <a href="#"
-                                                                                                data-action="upstream:extension:change"><?php _e( 'Change',
-                                                    'upstream' ); ?></a>
-                                        <?php endif; ?>
-                                    </div>
-                                    <div class="u-license-status">
-                                        <?php if ( $row->license->status === 'valid' ): ?>
-                                            <?php _e( 'Active license key.', 'upstream' ); ?> - <a href="#"
-                                                                                                   data-action="upstream:extension:deactivate"><?php _e( 'Deactivate',
-                                                    'upstream' ); ?></a>
-                                        <?php elseif ( $row->license->status === 'invalid' ): ?>
-                                            <?php _e( 'Invalid license key.', 'upstream' ); ?>
-                                        <?php elseif ( $row->license->status === 'inactive' ): ?>
-                                            <?php _e( 'Your license is not activated yet.', 'upstream' ); ?>
-                                        <?php endif; ?>
-                                    </div>
+                                <div class="u-license-status">
+                                    <?php if ( $row->license->status === 'valid' ): ?>
+                                        <?php _e( 'Active license key.', 'upstream' ); ?> - <a href="#"
+                                                                                               data-action="upstream:extension:deactivate"><?php _e( 'Deactivate',
+                                                'upstream' ); ?></a>
+                                    <?php elseif ( $row->license->status === 'invalid' ): ?>
+                                        <?php _e( 'Invalid license key.', 'upstream' ); ?>
+                                    <?php elseif ( $row->license->status === 'inactive' ): ?>
+                                        <?php _e( 'Your license is not activated yet.', 'upstream' ); ?>
+                                    <?php endif; ?>
                                 </div>
-                            </article>
-                        <?php endforeach; ?>
-                        <input type="hidden" id="upstream-extensions-nonce"
-                               value="<?php echo wp_create_nonce( 'upstream:extensions' ); ?>"/>
-                    <?php endif; ?>
+                            </div>
+                        </article>
+                    <?php endforeach; ?>
+                    <input type="hidden" id="upstream-extensions-nonce"
+                           value="<?php echo wp_create_nonce( 'upstream:extensions' ); ?>"/>
                 </div>
-                <div id="non-installed-extensions-list"
+                <?php endif; ?>
+
+                <div id="non-installed-extensions-list container"
                      style="display: <?php echo $rowsetInstalledCount === 0 ? 'flex' : 'none'; ?>;">
                     <?php if ( count( $rowsetMissing ) === 0 ): ?>
                         <p>
@@ -313,17 +323,26 @@ if ( ! class_exists( 'UpStream_Options_Extensions' ) ) :
                                 'upstream' ); ?>
                         </p>
                     <?php else: ?>
-                        <?php foreach ( $rowsetMissing as $row ): ?>
-                            <article class="u-card">
-                                <header>
-                                    <h3><?php echo $row->title; ?></h3>
-                                    <img src="<?php echo $row->cover; ?>" alt="<?php echo $row->title; ?>"/>
-                                </header>
-                                <p><?php echo $row->description; ?></p>
-                                <a href="<?php echo $row->url; ?>" target="_blank" rel="noopener noreferer"
-                                   class="button button-primary"><?php _e( 'Get This Extension', 'upstream' ); ?></a>
-                            </article>
-                        <?php endforeach; ?>
+                        <div class="row">
+                            <?php foreach ( $rowsetMissing as $row ): ?>
+                                <article class="extensions-card col-md-4">
+                                    <div class="card">
+                                        <header>
+                                            <i class="fa fa-<?php echo $row->icon; ?>"></i>
+                                        </header>
+
+                                        <div class="body">
+                                            <h3><?php echo $row->title; ?></h3>
+
+                                            <p><?php echo $row->description; ?></p>
+
+                                            <a href="<?php echo $row->url; ?>" target="_blank" rel="noopener noreferer"
+                                               class="button button-primary"><?php _e( 'Get all the UpStream extensions', 'upstream' ); ?></a>
+                                        </div>
+                                    </div>
+                                </article>
+                            <?php endforeach; ?>
+                        </div>
                     <?php endif; ?>
                 </div>
             </section>

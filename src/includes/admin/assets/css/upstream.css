@@ -846,48 +846,77 @@ body.upstream_page_upstream_extensions #upstream_extensions input[type="submit"]
   display: none;
 }
 
-#installed-extensions-list {
-  display: flex;
-  flex-direction: column;
+/* Extensions */
+
+.extensions-card {
+    box-sizing: border-box;
 }
 
-#installed-extensions-list article {
-  display: flex;
-  flex-direction: row;
+.extensions-card .card {
+    box-sizing: border-box;
+    border: 1px solid #e6e6e6;
+    border-radius: 3px;
+    min-width: 200px;
+    height: 400px;
+    position: relative;
+    padding: 0;
 }
 
-#installed-extensions-list article + article {
-  margin-top: 25px;
+.extensions-card header {
+    background: #f7f7f7;
+    height: 143px;
+    text-align: center;
+    font-size: 70px;
+    padding-top: 35px;
+    box-sizing: border-box;
 }
 
-#installed-extensions-list article > div:first-child {
-  background-color: #3CB3BA;
+.extensions-card .body {
+    padding: 10px 25px;
+    position: relative;
+    height: 205px;
 }
 
-#installed-extensions-list article > div:last-child {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
+.extensions-card .body a.button {
+    position: absolute;
+    bottom: 0;
+    height: 40px;
+    line-height: 39px;
+    padding: 0 15px;
+    max-width: 100%;
 }
 
-#installed-extensions-list article > div + div {
-  margin-left: 10px;
+.extensions-card .fa-paint-brush {
+    color: #e2b661;
 }
 
-#installed-extensions-list article img {
-  max-width: 360px;
+.extensions-card .fa-envelope {
+    color: #8194c2;
 }
 
-#installed-extensions-list article .u-title {
-  margin: 0;
+.extensions-card .fa-pencil-square-o {
+    color: #429160;
 }
 
-#installed-extensions-list article .u-description {
-  margin-top: 5px;
+.extensions-card .fa-align-left {
+    color: #ca89ca;
 }
+
+.extensions-card .fa-clone {
+    color: #da7171;
+}
+
+.extensions-card .fa-calendar {
+    color: #505b6f;
+}
+
+.extensions-card .fa-plus-square-o {
+    color: #a7ce76;
+}
+
 
 #installed-extensions-list article .u-license-status {
-  margin: 0;
+  margin: 1em;
   padding: 5px 0px 5px 8px;
   border-left: 4px solid;
 }
@@ -924,33 +953,7 @@ body.upstream_page_upstream_extensions #upstream_extensions input[type="submit"]
   border-bottom-color: #95a5a6;
 }
 
-#installed-extensions-list article header {
-  display: flex;
-  flex-direction: column;
-}
-
-#non-installed-extensions-list {
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  justify-content: space-between;
-}
-
-#non-installed-extensions-list > article + article {
-  margin: 10px 0;
-}
-
-#non-installed-extensions-list > article {
-  max-width: 360px;
-  background: #F8F8F8;
-  border: 1px solid #BDC3C7;
-  padding: 5px 10px 10px;
-}
-
-#non-installed-extensions-list > article img {
-  max-width: 360px;
-  width: 100%;
-}
+/* Loader */
 
 .u-loader,
 .u-loader:after {
