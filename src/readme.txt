@@ -142,7 +142,7 @@ If you were having date issues within Projects, please clear your cache and re-s
 The format is based on [Keep a Changelog](http://keepachangelog.com)
 and this project adheres to [Semantic Versioning](http://semver.org).
 
-= [1.18.4] - UNRELEASED =
+= [1.18.4] - 2018-06-22 =
 
 Fixed:
 * Fixed style for the admin bar which was being displayed in the bottom-left;
