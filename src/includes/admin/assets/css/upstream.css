@@ -914,9 +914,29 @@ body.upstream_page_upstream_extensions #upstream_extensions input[type="submit"]
     color: #a7ce76;
 }
 
+.extensions-card.stack .card {
+    height: 190px;
+    max-width: 100%;
+}
+
+.extensions-card.stack header {
+    display: block;
+    height: 189px;
+    width: 150px;
+    float: left;
+    line-height: 115px;
+}
+
+.extensions-card.stack .body {
+    display: block;
+    height: 190px;
+    width: 100%;
+    padding-left: 180px;
+}
 
 #installed-extensions-list article .u-license-status {
   margin: 1em;
+  margin-left: 0;
   padding: 5px 0px 5px 8px;
   border-left: 4px solid;
 }
