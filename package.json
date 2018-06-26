@@ -3,11 +3,11 @@
   "scripts": {
     "build": "node scripts/build.js"
   },
-  "version": "1.18.3",
+  "version": "1.18.4",
   "devDependencies": {
     "wp-pot": "^1.1.5"
   },
   "dependencies": {
-    "npm": "^6.0.1"
+    "npm": "^6.1.0"
   }
 }
