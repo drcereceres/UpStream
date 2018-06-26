@@ -26,7 +26,7 @@ function upstream_load_admin_scripts( $hook ) {
 
     global $pagenow;
 
-    wp_enqueue_script( 'upstream-admin', $assetsDir . 'js/admin.js', $admin_deps, UPSTREAM_VERSION,
+    wp_enqueue_script( 'upstream-admin', $assetsDir . 'js/admin.js', ['jquery'], UPSTREAM_VERSION,
         false );
 
     if ( in_array( $pagenow, [ 'edit.php', 'post.php', 'post-new.php' ] ) ) {
