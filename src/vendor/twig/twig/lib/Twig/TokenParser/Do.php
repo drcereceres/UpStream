@@ -11,14 +11,16 @@
 
 /**
  * Evaluates an expression, discarding the returned value.
+ *
+ * @final
  */
-final class Twig_TokenParser_Do extends Twig_TokenParser
+class Twig_TokenParser_Do extends Twig_TokenParser
 {
     public function parse(Twig_Token $token)
     {
         $expr = $this->parser->getExpressionParser()->parseExpression();
 
-        $this->parser->getStream()->expect(/* Twig_Token::BLOCK_END_TYPE */ 3);
+        $this->parser->getStream()->expect(Twig_Token::BLOCK_END_TYPE);
 
         return new Twig_Node_Do($expr, $token->getLine(), $this->getTag());
     }

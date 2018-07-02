@@ -19,15 +19,17 @@
  * </pre>
  *
  * @see http://www.twig-project.org/doc/api.html#sandbox-extension for details
+ *
+ * @final
  */
-final class Twig_TokenParser_Sandbox extends Twig_TokenParser
+class Twig_TokenParser_Sandbox extends Twig_TokenParser
 {
     public function parse(Twig_Token $token)
     {
         $stream = $this->parser->getStream();
-        $stream->expect(/* Twig_Token::BLOCK_END_TYPE */ 3);
+        $stream->expect(Twig_Token::BLOCK_END_TYPE);
         $body = $this->parser->subparse(array($this, 'decideBlockEnd'), true);
-        $stream->expect(/* Twig_Token::BLOCK_END_TYPE */ 3);
+        $stream->expect(Twig_Token::BLOCK_END_TYPE);
 
         // in a sandbox tag, only include tags are allowed
         if (!$body instanceof Twig_Node_Include) {

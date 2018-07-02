@@ -17,21 +17,23 @@
  *    <input type="{{ type|default('text') }}" name="{{ name }}" value="{{ value|e }}" size="{{ size|default(20) }}" />
  * {% endmacro %}
  * </pre>
+ *
+ * @final
  */
-final class Twig_TokenParser_Macro extends Twig_TokenParser
+class Twig_TokenParser_Macro extends Twig_TokenParser
 {
     public function parse(Twig_Token $token)
     {
         $lineno = $token->getLine();
         $stream = $this->parser->getStream();
-        $name = $stream->expect(/* Twig_Token::NAME_TYPE */ 5)->getValue();
+        $name = $stream->expect(Twig_Token::NAME_TYPE)->getValue();
 
         $arguments = $this->parser->getExpressionParser()->parseArguments(true, true);
 
-        $stream->expect(/* Twig_Token::BLOCK_END_TYPE */ 3);
+        $stream->expect(Twig_Token::BLOCK_END_TYPE);
         $this->parser->pushLocalScope();
         $body = $this->parser->subparse(array($this, 'decideBlockEnd'), true);
-        if ($token = $stream->nextIf(/* Twig_Token::NAME_TYPE */ 5)) {
+        if ($token = $stream->nextIf(Twig_Token::NAME_TYPE)) {
             $value = $token->getValue();
 
             if ($value != $name) {
@@ -39,7 +41,7 @@ final class Twig_TokenParser_Macro extends Twig_TokenParser
             }
         }
         $this->parser->popLocalScope();
-        $stream->expect(/* Twig_Token::BLOCK_END_TYPE */ 3);
+        $stream->expect(Twig_Token::BLOCK_END_TYPE);
 
         $this->parser->setMacro($name, new Twig_Node_Macro($name, new Twig_Node_Body(array($body)), $arguments, $lineno, $this->getTag()));
     }
