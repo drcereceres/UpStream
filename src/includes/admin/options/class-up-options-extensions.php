@@ -110,7 +110,7 @@ if ( ! class_exists( 'UpStream_Options_Extensions' ) ) :
                 [
                     'id'               => 'email-notifications',
                     'title'            => 'Email Notifications',
-                    'description'      => __( 'Allow you to email project updates to people working on your projects.',
+                    'description'      => __( 'Allows you to email project updates to people working on your projects.',
                         'upstream' ),
                     'product_id'       => 4996,
                     'options_key_slug' => 'email-notifications',
@@ -135,7 +135,7 @@ if ( ! class_exists( 'UpStream_Options_Extensions' ) ) :
                 [
                     'id'               => 'copy-project',
                     'title'            => 'Copy Project',
-                    'description'      => __( 'Allow you to duplicate an UpStream project including all the content and options.',
+                    'description'      => __( 'Allows you to duplicate an UpStream project including all the content and options.',
                         'upstream' ),
                     'product_id'       => 5471,
                     'options_key_slug' => 'copy-project',
@@ -144,7 +144,7 @@ if ( ! class_exists( 'UpStream_Options_Extensions' ) ) :
                 [
                     'id'               => 'calendar-view',
                     'title'            => 'Calendar View',
-                    'description'      => __( 'This calendar display will allow you to easily see everything that’s happening in a project. You’ll be able to see due dates for all the milestones, tasks, and bugs.',
+                    'description'      => __( 'This calendar display will allow you to easily see everything that’s happening in a project.',
                         'upstream' ),
                     'product_id'       => 6798,
                     'options_key_slug' => 'calendar-view',
@@ -153,7 +153,7 @@ if ( ! class_exists( 'UpStream_Options_Extensions' ) ) :
                 [
                     'id'               => 'custom-fields',
                     'title'            => 'Custom Fields',
-                    'description'      => __( 'This extension will allow you to add more information to tasks and bugs. For example, in a web design project, the bugs could have fields for the browser type, PHP version, and screen size.',
+                    'description'      => __( 'This extension wallow you to add more information to Project, Milestone, Tasks and Bugs.',
                         'upstream' ),
                     'product_id'       => 8409,
                     'options_key_slug' => 'custom-fields',
