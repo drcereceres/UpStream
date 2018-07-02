@@ -258,20 +258,20 @@ if ( ! class_exists( 'UpStream' ) ) :
          */
         public function includes() {
             // When composer is used in a global scope the folder won't exist here. So we need to check before load it.
-            if ( file_exists( 'vendor/autoload.php' ) ) {
-                require_once 'vendor/autoload.php';
+            if ( file_exists( __DIR__ . '/vendor/autoload.php' ) ) {
+                require_once __DIR__ . '/vendor/autoload.php';
             }
 
-            include_once( 'includes/up-install.php' );
-            include_once( 'includes/class-up-autoloader.php' );
-            include_once( 'includes/class-up-roles.php' );
-            include_once( 'includes/class-up-counts.php' );
-            include_once( 'includes/class-up-project-activity.php' );
-            include_once( 'includes/up-permalinks.php' );
-            include_once( 'includes/up-post-types.php' );
-            include_once( 'includes/up-labels.php' );
-            include_once( 'includes/trait-up-singleton.php' );
-            include_once( 'includes/abs-class-up-struct.php' );
+            include_once __DIR__ . '/includes/up-install.php';
+            include_once __DIR__ . '/includes/class-up-autoloader.php';
+            include_once __DIR__ . '/includes/class-up-roles.php';
+            include_once __DIR__ . '/includes/class-up-counts.php';
+            include_once __DIR__ . '/includes/class-up-project-activity.php';
+            include_once __DIR__ . '/includes/up-permalinks.php';
+            include_once __DIR__ . '/includes/up-post-types.php';
+            include_once __DIR__ . '/includes/up-labels.php';
+            include_once __DIR__ . '/includes/trait-up-singleton.php';
+            include_once __DIR__ . '/includes/abs-class-up-struct.php';
 
             if ( $this->is_request( 'admin' ) ) {
                 global $pagenow;
@@ -306,34 +306,34 @@ if ( ! class_exists( 'UpStream' ) ) :
                 }
 
                 if ( $loadCmb2 ) {
-                    include_once( 'includes/libraries/cmb2/init.php' );
-                    include_once( 'includes/libraries/cmb2-grid/Cmb2GridPlugin.php' );
+                    include_once __DIR__ . '/includes/libraries/cmb2/init.php';
+                    include_once __DIR__ . '/includes/libraries/cmb2-grid/Cmb2GridPlugin.php';
                 }
 
-                include_once( 'includes/admin/class-up-admin.php' );
-                include_once( 'includes/admin/class-up-admin-tasks-page.php' );
-                include_once( 'includes/admin/class-up-admin-bugs-page.php' );
-                include_once( 'includes/admin/class-up-admin-reviews.php' );
-                include_once( 'includes/admin/class-up-admin-subscription.php' );
+                include_once __DIR__ . '/includes/admin/class-up-admin.php';
+                include_once __DIR__ . '/includes/admin/class-up-admin-tasks-page.php';
+                include_once __DIR__ . '/includes/admin/class-up-admin-bugs-page.php';
+                include_once __DIR__ . '/includes/admin/class-up-admin-reviews.php';
+                include_once __DIR__ . '/includes/admin/class-up-admin-subscription.php';
             }
 
             if ( $this->is_request( 'frontend' ) ) {
-                include_once( 'includes/frontend/class-up-template-loader.php' );
-                include_once( 'includes/frontend/class-up-login.php' );
-                include_once( 'includes/frontend/class-up-style-output.php' );
-                include_once( 'includes/frontend/up-enqueues.php' );
-                include_once( 'includes/frontend/up-template-functions.php' );
-                include_once( 'includes/frontend/up-table-functions.php' );
-                include_once( 'includes/frontend/class-up-view.php' );
+                include_once __DIR__ . '/includes/frontend/class-up-template-loader.php';
+                include_once __DIR__ . '/includes/frontend/class-up-login.php';
+                include_once __DIR__ . '/includes/frontend/class-up-style-output.php';
+                include_once __DIR__ . '/includes/frontend/up-enqueues.php';
+                include_once __DIR__ . '/includes/frontend/up-template-functions.php';
+                include_once __DIR__ . '/includes/frontend/up-table-functions.php';
+                include_once __DIR__ . '/includes/frontend/class-up-view.php';
             }
 
-            include_once( 'includes/up-general-functions.php' );
-            include_once( 'includes/up-project-functions.php' );
-            include_once( 'includes/up-client-functions.php' );
-            include_once( 'includes/up-permissions-functions.php' );
-            include_once( 'includes/up-comments-migration.php' );
-            include_once( 'includes/class-up-comments.php' );
-            include_once( 'includes/class-up-comment.php' );
+            include_once __DIR__ . '/includes/up-general-functions.php';
+            include_once __DIR__ . '/includes/up-project-functions.php';
+            include_once __DIR__ . '/includes/up-client-functions.php';
+            include_once __DIR__ . '/includes/up-permissions-functions.php';
+            include_once __DIR__ . '/includes/up-comments-migration.php';
+            include_once __DIR__ . '/includes/class-up-comments.php';
+            include_once __DIR__ . '/includes/class-up-comment.php';
         }
 
         /**
