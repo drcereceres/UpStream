@@ -915,13 +915,13 @@ body.upstream_page_upstream_extensions #upstream_extensions input[type="submit"]
 }
 
 .extensions-card.stack .card {
-    height: 190px;
+    height: 200px;
     max-width: 100%;
 }
 
 .extensions-card.stack header {
     display: block;
-    height: 189px;
+    height: 198px;
     width: 150px;
     float: left;
     line-height: 115px;
@@ -929,8 +929,7 @@ body.upstream_page_upstream_extensions #upstream_extensions input[type="submit"]
 
 .extensions-card.stack .body {
     display: block;
-    height: 190px;
-    width: 100%;
+    height: 200px;
     padding-left: 180px;
 }
 
