@@ -179,7 +179,7 @@ if ( ! class_exists( 'UpStream_Options_Extensions' ) ) :
                     'status' => 'inactive',
                     'key'    => "",
                 ];
-                $extension['url']         = 'https://upstreamplugin.com/pricing/' . '?utm_source=extensions&utm_campaign=plugin&utm_medium=settings_extensions&utm_content=' . $extension['id'];
+                $extension['url']         = 'https://upstreamplugin.com/pricing';
                 $extension['cover']       = $assetsCoversURLPrefix . $extension['id'] . '.jpg';
 
                 $license = isset( $licenses[ $extension['id'] ] ) ? $licenses[ $extension['id'] ] : null;
@@ -276,7 +276,7 @@ if ( ! class_exists( 'UpStream_Options_Extensions' ) ) :
 
                 <?php if ( $rowsetInstalledCount > 0 ): ?>
                     <div id="installed-extensions-list" class="container"
-                         style="display: <?php echo $rowsetInstalledCount > 0 ? 'flex' : 'none'; ?>;">
+                         style="display: <?php echo $rowsetInstalledCount > 0 ? 'block' : 'none'; ?>;">
                         <div class="row">
                             <?php foreach ( $rowsetInstalled as $row ): ?>
                                 <article
@@ -339,26 +339,31 @@ if ( ! class_exists( 'UpStream_Options_Extensions' ) ) :
                         </p>
                     <?php else: ?>
                         <div class="row">
-                            <?php foreach ( $rowsetMissing as $row ): ?>
-                                <article class="extensions-card col-md-4 col-sm-1">
-                                    <div class="card">
-                                        <header>
-                                            <i class="fa fa-<?php echo $row->icon; ?>"></i>
-                                        </header>
+                            <div class="col-md-12 get-all-button">
+                                <a href="https://upstreamplugin.com/pricing/" target="_blank" rel="noopener noreferer"
+                                   class="button button-primary"><?php _e( 'Get all the extensions',
+                                        'upstream' ); ?></a>
+                            </div>
 
-                                        <div class="body">
-                                            <h3><?php echo $row->title; ?></h3>
+                            <div class="col-md-12">
+                                <div class="row">
+                                    <?php foreach ( $rowsetMissing as $row ): ?>
+                                        <article class="extensions-card col-md-4 col-sm-6">
+                                            <div class="card">
+                                                <header>
+                                                    <i class="fa fa-<?php echo $row->icon; ?>"></i>
+                                                </header>
 
-                                            <p><?php echo $row->description; ?></p>
+                                                <div class="body">
+                                                    <h3><?php echo $row->title; ?></h3>
 
-                                            <a href="<?php echo $row->url; ?>" target="_blank" rel="noopener noreferer"
-                                               class="button button-primary"><?php _e( 'Get all the extensions',
-                                                    'upstream' ); ?></a>
-                                        </div>
-                                    </div>
-                                </article>
-                            <?php endforeach; ?>
-                        </div>
+                                                    <p><?php echo $row->description; ?></p>
+                                                </div>
+                                            </div>
+                                        </article>
+                                    <?php endforeach; ?>
+                                </div>
+                            </div>
                     <?php endif; ?>
                 </div>
             </section>
