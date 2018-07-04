@@ -144,7 +144,10 @@ and this project adheres to [Semantic Versioning](http://semver.org).
 
 = [1.19.0] - 2018-07-04 =
 
-*
+Changed:
+* Improved the style in the extensions page;
+* Highlighter upgrade and extensions links;
+* Added form and message in the settings page to subscribe and earn 20% off and ask for review;
 
 = [1.18.4] - 2018-06-22 =
 
