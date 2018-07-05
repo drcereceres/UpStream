@@ -2,7 +2,7 @@
 
 ## Welcome to the UpStream GitHub repository
 
-While the UpStream's [documentation](https://upstreamplugin.com/documentation/) can be found on [UpStreamPlugin.com](https://upstreamplugin.com/), here you can browse the source, find and discuss open issues or even [contribute yourself](https://github.com/AllediaWordPress/UpStream/blob/master/CONTRIBUTING.md).  
+While the UpStream's [documentation](https://upstreamplugin.com/documentation/) can be found on [UpStreamPlugin.com](https://upstreamplugin.com/), here you can browse the source, find and discuss open issues or even [contribute yourself](https://github.com/AllediaWordPress/UpStream/blob/master/CONTRIBUTING.md).
 
 We recommend all developers to follow the [UpStream blog](https://upstreamplugin.com/blog/) to stay up to date about everything happening in the project. You can also follow [@upstreamplugin](https://twitter.com/upstreamplugin) on Twitter.
 
