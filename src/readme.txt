@@ -142,6 +142,15 @@ If you were having date issues within Projects, please clear your cache and re-s
 The format is based on [Keep a Changelog](http://keepachangelog.com)
 and this project adheres to [Semantic Versioning](http://semver.org).
 
+= UNRELEASED =
+
+Fixed:
+* Fixed the custom label for Discussions;
+* Added option top select roles which can see all media;
+* Fixed the filter for statuses for tasks;
+* Added the link to the list of projects to the main menu item;
+* Fixed PHP error when project members is not an array;
+
 = [1.19.0] - 2018-07-04 =
 
 Changed:
