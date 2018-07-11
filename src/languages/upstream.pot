@@ -996,7 +996,7 @@ msgid "This calendar display will allow you to easily see everything that’s ha
 msgstr ""
 
 #: includes/admin/options/class-up-options-extensions.php:156
-msgid "This extension wallow you to add more information to Project, Milestone, Tasks and Bugs."
+msgid "This extension allows you to add more information to Project, Milestone, Tasks and Bugs."
 msgstr ""
 
 #: includes/admin/options/class-up-options-extensions.php:250
