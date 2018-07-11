@@ -151,6 +151,9 @@ Fixed:
 * Added the link to the list of projects to the main menu item;
 * Fixed PHP error when project members is not an array;
 
+Changed:
+* Updated the .pot file for translators;
+
 Added:
 * Added option to enable debug and log on UpStream settings for debugging sessions;
 
