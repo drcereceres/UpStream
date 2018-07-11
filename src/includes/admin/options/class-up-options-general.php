@@ -240,7 +240,7 @@ if ( ! class_exists( 'UpStream_Options_General' ) ) :
                         [
                             'name'    => __( 'Who can see all the media?', 'upstream' ),
                             'id'      => 'media_unrestricted_roles',
-                            'desc'    => __( 'By default we only display the user\'s media. Select the roles who can see all the others media files.',
+                            'desc'    => __( 'For security, UpStream users can normally only access their own media uploads. Select the roles who can see all the entire media library.',
                                 'upstream' ),
                             'type'    => 'multicheck',
                             'default' => ['administrator'],

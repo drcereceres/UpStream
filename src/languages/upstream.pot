@@ -1197,7 +1197,7 @@ msgid "Who can see all the media?"
 msgstr ""
 
 #: includes/admin/options/class-up-options-general.php:243
-msgid "By default we only display the user's media. Select the roles who can see all the others media files."
+msgid "For security, UpStream users can normally only access their own media uploads. Select the roles who can see all the entire media library."
 msgstr ""
 
 #: includes/admin/options/class-up-options-general.php:254
