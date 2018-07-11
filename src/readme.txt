@@ -151,6 +151,9 @@ Fixed:
 * Added the link to the list of projects to the main menu item;
 * Fixed PHP error when project members is not an array;
 
+Added:
+* Added option to enable debug and log on UpStream settings for debugging sessions;
+
 = [1.19.0] - 2018-07-04 =
 
 Changed:

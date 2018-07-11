@@ -79,6 +79,11 @@ if ( ! class_exists( 'UpStream' ) ) :
         public function __construct() {
             $this->define_constants();
             $this->includes();
+
+            if ( UpStream_Debug::is_enabled() ) {
+                UpStream_Debug::init();
+            }
+
             $this->init_hooks();
 
             if ( session_status() === PHP_SESSION_NONE ) {
@@ -262,6 +267,7 @@ if ( ! class_exists( 'UpStream' ) ) :
                 require_once __DIR__ . '/vendor/autoload.php';
             }
 
+            include_once __DIR__ . '/includes/class-up-debug.php';
             include_once __DIR__ . '/includes/up-install.php';
             include_once __DIR__ . '/includes/class-up-autoloader.php';
             include_once __DIR__ . '/includes/class-up-roles.php';

@@ -499,8 +499,27 @@ if ( ! class_exists( 'UpStream_Options_General' ) ) :
                         ],
 
                         /**
-                         * Other
+                         * Maintenance
                          */
+                        [
+                            'name' => __( 'Maintenance', 'upstream' ),
+                            'id'   => 'maintenance_title',
+                            'type' => 'title',
+                            'before_row'        => '<hr>',
+                            'desc' => __('General options for maintenance only. Be careful enabling any of these options.', 'upstream'),
+                        ],
+                        [
+                            'name'              => __( 'Debug', 'upstream' ),
+                            'id'                => 'debug',
+                            'type'              => 'multicheck',
+                            'desc'              => __( 'Ticking this box will enable special debug code and a new menu to inspect the debug information.',
+                                'upstream' ),
+                            'default'           => '',
+                            'options'           => [
+                                '1' => __( 'Enabled', 'upstream' ),
+                            ],
+                            'select_all_button' => false,
+                        ],
                         [
                             'name'              => __( 'Remove Data', 'upstream' ),
                             'id'                => 'remove_data',
@@ -512,7 +531,6 @@ if ( ! class_exists( 'UpStream_Options_General' ) ) :
                                 'yes' => __( 'Remove all data on uninstall?', 'upstream' ),
                             ],
                             'select_all_button' => false,
-                            'before_row'        => '<hr>',
                         ],
 
                     ],
@@ -520,9 +538,7 @@ if ( ! class_exists( 'UpStream_Options_General' ) ) :
             );
 
             return $options;
-
         }
-
     }
 
 
