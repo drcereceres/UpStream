@@ -550,6 +550,12 @@ function renderTableColumnValue( $columnName, $columnValue, $column, $row, $rowT
 
     $html       = sprintf( '<i class="s-text-color-gray">%s</i>', __( 'none', 'upstream' ) );
     $columnType = isset( $column['type'] ) ? $column['type'] : 'raw';
+
+    // Detect color values
+    if ($columnType === 'raw' && preg_match('/^(#[0-9a-f]+|rgba?\()/i', $columnValue)) {
+        $columnType = 'colorpicker';
+    }
+
     if ( $columnType === 'user' ) {
         if ( ! is_array( $columnValue ) ) {
             $columnValue = (array) $columnValue;
@@ -646,6 +652,17 @@ function renderTableColumnValue( $columnName, $columnValue, $column, $row, $rowT
             }
         } else {
             $html = '<br>' . $html;
+        }
+    } elseif ( $columnType === 'colorpicker' ) {
+        $columnValue = trim( (string) $columnValue );
+        if ( strlen( $columnValue ) > 0 ) {
+            $html = '<div class="up-c-color-square has-tooltip" data-toggle="tooltip" title="' . $columnValue . '">';
+            $html .= '<div style="background-color: ' . $columnValue . '"></div>';
+            $html .= '</div>';
+        }
+
+        if ( $isHidden ) {
+            $html = '<span data-value="' . esc_attr( $columnValue ) . '">' . $html . '</span>';
         }
     } else {
         $columnValue = trim( (string) $columnValue );
