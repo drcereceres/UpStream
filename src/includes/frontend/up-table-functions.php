@@ -394,6 +394,107 @@ function getFilesFields( $areCommentsEnabled = null ) {
     return apply_filters( 'upstream:project.files.fields', $schema );
 }
 
+function getProjectFields( $statuses = [] ) {
+
+    if ( empty( $statuses ) ) {
+        $statuses = upstream_get_all_project_statuses();
+    }
+
+    $options = null;
+
+    $schema = [
+        'title'       => [
+            'type'        => 'raw',
+            'isOrderable' => true,
+            'label'       => __( 'Title', 'upstream' ),
+        ],
+        'status'      => [
+            'type'           => 'custom',
+            'label'          => __( 'Status', 'upstream' ),
+            'isOrderable'    => true,
+            'renderCallback' => function ( $columnName, $columnValue, $column, $row, $rowType, $projectId ) use (
+                &
+                $statuses,
+                &$options
+            ) {
+                if ( strlen( $columnValue ) > 0 ) {
+                    if ( isset( $statuses[ $columnValue ] ) ) {
+                        $columnValue = sprintf( '<span class="label up-o-label" style="background-color: %s;">%s</span>',
+                            $statuses[ $columnValue ]['color'], $statuses[ $columnValue ]['name'] );
+                    } else {
+                        $columnValue = sprintf(
+                            '<span class="label up-o-label" title="%s" style="background-color: %s;">%s <i class="fa fa-ban"></i></span>',
+                            __( "This Status doesn't exist anymore.", 'upstream' ),
+                            '#bdc3c7',
+                            $columnValue
+                        );
+                    }
+                } else {
+                    $columnValue = sprintf( '<i class="s-text-color-gray">%s</i>', __( 'none', 'upstream' ) );
+                }
+
+                return $columnValue;
+            },
+        ],
+        'owner' => [
+            'type'        => 'user',
+            'isOrderable' => true,
+            'label'       => __( 'Owner', 'upstream' ),
+        ],
+        'client' => [
+            'type'        => 'custom',
+            'isOrderable' => true,
+            'label'       => upstream_client_label(),
+        ],
+        'client_users'      => [
+            'type'           => 'array',
+            'label'          => __( 'Client users', 'upstream' ),
+            'isOrderable'    => true,
+            'renderCallback' => function ( $columnName, $columnValue, $column, $row, $rowType, $projectId ) use (
+                &
+                $statuses,
+                &$options
+            ) {
+                if ( strlen( $columnValue ) > 0 ) {
+                    if ( isset( $statuses[ $columnValue ] ) ) {
+                        $columnValue = sprintf( '<span class="label up-o-label" style="background-color: %s;">%s</span>',
+                            $statuses[ $columnValue ]['color'], $statuses[ $columnValue ]['name'] );
+                    } else {
+                        $columnValue = sprintf(
+                            '<span class="label up-o-label" title="%s" style="background-color: %s;">%s <i class="fa fa-ban"></i></span>',
+                            __( "This Status doesn't exist anymore.", 'upstream' ),
+                            '#bdc3c7',
+                            $columnValue
+                        );
+                    }
+                } else {
+                    $columnValue = sprintf( '<i class="s-text-color-gray">%s</i>', __( 'none', 'upstream' ) );
+                }
+
+                return $columnValue;
+            },
+        ],
+        'start'    => [
+            'type'        => 'date',
+            'isOrderable' => true,
+            'label'       => __( 'Start', 'upstream' ),
+        ],
+        'end'    => [
+            'type'        => 'date',
+            'isOrderable' => true,
+            'label'       => __( 'End', 'upstream' ),
+        ],
+
+        'description' => [
+            'type'     => 'wysiwyg',
+            'label'    => __( 'Description', 'upstream' ),
+            'isHidden' => true,
+        ],
+    ];
+
+    return apply_filters( 'upstream:project.fields', $schema );
+}
+
 function renderTableHeaderColumn( $identifier, $data ) {
     $attrs = [
         'data-column' => $identifier,
