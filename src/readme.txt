@@ -142,6 +142,11 @@ If you were having date issues within Projects, please clear your cache and re-s
 The format is based on [Keep a Changelog](http://keepachangelog.com)
 and this project adheres to [Semantic Versioning](http://semver.org).
 
+= UNRELEASED =
+
+Fixed:
+* Fixed method to return project's data for add-ons;
+
 = [1.19.1] - 2018-07-11 =
 
 Fixed:
