@@ -656,7 +656,7 @@ function renderTableColumnValue( $columnName, $columnValue, $column, $row, $rowT
     } elseif ( $columnType === 'colorpicker' ) {
         $columnValue = trim( (string) $columnValue );
         if ( strlen( $columnValue ) > 0 ) {
-            $html = '<div class="up-c-color-square has-tooltip" data-toggle="tooltip" title="' . $columnValue . '">';
+            $html = '<br><div class="up-c-color-square has-tooltip" data-toggle="tooltip" title="' . $columnValue . '">';
             $html .= '<div style="background-color: ' . $columnValue . '"></div>';
             $html .= '</div>';
         }
@@ -679,6 +679,8 @@ function renderTableColumnValue( $columnName, $columnValue, $column, $row, $rowT
             }
         }
 
+        $html = '<br>' . $html;
+
         if ( $isHidden ) {
             $html = '<span data-value="' . esc_attr( $columnValue ) . '">' . $html . '</span>';
         }
@@ -695,6 +697,8 @@ function renderTableColumnValue( $columnName, $columnValue, $column, $row, $rowT
         if ( $isHidden ) {
             $html = '<span data-value="' . esc_attr( $columnValue ) . '">' . $html . '</span>';
         }
+
+        $html = '<br>' . $html;
     }
 
     $html = apply_filters( 'upstream:frontend:project.table.body.td_value', $html, $columnName, $columnValue, $column,
