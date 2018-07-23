@@ -664,7 +664,29 @@ function renderTableColumnValue( $columnName, $columnValue, $column, $row, $rowT
         if ( $isHidden ) {
             $html = '<span data-value="' . esc_attr( $columnValue ) . '">' . $html . '</span>';
         }
+    } elseif ( $columnType === 'radio' ) {
+        if ( is_array( $columnValue ) ) {
+            $columnValue = $columnValue[0];
+        }
+
+        $columnValue = trim( (string) $columnValue );
+
+        if ( strlen( $columnValue ) > 0 ) {
+            if ( $columnValue === '__none__' ) {
+                $html = '<i class="s-text-color-gray">' . _( 'none', 'upstream' ) . '</i>';
+            } else {
+                $html = esc_html( $columnValue );
+            }
+        }
+
+        if ( $isHidden ) {
+            $html = '<span data-value="' . esc_attr( $columnValue ) . '">' . $html . '</span>';
+        }
     } else {
+        if ( is_array( $columnValue ) ) {
+            $columnValue = $columnValue[0];
+        }
+
         $columnValue = trim( (string) $columnValue );
         if ( strlen( $columnValue ) > 0 ) {
             $html = esc_html( $columnValue );
