@@ -403,12 +403,12 @@ function getProjectFields( $statuses = [] ) {
     $options = null;
 
     $schema = [
-        'title'       => [
+        'title'        => [
             'type'        => 'raw',
             'isOrderable' => true,
             'label'       => __( 'Title', 'upstream' ),
         ],
-        'status'      => [
+        'status'       => [
             'type'           => 'custom',
             'label'          => __( 'Status', 'upstream' ),
             'isOrderable'    => true,
@@ -436,17 +436,17 @@ function getProjectFields( $statuses = [] ) {
                 return $columnValue;
             },
         ],
-        'owner' => [
+        'owner'        => [
             'type'        => 'user',
             'isOrderable' => true,
             'label'       => __( 'Owner', 'upstream' ),
         ],
-        'client' => [
+        'client'       => [
             'type'        => 'custom',
             'isOrderable' => true,
             'label'       => upstream_client_label(),
         ],
-        'client_users'      => [
+        'client_users' => [
             'type'           => 'array',
             'label'          => __( 'Client users', 'upstream' ),
             'isOrderable'    => true,
@@ -474,12 +474,12 @@ function getProjectFields( $statuses = [] ) {
                 return $columnValue;
             },
         ],
-        'start'    => [
+        'start'        => [
             'type'        => 'date',
             'isOrderable' => true,
             'label'       => __( 'Start', 'upstream' ),
         ],
-        'end'    => [
+        'end'          => [
             'type'        => 'date',
             'isOrderable' => true,
             'label'       => __( 'End', 'upstream' ),
@@ -552,7 +552,7 @@ function renderTableColumnValue( $columnName, $columnValue, $column, $row, $rowT
     $columnType = isset( $column['type'] ) ? $column['type'] : 'raw';
 
     // Detect color values
-    if ($columnType === 'raw' && preg_match('/^(#[0-9a-f]+|rgba?\()/i', $columnValue)) {
+    if ( $columnType === 'raw' && preg_match( '/^(#[0-9a-f]+|rgba?\()/i', $columnValue ) ) {
         $columnType = 'colorpicker';
     }
 
