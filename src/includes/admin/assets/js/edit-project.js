@@ -550,6 +550,18 @@
         box.fadeOut(400, removeBox);
     };
 
+    /*
+     * Deal with invalid fields to make sure they are visible when there is an error. If hidden, there will be an error:
+     * "An invalid form control with name.... is not focusable."
+     * It will happen on Chrome if the field is invalid and not visible.
+     */
+    $('form#post').find("input,textarea,select").on('invalid', function(e) {
+        // Check if its container is closed and open it.
+        if ($(this).closest('.postbox.closed')) {
+            $(this).closest('.postbox.closed').removeClass('closed');
+        }
+    });
+
     $('form#post').on('submit', function (e) {
         var tasksWrapper = $('#_upstream_project_tasks_repeat');
         var tasks = $('.postbox.cmb-row.cmb-repeatable-grouping', tasksWrapper);
