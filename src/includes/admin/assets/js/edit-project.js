@@ -421,6 +421,35 @@
         $row.find('.up-o-tab').removeClass('nav-tab-active');
         $row.find('.up-o-tab[data-target=".up-c-tab-content-data"]').addClass('nav-tab-active');
 
+        // Check if we have a defined default value in the attributes.
+        $row.find('input, textarea, select').each(function() {
+            var $self = $(this);
+            var $wrapper = $self.closest('.cmb-row,.form-group');
+
+            if ($wrapper.data('default')) {
+                var defaultValue = $wrapper.data('default');
+
+                // Is this element a select field?
+                if (this.tagName === 'SELECT') {
+                    defaultValue = defaultValue.split(',');
+
+                    $.each(defaultValue, function(i, value) {
+                        $self.find('option').each(function (i, option) {
+                            if ($(option).prop('value') === value) {
+                                $(option).prop('selected', true);
+                            }
+                        });
+                    });
+                } else if (this.tagName === 'INPUT' && $(this).prop('type') === 'radio') {
+                    if ($self.prop('value') === defaultValue) {
+                        $self.prop('checked', true);
+                    }
+                } else {
+                    $self.val(defaultValue);
+                }
+            }
+        });
+
         setTimeout(function () {
             $row.find('.up-o-tab[data-target=".up-c-tab-content-comments"]').remove();
             $row.find('.up-c-tabs-header').remove();
