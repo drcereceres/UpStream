@@ -144,6 +144,9 @@ and this project adheres to [Semantic Versioning](http://semver.org).
 
 = [1.19.2] - 2018-07-26 =
 
+Added:
+* Added option in the general settings to pre-select all client's users by default, after select a client;
+
 Fixed:
 * Fixed saving project data in the front-end;
 * Fixed the loaded value of color picker fields in the front-end;

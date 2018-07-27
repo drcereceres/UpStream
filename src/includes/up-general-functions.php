@@ -1027,6 +1027,19 @@ function is_clients_disabled() {
 }
 
 /**
+ * Check if should Select Users by Default.
+ *
+ * @return  bool
+ */
+function select_users_by_default() {
+    $options = get_option( 'upstream_general' );
+
+    $enabled = isset( $options['pre_select_users'] ) ? (bool) $options['pre_select_users'] : false;
+
+    return $enabled;
+}
+
+/**
  * Retrieve the avatar URL from a given user.
  *
  * @since   1.12.0
