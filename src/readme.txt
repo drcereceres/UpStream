@@ -142,7 +142,7 @@ If you were having date issues within Projects, please clear your cache and re-s
 The format is based on [Keep a Changelog](http://keepachangelog.com)
 and this project adheres to [Semantic Versioning](http://semver.org).
 
-= [1.19.2] - 2018-07-26 =
+= [1.20.0] - 2018-07-31 =
 
 Added:
 * Added option in the general settings to pre-select all client's users by default, after select a client;
