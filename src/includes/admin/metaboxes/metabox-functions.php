@@ -1079,10 +1079,14 @@ function upstream_admin_ajax_get_clients_users() {
             $currentProjectClientUsers = (array) get_post_meta( $project_id, '_upstream_project_client_users' );
             $currentProjectClientUsers = ! empty( $currentProjectClientUsers ) ? $currentProjectClientUsers[0] : [];
 
+            // Check if the users should be pre-selected by default.
+
             $userIndex = 0;
             foreach ( $data as $user_id => $userName ) {
-                $output .= sprintf( '<li><input type="checkbox" value="%s" id="_upstream_project_client_users%d" name="_upstream_project_client_users[]"  class="cmb2-option"%s> <label for="_upstream_project_client_users%2$d">%4$s</label></li>',
-                    $user_id, $userIndex, ( in_array( $user_id, $currentProjectClientUsers ) ? ' checked' : '' ),
+                $checked = select_users_by_default() || in_array( $user_id, $currentProjectClientUsers );
+
+                $output .= sprintf( '<li><input type="checkbox" value="%s" id="_upstream_project_client_users%d" name="_upstream_project_client_users[]" class="cmb2-option"%s> <label for="_upstream_project_client_users%2$d">%4$s</label></li>',
+                    $user_id, $userIndex, ( $checked ? ' checked' : '' ),
                     $userName );
                 $userIndex ++;
             }

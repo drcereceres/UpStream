@@ -354,6 +354,18 @@ if ( ! class_exists( 'UpStream_Options_General' ) ) :
                             ],
                         ],
                         [
+                            'name'    => __( 'Select all client\'s users by default', 'upstream' ),
+                            'id'      => 'pre_select_users',
+                            'type'    => 'radio_inline',
+                            'desc'    => __( 'Choose whether if all client\'s users should be checked by default after change or select the client.',
+                                'upstream' ),
+                            'default' => '0',
+                            'options' => [
+                                0 => __( 'No', 'upstream' ),
+                                1 => __( 'Yes', 'upstream' ),
+                            ],
+                        ],
+                        [
                             'name'    => __( 'Disable Projects Categorization', 'upstream' ),
                             'id'      => 'disable_categories',
                             'type'    => 'radio_inline',

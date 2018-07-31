@@ -16,6 +16,9 @@ a#upstream-upgrade-link,
     padding: 15px;
 }
 
+form input:invalid,
+form select:invalid,
+form textarea:invalid,
 #upstream_subscription_ad .content .error {
     border: 1px solid #ff606c;
     background: #f6dbdc;

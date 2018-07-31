@@ -142,6 +142,20 @@ If you were having date issues within Projects, please clear your cache and re-s
 The format is based on [Keep a Changelog](http://keepachangelog.com)
 and this project adheres to [Semantic Versioning](http://semver.org).
 
+= [1.20.0] - 2018-07-31 =
+
+Added:
+* Added option in the general settings to pre-select all client's users by default, after select a client;
+
+Fixed:
+* Fixed saving project data in the front-end;
+* Fixed the loaded value of color picker fields in the front-end;
+* Fixed the style for "none" value of fields in the tables on the front-end;
+* Fixed line break on field values in the tables on the front-end;
+* Fixed JS error related to "invalid field not focusable" for hidden fields in the back-end form validation;
+* Fixed default value for fields in the front-end;
+* Fixed method to return project's data for add-ons;
+
 = [1.19.1] - 2018-07-11 =
 
 Fixed:
