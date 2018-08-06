@@ -100,7 +100,7 @@ function upstream_load_admin_scripts( $hook ) {
     }
 
     wp_enqueue_style( 'upstream-admin-icon', $assetsDir . 'css/admin-upstream-icon.css', [], UPSTREAM_VERSION );
-    wp_enqueue_style( 'upstream-admin-style', $assetsDir . 'css/admin.css', [], UPSTREAM_VERSION );
+    wp_enqueue_style( 'upstream-admin-style', $assetsDir . 'css/admin.css', ['alledia-framework'], UPSTREAM_VERSION );
     wp_enqueue_style( 'up-fontawesome', UPSTREAM_PLUGIN_URL . 'templates/assets/css/fontawesome.min.css', [], UPSTREAM_VERSION, 'all' );
 }
 

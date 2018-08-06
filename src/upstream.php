@@ -36,6 +36,11 @@ if ( ! class_exists( 'UpStream' ) ) :
         protected $twig;
 
         /**
+         * @var Container
+         */
+        protected $container;
+
+        /**
          * Main UpStream Instance.
          */
         public static function instance() {
@@ -79,6 +84,9 @@ if ( ! class_exists( 'UpStream' ) ) :
         public function __construct() {
             $this->define_constants();
             $this->includes();
+
+            // Start the pimple container.
+            $this->container = Container::get_instance();
 
             if ( UpStream_Debug::is_enabled() ) {
                 UpStream_Debug::init();
@@ -213,6 +221,13 @@ if ( ! class_exists( 'UpStream' ) ) :
         }
 
         /**
+         * @return Container
+         */
+        public function get_container() {
+            return $this->container;
+        }
+
+        /**
          * Define Constants.
          *
          * @since  1.0.0
@@ -268,6 +283,7 @@ if ( ! class_exists( 'UpStream' ) ) :
             }
 
             include_once __DIR__ . '/includes/class-up-debug.php';
+            include_once __DIR__ . '/includes/class-up-container.php';
             include_once __DIR__ . '/includes/up-install.php';
             include_once __DIR__ . '/includes/class-up-autoloader.php';
             include_once __DIR__ . '/includes/class-up-roles.php';

@@ -27,6 +27,7 @@ class UpStream_Admin {
      */
     public function __construct() {
         add_action( 'init', [ $this, 'includes' ] );
+        add_action( 'init', [ $this, 'init' ], 13 );
         add_filter( 'admin_body_class', [ $this, 'admin_body_class' ] );
         add_filter( 'ajax_query_attachments_args', [ $this, 'filter_user_attachments' ], 10, 1 );
         add_action( 'admin_menu', [ $this, 'limitUpStreamUserAccess' ] );
@@ -47,9 +48,6 @@ class UpStream_Admin {
 
         add_action( 'cmb2_render_up_timestamp', [ $this, 'renderCmb2TimestampField' ], 10, 5 );
         add_action( 'cmb2_sanitize_up_timestamp', [ $this, 'sanitizeCmb2TimestampField' ], 10, 5 );
-
-        add_action( 'plugin_action_links_' . plugin_basename( 'upstream/upstream.php' ),
-            [ $this, 'plugin_action_links' ], 999 );
     }
 
     /**
@@ -403,6 +401,14 @@ class UpStream_Admin {
         return $rowset;
     }
 
+    /**
+     * Init the dependencies.
+     */
+    public function init() {
+        $container = UpStream::instance()->get_container()['framework']->get_container();
+        $container['upgrade']->add_action_upgrade_link( 'https://upstreamplugin.com/pricing/' );
+    }
+
     public function limitUpStreamUserAccess() {
         if ( empty( $_GET ) || ! is_admin() ) {
             return;
@@ -529,21 +535,6 @@ class UpStream_Admin {
         }
 
         return $query;
-    }
-
-    /**
-     * @param $links
-     */
-    public function plugin_action_links( $links ) {
-        $links = array_merge(
-            $links,
-            [
-                '<a href="https://upstreamplugin.com/pricing/" target="_blank" id="upstream-upgrade-link">' . __( 'Upgrade',
-                    'upstream' ) . '</a>',
-            ]
-        );
-
-        return $links;
     }
 }
 

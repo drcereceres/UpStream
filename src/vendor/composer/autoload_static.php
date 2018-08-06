@@ -6,10 +6,26 @@ namespace Composer\Autoload;
 
 class ComposerStaticInit759c41bd3fe7c00f124e4196e121305d
 {
+    public static $files = array (
+        '320cde22f66dd4f5d3fd621d3e88b98f' => __DIR__ . '/..' . '/symfony/polyfill-ctype/bootstrap.php',
+    );
+
     public static $prefixLengthsPsr4 = array (
         'T' => 
         array (
             'Twig\\' => 5,
+        ),
+        'S' => 
+        array (
+            'Symfony\\Polyfill\\Ctype\\' => 23,
+        ),
+        'P' => 
+        array (
+            'Psr\\Container\\' => 14,
+        ),
+        'A' => 
+        array (
+            'AllediaFramework\\' => 17,
         ),
     );
 
@@ -17,6 +33,18 @@ class ComposerStaticInit759c41bd3fe7c00f124e4196e121305d
         'Twig\\' => 
         array (
             0 => __DIR__ . '/..' . '/twig/twig/src',
+        ),
+        'Symfony\\Polyfill\\Ctype\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/symfony/polyfill-ctype',
+        ),
+        'Psr\\Container\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/psr/container/src',
+        ),
+        'AllediaFramework\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/alledia/plugin-framework/src',
         ),
     );
 
@@ -26,6 +54,13 @@ class ComposerStaticInit759c41bd3fe7c00f124e4196e121305d
             'Twig_' => 
             array (
                 0 => __DIR__ . '/..' . '/twig/twig/lib',
+            ),
+        ),
+        'P' => 
+        array (
+            'Pimple' => 
+            array (
+                0 => __DIR__ . '/..' . '/pimple/pimple/src',
             ),
         ),
     );

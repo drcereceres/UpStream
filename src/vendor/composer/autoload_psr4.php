@@ -7,4 +7,7 @@ $baseDir = dirname($vendorDir);
 
 return array(
     'Twig\\' => array($vendorDir . '/twig/twig/src'),
+    'Symfony\\Polyfill\\Ctype\\' => array($vendorDir . '/symfony/polyfill-ctype'),
+    'Psr\\Container\\' => array($vendorDir . '/psr/container/src'),
+    'AllediaFramework\\' => array($vendorDir . '/alledia/plugin-framework/src'),
 );
