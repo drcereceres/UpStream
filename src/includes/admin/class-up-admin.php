@@ -23,6 +23,11 @@ class UpStream_Admin {
     private static $utcTimeZone = null;
 
     /**
+     * @var \AllediaFramework\Core
+     */
+    protected $framework;
+
+    /**
      * Constructor.
      */
     public function __construct() {
@@ -48,6 +53,8 @@ class UpStream_Admin {
 
         add_action( 'cmb2_render_up_timestamp', [ $this, 'renderCmb2TimestampField' ], 10, 5 );
         add_action( 'cmb2_sanitize_up_timestamp', [ $this, 'sanitizeCmb2TimestampField' ], 10, 5 );
+
+        $this->framework = UpStream::instance()->get_container()['framework'];
     }
 
     /**
@@ -405,8 +412,7 @@ class UpStream_Admin {
      * Init the dependencies.
      */
     public function init() {
-        $container = UpStream::instance()->get_container()['framework']->get_container();
-        $container['upgrade']->add_action_upgrade_link( 'https://upstreamplugin.com/pricing/' );
+        $this->framework->get_service( 'upgrade' )->add_action_upgrade_link( 'https://upstreamplugin.com/pricing/' );
     }
 
     public function limitUpStreamUserAccess() {
