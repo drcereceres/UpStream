@@ -263,8 +263,6 @@ class Comment extends Struct {
 
             $integrityCheck = wp_allow_comment( $data, true );
 
-            $integrityCheck = 1;
-
             $this->state = $integrityCheck !== "spam" ? (int) $integrityCheck : $integrityCheck;
 
             $dateFormat        = get_option( 'date_format' );
@@ -278,6 +276,13 @@ class Comment extends Struct {
             $data['comment_date']        = $date->format( 'Y-m-d H:i:s' );
 
             $this->created_at->humanized = _x( 'just now', 'Comment was very recently added.', 'upstream' );
+
+            // Filters the comments HTML.
+            $data['comment_content'] = wp_kses($data['comment_content'], wp_kses_allowed_html());
+
+            $a = $this->html2text($data['comment_content']);
+
+            var_dump($a); die;
 
             $comment_id = wp_insert_comment( $data );
             if ( ! $comment_id ) {
@@ -296,6 +301,40 @@ class Comment extends Struct {
 
             return true;
         }
+    }
+
+    function html2text($Document) {
+        $Rules = array ('@<script[^>]*?>.*?</script>@si',
+            '@<[\/\!]*?[^<>]*?>@si',
+            '@([\r\n])[\s]+@',
+            '@&(quot|#34);@i',
+            '@&(amp|#38);@i',
+            '@&(lt|#60);@i',
+            '@&(gt|#62);@i',
+            '@&(nbsp|#160);@i',
+            '@&(iexcl|#161);@i',
+            '@&(cent|#162);@i',
+            '@&(pound|#163);@i',
+            '@&(copy|#169);@i',
+            '@&(reg|#174);@i',
+            '@&#(d+);@e'
+        );
+        $Replace = array ('',
+            '',
+            '',
+            '',
+            '&',
+            '<',
+            '>',
+            ' ',
+            chr(161),
+            chr(162),
+            chr(163),
+            chr(169),
+            chr(174),
+            'chr()'
+        );
+        return preg_replace($Rules, $Replace, $Document);
     }
 
     /**

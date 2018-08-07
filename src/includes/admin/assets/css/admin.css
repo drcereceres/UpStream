@@ -1,7 +1,7 @@
-.alledia-framework-upgrade-link.upstream,
+.alledia-framework-highlight.upstream a,
 a#upstream-upgrade-link,
 #toplevel_page_upstream_general li.upstream-extensions a {
-    color: #5facd2;
+    color: #5facd2 !important;
     font-weight: bold;
 }
 
