@@ -19,26 +19,6 @@ if ( ! defined( 'ABSPATH' ) || class_exists( 'UpStream_Admin_Reviews' ) ) {
 class UpStream_Admin_Reviews {
 
     /**
-     * @var \Pimple\Container
-     */
-    protected $container;
-
-    /**
-     * @var \AllediaFramework\Core
-     */
-    protected $framework;
-
-    /**
-     * UpStream_Admin_Reviews constructor.
-     *
-     * @param $container
-     */
-    public function __construct( $container ) {
-        $this->container = $container;
-        $this->framework = $this->container['framework'];
-    }
-
-    /**
      * Checks if it should display the notification and look for actions in the URL.
      */
     public function init() {
@@ -63,7 +43,8 @@ class UpStream_Admin_Reviews {
                     'upstream' ),
             ];
 
-            $this->framework->get_service( 'reviews' )->check_review_notification( $params );
+            // Enable the Reviews module from the Allex framework.
+            do_action( 'allex_enable_module_reviews', $params );
         }
     }
 

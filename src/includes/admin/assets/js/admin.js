@@ -1,7 +1,7 @@
 (function ($) {
     // Highlight the extensions submenu.
-    var upstreamFramework = new Alledia_Framework('upstream');
-    upstreamFramework.highlight_submenu('admin.php?page=upstream_extensions');
+    var allex = new Allex('upstream');
+    allex.highlight_submenu('admin.php?page=upstream_extensions');
 
     // Mailchimp subscription form
     var attempts = 0,

@@ -230,7 +230,8 @@ if ( ! class_exists( 'UpStream_Admin_Options' ) ) :
                 $this->option_metabox[] = $bug_options->options();
             }
 
-            $ext_options            = new UpStream_Options_Extensions();
+            $container = UpStream::instance()->get_container();
+            $ext_options            = new UpStream_Options_Extensions( $container );
             $this->option_metabox[] = $ext_options->getOptions();
 
             return apply_filters( 'upstream_option_metaboxes', $this->option_metabox );

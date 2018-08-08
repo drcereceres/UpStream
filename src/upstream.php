@@ -88,6 +88,9 @@ if ( ! class_exists( 'UpStream' ) ) :
             // Start the pimple container.
             $this->container = Container::get_instance();
 
+            // Initialize the Allex Framework.
+            $this->init_framework();
+
             if ( UpStream_Debug::is_enabled() ) {
                 UpStream_Debug::init();
             }
@@ -120,8 +123,10 @@ if ( ! class_exists( 'UpStream' ) ) :
             add_filter( 'comments_clauses', [ $this, 'filterCommentsOnDashboard' ], 10, 2 );
             add_filter( 'views_dashboard', [ 'UpStream_Admin', 'commentStatusLinks' ], 10, 1 );
 
-            add_action( 'admin_init', [ $this->container['reviews'], 'init' ] );
-            add_action( 'admin_init', [ 'UpStream_Admin_Subscription', 'check_ad' ] );
+            if ( is_admin() ) {
+                add_action( 'admin_init', [ $this->container['reviews'], 'init' ] );
+                add_action( 'admin_init', [ 'UpStream_Admin_Subscription', 'check_ad' ] );
+            }
 
             // Render additional update info if needed.
             global $pagenow;
@@ -129,6 +134,13 @@ if ( ! class_exists( 'UpStream' ) ) :
                 add_action( 'in_plugin_update_message-' . UPSTREAM_PLUGIN_BASENAME,
                     [ $this, 'renderAdditionalUpdateInfo' ], 20, 2 );
             }
+        }
+
+        /**
+         * Initialize the Alledia Framework.
+         */
+        private function init_framework() {
+            $this->container['framework']->init();
         }
 
         /**

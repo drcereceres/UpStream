@@ -23,7 +23,7 @@ class UpStream_Admin {
     private static $utcTimeZone = null;
 
     /**
-     * @var \AllediaFramework\Core
+     * @var \Allex\Core
      */
     protected $framework;
 
@@ -412,7 +412,7 @@ class UpStream_Admin {
      * Init the dependencies.
      */
     public function init() {
-        $this->framework->get_service( 'upgrade' )->add_action_upgrade_link( 'https://upstreamplugin.com/pricing/' );
+        do_action( 'alex_enable_module_upgrade', 'https://upstreamplugin.com/pricing/' );
     }
 
     public function limitUpStreamUserAccess() {

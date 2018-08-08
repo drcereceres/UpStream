@@ -11,18 +11,19 @@ class Container extends \Pimple\Container {
             $instance = new self;
 
             // Define the services
-
-            $instance['framework'] = function ( $c ) {
-                return new AllediaFramework\Core( $c['PLUGIN_BASENAME'] );
-            };
-
             $instance['PLUGIN_BASENAME'] = function ( $c ) {
                 return plugin_basename( 'upstream/upstream.php' );
             };
 
-            $instance['reviews'] = function ( $c ) {
-                return new UpStream_Admin_Reviews( $c );
+            $instance['framework'] = function ( $c ) {
+                return new Allex\Core( $c['PLUGIN_BASENAME'] );
             };
+
+            if ( is_admin() ) {
+                $instance['reviews'] = function ( $c ) {
+                    return new UpStream_Admin_Reviews( $c );
+                };
+            }
 
             static::$instance = $instance;
         }
