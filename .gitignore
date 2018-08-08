@@ -27,3 +27,6 @@ $RECYCLE.BIN/
 ##############
 config.codekit
 /package-lock.json
+
+/vendor
+/src/vendor
