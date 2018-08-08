@@ -18,6 +18,18 @@ msgstr ""
 "X-Generator: Poedit 2.1.1\n"
 "X-Poedit-SearchPath-0: .\n"
 
-#: Upgrade.php:27
+#: Reviews.php:222
+msgid "Ok, you deserved it"
+msgstr ""
+
+#: Reviews.php:223
+msgid "I already did"
+msgstr ""
+
+#: Reviews.php:224
+msgid "No, not good enough for now"
+msgstr ""
+
+#: Upgrade.php:30
 msgid "Upgrade"
 msgstr ""

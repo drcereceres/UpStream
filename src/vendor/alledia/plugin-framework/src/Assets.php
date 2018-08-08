@@ -2,21 +2,7 @@
 
 namespace AllediaFramework;
 
-class Assets {
-    /**
-     * @var Container
-     */
-    protected $container;
-
-    /**
-     * TextDomain constructor.
-     *
-     * @param Container $container
-     */
-    public function __construct( Container $container ) {
-        $this->container = $container;
-    }
-
+class Assets extends AbstractService {
     /**
      * Enqueue styles for the admin UI.
      */

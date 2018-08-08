@@ -2,16 +2,11 @@
 
 namespace AllediaFramework;
 
-class Text_Domain {
+class Text_Domain extends AbstractService {
     /**
      * @var string
      */
     protected $locale;
-
-    /**
-     * @var Container
-     */
-    protected $container;
 
     /**
      * TextDomain constructor.
@@ -19,8 +14,9 @@ class Text_Domain {
      * @param Container $container
      */
     public function __construct( Container $container ) {
-        $this->container = $container;
-        $this->locale    = get_locale();
+        parent::__construct( $container );
+
+        $this->locale = get_locale();
     }
 
     /**

@@ -2,25 +2,11 @@
 
 namespace AllediaFramework;
 
-class Upgrade {
-    /**
-     * @var Container
-     */
-    protected $container;
-
+class Upgrade extends AbstractService {
     /**
      * @var string
      */
     protected $url;
-
-    /**
-     * TextDomain constructor.
-     *
-     * @param Container $container
-     */
-    public function __construct( Container $container ) {
-        $this->container = $container;
-    }
 
     /**
      * Add an Upgrade link to the action links in the plugin list.

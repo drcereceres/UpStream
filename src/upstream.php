@@ -120,7 +120,7 @@ if ( ! class_exists( 'UpStream' ) ) :
             add_filter( 'comments_clauses', [ $this, 'filterCommentsOnDashboard' ], 10, 2 );
             add_filter( 'views_dashboard', [ 'UpStream_Admin', 'commentStatusLinks' ], 10, 1 );
 
-            add_action( 'admin_init', [ 'UpStream_Admin_Reviews', 'check_review_notification' ] );
+            add_action( 'admin_init', [ $this->container['reviews'], 'init' ] );
             add_action( 'admin_init', [ 'UpStream_Admin_Subscription', 'check_ad' ] );
 
             // Render additional update info if needed.

@@ -20,6 +20,10 @@ class Container extends \Pimple\Container {
                 return plugin_basename( 'upstream/upstream.php' );
             };
 
+            $instance['reviews'] = function ( $c ) {
+                return new UpStream_Admin_Reviews( $c );
+            };
+
             static::$instance = $instance;
         }
 
