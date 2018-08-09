@@ -142,6 +142,11 @@ If you were having date issues within Projects, please clear your cache and re-s
 The format is based on [Keep a Changelog](http://keepachangelog.com)
 and this project adheres to [Semantic Versioning](http://semver.org).
 
+= [1.20.1] - UNRELEASED =
+
+Fixed:
+* Fixed the filter by statuses in the tasks and bugs page;
+
 = [1.20.0] - 2018-07-31 =
 
 Added:

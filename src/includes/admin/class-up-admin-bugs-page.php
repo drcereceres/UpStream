@@ -88,7 +88,7 @@ class Upstream_Bug_List extends WP_List_Table {
                     continue;
                 }
 
-                $stati           = strtolower( $status['name'] );
+                $stati           = strtolower( $status['id'] );
                 $class           = ( $current == $stati ? ' class="current"' : '' );
                 $url             = add_query_arg( [ 'status' => $stati, 'view' => false, 'paged' => false ] );
                 $count           = isset( $counts[ $status['name'] ] ) ? $counts[ $status['name'] ] : 0;
@@ -573,7 +573,11 @@ class Upstream_Bug_List extends WP_List_Table {
 
         $per_page     = $this->get_items_per_page( 'bugs_per_page', 10 );
         $current_page = $this->get_pagenum();
-        $total_items  = upstream_count_total( 'bugs' );
+
+        $unpaginated_items = self::get_bugs();
+        $unpaginated_items = self::sort_filter( $unpaginated_items );
+
+        $total_items = count( $unpaginated_items );
 
         $this->set_pagination_args( [
             'total_items' => $total_items, //We have to calculate the total number of items
