@@ -146,6 +146,7 @@ and this project adheres to [Semantic Versioning](http://semver.org).
 
 Fixed:
 * Fixed the filter by statuses in the tasks and bugs page;
+* Fixed invalid dates result of some wrong timezone calculation;
 
 = [1.20.0] - 2018-07-31 =
 
