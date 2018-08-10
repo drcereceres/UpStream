@@ -268,10 +268,7 @@ class Comment extends Struct {
             $dateFormat        = get_option( 'date_format' );
             $timeFormat        = get_option( 'time_format' );
             $theDateTimeFormat = $dateFormat . ' ' . $timeFormat;
-            $utcTimeZone       = new \DateTimeZone( 'UTC' );
-            $currentTimezone   = upstreamGetTimeZone();
-            $date              = \DateTime::createFromFormat( 'Y-m-d H:i:s', $this->created_at->utc, $utcTimeZone );
-            $date->setTimezone( $currentTimezone );
+            $date              = \DateTime::createFromFormat( 'Y-m-d H:i:s', $this->created_at->utc );
             $this->created_at->localized = $date->format( $theDateTimeFormat );
             $data['comment_date']        = $date->format( 'Y-m-d H:i:s' );
 
@@ -544,12 +541,9 @@ class Comment extends Struct {
         $dateFormat        = get_option( 'date_format' );
         $timeFormat        = get_option( 'time_format' );
         $theDateTimeFormat = $dateFormat . ' ' . $timeFormat;
-        $utcTimeZone       = new \DateTimeZone( 'UTC' );
-        $currentTimezone   = upstreamGetTimeZone();
         $currentTimestamp  = time();
 
-        $date = \DateTime::createFromFormat( 'Y-m-d H:i:s', $this->created_at->utc, $utcTimeZone );
-        $date->setTimezone( $currentTimezone );
+        $date = \DateTime::createFromFormat( 'Y-m-d H:i:s', $this->created_at->utc );
         $dateTimestamp = $date->getTimestamp();
 
         $this->created_at->localized = $date->format( $theDateTimeFormat );

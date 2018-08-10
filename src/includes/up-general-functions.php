@@ -509,35 +509,8 @@ function upstream_format_date( $timestamp, $dateFormat = null ) {
     if ( ! $timestamp ) {
         $date = null;
     } else {
-        // Copyright: Anthony Eden (https://mediarealm.com.au/articles/wordpress-timezones-strtotime-date-functions/)
-        // This function behaves a bit like PHP's Date() function, but taking into account the Wordpress site's timezone
-        // CAUTION: It will throw an exception when it receives invalid input - please catch it accordingly
-        // From https://mediarealm.com.au/
-        $tz_string = get_option( 'timezone_string' );
-        $tz_offset = get_option( 'gmt_offset', 0 );
-
-        if ( ! empty( $tz_string ) ) {
-            // If site timezone option string exists, use it
-            $timezone = $tz_string;
-        } elseif ( $tz_offset == 0 ) {
-            // get UTC offset, if it isn’t set then return UTC
-            $timezone = 'UTC';
-        } else {
-            $timezone = $tz_offset;
-            if ( substr( $tz_offset, 0, 1 ) != "-" && substr( $tz_offset, 0, 1 ) != "+" && substr( $tz_offset, 0,
-                    1 ) != "U" ) {
-                $timezone = "+" . $tz_offset;
-            }
-        }
-
-        if ( $timestamp === null ) {
-            $timestamp = time();
-        }
-
         $datetime = new \DateTime();
-
         $datetime->setTimestamp( $timestamp );
-        $datetime->setTimezone( new \DateTimeZone( $timezone ) );
 
         $date = $datetime->format( $dateFormat );
     }
@@ -929,39 +902,6 @@ function applyOEmbedFiltersToWysiwygEditorContent( $content, $field_args, $field
 }
 
 /**
- * Convert a given date (UTC)/timestamp to the instance's timezone.
- *
- * @since   1.11.0
- *
- * @param   int|string $subject The date to be converted. If int, assume it's a timestamp.
- *
- * @return  string|false                The converted string or false in case of failure.
- */
-function upstream_convert_UTC_date_to_timezone( $subject, $includeTime = true ) {
-    try {
-        $dateFormat = get_option( 'date_format' );
-
-        if ( $includeTime === true ) {
-            $dateFormat .= ' ' . get_option( 'time_format' );
-        }
-
-        if ( is_numeric( $subject ) ) {
-            $theDate = new DateTime();
-            $theDate->setTimestamp( $subject );
-        } else {
-            $theDate = new DateTime( $subject );
-        }
-
-        $instanceTimezone = upstreamGetTimeZone();
-        $theDate->setTimeZone( $instanceTimezone );
-
-        return $theDate->format( $dateFormat );
-    } catch ( Exception $e ) {
-        return false;
-    }
-}
-
-/**
  * Check if Comments/Discussion are disabled for the current open project.
  * If no ID is passed, this function tries to guess it by checking $_GET/$_POST vars.
  *
@@ -1153,26 +1093,6 @@ function upstreamGenerateRandomString(
     }
 
     return $randomString;
-}
-
-/**
- * Retrieve a DateTimeZone object of the current WP's timezone.
- * This function falls back to UTC in case of an invalid/empty timezone option.
- *
- * @since   1.12.3
- *
- * @return  \DateTimeZone
- */
-function upstreamGetTimeZone() {
-    $tz = (string) get_option( 'timezone_string' );
-
-    try {
-        $theTimeZone = new DateTimeZone( $tz );
-    } catch ( Exception $e ) {
-        $theTimeZone = new DateTimeZone( 'UTC' );
-    }
-
-    return $theTimeZone;
 }
 
 /**
@@ -1563,5 +1483,5 @@ function getBugsSeverities() {
 function upstream_media_unrestricted_roles() {
     $option = get_option( 'upstream_general' );
 
-    return isset( $option['media_unrestricted_roles'] ) ? $option['media_unrestricted_roles'] : ['administrator'];
+    return isset( $option['media_unrestricted_roles'] ) ? $option['media_unrestricted_roles'] : [ 'administrator' ];
 }

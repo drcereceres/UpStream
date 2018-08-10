@@ -218,13 +218,10 @@ final class UpStream_Metaboxes_Clients {
                 </thead>
                 <tbody>
                 <?php if ( count( $usersList ) > 0 ):
-                    $instanceTimezone = upstreamGetTimeZone();
                     $dateFormat = get_option( 'date_format' ) . ' ' . get_option( 'time_format' );
 
                     foreach ( $usersList as $user ):
                         $assignedAt = new DateTime( $user->assigned_at );
-                        // Convert the date, which is in UTC, to the instance's timezone.
-                        $assignedAt->setTimeZone( $instanceTimezone );
                         ?>
                         <tr data-id="<?php echo $user->id; ?>">
                             <td>
@@ -696,7 +693,7 @@ final class UpStream_Metaboxes_Clients {
                 'include' => $usersIdsList,
             ] );
 
-            $assignedAt = upstream_convert_UTC_date_to_timezone( $now );
+            $assignedAt = upstream_format_date( $now );
 
             foreach ( $rowset as $user ) {
                 array_push( $response['data'], [

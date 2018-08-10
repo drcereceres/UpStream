@@ -531,15 +531,12 @@ function upstreamRenderCommentsBox(
         $dateFormat        = get_option( 'date_format' );
         $timeFormat        = get_option( 'time_format' );
         $theDateTimeFormat = $dateFormat . ' ' . $timeFormat;
-        $utcTimeZone       = new DateTimeZone( 'UTC' );
-        $currentTimezone   = upstreamGetTimeZone();
         $currentTimestamp  = time();
 
         foreach ( $rowset as $row ) {
             $author = $users[ (int) $row->user_id ];
 
-            $date = DateTime::createFromFormat( 'Y-m-d H:i:s', $row->comment_date_gmt, $utcTimeZone );
-            $date->setTimezone( $currentTimezone );
+            $date = DateTime::createFromFormat( 'Y-m-d H:i:s', $row->comment_date_gmt );
             $dateTimestamp = $date->getTimestamp();
 
             $comment = json_decode( json_encode( [

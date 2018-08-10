@@ -19,9 +19,6 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 class UpStream_Admin {
 
-    private static $wpTimeZone = null;
-    private static $utcTimeZone = null;
-
     /**
      * @var \Allex\Core
      */
@@ -246,10 +243,8 @@ class UpStream_Admin {
         $value = trim( (string) $value );
 
         if ( strlen( $value ) > 0 ) {
-            $instanceTimezone = upstreamGetTimeZone();
-
             try {
-                $date = DateTime::createFromFormat( $fieldArgs['date_format'], $value, $instanceTimezone );
+                $date = DateTime::createFromFormat( $fieldArgs['date_format'], $value );
 
                 if ( $date !== false ) {
                     $date->setTime( 0, 0, 0 );
@@ -267,19 +262,10 @@ class UpStream_Admin {
     }
 
     public static function escapeCmb2TimestampField( $value, $args, $field ) {
-        if ( self::$wpTimeZone === null ) {
-            self::$wpTimeZone = upstreamGetTimeZone();
-        }
-
-        if ( self::$utcTimeZone === null ) {
-            self::$utcTimeZone = new \DateTimeZone( 'UTC' );
-        }
-
         $value = (int) $value;
         if ( $value > 0 ) {
-            $date = new \DateTime( 'now', self::$utcTimeZone );
+            $date = new \DateTime( 'now' );
             $date->setTimestamp( $value );
-            $date->setTimeZone( self::$wpTimeZone );
 
             $value = $date->format( $args['date_format'] );
         }

@@ -28,11 +28,6 @@ final class Comments {
         if ( count( $rowset ) > 0 ) {
             global $wpdb;
 
-            $dateFormat        = get_option( 'date_format' );
-            $timeFormat        = get_option( 'time_format' );
-            $theDateTimeFormat = $dateFormat . ' ' . $timeFormat;
-            $utcTimeZone       = new \DateTimeZone( 'UTC' );
-            $currentTimezone   = upstreamGetTimeZone();
             foreach ( $rowset as $project_id => $legacyComments ) {
                 foreach ( $legacyComments as $legacyComment ) {
                     if ( ! isset( $legacyComment['created_by'] )
@@ -45,7 +40,7 @@ final class Comments {
 
                     $user = get_user_by( 'id', $legacyComment['created_by'] );
 
-                    $date = \DateTime::createFromFormat( 'U', $legacyComment['created_time'], $utcTimeZone );
+                    $date = \DateTime::createFromFormat( 'U', $legacyComment['created_time'] );
 
                     $newCommentData = [
                         'comment_post_ID'      => $project_id,
@@ -57,7 +52,6 @@ final class Comments {
                         'comment_approved'     => 1,
                     ];
 
-                    $date->setTimezone( $currentTimezone );
                     $newCommentData['comment_date'] = $date->format( 'Y-m-d H:i:s' );
 
                     $wpdb->insert( $wpdb->prefix . 'comments', $newCommentData );

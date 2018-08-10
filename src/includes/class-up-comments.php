@@ -643,8 +643,6 @@ class Comments {
             $dateFormat        = get_option( 'date_format' );
             $timeFormat        = get_option( 'time_format' );
             $theDateTimeFormat = $dateFormat . ' ' . $timeFormat;
-            $utcTimeZone       = new \DateTimeZone( 'UTC' );
-            $currentTimezone   = upstreamGetTimeZone();
             $currentTimestamp  = time();
 
             $user                     = wp_get_current_user();
@@ -691,8 +689,7 @@ class Comments {
                         foreach ( $comments as $comment ) {
                             $author = $usersCache[ (int) $comment->user_id ];
 
-                            $date = \DateTime::createFromFormat( 'Y-m-d H:i:s', $comment->comment_date_gmt,
-                                $utcTimeZone );
+                            $date = \DateTime::createFromFormat( 'Y-m-d H:i:s', $comment->comment_date_gmt );
 
                             $commentData = json_decode( json_encode( [
                                 'id'             => (int) $comment->comment_ID,
@@ -714,8 +711,6 @@ class Comments {
                                 ],
                                 'replies'        => [],
                             ] ) );
-
-                            $date->setTimezone( $currentTimezone );
 
                             $commentData->created_at->localized = $date->format( $theDateTimeFormat );
 

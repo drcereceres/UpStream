@@ -590,7 +590,7 @@ function renderTableColumnValue( $columnName, $columnValue, $column, $row, $rowT
     } elseif ( $columnType === 'date' ) {
         $columnValue = (int) $columnValue;
         if ( $columnValue > 0 ) {
-            $html = upstream_convert_UTC_date_to_timezone( $columnValue, false );
+            $html = upstream_format_date( $columnValue );
         }
     } elseif ( $columnType === 'wysiwyg' ) {
         $columnValue = preg_replace( '/(?!>[\s]*).\r?\n(?![\s]*<)/', '$0<br />', trim( (string) $columnValue ) );
