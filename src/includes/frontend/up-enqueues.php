@@ -73,8 +73,10 @@ function upstream_enqueue_styles_scripts() {
     }
 
     // Enqueue style for poopy sandbox to complement the admin bar.
-    if ( file_exists( ABSPATH . 'wp-content/plugins/' . plugin_dir_path( 'sandbox/sandbox.php' ) . 'static/css/poopy.css' ) ) {
-        wp_enqueue_style( 'poopy', plugin_dir_url( 'sandbox/sandbox.php' ) . '/static/css/poopy.css', [], $up_ver );
+    if ( class_exists( 'Sandbox_API' ) && Sandbox_API::getInstance()->is_poopy_site() ) {
+        if ( file_exists( ABSPATH . 'wp-content/plugins/' . plugin_dir_path( 'sandbox/sandbox.php' ) . 'static/css/poopy.css' ) ) {
+            wp_enqueue_style( 'poopy', plugin_dir_url( 'sandbox/sandbox.php' ) . '/static/css/poopy.css', [], $up_ver );
+        }
     }
 
     /*
@@ -94,7 +96,8 @@ function upstream_enqueue_styles_scripts() {
         [ 'jquery', 'up-bootstrap' ], $up_ver, true );
     wp_enqueue_script( 'up-modal', $up_url . $js_dir . 'vendor/modal.min.js', [ 'jquery' ], $up_ver, true );
 
-    wp_enqueue_script( 'upstream', $up_url . $js_dir . 'upstream.js', [ 'jquery', 'up-modal', 'admin-bar' ], $up_ver, true );
+    wp_enqueue_script( 'upstream', $up_url . $js_dir . 'upstream.js', [ 'jquery', 'up-modal', 'admin-bar' ], $up_ver,
+        true );
 
 
     $noDataStringTemplate = _x( "You haven't created any %s yet",
