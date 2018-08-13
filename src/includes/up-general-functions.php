@@ -1485,3 +1485,63 @@ function upstream_media_unrestricted_roles() {
 
     return isset( $option['media_unrestricted_roles'] ) ? $option['media_unrestricted_roles'] : [ 'administrator' ];
 }
+
+
+/**
+ * DEPRECATED
+ */
+
+/**
+ * Retrieve a DateTimeZone object of the current WP's timezone.
+ * This function falls back to UTC in case of an invalid/empty timezone option.
+ *
+ * @since   1.12.3
+ * @deprecated
+ *
+ * @return  \DateTimeZone
+ */
+function upstreamGetTimeZone() {
+    $tz = (string) get_option( 'timezone_string' );
+
+    try {
+        $theTimeZone = new DateTimeZone( $tz );
+    } catch ( Exception $e ) {
+        $theTimeZone = new DateTimeZone( 'UTC' );
+    }
+
+    return $theTimeZone;
+}
+
+/**
+ * Convert a given date (UTC)/timestamp to the instance's timezone.
+ *
+ * @since   1.11.0
+ * @deprecated
+ *
+ * @param   int|string $subject The date to be converted. If int, assume it's a timestamp.
+ *
+ * @return  string|false                The converted string or false in case of failure.
+ */
+function upstream_convert_UTC_date_to_timezone( $subject, $includeTime = true ) {
+    try {
+        $dateFormat = get_option( 'date_format' );
+
+        if ( $includeTime === true ) {
+            $dateFormat .= ' ' . get_option( 'time_format' );
+        }
+
+        if ( is_numeric( $subject ) ) {
+            $theDate = new DateTime();
+            $theDate->setTimestamp( $subject );
+        } else {
+            $theDate = new DateTime( $subject );
+        }
+
+        $instanceTimezone = upstreamGetTimeZone();
+        $theDate->setTimeZone( $instanceTimezone );
+
+        return $theDate->format( $dateFormat );
+    } catch ( Exception $e ) {
+        return false;
+    }
+}
