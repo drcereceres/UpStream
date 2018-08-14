@@ -1,4 +1,7 @@
 {
+  "name": "upstream",
+  "type": "wordpress-plugin",
+  "license": "GPL-2.0+",
   "config": {
     "platform": {
       "php": "5.6"
@@ -7,9 +10,14 @@
   "require": {
     "twig/twig": "*",
     "alledia/plugin-framework": "*",
-    "pimple/pimple": "^3.2"
+    "pimple/pimple": "^3.2",
+    "publishpress/wordpress-plugin-builder": "^2"
   },
   "repositories": [
+    {
+      "type": "git",
+      "url": "https://github.com/AllediaWordPress/WordPress-Plugin-Builder"
+    },
     {
       "type": "git",
       "url": "https://github.com/AllediaWordPress/WordPress-Plugin-Framework"
