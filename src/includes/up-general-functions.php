@@ -202,6 +202,10 @@ function upstream_user_data( $data = 0, $ignore_current = false ) {
     $type      = is_email( $data ) ? 'email' : 'id';
     $wp_user   = get_user_by( $type, $data );
 
+    if (empty($wp_user)) {
+        $wp_user = wp_get_current_user();
+    }
+
     if ( ! function_exists( 'is_plugin_active' ) ) {
         include_once ABSPATH . 'wp-admin/includes/plugin.php';
     }
