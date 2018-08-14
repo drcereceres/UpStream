@@ -147,6 +147,8 @@ and this project adheres to [Semantic Versioning](http://semver.org).
 Fixed:
 * Fixed the filter by statuses in the tasks and bugs page;
 * Fixed invalid dates result of some wrong timezone calculation;
+* Fixed the verification for the Poopy sandbox sites before load its CSS file in the front-end;
+* Fixed error in the front-end when the current user is not defined in the session;
 
 = [1.20.0] - 2018-07-31 =
 
