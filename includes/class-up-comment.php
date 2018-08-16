@@ -279,8 +279,6 @@ class Comment extends Struct {
 
             $a = $this->html2text($data['comment_content']);
 
-            var_dump($a); die;
-
             $comment_id = wp_insert_comment( $data );
             if ( ! $comment_id ) {
                 throw new \Exception( __( 'Unable to save the data into database.', 'upstream' ) );
