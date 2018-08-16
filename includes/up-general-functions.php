@@ -549,13 +549,13 @@ function upstream_date_unixtime( $timestamp ) {
  * Run time formatting through here
  */
 function upstream_format_time( $timestamp ) {
-    if ( ! $timestamp ) {
-        $time = null;
-    } else {
-        $time = date_i18n( get_option( 'time_format' ), $timestamp, false );
-    }
+	if ( ! $timestamp ) {
+		$time = null;
+	} else {
+		$time = date_i18n( get_option( 'time_format' ), $timestamp, false );
+	}
 
-    return apply_filters( 'upstream_format_date', $time, $timestamp );
+	return apply_filters( 'upstream_format_date', $time, $timestamp );
 }
 
 /*
@@ -600,67 +600,67 @@ function upstream_timestamp_from_date( $value ) {
 // function to convert date format
 // pinched from CMB2
 function upstream_php_to_js_dateformat() {
-    $format            = get_option( 'date_format' );
-    $supported_options = [
-        'd' => 'dd',  // Day, leading 0
-        'j' => 'd',   // Day, no 0
-        'z' => 'o',   // Day of the year, no leading zeroes,
-        // 'D' => 'D',   // Day name short, not sure how it'll work with translations
-        // 'l' => 'DD',  // Day name full, idem before
-        'm' => 'mm',  // Month of the year, leading 0
-        'n' => 'm',   // Month of the year, no leading 0
-        // 'M' => 'M',   // Month, Short name
-        'F' => 'MM',  // Month, full name,
-        'y' => 'y',   // Year, two digit
-        'Y' => 'yy',  // Year, full
-        'H' => 'HH',  // Hour with leading 0 (24 hour)
-        'G' => 'H',   // Hour with no leading 0 (24 hour)
-        'h' => 'hh',  // Hour with leading 0 (12 hour)
-        'g' => 'h',   // Hour with no leading 0 (12 hour),
-        'i' => 'mm',  // Minute with leading 0,
-        's' => 'ss',  // Second with leading 0,
-        'a' => 'tt',  // am/pm
-        'A' => 'TT'   // AM/PM
-    ];
+	$format            = get_option( 'date_format' );
+	$supported_options = [
+		'd' => 'dd',  // Day, leading 0
+		'j' => 'd',   // Day, no 0
+		'z' => 'o',   // Day of the year, no leading zeroes,
+		// 'D' => 'D',   // Day name short, not sure how it'll work with translations
+		// 'l' => 'DD',  // Day name full, idem before
+		'm' => 'mm',  // Month of the year, leading 0
+		'n' => 'm',   // Month of the year, no leading 0
+		// 'M' => 'M',   // Month, Short name
+		'F' => 'MM',  // Month, full name,
+		'y' => 'y',   // Year, two digit
+		'Y' => 'yy',  // Year, full
+		'H' => 'HH',  // Hour with leading 0 (24 hour)
+		'G' => 'H',   // Hour with no leading 0 (24 hour)
+		'h' => 'hh',  // Hour with leading 0 (12 hour)
+		'g' => 'h',   // Hour with no leading 0 (12 hour),
+		'i' => 'mm',  // Minute with leading 0,
+		's' => 'ss',  // Second with leading 0,
+		'a' => 'tt',  // am/pm
+		'A' => 'TT'   // AM/PM
+	];
 
-    foreach ( $supported_options as $php => $js ) {
-        // replaces every instance of a supported option, but skips escaped characters
-        $format = preg_replace( "~(?<!\\\\)$php~", $js, $format );
-    }
+	foreach ( $supported_options as $php => $js ) {
+		// replaces every instance of a supported option, but skips escaped characters
+		$format = preg_replace( "~(?<!\\\\)$php~", $js, $format );
+	}
 
-    $format = preg_replace_callback( '~(?:\\\.)+~', 'upstream_wrap_escaped_chars', $format );
+	$format = preg_replace_callback( '~(?:\\\.)+~', 'upstream_wrap_escaped_chars', $format );
 
-    return $format;
+	return $format;
 
 }
 
 function upstream_wrap_escaped_chars( $value ) {
-    return "&#39;" . str_replace( '\\', '', $value[0] ) . "&#39;";
+	return "&#39;" . str_replace( '\\', '', $value[0] ) . "&#39;";
 }
 
 function upstream_logo_url() {
-    $option = get_option( 'upstream_general' );
-    $logo   = $option['logo'];
+	$option = get_option( 'upstream_general' );
+	$logo   = $option['logo'];
 
-    return apply_filters( 'upstream_logo', $logo );
+	return apply_filters( 'upstream_logo', $logo );
 }
 
 function upstream_login_heading() {
-    $option = get_option( 'upstream_general' );
+	$option = get_option( 'upstream_general' );
 
-    return isset( $option['login_heading'] ) ? $option['login_heading'] : '';
+	return isset( $option['login_heading'] ) ? $option['login_heading'] : '';
 }
 
 function upstream_login_text() {
-    $option = get_option( 'upstream_general' );
+	$option = get_option( 'upstream_general' );
 
-    return isset( $option['login_text'] ) ? wp_kses_post( wpautop( $option['login_text'] ) ) : '';
+	return isset( $option['login_text'] ) ? wp_kses_post( wpautop( $option['login_text'] ) ) : '';
 }
 
 function upstream_admin_email() {
-    $option = get_option( 'upstream_general' );
+	$option = get_option( 'upstream_general' );
 
-    return isset( $option['admin_email'] ) ? $option['admin_email'] : '';
+	return isset( $option['admin_email'] ) ? $option['admin_email'] : '';
 }
 
 /**
@@ -675,15 +675,15 @@ function upstream_admin_email() {
  * @return  string
  */
 function upstream_admin_support( $option ) {
-    if ( empty( $option ) ) {
-        $option = get_option( 'upstream_general' );
-    }
+	if ( empty( $option ) ) {
+		$option = get_option( 'upstream_general' );
+	}
 
-    if ( isset( $option['admin_support_link'] ) ) {
-        return ! empty( $option['admin_support_link'] ) ? $option['admin_support_link'] : 'mailto:' . $option['admin_email'];
-    } else {
-        return isset( $option['admin_email'] ) ? $option['admin_email'] : '#';
-    }
+	if ( isset( $option['admin_support_link'] ) ) {
+		return ! empty( $option['admin_support_link'] ) ? $option['admin_support_link'] : 'mailto:' . $option['admin_email'];
+	} else {
+		return isset( $option['admin_email'] ) ? $option['admin_email'] : '#';
+	}
 }
 
 /**
@@ -698,15 +698,15 @@ function upstream_admin_support( $option ) {
  * @return  string
  */
 function upstream_admin_support_label( $option ) {
-    if ( empty( $option ) ) {
-        $option = get_option( 'upstream_general' );
-    }
+	if ( empty( $option ) ) {
+		$option = get_option( 'upstream_general' );
+	}
 
-    if ( isset( $option['admin_support_label'] ) ) {
-        return ! empty( $option['admin_support_label'] ) ? $option['admin_support_label'] : '';
-    } else {
-        return __( 'Contact Admin', 'upstream' );
-    }
+	if ( isset( $option['admin_support_label'] ) ) {
+		return ! empty( $option['admin_support_label'] ) ? $option['admin_support_label'] : '';
+	} else {
+		return __( 'Contact Admin', 'upstream' );
+	}
 }
 
 /**
@@ -720,19 +720,19 @@ function upstream_admin_support_label( $option ) {
  * @return  bool
  */
 function upstream_are_milestones_disabled( $post_id = 0 ) {
-    $areMilestonesDisabled = false;
-    $post_id               = (int) $post_id;
+	$areMilestonesDisabled = false;
+	$post_id               = (int) $post_id;
 
-    if ( $post_id <= 0 ) {
-        $post_id = (int) upstream_post_id();
-    }
+	if ( $post_id <= 0 ) {
+		$post_id = (int) upstream_post_id();
+	}
 
-    if ( $post_id > 0 ) {
-        $theMeta               = get_post_meta( $post_id, '_upstream_project_disable_milestones', false );
-        $areMilestonesDisabled = ! empty( $theMeta ) && $theMeta[0] === 'on';
-    }
+	if ( $post_id > 0 ) {
+		$theMeta               = get_post_meta( $post_id, '_upstream_project_disable_milestones', false );
+		$areMilestonesDisabled = ! empty( $theMeta ) && $theMeta[0] === 'on';
+	}
 
-    return $areMilestonesDisabled;
+	return $areMilestonesDisabled;
 }
 
 /**
@@ -746,19 +746,19 @@ function upstream_are_milestones_disabled( $post_id = 0 ) {
  * @return  bool
  */
 function upstream_are_tasks_disabled( $post_id = 0 ) {
-    $areTasksDisabled = false;
-    $post_id          = (int) $post_id;
+	$areTasksDisabled = false;
+	$post_id          = (int) $post_id;
 
-    if ( $post_id <= 0 ) {
-        $post_id = (int) upstream_post_id();
-    }
+	if ( $post_id <= 0 ) {
+		$post_id = (int) upstream_post_id();
+	}
 
-    if ( $post_id > 0 ) {
-        $theMeta          = get_post_meta( $post_id, '_upstream_project_disable_tasks', false );
-        $areTasksDisabled = ! empty( $theMeta ) && $theMeta[0] === 'on';
-    }
+	if ( $post_id > 0 ) {
+		$theMeta          = get_post_meta( $post_id, '_upstream_project_disable_tasks', false );
+		$areTasksDisabled = ! empty( $theMeta ) && $theMeta[0] === 'on';
+	}
 
-    return $areTasksDisabled;
+	return $areTasksDisabled;
 }
 
 /**
@@ -772,19 +772,19 @@ function upstream_are_tasks_disabled( $post_id = 0 ) {
  * @return  bool
  */
 function upstream_are_bugs_disabled( $post_id = 0 ) {
-    $areBugsDisabled = false;
-    $post_id         = (int) $post_id;
+	$areBugsDisabled = false;
+	$post_id         = (int) $post_id;
 
-    if ( $post_id <= 0 ) {
-        $post_id = (int) upstream_post_id();
-    }
+	if ( $post_id <= 0 ) {
+		$post_id = (int) upstream_post_id();
+	}
 
-    if ( $post_id > 0 ) {
-        $theMeta         = get_post_meta( $post_id, '_upstream_project_disable_bugs', false );
-        $areBugsDisabled = ! empty( $theMeta ) && $theMeta[0] === 'on';
-    }
+	if ( $post_id > 0 ) {
+		$theMeta         = get_post_meta( $post_id, '_upstream_project_disable_bugs', false );
+		$areBugsDisabled = ! empty( $theMeta ) && $theMeta[0] === 'on';
+	}
 
-    return $areBugsDisabled;
+	return $areBugsDisabled;
 }
 
 /**
@@ -798,96 +798,96 @@ function upstream_are_bugs_disabled( $post_id = 0 ) {
  * @return  bool
  */
 function upstream_are_files_disabled( $post_id = 0 ) {
-    $areBugsDisabled = false;
-    $post_id         = (int) $post_id;
+	$areBugsDisabled = false;
+	$post_id         = (int) $post_id;
 
-    if ( $post_id <= 0 ) {
-        $post_id = (int) upstream_post_id();
-    }
+	if ( $post_id <= 0 ) {
+		$post_id = (int) upstream_post_id();
+	}
 
-    if ( $post_id > 0 ) {
-        $theMeta         = get_post_meta( $post_id, '_upstream_project_disable_files', false );
-        $areBugsDisabled = ! empty( $theMeta ) && $theMeta[0] === 'on';
-    }
+	if ( $post_id > 0 ) {
+		$theMeta         = get_post_meta( $post_id, '_upstream_project_disable_files', false );
+		$areBugsDisabled = ! empty( $theMeta ) && $theMeta[0] === 'on';
+	}
 
-    return $areBugsDisabled;
+	return $areBugsDisabled;
 }
 
 function upstream_tinymce_quicktags_settings( $tinyMCE ) {
-    if ( preg_match( '/^(?:_upstream_project_|description|notes|new_message)/i', $tinyMCE['id'] ) ) {
-        $tinyMCE['buttons'] = 'strong,em,link,del,ul,ol,li,close';
-    }
+	if ( preg_match( '/^(?:_upstream_project_|description|notes|new_message)/i', $tinyMCE['id'] ) ) {
+		$tinyMCE['buttons'] = 'strong,em,link,del,ul,ol,li,close';
+	}
 
-    return $tinyMCE;
+	return $tinyMCE;
 }
 
 function upstream_tinymce_before_init_setup_toolbar( $tinyMCE ) {
-    if ( preg_match( '/_upstream_project_|#description|#notes|#new_message|#upstream/i', $tinyMCE['selector'] ) ) {
-        $tinyMCE['toolbar1'] = 'bold,italic,underline,strikethrough,bullist,numlist,link';
-        $tinyMCE['toolbar2'] = '';
-        $tinyMCE['toolbar3'] = '';
-        $tinyMCE['toolbar4'] = '';
-    }
+	if ( preg_match( '/_upstream_project_|#description|#notes|#new_message|#upstream/i', $tinyMCE['selector'] ) ) {
+		$tinyMCE['toolbar1'] = 'bold,italic,underline,strikethrough,bullist,numlist,link';
+		$tinyMCE['toolbar2'] = '';
+		$tinyMCE['toolbar3'] = '';
+		$tinyMCE['toolbar4'] = '';
+	}
 
-    return $tinyMCE;
+	return $tinyMCE;
 }
 
 function upstream_tinymce_before_init( $tinyMCE ) {
-    if ( preg_match( '/_upstream_project_|#description|#notes|#new_message|#upstream/i', $tinyMCE['selector'] ) ) {
-        if ( isset( $tinyMCE['plugins'] ) ) {
-            $pluginsToBeAdded = [
-                'charmap',
-                'hr',
-                'media',
-                'paste',
-                'tabfocus',
-                'textcolor',
-                'wpautoresize',
-                'wpemoji',
-                'wpgallery',
-                'wpdialogs',
-                'wptextpattern',
-                'wpview',
-            ];
+	if ( preg_match( '/_upstream_project_|#description|#notes|#new_message|#upstream/i', $tinyMCE['selector'] ) ) {
+		if ( isset( $tinyMCE['plugins'] ) ) {
+			$pluginsToBeAdded = [
+				'charmap',
+				'hr',
+				'media',
+				'paste',
+				'tabfocus',
+				'textcolor',
+				'wpautoresize',
+				'wpemoji',
+				'wpgallery',
+				'wpdialogs',
+				'wptextpattern',
+				'wpview',
+			];
 
-            $pluginsList       = explode( ',', $tinyMCE['plugins'] );
-            $pluginsListUnique = array_unique( array_merge( $pluginsList, $pluginsToBeAdded ) );
+			$pluginsList       = explode( ',', $tinyMCE['plugins'] );
+			$pluginsListUnique = array_unique( array_merge( $pluginsList, $pluginsToBeAdded ) );
 
-            $tinyMCE['plugins'] = implode( ',', $pluginsListUnique );
-        }
-    }
+			$tinyMCE['plugins'] = implode( ',', $pluginsListUnique );
+		}
+	}
 
-    return $tinyMCE;
+	return $tinyMCE;
 }
 
 function upstream_disable_tasks() {
-    $options = get_option( 'upstream_general' );
+	$options = get_option( 'upstream_general' );
 
-    $disable_tasks = isset( $options['disable_tasks'] ) ? (array) $options['disable_tasks'] : [ 'no' ];
+	$disable_tasks = isset( $options['disable_tasks'] ) ? (array) $options['disable_tasks'] : [ 'no' ];
 
-    $areTasksDisabled = $disable_tasks[0] === 'yes';
+	$areTasksDisabled = $disable_tasks[0] === 'yes';
 
-    return $areTasksDisabled;
+	return $areTasksDisabled;
 }
 
 function upstream_disable_milestones() {
-    $options = get_option( 'upstream_general' );
+	$options = get_option( 'upstream_general' );
 
-    $disable_milestones = isset( $options['disable_milestones'] ) ? (array) $options['disable_milestones'] : [ 'no' ];
+	$disable_milestones = isset( $options['disable_milestones'] ) ? (array) $options['disable_milestones'] : [ 'no' ];
 
-    $areMilestonesDisabled = $disable_milestones[0] === 'yes';
+	$areMilestonesDisabled = $disable_milestones[0] === 'yes';
 
-    return $areMilestonesDisabled;
+	return $areMilestonesDisabled;
 }
 
 function upstream_disable_files() {
-    $options = get_option( 'upstream_general' );
+	$options = get_option( 'upstream_general' );
 
-    $disable_files = isset( $options['disable_files'] ) ? (array) $options['disable_files'] : [ 'no' ];
+	$disable_files = isset( $options['disable_files'] ) ? (array) $options['disable_files'] : [ 'no' ];
 
-    $areFilesDisabled = $disable_files[0] === 'yes';
+	$areFilesDisabled = $disable_files[0] === 'yes';
 
-    return $areFilesDisabled;
+	return $areFilesDisabled;
 }
 
 /**
@@ -907,18 +907,18 @@ function upstream_disable_files() {
  * @return  mixed                   Escaped value to be displayed.
  */
 function applyOEmbedFiltersToWysiwygEditorContent( $content, $field_args, $field ) {
-    global $wp_embed;
+	global $wp_embed;
 
-    $content = (string) $content;
+	$content = (string) $content;
 
-    if ( strlen( $content ) > 0 ) {
-        $content = $wp_embed->autoembed( $content );
-        $content = $wp_embed->run_shortcode( $content );
-        $content = wpautop( $content );
-        $content = do_shortcode( $content );
-    }
+	if ( strlen( $content ) > 0 ) {
+		$content = $wp_embed->autoembed( $content );
+		$content = $wp_embed->run_shortcode( $content );
+		$content = wpautop( $content );
+		$content = do_shortcode( $content );
+	}
 
-    return $content;
+	return $content;
 }
 
 /**
@@ -932,28 +932,28 @@ function applyOEmbedFiltersToWysiwygEditorContent( $content, $field_args, $field
  * @return  bool
  */
 function upstream_are_comments_disabled( $post_id = 0 ) {
-    // General settings
-    $pluginOptions = get_option( 'upstream_general' );
-    $disabled      = isset( $pluginOptions['disable_project_comments'] ) && (bool) $pluginOptions['disable_project_comments'] === false;
+	// General settings
+	$pluginOptions = get_option( 'upstream_general' );
+	$disabled      = isset( $pluginOptions['disable_project_comments'] ) && (bool) $pluginOptions['disable_project_comments'] === false;
 
-    if ( $disabled ) {
-        return true;
-    }
+	if ( $disabled ) {
+		return true;
+	}
 
-    // Project's settings
-    $areCommentsDisabled = false;
-    $post_id             = (int) $post_id;
+	// Project's settings
+	$areCommentsDisabled = false;
+	$post_id             = (int) $post_id;
 
-    if ( $post_id <= 0 ) {
-        $post_id = (int) upstream_post_id();
-    }
+	if ( $post_id <= 0 ) {
+		$post_id = (int) upstream_post_id();
+	}
 
-    if ( $post_id > 0 ) {
-        $theMeta             = get_post_meta( $post_id, '_upstream_project_disable_comments', false );
-        $areCommentsDisabled = ! empty( $theMeta ) && $theMeta[0] === 'on';
-    }
+	if ( $post_id > 0 ) {
+		$theMeta             = get_post_meta( $post_id, '_upstream_project_disable_comments', false );
+		$areCommentsDisabled = ! empty( $theMeta ) && $theMeta[0] === 'on';
+	}
 
-    return $areCommentsDisabled;
+	return $areCommentsDisabled;
 }
 
 /**
@@ -964,11 +964,11 @@ function upstream_are_comments_disabled( $post_id = 0 ) {
  * @return  bool
  */
 function is_project_categorization_disabled() {
-    $options = get_option( 'upstream_general' );
+	$options = get_option( 'upstream_general' );
 
-    $isDisabled = isset( $options['disable_categories'] ) ? (bool) $options['disable_categories'] : false;
+	$isDisabled = isset( $options['disable_categories'] ) ? (bool) $options['disable_categories'] : false;
 
-    return $isDisabled;
+	return $isDisabled;
 }
 
 /**
@@ -979,11 +979,11 @@ function is_project_categorization_disabled() {
  * @return  bool
  */
 function is_clients_disabled() {
-    $options = get_option( 'upstream_general' );
+	$options = get_option( 'upstream_general' );
 
-    $isDisabled = isset( $options['disable_clients'] ) ? (bool) $options['disable_clients'] : false;
+	$isDisabled = isset( $options['disable_clients'] ) ? (bool) $options['disable_clients'] : false;
 
-    return $isDisabled;
+	return $isDisabled;
 }
 
 /**
@@ -992,11 +992,11 @@ function is_clients_disabled() {
  * @return  bool
  */
 function select_users_by_default() {
-    $options = get_option( 'upstream_general' );
+	$options = get_option( 'upstream_general' );
 
-    $enabled = isset( $options['pre_select_users'] ) ? (bool) $options['pre_select_users'] : false;
+	$enabled = isset( $options['pre_select_users'] ) ? (bool) $options['pre_select_users'] : false;
 
-    return $enabled;
+	return $enabled;
 }
 
 /**
@@ -1009,67 +1009,67 @@ function select_users_by_default() {
  * @return  string|bool
  */
 function getUserAvatarURL( $user_id ) {
-    $user_id = (int) $user_id;
-    if ( $user_id <= 0 ) {
-        return false;
-    }
+	$user_id = (int) $user_id;
+	if ( $user_id <= 0 ) {
+		return false;
+	}
 
-    if ( ! function_exists( 'is_plugin_active' ) ) {
-        include_once ABSPATH . 'wp-admin/includes/plugin.php';
-    }
+	if ( ! function_exists( 'is_plugin_active' ) ) {
+		include_once ABSPATH . 'wp-admin/includes/plugin.php';
+	}
 
-    $avatarURL = "";
+	$avatarURL = "";
 
-    // Check if BuddyPress is running so we can borrow its functions.
-    $isBuddyPressRunning = is_plugin_active( 'buddypress/bp-loader.php' ) && class_exists( 'BuddyPress' ) && function_exists( 'bp_core_fetch_avatar' );
-    if ( $isBuddyPressRunning ) {
-        $avatarURL = (string) bp_core_fetch_avatar( [
-            'item_id' => $user_id,
-            'type'    => "thumb",
-            'html'    => false,
-        ] );
-    }
+	// Check if BuddyPress is running so we can borrow its functions.
+	$isBuddyPressRunning = is_plugin_active( 'buddypress/bp-loader.php' ) && class_exists( 'BuddyPress' ) && function_exists( 'bp_core_fetch_avatar' );
+	if ( $isBuddyPressRunning ) {
+		$avatarURL = (string) bp_core_fetch_avatar( [
+			'item_id' => $user_id,
+			'type'    => "thumb",
+			'html'    => false,
+		] );
+	}
 
-    // Check if WP-User-Avatar is running so we can borrow its functions.
-    if ( empty( $avatarURL ) && is_plugin_active( 'wp-user-avatar/wp-user-avatar.php' ) && function_exists( 'wpua_functions_init' ) ) {
-        global $wp_query;
+	// Check if WP-User-Avatar is running so we can borrow its functions.
+	if ( empty( $avatarURL ) && is_plugin_active( 'wp-user-avatar/wp-user-avatar.php' ) && function_exists( 'wpua_functions_init' ) ) {
+		global $wp_query;
 
-        // Make sure WP_Query is loaded.
-        if ( ! ( $wp_query instanceof \WP_Query ) ) {
-            $wp_query = new WP_Query();
-        }
+		// Make sure WP_Query is loaded.
+		if ( ! ( $wp_query instanceof \WP_Query ) ) {
+			$wp_query = new WP_Query();
+		}
 
-        try {
-            // Make sure WP User Avatar dependencies are loaded.
-            require_once ABSPATH . 'wp-settings.php';
-            require_once ABSPATH . 'wp-includes/pluggable.php';
-            require_once ABSPATH . 'wp-includes/query.php';
-            require_once WP_PLUGIN_DIR . '/wp-user-avatar/wp-user-avatar.php';
+		try {
+			// Make sure WP User Avatar dependencies are loaded.
+			require_once ABSPATH . 'wp-settings.php';
+			require_once ABSPATH . 'wp-includes/pluggable.php';
+			require_once ABSPATH . 'wp-includes/query.php';
+			require_once WP_PLUGIN_DIR . '/wp-user-avatar/wp-user-avatar.php';
 
-            // Load WP User Avatar plugin and its dependencies.
-            wpua_functions_init();
+			// Load WP User Avatar plugin and its dependencies.
+			wpua_functions_init();
 
-            // Retrieve the current user avatar URL.
-            $avatarURL = (string) get_wp_user_avatar_src( $user_id );
-        } catch ( Exception $e ) {
-            // Do nothing.
-        }
-    }
+			// Retrieve the current user avatar URL.
+			$avatarURL = (string) get_wp_user_avatar_src( $user_id );
+		} catch ( Exception $e ) {
+			// Do nothing.
+		}
+	}
 
-    // Check if Custom User Profile Photo is running so we can borrow its functions.
-    if ( empty( $avatarURL ) && is_plugin_active( 'custom-user-profile-photo/3five_cupp.php' ) && function_exists( 'get_cupp_meta' ) ) {
-        $avatarURL = (string) get_cupp_meta( $user_id );
-    }
+	// Check if Custom User Profile Photo is running so we can borrow its functions.
+	if ( empty( $avatarURL ) && is_plugin_active( 'custom-user-profile-photo/3five_cupp.php' ) && function_exists( 'get_cupp_meta' ) ) {
+		$avatarURL = (string) get_cupp_meta( $user_id );
+	}
 
-    if ( empty( $avatarURL ) ) {
-        if ( ! function_exists( 'get_avatar_url' ) ) {
-            require_once ABSPATH . 'wp-includes/link-template.php';
-        }
+	if ( empty( $avatarURL ) ) {
+		if ( ! function_exists( 'get_avatar_url' ) ) {
+			require_once ABSPATH . 'wp-includes/link-template.php';
+		}
 
-        $avatarURL = (string) get_avatar_url( $user_id, 96, get_option( 'avatar_default', 'mystery' ) );
-    }
+		$avatarURL = (string) get_avatar_url( $user_id, 96, get_option( 'avatar_default', 'mystery' ) );
+	}
 
-    return $avatarURL;
+	return $avatarURL;
 }
 
 /**
@@ -1080,15 +1080,15 @@ function getUserAvatarURL( $user_id ) {
  * @return  bool
  */
 function isUserEitherManagerOrAdmin( $user = null ) {
-    if ( empty( $user ) || ! ( $user instanceof \WP_User ) ) {
-        $user = wp_get_current_user();
-    }
+	if ( empty( $user ) || ! ( $user instanceof \WP_User ) ) {
+		$user = wp_get_current_user();
+	}
 
-    if ( $user->ID > 0 && isset( $user->roles ) ) {
-        return count( array_intersect( (array) $user->roles, [ 'administrator', 'upstream_manager' ] ) ) > 0;
-    }
+	if ( $user->ID > 0 && isset( $user->roles ) ) {
+		return count( array_intersect( (array) $user->roles, [ 'administrator', 'upstream_manager' ] ) ) > 0;
+	}
 
-    return false;
+	return false;
 }
 
 /**
@@ -1102,17 +1102,17 @@ function isUserEitherManagerOrAdmin( $user = null ) {
  * @return  string
  */
 function upstreamGenerateRandomString(
-    $length,
-    $charsPool = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'
+	$length,
+	$charsPool = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'
 ) {
-    $randomString       = "";
-    $maxCharsPoolLength = mb_strlen( $charsPool, '8bit' ) - 1;
+	$randomString       = "";
+	$maxCharsPoolLength = mb_strlen( $charsPool, '8bit' ) - 1;
 
-    for ( $lengthIndex = 0; $lengthIndex < $length; ++ $lengthIndex ) {
-        $randomString .= $charsPool[ random_int( 0, $maxCharsPoolLength ) ];
-    }
+	for ( $lengthIndex = 0; $lengthIndex < $length; ++ $lengthIndex ) {
+		$randomString .= $charsPool[ random_int( 0, $maxCharsPoolLength ) ];
+	}
 
-    return $randomString;
+	return $randomString;
 }
 
 /**
@@ -1123,48 +1123,48 @@ function upstreamGenerateRandomString(
  * @return  bool
  */
 function upstreamAreProjectCommentsEnabled() {
-    // Retrieve UpStream general options.
-    $options    = get_option( 'upstream_general' );
-    $optionName = 'disable_project_comments';
-    // Check if the option exists.
-    if ( isset( $options[ $optionName ] ) ) {
-        $allow = (bool) $options[ $optionName ];
-    } else {
-        $legacyOptionName = 'disable_discussion';
-        // Check if user has legacy option set.
-        if ( isset( $options[ $legacyOptionName ] ) ) {
-            if ( is_array( $options[ $legacyOptionName ] ) || is_object( $options[ $legacyOptionName ] ) ) {
-                $options[ $legacyOptionName ] = json_decode( json_encode( $options[ $legacyOptionName ] ), true );
-                if ( ! empty( $options[ $legacyOptionName ] ) ) {
-                    $options[ $legacyOptionName ] = array_reverse( $options[ $legacyOptionName ] );
-                    $legacyOptionValue            = array_pop( $options[ $legacyOptionName ] );
-                } else {
-                    $legacyOptionValue = "";
-                }
-            } else {
-                $legacyOptionValue = (string) $options[ $legacyOptionName ];
-            }
+	// Retrieve UpStream general options.
+	$options    = get_option( 'upstream_general' );
+	$optionName = 'disable_project_comments';
+	// Check if the option exists.
+	if ( isset( $options[ $optionName ] ) ) {
+		$allow = (bool) $options[ $optionName ];
+	} else {
+		$legacyOptionName = 'disable_discussion';
+		// Check if user has legacy option set.
+		if ( isset( $options[ $legacyOptionName ] ) ) {
+			if ( is_array( $options[ $legacyOptionName ] ) || is_object( $options[ $legacyOptionName ] ) ) {
+				$options[ $legacyOptionName ] = json_decode( json_encode( $options[ $legacyOptionName ] ), true );
+				if ( ! empty( $options[ $legacyOptionName ] ) ) {
+					$options[ $legacyOptionName ] = array_reverse( $options[ $legacyOptionName ] );
+					$legacyOptionValue            = array_pop( $options[ $legacyOptionName ] );
+				} else {
+					$legacyOptionValue = "";
+				}
+			} else {
+				$legacyOptionValue = (string) $options[ $legacyOptionName ];
+			}
 
-            if ( is_string( $legacyOptionValue ) ) {
-                $allow = strtoupper( trim( $legacyOptionValue ) ) !== 'YES';
-            } else {
-                $allow = true;
-            }
+			if ( is_string( $legacyOptionValue ) ) {
+				$allow = strtoupper( trim( $legacyOptionValue ) ) !== 'YES';
+			} else {
+				$allow = true;
+			}
 
-            unset( $options[ $legacyOptionName ] );
+			unset( $options[ $legacyOptionName ] );
 
-            // Migrate existent legacy option.
-            $options[ $optionName ] = (int) ! $allow;
+			// Migrate existent legacy option.
+			$options[ $optionName ] = (int) ! $allow;
 
-            // Update options.
-            update_option( 'upstream_general', $options );
-        } else {
-            // Default value.
-            $allow = true;
-        }
-    }
+			// Update options.
+			update_option( 'upstream_general', $options );
+		} else {
+			// Default value.
+			$allow = true;
+		}
+	}
 
-    return $allow;
+	return $allow;
 }
 
 /**
@@ -1175,13 +1175,13 @@ function upstreamAreProjectCommentsEnabled() {
  * @return  bool
  */
 function upstreamAreCommentsEnabledOnMilestones() {
-    $options = get_option( 'upstream_general' );
+	$options = get_option( 'upstream_general' );
 
-    $optionName = 'disable_comments_on_milestones';
+	$optionName = 'disable_comments_on_milestones';
 
-    $allow = isset( $options[ $optionName ] ) ? (bool) $options[ $optionName ] : true;
+	$allow = isset( $options[ $optionName ] ) ? (bool) $options[ $optionName ] : true;
 
-    return $allow;
+	return $allow;
 }
 
 /**
@@ -1192,13 +1192,13 @@ function upstreamAreCommentsEnabledOnMilestones() {
  * @return  bool
  */
 function upstreamAreCommentsEnabledOnTasks() {
-    $options = get_option( 'upstream_general' );
+	$options = get_option( 'upstream_general' );
 
-    $optionName = 'disable_comments_on_tasks';
+	$optionName = 'disable_comments_on_tasks';
 
-    $allow = isset( $options[ $optionName ] ) ? (bool) $options[ $optionName ] : true;
+	$allow = isset( $options[ $optionName ] ) ? (bool) $options[ $optionName ] : true;
 
-    return $allow;
+	return $allow;
 }
 
 /**
@@ -1209,13 +1209,13 @@ function upstreamAreCommentsEnabledOnTasks() {
  * @return  bool
  */
 function upstreamAreCommentsEnabledOnBugs() {
-    $options = get_option( 'upstream_general' );
+	$options = get_option( 'upstream_general' );
 
-    $optionName = 'disable_comments_on_bugs';
+	$optionName = 'disable_comments_on_bugs';
 
-    $allow = isset( $options[ $optionName ] ) ? (bool) $options[ $optionName ] : true;
+	$allow = isset( $options[ $optionName ] ) ? (bool) $options[ $optionName ] : true;
 
-    return $allow;
+	return $allow;
 }
 
 /**
@@ -1226,13 +1226,13 @@ function upstreamAreCommentsEnabledOnBugs() {
  * @return  bool
  */
 function upstreamAreCommentsEnabledOnFiles() {
-    $options = get_option( 'upstream_general' );
+	$options = get_option( 'upstream_general' );
 
-    $optionName = 'disable_comments_on_files';
+	$optionName = 'disable_comments_on_files';
 
-    $allow = isset( $options[ $optionName ] ) ? (bool) $options[ $optionName ] : true;
+	$allow = isset( $options[ $optionName ] ) ? (bool) $options[ $optionName ] : true;
 
-    return $allow;
+	return $allow;
 }
 
 /**
@@ -1245,144 +1245,144 @@ function upstreamAreCommentsEnabledOnFiles() {
  * @return  string
  */
 function upstream_nl2br( $subject ) {
-    // Step 1: Add <br /> tags for each line-break.
-    $subject = nl2br( $subject );
+	// Step 1: Add <br /> tags for each line-break.
+	$subject = nl2br( $subject );
 
-    // Step 2: Remove the actual line-breaks.
-    $subject = str_replace( "\n", "", $subject );
-    $subject = str_replace( "\r", "", $subject );
+	// Step 2: Remove the actual line-breaks.
+	$subject = str_replace( "\n", "", $subject );
+	$subject = str_replace( "\r", "", $subject );
 
-    // Step 3: Restore the line-breaks that are inside <pre></pre> tags.
-    if ( preg_match_all( '/\<pre\>(.*?)\<\/pre\>/', $subject, $match ) ) {
-        foreach ( $match as $a ) {
-            foreach ( $a as $b ) {
-                $subject = str_replace( '<pre>' . $b . '</pre>',
-                    "<pre>" . str_replace( "<br />", PHP_EOL, $b ) . "</pre>", $subject );
-            }
-        }
-    }
+	// Step 3: Restore the line-breaks that are inside <pre></pre> tags.
+	if ( preg_match_all( '/\<pre\>(.*?)\<\/pre\>/', $subject, $match ) ) {
+		foreach ( $match as $a ) {
+			foreach ( $a as $b ) {
+				$subject = str_replace( '<pre>' . $b . '</pre>',
+					"<pre>" . str_replace( "<br />", PHP_EOL, $b ) . "</pre>", $subject );
+			}
+		}
+	}
 
-    // Step 4: Removes extra <br /> tags.
+	// Step 4: Removes extra <br /> tags.
 
-    // Before <pre> tags.
-    $subject = str_replace( "<br /><br /><br /><pre>", '<br /><br /><pre>', $subject );
-    // After </pre> tags.
-    $subject = str_replace( "</pre><br /><br />", '</pre><br />', $subject );
+	// Before <pre> tags.
+	$subject = str_replace( "<br /><br /><br /><pre>", '<br /><br /><pre>', $subject );
+	// After </pre> tags.
+	$subject = str_replace( "</pre><br /><br />", '</pre><br />', $subject );
 
-    // Arround <ul></ul> tags.
-    $subject = str_replace( "<br /><br /><ul>", '<br /><ul>', $subject );
-    $subject = str_replace( "</ul><br /><br />", '</ul><br />', $subject );
-    // Inside <ul> </ul> tags.
-    $subject = str_replace( "<ul><br />", '<ul>', $subject );
-    $subject = str_replace( "<br /></ul>", '</ul>', $subject );
+	// Arround <ul></ul> tags.
+	$subject = str_replace( "<br /><br /><ul>", '<br /><ul>', $subject );
+	$subject = str_replace( "</ul><br /><br />", '</ul><br />', $subject );
+	// Inside <ul> </ul> tags.
+	$subject = str_replace( "<ul><br />", '<ul>', $subject );
+	$subject = str_replace( "<br /></ul>", '</ul>', $subject );
 
-    // Arround <ol></ol> tags.
-    $subject = str_replace( "<br /><br /><ol>", '<br /><ol>', $subject );
-    $subject = str_replace( "</ol><br /><br />", '</ol><br />', $subject );
-    // Inside <ol> </ol> tags.
-    $subject = str_replace( "<ol><br />", '<ol>', $subject );
-    $subject = str_replace( "<br /></ol>", '</ol>', $subject );
+	// Arround <ol></ol> tags.
+	$subject = str_replace( "<br /><br /><ol>", '<br /><ol>', $subject );
+	$subject = str_replace( "</ol><br /><br />", '</ol><br />', $subject );
+	// Inside <ol> </ol> tags.
+	$subject = str_replace( "<ol><br />", '<ol>', $subject );
+	$subject = str_replace( "<br /></ol>", '</ol>', $subject );
 
-    // Arround <li></li> tags.
-    $subject = str_replace( "<br /><li>", '<li>', $subject );
-    $subject = str_replace( "</li><br />", '</li>', $subject );
+	// Arround <li></li> tags.
+	$subject = str_replace( "<br /><li>", '<li>', $subject );
+	$subject = str_replace( "</li><br />", '</li>', $subject );
 
-    return $subject;
+	return $subject;
 }
 
 function upstreamShouldRunCmb2() {
-    global $pagenow;
+	global $pagenow;
 
-    if ( $pagenow === 'post.php'
-         || $pagenow === 'post-new.php'
-    ) {
-        $post_id  = isset( $_GET['post'] ) ? (int) $_GET['post'] : 0;
-        $postType = get_post_type( $post_id );
-        if ( empty( $postType ) ) {
-            $postType = isset( $_GET['post_type'] ) ? $_GET['post_type'] : '';
-            if ( empty( $postType )
-                 && isset( $_POST['post_type'] )
-            ) {
-                $postType = $_POST['post_type'];
-            }
-        }
+	if ( $pagenow === 'post.php'
+	     || $pagenow === 'post-new.php'
+	) {
+		$post_id  = isset( $_GET['post'] ) ? (int) $_GET['post'] : 0;
+		$postType = get_post_type( $post_id );
+		if ( empty( $postType ) ) {
+			$postType = isset( $_GET['post_type'] ) ? $_GET['post_type'] : '';
+			if ( empty( $postType )
+			     && isset( $_POST['post_type'] )
+			) {
+				$postType = $_POST['post_type'];
+			}
+		}
 
-        $postTypesUsingCmb2 = apply_filters( 'upstream:post_types_using_cmb2', [ 'project', 'client' ] );
+		$postTypesUsingCmb2 = apply_filters( 'upstream:post_types_using_cmb2', [ 'project', 'client' ] );
 
-        if ( in_array( $postType, $postTypesUsingCmb2 ) ) {
-            return true;
-        }
-    } elseif ( $pagenow === 'admin.php'
-               && isset( $_GET['page'] )
-               && preg_match( '/^upstream_/i', $_GET['page'] )
-    ) {
-        return true;
-    }
+		if ( in_array( $postType, $postTypesUsingCmb2 ) ) {
+			return true;
+		}
+	} elseif ( $pagenow === 'admin.php'
+	           && isset( $_GET['page'] )
+	           && preg_match( '/^upstream_/i', $_GET['page'] )
+	) {
+		return true;
+	}
 
-    return false;
+	return false;
 }
 
 function upstreamGetUsersMap() {
-    $map = [];
+	$map = [];
 
-    $rowset = get_users( [
-        'fields' => [ 'ID', 'display_name' ],
-    ] );
+	$rowset = get_users( [
+		'fields' => [ 'ID', 'display_name' ],
+	] );
 
-    foreach ( $rowset as $user ) {
-        $map[ (int) $user->ID ] = $user->display_name;
-    }
+	foreach ( $rowset as $user ) {
+		$map[ (int) $user->ID ] = $user->display_name;
+	}
 
-    return $map;
+	return $map;
 }
 
 function upstreamGetDateFormatForJsDatepicker() {
-    $format            = get_option( 'date_format' );
-    $supported_options = [
-        'd' => 'dd',  // Day, leading 0
-        'j' => 'd',   // Day, no 0
-        'z' => 'o',   // Day of the year, no leading zeroes,
-        // 'D' => 'D',   // Day name short, not sure how it'll work with translations
-        // 'l' => 'DD',  // Day name full, idem before
-        'm' => 'mm',  // Month of the year, leading 0
-        'n' => 'm',   // Month of the year, no leading 0
-        // 'M' => 'M',   // Month, Short name
-        'F' => 'MM',  // Month, full name,
-        'y' => 'yy',   // Year, two digit
-        'Y' => 'yyyy',  // Year, full
-        'H' => 'HH',  // Hour with leading 0 (24 hour)
-        'G' => 'H',   // Hour with no leading 0 (24 hour)
-        'h' => 'hh',  // Hour with leading 0 (12 hour)
-        'g' => 'h',   // Hour with no leading 0 (12 hour),
-        'i' => 'mm',  // Minute with leading 0,
-        's' => 'ss',  // Second with leading 0,
-        'a' => 'tt',  // am/pm
-        'A' => 'TT'   // AM/PM
-    ];
+	$format            = get_option( 'date_format' );
+	$supported_options = [
+		'd' => 'dd',  // Day, leading 0
+		'j' => 'd',   // Day, no 0
+		'z' => 'o',   // Day of the year, no leading zeroes,
+		// 'D' => 'D',   // Day name short, not sure how it'll work with translations
+		// 'l' => 'DD',  // Day name full, idem before
+		'm' => 'mm',  // Month of the year, leading 0
+		'n' => 'm',   // Month of the year, no leading 0
+		// 'M' => 'M',   // Month, Short name
+		'F' => 'MM',  // Month, full name,
+		'y' => 'yy',   // Year, two digit
+		'Y' => 'yyyy',  // Year, full
+		'H' => 'HH',  // Hour with leading 0 (24 hour)
+		'G' => 'H',   // Hour with no leading 0 (24 hour)
+		'h' => 'hh',  // Hour with leading 0 (12 hour)
+		'g' => 'h',   // Hour with no leading 0 (12 hour),
+		'i' => 'mm',  // Minute with leading 0,
+		's' => 'ss',  // Second with leading 0,
+		'a' => 'tt',  // am/pm
+		'A' => 'TT'   // AM/PM
+	];
 
-    foreach ( $supported_options as $php => $js ) {
-        // replaces every instance of a supported option, but skips escaped characters
-        $format = preg_replace( "~(?<!\\\\)$php~", $js, $format );
-    }
+	foreach ( $supported_options as $php => $js ) {
+		// replaces every instance of a supported option, but skips escaped characters
+		$format = preg_replace( "~(?<!\\\\)$php~", $js, $format );
+	}
 
-    $format = preg_replace_callback( '~(?:\\\.)+~', 'upstream_wrap_escaped_chars', $format );
+	$format = preg_replace_callback( '~(?:\\\.)+~', 'upstream_wrap_escaped_chars', $format );
 
-    return $format;
+	return $format;
 
 }
 
 function userCanReceiveCommentRepliesNotification( $user_id = 0 ) {
-    if ( ! is_numeric( $user_id ) ) {
-        return false;
-    }
+	if ( ! is_numeric( $user_id ) ) {
+		return false;
+	}
 
-    if ( (int) $user_id <= 0 ) {
-        $user_id = get_current_user_id();
-    }
+	if ( (int) $user_id <= 0 ) {
+		$user_id = get_current_user_id();
+	}
 
-    $receiveNotifications = get_user_meta( $user_id, 'upstream_comment_replies_notification', true ) !== 'no';
+	$receiveNotifications = get_user_meta( $user_id, 'upstream_comment_replies_notification', true ) !== 'no';
 
-    return $receiveNotifications;
+	return $receiveNotifications;
 }
 
 /**
@@ -1393,18 +1393,18 @@ function userCanReceiveCommentRepliesNotification( $user_id = 0 ) {
  * @return  array
  */
 function getMilestones() {
-    $data = [];
+	$data = [];
 
-    $milestones = (array) get_option( 'upstream_milestones' );
-    if ( isset( $milestones['milestones'] ) ) {
-        foreach ( $milestones['milestones'] as $milestone ) {
-            if ( isset( $milestone['id'] ) ) {
-                $data[ $milestone['id'] ] = $milestone;
-            }
-        }
-    }
+	$milestones = (array) get_option( 'upstream_milestones' );
+	if ( isset( $milestones['milestones'] ) ) {
+		foreach ( $milestones['milestones'] as $milestone ) {
+			if ( isset( $milestone['id'] ) ) {
+				$data[ $milestone['id'] ] = $milestone;
+			}
+		}
+	}
 
-    return $data;
+	return $data;
 }
 
 /**
@@ -1415,16 +1415,16 @@ function getMilestones() {
  * @return  array
  */
 function getMilestonesTitles() {
-    $data = [];
+	$data = [];
 
-    $milestones = getMilestones();
-    foreach ( $milestones as $milestone ) {
-        if ( isset( $milestone['id'] ) ) {
-            $data[ $milestone['id'] ] = $milestone['title'];
-        }
-    }
+	$milestones = getMilestones();
+	foreach ( $milestones as $milestone ) {
+		if ( isset( $milestone['id'] ) ) {
+			$data[ $milestone['id'] ] = $milestone['title'];
+		}
+	}
 
-    return $data;
+	return $data;
 }
 
 /**
@@ -1435,18 +1435,18 @@ function getMilestonesTitles() {
  * @return  array
  */
 function getTasksStatuses() {
-    $data = [];
+	$data = [];
 
-    $tasks = (array) get_option( 'upstream_tasks' );
-    if ( isset( $tasks['statuses'] ) ) {
-        foreach ( $tasks['statuses'] as $task ) {
-            if ( isset( $task['id'] ) ) {
-                $data[ $task['id'] ] = $task;
-            }
-        }
-    }
+	$tasks = (array) get_option( 'upstream_tasks' );
+	if ( isset( $tasks['statuses'] ) ) {
+		foreach ( $tasks['statuses'] as $task ) {
+			if ( isset( $task['id'] ) ) {
+				$data[ $task['id'] ] = $task;
+			}
+		}
+	}
 
-    return $data;
+	return $data;
 }
 
 /**
@@ -1457,53 +1457,53 @@ function getTasksStatuses() {
  * @return  array
  */
 function getTasksStatusesTitles() {
-    $data = [];
+	$data = [];
 
-    $tasks = getTasksStatuses();
-    foreach ( $tasks as $task ) {
-        if ( isset( $task['id'] ) ) {
-            $data[ $task['id'] ] = $task['name'];
-        }
-    }
+	$tasks = getTasksStatuses();
+	foreach ( $tasks as $task ) {
+		if ( isset( $task['id'] ) ) {
+			$data[ $task['id'] ] = $task['name'];
+		}
+	}
 
-    return $data;
+	return $data;
 }
 
 
 function getBugsStatuses() {
-    $data = [];
+	$data = [];
 
-    $bugs = (array) get_option( 'upstream_bugs' );
-    if ( isset( $bugs['statuses'] ) ) {
-        foreach ( $bugs['statuses'] as $bugStatus ) {
-            if ( isset( $bugStatus['id'] ) ) {
-                $data[ $bugStatus['id'] ] = $bugStatus;
-            }
-        }
-    }
+	$bugs = (array) get_option( 'upstream_bugs' );
+	if ( isset( $bugs['statuses'] ) ) {
+		foreach ( $bugs['statuses'] as $bugStatus ) {
+			if ( isset( $bugStatus['id'] ) ) {
+				$data[ $bugStatus['id'] ] = $bugStatus;
+			}
+		}
+	}
 
-    return $data;
+	return $data;
 }
 
 function getBugsSeverities() {
-    $data = [];
+	$data = [];
 
-    $bugs = (array) get_option( 'upstream_bugs' );
-    if ( isset( $bugs['severities'] ) ) {
-        foreach ( $bugs['severities'] as $bugSeverity ) {
-            if ( isset( $bugSeverity['id'] ) ) {
-                $data[ $bugSeverity['id'] ] = $bugSeverity;
-            }
-        }
-    }
+	$bugs = (array) get_option( 'upstream_bugs' );
+	if ( isset( $bugs['severities'] ) ) {
+		foreach ( $bugs['severities'] as $bugSeverity ) {
+			if ( isset( $bugSeverity['id'] ) ) {
+				$data[ $bugSeverity['id'] ] = $bugSeverity;
+			}
+		}
+	}
 
-    return $data;
+	return $data;
 }
 
 function upstream_media_unrestricted_roles() {
-    $option = get_option( 'upstream_general' );
+	$option = get_option( 'upstream_general' );
 
-    return isset( $option['media_unrestricted_roles'] ) ? $option['media_unrestricted_roles'] : [ 'administrator' ];
+	return isset( $option['media_unrestricted_roles'] ) ? $option['media_unrestricted_roles'] : [ 'administrator' ];
 }
 
 
@@ -1521,15 +1521,15 @@ function upstream_media_unrestricted_roles() {
  * @return  \DateTimeZone
  */
 function upstreamGetTimeZone() {
-    $tz = (string) get_option( 'timezone_string' );
+	$tz = (string) get_option( 'timezone_string' );
 
-    try {
-        $theTimeZone = new DateTimeZone( $tz );
-    } catch ( Exception $e ) {
-        $theTimeZone = new DateTimeZone( 'UTC' );
-    }
+	try {
+		$theTimeZone = new DateTimeZone( $tz );
+	} catch ( Exception $e ) {
+		$theTimeZone = new DateTimeZone( 'UTC' );
+	}
 
-    return $theTimeZone;
+	return $theTimeZone;
 }
 
 /**
@@ -1543,25 +1543,25 @@ function upstreamGetTimeZone() {
  * @return  string|false                The converted string or false in case of failure.
  */
 function upstream_convert_UTC_date_to_timezone( $subject, $includeTime = true ) {
-    try {
-        $dateFormat = get_option( 'date_format' );
+	try {
+		$dateFormat = get_option( 'date_format' );
 
-        if ( $includeTime === true ) {
-            $dateFormat .= ' ' . get_option( 'time_format' );
-        }
+		if ( $includeTime === true ) {
+			$dateFormat .= ' ' . get_option( 'time_format' );
+		}
 
-        if ( is_numeric( $subject ) ) {
-            $theDate = new DateTime();
-            $theDate->setTimestamp( $subject );
-        } else {
-            $theDate = new DateTime( $subject );
-        }
+		if ( is_numeric( $subject ) ) {
+			$theDate = new DateTime();
+			$theDate->setTimestamp( $subject );
+		} else {
+			$theDate = new DateTime( $subject );
+		}
 
-        $instanceTimezone = upstreamGetTimeZone();
-        $theDate->setTimeZone( $instanceTimezone );
+		$instanceTimezone = upstreamGetTimeZone();
+		$theDate->setTimeZone( $instanceTimezone );
 
-        return $theDate->format( $dateFormat );
-    } catch ( Exception $e ) {
-        return false;
-    }
+		return $theDate->format( $dateFormat );
+	} catch ( Exception $e ) {
+		return false;
+	}
 }
