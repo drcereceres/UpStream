@@ -2,7 +2,7 @@
 
 // Exit if accessed directly
 if ( ! defined( 'ABSPATH' ) ) {
-    exit;
+	exit;
 }
 
 /**
@@ -10,50 +10,50 @@ if ( ! defined( 'ABSPATH' ) ) {
  * no matter where we are or what we are doing.
  */
 function upstream_post_id() {
-    $post_id = 0;
-    if ( ! $post_id ) {
-        $post_id = get_the_ID();
-    }
-    if ( ! $post_id ) {
-        $post_id = isset( $_GET['post'] ) ? (int) $_GET['post'] : 0;
-    }
-    if ( ! $post_id ) {
-        $post_id = isset( $_POST['post'] ) ? (int) $_POST['post'] : 0;
-    }
-    if ( ! $post_id ) {
-        $post_id = isset( $_POST['post_ID'] ) ? (int) $_POST['post_ID'] : 0;
-    }
-    if ( ! $post_id ) {
-        $post_id = isset( $_POST['post_id'] ) ? (int) $_POST['post_id'] : 0;
-    }
-    if ( ! $post_id ) {
-        $post_id = isset( $_POST['post'] ) ? (int) $_POST['post'] : 0;
-    }
-    if ( ! $post_id ) {
-        global $wp_query;
-        $post_id = $wp_query->get_queried_object_id();
-    }
-    if ( ! $post_id ) {
-        if ( isset( $_POST['formdata'] ) ) {
-            parse_str( $_POST['formdata'], $posted );
-            $post_id = $posted['post_id'];
-        }
-    }
+	$post_id = 0;
+	if ( ! $post_id ) {
+		$post_id = get_the_ID();
+	}
+	if ( ! $post_id ) {
+		$post_id = isset( $_GET['post'] ) ? (int) $_GET['post'] : 0;
+	}
+	if ( ! $post_id ) {
+		$post_id = isset( $_POST['post'] ) ? (int) $_POST['post'] : 0;
+	}
+	if ( ! $post_id ) {
+		$post_id = isset( $_POST['post_ID'] ) ? (int) $_POST['post_ID'] : 0;
+	}
+	if ( ! $post_id ) {
+		$post_id = isset( $_POST['post_id'] ) ? (int) $_POST['post_id'] : 0;
+	}
+	if ( ! $post_id ) {
+		$post_id = isset( $_POST['post'] ) ? (int) $_POST['post'] : 0;
+	}
+	if ( ! $post_id ) {
+		global $wp_query;
+		$post_id = $wp_query->get_queried_object_id();
+	}
+	if ( ! $post_id ) {
+		if ( isset( $_POST['formdata'] ) ) {
+			parse_str( $_POST['formdata'], $posted );
+			$post_id = $posted['post_id'];
+		}
+	}
 
-    return $post_id;
+	return $post_id;
 }
 
 
 // Url for logging out, depending on client or WP user
 function upstream_logout_url() {
-    if (
-        ( ! empty( $_SESSION ) && isset( $_SESSION['upstream'] ) && isset( $_SESSION['upstream']['user_id'] ) ) ||
-        ( ! is_user_logged_in() )
-    ) {
-        return '?action=logout';
-    } else {
-        return wp_logout_url( get_post_type_archive_link( 'project' ) );
-    }
+	if (
+		( ! empty( $_SESSION ) && isset( $_SESSION['upstream'] ) && isset( $_SESSION['upstream']['user_id'] ) ) ||
+		( ! is_user_logged_in() )
+	) {
+		return '?action=logout';
+	} else {
+		return wp_logout_url( get_post_type_archive_link( 'project' ) );
+	}
 }
 
 
@@ -62,11 +62,11 @@ function upstream_logout_url() {
  *
  */
 function upstream_disable_bugs() {
-    $options      = get_option( 'upstream_general' );
-    $disable_bugs = isset( $options['disable_bugs'] ) ? $options['disable_bugs'] : [ 'no' ];
-    if ( $disable_bugs[0] == 'yes' ) {
-        return true;
-    }
+	$options      = get_option( 'upstream_general' );
+	$disable_bugs = isset( $options['disable_bugs'] ) ? $options['disable_bugs'] : [ 'no' ];
+	if ( $disable_bugs[0] == 'yes' ) {
+		return true;
+	}
 }
 
 
@@ -75,7 +75,7 @@ function upstream_disable_bugs() {
  *
  */
 function upstream_admin_set_unique_id() {
-    return uniqid( get_current_user_id() );
+	return uniqid( get_current_user_id() );
 }
 
 /**
@@ -84,12 +84,12 @@ function upstream_admin_set_unique_id() {
  * @since   1.0.0
  */
 function upstream_is_user_logged_in() {
-    // Checks if the user is logged in through WordPress.
-    if ( is_user_logged_in() ) {
-        return true;
-    }
+	// Checks if the user is logged in through WordPress.
+	if ( is_user_logged_in() ) {
+		return true;
+	}
 
-    return UpStream_Login::userIsLoggedIn();
+	return UpStream_Login::userIsLoggedIn();
 }
 
 /**
@@ -98,45 +98,45 @@ function upstream_is_user_logged_in() {
  * @since   1.0.0
  */
 function upstream_current_user_id() {
-    if ( is_user_logged_in() ) {
-        return get_current_user_id();
-    } else {
-        return isset( $_SESSION['upstream'] ) && isset( $_SESSION['upstream']['user_id'] ) ? $_SESSION['upstream']['user_id'] : 0;
-    }
+	if ( is_user_logged_in() ) {
+		return get_current_user_id();
+	} else {
+		return isset( $_SESSION['upstream'] ) && isset( $_SESSION['upstream']['user_id'] ) ? $_SESSION['upstream']['user_id'] : 0;
+	}
 }
 
 // checks if current user is a wordpress user or client
 function upstream_user_type() {
-    if ( is_user_logged_in() ) {
-        return 'wp';
-    } else {
-        return 'client';
-    }
+	if ( is_user_logged_in() ) {
+		return 'wp';
+	} else {
+		return 'client';
+	}
 }
 
 
 // gets the client id that a user belongs to
 function upstream_get_users_client_id( $user_id ) {
 
-    $args = [
-        'post_type'      => 'client',
-        'post_status'    => 'publish',
-        //'order'            => $order, TODO
-        'fields'         => 'ids',
-        'posts_per_page' => 1,
-        'meta_query'     => [
-            [
-                'key'     => '_upstream_client_users',
-                'value'   => $user_id,
-                'compare' => 'REGEXP',
-            ],
-        ],
-    ];
+	$args = [
+		'post_type'      => 'client',
+		'post_status'    => 'publish',
+		//'order'            => $order, TODO
+		'fields'         => 'ids',
+		'posts_per_page' => 1,
+		'meta_query'     => [
+			[
+				'key'     => '_upstream_client_users',
+				'value'   => $user_id,
+				'compare' => 'REGEXP',
+			],
+		],
+	];
 
-    $the_query = new WP_Query( $args );
-    if ( $the_query->posts ) {
-        return $the_query->posts[0];
-    }
+	$the_query = new WP_Query( $args );
+	if ( $the_query->posts ) {
+		return $the_query->posts[0];
+	}
 
 }
 
@@ -144,211 +144,211 @@ function upstream_get_users_client_id( $user_id ) {
 // returns a single item
 // basically a wrapper for upstream_user_data()
 function upstream_current_user( $item = null ) {
-    if ( ! $item ) {
-        return;
-    }
-    $user_data = upstream_user_data( upstream_current_user_id() );
-    $return    = isset( $user_data[ $item ] ) ? $user_data[ $item ] : '';
+	if ( ! $item ) {
+		return;
+	}
+	$user_data = upstream_user_data( upstream_current_user_id() );
+	$return    = isset( $user_data[ $item ] ) ? $user_data[ $item ] : '';
 
-    return $return;
+	return $return;
 }
 
 // get some data for a user with ID passed
 // returns a single item
 // basically a wrapper for upstream_user_data()
 function upstream_user_item( $id = 0, $item = null ) {
-    if ( ! $item || ! $id ) {
-        return;
-    }
-    $user_data = upstream_user_data( $id );
-    $return    = isset( $user_data[ $item ] ) ? $user_data[ $item ] : '';
+	if ( ! $item || ! $id ) {
+		return;
+	}
+	$user_data = upstream_user_data( $id );
+	$return    = isset( $user_data[ $item ] ) ? $user_data[ $item ] : '';
 
-    return $return;
+	return $return;
 }
 
 // get the user avatar with full name in tooltips
 function upstream_user_avatar( $user_id, $displayTooltip = true ) {
 
-    if ( ! $user_id ) {
-        return;
-    }
-    // get user data & ignore current user.
-    // if we want current user, pass the ID
-    $user_data = upstream_user_data( $user_id, true );
-    $url       = isset( $user_data['avatar'] ) ? $user_data['avatar'] : '';
+	if ( ! $user_id ) {
+		return;
+	}
+	// get user data & ignore current user.
+	// if we want current user, pass the ID
+	$user_data = upstream_user_data( $user_id, true );
+	$url       = isset( $user_data['avatar'] ) ? $user_data['avatar'] : '';
 
-    $userDisplayName = esc_attr( $user_data['display_name'] );
+	$userDisplayName = esc_attr( $user_data['display_name'] );
 
-    $return = sprintf( '
+	$return = sprintf( '
         <img class="avatar" src="%s" %s />',
-        esc_attr( $url ),
-        (bool) $displayTooltip ? sprintf( 'title="%s" data-toggle="tooltip" data-placement="top" data-original-title="%1$s"',
-            $userDisplayName ) : ''
-    );
+		esc_attr( $url ),
+		(bool) $displayTooltip ? sprintf( 'title="%s" data-toggle="tooltip" data-placement="top" data-original-title="%1$s"',
+			$userDisplayName ) : ''
+	);
 
-    return apply_filters( 'upstream_user_avatar', $return );
+	return apply_filters( 'upstream_user_avatar', $return );
 }
 
 // get data for any user including current
 // can send id
 function upstream_user_data( $data = 0, $ignore_current = false ) {
 
-    // if no data sent, find current user email
-    if ( ! $data && ! $ignore_current ) {
-        $data = upstream_get_email_address();
-    }
+	// if no data sent, find current user email
+	if ( ! $data && ! $ignore_current ) {
+		$data = upstream_get_email_address();
+	}
 
-    $user_data = null;
-    $type      = is_email( $data ) ? 'email' : 'id';
-    $wp_user   = get_user_by( $type, $data );
+	$user_data = null;
+	$type      = is_email( $data ) ? 'email' : 'id';
+	$wp_user   = get_user_by( $type, $data );
 
-    if (empty($wp_user)) {
-        $wp_user = wp_get_current_user();
-    }
+	if ( empty( $wp_user ) ) {
+		$wp_user = wp_get_current_user();
+	}
 
-    if ( ! function_exists( 'is_plugin_active' ) ) {
-        include_once ABSPATH . 'wp-admin/includes/plugin.php';
-    }
+	if ( ! function_exists( 'is_plugin_active' ) ) {
+		include_once ABSPATH . 'wp-admin/includes/plugin.php';
+	}
 
-    $isBuddyPressRunning = is_plugin_active( 'buddypress/bp-loader.php' ) && class_exists( 'BuddyPress' ) && function_exists( 'bp_core_fetch_avatar' );
+	$isBuddyPressRunning = is_plugin_active( 'buddypress/bp-loader.php' ) && class_exists( 'BuddyPress' ) && function_exists( 'bp_core_fetch_avatar' );
 
-    if ( $wp_user && is_object( $wp_user ) ) {
-        $role = '';
+	if ( $wp_user && is_object( $wp_user ) ) {
+		$role = '';
 
-        if ( isset( $wp_user->roles )
-             && is_array( $wp_user->roles )
-             && count( $wp_user->roles ) > 0
-        ) {
-            $role = ucwords( array_values( $wp_user->roles )[0] );
-        }
+		if ( isset( $wp_user->roles )
+		     && is_array( $wp_user->roles )
+		     && count( $wp_user->roles ) > 0
+		) {
+			$role = ucwords( array_values( $wp_user->roles )[0] );
+		}
 
-        if ( in_array( 'upstream_user', $wp_user->roles ) ) {
-            $role = sprintf( __( '%s User', 'upstream' ), upstream_project_label() );
-        }
-        if ( in_array( 'upstream_manager', $wp_user->roles ) ) {
-            $role = sprintf( __( '%s Manager', 'upstream' ), upstream_project_label() );
-        }
-        if ( in_array( 'upstream_client_user', $wp_user->roles ) ) {
-            $role = sprintf( __( '%s Client User', 'upstream' ), upstream_project_label() );
-        }
+		if ( in_array( 'upstream_user', $wp_user->roles ) ) {
+			$role = sprintf( __( '%s User', 'upstream' ), upstream_project_label() );
+		}
+		if ( in_array( 'upstream_manager', $wp_user->roles ) ) {
+			$role = sprintf( __( '%s Manager', 'upstream' ), upstream_project_label() );
+		}
+		if ( in_array( 'upstream_client_user', $wp_user->roles ) ) {
+			$role = sprintf( __( '%s Client User', 'upstream' ), upstream_project_label() );
+		}
 
-        $user_data = [
-            'id'           => $wp_user->ID,
-            'fname'        => $wp_user->first_name,
-            'lname'        => $wp_user->last_name,
-            'full_name'    => $wp_user->first_name . ' ' . $wp_user->last_name,
-            'email'        => $wp_user->user_email,
-            'display_name' => $wp_user->display_name,
-            'phone'        => '',
-            'projects'     => upstream_get_users_projects( $wp_user->ID ),
-            'role'         => $role,
-            'avatar'       => "",
-        ];
+		$user_data = [
+			'id'           => $wp_user->ID,
+			'fname'        => $wp_user->first_name,
+			'lname'        => $wp_user->last_name,
+			'full_name'    => $wp_user->first_name . ' ' . $wp_user->last_name,
+			'email'        => $wp_user->user_email,
+			'display_name' => $wp_user->display_name,
+			'phone'        => '',
+			'projects'     => upstream_get_users_projects( $wp_user->ID ),
+			'role'         => $role,
+			'avatar'       => "",
+		];
 
-        if ( $isBuddyPressRunning ) {
-            $user_data['avatar'] = bp_core_fetch_avatar( [
-                'item_id' => $wp_user->ID,
-                'type'    => 'thumb',
-                'html'    => false,
-            ] );
-        } else {
-            if ( is_plugin_active( 'wp-user-avatar/wp-user-avatar.php' ) && function_exists( 'wpua_functions_init' ) ) {
-                global $wp_query;
+		if ( $isBuddyPressRunning ) {
+			$user_data['avatar'] = bp_core_fetch_avatar( [
+				'item_id' => $wp_user->ID,
+				'type'    => 'thumb',
+				'html'    => false,
+			] );
+		} else {
+			if ( is_plugin_active( 'wp-user-avatar/wp-user-avatar.php' ) && function_exists( 'wpua_functions_init' ) ) {
+				global $wp_query;
 
-                // Make sure WP_Query is loaded.
-                if ( ! ( $wp_query instanceof \WP_Query ) ) {
-                    $wp_query = new WP_Query();
-                }
+				// Make sure WP_Query is loaded.
+				if ( ! ( $wp_query instanceof \WP_Query ) ) {
+					$wp_query = new WP_Query();
+				}
 
-                try {
-                    // Make sure WP User Avatar dependencies are loaded.
-                    require_once ABSPATH . 'wp-settings.php';
-                    require_once ABSPATH . 'wp-includes/pluggable.php';
-                    require_once ABSPATH . 'wp-includes/query.php';
-                    require_once WP_PLUGIN_DIR . '/wp-user-avatar/wp-user-avatar.php';
+				try {
+					// Make sure WP User Avatar dependencies are loaded.
+					require_once ABSPATH . 'wp-settings.php';
+					require_once ABSPATH . 'wp-includes/pluggable.php';
+					require_once ABSPATH . 'wp-includes/query.php';
+					require_once WP_PLUGIN_DIR . '/wp-user-avatar/wp-user-avatar.php';
 
-                    // Load WP User Avatar plugin and its dependencies.
-                    wpua_functions_init();
+					// Load WP User Avatar plugin and its dependencies.
+					wpua_functions_init();
 
-                    // Retrieve current user id.
-                    $user_id = upstream_current_user_id();
+					// Retrieve current user id.
+					$user_id = upstream_current_user_id();
 
-                    // Retrieve the current user avatar URL.
-                    $user_data['avatar'] = get_wp_user_avatar_src( $wp_user->ID );
-                } catch ( Exception $e ) {
-                    // Do nothing.
-                }
-            } elseif ( is_plugin_active( 'custom-user-profile-photo/3five_cupp.php' ) && function_exists( 'get_cupp_meta' ) ) {
-                $user_data['avatar'] = get_cupp_meta( $wp_user->ID );
-            }
+					// Retrieve the current user avatar URL.
+					$user_data['avatar'] = get_wp_user_avatar_src( $wp_user->ID );
+				} catch ( Exception $e ) {
+					// Do nothing.
+				}
+			} elseif ( is_plugin_active( 'custom-user-profile-photo/3five_cupp.php' ) && function_exists( 'get_cupp_meta' ) ) {
+				$user_data['avatar'] = get_cupp_meta( $wp_user->ID );
+			}
 
-            if ( empty( $user_data['avatar'] ) ) {
-                if ( ! function_exists( 'get_avatar_url' ) ) {
-                    require_once ABSPATH . 'wp-includes/link-template.php';
-                }
+			if ( empty( $user_data['avatar'] ) ) {
+				if ( ! function_exists( 'get_avatar_url' ) ) {
+					require_once ABSPATH . 'wp-includes/link-template.php';
+				}
 
-                $user_data['avatar'] = get_avatar_url( $wp_user->user_email, 96,
-                    get_option( 'avatar_default', 'mystery' ) );
-            }
-        }
+				$user_data['avatar'] = get_avatar_url( $wp_user->user_email, 96,
+					get_option( 'avatar_default', 'mystery' ) );
+			}
+		}
 
-    } else {
+	} else {
 
-        global $wpdb;
-        $users = $wpdb->get_results(
-            "SELECT * FROM `" . $wpdb->postmeta .
-            "` WHERE `meta_key` = '_upstream_client_users' AND
+		global $wpdb;
+		$users = $wpdb->get_results(
+			"SELECT * FROM `" . $wpdb->postmeta .
+			"` WHERE `meta_key` = '_upstream_client_users' AND
             `meta_value` REGEXP '.*\"" . $type . "\";s:[0-9]+:\"" . $data . "\".*'"
-        );
+		);
 
-        if ( ! $users ) {
-            return;
-        }
+		if ( ! $users ) {
+			return;
+		}
 
-        $metavalue = unserialize( $users[0]->meta_value );
+		$metavalue = unserialize( $users[0]->meta_value );
 
-        foreach ( $metavalue as $key => $user ) {
+		foreach ( $metavalue as $key => $user ) {
 
-            // get the matching user
-            if ( in_array( $data, [ $user['id'], $user['email'] ] ) ) {
+			// get the matching user
+			if ( in_array( $data, [ $user['id'], $user['email'] ] ) ) {
 
-                $fname     = isset( $user['fname'] ) ? trim( $user['fname'] ) : '';
-                $lname     = isset( $user['lname'] ) ? trim( $user['lname'] ) : '';
-                $user_data = [
-                    'id'        => $user['id'],
-                    'fname'     => $fname,
-                    'lname'     => $lname,
-                    'full_name' => trim( $fname . ' ' . $lname ),
-                    'email'     => isset( $user['email'] ) ? $user['email'] : '',
-                    'phone'     => isset( $user['phone'] ) ? $user['phone'] : '',
-                    'projects'  => upstream_get_users_projects( $user['id'] ),
-                    'role'      => __( 'Client User', 'upstream' ),
-                ];
+				$fname     = isset( $user['fname'] ) ? trim( $user['fname'] ) : '';
+				$lname     = isset( $user['lname'] ) ? trim( $user['lname'] ) : '';
+				$user_data = [
+					'id'        => $user['id'],
+					'fname'     => $fname,
+					'lname'     => $lname,
+					'full_name' => trim( $fname . ' ' . $lname ),
+					'email'     => isset( $user['email'] ) ? $user['email'] : '',
+					'phone'     => isset( $user['phone'] ) ? $user['phone'] : '',
+					'projects'  => upstream_get_users_projects( $user['id'] ),
+					'role'      => __( 'Client User', 'upstream' ),
+				];
 
-                $displayName               = ! empty( $user_data['full_name'] ) ? $user_data['full_name'] : $user_data['email'];
-                $user_data['display_name'] = $displayName;
+				$displayName               = ! empty( $user_data['full_name'] ) ? $user_data['full_name'] : $user_data['email'];
+				$user_data['display_name'] = $displayName;
 
-                if ( $isBuddyPressRunning ) {
-                    $user_data['avatar'] = bp_core_fetch_avatar( [
-                        'item_id' => $user['id'],
-                        'type'    => 'thumb',
-                        'html'    => false,
-                    ] );
-                } else {
-                    if ( ! function_exists( 'get_avatar_url' ) ) {
-                        require_once ABSPATH . 'wp-includes/link-template.php';
-                    }
+				if ( $isBuddyPressRunning ) {
+					$user_data['avatar'] = bp_core_fetch_avatar( [
+						'item_id' => $user['id'],
+						'type'    => 'thumb',
+						'html'    => false,
+					] );
+				} else {
+					if ( ! function_exists( 'get_avatar_url' ) ) {
+						require_once ABSPATH . 'wp-includes/link-template.php';
+					}
 
-                    $user_data['avatar'] = get_avatar_url( $user['email'], 96,
-                        get_option( 'avatar_default', 'mystery' ) );
-                }
-            }
+					$user_data['avatar'] = get_avatar_url( $user['email'], 96,
+						get_option( 'avatar_default', 'mystery' ) );
+				}
+			}
 
-        }
+		}
 
-    }
+	}
 
-    return $user_data;
+	return $user_data;
 }
 
 
@@ -356,57 +356,57 @@ function upstream_user_data( $data = 0, $ignore_current = false ) {
 // normalizes things as we can pass either nothing, or an id or an email.
 function upstream_get_email_address( $user = 0 ) {
 
-    // if $user is already an email, simply return it
-    if ( is_email( $user ) ) {
-        return $user;
-    }
+	// if $user is already an email, simply return it
+	if ( is_email( $user ) ) {
+		return $user;
+	}
 
-    $email = null;
+	$email = null;
 
-    // this assumes that $user is a wordpress user id
-    if ( $user != 0 && is_numeric( $user ) ) {
-        $wp_user = get_user_by( 'id', $user );
-        $email   = $wp_user->user_email;
-    }
+	// this assumes that $user is a wordpress user id
+	if ( $user != 0 && is_numeric( $user ) ) {
+		$wp_user = get_user_by( 'id', $user );
+		$email   = $wp_user->user_email;
+	}
 
-    // this assumes that $user is a client user id
-    if ( $user != 0 && ! is_numeric( $user ) ) {
-        $client_id = upstream_get_users_client_id( $user );
-        $users     = get_post_meta( $client_id, '_upstream_client_users', true );
-        if ( is_array( $users ) && count( $users ) > 0 ) :
-            foreach ( $users as $key => $user ) {
-                if ( $user['id'] == $user ) {
-                    $email = $user['email'];
-                }
-            }
-        endif;
-    }
+	// this assumes that $user is a client user id
+	if ( $user != 0 && ! is_numeric( $user ) ) {
+		$client_id = upstream_get_users_client_id( $user );
+		$users     = get_post_meta( $client_id, '_upstream_client_users', true );
+		if ( is_array( $users ) && count( $users ) > 0 ) :
+			foreach ( $users as $key => $user ) {
+				if ( $user['id'] == $user ) {
+					$email = $user['email'];
+				}
+			}
+		endif;
+	}
 
-    // this assumes we are a logged in wordpress user looking for our own info
-    if ( ! $user && upstream_user_type() == 'wp' ) {
-        $wp_user = get_user_by( 'id', get_current_user_id() );
-        $email   = $wp_user->user_email;
-    }
+	// this assumes we are a logged in wordpress user looking for our own info
+	if ( ! $user && upstream_user_type() == 'wp' ) {
+		$wp_user = get_user_by( 'id', get_current_user_id() );
+		$email   = $wp_user->user_email;
+	}
 
-    // this assumes we are a logged in client user looking for our own info
-    if ( ! $user && upstream_user_type() == 'client' ) {
-        if ( ! isset( $_SESSION['upstream'] ) ) {
-            return null;
-        }
+	// this assumes we are a logged in client user looking for our own info
+	if ( ! $user && upstream_user_type() == 'client' ) {
+		if ( ! isset( $_SESSION['upstream'] ) ) {
+			return null;
+		}
 
-        $client_id = $_SESSION['upstream']['client_id'];
-        $user_id   = $_SESSION['upstream']['user_id'];
-        $users     = get_post_meta( $client_id, '_upstream_client_users', true );
-        if ( is_array( $users ) && count( $users ) > 0 ) :
-            foreach ( $users as $key => $user ) {
-                if ( $user['id'] == $user_id ) {
-                    $email = isset( $user['email'] ) ? $user['email'] : '';
-                }
-            }
-        endif;
-    }
+		$client_id = $_SESSION['upstream']['client_id'];
+		$user_id   = $_SESSION['upstream']['user_id'];
+		$users     = get_post_meta( $client_id, '_upstream_client_users', true );
+		if ( is_array( $users ) && count( $users ) > 0 ) :
+			foreach ( $users as $key => $user ) {
+				if ( $user['id'] == $user_id ) {
+					$email = isset( $user['email'] ) ? $user['email'] : '';
+				}
+			}
+		endif;
+	}
 
-    return $email;
+	return $email;
 
 }
 
@@ -415,20 +415,20 @@ function upstream_get_email_address( $user = 0 ) {
 // displays full name or email if no name set
 function upstream_users_name( $id = 0, $show_email = false ) {
 
-    $user = upstream_user_data( $id, true );
+	$user = upstream_user_data( $id, true );
 
-    if ( ! $user ) {
-        return;
-    }
+	if ( ! $user ) {
+		return;
+	}
 
-    // if first name exists, then show name. Else show email.
-    $output = $user['display_name'];
+	// if first name exists, then show name. Else show email.
+	$output = $user['display_name'];
 
-    if ( $show_email && ! empty( $user['email'] ) ) {
-        $output .= " <a target='_blank' href='mailto:" . esc_html( $user['email'] ) . "' title='" . esc_html( $user['email'] ) . "'><span class='dashicons dashicons-email-alt'></span></a>";
-    }
+	if ( $show_email && ! empty( $user['email'] ) ) {
+		$output .= " <a target='_blank' href='mailto:" . esc_html( $user['email'] ) . "' title='" . esc_html( $user['email'] ) . "'><span class='dashicons dashicons-email-alt'></span></a>";
+	}
 
-    return $output;
+	return $output;
 }
 
 
@@ -442,28 +442,28 @@ function upstream_users_name( $id = 0, $show_email = false ) {
  * @return  array
  */
 function upstream_get_users_projects( $user ) {
-    $user = $user instanceof \WP_User ? $user : new \WP_User( $user );
-    if ( $user->ID === 0 ) {
-        return [];
-    }
+	$user = $user instanceof \WP_User ? $user : new \WP_User( $user );
+	if ( $user->ID === 0 ) {
+		return [];
+	}
 
-    $data = [];
+	$data = [];
 
-    $rowset = (array) get_posts( [
-        'post_type'      => "project",
-        'post_status'    => "publish",
-        'posts_per_page' => - 1,
-    ] );
+	$rowset = (array) get_posts( [
+		'post_type'      => "project",
+		'post_status'    => "publish",
+		'posts_per_page' => - 1,
+	] );
 
-    if ( count( $rowset ) > 0 ) {
-        foreach ( $rowset as $project ) {
-            if ( upstream_user_can_access_project( $user, $project->ID ) ) {
-                $data[ $project->ID ] = $project;
-            }
-        }
-    }
+	if ( count( $rowset ) > 0 ) {
+		foreach ( $rowset as $project ) {
+			if ( upstream_user_can_access_project( $user, $project->ID ) ) {
+				$data[ $project->ID ] = $project;
+			}
+		}
+	}
 
-    return $data;
+	return $data;
 }
 
 
@@ -474,31 +474,31 @@ function upstream_get_users_projects( $user ) {
  */
 function upstream_get_percentages_for_dropdown() {
 
-    $array = [
-        ''    => '0%',
-        '5'   => '5%',
-        '10'  => '10%',
-        '15'  => '15%',
-        '20'  => '20%',
-        '25'  => '25%',
-        '30'  => '30%',
-        '35'  => '35%',
-        '40'  => '40%',
-        '45'  => '45%',
-        '50'  => '50%',
-        '55'  => '55%',
-        '60'  => '60%',
-        '65'  => '65%',
-        '70'  => '70%',
-        '75'  => '75%',
-        '80'  => '80%',
-        '85'  => '85%',
-        '90'  => '90%',
-        '95'  => '95%',
-        '100' => '100%',
-    ];
+	$array = [
+		''    => '0%',
+		'5'   => '5%',
+		'10'  => '10%',
+		'15'  => '15%',
+		'20'  => '20%',
+		'25'  => '25%',
+		'30'  => '30%',
+		'35'  => '35%',
+		'40'  => '40%',
+		'45'  => '45%',
+		'50'  => '50%',
+		'55'  => '55%',
+		'60'  => '60%',
+		'65'  => '65%',
+		'70'  => '70%',
+		'75'  => '75%',
+		'80'  => '80%',
+		'85'  => '85%',
+		'90'  => '90%',
+		'95'  => '95%',
+		'100' => '100%',
+	];
 
-    return apply_filters( 'upstream_percentages', $array );
+	return apply_filters( 'upstream_percentages', $array );
 
 }
 
@@ -506,32 +506,43 @@ function upstream_get_percentages_for_dropdown() {
  * Run date formatting through here
  */
 function upstream_format_date( $timestamp, $dateFormat = null ) {
-    if ( empty( $dateFormat ) ) {
-        $dateFormat = get_option( 'date_format', 'Y-m-d' );
-    }
+	if ( empty( $dateFormat ) ) {
+		$dateFormat = get_option( 'date_format', 'Y-m-d' );
+	}
 
-    if ( ! $timestamp ) {
-        $date = null;
-    } else {
-        $datetime = new \DateTime();
-        $datetime->setTimestamp( $timestamp );
+	if ( ! $timestamp ) {
+		$date = null;
+	} else {
+		$datetime = new \DateTime();
+		$datetime->setTimestamp( $timestamp );
 
-        $date = $datetime->format( $dateFormat );
-    }
+		$date = $datetime->format( $dateFormat );
+	}
 
-    return apply_filters( 'upstream_format_date', $date, $timestamp );
+	return apply_filters( 'upstream_format_date', $date, $timestamp );
 }
 
 /*
  * Convert date to unixtime format
+ *
+ * @return mixed
  */
 function upstream_date_unixtime( $timestamp ) {
-    $dateFormat = get_option( 'date_format', 'Y-m-d' );
+	// Return empty string if timestamp is empty.
+	if ( is_string( $timestamp ) ) {
+		$timestamp = trim( $timestamp );
+	}
 
-    $date = \DateTime::createFromFormat( $dateFormat, $timestamp );
-    $date = $date->format( 'U' );
+	if ( empty( $timestamp ) ) {
+		return '';
+	}
 
-    return apply_filters( 'upstream_date_mysql', $date, $timestamp );
+	$dateFormat = get_option( 'date_format', 'Y-m-d' );
+
+	$date = \DateTime::createFromFormat( $dateFormat, $timestamp );
+	$date = $date->format( 'U' );
+
+	return apply_filters( 'upstream_date_mysql', $date, $timestamp );
 }
 
 /*
@@ -552,32 +563,37 @@ function upstream_format_time( $timestamp ) {
  */
 function upstream_timestamp_from_date( $value ) {
 
-    // if blank, return empty string
-    if ( ! $value || empty( $value ) ) {
-        return '';
-    }
+	// if blank, return empty string
+	if ( ! $value || empty( $value ) ) {
+		return '';
+	}
 
-    $timestamp = null;
+	$timestamp = null;
 
-    // if already a timestamp, return the timestamp
-    if ( is_numeric( $value ) && (int) $value == $value ) {
-        $timestamp = $value;
-    }
+	// if already a timestamp, return the timestamp
+	if ( is_numeric( $value ) && (int) $value == $value ) {
+		$timestamp = $value;
+	}
 
-    if ( ! $timestamp ) {
-        $date_format = get_option( 'date_format' );
-        $date        = DateTime::createFromFormat( $date_format, trim( $value ) );
+	if ( ! $timestamp ) {
 
-        if ( $date ) {
-            $timestamp = $date->getTimestamp();
-        } else {
-            $date_object = date_create_from_format( $date_format, $value );
-            $timestamp   = $date_object ? $date_object->setTime( 0, 0, 0 )->getTimeStamp() : strtotime( $value );
-        }
-    }
+		if ( empty( $value ) ) {
+			return 0;
+		}
 
-    // returns the timestamp and sets it to the start of the day
-    return strtotime( 'today', $timestamp );
+		$date_format = get_option( 'date_format' );
+		$date        = DateTime::createFromFormat( $date_format, trim( $value ) );
+
+		if ( $date ) {
+			$timestamp = $date->getTimestamp();
+		} else {
+			$date_object = date_create_from_format( $date_format, $value );
+			$timestamp   = $date_object ? $date_object->setTime( 0, 0, 0 )->getTimeStamp() : strtotime( $value );
+		}
+	}
+
+	// returns the timestamp and sets it to the start of the day
+	return strtotime( 'today', $timestamp );
 
 }
 
