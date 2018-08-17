@@ -142,6 +142,13 @@ If you were having date issues within Projects, please clear your cache and re-s
 The format is based on [Keep a Changelog](http://keepachangelog.com)
 and this project adheres to [Semantic Versioning](http://semver.org).
 
+= UNRELEASED =
+
+Fixed:
+* Fixed missed debug statement in the code;
+* Fixed fatal error when date fields are empty and a task is saved in the front-end;
+* Fixed images in the comments, adding an option and custom capability (upstream_comment_images) for controlling who can add images;
+
 = [1.20.1] - 2018-08-14 =
 
 Fixed:
