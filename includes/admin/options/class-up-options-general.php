@@ -247,6 +247,16 @@ if ( ! class_exists( 'UpStream_Options_General' ) ) :
                             'options' => $roles,
 
                         ],
+	                    [
+		                    'name'    => __( 'Who can post images in comments?', 'upstream' ),
+		                    'id'      => 'media_comment_images',
+		                    'desc'    => __( 'For default, UpStream will deny images from everyone. Select the roles who can send images in the comments and discussions.',
+			                    'upstream' ),
+		                    'type'    => 'multicheck',
+		                    'default' => ['administrator', 'upstream_manager'],
+		                    'options' => $roles,
+
+	                    ],
                         /**
                          * Collapse Sections
                          */

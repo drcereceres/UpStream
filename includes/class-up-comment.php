@@ -107,7 +107,9 @@ class Comment extends Struct {
      */
     public function __construct( $content = "", $project_id = 0, $user_id = 0 ) {
         if ( ! empty( $content ) ) {
-            $this->content = $content;
+        	// Make sure the comment content is always filtered.
+	        $allowed_tags = apply_filters('upstream_allowed_tags_in_comments', []);
+	        $this->content  = wp_kses($content, wp_kses_allowed_html( $allowed_tags ));
         }
 
         if ( (int) $project_id <= 0 ) {
@@ -274,8 +276,9 @@ class Comment extends Struct {
 
             $this->created_at->humanized = _x( 'just now', 'Comment was very recently added.', 'upstream' );
 
-            // Filters the comments HTML.
-            $data['comment_content'] = wp_kses($data['comment_content'], wp_kses_allowed_html());
+            $allowed_tags = apply_filters('upstream_allowed_tags_in_comments', []);
+
+	        $data['comment_content'] = wp_kses($data['comment_content'], wp_kses_allowed_html( $allowed_tags ));
 
             $a = $this->html2text($data['comment_content']);
 
@@ -486,7 +489,7 @@ class Comment extends Struct {
      *
      * @since   1.13.0
      *
-     * @param   bool  $return         Either return the HTML or render it insted.
+     * @param   bool  $return         Either return the HTML or render it instead.
      * @param   bool  $useAdminLayout Either use admin/frontend layout.
      * @param   array $commentsCache  Array of comments passed to render functions.
      *

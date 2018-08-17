@@ -169,7 +169,7 @@ class UpStream_Roles {
 
                 "edit_project_author",
                 "manage_upstream",
-
+	            'upstream_comment_images',
             ];
         }
 
