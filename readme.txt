@@ -148,6 +148,7 @@ Fixed:
 * Fixed missed debug statement in the code;
 * Fixed fatal error when date fields are empty and a task is saved in the front-end;
 * Fixed images in the comments, adding an option and custom capability (upstream_comment_images) for controlling who can add images;
+* Fixed comments when they contain only images, without any text;
 
 = [1.20.1] - 2018-08-14 =
 
