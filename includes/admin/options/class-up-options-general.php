@@ -250,7 +250,7 @@ if ( ! class_exists( 'UpStream_Options_General' ) ) :
 	                    [
 		                    'name'    => __( 'Who can post images in comments?', 'upstream' ),
 		                    'id'      => 'media_comment_images',
-		                    'desc'    => __( 'For default, UpStream will deny images from everyone. Select the roles who can send images in the comments and discussions.',
+		                    'desc'    => __( 'By default, not all WordPress users can upload images. Select the roles who can add images to UpStream comments.',
 			                    'upstream' ),
 		                    'type'    => 'multicheck',
 		                    'default' => ['administrator', 'upstream_manager'],
