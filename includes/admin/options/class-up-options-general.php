@@ -253,7 +253,7 @@ if ( ! class_exists( 'UpStream_Options_General' ) ) :
 		                    'desc'    => __( 'By default, not all WordPress users can upload images. Select the roles who can add images to UpStream comments.',
 			                    'upstream' ),
 		                    'type'    => 'multicheck',
-		                    'default' => ['administrator', 'upstream_manager'],
+		                    'default' => array_keys( $roles ),
 		                    'options' => $roles,
 
 	                    ],
