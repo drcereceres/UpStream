@@ -454,6 +454,9 @@
             $row.find('.up-o-tab[data-target=".up-c-tab-content-comments"]').remove();
             $row.find('.up-c-tabs-header').remove();
             $row.find('.cmb-row[data-fieldtype="comments"]').remove();
+            // Recreate select2 fields.
+            $row.find('.select2-container').remove();
+            $row.find('.o-select2').select2();
         }, 25);
 
         $group.find('.cmb-add-row span').remove();
