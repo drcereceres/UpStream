@@ -174,6 +174,13 @@ class CMB2_Option {
 			return false;
 		}
 
+		/**
+		 * Allow to customise the options before set them.
+		 *
+		 * @author Anderson Martins
+		 */
+		apply_filters( 'cmb2_set_options', $this->key, $this->options );
+
 		$test_save = apply_filters( "cmb2_override_option_save_{$this->key}", 'cmb2_no_override_option_save', $this->options, $this );
 
 		if ( 'cmb2_no_override_option_save' !== $test_save ) {

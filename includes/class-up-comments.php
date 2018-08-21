@@ -61,6 +61,8 @@ class Comments {
 
         add_filter( 'comment_notification_subject', [ self::$namespace, 'defineNotificationHeader' ], 10, 2 );
         add_filter( 'comment_notification_recipients', [ self::$namespace, 'defineNotificationRecipients' ], 10, 2 );
+
+        add_filter( 'upstream_allowed_tags_in_comments', [self::$namespace, 'filter_allowed_tags' ] );
     }
 
     /**
@@ -87,6 +89,31 @@ class Comments {
 
             update_option( 'upstream:remove_comments_type', 1 );
         }
+    }
+
+	/**
+	 * @param array $allowed_tags
+	 *
+	 * @return array
+	 */
+    public static function filter_allowed_tags( $allowed_tags ) {
+	    // Filters the comments HTML, allowing to add images in the comments.
+
+		if ( ! current_user_can('upstream_comment_images')) {
+			return $allowed_tags;
+		}
+
+	    $allowed_tags = [
+		    'img' => [
+			    'class'  => true,
+			    'src'    => true,
+			    'alt'    => true,
+			    'width'  => true,
+			    'height' => true,
+		    ],
+	    ];
+
+	    return $allowed_tags;
     }
 
     /**
@@ -158,7 +185,9 @@ class Comments {
 
             $user_id = get_current_user_id();
 
-            $comment = new Comment( $_POST['content'], $project_id, $user_id );
+            $comment_content = stripslashes($_POST['content']);
+
+            $comment = new Comment( $comment_content, $project_id, $user_id );
 
             $comment->created_by->ip    = preg_replace( '/[^0-9a-fA-F:., ]/', '', $_SERVER['REMOTE_ADDR'] );
             $comment->created_by->agent = isset( $_SERVER['HTTP_USER_AGENT'] ) ? $_SERVER['HTTP_USER_AGENT'] : null;
@@ -176,7 +205,8 @@ class Comments {
 
             $useAdminLayout = ! isset( $_POST['teeny'] ) ? true : (bool) $_POST['teeny'] === false;
 
-            $response['comment_html'] = $comment->render( true, $useAdminLayout );
+            $response['comment_html'] = stripslashes($comment->render( true, $useAdminLayout ));
+
             $response['success']      = true;
         } catch ( \Exception $e ) {
             $response['error'] = $e->getMessage();
@@ -261,7 +291,7 @@ class Comments {
 
             $user_id = get_current_user_id();
 
-            $comment                    = new Comment( $_POST['content'], $project_id, $user_id );
+            $comment                    = new Comment( stripslashes($_POST['content']), $project_id, $user_id );
             $comment->parent_id         = (int) $_POST['parent_id'];
             $comment->created_by->ip    = preg_replace( '/[^0-9a-fA-F:., ]/', '', $_SERVER['REMOTE_ADDR'] );
             $comment->created_by->agent = isset( $_SERVER['HTTP_USER_AGENT'] ) ? $_SERVER['HTTP_USER_AGENT'] : null;
@@ -286,7 +316,7 @@ class Comments {
                 ] ) ),
             ];
 
-            $response['comment_html'] = $comment->render( true, $useAdminLayout, $commentsCache );
+            $response['comment_html'] = stripslashes($comment->render( true, $useAdminLayout, $commentsCache ));
 
             wp_new_comment_notify_moderator( $comment->id );
             wp_notify_postauthor( $comment->id );

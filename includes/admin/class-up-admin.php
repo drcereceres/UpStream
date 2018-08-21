@@ -51,6 +51,8 @@ class UpStream_Admin {
         add_action( 'cmb2_render_up_timestamp', [ $this, 'renderCmb2TimestampField' ], 10, 5 );
         add_action( 'cmb2_sanitize_up_timestamp', [ $this, 'sanitizeCmb2TimestampField' ], 10, 5 );
 
+        add_filter( 'cmb2_override_option_get_upstream_general', [ $this, 'filter_override_option_get_upstream_general' ], 10, 3 );
+
         $this->framework = UpStream::instance()->get_container()['framework'];
     }
 
@@ -528,6 +530,35 @@ class UpStream_Admin {
 
         return $query;
     }
+
+	/**
+	 * Override the media_comment_images option based on the current capabilities.
+	 *
+	 * @param string $test
+	 * @param        $default
+	 * @param        $instance
+	 *
+	 * @return array
+	 */
+	public function filter_override_option_get_upstream_general( $test, $default, $instance ) {
+
+		// Identify roles that has the upstream_comment_images capability.
+		$roles         = array_keys( get_editable_roles() );
+		$capable_roles = [];
+		foreach ( $roles as $role_id ) {
+			$role = get_role( $role_id );
+			if ( $role->has_cap( 'upstream_comment_images' ) ) {
+				$capable_roles[] = $role_id;
+			}
+		}
+
+		$options = get_option( 'upstream_general' );
+
+		$options['media_comment_images'] = $capable_roles;
+
+
+		return $options;
+	}
 }
 
 return new UpStream_Admin();

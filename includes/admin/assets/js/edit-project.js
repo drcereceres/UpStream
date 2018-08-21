@@ -454,6 +454,9 @@
             $row.find('.up-o-tab[data-target=".up-c-tab-content-comments"]').remove();
             $row.find('.up-c-tabs-header').remove();
             $row.find('.cmb-row[data-fieldtype="comments"]').remove();
+            // Recreate select2 fields.
+            $row.find('.select2-container').remove();
+            $row.find('.o-select2').select2();
         }, 25);
 
         $group.find('.cmb-add-row span').remove();
@@ -768,6 +771,30 @@
             return content;
         }
 
+        function isEditorEmpty(editor_id) {
+            var theEditor = getCommentEditor(editor_id),
+                content;
+
+            var isEditorInVisualMode = theEditor ? !theEditor.isHidden() : false;
+
+            if (isEditorInVisualMode) {
+                content = theEditor.getContent();
+            } else {
+                theEditor = getCommentEditorTextarea(editor_id);
+                content = theEditor.val().trim();
+            }
+
+            // Check if maybe we have images in the content (those are not identified on the text format).
+            // Replace images with placeholders
+            content = content.replace(/<img.*\/>/g, '[image]');
+            // Remove tags and special chars.
+            content = content.replace(/<[^>]+>|&[a-z]+;/g, '');
+            // Remove spaces.
+            content = content.trim();
+
+            return content === '';
+        }
+
         function disableCommentArea (editor_id) {
             var theEditor = getCommentEditor(editor_id);
 
@@ -863,7 +890,7 @@
 
             var editor_id = $('textarea.wp-editor-area', parent).attr('id');
 
-            if (getEditorContent(editor_id, false).length === 0) {
+            if (isEditorEmpty(editor_id)) {
                 setFocus(editor_id);
                 return;
             }
@@ -1157,7 +1184,7 @@
             var self = $(this);
 
             var editor_id = '_upstream_project_new_message';
-            if (getEditorContent(editor_id, false).length === 0) {
+            if (isEditorEmpty(editor_id)) {
                 setFocus(editor_id);
                 return;
             }
@@ -1385,7 +1412,7 @@
                     var self = $(this);
 
                     var editor_id = prefix + '_comments_editor';
-                    if (getEditorContent(editor_id, false).length === 0) {
+                    if (isEditorEmpty(editor_id)) {
                         setFocus(editor_id);
                         return;
                     }

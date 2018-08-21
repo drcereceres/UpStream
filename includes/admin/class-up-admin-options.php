@@ -89,6 +89,8 @@ if ( ! class_exists( 'UpStream_Admin_Options' ) ) :
         public function hooks() {
             add_action( 'admin_init', [ $this, 'init' ] );
             add_action( 'admin_menu', [ $this, 'add_options_pages' ] );
+
+	        add_filter( 'cmb2_set_options', [ $this, 'filter_cmb2_set_options' ], 10, 2 );
         }
 
         /**
@@ -260,6 +262,47 @@ if ( ! class_exists( 'UpStream_Admin_Options' ) ) :
             throw new Exception( 'Invalid property: ' . $field );
         }
 
+	    /**
+	     * Get a list of user roles.
+	     *
+	     * @return array
+	     */
+	    protected function get_roles() {
+		    $list  = [];
+		    $roles = get_editable_roles();
+
+		    foreach ( $roles as $role => $data ) {
+			    $list[ $role ] = $data['name'];
+		    }
+
+		    return $list;
+	    }
+
+	    /**
+	     * @param string $key
+	     * @param array $options
+	     */
+        public function filter_cmb2_set_options( $key, $options ) {
+
+            if ( $key === 'upstream_general' ) {
+                // For "Who can post images in comments", update capabilities based on the selected roles.
+                $selected = $options['media_comment_images'];
+
+                $roles = $this->get_roles();
+
+                foreach ( $roles as $index => $role_name ) {
+                    $role = get_role( $index );
+
+                    if ( in_array( $index, $selected ) ) {
+                        $role->add_cap( 'upstream_comment_images' );
+                    } else {
+                        $role->remove_cap( 'upstream_comment_images' );
+                    }
+                }
+            }
+
+            return $options;
+        }
     }
 
     /**

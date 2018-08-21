@@ -247,6 +247,16 @@ if ( ! class_exists( 'UpStream_Options_General' ) ) :
                             'options' => $roles,
 
                         ],
+	                    [
+		                    'name'    => __( 'Who can post images in comments?', 'upstream' ),
+		                    'id'      => 'media_comment_images',
+		                    'desc'    => __( 'By default, not all WordPress users can upload images. Select the roles who can add images to UpStream comments.',
+			                    'upstream' ),
+		                    'type'    => 'multicheck',
+		                    'default' => array_keys( $roles ),
+		                    'options' => $roles,
+
+	                    ],
                         /**
                          * Collapse Sections
                          */

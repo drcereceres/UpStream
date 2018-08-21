@@ -4,7 +4,7 @@ Tags: project, manage, management, project management, project manager, wordpres
 Requires at least: 4.5
 Tested up to: 4.9
 Requires PHP: 5.6
-Stable tag: 1.20.1
+Stable tag: 1.20.2
 License: GPL-3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -141,6 +141,16 @@ If you were having date issues within Projects, please clear your cache and re-s
 
 The format is based on [Keep a Changelog](http://keepachangelog.com)
 and this project adheres to [Semantic Versioning](http://semver.org).
+
+= [1.20.2] - 2018-08-21 =
+
+Fixed:
+* Fixed missed debug statement in the code;
+* Fixed fatal error when date fields are empty and a task is saved in the front-end;
+* Fixed images in the comments, adding an option and custom capability (upstream_comment_images) for controlling who can add images. All roles will be selected by default;
+* Fixed comments when they contain only images, without any text;
+* Fixed the field to assign tasks to users on new tasks for some sites where the field was blocked;
+* Fixed JavaScript error that prevents to select new assigner for tasks in some sites;
 
 = [1.20.1] - 2018-08-14 =
 
