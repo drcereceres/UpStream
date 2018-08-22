@@ -741,6 +741,12 @@
 
         function getCommentEditor (editor_id) {
             var TinyMceSingleton = window.tinyMCE ? window.tinyMCE : (window.tinymce ? window.tinymce : null);
+
+            // The editor can be disabled by the user in his profile, so we return null.
+            if ( TinyMceSingleton === null ) {
+                return null;
+            }
+
             var theEditor = TinyMceSingleton.get(editor_id);
 
             return theEditor;
