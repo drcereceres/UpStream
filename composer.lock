@@ -115,12 +115,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/AllediaWordPress/WordPress-Plugin-Builder.git",
-                "reference": "b317c04d589b4df64f22a9279d832998ca63f081"
+                "reference": "e9ea07f4205c76a05ba78855e38266ca3f0a242d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/AllediaWordPress/WordPress-Plugin-Builder/zipball/b317c04d589b4df64f22a9279d832998ca63f081",
-                "reference": "b317c04d589b4df64f22a9279d832998ca63f081",
+                "url": "https://api.github.com/repos/AllediaWordPress/WordPress-Plugin-Builder/zipball/e9ea07f4205c76a05ba78855e38266ca3f0a242d",
+                "reference": "e9ea07f4205c76a05ba78855e38266ca3f0a242d",
                 "shasum": ""
             },
             "require": {
@@ -165,7 +165,7 @@
                 "plugin",
                 "wordpress"
             ],
-            "time": "2018-08-22T16:53:47+00:00"
+            "time": "2018-08-22T17:37:33+00:00"
         },
         {
             "name": "alledia/wordpress-plugin-framework",
