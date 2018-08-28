@@ -535,47 +535,6 @@ body.upstream .wp-list-table.fixed.posts {
   margin-bottom: 30px;
 }
 
-.upstream_options .license-active {
-  border-top: 1px solid #46b450;
-  display: block;
-  padding: 5px 10px;
-  width: 95%;
-}
-
-.upstream_options #upstream_extensions .desc {
-  color: #72777c;
-  font-size: 13px;
-  font-style: normal;
-  margin-bottom: 5px;
-  padding: 20px 0;
-}
-.upstream_options #cmb2-metabox-upstream_extensions > div {
-  width: 30%;
-  margin: 0 1.5%;
-  float: left;
-  min-height: 220px;
-}
-.upstream_options #cmb2-metabox-upstream_extensions {
-  background: #f8f8f8 none repeat scroll 0 0;
-  border: 1px solid #ddd;
-  display: inline-block;
-  padding: 0 0 20px;
-  width: 100%;
-}
-.upstream_options #cmb2-metabox-upstream_extensions .cmb-type-text .cmb-td {
-  padding-left: 0;
-}
-.upstream_options #cmb2-metabox-upstream_extensions .wrapper img {
-  width: 100%;
-  background: #efefef;
-  height: auto;
-  max-height: 200px;
-  margin: 10px 0;
-}
-.upstream_options h3.extension {
-  margin: 1em 0 5px;
-}
-
 /*
  * Hide some stuff
  */

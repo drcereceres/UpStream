@@ -125,7 +125,6 @@ if ( ! class_exists( 'UpStream' ) ) :
 
             if ( is_admin() ) {
                 add_action( 'admin_init', [ $this->container['reviews'], 'init' ] );
-                add_action( 'admin_init', [ 'UpStream_Admin_Subscription', 'check_ad' ] );
             }
 
             // Render additional update info if needed.
@@ -349,7 +348,6 @@ if ( ! class_exists( 'UpStream' ) ) :
                 include_once __DIR__ . '/includes/admin/class-up-admin-tasks-page.php';
                 include_once __DIR__ . '/includes/admin/class-up-admin-bugs-page.php';
                 include_once __DIR__ . '/includes/admin/class-up-admin-reviews.php';
-                include_once __DIR__ . '/includes/admin/class-up-admin-subscription.php';
             }
 
             if ( $this->is_request( 'frontend' ) ) {
