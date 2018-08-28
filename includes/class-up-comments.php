@@ -97,20 +97,26 @@ class Comments {
 	 * @return array
 	 */
 	public static function filter_allowed_tags( $allowed_tags ) {
-		// Filters the comments HTML, allowing to add images in the comments.
+		global $allowedtags;
 
+		// Add default allwed tags.
+		$allowed_tags = array_merge( $allowed_tags, $allowedtags );
+
+		// Filters the comments HTML, allowing to add images in the comments.
 		if ( ! current_user_can( 'upstream_comment_images' ) ) {
-			return $allowed_tags;
+			var_dump(34525); die;
 		}
 
-		$allowed_tags = [
-			'img' => [
-				'class'  => true,
-				'src'    => true,
-				'alt'    => true,
-				'width'  => true,
-				'height' => true,
-			],
+		if ( ! is_array( $allowed_tags ) ) {
+			$allowed_tags = [];
+		}
+
+		$allowed_tags['img'] = [
+			'class'  => true,
+			'src'    => true,
+			'alt'    => true,
+			'width'  => true,
+			'height' => true,
 		];
 
 		return $allowed_tags;
