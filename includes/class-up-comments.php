@@ -99,14 +99,15 @@ class Comments {
 	public static function filter_allowed_tags( $allowed_tags ) {
 		global $allowedtags;
 
-		// Add default allwed tags.
+		// Add default allowed tags.
 		$allowed_tags = array_merge( $allowed_tags, $allowedtags );
 
-		// Filters the comments HTML, allowing to add images in the comments.
+		// If the current can't post images, we return current supported tags.
 		if ( ! current_user_can( 'upstream_comment_images' ) ) {
-			var_dump(34525); die;
+			return $allowed_tags;
 		}
 
+		// The user can post images, so let's allow the img tag.
 		if ( ! is_array( $allowed_tags ) ) {
 			$allowed_tags = [];
 		}
