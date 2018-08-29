@@ -146,6 +146,11 @@ and this project adheres to [Semantic Versioning](http://semver.org).
 
 Fixed:
 * Fixed comments not being sent if the user have disabled editors - checking the option "Disable the visual editor when writing" on his profile;
+* Fixed stripped HTML tags on projects' comments;
+* Fixed HTML content sent in emails sent for comments' notifications. The email now is sent as text/html;
+
+Changed:
+* Refactored the license management page, upgrade links and subscription form, based on the Alledia's plugin framework;
 
 = [1.20.2] - 2018-08-21 =
 
