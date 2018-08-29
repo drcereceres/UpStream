@@ -63,6 +63,9 @@ class Comments {
 		add_filter( 'comment_notification_recipients', [ self::$namespace, 'defineNotificationRecipients' ], 10, 2 );
 
 		add_filter( 'upstream_allowed_tags_in_comments', [ self::$namespace, 'filter_allowed_tags' ] );
+		add_filter( 'comment_notification_headers', [ self::$namespace, 'filter_comment_notification_headers' ], 10,
+			2 );
+		add_filter( 'comment_notification_text', [ self::$namespace, 'filter_comment_notification_text' ], 10, 2 );
 	}
 
 	/**
@@ -1043,5 +1046,76 @@ class Comments {
 		$subject = apply_filters( 'upstream:comment_notification.subject', $subject, $comment, $project );
 
 		return $subject;
+	}
+
+	/**
+	 * Convert notifications text for comments in projects into HTML.
+	 *
+	 * @param string $text
+	 * @param int    $comment_id
+	 *
+	 * @return string
+	 */
+	public static function filter_comment_notification_text( $text, $comment_id ) {
+		if ( self::is_comment_from_project( $comment_id ) ) {
+			// Convert from txt to html.
+			$text = str_replace( "\n", '<br>', $text );
+			$text = self::replace_email_with_html_link( $text );
+			$text = self::replace_link_with_html_link( $text );
+		}
+
+		return $text;
+	}
+
+	/**
+	 * @param $comment_id
+	 *
+	 * @return bool
+	 */
+	protected static function is_comment_from_project( $comment_id ) {
+		// Check if the post is a project
+		$comment = get_comment( $comment_id );
+		$post    = get_post( $comment->comment_post_ID );
+
+		return 'project' === $post->post_type;
+	}
+
+	/**
+	 * Convert notifications for comments in projects into HTML.
+	 *
+	 * @param string $headers
+	 * @param int    $comment_id
+	 *
+	 * @return string
+	 */
+	public static function filter_comment_notification_headers( $headers, $comment_id ) {
+		if ( self::is_comment_from_project( $comment_id ) ) {
+			// Convert from txt to html.
+			$headers = str_replace( 'text/plain;', 'text/html;', $headers );
+		}
+
+		return $headers;
+	}
+
+	/**
+	 * @param string $text
+	 *
+	 * @return string
+	 */
+	protected static function replace_email_with_html_link( $text ) {
+		$text = preg_replace( '/([^\s@]+@[a-z\._\-0-9]+)/i', '<a href="mailto:${1}" target="_blank">${1}</a>', $text );
+
+		return $text;
+	}
+
+	/**
+	 * @param string $text
+	 *
+	 * @return string
+	 */
+	protected static function replace_link_with_html_link( $text ) {
+		$text = preg_replace( '~([a-z]+:\/\/\S+)~i', '<a href="${1}" target="_blank">${1}</a>', $text );
+
+		return $text;
 	}
 }
