@@ -509,7 +509,7 @@ msgid "UpStream Client User"
 msgstr ""
 
 #: includes/admin/metaboxes/class-up-metaboxes-clients.php:384
-#: includes/admin/up-enqueues.php:81
+#: includes/admin/up-enqueues.php:83
 msgid "No users found."
 msgstr ""
 
@@ -869,6 +869,7 @@ msgid "No project selected"
 msgstr ""
 
 #: includes/admin/metaboxes/metabox-functions.php:1061
+#: includes/admin/up-enqueues.php:70
 msgid "No client selected"
 msgstr ""
 
@@ -1474,7 +1475,7 @@ msgstr ""
 msgid "Add Comment Reply"
 msgstr ""
 
-#: includes/admin/up-enqueues.php:57 includes/admin/up-enqueues.php:82
+#: includes/admin/up-enqueues.php:57 includes/admin/up-enqueues.php:84
 msgid "Adding..."
 msgstr ""
 
@@ -1494,7 +1495,7 @@ msgstr ""
 msgid "Approving..."
 msgstr ""
 
-#: includes/admin/up-enqueues.php:65 includes/admin/up-enqueues.php:83
+#: includes/admin/up-enqueues.php:65 includes/admin/up-enqueues.php:85
 msgid "Are you sure? This action cannot be undone."
 msgstr ""
 
@@ -1510,36 +1511,40 @@ msgstr ""
 msgid "Invalid interval between dates."
 msgstr ""
 
-#: includes/admin/up-enqueues.php:76
-msgid "UpStream requires jQuery."
-msgstr ""
-
-#: includes/admin/up-enqueues.php:77
-msgid "There's no users assigned yet."
+#: includes/admin/up-enqueues.php:71
+msgid "No results"
 msgstr ""
 
 #: includes/admin/up-enqueues.php:78
-msgid "Please, select at least one user"
+msgid "UpStream requires jQuery."
 msgstr ""
 
 #: includes/admin/up-enqueues.php:79
-msgid "Add 1 User"
+msgid "There's no users assigned yet."
 msgstr ""
 
 #: includes/admin/up-enqueues.php:80
+msgid "Please, select at least one user"
+msgstr ""
+
+#: includes/admin/up-enqueues.php:81
+msgid "Add 1 User"
+msgstr ""
+
+#: includes/admin/up-enqueues.php:82
 #, php-format
 msgid "Add %d Users"
 msgstr ""
 
-#: includes/admin/up-enqueues.php:84
+#: includes/admin/up-enqueues.php:86
 msgid "Fetching data..."
 msgstr ""
 
-#: includes/admin/up-enqueues.php:85
+#: includes/admin/up-enqueues.php:87
 msgid "No data found."
 msgstr ""
 
-#: includes/admin/up-enqueues.php:86
+#: includes/admin/up-enqueues.php:88
 #, php-format
 msgid "Managing %s\\'s Permissions"
 msgstr ""
@@ -1903,80 +1908,80 @@ msgstr ""
 msgid "Discussions"
 msgstr ""
 
-#: includes/up-labels.php:222 includes/up-labels.php:226
+#: includes/up-labels.php:250 includes/up-labels.php:254
 #, php-format
 msgid "Enter %s name here"
 msgstr ""
 
-#: includes/up-labels.php:293 includes/up-labels.php:295
+#: includes/up-labels.php:321 includes/up-labels.php:323
 #, php-format
 msgid "%2$s updated. %1$sView %2$s%3$s"
 msgstr ""
 
-#: includes/up-labels.php:297
+#: includes/up-labels.php:325
 #, php-format
 msgid "%2$s published. %1$sView %2$s%3$s"
 msgstr ""
 
-#: includes/up-labels.php:299
+#: includes/up-labels.php:327
 #, php-format
 msgid "%2$s saved. %1$sView %2$s%3$s"
 msgstr ""
 
-#: includes/up-labels.php:301
+#: includes/up-labels.php:329
 #, php-format
 msgid "%2$s submitted. %1$sView %2$s%3$s"
 msgstr ""
 
-#: includes/up-labels.php:306 includes/up-labels.php:307
+#: includes/up-labels.php:334 includes/up-labels.php:335
 #, php-format
 msgid "%1$s updated."
 msgstr ""
 
-#: includes/up-labels.php:308
+#: includes/up-labels.php:336
 #, php-format
 msgid "%1$s published."
 msgstr ""
 
-#: includes/up-labels.php:309
+#: includes/up-labels.php:337
 #, php-format
 msgid "%1$s saved."
 msgstr ""
 
-#: includes/up-labels.php:310
+#: includes/up-labels.php:338
 #, php-format
 msgid "%1$s submitted."
 msgstr ""
 
-#: includes/up-labels.php:342 includes/up-labels.php:359
+#: includes/up-labels.php:370 includes/up-labels.php:387
 #, php-format
 msgid "%1$s %2$s updated."
 msgid_plural "%1$s %3$s updated."
 msgstr[0] ""
 msgstr[1] ""
 
-#: includes/up-labels.php:344 includes/up-labels.php:361
+#: includes/up-labels.php:372 includes/up-labels.php:389
 #, php-format
 msgid "%1$s %2$s not updated, somebody is editing it."
 msgid_plural "%1$s %3$s not updated, somebody is editing them."
 msgstr[0] ""
 msgstr[1] ""
 
-#: includes/up-labels.php:347 includes/up-labels.php:364
+#: includes/up-labels.php:375 includes/up-labels.php:392
 #, php-format
 msgid "%1$s %2$s permanently deleted."
 msgid_plural "%1$s %3$s permanently deleted."
 msgstr[0] ""
 msgstr[1] ""
 
-#: includes/up-labels.php:350 includes/up-labels.php:367
+#: includes/up-labels.php:378 includes/up-labels.php:395
 #, php-format
 msgid "%1$s %2$s moved to the Trash."
 msgid_plural "%1$s %3$s moved to the Trash."
 msgstr[0] ""
 msgstr[1] ""
 
-#: includes/up-labels.php:353 includes/up-labels.php:370
+#: includes/up-labels.php:381 includes/up-labels.php:398
 #, php-format
 msgid "%1$s %2$s restored from the Trash."
 msgid_plural "%1$s %3$s restored from the Trash."
