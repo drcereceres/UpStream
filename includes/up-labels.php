@@ -68,13 +68,17 @@ function upstream_get_default_labels() {
 function upstream_project_label( $lowercase = false ) {
     $defaults = upstream_get_default_labels();
 
-    return ( $lowercase ) ? strtolower( $defaults['projects']['singular'] ) : $defaults['projects']['singular'];
+    $label = ( $lowercase ) ? strtolower( $defaults['projects']['singular'] ) : $defaults['projects']['singular'];
+
+    return __( $label, 'upstream' );
 }
 
 function upstream_project_label_plural( $lowercase = false ) {
     $defaults = upstream_get_default_labels();
 
-    return ( $lowercase ) ? strtolower( $defaults['projects']['plural'] ) : $defaults['projects']['plural'];
+    $label = ( $lowercase ) ? strtolower( $defaults['projects']['plural'] ) : $defaults['projects']['plural'];
+
+    return __( $label, 'upstream' );
 }
 
 /**
@@ -89,13 +93,17 @@ function upstream_project_label_plural( $lowercase = false ) {
 function upstream_client_label( $lowercase = false ) {
     $defaults = upstream_get_default_labels();
 
-    return ( $lowercase ) ? strtolower( $defaults['clients']['singular'] ) : $defaults['clients']['singular'];
+    $label = ( $lowercase ) ? strtolower( $defaults['clients']['singular'] ) : $defaults['clients']['singular'];
+
+    return __( $label, 'upstream' );
 }
 
 function upstream_client_label_plural( $lowercase = false ) {
     $defaults = upstream_get_default_labels();
 
-    return ( $lowercase ) ? strtolower( $defaults['clients']['plural'] ) : $defaults['clients']['plural'];
+    $label = ( $lowercase ) ? strtolower( $defaults['clients']['plural'] ) : $defaults['clients']['plural'];
+
+    return __( $label, 'upstream' );
 }
 
 /**
@@ -110,13 +118,17 @@ function upstream_client_label_plural( $lowercase = false ) {
 function upstream_milestone_label( $lowercase = false ) {
     $defaults = upstream_get_default_labels();
 
-    return ( $lowercase ) ? strtolower( $defaults['milestones']['singular'] ) : $defaults['milestones']['singular'];
+    $label = ( $lowercase ) ? strtolower( $defaults['milestones']['singular'] ) : $defaults['milestones']['singular'];
+
+    return __( $label, 'upstream' );
 }
 
 function upstream_milestone_label_plural( $lowercase = false ) {
     $defaults = upstream_get_default_labels();
 
-    return ( $lowercase ) ? strtolower( $defaults['milestones']['plural'] ) : $defaults['milestones']['plural'];
+    $label = ( $lowercase ) ? strtolower( $defaults['milestones']['plural'] ) : $defaults['milestones']['plural'];
+
+    return __( $label, 'upstream' );
 }
 
 /**
@@ -131,13 +143,17 @@ function upstream_milestone_label_plural( $lowercase = false ) {
 function upstream_task_label( $lowercase = false ) {
     $defaults = upstream_get_default_labels();
 
-    return ( $lowercase ) ? strtolower( $defaults['tasks']['singular'] ) : $defaults['tasks']['singular'];
+    $label = ( $lowercase ) ? strtolower( $defaults['tasks']['singular'] ) : $defaults['tasks']['singular'];
+
+    return __( $label, 'upstream' );
 }
 
 function upstream_task_label_plural( $lowercase = false ) {
     $defaults = upstream_get_default_labels();
 
-    return ( $lowercase ) ? strtolower( $defaults['tasks']['plural'] ) : $defaults['tasks']['plural'];
+    $label = ( $lowercase ) ? strtolower( $defaults['tasks']['plural'] ) : $defaults['tasks']['plural'];
+
+    return __( $label, 'upstream' );
 }
 
 /**
@@ -152,13 +168,17 @@ function upstream_task_label_plural( $lowercase = false ) {
 function upstream_bug_label( $lowercase = false ) {
     $defaults = upstream_get_default_labels();
 
-    return ( $lowercase ) ? strtolower( $defaults['bugs']['singular'] ) : $defaults['bugs']['singular'];
+    $label = ( $lowercase ) ? strtolower( $defaults['bugs']['singular'] ) : $defaults['bugs']['singular'];
+
+    return __( $label, 'upstream' );
 }
 
 function upstream_bug_label_plural( $lowercase = false ) {
     $defaults = upstream_get_default_labels();
 
-    return ( $lowercase ) ? strtolower( $defaults['bugs']['plural'] ) : $defaults['bugs']['plural'];
+    $label = ( $lowercase ) ? strtolower( $defaults['bugs']['plural'] ) : $defaults['bugs']['plural'];
+
+    return __( $label, 'upstream' );
 }
 
 /**
@@ -173,13 +193,17 @@ function upstream_bug_label_plural( $lowercase = false ) {
 function upstream_file_label( $lowercase = false ) {
     $defaults = upstream_get_default_labels();
 
-    return ( $lowercase ) ? strtolower( $defaults['files']['singular'] ) : $defaults['files']['singular'];
+    $label = ( $lowercase ) ? strtolower( $defaults['files']['singular'] ) : $defaults['files']['singular'];
+
+    return __( $label, 'upstream' );
 }
 
 function upstream_file_label_plural( $lowercase = false ) {
     $defaults = upstream_get_default_labels();
 
-    return ( $lowercase ) ? strtolower( $defaults['files']['plural'] ) : $defaults['files']['plural'];
+    $label = ( $lowercase ) ? strtolower( $defaults['files']['plural'] ) : $defaults['files']['plural'];
+
+    return __( $label, 'upstream' );
 }
 
 /**
@@ -194,13 +218,17 @@ function upstream_file_label_plural( $lowercase = false ) {
 function upstream_discussion_label( $lowercase = false ) {
     $defaults = upstream_get_default_labels();
 
-    return ( $lowercase ) ? strtolower( $defaults['discussion']['singular'] ) : $defaults['discussion']['singular'];
+    $label = ( $lowercase ) ? strtolower( $defaults['discussion']['singular'] ) : $defaults['discussion']['singular'];
+
+    return $label;
 }
 
 function upstream_discussion_label_plural( $lowercase = false ) {
     $defaults = upstream_get_default_labels();
 
-    return ( $lowercase ) ? strtolower( $defaults['discussion']['plural'] ) : $defaults['discussion']['plural'];
+    $label = ( $lowercase ) ? strtolower( $defaults['discussion']['plural'] ) : $defaults['discussion']['plural'];
+
+    return $label;
 }
 
 /**
