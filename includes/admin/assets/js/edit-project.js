@@ -537,7 +537,7 @@
 
         noUsers = function () {
             if ($ul.find('li').length == 0) {
-                $ul.append('<li>No client selected</li>');
+                $ul.append('<li>' + upstream_project.l.MSG_NO_CLIENT_SELECTED + '</li>');
             }
         };
 
@@ -1658,7 +1658,7 @@
 
             var filteredRows = $('.cmb-row.postbox[data-iterator]:visible', table);
             if (filteredRows.length === 0) {
-                $('.cmb-row:last-child', table).prepend($('<div class="postbox cmb-row cmb-repeatable-grouping" data-empty-row><p>No results</p></div>'));
+                $('.cmb-row:last-child', table).prepend($('<div class="postbox cmb-row cmb-repeatable-grouping" data-empty-row><p>' + upstream_project.l.MSG_NO_RESULTS + '</p></div>'));
             } else {
                 $('.cmb-row.postbox:visible', table).addClass('is-filtered');
             }

@@ -65,8 +65,10 @@ function upstream_load_admin_scripts( $hook ) {
                     'MSG_ARE_YOU_SURE'                  => __( 'Are you sure? This action cannot be undone.', 'upstream' ),
                     'MSG_COMMENT_NOT_VIS'               => __( 'This comment is not visible by regular users.', 'upstream' ),
                     'LB_ASSIGNED_TO'                    => __( 'Assigned To', 'upstream' ),
-                    'MSG_TITLE_CANT_BE_EMPTY'           => __( 'Title can\'t be empty' ),
-                    'MSG_INVALID_INTERVAL_BETWEEN_DATE' => __( 'Invalid interval between dates.' ),
+                    'MSG_TITLE_CANT_BE_EMPTY'           => __( 'Title can\'t be empty', 'upstream' ),
+                    'MSG_INVALID_INTERVAL_BETWEEN_DATE' => __( 'Invalid interval between dates.', 'upstream' ),
+	                'MSG_NO_CLIENT_SELECTED'            => __( 'No client selected', 'upstream' ),
+	                'MSG_NO_RESULTS'                    => __( 'No results', 'upstream' ),
                 ],
             ] ) );
         } elseif ( $postType === 'client' ) {
