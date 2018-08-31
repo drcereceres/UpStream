@@ -110,7 +110,8 @@ function upstream_permissions( $capability = null, $item_id = null ) {
  * Return true if they are allowed.
  *
  * @param  string      $capability
- * @param  object|null $field
+ *
+ * @return bool
  */
 function upstream_admin_permissions( $capability = null ) {
 
@@ -146,7 +147,6 @@ function upstream_admin_permissions( $capability = null ) {
     }
 
     return apply_filters( 'upstream_admin_permissions', $return );
-
 }
 
 /**
