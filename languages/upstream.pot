@@ -75,7 +75,7 @@ msgstr ""
 
 #: includes/admin/class-up-admin-bugs-page.php:74
 #: includes/admin/class-up-admin-tasks-page.php:81
-#: includes/admin/metaboxes/metabox-functions.php:199
+#: includes/admin/metaboxes/metabox-functions.php:201
 msgid "Mine"
 msgstr ""
 
@@ -114,7 +114,7 @@ msgstr ""
 #: includes/admin/class-up-admin-tasks-page.php:455
 #: includes/admin/class-up-admin-tasks-page.php:461
 #: includes/admin/class-up-admin-tasks-page.php:468
-#: includes/admin/metaboxes/metabox-functions.php:592
+#: includes/admin/metaboxes/metabox-functions.php:594
 #: includes/class-up-project-activity.php:574
 #: includes/frontend/up-table-functions.php:137
 #: includes/frontend/up-table-functions.php:188
@@ -802,7 +802,7 @@ msgid "Invalid Project."
 msgstr ""
 
 #: includes/admin/metaboxes/class-up-metaboxes-projects.php:1889
-#: includes/admin/metaboxes/metabox-functions.php:554
+#: includes/admin/metaboxes/metabox-functions.php:556
 #: includes/class-up-comment.php:552 includes/class-up-comments.php:743
 #, php-format
 msgctxt "%s = human-readable time difference"
@@ -813,7 +813,7 @@ msgstr ""
 msgid "Missing some required fields"
 msgstr ""
 
-#: includes/admin/metaboxes/metabox-functions.php:195
+#: includes/admin/metaboxes/metabox-functions.php:197
 #: includes/admin/options/class-up-options-bugs.php:143
 #: includes/admin/options/class-up-options-projects.php:145
 #: includes/admin/options/class-up-options-tasks.php:145
@@ -823,57 +823,57 @@ msgstr ""
 msgid "Open"
 msgstr ""
 
-#: includes/admin/metaboxes/metabox-functions.php:235
+#: includes/admin/metaboxes/metabox-functions.php:237
 msgid "Last 10"
 msgstr ""
 
-#: includes/admin/metaboxes/metabox-functions.php:237
+#: includes/admin/metaboxes/metabox-functions.php:239
 msgid "Last 20"
 msgstr ""
 
-#: includes/admin/metaboxes/metabox-functions.php:239
+#: includes/admin/metaboxes/metabox-functions.php:241
 msgid "View All"
 msgstr ""
 
-#: includes/admin/metaboxes/metabox-functions.php:643
-#: includes/admin/metaboxes/metabox-functions.php:739
+#: includes/admin/metaboxes/metabox-functions.php:645
+#: includes/admin/metaboxes/metabox-functions.php:741
 msgid "This comment and its replies are not visible by regular users."
 msgstr ""
 
-#: includes/admin/metaboxes/metabox-functions.php:668
+#: includes/admin/metaboxes/metabox-functions.php:670
 #: includes/admin/up-enqueues.php:61
 msgid "Unapprove"
 msgstr ""
 
-#: includes/admin/metaboxes/metabox-functions.php:674
+#: includes/admin/metaboxes/metabox-functions.php:676
 #: includes/admin/up-enqueues.php:63
 msgid "Approve"
 msgstr ""
 
-#: includes/admin/metaboxes/metabox-functions.php:683
+#: includes/admin/metaboxes/metabox-functions.php:685
 #: includes/admin/up-enqueues.php:53
 msgid "Reply"
 msgstr ""
 
-#: includes/admin/metaboxes/metabox-functions.php:691
+#: includes/admin/metaboxes/metabox-functions.php:693
 #: includes/admin/up-enqueues.php:59
 msgid "Delete"
 msgstr ""
 
-#: includes/admin/metaboxes/metabox-functions.php:955
+#: includes/admin/metaboxes/metabox-functions.php:957
 msgid "Not Assigned"
 msgstr ""
 
-#: includes/admin/metaboxes/metabox-functions.php:1057
+#: includes/admin/metaboxes/metabox-functions.php:1059
 msgid "No project selected"
 msgstr ""
 
-#: includes/admin/metaboxes/metabox-functions.php:1061
+#: includes/admin/metaboxes/metabox-functions.php:1063
 #: includes/admin/up-enqueues.php:70
 msgid "No client selected"
 msgstr ""
 
-#: includes/admin/metaboxes/metabox-functions.php:1071
+#: includes/admin/metaboxes/metabox-functions.php:1073
 msgid "No users found"
 msgstr ""
 
