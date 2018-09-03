@@ -151,6 +151,7 @@ Fixed:
 
 Changed:
 * Refactored the license management page, upgrade links and subscription form, based on the Alledia's plugin framework;
+* Updated the POT file for translators;
 
 = [1.20.2] - 2018-08-21 =
 
