@@ -105,6 +105,68 @@ class Comments {
 		// Add default allowed tags.
 		$allowed_tags = array_merge( $allowed_tags, $allowedtags );
 
+		// Add basic tags.
+		if ( ! array_key_exists( 'p', $allowed_tags ) ) {
+			$allowed_tags['p'] = [
+				'class' => true,
+				'id'    => true,
+			];
+		}
+
+		if ( ! array_key_exists( 'br', $allowed_tags ) ) {
+			$allowed_tags['br'] = [];
+		}
+
+		if ( ! array_key_exists( 'strong', $allowed_tags ) ) {
+			$allowed_tags['strong'] = [
+				'class' => true,
+				'id' => true,
+			];
+		}
+
+		if ( ! array_key_exists( 'em', $allowed_tags ) ) {
+			$allowed_tags['em'] = [
+				'class' => true,
+				'id' => true,
+			];
+		}
+
+		if ( ! array_key_exists( 'span', $allowed_tags ) ) {
+			$allowed_tags['span'] = [
+				'class' => true,
+				'id' => true,
+				'style' => true,
+			];
+		}
+
+		if ( ! array_key_exists( 'del', $allowed_tags ) ) {
+			$allowed_tags['del'] = [
+				'class' => true,
+				'id' => true,
+			];
+		}
+
+		if ( ! array_key_exists( 'ul', $allowed_tags ) ) {
+			$allowed_tags['ul'] = [
+				'class' => true,
+				'id' => true,
+			];
+		}
+
+		if ( ! array_key_exists( 'ol', $allowed_tags ) ) {
+			$allowed_tags['ol'] = [
+				'class' => true,
+				'id' => true,
+			];
+		}
+
+		if ( ! array_key_exists( 'li', $allowed_tags ) ) {
+			$allowed_tags['li'] = [
+				'class' => true,
+				'id' => true,
+			];
+		}
+
 		// If the current can't post images, we return current supported tags.
 		if ( ! current_user_can( 'upstream_comment_images' ) ) {
 			return $allowed_tags;
