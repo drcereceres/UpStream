@@ -1143,23 +1143,6 @@ class Comments {
 	}
 
 	/**
-	 * Convert notifications for comments in projects into HTML.
-	 *
-	 * @param string $headers
-	 * @param int    $comment_id
-	 *
-	 * @return string
-	 */
-	public static function filter_comment_notification_headers( $headers, $comment_id ) {
-		if ( self::is_comment_from_project( $comment_id ) ) {
-			// Convert from txt to html.
-			$headers = str_replace( 'text/plain;', 'text/html;', $headers );
-		}
-
-		return $headers;
-	}
-
-	/**
 	 * @param string $text
 	 *
 	 * @return string
@@ -1179,5 +1162,22 @@ class Comments {
 		$text = preg_replace( '~([a-z]+:\/\/\S+)~i', '<a href="${1}" target="_blank">${1}</a>', $text );
 
 		return $text;
+	}
+
+	/**
+	 * Convert notifications for comments in projects into HTML.
+	 *
+	 * @param string $headers
+	 * @param int    $comment_id
+	 *
+	 * @return string
+	 */
+	public static function filter_comment_notification_headers( $headers, $comment_id ) {
+		if ( self::is_comment_from_project( $comment_id ) ) {
+			// Convert from txt to html.
+			$headers = str_replace( 'text/plain;', 'text/html;', $headers );
+		}
+
+		return $headers;
 	}
 }
