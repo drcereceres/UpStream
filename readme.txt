@@ -146,8 +146,10 @@ and this project adheres to [Semantic Versioning](http://semver.org).
 
 Fixed:
 * Fixed comments not being sent if the user have disabled editors - checking the option "Disable the visual editor when writing" on his profile;
-* Fixed stripped HTML tags on projects' comments;
+* Fixed stripped HTML tags on projects' comments - added basic tags like P, BR, STRONG, EM, SPAN, DEL, UL, OL and LI;
 * Fixed HTML content sent in emails sent for comments' notifications. The email now is sent as text/html;
+* Fixed PHP warning in the admin when there is no milestones in the project;
+* Fixed PHP warning about undefined indexes: before_row and after_row;
 
 Changed:
 * Refactored the license management page, upgrade links and subscription form, based on the Alledia's plugin framework;
