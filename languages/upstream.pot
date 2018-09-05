@@ -560,8 +560,8 @@ msgstr ""
 #: includes/admin/metaboxes/class-up-metaboxes-clients.php:643
 #: includes/admin/metaboxes/class-up-metaboxes-clients.php:735
 #: includes/admin/metaboxes/class-up-metaboxes-clients.php:784
-#: includes/class-up-comments.php:182 includes/class-up-comments.php:288
-#: includes/class-up-comments.php:400 includes/class-up-comments.php:512
+#: includes/class-up-comments.php:244 includes/class-up-comments.php:350
+#: includes/class-up-comments.php:462 includes/class-up-comments.php:574
 #: vendor/alledia/wordpress-plugin-framework/src/library/Module/Addons.php:287
 #: vendor/alledia/wordpress-plugin-framework/src/library/Module/Addons.php:295
 msgid "You're not allowed to do this."
@@ -573,10 +573,10 @@ msgstr ""
 #: includes/admin/metaboxes/class-up-metaboxes-clients.php:739
 #: includes/admin/metaboxes/class-up-metaboxes-clients.php:788
 #: includes/admin/metaboxes/class-up-metaboxes-projects.php:1797
-#: includes/class-up-comments.php:155 includes/class-up-comments.php:273
-#: includes/class-up-comments.php:282 includes/class-up-comments.php:367
-#: includes/class-up-comments.php:507 includes/class-up-comments.php:627
-#: includes/class-up-comments.php:643
+#: includes/class-up-comments.php:217 includes/class-up-comments.php:335
+#: includes/class-up-comments.php:344 includes/class-up-comments.php:429
+#: includes/class-up-comments.php:569 includes/class-up-comments.php:689
+#: includes/class-up-comments.php:705
 #: vendor/alledia/wordpress-plugin-framework/src/library/Module/Addons.php:291
 msgid "Invalid request."
 msgstr ""
@@ -796,14 +796,14 @@ msgid "Disable Discussion for this project"
 msgstr ""
 
 #: includes/admin/metaboxes/class-up-metaboxes-projects.php:1803
-#: includes/class-up-comments.php:188 includes/class-up-comments.php:294
-#: includes/class-up-comments.php:373 includes/class-up-comments.php:633
+#: includes/class-up-comments.php:250 includes/class-up-comments.php:356
+#: includes/class-up-comments.php:435 includes/class-up-comments.php:695
 msgid "Invalid Project."
 msgstr ""
 
 #: includes/admin/metaboxes/class-up-metaboxes-projects.php:1889
 #: includes/admin/metaboxes/metabox-functions.php:556
-#: includes/class-up-comment.php:552 includes/class-up-comments.php:743
+#: includes/class-up-comment.php:552 includes/class-up-comments.php:805
 #, php-format
 msgctxt "%s = human-readable time difference"
 msgid "%s ago"
@@ -1555,46 +1555,46 @@ msgid "just now"
 msgstr ""
 
 #: includes/class-up-comment.php:287 includes/class-up-comment.php:297
-#: includes/class-up-comments.php:533
+#: includes/class-up-comments.php:595
 msgid "Unable to save the data into database."
 msgstr ""
 
-#: includes/class-up-comments.php:165
+#: includes/class-up-comments.php:227
 msgid "Invalid item."
 msgstr ""
 
-#: includes/class-up-comments.php:177 includes/class-up-comments.php:655
+#: includes/class-up-comments.php:239 includes/class-up-comments.php:717
 msgid "Invalid nonce."
 msgstr ""
 
-#: includes/class-up-comments.php:193 includes/class-up-comments.php:299
-#: includes/class-up-comments.php:660
+#: includes/class-up-comments.php:255 includes/class-up-comments.php:361
+#: includes/class-up-comments.php:722
 msgid "Commenting is disabled on this project."
 msgstr ""
 
-#: includes/class-up-comments.php:378 includes/class-up-comments.php:523
+#: includes/class-up-comments.php:440 includes/class-up-comments.php:585
 msgid "Comments are disabled for this project."
 msgstr ""
 
-#: includes/class-up-comments.php:391
+#: includes/class-up-comments.php:453
 msgctxt "Removing a comment in projects"
 msgid "Comment not found."
 msgstr ""
 
-#: includes/class-up-comments.php:405
+#: includes/class-up-comments.php:467
 msgid "It wasn't possible to delete this comment."
 msgstr ""
 
-#: includes/class-up-comments.php:518
+#: includes/class-up-comments.php:580
 #, php-format
 msgid "Invalid \"%s\" parameter."
 msgstr ""
 
-#: includes/class-up-comments.php:528
+#: includes/class-up-comments.php:590
 msgid "Comment not found."
 msgstr ""
 
-#: includes/class-up-comments.php:1027
+#: includes/class-up-comments.php:1089
 #, php-format
 msgctxt "Comment notification subject"
 msgid "New comment on %s"
