@@ -61,19 +61,13 @@ if ( ! class_exists( 'UpStream_Options_Extensions' ) ) :
 			/**
 			 * Add-ons page
 			 */
-			$params = [
-				'addons_page_url' => 'https://upstreamplugin.com/pricing/',
-			];
-
-			do_action( 'allex_enable_module_addons', $params );
+			do_action( 'allex_enable_module_addons' );
+			add_filter( 'allex_addons', [ 'UpStream_Options_Extensions', 'filterAllexAddons' ], 10, 2 );
 
 			/**
 			 * Upgrade link
 			 */
-			$params = [
-				'url' => 'https://upstreamplugin.com/pricing/',
-			];
-			do_action( 'allex_enable_module_upgrade', $params );
+			do_action( 'allex_enable_module_upgrade', 'https://upstreamplugin.com/pricing/' );
 
 			// Set our title
 			$this->title       = __( 'Extensions', 'upstream' );
@@ -83,11 +77,13 @@ if ( ! class_exists( 'UpStream_Options_Extensions' ) ) :
 
 			add_action( 'cmb2_render_upstream_extensions_wrapper',
 				[ 'UpStream_Options_Extensions', 'renderExtensionsWrapper' ], 10, 5 );
-			add_action( 'wp_ajax_upstream:extensions:license.validate',
-				[ 'UpStream_Options_Extensions', 'validateLicenseKey' ] );
-			add_action( 'wp_ajax_upstream:extensions:license.deactivate',
-				[ 'UpStream_Options_Extensions', 'deactivateLicenseKey' ] );
+
+			add_filter( 'allex_upgrade_mailchimp_config', [ $this, 'filter_allex_upgrade_mailchimp_config' ], 10, 2 );
+			add_action( 'allex_addon_update_license', [ $this, 'action_allex_addon_update_license' ], 10, 4 );
+			add_filter( 'allex_addons_get_license_key', [ $this, 'filter_allex_addons_get_license_key' ], 10, 2 );
+			add_filter( 'allex_addons_get_license_status', [ $this, 'filter_allex_addons_get_license_status' ], 10, 2 );
 		}
+
 
 		/**
 		 * Returns true if there is one or more installed extension.
@@ -95,160 +91,152 @@ if ( ! class_exists( 'UpStream_Options_Extensions' ) ) :
 		 * @return bool
 		 */
 		public static function thereAreInstalledExtensions() {
-			$pool = self::getExtensionsPool( true );
+			$pool = apply_filters( 'allex_addons', [], 'upstream' );
 
-			return count( $pool ) > 0;
+			foreach ( $pool as $addon ) {
+				if ( file_exists( ABSPATH . 'wp-content/plugins/' . $addon['slug'] . '/' . $addon['slug'] . '.php' ) ) {
+					return true;
+				}
+			}
+
+			return false;
+		}
+
+
+		/**
+		 * @param $addons
+		 * @param $plugin_name
+		 *
+		 * @return array
+		 */
+		public static function filterAllexAddons( $addons, $plugin_name ) {
+			if ( 'upstream' === $plugin_name ) {
+				$addons = self::getAddonsList();
+			}
+
+			return $addons;
 		}
 
 		/**
-		 * Retrieve an array containing all available UpStream extensions.
-		 *
-		 * @since   1.11.0
-		 * @access  private
-		 * @static
-		 *
-		 * @param   bool $installedOnly If true, only installed extensions (regardless of their activated status).
-		 * @param   bool $missingOnly   If true, it will ignore $installedOnly param and will return only non installed extensions.
-		 *
-		 * @return  array
+		 * @return array
 		 */
-		private static function getExtensionsPool( $installedOnly = false, $missingOnly = false ) {
-			if ( ! function_exists( 'is_plugin_active' ) ) {
-				require_once ABSPATH . 'wp-admin/includes/plugin.php';
-			}
-
-			$pool = [
-				[
-					'id'               => 'customizer',
-					'title'            => 'Customizer',
-					'description'      => __( 'Adds controls to easily customize the appearance of your projects.',
+		protected static function getAddonsList() {
+			$addons = [
+				'upstream-customizer'          => [
+					'slug'        => 'upstream-customizer',
+					'title'       => __( 'Customizer', 'upstream' ),
+					'description' => __( 'Adds controls to easily customize the appearance of your projects.',
 						'upstream' ),
-					'product_id'       => 4051,
-					'options_key_slug' => 'upstream_customizer',
-					'icon'             => 'paint-brush',
+					'icon_class'  => 'fa fa-paint-brush',
+					'edd_id'      => 4051,
 				],
-				[
-					'id'               => 'email-notifications',
-					'title'            => 'Email Notifications',
-					'description'      => __( 'Allows you to email project updates to people working on your projects.',
+				'upstream-email-notifications' => [
+					'slug'        => 'upstream-email-notifications',
+					'title'       => __( 'Email Notifications', 'upstream' ),
+					'description' => __( 'Allows you to email project updates to people working on your projects.',
 						'upstream' ),
-					'product_id'       => 4996,
-					'options_key_slug' => 'email-notifications',
-					'icon'             => 'envelope',
+					'icon_class'  => 'fa fa-envelope',
+					'edd_id'      => 4996,
 				],
-				[
-					'id'               => 'frontend-edit',
-					'title'            => 'Frontend Edit',
-					'description'      => __( 'Allow users to add and edit items on the frontend.', 'upstream' ),
-					'product_id'       => 3925,
-					'options_key_slug' => 'upstream_frontend_edit',
-					'icon'             => 'pencil-square-o',
-				],
-				[
-					'id'               => 'project-timeline',
-					'title'            => 'Project Timeline',
-					'description'      => __( 'Add a Gantt style chart to visualize your projects.', 'upstream' ),
-					'product_id'       => 3920,
-					'options_key_slug' => 'project-timeline',
-					'icon'             => 'align-left',
-				],
-				[
-					'id'               => 'copy-project',
-					'title'            => 'Copy Project',
-					'description'      => __( 'Allows you to duplicate an UpStream project including all the content and options.',
+				'upstream-frontend-edit'       => [
+					'slug'        => 'upstream-frontend-edit',
+					'title'       => __( 'Frontend Edit', 'upstream' ),
+					'description' => __( 'Allow users to add and edit items on the frontend.',
 						'upstream' ),
-					'product_id'       => 5471,
-					'options_key_slug' => 'copy-project',
-					'icon'             => 'clone',
+					'icon_class'  => 'fa fa-edit',
+					'edd_id'      => 3925,
 				],
-				[
-					'id'               => 'calendar-view',
-					'title'            => 'Calendar View',
-					'description'      => __( 'This calendar display will allow you to easily see everything that’s happening in a project.',
+				'upstream-project-timeline'    => [
+					'slug'        => 'upstream-project-timeline',
+					'title'       => __( 'Project Timeline', 'upstream' ),
+					'description' => __( 'Add a Gantt style chart to visualize your projects.',
 						'upstream' ),
-					'product_id'       => 6798,
-					'options_key_slug' => 'calendar-view',
-					'icon'             => 'calendar',
+					'icon_class'  => 'fa fa-align-left',
+					'edd_id'      => 3920,
 				],
-				[
-					'id'               => 'custom-fields',
-					'title'            => 'Custom Fields',
-					'description'      => __( 'This extension allows you to add more information to Project, Milestone, Tasks and Bugs.',
+				'upstream-copy-project'        => [
+					'slug'        => 'upstream-copy-project',
+					'title'       => __( 'Copy Project', 'upstream' ),
+					'description' => __( 'Allows you to duplicate an UpStream project including all the content and options.',
 						'upstream' ),
-					'product_id'       => 8409,
-					'options_key_slug' => 'custom-fields',
-					'icon'             => 'plus-square-o',
+					'icon_class'  => 'fa fa-copy',
+					'edd_id'      => 5471,
+				],
+				'upstream-calendar-view'       => [
+					'slug'        => 'upstream-calendar-view',
+					'title'       => __( 'Calendar View', 'upstream' ),
+					'description' => __( 'This calendar display will allow you to easily see everything that’s happening in a project.',
+						'upstream' ),
+					'icon_class'  => 'fa fa-calendar',
+					'edd_id'      => 6798,
+				],
+				'upstream-custom-fields'       => [
+					'slug'        => 'upstream-custom-fields',
+					'title'       => __( 'Custom Fields', 'upstream' ),
+					'description' => __( 'This extension allows you to add more information to Project, Milestone, Tasks and Bugs.',
+						'upstream' ),
+					'icon_class'  => 'fa fa-plus-square',
+					'edd_id'      => 8409,
 				],
 			];
 
-			$licenses           = (array) get_option( 'upstream:extensions' );
-			$legacyLicensesMeta = (array) get_option( 'upstream_extensions' );
-			$legacyLicensesMeta = ! empty( $legacyLicensesMeta ) ? $legacyLicensesMeta : [];
-			$rowset             = [];
+			return $addons;
+		}
 
-			$assetsCoversURLPrefix = get_site_url() . '/wp-content/plugins/upstream/includes/admin/assets/img/banner-';
+		/**
+		 * @param $plugin_name
+		 * @param $addon_slug
+		 * @param $license_key
+		 * @param $license_status
+		 */
+		public function action_allex_addon_update_license( $plugin_name, $addon_slug, $license_key, $license_status ) {
+			/**
+			 * Duplicate the license key for backward compatibility with add-ons.
+			 */
+			$extensions = get_option( 'upstream:extensions' );
 
-			foreach ( $pool as $extension ) {
-				$extensionFullname   = 'upstream-' . $extension['id'];
-				$extensionSlug       = str_replace( '-', '_', $extensionFullname );
-				$extensionDispatcher = $extensionFullname . '/' . $extensionFullname . '.php';
-
-				$extension['isActive']    = (bool) is_plugin_active( $extensionDispatcher );
-				$extension['isInstalled'] = file_exists( ABSPATH . 'wp-content/plugins/' . $extensionDispatcher );
-				$extension['license']     = [
-					'status' => 'inactive',
-					'key'    => "",
-				];
-				$extension['url']         = 'https://upstreamplugin.com/pricing';
-				$extension['cover']       = $assetsCoversURLPrefix . $extension['id'] . '.jpg';
-
-				$license = isset( $licenses[ $extension['id'] ] ) ? $licenses[ $extension['id'] ] : null;
-				if ( ! empty( $license ) ) {
-					$licenseKey                     = $licenses[ $extension['id'] ]['key'];
-					$extension['license']['status'] = $licenses[ $extension['id'] ]['status'];
-				} else {
-					$licenseKey = isset( $legacyLicensesMeta[ $extension['options_key_slug'] ] ) ? $legacyLicensesMeta[ $extension['options_key_slug'] ] : "";
-					if ( ! empty( $licenseKey ) ) {
-						$extensions[ $extension['id'] ] = [
-							'status' => $extension['license']['status'],
-							'key'    => $licenseKey,
-						];
-					}
-
-					$licenseStatus = get_option( str_replace( '-', '_',
-							$extension['options_key_slug'] ) . '_license_active' );
-					if ( ! empty( $licenseStatus ) ) {
-						$extension['license']['status'] = $licenseStatus;
-
-						delete_option( str_replace( '-', '_', $extension['options_key_slug'] ) . '_license_active' );
-					}
-				}
-
-				unset( $legacyLicensesMeta[ $extension['options_key_slug'] ], $legacyLicensesMeta[ $extensionSlug ], $legacyLicensesMeta[ $extension['id'] ] );
-
-				$extension['license']['key'] = $licenseKey;
-
-				if ( ! $missingOnly ) {
-					if ( $installedOnly ) {
-						if ( $extension['isInstalled'] ) {
-							array_push( $rowset, $extension );
-						}
-					} else {
-						array_push( $rowset, $extension );
-					}
-				} else {
-					if ( ! $extension['isInstalled'] ) {
-						array_push( $rowset, $extension );
-					}
-				}
+			if ( ! is_array( $extensions ) ) {
+				$extensions = [];
 			}
 
-			if ( ! empty( $licenses ) ) {
-				update_option( 'upstream:extensions', $licenses );
-				update_option( 'upstream_extensions', $legacyLicensesMeta );
+			$extensions[ $addon_slug ] = [
+				'key'    => $license_key,
+				'status' => $license_status,
+			];
+
+			update_option( 'upstream:extensions', $extensions );
+		}
+
+		/**
+		 * @param $license_key
+		 * @param $addon_slug
+		 *
+		 * @return string
+		 */
+		public function filter_allex_addons_get_license_key( $license_key, $addon_slug ) {
+			$extensions = get_option( 'upstream:extensions' );
+
+			if ( isset( $extensions[ $addon_slug ] ) && $extensions[ $addon_slug ]['key'] ) {
+				return $extensions[ $addon_slug ]['key'];
 			}
 
-			return json_decode( json_encode( $rowset ) );
+			return $license_key;
+		}
+
+		/**
+		 * @param $license_status
+		 * @param $addon_slug
+		 *
+		 * @return string
+		 */
+		public function filter_allex_addons_get_license_status( $license_status, $addon_slug ) {
+			$extensions = get_option( 'upstream:extensions' );
+
+			if ( isset( $extensions[ $addon_slug ] ) && $extensions[ $addon_slug ]['status'] ) {
+				return $extensions[ $addon_slug ]['status'];
+			}
+
+			return $license_status;
 		}
 
 		/**
@@ -264,309 +252,21 @@ if ( ! class_exists( 'UpStream_Options_Extensions' ) ) :
 		 * @param   \CMB2_Types $fieldType  Instance of the correspondent CMB2_Types object.
 		 */
 		public static function renderExtensionsWrapper( $field, $value, $object_id, $objectType, $fieldType ) {
-			wp_enqueue_script( 'upstream-extensions', UPSTREAM_PLUGIN_URL . 'includes/admin/assets/js/extensions.js',
-				[ 'jquery' ], UPSTREAM_VERSION, true );
-			wp_localize_script( 'upstream-extensions', 'upstreamExtensionsLang', [
-				'LB_ACTIVATE'          => __( 'Activate', 'upstream' ),
-				'LB_CHANGE'            => __( 'Change', 'upstream' ),
-				'LB_DEACTIVATE'        => __( 'Deactivate', 'upstream' ),
-				'LB_DEACTIVATING'      => __( 'Deactivating...', 'upstream' ),
-				'MSG_ENTER_LICENSE'    => __( 'Enter your License Key', 'upstream' ),
-				'MSG_INACTIVE_LICENSE' => __( 'Your license is not activated yet.', 'upstream' ),
-			] );
-
-			$rowsetInstalled      = self::getExtensionsPool( true );
-			$rowsetInstalledCount = count( $rowsetInstalled );
-			$rowsetMissing        = self::getExtensionsPool( false, true );
-			?>
-
-            <section id="extensions-wrapper">
-				<?php if ( $rowsetInstalledCount > 0 ): ?>
-                    <h2 class="nav-tab-wrapper">
-                        <a href="#"
-                           class="nav-tab<?php echo $rowsetInstalledCount > 0 ? ' nav-tab-active' : ''; ?>"
-                           data-tab="installed"><?php _e( 'Installed Extensions',
-								'upstream' ); ?></a>
-                        <a href="#"
-                           class="nav-tab<?php echo $rowsetInstalledCount === 0 ? ' nav-tab-active' : ''; ?>"
-                           data-tab="missed"><?php _e( 'Browse More Extensions',
-								'upstream' ); ?></a>
-                    </h2>
-				<?php endif; ?>
-
-				<?php if ( $rowsetInstalledCount > 0 ): ?>
-                    <div id="installed-extensions-list" class="container"
-                         style="display: <?php echo $rowsetInstalledCount > 0 ? 'block' : 'none'; ?>;">
-                        <div class="row">
-							<?php foreach ( $rowsetInstalled as $row ): ?>
-                                <article
-                                        class="license-<?php echo $row->license->status; ?> extensions-card stack col-md-12"
-                                        data-id="<?php echo $row->id; ?>">
-                                    <div class="card">
-                                        <header>
-                                            <a href="#" target="_blank" rel="noopener noreferer">
-                                                <i class="fa fa-<?php echo $row->icon; ?>"></i>
-                                            </a>
-                                        </header>
-                                        <div class="body">
-                                            <h3 class="u-title"><?php echo $row->title; ?></h3>
-                                            <p class="u-description"><?php echo $row->description; ?></p>
-                                            <div class="u-license">
-												<?php if ( $row->license->status !== 'valid' ): ?>
-                                                    <input type="text" size="40"
-                                                           placeholder="<?php echo __( 'Enter your License Key',
-														       'upstream' ); ?>" maxlength="32" autocomplete="false"
-                                                           value="<?php echo $row->license->key; ?>"/>
-                                                    <button type="button" class="button button-primary"
-                                                            data-action="upstream:extension:activate"><?php echo __( 'Activate',
-															'upstream' ); ?></button>
-												<?php else: ?>
-                                                    <strong><?php _e( 'License Key', 'upstream' ); ?>:</strong>&nbsp;
-                                                    <code><?php echo $row->license->key; ?></code> - <a href="#"
-                                                                                                        data-action="upstream:extension:change"><?php _e( 'Change',
-															'upstream' ); ?></a>
-												<?php endif; ?>
-                                            </div>
-                                            <div class="u-license-status">
-												<?php if ( $row->license->status === 'valid' ): ?>
-													<?php _e( 'Active license key.', 'upstream' ); ?> - <a href="#"
-                                                                                                           data-action="upstream:extension:deactivate"><?php _e( 'Deactivate',
-															'upstream' ); ?></a>
-												<?php elseif ( $row->license->status === 'invalid' ): ?>
-													<?php _e( 'Invalid license key.', 'upstream' ); ?>
-												<?php elseif ( $row->license->status === 'inactive' ): ?>
-													<?php _e( 'Your license is not activated yet.', 'upstream' ); ?>
-												<?php endif; ?>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </article>
-							<?php endforeach; ?>
-                        </div>
-                        <input type="hidden" id="upstream-extensions-nonce"
-                               value="<?php echo wp_create_nonce( 'upstream:extensions' ); ?>"/>
-                    </div>
-				<?php endif; ?>
-
-                <div id="non-installed-extensions-list" class="container"
-                     style="display: <?php echo $rowsetInstalledCount === 0 ? 'flex' : 'none'; ?>;">
-					<?php if ( count( $rowsetMissing ) === 0 ): ?>
-                        <p>
-							<?php _e( 'Looks like you have acquired all of our currently available extensions.',
-								'upstream' ); ?> <br/>
-							<?php _e( '<strong>Thank you</strong> for your support, and stay tuned for more.',
-								'upstream' ); ?>
-                        </p>
-					<?php else: ?>
-                    <div class="row">
-                        <div class="col-md-12 get-all-button">
-                            <a href="https://upstreamplugin.com/pricing/" target="_blank" rel="noopener noreferer"
-                               class="button button-primary"><?php _e( 'Get all the extensions',
-									'upstream' ); ?></a>
-                        </div>
-
-                        <div class="col-md-12">
-                            <div class="row">
-								<?php foreach ( $rowsetMissing as $row ): ?>
-                                    <article class="extensions-card col-md-4 col-sm-6">
-                                        <div class="card">
-                                            <header>
-                                                <i class="fa fa-<?php echo $row->icon; ?>"></i>
-                                            </header>
-
-                                            <div class="body">
-                                                <h3><?php echo $row->title; ?></h3>
-
-                                                <p><?php echo $row->description; ?></p>
-                                            </div>
-                                        </div>
-                                    </article>
-								<?php endforeach; ?>
-                            </div>
-                        </div>
-						<?php endif; ?>
-                    </div>
-            </section>
-			<?php
+			do_action( 'allex_echo_addons_page', 'https://upstreamplugin.com/pricing/' );
 		}
 
 		/**
-		 * AJAX endpoint that validates a given license key for an extension.
+		 * @param array  $mailchimp_config
+		 * @param string $plugin_name
 		 *
-		 * @since   1.11.0
-		 * @static
+		 * @return array
 		 */
-		public static function validateLicenseKey() {
-			header( 'Content-Type: application/json' );
+		public function filter_allex_upgrade_mailchimp_config( $mailchimp_config, $plugin_name ) {
+			$mailchimp_config['code']     = 'b_a42978bc16dd60d0ce3cac4d4_bb6f51185b';
+			$mailchimp_config['id']       = '132405';
+			$mailchimp_config['group_id'] = '2';
 
-			$response = [
-				'success'        => false,
-				'message'        => "",
-				'license_status' => "",
-				'err'            => null,
-			];
-
-			try {
-				if ( ! current_user_can( 'activate_plugins' ) ) {
-					throw new \Exception( __( "You're not allowed to do this.", 'upstream' ) );
-				}
-
-				if ( empty( $_POST ) || ! isset( $_POST['key'] ) || ! isset( $_POST['extension'] ) || ! isset( $_POST['nonce'] ) ) {
-					throw new \Exception( __( 'Invalid request.', 'upstream' ) );
-				}
-
-				if ( ! check_ajax_referer( 'upstream:extensions', 'nonce', false ) ) {
-					throw new \Exception( __( "You're not allowed to do this.", 'upstream' ) );
-				}
-
-				$extension_id = sanitize_text_field( trim( $_POST['extension'] ) );
-				if ( empty( $extension_id ) ) {
-					throw new \Exception( __( 'Invalid extension.', 'upstream' ) );
-				}
-
-				$licenseKey = sanitize_text_field( trim( $_POST['key'] ) );
-				if ( empty( $licenseKey ) ) {
-					throw new \Exception( __( 'Invalid license key.', 'upstream' ) );
-				}
-
-				$extensionsList = self::getExtensionsPool( true );
-				if ( empty( $extensionsList ) ) {
-					throw new \Exception( __( "Invalid extension.", 'upstream' ) );
-				}
-
-				foreach ( $extensionsList as $extension ) {
-					if ( $extension->id === $extension_id ) {
-						$apiData = [
-							'edd_action' => 'activate_license',
-							'license'    => $licenseKey,
-							'item_id'    => $extension->product_id,
-						];
-
-						$apiResponse = wp_remote_get(
-							esc_url_raw( add_query_arg( $apiData, 'https://upstreamplugin.com' ) ),
-							[
-								'timeout'   => 15,
-								'body'      => $apiData,
-								'sslverify' => false,
-							]
-						);
-
-						if ( is_wp_error( $apiResponse ) ) {
-							throw new \Exception( $apiResponse->get_error_message() );
-						}
-
-						$apiResponseData = json_decode( wp_remote_retrieve_body( $apiResponse ) );
-
-						$response['license_key'] = $licenseKey;
-
-						$extensions                  = get_option( 'upstream:extensions' );
-						$extensions[ $extension_id ] = [
-							'key'    => $licenseKey,
-							'status' => $apiResponseData->license,
-						];
-						update_option( 'upstream:extensions', $extensions );
-
-						$response['license_status'] = $apiResponseData->license;
-						if ( $apiResponseData->license === 'invalid' ) {
-							if ( $apiResponseData->error === 'expired' ) {
-								$response['message'] = __( 'This key is expired and could not be activated.',
-									'upstream' );
-							} else {
-								$response['message'] = __( 'Invalid license key.', 'upstream' );
-							}
-						} elseif ( $apiResponseData->license === 'valid' ) {
-							$response['message'] = __( 'Active license key.', 'upstream' );
-						}
-
-						$response['success'] = true;
-
-						break;
-					}
-				}
-			} catch ( \Exception $e ) {
-				$response['err'] = $e->getMessage();
-			}
-
-			echo wp_json_encode( $response );
-
-			wp_die();
-		}
-
-		/**
-		 * AJAX endpoint that deactivates a given license key for an extension.
-		 *
-		 * @since   1.11.0
-		 * @static
-		 */
-		public static function deactivateLicenseKey() {
-			header( 'Content-Type: application/json' );
-
-			$response = [
-				'success' => false,
-				'err'     => null,
-			];
-
-			try {
-				if ( ! current_user_can( 'activate_plugins' ) ) {
-					throw new \Exception( __( "You're not allowed to do this.", 'upstream' ) );
-				}
-
-				if ( empty( $_POST ) || ! isset( $_POST['extension'] ) || ! isset( $_POST['nonce'] ) ) {
-					throw new \Exception( __( 'Invalid request.', 'upstream' ) );
-				}
-
-				if ( ! check_ajax_referer( 'upstream:extensions', 'nonce', false ) ) {
-					throw new \Exception( __( "You're not allowed to do this.", 'upstream' ) );
-				}
-
-				$extension_id = sanitize_text_field( trim( $_POST['extension'] ) );
-				if ( empty( $extension_id ) ) {
-					throw new \Exception( __( 'Invalid extension.', 'upstream' ) );
-				}
-
-				$extensionSlug = str_replace( '-', '_', $extension_id );
-
-				$extensionsLicenses = get_option( 'upstream:extensions' );
-				if ( isset( $extensionsLicenses[ $extension_id ] ) ) {
-					unset( $extensionsLicenses[ $extension_id ] );
-
-					update_option( 'upstream:extensions', $extensionsLicenses );
-				}
-
-				delete_option( 'upstream_' . $extensionSlug . '_license_active' );
-				delete_option( $extensionSlug . '_license_active' );
-
-				$legacyMeta = get_option( 'upstream_extensions' );
-				if ( empty( $legacyMeta ) ) {
-					delete_option( 'upstream_extensions' );
-				} else {
-					if ( isset( $legacyMeta[ $extensionSlug ] ) ) {
-						unset( $legacyMeta[ $extensionSlug ] );
-					}
-
-					if ( isset( $legacyMeta[ 'upstream_' . $extensionSlug ] ) ) {
-						unset( $legacyMeta[ 'upstream_' . $extensionSlug ] );
-					}
-
-					if ( isset( $legacyMeta[ $extension_id ] ) ) {
-						unset( $legacyMeta[ $extension_id ] );
-					}
-
-					if ( empty( $legacyMeta ) ) {
-						delete_option( 'upstream_extensions' );
-					} else {
-						update_option( 'upstream_extensions', $legacyMeta );
-					}
-				}
-
-				$response['success'] = true;
-			} catch ( \Exception $e ) {
-				$response['err'] = $e->getMessage();
-			}
-
-			echo wp_json_encode( $response );
-
-			wp_die();
+			return $mailchimp_config;
 		}
 
 		/**

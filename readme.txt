@@ -4,7 +4,7 @@ Tags: project, manage, management, project management, project manager, wordpres
 Requires at least: 4.5
 Tested up to: 4.9
 Requires PHP: 5.6
-Stable tag: 1.20.2
+Stable tag: 1.21.0
 License: GPL-3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -141,6 +141,19 @@ If you were having date issues within Projects, please clear your cache and re-s
 
 The format is based on [Keep a Changelog](http://keepachangelog.com)
 and this project adheres to [Semantic Versioning](http://semver.org).
+
+= [1.21.0] - 2018-09-06 =
+
+Fixed:
+* Fixed comments not being sent if the user have disabled editors - checking the option "Disable the visual editor when writing" on his profile;
+* Fixed stripped HTML tags on projects' comments - added basic tags like P, BR, STRONG, EM, SPAN, DEL, UL, OL and LI;
+* Fixed HTML content sent in emails sent for comments' notifications. The email now is sent as text/html;
+* Fixed PHP warning in the admin when there is no milestones in the project;
+* Fixed PHP warning about undefined indexes: before_row and after_row;
+
+Changed:
+* Refactored the license management page, upgrade links and subscription form, based on the Alledia's plugin framework;
+* Updated the POT file for translators;
 
 = [1.20.2] - 2018-08-21 =
 

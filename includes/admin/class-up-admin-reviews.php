@@ -17,8 +17,7 @@ if ( ! defined( 'ABSPATH' ) || class_exists( 'UpStream_Admin_Reviews' ) ) {
  * Class UpStream_Admin_Reviews
  */
 class UpStream_Admin_Reviews {
-
-    /**
+	/**
      * Checks if it should display the notification and look for actions in the URL.
      */
     public function init() {

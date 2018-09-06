@@ -160,13 +160,15 @@ function upstream_output_overview_counts( $field_args, $field ) {
     $rowset = ! empty( $rowset ) ? $rowset[0] : [];
 
     if ( $itemType === "milestones" ) {
-        foreach ( $rowset as $row ) {
-            if ( isset( $row['assigned_to'] ) && (int) $row['assigned_to'] === $user_id ) {
-                $countMine ++;
+        if ( ! empty( $rowset ) ) {
+            foreach ( $rowset as $row ) {
+                if ( isset( $row['assigned_to'] ) && (int) $row['assigned_to'] === $user_id ) {
+                    $countMine ++;
+                }
             }
         }
 
-        $countOpen = count( $rowset );
+        $countOpen = count( (array) $rowset );
     } elseif ( is_array( $rowset ) && count( $rowset ) > 0 ) {
         $options  = get_option( 'upstream_' . $itemType );
         $statuses = isset( $options['statuses'] ) ? $options['statuses'] : [];
