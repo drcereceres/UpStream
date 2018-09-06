@@ -142,7 +142,7 @@ If you were having date issues within Projects, please clear your cache and re-s
 The format is based on [Keep a Changelog](http://keepachangelog.com)
 and this project adheres to [Semantic Versioning](http://semver.org).
 
-= 1.21.0 - 2018-09-06 =
+= [1.21.0] - 2018-09-06 =
 
 Fixed:
 * Fixed comments not being sent if the user have disabled editors - checking the option "Disable the visual editor when writing" on his profile;
