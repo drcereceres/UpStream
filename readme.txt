@@ -142,6 +142,13 @@ If you were having date issues within Projects, please clear your cache and re-s
 The format is based on [Keep a Changelog](http://keepachangelog.com)
 and this project adheres to [Semantic Versioning](http://semver.org).
 
+= [1.21.1] - UNRELEASED =
+
+Fixed:
+* Fixed links in comments to not remove the target and other attributes;
+* Fixed a syntax error in the HTML of a metabox properly closing a P tag;
+* Fixed license key activation and upgrade form when installed alongside PublishPress;
+
 = [1.21.0] - 2018-09-06 =
 
 Fixed:
