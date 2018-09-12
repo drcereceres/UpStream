@@ -36,14 +36,16 @@ function upstream_enqueue_styles_scripts() {
         }
     }
 
-    $up_url  = UPSTREAM_PLUGIN_URL;
-    $up_ver  = UPSTREAM_VERSION;
-    $lib_dir = 'templates/assets/libraries/';
+	$up_url  = UPSTREAM_PLUGIN_URL;
+	$up_ver  = UPSTREAM_VERSION;
+	$lib_dir = 'templates/assets/libraries/';
+	$js_dir  = 'templates/assets/js/';
+	$css_dir = 'templates/assets/css/';
+
 
     /*
      * Enqueue styles
      */
-    $css_dir = 'templates/assets/css/';
 
     $dir        = upstream_template_path();
     $maintheme  = trailingslashit( get_template_directory() ) . $dir . 'assets/css/';
@@ -55,7 +57,7 @@ function upstream_enqueue_styles_scripts() {
     wp_enqueue_style( 'up-chosen', $up_url . $lib_dir . 'chosen/chosen.min.css', [], $up_ver, 'all' );
     wp_enqueue_style( 'up-fontawesome', $up_url . $css_dir . 'fontawesome.min.css', [], $up_ver, 'all' );
     wp_enqueue_style( 'framework', $up_url . $css_dir . 'framework.css', [], $up_ver, 'all' );
-    wp_enqueue_style( 'upstream-datepicker', $up_url . $css_dir . 'vendor/bootstrap-datepicker3.min.css', [], $up_ver,
+    wp_enqueue_style( 'upstream-datepicker', $up_url . $js_dir . 'vendor/bootstrap-datepicker-1.8.0/css/bootstrap-datepicker3.css', [], $up_ver,
         'all' );
     wp_enqueue_style( 'upstream', $up_url . $css_dir . 'upstream.css', [ 'admin-bar' ], $up_ver, 'all' );
 
@@ -82,7 +84,6 @@ function upstream_enqueue_styles_scripts() {
     /*
      * Enqueue scripts
      */
-    $js_dir = 'templates/assets/js/';
 
     wp_enqueue_script( 'up-filesaver', $up_url . $js_dir . 'vendor/FileSaver.min.js', [], $up_ver, true );
     wp_enqueue_script( 'up-tableexport', $up_url . $js_dir . 'vendor/tableexport.min.js', [], $up_ver, true );
@@ -92,7 +93,7 @@ function upstream_enqueue_styles_scripts() {
     wp_enqueue_script( 'up-fastclick', $up_url . $js_dir . 'fastclick.js', [ 'jquery' ], $up_ver, true );
     wp_enqueue_script( 'up-nprogress', $up_url . $js_dir . 'nprogress.js', [ 'jquery' ], $up_ver, true );
 
-    wp_enqueue_script( 'upstream-datepicker', $up_url . $js_dir . 'vendor/bootstrap-datepicker.min.js',
+    wp_enqueue_script( 'upstream-datepicker', $up_url . $js_dir . 'vendor/bootstrap-datepicker-1.8.0/js/bootstrap-datepicker.min.js',
         [ 'jquery', 'up-bootstrap' ], $up_ver, true );
     wp_enqueue_script( 'up-modal', $up_url . $js_dir . 'vendor/modal.min.js', [ 'jquery' ], $up_ver, true );
 
