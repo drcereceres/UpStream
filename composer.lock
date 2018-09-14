@@ -69,12 +69,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/AllediaWordPress/WordPress-Plugin-Framework.git",
-                "reference": "199b1d6097989137fb674962d58ba905314a8f4b"
+                "reference": "0bcf28db55c867284601bdeaeff482b864a68a3c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/AllediaWordPress/WordPress-Plugin-Framework/zipball/199b1d6097989137fb674962d58ba905314a8f4b",
-                "reference": "199b1d6097989137fb674962d58ba905314a8f4b",
+                "url": "https://api.github.com/repos/AllediaWordPress/WordPress-Plugin-Framework/zipball/0bcf28db55c867284601bdeaeff482b864a68a3c",
+                "reference": "0bcf28db55c867284601bdeaeff482b864a68a3c",
                 "shasum": ""
             },
             "require": {
@@ -111,7 +111,7 @@
                 "plugin",
                 "wordpress"
             ],
-            "time": "2018-09-12T02:32:13+00:00"
+            "time": "2018-09-14T19:50:21+00:00"
         },
         {
             "name": "pimple/pimple",
