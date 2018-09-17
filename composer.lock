@@ -69,12 +69,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/AllediaWordPress/WordPress-Plugin-Framework.git",
-                "reference": "0bcf28db55c867284601bdeaeff482b864a68a3c"
+                "reference": "56290abea3789eb09d3f17b528b0a6a85323bd43"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/AllediaWordPress/WordPress-Plugin-Framework/zipball/0bcf28db55c867284601bdeaeff482b864a68a3c",
-                "reference": "0bcf28db55c867284601bdeaeff482b864a68a3c",
+                "url": "https://api.github.com/repos/AllediaWordPress/WordPress-Plugin-Framework/zipball/56290abea3789eb09d3f17b528b0a6a85323bd43",
+                "reference": "56290abea3789eb09d3f17b528b0a6a85323bd43",
                 "shasum": ""
             },
             "require": {
@@ -111,7 +111,7 @@
                 "plugin",
                 "wordpress"
             ],
-            "time": "2018-09-14T19:50:21+00:00"
+            "time": "2018-09-17T18:14:08+00:00"
         },
         {
             "name": "pimple/pimple",
@@ -1389,6 +1389,7 @@
                 "drupal/drupal": ">=7,<7.59|>=8,<8.4.8|>=8.5,<8.5.3",
                 "erusev/parsedown": "<1.7",
                 "ezsystems/ezpublish-legacy": ">=5.3,<5.3.12.3|>=5.4,<5.4.11.3|>=2017.8,<2017.8.1.1|>=2017.12,<2017.12.2.1",
+                "ezyang/htmlpurifier": "<4.1.1",
                 "firebase/php-jwt": "<2",
                 "friendsofsymfony/rest-bundle": ">=1.2,<1.2.2",
                 "friendsofsymfony/user-bundle": ">=1.2,<1.3.5",
@@ -1400,6 +1401,7 @@
                 "illuminate/cookie": ">=4,<=4.0.11|>=4.1,<=4.1.31|>=4.2,<=4.2.22|>=5,<=5.0.35|>=5.1,<=5.1.46|>=5.2,<=5.2.45|>=5.3,<=5.3.31|>=5.4,<=5.4.36|>=5.5,<5.5.42|>=5.6,<5.6.30",
                 "illuminate/database": ">=4,<4.0.99|>=4.1,<4.1.29",
                 "illuminate/encryption": ">=4,<=4.0.11|>=4.1,<=4.1.31|>=4.2,<=4.2.22|>=5,<=5.0.35|>=5.1,<=5.1.46|>=5.2,<=5.2.45|>=5.3,<=5.3.31|>=5.4,<=5.4.36|>=5.5,<5.5.40|>=5.6,<5.6.15",
+                "james-heinrich/getid3": "<1.9.9",
                 "joomla/session": "<1.3.1",
                 "kreait/firebase-php": ">=3.2,<3.8.1",
                 "laravel/framework": ">=4,<4.0.99|>=4.1,<=4.1.31|>=4.2,<=4.2.22|>=5,<=5.0.35|>=5.1,<=5.1.46|>=5.2,<=5.2.45|>=5.3,<=5.3.31|>=5.4,<=5.4.36|>=5.5,<5.5.42|>=5.6,<5.6.30",
@@ -1410,6 +1412,7 @@
                 "monolog/monolog": ">=1.8,<1.12",
                 "namshi/jose": "<2.2",
                 "onelogin/php-saml": "<2.10.4",
+                "openid/php-openid": "<2.3",
                 "oro/crm": ">=1.7,<1.7.4",
                 "oro/platform": ">=1.7,<1.7.4",
                 "padraic/humbug_get_contents": "<1.1.2",
@@ -1513,7 +1516,7 @@
                 }
             ],
             "description": "Prevents installation of composer packages with known security vulnerabilities: no API, simply require it",
-            "time": "2018-08-14T15:39:17+00:00"
+            "time": "2018-09-16T19:32:36+00:00"
         },
         {
             "name": "sensiolabs/behat-page-object-extension",
