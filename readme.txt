@@ -142,12 +142,16 @@ If you were having date issues within Projects, please clear your cache and re-s
 The format is based on [Keep a Changelog](http://keepachangelog.com)
 and this project adheres to [Semantic Versioning](http://semver.org).
 
-= [1.21.1] - UNRELEASED =
+= [1.21.1] - 2018-09-19 =
 
 Fixed:
 * Fixed links in comments to not remove the target and other attributes;
 * Fixed a syntax error in the HTML of a metabox properly closing a P tag;
-* Fixed license key activation and upgrade form when installed alongside PublishPress;
+* Fixed license key activation and upgrade form when installed alongside PublishPress - requires to update PublishPress as well;
+* Fixed wrong URL for assets on Windows machines;
+
+Added:
+* Added action hook when the project meta is being updated;
 
 = [1.21.0] - 2018-09-06 =
 
