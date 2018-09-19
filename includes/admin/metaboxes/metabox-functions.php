@@ -591,7 +591,7 @@ function upstreamRenderCommentsBox(
     if ( $commentsCacheCount === 0
          && ! is_admin()
     ) {
-        printf( '<p data-empty><i class="s-text-color-gray">%s</i></>', __( 'none', 'upstream' ) );
+        printf( '<p data-empty><i class="s-text-color-gray">%s</i></p>', __( 'none', 'upstream' ) );
     }
     ?>
 

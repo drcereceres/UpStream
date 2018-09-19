@@ -167,6 +167,28 @@ class Comments {
 			];
 		}
 
+		if ( ! array_key_exists( 'a', $allowed_tags ) ) {
+			$allowed_tags['a'] = [
+				'class'   => true,
+				'id'      => true,
+				'href'    => true,
+				'charset' => true,
+				'name'    => true,
+				'rel'     => true,
+				'target'  => true,
+				'type'    => true,
+			];
+		} else {
+			$allowed_tags['a']['class']   = true;
+			$allowed_tags['a']['id']      = true;
+			$allowed_tags['a']['href']    = true;
+			$allowed_tags['a']['charset'] = true;
+			$allowed_tags['a']['name']    = true;
+			$allowed_tags['a']['rel']     = true;
+			$allowed_tags['a']['target']  = true;
+			$allowed_tags['a']['type']    = true;
+		}
+
 		// If the current can't post images, we return current supported tags.
 		if ( ! current_user_can( 'upstream_comment_images' ) ) {
 			return $allowed_tags;

@@ -166,7 +166,7 @@ if ( ! class_exists( 'UpStream_Admin_Options' ) ) :
 			 *
 			 * @var bool
 			 */
-			$show_sidebar = apply_filters( 'allex_upgrade_show_sidebar_ad', true );
+			$show_sidebar = apply_filters( 'allex_upgrade_show_sidebar_ad', true, 'upstream' );
 			?>
 
             <div class="wrap upstream_options <?php echo $show_sidebar ? 'upstream_with_sidebar container' : ''; ?>">
@@ -207,7 +207,7 @@ if ( ! class_exists( 'UpStream_Admin_Options' ) ) :
 
 					<?php if ( $show_sidebar ) : ?>
                         <div class="col-md-3">
-                            <?php do_action( 'allex_upgrade_sidebar_ad' ); ?>
+                            <?php do_action( 'allex_upgrade_sidebar_ad', 'upstream' ); ?>
                         </div>
 					<?php endif; ?>
                 </div>

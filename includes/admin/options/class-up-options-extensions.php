@@ -252,7 +252,7 @@ if ( ! class_exists( 'UpStream_Options_Extensions' ) ) :
 		 * @param   \CMB2_Types $fieldType  Instance of the correspondent CMB2_Types object.
 		 */
 		public static function renderExtensionsWrapper( $field, $value, $object_id, $objectType, $fieldType ) {
-			do_action( 'allex_echo_addons_page', 'https://upstreamplugin.com/pricing/' );
+			do_action( 'allex_echo_addons_page', 'https://upstreamplugin.com/pricing/', 'upstream' );
 		}
 
 		/**

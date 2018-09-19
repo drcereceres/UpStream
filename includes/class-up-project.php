@@ -365,6 +365,7 @@ class UpStream_Project {
 
 		$this->update_project_members();
 
+		do_action( 'upstream:project.updateProjectMeta', $this->ID, $frontend );
 	}
 
 	/**
@@ -503,8 +504,6 @@ class UpStream_Project {
 			}
 		}
 		update_post_meta( $this->ID, '_upstream_project_progress', round( $project_progress, 1 ) );
-
-
 	}
 
 
