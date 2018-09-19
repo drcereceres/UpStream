@@ -518,12 +518,12 @@ msgid "The users listed below are those old <code>UpStream Client Users</code> t
 msgstr ""
 
 #: includes/admin/metaboxes/class-up-metaboxes-clients.php:436
-#: vendor/alledia/wordpress-plugin-framework/src/library/Module/Upgrade.php:153
+#: vendor/alledia/wordpress-plugin-framework/src/library/Module/Upgrade.php:154
 msgid "First Name"
 msgstr ""
 
 #: includes/admin/metaboxes/class-up-metaboxes-clients.php:437
-#: vendor/alledia/wordpress-plugin-framework/src/library/Module/Upgrade.php:154
+#: vendor/alledia/wordpress-plugin-framework/src/library/Module/Upgrade.php:155
 msgid "Last Name"
 msgstr ""
 
@@ -2509,24 +2509,24 @@ msgstr ""
 msgid "No, not good enough for now"
 msgstr ""
 
-#: vendor/alledia/wordpress-plugin-framework/src/library/Module/Upgrade.php:87
+#: vendor/alledia/wordpress-plugin-framework/src/library/Module/Upgrade.php:88
 msgid "Upgrade"
 msgstr ""
 
-#: vendor/alledia/wordpress-plugin-framework/src/library/Module/Upgrade.php:147
+#: vendor/alledia/wordpress-plugin-framework/src/library/Module/Upgrade.php:148
 #, php-format
 msgid "Get %d%% off the %s extensions"
 msgstr ""
 
-#: vendor/alledia/wordpress-plugin-framework/src/library/Module/Upgrade.php:150
+#: vendor/alledia/wordpress-plugin-framework/src/library/Module/Upgrade.php:151
 #, php-format
 msgid "Thanks for using %1$s! Enter your details and we'll send you a coupon for %2$d%% off the %1$s extensions."
 msgstr ""
 
-#: vendor/alledia/wordpress-plugin-framework/src/library/Module/Upgrade.php:152
+#: vendor/alledia/wordpress-plugin-framework/src/library/Module/Upgrade.php:153
 msgid "Email Address"
 msgstr ""
 
-#: vendor/alledia/wordpress-plugin-framework/src/library/Module/Upgrade.php:155
+#: vendor/alledia/wordpress-plugin-framework/src/library/Module/Upgrade.php:156
 msgid "Yes! Send me the coupon"
 msgstr ""
