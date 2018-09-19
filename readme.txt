@@ -150,8 +150,12 @@ Fixed:
 * Fixed license key activation and upgrade form when installed alongside PublishPress - requires to update PublishPress as well;
 * Fixed wrong URL for assets on Windows machines;
 
+
 Added:
 * Added action hook when the project meta is being updated;
+
+Changed:
+* Updated POT file;
 
 = [1.21.0] - 2018-09-06 =
 
