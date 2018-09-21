@@ -127,15 +127,15 @@ if ( ! upstream_are_milestones_disabled()
                         </div>
                         <div id="milestones-filters" class="collapse">
                             <div class="form-group visible-xs">
-              <?php
-              \UpStream\Frontend\renderTableFilter('search', 'milestone', [
-                  'attrs' => [
-                      'placeholder' => $l['LB_MILESTONE'],
-                      'width'       => 200,
-                  ],
-              ], false);
-              ?>
-            </div>
+                              <?php
+                              \UpStream\Frontend\renderTableFilter('search', 'milestone', [
+                                  'attrs' => [
+                                      'placeholder' => $l['LB_MILESTONE'],
+                                      'width'       => 200,
+                                  ],
+                              ], false);
+                              ?>
+                            </div>
                             <div class="form-group">
                                 <div class="input-group">
                                     <div class="input-group-addon">

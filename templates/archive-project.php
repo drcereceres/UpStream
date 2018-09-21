@@ -103,6 +103,7 @@ if ( isset( $currentUser->projects ) ) {
             }
 
             $projectsList[ $project_id ] = $data;
+
         }
 
         unset( $project, $project_id );
@@ -123,6 +124,25 @@ $categories = (array) get_terms( [
 ] );
 
 $projectsView = ! isset( $_GET['view'] );
+
+
+// Filters
+$tableSettings = [
+    'id'              => 'projects',
+    'type'            => 'project',
+    'data-ordered-by' => 'start_date',
+    'data-order-dir'  => 'DESC',
+];
+$columnsSchema = \UpStream\Frontend\getProjectFields();
+
+$hiddenColumnsSchema  = [];
+
+foreach ( $columnsSchema as $columnName => $columnArgs ) {
+    if ( isset( $columnArgs['isHidden'] ) && (bool) $columnArgs['isHidden'] === true ) {
+        $hiddenColumnsSchema[ $columnName ] = $columnArgs;
+    }
+}
+
 ?>
 
     <div class="right_col" role="main">
@@ -276,6 +296,8 @@ $projectsView = ! isset( $_GET['view'] );
                                                     </select>
                                                 </div>
                                             </div>
+
+                                            <?php do_action( 'upstream:project.filters', $tableSettings, $columnsSchema ); ?>
                                         </div>
                                     </form>
                                     <table id="projects"
@@ -328,6 +350,9 @@ $projectsView = ! isset( $_GET['view'] );
                                         <?php
                                         $isProjectIndexOdd = true;
                                         foreach ( $projectsList as $projectIndex => $project ): ?>
+                                            <?php
+                                            $project = apply_filters('upstream_frontend_project_data', $project, $project->id);
+                                            ?>
                                             <tr class="t-row-<?php echo $isProjectIndexOdd ? 'odd' : 'even'; ?>"
                                                 data-id="<?php echo $project->id; ?>">
                                                 <td data-column="title"
@@ -402,7 +427,32 @@ $projectsView = ! isset( $_GET['view'] );
                                                     <?php endif; ?>
                                                 </td>
                                             </tr>
-                                            <?php
+
+                                            <?php if ( ! empty( $hiddenColumnsSchema ) ): ?>
+                                                <tr data-parent="<?php echo $project->id; ?>" aria-expanded="false" style="display: none;">
+                                                    <td>
+                                                        <div>
+                                                            <?php foreach ( $hiddenColumnsSchema as $columnName => $column ):
+                                                                $columnValue = isset( $project->{$columnName} ) ? $project->{$columnName} : null;
+                                                                if (is_null($columnValue)) {
+                                                                    continue;
+                                                                }
+
+                                                                if (is_array($columnValue) && isset($columnValue['value'])) {
+                                                                    $columnValue = $columnValue['value'];
+                                                                }
+                                                                ?>
+                                                                <div class="form-group" data-column="<?php echo $columnName; ?>">
+                                                                    <label><?php echo isset( $column['label'] ) ? $column['label'] : ''; ?></label>
+                                                                    <?php UpStream\Frontend\renderTableColumnValue( $columnName, $columnValue, $column, (array)$project, 'project',
+                                                                        $project->id ); ?>
+                                                                </div>
+                                                            <?php endforeach; ?>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            <?php endif;
+
                                             $isProjectIndexOdd = ! $isProjectIndexOdd;
                                         endforeach; ?>
                                         </tbody>

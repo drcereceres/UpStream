@@ -774,7 +774,7 @@ function renderTableBody( $data, $visibleColumnsSchema, $hiddenColumnsSchema, $r
                 </div>
             </td>
         </tr>
-    <?php endif;
+        <?php endif;
         $isRowIndexOdd = ! $isRowIndexOdd; ?>
     <?php endforeach; ?>
     <?php else: ?>
