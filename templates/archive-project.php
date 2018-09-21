@@ -344,6 +344,8 @@ foreach ( $columnsSchema as $columnName => $columnArgs ) {
                                             <th style="max-width: 250px;">
                                                 <?php echo esc_html( $i18n['LB_CATEGORIES'] ); ?>
                                             </th>
+
+                                            <?php do_action('upstream:project.columns.header', $tableSettings, $columnsSchema ); ?>
                                         </tr>
                                         </thead>
                                         <tbody>
@@ -426,6 +428,8 @@ foreach ( $columnsSchema as $columnName => $columnArgs ) {
                                                         <i class="s-text-color-gray"><?php echo esc_html( $i18n['LB_NONE'] ); ?></i>
                                                     <?php endif; ?>
                                                 </td>
+
+                                                <?php do_action('upstream:project.columns.data', $tableSettings, $columnsSchema, $project->id ); ?>
                                             </tr>
 
                                             <?php if ( ! empty( $hiddenColumnsSchema ) ): ?>
