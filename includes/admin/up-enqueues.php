@@ -72,7 +72,7 @@ function upstream_load_admin_scripts($hook)
                     'LB_CANCEL'                         => __('Cancel'),
                     'LB_SEND_REPLY'                     => __('Add Reply', 'upstream'),
                     'LB_REPLY'                          => __('Reply'),
-                    'LB_ADD_COMMENT'                    => __('Add Comment'),
+                    'LB_ADD_COMMENT'                    => __('Add Comment', 'upstream'),
                     'LB_ADD_NEW_COMMENT'                => __('Add new Comment'),
                     'LB_ADD_NEW_REPLY'                  => __('Add Comment Reply', 'upstream'),
                     'LB_ADDING'                         => __('Adding...', 'upstream'),

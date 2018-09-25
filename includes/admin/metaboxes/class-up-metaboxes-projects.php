@@ -1735,7 +1735,7 @@ if ( ! class_exists('UpStream_Metaboxes_Projects')) :
                     'type'         => 'wysiwyg',
                     'permissions'  => 'publish_project_discussion',
                     'before'       => 'upstream_add_field_attributes',
-                    'after_field'  => '<p class="u-text-right"><button class="button button-primary" type="button" data-action="comments.add_comment" data-nonce="' . wp_create_nonce('upstream:project.add_comment') . '">' . __('Add Comment') . '</button></p></div></div>',
+                    'after_field'  => '<p class="u-text-right"><button class="button button-primary" type="button" data-action="comments.add_comment" data-nonce="' . wp_create_nonce('upstream:project.add_comment') . '">' . __('Add Comment', 'upstream') . '</button></p></div></div>',
                     'after_row'    => 'upstreamRenderCommentsBox',
                     'options'      => [
                         'media_buttons' => true,
