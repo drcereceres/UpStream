@@ -7,12 +7,12 @@
  *
  */
 
-if (! defined('ABSPATH')) {
+if ( ! defined('ABSPATH')) {
     exit; // Exit if accessed directly
 }
 
 // redirect to projects if no permissions for this project
-if (! upstream_user_can_access_project(get_current_user_id(), upstream_post_id())) {
+if ( ! upstream_user_can_access_project(get_current_user_id(), upstream_post_id())) {
     wp_redirect(get_post_type_archive_link('project'));
     exit;
 }
@@ -27,24 +27,24 @@ $supportUrl        = upstream_admin_support($pluginOptions);
 $logOutUrl         = upstream_logout_url();
 $areClientsEnabled = ! is_clients_disabled();
 
-$currentUser = (object) upstream_user_data();
+$currentUser = (object)upstream_user_data();
 
 $projectsList = [];
 if (isset($currentUser->projects)) {
     if (is_array($currentUser->projects) && count($currentUser->projects) > 0) {
         foreach ($currentUser->projects as $project_id => $project) {
-            $data = (object) [
+            $data = (object)[
                 'id'          => $project_id,
-                'author'      => (int) $project->post_author,
-                'created_at'  => (string) $project->post_date_gmt,
-                'modified_at' => (string) $project->post_modified_gmt,
+                'author'      => (int)$project->post_author,
+                'created_at'  => (string)$project->post_date_gmt,
+                'modified_at' => (string)$project->post_modified_gmt,
                 'title'       => $project->post_title,
                 'slug'        => $project->post_name,
                 'status'      => $project->post_status,
                 'permalink'   => get_permalink($project_id),
             ];
 
-            $projectsList[ $project_id ] = $data;
+            $projectsList[$project_id] = $data;
         }
 
         unset($project, $project_id);
@@ -90,9 +90,9 @@ do_action('upstream_single_project_before');
 
 $user = upstream_user_data();
 
-$options                = (array) get_option('upstream_general');
-$displayOverviewSection = ! isset($options['disable_project_overview']) || (bool) $options['disable_project_overview'] === false;
-$displayDetailsSection  = ! isset($options['disable_project_details']) || (bool) $options['disable_project_details'] === false;
+$options                = (array)get_option('upstream_general');
+$displayOverviewSection = ! isset($options['disable_project_overview']) || (bool)$options['disable_project_overview'] === false;
+$displayDetailsSection  = ! isset($options['disable_project_details']) || (bool)$options['disable_project_details'] === false;
 unset($options);
 
 while (have_posts()) : the_post(); ?>
@@ -108,7 +108,7 @@ while (have_posts()) : the_post(); ?>
                 <div class="col-xs-12 col-sm-12 col-md-12 col-lg-5">
                     <h3 style="display: inline-block;"><?php echo get_the_title(get_the_ID()); ?></h3>
                     <?php $status = upstream_project_status_color($id); ?>
-                    <?php if (! empty($status['status'])): ?>
+                    <?php if ( ! empty($status['status'])): ?>
                         <span class="label up-o-label"
                               style="background-color: <?php echo esc_attr($status['color']); ?>"><?php echo $status['status']; ?>
                 </span>
@@ -130,7 +130,7 @@ while (have_posts()) : the_post(); ?>
 
             <?php do_action('upstream:frontend.project.renderAfterDetails'); ?>
 
-            <?php if (! upstream_are_milestones_disabled() && ! upstream_disable_milestones()): ?>
+            <?php if ( ! upstream_are_milestones_disabled() && ! upstream_disable_milestones()): ?>
                 <div class="row">
                 <?php do_action('upstream_single_project_before_milestones'); ?>
 
@@ -138,7 +138,7 @@ while (have_posts()) : the_post(); ?>
             </div>
             <?php endif; ?>
 
-            <?php if (! upstream_are_tasks_disabled() && ! upstream_disable_tasks()): ?>
+            <?php if ( ! upstream_are_tasks_disabled() && ! upstream_disable_tasks()): ?>
                 <div class="row">
                 <?php do_action('upstream_single_project_before_tasks'); ?>
 
@@ -146,7 +146,7 @@ while (have_posts()) : the_post(); ?>
             </div>
             <?php endif; ?>
 
-            <?php if (! upstream_disable_bugs() && ! upstream_are_bugs_disabled()): ?>
+            <?php if ( ! upstream_disable_bugs() && ! upstream_are_bugs_disabled()): ?>
                 <div class="row">
                 <?php do_action('upstream_single_project_before_bugs'); ?>
 
@@ -154,7 +154,7 @@ while (have_posts()) : the_post(); ?>
             </div>
             <?php endif; ?>
 
-            <?php if (! upstream_are_files_disabled() && ! upstream_disable_files()): ?>
+            <?php if ( ! upstream_are_files_disabled() && ! upstream_disable_files()): ?>
                 <div class="row">
                 <?php do_action('upstream_single_project_before_files'); ?>
 

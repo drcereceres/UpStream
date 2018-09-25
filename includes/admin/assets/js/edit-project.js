@@ -422,7 +422,7 @@
         $row.find('.up-o-tab[data-target=".up-c-tab-content-data"]').addClass('nav-tab-active');
 
         // Check if we have a defined default value in the attributes.
-        $row.find('input, textarea, select').each(function() {
+        $row.find('input, textarea, select').each(function () {
             var $self = $(this);
             var $wrapper = $self.closest('.cmb-row,.form-group');
 
@@ -433,7 +433,7 @@
                 if (this.tagName === 'SELECT') {
                     defaultValue = defaultValue.split(',');
 
-                    $.each(defaultValue, function(i, value) {
+                    $.each(defaultValue, function (i, value) {
                         $self.find('option').each(function (i, option) {
                             if ($(option).prop('value') === value) {
                                 $(option).prop('selected', true);
@@ -587,7 +587,7 @@
      * "An invalid form control with name.... is not focusable."
      * It will happen on Chrome if the field is invalid and not visible.
      */
-    $('form#post').find("input,textarea,select").on('invalid', function(e) {
+    $('form#post').find('input,textarea,select').on('invalid', function (e) {
         // Check if its container is closed and open it.
         if ($(this).closest('.postbox.closed')) {
             $(this).closest('.postbox.closed').removeClass('closed');
@@ -743,7 +743,7 @@
             var TinyMceSingleton = window.tinyMCE ? window.tinyMCE : (window.tinymce ? window.tinymce : null);
 
             // The editor can be disabled by the user in his profile, so we return null.
-            if ( TinyMceSingleton === null ) {
+            if (TinyMceSingleton === null) {
                 return null;
             }
 
@@ -777,7 +777,7 @@
             return content;
         }
 
-        function isEditorEmpty(editor_id) {
+        function isEditorEmpty (editor_id) {
             var theEditor = getCommentEditor(editor_id),
                 content;
 

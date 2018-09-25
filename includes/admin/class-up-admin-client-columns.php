@@ -1,11 +1,11 @@
 <?php
 
 // Exit if accessed directly
-if (! defined('ABSPATH')) {
+if ( ! defined('ABSPATH')) {
     exit;
 }
 
-if (! class_exists('UpStream_Admin_Client_Columns')) :
+if ( ! class_exists('UpStream_Admin_Client_Columns')) :
 
     /**
      * Admin columns
@@ -33,8 +33,8 @@ if (! class_exists('UpStream_Admin_Client_Columns')) :
 
         public function hooks()
         {
-            add_filter('manage_client_posts_columns', [ $this, 'client_columns' ]);
-            add_action('manage_client_posts_custom_column', [ $this, 'client_data' ], 10, 2);
+            add_filter('manage_client_posts_columns', [$this, 'client_columns']);
+            add_action('manage_client_posts_custom_column', [$this, 'client_data'], 10, 2);
         }
 
         /**
@@ -49,7 +49,7 @@ if (! class_exists('UpStream_Admin_Client_Columns')) :
 
             /* Get taxonomies that should appear in the manage posts table. */
             $taxonomies = get_object_taxonomies($post_type, 'objects');
-            $taxonomies = wp_filter_object_list($taxonomies, [ 'show_admin_column' => true ], 'and', 'name');
+            $taxonomies = wp_filter_object_list($taxonomies, ['show_admin_column' => true], 'and', 'name');
 
             /* Allow devs to filter the taxonomy columns. */
             $taxonomies = apply_filters(
@@ -61,7 +61,7 @@ if (! class_exists('UpStream_Admin_Client_Columns')) :
 
             /* Loop through each taxonomy and add it as a column. */
             foreach ($taxonomies as $taxonomy) {
-                $columns[ 'taxonomy-' . $taxonomy ] = get_taxonomy($taxonomy)->labels->name;
+                $columns['taxonomy-' . $taxonomy] = get_taxonomy($taxonomy)->labels->name;
             }
             $defaults['title']   = $this->label;
             $defaults['logo']    = __('Logo', 'upstream');
@@ -81,28 +81,28 @@ if (! class_exists('UpStream_Admin_Client_Columns')) :
 
             if ($column_name === 'logo') {
                 $logoID = $client->get_meta('logo_id');
-                if (! empty($logoID)) {
+                if ( ! empty($logoID)) {
                     $logoImgURL = wp_get_attachment_image_src($logoID);
 
                     $columnValue = '<img height="50" src="' . $logoImgURL[0] . '" />';
                 }
             } elseif ($column_name === 'website') {
                 $website = $client->get_meta('website');
-                if (! empty($website)) {
+                if ( ! empty($website)) {
                     $columnValue = '<a href="' . esc_url($website) . '" target="_blank" rel="noopener noreferer">' . esc_html($website) . '</a>';
                 }
             } elseif ($column_name === 'phone') {
                 $phone = $client->get_meta('phone');
-                if (! empty($phone)) {
+                if ( ! empty($phone)) {
                     $columnValue = $phone;
                 }
             } elseif ($column_name === 'address') {
                 $address = $client->get_meta('address');
-                if (! empty($address)) {
+                if ( ! empty($address)) {
                     $columnValue = wp_kses_post(wpautop($address));
                 }
             } elseif ($column_name === 'users') {
-                $clientUsers = (array) upstream_get_client_users($post_id);
+                $clientUsers = (array)upstream_get_client_users($post_id);
                 if (count($clientUsers) > 0) {
                     upstream_client_render_users_column(upstream_get_client_users($post_id));
 
@@ -111,9 +111,9 @@ if (! class_exists('UpStream_Admin_Client_Columns')) :
             }
 
             echo ! empty($columnValue) ? $columnValue : '<i style="color: #CCC;">' . __(
-                'none',
+                    'none',
                     'upstream'
-            ) . '</i>';
+                ) . '</i>';
         }
     }
 
@@ -131,7 +131,7 @@ endif;
  */
 function upstream_client_render_users_column($usersList)
 {
-    $usersList      = (array) $usersList;
+    $usersList      = (array)$usersList;
     $usersListCount = count($usersList);
 
     if ($usersListCount === 0) {
@@ -149,7 +149,7 @@ function upstream_client_render_users_column($usersList)
                 );
                 break;
             }
-            $userIndex ++;
+            $userIndex++;
         }
     }
 }

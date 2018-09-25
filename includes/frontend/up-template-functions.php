@@ -1,7 +1,7 @@
 <?php
 
 // Exit if accessed directly
-if (! defined('ABSPATH')) {
+if ( ! defined('ABSPATH')) {
     exit;
 }
 
@@ -42,7 +42,7 @@ function upstream_get_template_part($part)
 // output list of the client users avatars
 function upstream_output_client_users($id = null)
 {
-    $users = (array) upstream_project_client_users($id);
+    $users = (array)upstream_project_client_users($id);
 
     if (count($users) > 0): ?>
         <ul class="list-inline">
@@ -60,7 +60,7 @@ function upstream_output_client_users($id = null)
 // output list of the project members avatars
 function upstream_output_project_members($id = null)
 {
-    $users = (array) upstream_project_users($id);
+    $users = (array)upstream_project_users($id);
 
     if (count($users) > 0): ?>
         <ul class="list-inline">
@@ -77,7 +77,7 @@ function upstream_output_project_members($id = null)
 
 function upstream_get_file_preview($attachment_id, $attachment_url, $useLi = true)
 {
-    $useLi    = (bool) $useLi;
+    $useLi    = (bool)$useLi;
     $filetype = wp_check_filetype($attachment_url);
     $filename = basename($attachment_url);
 
@@ -90,13 +90,13 @@ function upstream_get_file_preview($attachment_id, $attachment_url, $useLi = tru
     if (wp_get_attachment_image($attachment_id, 'thumbnail')) {
         $output .= '<a target="_blank" href="' . esc_url($attachment_url) . '">' . wp_get_attachment_image(
                 $attachment_id,
-                [ 32, 32 ],
+                [32, 32],
                 false,
                 [
                     'title'          => esc_attr($filename),
                     'data-toggle'    => 'tooltip',
                     'data-placement' => 'top',
-                    'data-fileid'    => (int) $attachment_id,
+                    'data-fileid'    => (int)$attachment_id,
                     'data-fileurl'   => esc_attr($attachment_url),
                     'class'          => 'avatar itemfile',
                 ]
@@ -154,7 +154,7 @@ function upstream_get_file_preview($attachment_id, $attachment_url, $useLi = tru
             $output = '<li>';
         }
 
-        $output .= '<a target="_blank" href="' . esc_url($attachment_url) . '"><i class="itemfile fa ' . esc_attr($icon) . '" data-toggle="tooltip" data-placement="top" data-fileid="' . (int) $attachment_id . '" data-fileurl="' . esc_attr($attachment_url) . '" title="' . esc_attr($filename) . '"></i></a>';
+        $output .= '<a target="_blank" href="' . esc_url($attachment_url) . '"><i class="itemfile fa ' . esc_attr($icon) . '" data-toggle="tooltip" data-placement="top" data-fileid="' . (int)$attachment_id . '" data-fileurl="' . esc_attr($attachment_url) . '" title="' . esc_attr($filename) . '"></i></a>';
     }
 
     if ($useLi) {
@@ -207,12 +207,12 @@ function upstream_frontend_output_comment($row, $rowIndex, $project_id)
                 <h5 class="media-heading o-comment__creator_name"><?php echo $row->created_by->name; ?></h5>
                 <?php if (isset($row->parent) && $row->parent !== null): ?>
                     <div
-                        class="o-comment__replier"><?php printf(
-        '%s <a href="#comment-%s" class="text-info" data-action="comment.go_to_reply">%s</a>',
+                            class="o-comment__replier"><?php printf(
+                            '%s <a href="#comment-%s" class="text-info" data-action="comment.go_to_reply">%s</a>',
                             __('In reply to', 'upstream'),
-        $row->parent->id,
+                            $row->parent->id,
                             $row->parent->created_by->name
-    ); ?></div>
+                        ); ?></div>
                 <?php endif; ?>
                 <time datetime="<?php echo $row->created_at->iso_8601; ?>" data-delay="500" data-toggle="tooltip"
                       data-placement="top" title="<?php echo $row->created_at->formatted; ?>"

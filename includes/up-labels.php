@@ -1,7 +1,7 @@
 <?php
 
 // Exit if accessed directly
-if (! defined('ABSPATH')) {
+if ( ! defined('ABSPATH')) {
     exit;
 }
 
@@ -59,9 +59,11 @@ function upstream_get_default_labels()
             'singular' => isset($option['file']['single']) ? $option['file']['single'] : __('File', 'upstream'),
             'plural'   => isset($option['file']['plural']) ? $option['file']['plural'] : __('Files', 'upstream'),
         ],
-        'discussion'      => [
-            'singular' => isset($option['discussion']['single']) ? $option['discussion']['single'] : __('Discussion', 'upstream'),
-            'plural'   => isset($option['discussion']['plural']) ? $option['discussion']['plural'] : __('Discussions', 'upstream'),
+        'discussion' => [
+            'singular' => isset($option['discussion']['single']) ? $option['discussion']['single'] : __('Discussion',
+                'upstream'),
+            'plural'   => isset($option['discussion']['plural']) ? $option['discussion']['plural'] : __('Discussions',
+                'upstream'),
         ],
     ];
 
@@ -298,9 +300,9 @@ add_filter('enter_title_here', 'upstream_change_default_title');
  */
 function upstream_get_taxonomy_labels($taxonomy = 'project_category')
 {
-    $allowed_taxonomies = apply_filters('upstream_allowed_project_taxonomies', [ 'project_category' ]);
+    $allowed_taxonomies = apply_filters('upstream_allowed_project_taxonomies', ['project_category']);
 
-    if (! in_array($taxonomy, $allowed_taxonomies)) {
+    if ( ! in_array($taxonomy, $allowed_taxonomies)) {
         return false;
     }
 
@@ -401,11 +403,11 @@ add_filter('post_updated_messages', 'upstream_updated_messages');
  */
 function upstream_bulk_updated_messages($bulk_messages, $bulk_counts)
 {
-    $itemsUpdatedCount   = (int) $bulk_counts['updated'];
-    $itemsLockedCount    = (int) $bulk_counts['locked'];
-    $itemsDeletedCount   = (int) $bulk_counts['deleted'];
-    $itemsTrashedCount   = (int) $bulk_counts['trashed'];
-    $itemsUntrashedCount = (int) $bulk_counts['untrashed'];
+    $itemsUpdatedCount   = (int)$bulk_counts['updated'];
+    $itemsLockedCount    = (int)$bulk_counts['locked'];
+    $itemsDeletedCount   = (int)$bulk_counts['deleted'];
+    $itemsTrashedCount   = (int)$bulk_counts['trashed'];
+    $itemsUntrashedCount = (int)$bulk_counts['untrashed'];
 
     $postTypeClientLabelSingular = upstream_client_label();
     $postTypeClientLabelPlural   = upstream_client_label_plural();
@@ -422,44 +424,44 @@ function upstream_bulk_updated_messages($bulk_messages, $bulk_counts)
         ),
         'locked'    => sprintf(
             _n(
-            '%1$s %2$s not updated, somebody is editing it.',
-            '%1$s %3$s not updated, somebody is editing them.',
-            $itemsLockedCount,
-            'upstream'
-        ),
+                '%1$s %2$s not updated, somebody is editing it.',
+                '%1$s %3$s not updated, somebody is editing them.',
+                $itemsLockedCount,
+                'upstream'
+            ),
             $itemsLockedCount,
             $postTypeClientLabelSingular,
             $postTypeClientLabelPlural
         ),
         'deleted'   => sprintf(
             _n(
-            '%1$s %2$s permanently deleted.',
-            '%1$s %3$s permanently deleted.',
-            $itemsDeletedCount,
-            'upstream'
-        ),
+                '%1$s %2$s permanently deleted.',
+                '%1$s %3$s permanently deleted.',
+                $itemsDeletedCount,
+                'upstream'
+            ),
             $itemsDeletedCount,
             $postTypeClientLabelSingular,
             $postTypeClientLabelPlural
         ),
         'trashed'   => sprintf(
             _n(
-            '%1$s %2$s moved to the Trash.',
-            '%1$s %3$s moved to the Trash.',
-            $itemsTrashedCount,
-            'upstream'
-        ),
+                '%1$s %2$s moved to the Trash.',
+                '%1$s %3$s moved to the Trash.',
+                $itemsTrashedCount,
+                'upstream'
+            ),
             $itemsTrashedCount,
             $postTypeClientLabelSingular,
             $postTypeClientLabelPlural
         ),
         'untrashed' => sprintf(
             _n(
-            '%1$s %2$s restored from the Trash.',
-            '%1$s %3$s restored from the Trash.',
-            $itemsUntrashedCount,
-            'upstream'
-        ),
+                '%1$s %2$s restored from the Trash.',
+                '%1$s %3$s restored from the Trash.',
+                $itemsUntrashedCount,
+                'upstream'
+            ),
             $itemsUntrashedCount,
             $postTypeClientLabelSingular,
             $postTypeClientLabelPlural
@@ -475,44 +477,44 @@ function upstream_bulk_updated_messages($bulk_messages, $bulk_counts)
         ),
         'locked'    => sprintf(
             _n(
-            '%1$s %2$s not updated, somebody is editing it.',
-            '%1$s %3$s not updated, somebody is editing them.',
-            $itemsLockedCount,
-            'upstream'
-        ),
+                '%1$s %2$s not updated, somebody is editing it.',
+                '%1$s %3$s not updated, somebody is editing them.',
+                $itemsLockedCount,
+                'upstream'
+            ),
             $itemsLockedCount,
             $postTypeProjectLabelSingular,
             $postTypeProjectLabelPlural
         ),
         'deleted'   => sprintf(
             _n(
-            '%1$s %2$s permanently deleted.',
-            '%1$s %3$s permanently deleted.',
-            $itemsDeletedCount,
-            'upstream'
-        ),
+                '%1$s %2$s permanently deleted.',
+                '%1$s %3$s permanently deleted.',
+                $itemsDeletedCount,
+                'upstream'
+            ),
             $itemsDeletedCount,
             $postTypeProjectLabelSingular,
             $postTypeProjectLabelPlural
         ),
         'trashed'   => sprintf(
             _n(
-            '%1$s %2$s moved to the Trash.',
-            '%1$s %3$s moved to the Trash.',
-            $itemsTrashedCount,
-            'upstream'
-        ),
+                '%1$s %2$s moved to the Trash.',
+                '%1$s %3$s moved to the Trash.',
+                $itemsTrashedCount,
+                'upstream'
+            ),
             $itemsTrashedCount,
             $postTypeProjectLabelSingular,
             $postTypeProjectLabelPlural
         ),
         'untrashed' => sprintf(
             _n(
-            '%1$s %2$s restored from the Trash.',
-            '%1$s %3$s restored from the Trash.',
-            $itemsUntrashedCount,
-            'upstream'
-        ),
+                '%1$s %2$s restored from the Trash.',
+                '%1$s %3$s restored from the Trash.',
+                $itemsUntrashedCount,
+                'upstream'
+            ),
             $itemsUntrashedCount,
             $postTypeProjectLabelSingular,
             $postTypeProjectLabelPlural
@@ -533,7 +535,7 @@ function upstream_admin_notices_errors()
 {
     $errors = get_transient('upstream_errors');
 
-    if (! empty($errors)): ?>
+    if ( ! empty($errors)): ?>
         <div class="notice notice-error is-dismissible">
             <p>
                 <?php echo $errors; ?>

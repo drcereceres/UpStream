@@ -1,11 +1,11 @@
 <?php
 
 // Exit if accessed directly
-if (! defined('ABSPATH')) {
+if ( ! defined('ABSPATH')) {
     exit;
 }
 
-if (! class_exists('UpStream_Options_Tasks')) :
+if ( ! class_exists('UpStream_Options_Tasks')) :
 
     /**
      * CMB2 Theme Options
@@ -92,7 +92,7 @@ if (! class_exists('UpStream_Options_Tasks')) :
                     'title'      => $this->title,
                     'menu_title' => $this->menu_title,
                     'desc'       => $this->description,
-                    'show_on'    => [ 'key' => 'options-page', 'value' => [ $this->id ], ],
+                    'show_on'    => ['key' => 'options-page', 'value' => [$this->id],],
                     'show_names' => true,
                     'fields'     => [
                         [
@@ -101,9 +101,9 @@ if (! class_exists('UpStream_Options_Tasks')) :
                             'type' => 'title',
                             'desc' => sprintf(
                                 __(
-                                'The statuses and colors that can be used for the status of %s.<br>These will become available in the %s Status dropdown within each %s',
-                                'upstream'
-                            ),
+                                    'The statuses and colors that can be used for the status of %s.<br>These will become available in the %s Status dropdown within each %s',
+                                    'upstream'
+                                ),
                                 upstream_task_label_plural(),
                                 upstream_task_label(),
                                 upstream_task_label()
@@ -120,7 +120,7 @@ if (! class_exists('UpStream_Options_Tasks')) :
                                 'remove_button' => __('Remove Entry', 'upstream'),
                                 'sortable'      => true, // beta
                             ],
-                            'sanitization_cb' => [ 'UpStream_Admin', 'onBeforeSave' ],
+                            'sanitization_cb' => ['UpStream_Admin', 'onBeforeSave'],
                             'fields'          => [
                                 [
                                     'name' => __('Hidden', 'upstream'),
@@ -150,12 +150,12 @@ if (! class_exists('UpStream_Options_Tasks')) :
                                     'type'    => 'radio',
                                     'default' => 'open',
                                     'desc'    => __(
-                                        "A Status Name such as 'In Progress' or 'Overdue' would be considered Open.",
-                                            'upstream'
-                                    ) . '<br>' . __(
-                                                "A Status Name such as 'Complete' or 'Cancelled' would be considered Closed.",
-                                            'upstream'
-                                            ),
+                                                     "A Status Name such as 'In Progress' or 'Overdue' would be considered Open.",
+                                                     'upstream'
+                                                 ) . '<br>' . __(
+                                                     "A Status Name such as 'Complete' or 'Cancelled' would be considered Closed.",
+                                                     'upstream'
+                                                 ),
                                     'options' => [
                                         'open'   => __('Open', 'upstream'),
                                         'closed' => __('Closed', 'upstream'),
@@ -180,8 +180,8 @@ if (! class_exists('UpStream_Options_Tasks')) :
          */
         public static function createTasksStatusesIds()
         {
-            $continue = ! (bool) get_option('upstream:created_tasks_args_ids');
-            if (! $continue) {
+            $continue = ! (bool)get_option('upstream:created_tasks_args_ids');
+            if ( ! $continue) {
                 return;
             }
 
@@ -230,9 +230,9 @@ if (! class_exists('UpStream_Options_Tasks')) :
                             continue;
                         }
 
-                        $projectId = (int) $meta->post_id;
+                        $projectId = (int)$meta->post_id;
 
-                        $data = array_filter(maybe_unserialize((string) $meta->meta_value));
+                        $data = array_filter(maybe_unserialize((string)$meta->meta_value));
                         $data = array_map($replaceTaskStatusWithItsId, $data);
 
                         update_post_meta($projectId, '_upstream_project_tasks', $data);

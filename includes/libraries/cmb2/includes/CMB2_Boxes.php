@@ -18,7 +18,7 @@ class CMB2_Boxes
      * @since 2.0.0
      * @var array
      */
-    protected static $cmb2_instances = array();
+    protected static $cmb2_instances = [];
 
     /**
      * Add a CMB2 instance object to the registry.
@@ -29,7 +29,7 @@ class CMB2_Boxes
      */
     public static function add(CMB2 $cmb_instance)
     {
-        self::$cmb2_instances[ $cmb_instance->cmb_id ] = $cmb_instance;
+        self::$cmb2_instances[$cmb_instance->cmb_id] = $cmb_instance;
     }
 
     /**
@@ -42,7 +42,7 @@ class CMB2_Boxes
     public static function remove($cmb_id)
     {
         if (array_key_exists($cmb_id, self::$cmb2_instances)) {
-            unset(self::$cmb2_instances[ $cmb_id ]);
+            unset(self::$cmb2_instances[$cmb_id]);
         }
     }
 
@@ -57,11 +57,11 @@ class CMB2_Boxes
      */
     public static function get($cmb_id)
     {
-        if (empty(self::$cmb2_instances) || empty(self::$cmb2_instances[ $cmb_id ])) {
+        if (empty(self::$cmb2_instances) || empty(self::$cmb2_instances[$cmb_id])) {
             return false;
         }
 
-        return self::$cmb2_instances[ $cmb_id ];
+        return self::$cmb2_instances[$cmb_id];
     }
 
     /**
@@ -79,26 +79,28 @@ class CMB2_Boxes
      * Retrieve all CMB2 instances that have the specified property set.
      *
      * @since  2.4.0
+     *
      * @param  string $property Property name.
      * @param  mixed  $compare  (Optional) The value to compare.
+     *
      * @return CMB2[]           Array of matching cmb2 instances.
      */
     public static function get_by($property, $compare = 'nocompare')
     {
-        $boxes = array();
+        $boxes = [];
 
         foreach (self::$cmb2_instances as $cmb_id => $cmb) {
             $prop = $cmb->prop($property);
 
             if ('nocompare' === $compare) {
-                if (! empty($prop)) {
-                    $boxes[ $cmb_id ] = $cmb;
+                if ( ! empty($prop)) {
+                    $boxes[$cmb_id] = $cmb;
                 }
                 continue;
             }
 
             if ($compare === $prop) {
-                $boxes[ $cmb_id ] = $cmb;
+                $boxes[$cmb_id] = $cmb;
             }
         }
 
@@ -109,20 +111,22 @@ class CMB2_Boxes
      * Retrieve all CMB2 instances as long as they do not include the ignored property.
      *
      * @since  2.4.0
+     *
      * @param  string $property  Property name.
      * @param  mixed  $to_ignore The value to ignore.
+     *
      * @return CMB2[]            Array of matching cmb2 instances.
      */
     public static function filter_by($property, $to_ignore = null)
     {
-        $boxes = array();
+        $boxes = [];
 
         foreach (self::$cmb2_instances as $cmb_id => $cmb) {
             if ($to_ignore === $cmb->prop($property)) {
                 continue;
             }
 
-            $boxes[ $cmb_id ] = $cmb;
+            $boxes[$cmb_id] = $cmb;
         }
 
         return $boxes;
@@ -136,11 +140,13 @@ class CMB2_Boxes
      *
      * @param  string $property  Property name.
      * @param  mixed  $to_ignore The value to ignore.
+     *
      * @return CMB2[]            Array of matching cmb2 instances.
      */
     public static function get_by_property($property, $to_ignore = null)
     {
         _deprecated_function(__METHOD__, '2.4.0', 'CMB2_Boxes::filter_by()');
+
         return self::filter_by($property);
     }
 }

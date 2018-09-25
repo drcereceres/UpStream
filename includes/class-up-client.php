@@ -1,7 +1,7 @@
 <?php
 
 // Exit if accessed directly
-if (! defined('ABSPATH')) {
+if ( ! defined('ABSPATH')) {
     exit;
 }
 
@@ -68,12 +68,12 @@ class UpStream_Client
 
         // if no id is sent, then go through the varous ways of getting the id
         // may need to check the order more closely to ensure we get it right
-        if (! $_id) {
+        if ( ! $_id) {
             $user_id = upstream_current_user_id();
             $_id     = upstream_get_users_client_id($user_id);
         }
 
-        if (! $_id) {
+        if ( ! $_id) {
             $_id = upstream_project_client_id();
         }
 
@@ -94,11 +94,11 @@ class UpStream_Client
      */
     private function setup_client($client)
     {
-        if (! is_object($client)) {
+        if ( ! is_object($client)) {
             return false;
         }
 
-        if (! is_a($client, 'WP_Post')) {
+        if ( ! is_a($client, 'WP_Post')) {
             return false;
         }
 
@@ -120,7 +120,7 @@ class UpStream_Client
 
     public function init()
     {
-        add_action('init', [ $this, 'hooks' ]);
+        add_action('init', [$this, 'hooks']);
     }
 
     public function hooks()
@@ -142,7 +142,7 @@ class UpStream_Client
     public function get_meta($meta)
     {
         $result = get_post_meta($this->ID, $this->meta_prefix . $meta, true);
-        if (! $result) {
+        if ( ! $result) {
             $result = null;
         }
 

@@ -1,7 +1,7 @@
 <?php
 
 // Exit if accessed directly
-if (! defined('ABSPATH')) {
+if ( ! defined('ABSPATH')) {
     exit;
 }
 
@@ -17,7 +17,7 @@ add_action('admin_init', 'upstream_validate_permalink_settings');
  */
 function upstream_get_permalink_base($base)
 {
-    if (! in_array($base, [ 'projects', 'client' ])) {
+    if ( ! in_array($base, ['projects', 'client'])) {
         return false;
     }
 
@@ -126,15 +126,15 @@ function upstream_print_client_permalink_field()
  */
 function upstream_validate_permalink_settings()
 {
-    if (! array_key_exists('permalink_structure', $_POST)) {
+    if ( ! array_key_exists('permalink_structure', $_POST)) {
         return;
     }
 
-    if (! array_key_exists('upstream_nonce', $_POST)) {
+    if ( ! array_key_exists('upstream_nonce', $_POST)) {
         return;
     }
 
-    if (! wp_verify_nonce($_POST['upstream_nonce'], 'upstream_permalink_settings')) {
+    if ( ! wp_verify_nonce($_POST['upstream_nonce'], 'upstream_permalink_settings')) {
         return;
     }
 

@@ -10,7 +10,7 @@
  */
 
 // Exit if accessed directly
-if (! defined('ABSPATH')) {
+if ( ! defined('ABSPATH')) {
     exit;
 }
 
@@ -30,32 +30,33 @@ class UpStream_Admin
      */
     public function __construct()
     {
-        add_action('init', [ $this, 'includes' ]);
-        add_action('init', [ $this, 'init' ], 13);
-        add_filter('admin_body_class', [ $this, 'admin_body_class' ]);
-        add_filter('ajax_query_attachments_args', [ $this, 'filter_user_attachments' ], 10, 1);
-        add_action('admin_menu', [ $this, 'limitUpStreamUserAccess' ]);
+        add_action('init', [$this, 'includes']);
+        add_action('init', [$this, 'init'], 13);
+        add_filter('admin_body_class', [$this, 'admin_body_class']);
+        add_filter('ajax_query_attachments_args', [$this, 'filter_user_attachments'], 10, 1);
+        add_action('admin_menu', [$this, 'limitUpStreamUserAccess']);
 
-        add_action('show_user_profile', [ $this, 'renderAdditionalUserFields' ], 10, 1);
-        add_action('edit_user_profile', [ $this, 'renderAdditionalUserFields' ], 10, 1);
-        add_action('personal_options_update', [ $this, 'saveAdditionalUserFields' ], 10, 1);
-        add_action('edit_user_profile_update', [ $this, 'saveAdditionalUserFields' ], 10, 1);
+        add_action('show_user_profile', [$this, 'renderAdditionalUserFields'], 10, 1);
+        add_action('edit_user_profile', [$this, 'renderAdditionalUserFields'], 10, 1);
+        add_action('personal_options_update', [$this, 'saveAdditionalUserFields'], 10, 1);
+        add_action('edit_user_profile_update', [$this, 'saveAdditionalUserFields'], 10, 1);
 
         global $pagenow;
         if ($pagenow === 'edit-comments.php') {
-            add_filter('comment_status_links', [ $this, 'commentStatusLinks' ], 10, 1);
-            add_action('pre_get_comments', [ $this, 'preGetComments' ], 10, 1);
+            add_filter('comment_status_links', [$this, 'commentStatusLinks'], 10, 1);
+            add_action('pre_get_comments', [$this, 'preGetComments'], 10, 1);
         }
 
         add_action(
             'wp_ajax_upstream:project.get_all_items_comments',
-            [ 'UpStream_Metaboxes_Projects', 'fetchAllItemsComments' ]
+            ['UpStream_Metaboxes_Projects', 'fetchAllItemsComments']
         );
 
-        add_action('cmb2_render_up_timestamp', [ $this, 'renderCmb2TimestampField' ], 10, 5);
-        add_action('cmb2_sanitize_up_timestamp', [ $this, 'sanitizeCmb2TimestampField' ], 10, 5);
+        add_action('cmb2_render_up_timestamp', [$this, 'renderCmb2TimestampField'], 10, 5);
+        add_action('cmb2_sanitize_up_timestamp', [$this, 'sanitizeCmb2TimestampField'], 10, 5);
 
-        add_filter('cmb2_override_option_get_upstream_general', [ $this, 'filter_override_option_get_upstream_general' ], 10, 3);
+        add_filter('cmb2_override_option_get_upstream_general', [$this, 'filter_override_option_get_upstream_general'],
+            10, 3);
 
         $this->framework = UpStream::instance()->get_container()['framework'];
     }
@@ -70,7 +71,7 @@ class UpStream_Admin
      */
     public static function preGetComments($query)
     {
-        if (! isUserEitherManagerOrAdmin()) {
+        if ( ! isUserEitherManagerOrAdmin()) {
             $user = wp_get_current_user();
 
             if (in_array('upstream_user', $user->roles) || in_array('upstream_client_user', $user->roles)) {
@@ -81,18 +82,18 @@ class UpStream_Admin
                 $userCanModerateComments = user_can($user, 'moderate_comments');
                 $userCanDeleteComments   = user_can($user, 'delete_project_discussion');
 
-                $query->query_vars['status'] = [ 'approve' ];
+                $query->query_vars['status'] = ['approve'];
 
                 if ($userCanModerateComments) {
                     $query->query_vars['status'][] = 'hold';
                 } elseif (empty($allowedProjects)) {
-                    $query->query_vars['post__in'] = - 1;
+                    $query->query_vars['post__in'] = -1;
                 }
             } else {
                 // Hide Projects comments from other user types.
                 $projects = get_posts([
                     'post_type'      => "project",
-                    'posts_per_page' => - 1,
+                    'posts_per_page' => -1,
                 ]);
 
                 $ids = [];
@@ -117,17 +118,17 @@ class UpStream_Admin
      */
     public static function commentStatusLinks($links)
     {
-        if (! isUserEitherManagerOrAdmin()) {
+        if ( ! isUserEitherManagerOrAdmin()) {
             $user = wp_get_current_user();
 
             if (in_array('upstream_user', $user->roles) || in_array('upstream_client_user', $user->roles)) {
                 $userCanModerateComments = user_can($user, 'moderate_comments');
                 $userCanDeleteComments   = user_can($user, 'delete_project_discussion');
 
-                if (! $userCanModerateComments) {
+                if ( ! $userCanModerateComments) {
                     unset($links['moderated'], $links['approved'], $links['spam']);
 
-                    if (! $userCanDeleteComments) {
+                    if ( ! $userCanDeleteComments) {
                         unset($links['trash']);
                     }
                 }
@@ -152,7 +153,7 @@ class UpStream_Admin
                 if (isset($links['moderated'])) {
                     $commentsCount->approved = get_comments(array_merge(
                         $commentsQueryArgs,
-                        [ 'status' => "approve" ]
+                        ['status' => "approve"]
                     ));
 
                     $links['approved'] = preg_replace(
@@ -161,7 +162,7 @@ class UpStream_Admin
                         $links['approved']
                     );
 
-                    $commentsCount->pending = get_comments(array_merge($commentsQueryArgs, [ 'status' => "hold" ]));
+                    $commentsCount->pending = get_comments(array_merge($commentsQueryArgs, ['status' => "hold"]));
 
                     $links['moderated'] = preg_replace(
                         '/<span class="pending-count">\d+<\/span>/',
@@ -171,7 +172,7 @@ class UpStream_Admin
                 }
 
                 if (isset($links['trash'])) {
-                    $commentsCount->trash = get_comments(array_merge($commentsQueryArgs, [ 'status' => "trash" ]));
+                    $commentsCount->trash = get_comments(array_merge($commentsQueryArgs, ['status' => "trash"]));
 
                     $links['trash'] = preg_replace(
                         '/<span class="trash-count">\d+<\/span>/',
@@ -182,7 +183,7 @@ class UpStream_Admin
             } else {
                 $projects = get_posts([
                     'post_type'      => "project",
-                    'posts_per_page' => - 1,
+                    'posts_per_page' => -1,
                 ]);
 
                 $projectsIds = [];
@@ -205,7 +206,7 @@ class UpStream_Admin
                 }
 
                 if (isset($links['moderated'])) {
-                    $count              = get_comments(array_merge($commentsQueryArgs, [ 'status' => "hold" ]));
+                    $count              = get_comments(array_merge($commentsQueryArgs, ['status' => "hold"]));
                     $links['moderated'] = preg_replace(
                         '/<span class="pending-count">\d+<\/span>/',
                         '<span class="pending-count">' . $count . '</span>',
@@ -214,7 +215,7 @@ class UpStream_Admin
                 }
 
                 if (isset($links['approved'])) {
-                    $count             = get_comments(array_merge($commentsQueryArgs, [ 'status' => "approve" ]));
+                    $count             = get_comments(array_merge($commentsQueryArgs, ['status' => "approve"]));
                     $links['approved'] = preg_replace(
                         '/<span class="approved-count">\d+<\/span>/',
                         '<span class="approved-count">' . $count . '</span>',
@@ -223,7 +224,7 @@ class UpStream_Admin
                 }
 
                 if (isset($links['spam'])) {
-                    $count         = get_comments(array_merge($commentsQueryArgs, [ 'status' => "spam" ]));
+                    $count         = get_comments(array_merge($commentsQueryArgs, ['status' => "spam"]));
                     $links['spam'] = preg_replace(
                         '/<span class="spam-count">\d+<\/span>/',
                         '<span class="spam-count">' . $count . '</span>',
@@ -232,7 +233,7 @@ class UpStream_Admin
                 }
 
                 if (isset($links['trash'])) {
-                    $count          = get_comments(array_merge($commentsQueryArgs, [ 'status' => "trash" ]));
+                    $count          = get_comments(array_merge($commentsQueryArgs, ['status' => "trash"]));
                     $links['trash'] = preg_replace(
                         '/<span class="trash-count">\d+<\/span>/',
                         '<span class="trash-count">' . $count . '</span>',
@@ -279,7 +280,7 @@ class UpStream_Admin
      */
     public static function sanitizeCmb2TimestampField($overrideValue, $value, $objectId, $fieldArgs, $sanitizer)
     {
-        $value = trim((string) $value);
+        $value = trim((string)$value);
 
         if (strlen($value) > 0) {
             try {
@@ -287,7 +288,7 @@ class UpStream_Admin
 
                 if ($date !== false) {
                     $date->setTime(0, 0, 0);
-                    $value         = (string) $date->format('U');
+                    $value         = (string)$date->format('U');
                     $overrideValue = $value;
                 } else {
                     $value = '';
@@ -302,7 +303,7 @@ class UpStream_Admin
 
     public static function escapeCmb2TimestampField($value, $args, $field)
     {
-        $value = (int) $value;
+        $value = (int)$value;
         if ($value > 0) {
             $date = new \DateTime('now');
             $date->setTimestamp($value);
@@ -315,7 +316,7 @@ class UpStream_Admin
 
     public static function saveAdditionalUserFields($user_id)
     {
-        if (! current_user_can('edit_user', $user_id)
+        if ( ! current_user_can('edit_user', $user_id)
              || ! isset($_POST['upstream'])
         ) {
             return false;
@@ -341,9 +342,9 @@ class UpStream_Admin
             <tr>
                 <th>
                     <label for="upstream_comment_reply_notifications"><?php _e(
-            'Comment reply notifications',
+                            'Comment reply notifications',
                             'upstream'
-        ); ?></label>
+                        ); ?></label>
                 </th>
                 <td>
                     <div>
@@ -403,7 +404,7 @@ class UpStream_Admin
      */
     public static function createMissingIdsInSet($rowset)
     {
-        if (! is_array($rowset)) {
+        if ( ! is_array($rowset)) {
             return false;
         }
 
@@ -412,12 +413,12 @@ class UpStream_Admin
             $idsMap           = [];
 
             foreach ($rowset as $rowIndex => $row) {
-                if (! isset($row['id'])
+                if ( ! isset($row['id'])
                      || empty($row['id'])
                 ) {
                     $indexesMissingId[] = $rowIndex;
                 } else {
-                    $idsMap[ $row['id'] ] = $rowIndex;
+                    $idsMap[$row['id']] = $rowIndex;
                 }
             }
 
@@ -428,10 +429,10 @@ class UpStream_Admin
                 foreach ($indexesMissingId as $rowIndex) {
                     do {
                         $id = upstreamGenerateRandomString($newIdsLength, $newIdsCharsPool);
-                    } while (isset($idsMap[ $id ]));
+                    } while (isset($idsMap[$id]));
 
-                    $rowset[ $rowIndex ]['id'] = $id;
-                    $idsMap[ $id ]             = $rowIndex;
+                    $rowset[$rowIndex]['id'] = $id;
+                    $idsMap[$id]             = $rowIndex;
                 }
             }
         }
@@ -455,9 +456,9 @@ class UpStream_Admin
 
         $user               = wp_get_current_user();
         $userIsUpStreamUser = count(array_intersect(
-            (array) $user->roles,
-                [ 'administrator', 'upstream_manager' ]
-        )) === 0;
+                (array)$user->roles,
+                ['administrator', 'upstream_manager']
+            )) === 0;
 
         if ($userIsUpStreamUser) {
             global $pagenow;
@@ -469,25 +470,25 @@ class UpStream_Admin
 
             if ($pagenow === 'edit-tags.php') {
                 if (isset($_GET['taxonomy'])
-                     && $_GET['taxonomy'] === 'project_category'
-                     && $isPostTypeProject
+                    && $_GET['taxonomy'] === 'project_category'
+                    && $isPostTypeProject
                 ) {
                     $shouldRedirect = true;
                 }
             } elseif ($pagenow === 'post.php'
-                       && $isPostTypeProject
+                      && $isPostTypeProject
             ) {
-                $projectMembersList = (array) get_post_meta((int) $_GET['post'], '_upstream_project_members', true);
+                $projectMembersList = (array)get_post_meta((int)$_GET['post'], '_upstream_project_members', true);
                 // Since he's not and Administrator nor an UpStream Manager, we need to check if he's participating in the project.
-                if (! in_array($user->ID, $projectMembersList)) {
+                if ( ! in_array($user->ID, $projectMembersList)) {
                     $shouldRedirect = true;
                 }
             } elseif ($pagenow === 'post-new.php'
-                       && $isPostTypeProject
+                      && $isPostTypeProject
             ) {
                 $shouldRedirect = true;
             } elseif ($pagenow === 'edit.php'
-                       && $postType === 'client'
+                      && $postType === 'client'
             ) {
                 $shouldRedirect = true;
             }
@@ -565,7 +566,7 @@ class UpStream_Admin
         $match = array_intersect($user->roles, $roles);
 
         // If the user's has a role selected as unrestricted, we do not filter the attachments.
-        if (! empty($match)) {
+        if ( ! empty($match)) {
             return $query;
         }
 

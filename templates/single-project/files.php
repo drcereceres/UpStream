@@ -1,14 +1,14 @@
 <?php
 // Prevent direct access.
-if (! defined('ABSPATH')) {
+if ( ! defined('ABSPATH')) {
     exit;
 }
 
-if (! upstream_are_files_disabled()
+if ( ! upstream_are_files_disabled()
      && ! upstream_disable_files()):
 
     $collapseBox = isset($pluginOptions['collapse_project_files'])
-                   && (bool) $pluginOptions['collapse_project_files'] === true;
+                   && (bool)$pluginOptions['collapse_project_files'] === true;
 
     $itemType      = 'file';
     $currentUserId = get_current_user_id();
@@ -17,21 +17,21 @@ if (! upstream_are_files_disabled()
     $rowset    = [];
     $projectId = upstream_post_id();
 
-    $meta = (array) get_post_meta($projectId, '_upstream_project_files', true);
+    $meta = (array)get_post_meta($projectId, '_upstream_project_files', true);
     foreach ($meta as $data) {
-        if (! isset($data['id'])
+        if ( ! isset($data['id'])
              || ! isset($data['created_by'])
         ) {
             continue;
         }
 
-        $data['created_by']   = (int) $data['created_by'];
-        $data['created_time'] = isset($data['created_time']) ? (int) $data['created_time'] : 0;
-        $data['title']        = isset($data['title']) ? (string) $data['title'] : '';
-        $data['file_id']      = isset($data['file_id']) ? (int) $data['file_id'] : 0;
-        $data['description']  = isset($data['description']) ? (string) $data['description'] : '';
+        $data['created_by']   = (int)$data['created_by'];
+        $data['created_time'] = isset($data['created_time']) ? (int)$data['created_time'] : 0;
+        $data['title']        = isset($data['title']) ? (string)$data['title'] : '';
+        $data['file_id']      = isset($data['file_id']) ? (int)$data['file_id'] : 0;
+        $data['description']  = isset($data['description']) ? (string)$data['description'] : '';
 
-        $rowset[ $data['id'] ] = $data;
+        $rowset[$data['id']] = $data;
     }
 
     $l = [
@@ -99,17 +99,17 @@ if (! upstream_are_files_disabled()
                                         <li>
                                             <a href="#" data-action="export" data-type="txt">
                                                 <i class="fa fa-file-text-o"></i>&nbsp;&nbsp;<?php _e(
-        'Plain Text',
+                                                    'Plain Text',
                                                     'upstream'
-    ); ?>
+                                                ); ?>
                                             </a>
                                         </li>
                                         <li>
                                             <a href="#" data-action="export" data-type="csv">
                                                 <i class="fa fa-file-code-o"></i>&nbsp;&nbsp;<?php _e(
-                                                        'CSV',
+                                                    'CSV',
                                                     'upstream'
-                                                    ); ?>
+                                                ); ?>
                                             </a>
                                         </li>
                                     </ul>
@@ -132,17 +132,17 @@ if (! upstream_are_files_disabled()
                                         <li>
                                             <a href="#" data-action="export" data-type="txt">
                                                 <i class="fa fa-file-text-o"></i>&nbsp;&nbsp;<?php _e(
-                                                        'Plain Text',
+                                                    'Plain Text',
                                                     'upstream'
-                                                    ); ?>
+                                                ); ?>
                                             </a>
                                         </li>
                                         <li>
                                             <a href="#" data-action="export" data-type="csv">
                                                 <i class="fa fa-file-code-o"></i>&nbsp;&nbsp;<?php _e(
-                                                        'CSV',
+                                                    'CSV',
                                                     'upstream'
-                                                    ); ?>
+                                                ); ?>
                                             </a>
                                         </li>
                                     </ul>
@@ -169,16 +169,16 @@ if (! upstream_are_files_disabled()
                                             data-placeholder="<?php _e('Uploader', 'upstream'); ?>" multiple>
                                         <option value></option>
                                         <option value="<?php echo $currentUserId; ?>"><?php _e(
-                                                        'Me',
+                                                'Me',
                                                 'upstream'
-                                                    ); ?></option>
+                                            ); ?></option>
                                         <optgroup label="<?php _e('Users'); ?>">
                                             <?php foreach ($users as $user_id => $userName): ?>
                                                 <?php if ($user_id === $currentUserId) {
-                                                        continue;
-                                                    } ?>
+                                                    continue;
+                                                } ?>
                                                 <option
-                                                    value="<?php echo $user_id; ?>"><?php echo $userName; ?></option>
+                                                        value="<?php echo $user_id; ?>"><?php echo $userName; ?></option>
                                             <?php endforeach; ?>
                                         </optgroup>
                                     </select>
@@ -194,16 +194,16 @@ if (! upstream_are_files_disabled()
                                         <option value></option>
                                         <option value="__none__"><?php _e('Nobody', 'upstream'); ?></option>
                                         <option value="<?php echo $currentUserId; ?>"><?php _e(
-                                                    'Me',
+                                                'Me',
                                                 'upstream'
-                                                ); ?></option>
+                                            ); ?></option>
                                         <optgroup label="<?php _e('Users'); ?>">
                                             <?php foreach ($users as $user_id => $userName): ?>
                                                 <?php if ($user_id === $currentUserId) {
                                                     continue;
                                                 } ?>
                                                 <option
-                                                    value="<?php echo $user_id; ?>"><?php echo $userName; ?></option>
+                                                        value="<?php echo $user_id; ?>"><?php echo $userName; ?></option>
                                             <?php endforeach; ?>
                                         </optgroup>
                                     </select>
@@ -223,20 +223,20 @@ if (! upstream_are_files_disabled()
                             </div>
 
                             <?php do_action(
-                                                    'upstream:project.files.filters',
-                                                    $tableSettings,
-                                                    $columnsSchema,
+                                'upstream:project.files.filters',
+                                $tableSettings,
+                                $columnsSchema,
                                 $projectId
-                                                ); ?>
+                            ); ?>
                         </div>
                     </form>
                     <?php \UpStream\Frontend\renderTable(
-                                    $tableSettings,
-                                    $columnsSchema,
-                                    $rowset,
-                                    'file',
+                        $tableSettings,
+                        $columnsSchema,
+                        $rowset,
+                        'file',
                         $projectId
-                                ); ?>
+                    ); ?>
                 </div>
             </div>
         </div>

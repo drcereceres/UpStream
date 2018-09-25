@@ -1,8 +1,9 @@
 <?php
+
 /**
  * CMB file field type
  *
- * @since  2.2.2
+ * @since     2.2.2
  *
  * @category  WordPress_Plugin
  * @package   CMB2
@@ -17,15 +18,16 @@ class CMB2_Type_File extends CMB2_Type_File_Base
      * Handles outputting an 'file' field
      *
      * @param  array $args Override arguments
+     *
      * @return string      Form input element
      */
-    public function render($args = array())
+    public function render($args = [])
     {
         $args    = empty($args) ? $this->args : $args;
         $field   = $this->field;
-        $options = (array) $field->options();
+        $options = (array)$field->options();
 
-        $a = $this->args = $this->parse_args('file', array(
+        $a = $this->args = $this->parse_args('file', [
             'class'           => 'cmb2-upload-file regular-text',
             'id'              => $this->_id(),
             'name'            => $this->_name(),
@@ -41,7 +43,7 @@ class CMB2_Type_File extends CMB2_Type_File_Base
             'type'            => array_key_exists('url', $options) && false === $options['url']
                 ? 'hidden'
                 : 'text',
-        ), $args);
+        ], $args);
 
         // get an array of image size meta data, fallback to 'large'
         $this->args['img_size_data'] = $img_size_data = parent::get_image_size_data(
@@ -51,26 +53,26 @@ class CMB2_Type_File extends CMB2_Type_File_Base
 
         $output = '';
 
-        $output .= parent::render(array(
-            'type'  => $a['type'],
-            'class' => $a['class'],
-            'value' => $a['value'],
-            'id'    => $a['id'],
-            'name'  => $a['name'],
-            'size'  => $a['size'],
-            'desc'  => '',
+        $output .= parent::render([
+            'type'             => $a['type'],
+            'class'            => $a['class'],
+            'value'            => $a['value'],
+            'id'               => $a['id'],
+            'name'             => $a['name'],
+            'size'             => $a['size'],
+            'desc'             => '',
             'data-previewsize' => sprintf('[%d,%d]', $img_size_data['width'], $img_size_data['height']),
             'data-sizename'    => $img_size_data['name'],
             'data-queryargs'   => ! empty($a['query_args']) ? json_encode($a['query_args']) : '',
             'js_dependencies'  => $a['js_dependencies'],
-        ));
+        ]);
 
         // Now remove the data-iterator attribute if it exists.
         // (Possible if being used within a custom field)
         // This is not elegant, but compensates for CMB2_Types::_id
         // automagically & inelegantly adding the data-iterator attribute.
         // Single responsibility principle? pffft
-        $parts = explode('"', $this->args['id']);
+        $parts            = explode('"', $this->args['id']);
         $this->args['id'] = $parts[0];
 
         $output .= sprintf(
@@ -82,7 +84,7 @@ class CMB2_Type_File extends CMB2_Type_File_Base
         $output .= $this->get_id_field_output();
 
         $output .= '<div id="' . $field->id() . '-status" class="cmb2-media-status">';
-        if (! empty($a['value'])) {
+        if ( ! empty($a['value'])) {
             $output .= $this->get_file_preview_output();
         }
         $output .= '</div>';
@@ -92,27 +94,27 @@ class CMB2_Type_File extends CMB2_Type_File_Base
 
     public function get_file_preview_output()
     {
-        if (! $this->is_valid_img_ext($this->args['value'])) {
-            return $this->file_status_output(array(
+        if ( ! $this->is_valid_img_ext($this->args['value'])) {
+            return $this->file_status_output([
                 'value'     => $this->args['value'],
                 'tag'       => 'div',
                 'cached_id' => $this->args['id'],
-            ));
+            ]);
         }
 
         if ($this->args['id_value']) {
-            $image = wp_get_attachment_image($this->args['id_value'], $this->args['preview_size'], null, array(
+            $image = wp_get_attachment_image($this->args['id_value'], $this->args['preview_size'], null, [
                 'class' => 'cmb-file-field-image',
-            ));
+            ]);
         } else {
             $image = '<img style="max-width: ' . absint($this->args['img_size_data']['width']) . 'px; width: 100%;" src="' . $this->args['value'] . '" class="cmb-file-field-image" alt="" />';
         }
 
-        return $this->img_status_output(array(
+        return $this->img_status_output([
             'image'     => $image,
             'tag'       => 'div',
             'cached_id' => $this->args['id'],
-        ));
+        ]);
     }
 
     public function get_id_field_output()
@@ -125,12 +127,12 @@ class CMB2_Type_File extends CMB2_Type_File_Base
          */
         $this->types->field = $this->get_id_field();
 
-        $output = parent::render(array(
+        $output = parent::render([
             'type'  => 'hidden',
             'class' => 'cmb2-upload-file-id',
             'value' => $this->types->field->value,
             'desc'  => '',
-        ));
+        ]);
 
         // We need to put the original field object back
         // or other fields in a custom field will be broken.
@@ -143,11 +145,11 @@ class CMB2_Type_File extends CMB2_Type_File_Base
     {
 
         // reset field args for attachment id
-        $args = array(
+        $args = [
             // if we're looking at a file in a group, we need to get the non-prefixed id
-            'id' => ($this->field->group ? $this->field->args('_id') : $this->args['id']) . '_id',
+            'id'                          => ($this->field->group ? $this->field->args('_id') : $this->args['id']) . '_id',
             'disable_hash_data_attribute' => true,
-        );
+        ];
 
         // and get new field object
         // (need to set it to the types field property)
@@ -156,7 +158,7 @@ class CMB2_Type_File extends CMB2_Type_File_Base
         $id_value = absint(null !== $this->args['id_value'] ? $this->args['id_value'] : $id_field->escaped_value());
 
         // we don't want to output "0" as a value.
-        if (! $id_value) {
+        if ( ! $id_value) {
             $id_value = '';
         }
 

@@ -1,8 +1,9 @@
 <?php
+
 /**
  * CMB Taxonomy base field type
  *
- * @since  2.2.2
+ * @since     2.2.2
  *
  * @category  WordPress_Plugin
  * @package   CMB2
@@ -50,13 +51,13 @@ abstract class CMB2_Type_Taxonomy_Base extends CMB2_Type_Multi_Base
     public function options_terms()
     {
         if (empty($this->field->value)) {
-            return array();
+            return [];
         }
 
-        $terms = (array) $this->field->value;
+        $terms = (array)$this->field->value;
 
         foreach ($terms as $index => $term) {
-            $terms[ $index ] = get_term_by('slug', $term, $this->field->args('taxonomy'));
+            $terms[$index] = get_term_by('slug', $term, $this->field->args('taxonomy'));
         }
 
         return $terms;
@@ -71,14 +72,14 @@ abstract class CMB2_Type_Taxonomy_Base extends CMB2_Type_Multi_Base
     public function non_post_object_terms()
     {
         $object_id = $this->field->object_id;
-        $taxonomy = $this->field->args('taxonomy');
+        $taxonomy  = $this->field->args('taxonomy');
 
         $cache_key = "cmb-cache-{$taxonomy}-{$object_id}";
 
         // Check cache
         $cached = get_transient($cache_key);
 
-        if (! $cached) {
+        if ( ! $cached) {
             $cached = wp_get_object_terms($object_id, $taxonomy);
             // Do our own (minimal) caching. Long enough for a page-load.
             set_transient($cache_key, $cached, 60);
@@ -96,16 +97,16 @@ abstract class CMB2_Type_Taxonomy_Base extends CMB2_Type_Multi_Base
      */
     public function get_terms()
     {
-        $args = array(
+        $args = [
             'taxonomy'   => $this->field->args('taxonomy'),
             'hide_empty' => false,
-        );
+        ];
 
         if (null !== $this->parent) {
             $args['parent'] = $this->parent;
         }
 
-        $args = wp_parse_args($this->field->prop('query_args', array()), $args);
+        $args = wp_parse_args($this->field->prop('query_args', []), $args);
 
         return CMB2_Utils::wp_at_least('4.5.0')
             ? get_terms($args)
@@ -116,10 +117,10 @@ abstract class CMB2_Type_Taxonomy_Base extends CMB2_Type_Multi_Base
     {
         if (is_wp_error($error)) {
             $message = $error->get_error_message();
-            $data = 'data-error="' . esc_attr($error->get_error_code()) . '"';
+            $data    = 'data-error="' . esc_attr($error->get_error_code()) . '"';
         } else {
             $message = $this->_text('no_terms_text', esc_html__('No terms', 'cmb2'));
-            $data = '';
+            $data    = '';
         }
 
         $this->field->args['select_all_button'] = false;
@@ -141,8 +142,8 @@ abstract class CMB2_Type_Taxonomy_Base extends CMB2_Type_Multi_Base
      *
      * @since  2.2.5
      *
-     * @param  array  $all_terms   Array of all terms.
-     * @param  array|string $saved Array of terms set to the object, or single term slug.
+     * @param  array        $all_terms Array of all terms.
+     * @param  array|string $saved     Array of terms set to the object, or single term slug.
      *
      * @return string              List of terms.
      */
@@ -170,7 +171,7 @@ abstract class CMB2_Type_Taxonomy_Base extends CMB2_Type_Multi_Base
         $terms   = $this->get_terms();
         $options = '';
 
-        if (! empty($terms) && is_array($terms)) {
+        if ( ! empty($terms) && is_array($terms)) {
             $options = '<li class="cmb2-indented-hierarchy"><ul>';
             $options .= $this->loop_terms($terms, $saved);
             $options .= '</ul></li>';

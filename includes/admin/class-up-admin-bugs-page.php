@@ -1,12 +1,12 @@
 <?php
 
 // Exit if accessed directly
-if (! defined('ABSPATH')) {
+if ( ! defined('ABSPATH')) {
     exit;
 }
 
 
-if (! class_exists('WP_List_Table')) {
+if ( ! class_exists('WP_List_Table')) {
     require_once(ABSPATH . 'wp-admin/includes/class-wp-list-table.php');
 }
 
@@ -52,9 +52,9 @@ class Upstream_Bug_List extends WP_List_Table
     {
         $views = [];
 
-        if (! empty($_REQUEST['status'])) {
+        if ( ! empty($_REQUEST['status'])) {
             $current = esc_html($_REQUEST['status']);
-        } elseif (! empty($_REQUEST['view'])) {
+        } elseif ( ! empty($_REQUEST['view'])) {
             $current = esc_html($_REQUEST['view']);
         } else {
             $current = 'all';
@@ -62,21 +62,21 @@ class Upstream_Bug_List extends WP_List_Table
 
         //All link
         $all_class    = ($current == 'all' ? ' class="current"' : '');
-        $all_url      = remove_query_arg([ 'status', 'view' ]);
+        $all_url      = remove_query_arg(['status', 'view']);
         $all_count    = upstream_count_total('bugs');
         $views['all'] = "<a href='" . esc_url($all_url) . "' {$all_class} >" . __(
-            'All',
+                'All',
                 'upstream'
-        ) . "</a>({$all_count})";
+            ) . "</a>({$all_count})";
 
         //Mine link
         $mine_class    = ($current == 'mine' ? ' class="current"' : '');
-        $mine_url      = add_query_arg([ 'view' => 'mine', 'status' => false ]);
+        $mine_url      = add_query_arg(['view' => 'mine', 'status' => false]);
         $mine_count    = upstream_count_assigned_to('bugs');
         $views['mine'] = "<a href='" . esc_url($mine_url) . "' {$mine_class} >" . __(
-            'Mine',
+                'Mine',
                 'upstream'
-        ) . "</a>({$mine_count})";
+            ) . "</a>({$mine_count})";
 
         // links for other statuses
         $option   = get_option('upstream_bugs');
@@ -92,11 +92,11 @@ class Upstream_Bug_List extends WP_List_Table
                     continue;
                 }
 
-                $stati           = strtolower($status['id']);
-                $class           = ($current == $stati ? ' class="current"' : '');
-                $url             = add_query_arg([ 'status' => $stati, 'view' => false, 'paged' => false ]);
-                $count           = isset($counts[ $status['name'] ]) ? $counts[ $status['name'] ] : 0;
-                $views[ $stati ] = "<a href='" . esc_url($url) . "' {$class} >{$status['name']}</a>({$count})";
+                $stati         = strtolower($status['id']);
+                $class         = ($current == $stati ? ' class="current"' : '');
+                $url           = add_query_arg(['status' => $stati, 'view' => false, 'paged' => false]);
+                $count         = isset($counts[$status['name']]) ? $counts[$status['name']] : 0;
+                $views[$stati] = "<a href='" . esc_url($url) . "' {$class} >{$status['name']}</a>({$count})";
             }
         }
 
@@ -117,14 +117,14 @@ class Upstream_Bug_List extends WP_List_Table
 
         foreach ($rowset as $row) {
             if (isset($row['status'])
-                 && ! empty($row['status'])
-                 && isset($statuses[ $row['status'] ])
+                && ! empty($row['status'])
+                && isset($statuses[$row['status']])
             ) {
-                $statusTitle = $statuses[ $row['status'] ]['name'];
-                if (isset($data[ $statusTitle ])) {
-                    $data[ $statusTitle ] ++;
+                $statusTitle = $statuses[$row['status']]['name'];
+                if (isset($data[$statusTitle])) {
+                    $data[$statusTitle]++;
                 } else {
-                    $data[ $statusTitle ] = 1;
+                    $data[$statusTitle] = 1;
                 }
             }
         }
@@ -142,7 +142,7 @@ class Upstream_Bug_List extends WP_List_Table
         $args = [
             'post_type'      => 'project',
             'post_status'    => 'publish',
-            'posts_per_page' => - 1,
+            'posts_per_page' => -1,
             'meta_query'     => [
                 [
                     'key'     => '_upstream_project_bugs',
@@ -155,23 +155,23 @@ class Upstream_Bug_List extends WP_List_Table
         $the_query = new WP_Query($args);
 
         // The Loop
-        if (! $the_query->have_posts()) {
+        if ( ! $the_query->have_posts()) {
             return;
         }
 
         $bugs = [];
         while ($the_query->have_posts()) : $the_query->the_post();
 
-        $post_id = get_the_ID();
+            $post_id = get_the_ID();
 
-        if (upstream_are_bugs_disabled($post_id)) {
-            continue;
-        }
+            if (upstream_are_bugs_disabled($post_id)) {
+                continue;
+            }
 
-        $meta  = get_post_meta($post_id, '_upstream_project_bugs', true);
-        $owner = get_post_meta($post_id, '_upstream_project_owner', true);
+            $meta  = get_post_meta($post_id, '_upstream_project_bugs', true);
+            $owner = get_post_meta($post_id, '_upstream_project_owner', true);
 
-        if ($meta) :
+            if ($meta) :
                 foreach ($meta as $meta_val => $bug) {
                     // set up the data for each column
                     $bug['title']       = isset($bug['title']) ? $bug['title'] : __('(no title)', 'upstream');
@@ -196,7 +196,7 @@ class Upstream_Bug_List extends WP_List_Table
                     $bugs[] = $bug;
                 }
 
-        endif;
+            endif;
 
         endwhile;
 
@@ -213,7 +213,7 @@ class Upstream_Bug_List extends WP_List_Table
         $option   = get_option('upstream_bugs');
         $statuses = isset($option['statuses']) ? $option['statuses'] : '';
 
-        if (! $statuses) {
+        if ( ! $statuses) {
             return false;
         }
 
@@ -237,90 +237,90 @@ class Upstream_Bug_List extends WP_List_Table
         <div class="alignleft actions">
 
             <?php
-            if (! is_singular()) {
-                $projects = (array) $this->get_projects_unique();
-                if (! empty($projects)) {
+            if ( ! is_singular()) {
+                $projects = (array)$this->get_projects_unique();
+                if ( ! empty($projects)) {
                     ?>
 
                     <select name='project' id='project' class='postform'>
                         <option value=''><?php printf(__('Show all %s', 'upstream'), 'projects') ?></option>
                         <?php foreach ($projects as $project_id => $title) {
-                        ?>
+                            ?>
                             <option
-                                value="<?php echo $project_id ?>" <?php isset($_GET['project']) ? selected(
-                    $_GET['project'],
+                                    value="<?php echo $project_id ?>" <?php isset($_GET['project']) ? selected(
+                                $_GET['project'],
                                 $project_id
-                ) : ''; ?>><?php echo esc_html($title) ?></option>
-                        <?php
-                    } ?>
+                            ) : ''; ?>><?php echo esc_html($title) ?></option>
+                            <?php
+                        } ?>
                     </select>
 
-                <?php
+                    <?php
                 }
 
-                $users = (array) $this->get_assigned_to_unique();
+                $users = (array)$this->get_assigned_to_unique();
                 if (count($users) > 0) {
-                    $assigned_to = isset($_REQUEST['assigned_to']) ? (int) $_REQUEST['assigned_to'] : 0; ?>
+                    $assigned_to = isset($_REQUEST['assigned_to']) ? (int)$_REQUEST['assigned_to'] : 0; ?>
                     <select id="assigned_to" name="assigned_to" class="postform">
                         <option value=""><?php printf(__('Show all %s', 'upstream'), 'users'); ?></option>
                         <?php foreach ($users as $userId => $userName): ?>
                             <option
-                                value="<?php echo esc_attr($userId); ?>" <?php echo $assigned_to === $userId ? 'selected' : ''; ?>><?php echo esc_html($userName) ?></option>
+                                    value="<?php echo esc_attr($userId); ?>" <?php echo $assigned_to === $userId ? 'selected' : ''; ?>><?php echo esc_html($userName) ?></option>
                         <?php endforeach; ?>
                     </select>
                     <?php
                 }
 
                 $status = self::getBugsStatuses();
-                if (! empty($status)) {
+                if ( ! empty($status)) {
                     ?>
 
                     <select name='status' id='status' class='postform'>
                         <option value=''><?php printf(__('Show all %s', 'upstream'), 'statuses') ?></option>
                         <?php foreach ($status as $stati) {
-                        if (is_array($stati)) {
-                            $statusTitle = $stati['name'];
-                            $statusId    = $stati['id'];
-                        } else {
-                            $statusTitle = $stati;
-                            $statusId    = $stati;
-                        } ?>
+                            if (is_array($stati)) {
+                                $statusTitle = $stati['name'];
+                                $statusId    = $stati['id'];
+                            } else {
+                                $statusTitle = $stati;
+                                $statusId    = $stati;
+                            } ?>
                             <option
-                                value="<?php echo $statusId; ?>" <?php isset($_GET['status']) ? selected(
+                                    value="<?php echo $statusId; ?>" <?php isset($_GET['status']) ? selected(
                                 $_GET['status'],
                                 $statusTitle
                             ) : ''; ?>><?php echo esc_html($statusTitle) ?></option>
-                        <?php
-                    } ?>
+                            <?php
+                        } ?>
                     </select>
 
-                <?php
+                    <?php
                 }
 
                 $severities = self::getBugsSeverities();
-                if (! empty($severities)) {
+                if ( ! empty($severities)) {
                     ?>
 
                     <select name='severity' id='severity' class='postform'>
                         <option value=''><?php printf(__('Show all %s', 'upstream'), 'severities') ?></option>
                         <?php foreach ($severities as $severity) {
-                        if (is_array($severity)) {
-                            $severityTitle = $severity['name'];
-                            $severityId    = $severity['id'];
-                        } else {
-                            $severityTitle = $severity;
-                            $severityId    = $severity;
-                        } ?>
+                            if (is_array($severity)) {
+                                $severityTitle = $severity['name'];
+                                $severityId    = $severity['id'];
+                            } else {
+                                $severityTitle = $severity;
+                                $severityId    = $severity;
+                            } ?>
                             <option
-                                value="<?php echo $severityId; ?>" <?php isset($_GET['severity']) ? selected(
+                                    value="<?php echo $severityId; ?>" <?php isset($_GET['severity']) ? selected(
                                 $_GET['severity'],
                                 $severityTitle
                             ) : ''; ?>><?php echo esc_html($severityTitle) ?></option>
-                        <?php
-                    } ?>
+                            <?php
+                        } ?>
                     </select>
 
-                <?php
+                    <?php
                 }
 
                 submit_button(__('Filter', 'upstream'), 'button', 'filter', false);
@@ -345,7 +345,7 @@ class Upstream_Bug_List extends WP_List_Table
 
     private function get_assigned_to_unique()
     {
-        $bugs = (array) self::get_bugs();
+        $bugs = (array)self::get_bugs();
         if (count($bugs) === 0) {
             return;
         }
@@ -355,14 +355,14 @@ class Upstream_Bug_List extends WP_List_Table
         $data = [];
 
         $setUserNameIntoData = function ($user_id) use (&$data) {
-            if (! isset($data[ $user_id ])) {
-                $data[ $user_id ] = upstream_users_name($user_id);
+            if ( ! isset($data[$user_id])) {
+                $data[$user_id] = upstream_users_name($user_id);
             }
         };
 
         foreach ($rowset as $assignees) {
-            if (! is_array($assignees)) {
-                $assignees = (array) $assignees;
+            if ( ! is_array($assignees)) {
+                $assignees = (array)$assignees;
             }
 
             $assignees = array_unique(array_filter(array_map('intval', $assignees)));
@@ -387,11 +387,11 @@ class Upstream_Bug_List extends WP_List_Table
             $data = [];
 
             foreach ($rowset as $row) {
-                if (! empty($row['status'])
+                if ( ! empty($row['status'])
                      && isset($row['status'])
                 ) {
-                    $data[ $row['status'] ] = isset($statuses[ $row['status'] ])
-                        ? $statuses[ $row['status'] ]
+                    $data[$row['status']] = isset($statuses[$row['status']])
+                        ? $statuses[$row['status']]
                         : $row['status'];
                 }
             }
@@ -417,11 +417,11 @@ class Upstream_Bug_List extends WP_List_Table
             $data = [];
 
             foreach ($rowset as $row) {
-                if (! empty($row['severity'])
+                if ( ! empty($row['severity'])
                      && isset($row['severity'])
                 ) {
-                    $data[ $row['severity'] ] = isset($statuses[ $row['severity'] ])
-                        ? $statuses[ $row['severity'] ]
+                    $data[$row['severity']] = isset($statuses[$row['severity']])
+                        ? $statuses[$row['severity']]
                         : $row['severity'];
                 }
             }
@@ -462,7 +462,7 @@ class Upstream_Bug_List extends WP_List_Table
                 return $output;
 
             case 'assigned_to':
-                $assignees = isset($item['assigned_to']) ? array_filter((array) $item['assigned_to']) : [];
+                $assignees = isset($item['assigned_to']) ? array_filter((array)$item['assigned_to']) : [];
                 if (count($assignees) > 0) {
                     $users = get_users([
                         'fields'  => [
@@ -476,7 +476,7 @@ class Upstream_Bug_List extends WP_List_Table
 
                     $currentUserId = get_current_user_id();
                     foreach ($users as $user) {
-                        if ((int) $user->ID === $currentUserId) {
+                        if ((int)$user->ID === $currentUserId) {
                             $html[] = '<span class="mine">' . esc_html($user->display_name) . '</span>';
                         } else {
                             $html[] = '<span>' . esc_html($user->display_name) . '</span>';
@@ -487,23 +487,23 @@ class Upstream_Bug_List extends WP_List_Table
                 } else {
                     return '<span><i style="color: #CCC;">' . __('none', 'upstream') . '</i></span>';
                 }
-                // no break
+            // no break
             case 'due_date':
-                if (isset($item['due_date']) && (int) $item['due_date'] > 0) {
+                if (isset($item['due_date']) && (int)$item['due_date'] > 0) {
                     return '<span class="end-date">' . upstream_format_date($item['due_date']) . '</span>';
                 } else {
                     return '<span><i style="color: #CCC;">' . __('none', 'upstream') . '</i></span>';
                 }
 
-                // no break
+            // no break
             case 'status':
-                if (! isset($item['status'])
+                if ( ! isset($item['status'])
                      || empty($item['status'])
                 ) {
                     return '<span><i style="color: #CCC;">' . __('none', 'upstream') . '</i></span>';
                 }
 
-                $status = self::$bugsStatuses[ $item['status'] ];
+                $status = self::$bugsStatuses[$item['status']];
 
                 if (is_array($status)) {
                     $statusTitle = $status['name'];
@@ -525,13 +525,13 @@ class Upstream_Bug_List extends WP_List_Table
                 return $output;
 
             case 'severity':
-                if (! isset($item['severity'])
+                if ( ! isset($item['severity'])
                      || empty($item['severity'])
                 ) {
                     return '<span><i style="color: #CCC;">' . __('none', 'upstream') . '</i></span>';
                 }
 
-                $severity = self::$bugsSeverities[ $item['severity'] ];
+                $severity = self::$bugsSeverities[$item['severity']];
 
                 if (is_array($severity)) {
                     $severityTitle = $severity['name'];
@@ -565,13 +565,13 @@ class Upstream_Bug_List extends WP_List_Table
     public function get_sortable_columns()
     {
         $sortable_columns = [
-            'title'       => [ 'title', true ],
+            'title'       => ['title', true],
             // 'project'       => array( 'project', false ),
             // 'milestone'     => array( 'milestone', false ),
-            'assigned_to' => [ 'assigned_to', false ],
-            'due_date'    => [ 'due_date', false ],
-            'status'      => [ 'status', false ],
-            'severity'    => [ 'severity', false ],
+            'assigned_to' => ['assigned_to', false],
+            'due_date'    => ['due_date', false],
+            'status'      => ['status', false],
+            'severity'    => ['severity', false],
         ];
 
         return $sortable_columns;
@@ -622,7 +622,7 @@ class Upstream_Bug_List extends WP_List_Table
         // sort & filter the bugs
         $bugs = self::sort_filter($bugs);
         // does the paging
-        if (! $bugs) {
+        if ( ! $bugs) {
             $output = 0;
         } else {
             $output = array_slice($bugs, ($page_number - 1) * $per_page, $per_page);
@@ -633,7 +633,7 @@ class Upstream_Bug_List extends WP_List_Table
 
     public static function sort_filter($bugs = [])
     {
-        if (! is_array($bugs) || count($bugs) === 0) {
+        if ( ! is_array($bugs) || count($bugs) === 0) {
             return [];
         }
 
@@ -641,14 +641,14 @@ class Upstream_Bug_List extends WP_List_Table
         $the_bugs = $bugs; // store the bugs array
 
         $status = isset($_REQUEST['status']) && ! empty($_REQUEST['status']) ? $_REQUEST['status'] : 'all';
-        if (! empty($status) && $status !== 'all') {
+        if ( ! empty($status) && $status !== 'all') {
             $bugs = array_filter($the_bugs, function ($row) use ($status) {
                 return isset($row['status']) && $row['status'] === $status;
             });
         }
 
         $severity = isset($_REQUEST['severity']) && ! empty($_REQUEST['severity']) ? $_REQUEST['severity'] : 'all';
-        if (! empty($severity) && $severity !== 'all') {
+        if ( ! empty($severity) && $severity !== 'all') {
             $bugs = array_filter($bugs, function ($row) use ($severity) {
                 return isset($row['severity']) && $row['severity'] === $severity;
             });
@@ -656,12 +656,12 @@ class Upstream_Bug_List extends WP_List_Table
 
         $preset = isset($_REQUEST['view']) ? $_REQUEST['view'] : '';
         if ($preset === 'mine') {
-            $currentUserId = (int) get_current_user_id();
+            $currentUserId = (int)get_current_user_id();
 
             $bugs = array_filter($bugs, function ($row) use ($currentUserId) {
                 if (isset($row['assigned_to'])) {
                     if ((is_array($row['assigned_to']) && in_array($currentUserId, $row['assigned_to']))
-                         || (int) $row['assigned_to'] === $currentUserId
+                        || (int)$row['assigned_to'] === $currentUserId
                     ) {
                         return true;
                     }
@@ -670,7 +670,7 @@ class Upstream_Bug_List extends WP_List_Table
                 return false;
             });
         } else {
-            $assigned_to = isset($_REQUEST['assigned_to']) ? (int) $_REQUEST['assigned_to'] : 0;
+            $assigned_to = isset($_REQUEST['assigned_to']) ? (int)$_REQUEST['assigned_to'] : 0;
             if ($assigned_to > 0) {
                 $bugs = array_filter($bugs, function ($row) use ($assigned_to) {
                     return isset($row['assigned_to']) && $row['assigned_to'] === $assigned_to;
@@ -678,7 +678,7 @@ class Upstream_Bug_List extends WP_List_Table
             }
         }
 
-        $project_id = isset($_REQUEST['project']) && ! empty($_REQUEST['project']) ? (int) $_REQUEST['project'] : 0;
+        $project_id = isset($_REQUEST['project']) && ! empty($_REQUEST['project']) ? (int)$_REQUEST['project'] : 0;
         if ($project_id > 0) {
             $bugs = array_filter($bugs, function ($row) use ($project_id) {
                 return isset($row['project_id']) && $row['project_id'] === $project_id;
@@ -686,18 +686,18 @@ class Upstream_Bug_List extends WP_List_Table
         }
 
         // sorting the bugs
-        if (! empty($_REQUEST['orderby'])) {
-            if (! empty($_REQUEST['order']) && $_REQUEST['order'] == 'asc') {
+        if ( ! empty($_REQUEST['orderby'])) {
+            if ( ! empty($_REQUEST['order']) && $_REQUEST['order'] == 'asc') {
                 $tmp = [];
                 foreach ($bugs as &$ma) {
-                    $tmp[] = &$ma[ esc_html($_REQUEST['orderby']) ];
+                    $tmp[] = &$ma[esc_html($_REQUEST['orderby'])];
                 }
                 array_multisort($tmp, SORT_ASC, $bugs);
             }
-            if (! empty($_REQUEST['order']) && $_REQUEST['order'] == 'desc') {
+            if ( ! empty($_REQUEST['order']) && $_REQUEST['order'] == 'desc') {
                 $tmp = [];
                 foreach ($bugs as &$ma) {
-                    $tmp[] = &$ma[ esc_html($_REQUEST['orderby']) ];
+                    $tmp[] = &$ma[esc_html($_REQUEST['orderby'])];
                 }
                 array_multisort($tmp, SORT_DESC, $bugs);
             }
@@ -705,8 +705,8 @@ class Upstream_Bug_List extends WP_List_Table
 
         $rowset = [];
         foreach ($bugs as $bug) {
-            if (! isset($rowset[ $bug['id'] ])) {
-                $rowset[ $bug['id'] ] = $bug;
+            if ( ! isset($rowset[$bug['id']])) {
+                $rowset[$bug['id']] = $bug;
             }
         }
 
@@ -715,7 +715,7 @@ class Upstream_Bug_List extends WP_List_Table
 
     protected function get_table_classes()
     {
-        return [ 'widefat', 'striped', $this->_args['plural'] ];
+        return ['widefat', 'striped', $this->_args['plural']];
     }
 
     private function get_status_unique()
@@ -760,14 +760,14 @@ class Upstream_Admin_Bugs_Page
     // class constructor`
     public function __construct()
     {
-        add_filter('set-screen-option', [ $this, 'set_screen' ], 10, 3);
-        add_action('admin_menu', [ $this, 'plugin_menu' ]);
+        add_filter('set-screen-option', [$this, 'set_screen'], 10, 3);
+        add_action('admin_menu', [$this, 'plugin_menu']);
     }
 
     /** Singleton instance */
     public static function get_instance()
     {
-        if (! isset(self::$instance)) {
+        if ( ! isset(self::$instance)) {
             self::$instance = new self();
         }
 
@@ -807,8 +807,8 @@ class Upstream_Admin_Bugs_Page
 
     public function plugin_menu()
     {
-        $count = (int) upstream_count_assigned_to_open('bugs');
-        if (! isUserEitherManagerOrAdmin() && $count <= 0) {
+        $count = (int)upstream_count_assigned_to_open('bugs');
+        if ( ! isUserEitherManagerOrAdmin() && $count <= 0) {
             return;
         }
 
@@ -818,10 +818,10 @@ class Upstream_Admin_Bugs_Page
             upstream_bug_label_plural(),
             'edit_projects',
             'bugs',
-            [ $this, 'plugin_settings_page' ]
+            [$this, 'plugin_settings_page']
         );
 
-        add_action("load-$hook", [ $this, 'screen_option' ]);
+        add_action("load-$hook", [$this, 'screen_option']);
 
         global $submenu;
 
@@ -829,8 +829,8 @@ class Upstream_Admin_Bugs_Page
         if ($proj) {
             foreach ($proj as $key => $value) {
                 if (in_array('bugs', $value)) {
-                    $i                                              = (int) $key;
-                    $submenu['edit.php?post_type=project'][ $i ][0] .= $count ? " <span class='update-plugins count-1'><span class='update-count'>$count</span></span>" : '';
+                    $i                                            = (int)$key;
+                    $submenu['edit.php?post_type=project'][$i][0] .= $count ? " <span class='update-plugins count-1'><span class='update-count'>$count</span></span>" : '';
                 }
             }
         }
@@ -849,12 +849,14 @@ class Upstream_Admin_Bugs_Page
 
                 <div class="meta-box-sortables ui-sortable">
                     <?php $this->bugs_obj->views(); ?>
-                    <?php //$this->bugs_obj->display_tablenav( 'top' );?>
-                    <?php //$this->bugs_obj->search_box('search', 'search_id');?>
+                    <?php //$this->bugs_obj->display_tablenav( 'top' );
+                    ?>
+                    <?php //$this->bugs_obj->search_box('search', 'search_id');
+                    ?>
                     <form method="post">
                         <?php
                         $this->bugs_obj->prepare_items();
-        $this->bugs_obj->display(); ?>
+                        $this->bugs_obj->display(); ?>
                     </form>
                 </div>
             </div>

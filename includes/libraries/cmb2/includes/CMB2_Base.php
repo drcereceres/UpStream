@@ -1,4 +1,5 @@
 <?php
+
 /**
  * CMB2 Base - Base object functionality.
  *
@@ -56,7 +57,7 @@ abstract class CMB2_Base
      * @var   array
      * @since 2.2.3
      */
-    public $data_to_save = array();
+    public $data_to_save = [];
 
     /**
      * Array of field param callback results
@@ -64,7 +65,7 @@ abstract class CMB2_Base
      * @var   array
      * @since 2.0.0
      */
-    protected $callback_results = array();
+    protected $callback_results = [];
 
     /**
      * The deprecated_param method deprecated param message signature.
@@ -80,20 +81,23 @@ abstract class CMB2_Base
      * Get started
      *
      * @since 2.2.3
+     *
      * @param array $args Object properties array
      */
-    public function __construct($args = array())
+    public function __construct($args = [])
     {
-        if (! empty($args)) {
-            foreach (array(
-                'cmb_id',
-                'properties_name',
-                'object_id',
-                'object_type',
-                'data_to_save',
-            ) as $object_prop) {
-                if (isset($args[ $object_prop ])) {
-                    $this->{$object_prop} = $args[ $object_prop ];
+        if ( ! empty($args)) {
+            foreach (
+                [
+                    'cmb_id',
+                    'properties_name',
+                    'object_id',
+                    'object_type',
+                    'data_to_save',
+                ] as $object_prop
+            ) {
+                if (isset($args[$object_prop])) {
+                    $this->{$object_prop} = $args[$object_prop];
                 }
             }
         }
@@ -103,7 +107,9 @@ abstract class CMB2_Base
      * Returns the object ID
      *
      * @since  2.2.3
+     *
      * @param  integer $object_id Object ID
+     *
      * @return integer Object ID
      */
     public function object_id($object_id = 0)
@@ -119,7 +125,9 @@ abstract class CMB2_Base
      * Returns the object type
      *
      * @since  2.2.3
+     *
      * @param  string $object_type Object Type
+     *
      * @return string Object type
      */
     public function object_type($object_type = '')
@@ -142,15 +150,15 @@ abstract class CMB2_Base
         global $pagenow;
         $type = 'post';
 
-        if (in_array($pagenow, array( 'user-edit.php', 'profile.php', 'user-new.php' ), true)) {
+        if (in_array($pagenow, ['user-edit.php', 'profile.php', 'user-new.php'], true)) {
             $type = 'user';
         }
 
-        if (in_array($pagenow, array( 'edit-comments.php', 'comment.php' ), true)) {
+        if (in_array($pagenow, ['edit-comments.php', 'comment.php'], true)) {
             $type = 'comment';
         }
 
-        if (in_array($pagenow, array( 'edit-tags.php', 'term.php' ), true)) {
+        if (in_array($pagenow, ['edit-tags.php', 'term.php'], true)) {
             $type = 'term';
         }
 
@@ -161,13 +169,15 @@ abstract class CMB2_Base
      * Set object property.
      *
      * @since  2.2.2
+     *
      * @param  string $property Metabox config property to retrieve
      * @param  mixed  $value    Value to set if no value found
+     *
      * @return mixed            Metabox config property value or false
      */
     public function set_prop($property, $value)
     {
-        $this->{$this->properties_name}[ $property ] = $value;
+        $this->{$this->properties_name}[$property] = $value;
 
         return $this->prop($property);
     }
@@ -176,16 +186,18 @@ abstract class CMB2_Base
      * Get object property and optionally set a fallback
      *
      * @since  2.0.0
+     *
      * @param  string $property Metabox config property to retrieve
      * @param  mixed  $fallback Fallback value to set if no value found
+     *
      * @return mixed            Metabox config property value or false
      */
     public function prop($property, $fallback = null)
     {
         if (array_key_exists($property, $this->{$this->properties_name})) {
-            return $this->{$this->properties_name}[ $property ];
+            return $this->{$this->properties_name}[$property];
         } elseif ($fallback) {
-            return $this->{$this->properties_name}[ $property ] = $fallback;
+            return $this->{$this->properties_name}[$property] = $fallback;
         }
     }
 
@@ -193,24 +205,26 @@ abstract class CMB2_Base
      * Get default field arguments specific to this CMB2 object.
      *
      * @since  2.2.0
+     *
      * @param  array      $field_args  Metabox field config array.
      * @param  CMB2_Field $field_group (optional) CMB2_Field object (group parent)
+     *
      * @return array                   Array of field arguments.
      */
     protected function get_default_args($field_args, $field_group = null)
     {
         if ($field_group) {
-            $args = array(
+            $args = [
                 'field_args'  => $field_args,
                 'group_field' => $field_group,
-            );
+            ];
         } else {
-            $args = array(
+            $args = [
                 'field_args'  => $field_args,
                 'object_type' => $this->object_type(),
                 'object_id'   => $this->object_id(),
                 'cmb_id'      => $this->cmb_id,
-            );
+            ];
         }
 
         return $args;
@@ -220,8 +234,10 @@ abstract class CMB2_Base
      * Get a new field object specific to this CMB2 object.
      *
      * @since  2.2.0
+     *
      * @param  array      $field_args  Metabox field config array.
      * @param  CMB2_Field $field_group (optional) CMB2_Field object (group parent)
+     *
      * @return CMB2_Field CMB2_Field object
      */
     protected function get_new_field($field_args, $field_group = null)
@@ -243,7 +259,7 @@ abstract class CMB2_Base
 
         // Use the callback to determine showing the cmb, if it exists
         if (is_callable($this->prop('show_on_cb'))) {
-            $show = (bool) call_user_func($this->prop('show_on_cb'), $this);
+            $show = (bool)call_user_func($this->prop('show_on_cb'), $this);
         }
 
         return $show;
@@ -253,6 +269,7 @@ abstract class CMB2_Base
      * Displays the results of the param callbacks.
      *
      * @since 2.0.0
+     *
      * @param string $param Field parameter
      */
     public function peform_param_callback($param)
@@ -264,7 +281,9 @@ abstract class CMB2_Base
      * Store results of the param callbacks for continual access
      *
      * @since  2.0.0
+     *
      * @param  string $param Field parameter
+     *
      * @return mixed         Results of param/param callback
      */
     public function get_param_callback_result($param)
@@ -274,7 +293,7 @@ abstract class CMB2_Base
         if (array_key_exists($param, $this->callback_results)) {
 
             // send it back
-            return $this->callback_results[ $param ];
+            return $this->callback_results[$param];
         }
 
         // Check if parameter has registered a callback.
@@ -289,27 +308,29 @@ abstract class CMB2_Base
 
             // This checks if the user returned or echoed their callback.
             // Defaults to using the echoed value.
-            $this->callback_results[ $param ] = $echoed ? $echoed : $returned;
+            $this->callback_results[$param] = $echoed ? $echoed : $returned;
         } else {
 
             // Otherwise just get whatever is there.
-            $this->callback_results[ $param ] = isset($this->{$this->properties_name}[ $param ]) ? $this->{$this->properties_name}[ $param ] : false;
+            $this->callback_results[$param] = isset($this->{$this->properties_name}[$param]) ? $this->{$this->properties_name}[$param] : false;
         }
 
-        return $this->callback_results[ $param ];
+        return $this->callback_results[$param];
     }
 
     /**
      * Unset the cached results of the param callback.
      *
      * @since  2.2.6
+     *
      * @param  string $param Field parameter
+     *
      * @return CMB2_Base
      */
     public function unset_param_callback_cache($param)
     {
-        if (isset($this->callback_results[ $param ])) {
-            unset($this->callback_results[ $param ]);
+        if (isset($this->callback_results[$param])) {
+            unset($this->callback_results[$param]);
         }
 
         return $this;
@@ -319,8 +340,10 @@ abstract class CMB2_Base
      * Handles the parameter callbacks, and passes this object as parameter.
      *
      * @since  2.2.3
+     *
      * @param  callable $cb                The callback method/function/closure
      * @param  mixed    $additional_params Any additoinal parameters which should be passed to the callback.
+     *
      * @return mixed                       Return of the callback function.
      */
     protected function do_callback($cb, $additional_params = null)
@@ -332,21 +355,23 @@ abstract class CMB2_Base
      * Checks if field has a callback value
      *
      * @since  1.0.1
+     *
      * @param  string $cb Callback string
+     *
      * @return mixed      NULL, false for NO validation, or $cb string if it exists.
      */
     public function maybe_callback($cb)
     {
         $args = $this->{$this->properties_name};
-        if (! isset($args[ $cb ])) {
+        if ( ! isset($args[$cb])) {
             return null;
         }
 
         // Check if requesting explicitly false
-        $cb = false !== $args[ $cb ] && 'false' !== $args[ $cb ] ? $args[ $cb ] : false;
+        $cb = false !== $args[$cb] && 'false' !== $args[$cb] ? $args[$cb] : false;
 
         // If requesting NO validation, return false
-        if (! $cb) {
+        if ( ! $cb) {
             return false;
         }
 
@@ -403,6 +428,7 @@ abstract class CMB2_Base
     {
         if (is_callable($val)) {
             $hook_function($hook_name, $val, 10, 2);
+
             return null;
         }
 
@@ -435,11 +461,13 @@ abstract class CMB2_Base
             switch ($message) {
 
                 case self::DEPRECATED_PARAM:
-                    $message = sprintf(__('The "%1$s" field parameter has been deprecated in favor of the "%2$s" parameter.', 'cmb2'), $args[3], $args[4]);
+                    $message = sprintf(__('The "%1$s" field parameter has been deprecated in favor of the "%2$s" parameter.',
+                        'cmb2'), $args[3], $args[4]);
                     break;
 
                 case self::DEPRECATED_CB_PARAM:
-                    $message = sprintf(__('Using the "%1$s" field parameter as a callback has been deprecated in favor of the "%2$s" parameter.', 'cmb2'), $args[3], $args[4]);
+                    $message = sprintf(__('Using the "%1$s" field parameter as a callback has been deprecated in favor of the "%2$s" parameter.',
+                        'cmb2'), $args[3], $args[4]);
                     break;
 
                 default:
@@ -468,16 +496,20 @@ abstract class CMB2_Base
          */
         if (defined('WP_DEBUG') && WP_DEBUG && apply_filters('deprecated_argument_trigger_error', true)) {
             if (function_exists('__')) {
-                if (! is_null($message)) {
-                    trigger_error(sprintf(__('%1$s was called with a parameter that is <strong>deprecated</strong> since version %2$s! %3$s', 'cmb2'), $function, $version, $message));
+                if ( ! is_null($message)) {
+                    trigger_error(sprintf(__('%1$s was called with a parameter that is <strong>deprecated</strong> since version %2$s! %3$s',
+                        'cmb2'), $function, $version, $message));
                 } else {
-                    trigger_error(sprintf(__('%1$s was called with a parameter that is <strong>deprecated</strong> since version %2$s with no alternative available.', 'cmb2'), $function, $version));
+                    trigger_error(sprintf(__('%1$s was called with a parameter that is <strong>deprecated</strong> since version %2$s with no alternative available.',
+                        'cmb2'), $function, $version));
                 }
             } else {
-                if (! is_null($message)) {
-                    trigger_error(sprintf('%1$s was called with a parameter that is <strong>deprecated</strong> since version %2$s! %3$s', $function, $version, $message));
+                if ( ! is_null($message)) {
+                    trigger_error(sprintf('%1$s was called with a parameter that is <strong>deprecated</strong> since version %2$s! %3$s',
+                        $function, $version, $message));
                 } else {
-                    trigger_error(sprintf('%1$s was called with a parameter that is <strong>deprecated</strong> since version %2$s with no alternative available.', $function, $version));
+                    trigger_error(sprintf('%1$s was called with a parameter that is <strong>deprecated</strong> since version %2$s with no alternative available.',
+                        $function, $version));
                 }
             }
         }
@@ -487,6 +519,7 @@ abstract class CMB2_Base
      * Magic getter for our object.
      *
      * @param string $field
+     *
      * @throws Exception Throws an exception if the field is invalid.
      * @return mixed
      */
@@ -498,7 +531,7 @@ abstract class CMB2_Base
                 if ($field === $this->properties_name) {
                     return $this->{$this->properties_name};
                 }
-                // no break
+            // no break
             case 'properties':
                 return $this->{$this->properties_name};
             case 'cmb_id':
@@ -514,6 +547,7 @@ abstract class CMB2_Base
      * Allows overloading the object with methods... Whooaaa oooh it's magic, y'knoooow.
      *
      * @since 1.0.0
+     *
      * @param string $method Non-existent method.
      * @param array  $args   All arguments passed to the method
      */
@@ -521,7 +555,7 @@ abstract class CMB2_Base
     {
         $object_class = strtolower(get_class($this));
 
-        if (! has_filter("{$object_class}_inherit_{$method}")) {
+        if ( ! has_filter("{$object_class}_inherit_{$method}")) {
             throw new Exception(sprintf(esc_html__('Invalid %1$s method: %2$s', 'cmb2'), get_class($this), $method));
         }
 

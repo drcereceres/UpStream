@@ -3,7 +3,7 @@
 namespace UpStream\Migrations;
 
 // Prevent direct access.
-if (! defined('ABSPATH')) {
+if ( ! defined('ABSPATH')) {
     exit;
 }
 
@@ -22,7 +22,7 @@ final class Comments
      */
     public static function run()
     {
-        if (! self::isMigrationNeeded()) {
+        if ( ! self::isMigrationNeeded()) {
             return;
         }
 
@@ -32,7 +32,7 @@ final class Comments
 
             foreach ($rowset as $project_id => $legacyComments) {
                 foreach ($legacyComments as $legacyComment) {
-                    if (! isset($legacyComment['created_by'])
+                    if ( ! isset($legacyComment['created_by'])
                          || ! isset($legacyComment['created_time'])
                          || ! isset($legacyComment['comment'])
                          || empty($legacyComment['comment'])
@@ -75,7 +75,7 @@ final class Comments
      */
     private static function isMigrationNeeded()
     {
-        return (string) get_option('upstream:migration.comments') !== 'yes';
+        return (string)get_option('upstream:migration.comments') !== 'yes';
     }
 
     /**
@@ -106,19 +106,19 @@ final class Comments
 
         if (count($metasRowset) > 0) {
             foreach ($metasRowset as $meta) {
-                $project_id = (int) $meta->post_id;
-                $metaValue  = (array) maybe_unserialize($meta->meta_value);
+                $project_id = (int)$meta->post_id;
+                $metaValue  = (array)maybe_unserialize($meta->meta_value);
 
-                if (! empty($metaValue)) {
+                if ( ! empty($metaValue)) {
                     $metaValue = isset($metaValue[0]) ? $metaValue[0] : $metaValue;
                 }
 
-                if (! empty($metaValue) && is_array($metaValue)) {
-                    if (! isset($data[ $project_id ])) {
-                        $data[ $project_id ] = [];
+                if ( ! empty($metaValue) && is_array($metaValue)) {
+                    if ( ! isset($data[$project_id])) {
+                        $data[$project_id] = [];
                     }
 
-                    $data[ $project_id ][] = $metaValue;
+                    $data[$project_id][] = $metaValue;
                 }
             }
         }

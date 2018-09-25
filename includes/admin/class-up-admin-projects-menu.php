@@ -9,11 +9,11 @@
  */
 
 // Exit if accessed directly
-if (! defined('ABSPATH')) {
+if ( ! defined('ABSPATH')) {
     exit;
 }
 
-if (! class_exists('UpStream_Admin_Projects_Menu')) :
+if ( ! class_exists('UpStream_Admin_Projects_Menu')) :
 
     /**
      * UpStream_Admin_Menus Class.
@@ -30,14 +30,14 @@ if (! class_exists('UpStream_Admin_Projects_Menu')) :
             if (self::$userIsUpStreamUser === null) {
                 $user                     = wp_get_current_user();
                 self::$userIsUpStreamUser = count(array_intersect(
-                    $user->roles,
-                        [ 'administrator', 'upstream_manager' ]
-                )) === 0;
+                        $user->roles,
+                        ['administrator', 'upstream_manager']
+                    )) === 0;
             }
 
-            add_action('admin_menu', [ $this, 'projects_menu' ], 9);
-            add_filter('custom_menu_order', [ $this, 'submenu_order' ]);
-            add_action('admin_head', [ $this, 'hideAddNewProjectButtonIfNeeded' ]);
+            add_action('admin_menu', [$this, 'projects_menu'], 9);
+            add_filter('custom_menu_order', [$this, 'submenu_order']);
+            add_action('admin_head', [$this, 'hideAddNewProjectButtonIfNeeded']);
         }
 
         public function hideAddNewProjectButtonIfNeeded()
@@ -70,10 +70,10 @@ if (! class_exists('UpStream_Admin_Projects_Menu')) :
             global $submenu;
 
             $subMenuIdentifier = 'edit.php?post_type=project';
-            if (isset($submenu[ $subMenuIdentifier ])
-                 && ! empty($submenu[ $subMenuIdentifier ])
+            if (isset($submenu[$subMenuIdentifier])
+                && ! empty($submenu[$subMenuIdentifier])
             ) {
-                $upstreamSubmenu    = &$submenu[ $subMenuIdentifier ];
+                $upstreamSubmenu    = &$submenu[$subMenuIdentifier];
                 $newUpStreamSubmenu = [];
 
                 $searchSubmenuItem = function ($needle) use (&$upstreamSubmenu) {
@@ -96,7 +96,7 @@ if (! class_exists('UpStream_Admin_Projects_Menu')) :
                 if (self::$userIsUpStreamUser) {
                     $submenuTasks = $searchSubmenuItem('^tasks$');
                     if ($submenuTasks !== null
-                         && strpos($submenuTasks[0], 'update-count' !== false)
+                        && strpos($submenuTasks[0], 'update-count' !== false)
                     ) {
                         $newUpStreamSubmenu[] = $submenuTasks;
                     }
@@ -104,7 +104,7 @@ if (! class_exists('UpStream_Admin_Projects_Menu')) :
 
                     $submenuBugs = $searchSubmenuItem('^bugs$');
                     if ($submenuBugs !== null
-                         && strpos($submenuBugs[0], 'update-count' !== false)
+                        && strpos($submenuBugs[0], 'update-count' !== false)
                     ) {
                         $newUpStreamSubmenu[] = $submenuBugs;
                     }
@@ -135,13 +135,13 @@ if (! class_exists('UpStream_Admin_Projects_Menu')) :
 
                     if ($areCategoriesEnabled) {
                         $submenuCategories = $searchSubmenuItem('^edit\-tags\.php\?taxonomy\=project_category\&amp;post_type=project$');
-                        if (! $submenuCategories !== null) {
+                        if ( ! $submenuCategories !== null) {
                             $newUpStreamSubmenu[] = $submenuCategories;
                         }
                         unset($submenuCategories);
 
                         $submenuTags = $searchSubmenuItem('^edit\-tags\.php\?taxonomy\=upstream_tag\&amp;post_type=project$');
-                        if (! $submenuTags !== null) {
+                        if ( ! $submenuTags !== null) {
                             $newUpStreamSubmenu[] = $submenuTags;
                         }
                         unset($submenuTags);

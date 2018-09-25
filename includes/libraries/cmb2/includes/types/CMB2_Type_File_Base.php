@@ -1,8 +1,9 @@
 <?php
+
 /**
  * CMB File base field type
  *
- * @since  2.2.2
+ * @since     2.2.2
  *
  * @category  WordPress_Plugin
  * @package   CMB2
@@ -17,14 +18,16 @@ class CMB2_Type_File_Base extends CMB2_Type_Text
      * Determines if a file has a valid image extension
      *
      * @since  1.0.0
+     *
      * @param  string $file File url
+     *
      * @return bool         Whether file has a valid image extension
      */
     public function is_valid_img_ext($file, $blah = false)
     {
         $file_ext = CMB2_Utils::get_file_ext($file);
 
-        $valid_types = array( 'jpg', 'jpeg', 'png', 'gif', 'ico', 'icon' );
+        $valid_types = ['jpg', 'jpeg', 'png', 'gif', 'ico', 'icon'];
 
         /**
          * Which image types are considered valid image file extensions.
@@ -34,8 +37,8 @@ class CMB2_Type_File_Base extends CMB2_Type_Text
          * @param array $valid_types The valid image file extensions.
          */
         $is_valid_types = apply_filters('cmb2_valid_img_types', $valid_types);
-        $is_valid = $file_ext && in_array($file_ext, (array) $is_valid_types);
-        $field_id = $this->field->id();
+        $is_valid       = $file_ext && in_array($file_ext, (array)$is_valid_types);
+        $field_id       = $this->field->id();
 
         /**
          * Filter for determining if a field value has a valid image file-type extension.
@@ -48,14 +51,16 @@ class CMB2_Type_File_Base extends CMB2_Type_Text
          * @param string $file     File url.
          * @param string $file_ext File extension.
          */
-        return (bool) apply_filters("cmb2_{$field_id}_is_valid_img_ext", $is_valid, $file, $file_ext);
+        return (bool)apply_filters("cmb2_{$field_id}_is_valid_img_ext", $is_valid, $file, $file_ext);
     }
 
     /**
      * file/file_list image wrap
      *
      * @since  2.0.2
+     *
      * @param  array $args Array of arguments for output
+     *
      * @return string       Image wrap output
      */
     public function img_status_output($args)
@@ -74,7 +79,9 @@ class CMB2_Type_File_Base extends CMB2_Type_Text
      * file/file_list file wrap
      *
      * @since  2.0.2
+     *
      * @param  array $args Array of arguments for output
+     *
      * @return string       File wrap output
      */
     public function file_status_output($args)
@@ -101,31 +108,45 @@ class CMB2_Type_File_Base extends CMB2_Type_Text
     public static function output_js_underscore_templates()
     {
         ?>
-		<script type="text/html" id="tmpl-cmb2-single-image">
-			<div class="img-status cmb2-media-item">
-				<img width="{{ data.sizeWidth }}" height="{{ data.sizeHeight }}" src="{{ data.sizeUrl }}" class="cmb-file-field-image" alt="{{ data.filename }}" title="{{ data.filename }}" />
-				<p><a href="#" class="cmb2-remove-file-button" rel="{{ data.mediaField }}">{{ data.stringRemoveImage }}</a></p>
-			</div>
-		</script>
-		<script type="text/html" id="tmpl-cmb2-single-file">
-			<div class="file-status cmb2-media-item">
-				<span>{{ data.stringFile }} <strong>{{ data.filename }}</strong></span>&nbsp;&nbsp; (<a href="{{ data.url }}" target="_blank" rel="external">{{ data.stringDownload }}</a> / <a href="#" class="cmb2-remove-file-button" rel="{{ data.mediaField }}">{{ data.stringRemoveFile }}</a>)
-			</div>
-		</script>
-		<script type="text/html" id="tmpl-cmb2-list-image">
-			<li class="img-status cmb2-media-item">
-				<img width="{{ data.sizeWidth }}" height="{{ data.sizeHeight }}" src="{{ data.sizeUrl }}" class="cmb-file_list-field-image" alt="{{ data.filename }}">
-				<p><a href="#" class="cmb2-remove-file-button" rel="{{ data.mediaField }}[{{ data.id }}]">{{ data.stringRemoveImage }}</a></p>
-				<input type="hidden" id="filelist-{{ data.id }}" data-id="{{ data.id }}" name="{{ data.mediaFieldName }}[{{ data.id }}]" value="{{ data.url }}">
-			</li>
-		</script>
-		<script type="text/html" id="tmpl-cmb2-list-file">
-			<li class="file-status cmb2-media-item">
-				<span>{{ data.stringFile }} <strong>{{ data.filename }}</strong></span>&nbsp;&nbsp; (<a href="{{ data.url }}" target="_blank" rel="external">{{ data.stringDownload }}</a> / <a href="#" class="cmb2-remove-file-button" rel="{{ data.mediaField }}[{{ data.id }}]">{{ data.stringRemoveFile }}</a>)
-				<input type="hidden" id="filelist-{{ data.id }}" data-id="{{ data.id }}" name="{{ data.mediaFieldName }}[{{ data.id }}]" value="{{ data.url }}">
-			</li>
-		</script>
-		<?php
+        <script type="text/html" id="tmpl-cmb2-single-image">
+            <div class="img-status cmb2-media-item">
+                <img width="{{ data.sizeWidth }}" height="{{ data.sizeHeight }}" src="{{ data.sizeUrl }}"
+                     class="cmb-file-field-image" alt="{{ data.filename }}" title="{{ data.filename }}"/>
+                <p><a href="#" class="cmb2-remove-file-button" rel="{{ data.mediaField }}">{{ data.stringRemoveImage
+                        }}</a></p>
+            </div>
+        </script>
+        <script type="text/html" id="tmpl-cmb2-single-file">
+            <div class="file-status cmb2-media-item">
+                <span>{{ data.stringFile }} <strong>{{ data.filename }}</strong></span>&nbsp;&nbsp; (<a
+                        href="{{ data.url }}" target="_blank" rel="external">{{ data.stringDownload }}</a> / <a href="#"
+                                                                                                                class="cmb2-remove-file-button"
+                                                                                                                rel="{{ data.mediaField }}">{{
+                    data.stringRemoveFile }}</a>)
+            </div>
+        </script>
+        <script type="text/html" id="tmpl-cmb2-list-image">
+            <li class="img-status cmb2-media-item">
+                <img width="{{ data.sizeWidth }}" height="{{ data.sizeHeight }}" src="{{ data.sizeUrl }}"
+                     class="cmb-file_list-field-image" alt="{{ data.filename }}">
+                <p><a href="#" class="cmb2-remove-file-button" rel="{{ data.mediaField }}[{{ data.id }}]">{{
+                        data.stringRemoveImage }}</a></p>
+                <input type="hidden" id="filelist-{{ data.id }}" data-id="{{ data.id }}"
+                       name="{{ data.mediaFieldName }}[{{ data.id }}]" value="{{ data.url }}">
+            </li>
+        </script>
+        <script type="text/html" id="tmpl-cmb2-list-file">
+            <li class="file-status cmb2-media-item">
+                <span>{{ data.stringFile }} <strong>{{ data.filename }}</strong></span>&nbsp;&nbsp; (<a
+                        href="{{ data.url }}" target="_blank" rel="external">{{ data.stringDownload }}</a> / <a href="#"
+                                                                                                                class="cmb2-remove-file-button"
+                                                                                                                rel="{{ data.mediaField }}[{{ data.id }}]">{{
+                    data.stringRemoveFile }}</a>)
+                <input type="hidden" id="filelist-{{ data.id }}" data-id="{{ data.id }}"
+                       name="{{ data.mediaFieldName }}[{{ data.id }}]" value="{{ data.url }}">
+            </li>
+        </script>
+        <?php
     }
 
     /**
@@ -136,8 +157,10 @@ class CMB2_Type_File_Base extends CMB2_Type_Text
      * to get the meta data associated with a named size.
      *
      * @since  2.2.4
-     * @param  array|string $img_size  Image size. Accepts an array of width and height (in that order)
-     * @param  string       $fallback  Size to use if the supplied named size doesn't exist
+     *
+     * @param  array|string $img_size Image size. Accepts an array of width and height (in that order)
+     * @param  string       $fallback Size to use if the supplied named size doesn't exist
+     *
      * @return array                   Array containing the image size meta data
      *    $size = (
      *      'width'  => (int) image size width
@@ -147,7 +170,7 @@ class CMB2_Type_File_Base extends CMB2_Type_Text
      */
     public static function get_image_size_data($img_size = '', $fallback = 'thumbnail')
     {
-        $data = array();
+        $data = [];
 
         if (is_array($img_size)) {
             $data['width']  = intval($img_size[0]);
@@ -167,13 +190,13 @@ class CMB2_Type_File_Base extends CMB2_Type_Text
             }
 
             // Named size doesn't exist, use $fallback
-            if (! array_key_exists($img_size, $image_sizes)) {
+            if ( ! array_key_exists($img_size, $image_sizes)) {
                 $img_size = $fallback;
             }
 
             // Get image dimensions from named sizes
-            $data['width']  = intval($image_sizes[ $img_size ]['width']);
-            $data['height'] = intval($image_sizes[ $img_size ]['height']);
+            $data['width']  = intval($image_sizes[$img_size]['width']);
+            $data['height'] = intval($image_sizes[$img_size]['height']);
             $data['name']   = $img_size;
         }
 
@@ -187,9 +210,11 @@ class CMB2_Type_File_Base extends CMB2_Type_Text
      * object returned by the wp.media uploader. Hooked to 'wp_prepare_attachment_for_js'.
      *
      * @since  2.2.4
+     *
      * @param  array      $response   Array of prepared attachment data
      * @param  int|object $attachment Attachment ID or object
      * @param  array      $meta       Array of attachment meta data ( from wp_get_attachment_metadata() )
+     *
      * @return array      filtered $response array
      */
     public static function prepare_image_sizes_for_js($response, $attachment, $meta)
@@ -197,17 +222,17 @@ class CMB2_Type_File_Base extends CMB2_Type_Text
         foreach (CMB2_Utils::get_available_image_sizes() as $size => $info) {
 
             // registered image size exists for this attachment
-            if (isset($meta['sizes'][ $size ])) {
+            if (isset($meta['sizes'][$size])) {
                 $attachment_url = wp_get_attachment_url($attachment->ID);
-                $base_url = str_replace(wp_basename($attachment_url), '', $attachment_url);
-                $size_meta = $meta['sizes'][ $size ];
+                $base_url       = str_replace(wp_basename($attachment_url), '', $attachment_url);
+                $size_meta      = $meta['sizes'][$size];
 
-                $response['sizes'][ $size ] = array(
+                $response['sizes'][$size] = [
                     'url'         => $base_url . $size_meta['file'],
                     'height'      => $size_meta['height'],
                     'width'       => $size_meta['width'],
                     'orientation' => $size_meta['height'] > $size_meta['width'] ? 'portrait' : 'landscape',
-                );
+                ];
             }
         }
 

@@ -1,4 +1,5 @@
 <?php
+
 namespace Cmb2Grid\DesignPatterns;
 
 /**
@@ -6,7 +7,7 @@ namespace Cmb2Grid\DesignPatterns;
  *
  * Pablo Pacheco <pablo.pacheco@origgami.com.br>
  */
-if (! class_exists('\Cmb2Grid\DesignPatterns\Singleton')) {
+if ( ! class_exists('\Cmb2Grid\DesignPatterns\Singleton')) {
     abstract class Singleton
     {
         abstract protected function __construct();

@@ -1,8 +1,9 @@
 <?php
+
 /**
  * CMB taxonomy_select field type
  *
- * @since  2.2.2
+ * @since     2.2.2
  *
  * @category  WordPress_Plugin
  * @package   CMB2
@@ -16,7 +17,7 @@ class CMB2_Type_Taxonomy_Select extends CMB2_Type_Taxonomy_Base
     {
         $all_terms = $this->get_terms();
 
-        if (! $all_terms || is_wp_error($all_terms)) {
+        if ( ! $all_terms || is_wp_error($all_terms)) {
             return $this->no_terms_result($all_terms, 'strong');
         }
 
@@ -24,7 +25,7 @@ class CMB2_Type_Taxonomy_Select extends CMB2_Type_Taxonomy_Base
         $option_none = $this->field->args('show_option_none');
         $options     = '';
 
-        if (! empty($option_none)) {
+        if ( ! empty($option_none)) {
             $field_id = $this->_id();
 
             /**
@@ -47,19 +48,19 @@ class CMB2_Type_Taxonomy_Select extends CMB2_Type_Taxonomy_Base
              */
             $option_none_value = apply_filters("cmb2_taxonomy_select_{$field_id}_default_value", $option_none_value);
 
-            $options .= $this->select_option(array(
+            $options .= $this->select_option([
                 'label'   => $option_none,
                 'value'   => $option_none_value,
                 'checked' => $saved_term == $option_none_value,
-            ));
+            ]);
         }
 
         $options .= $this->loop_terms($all_terms, $saved_term);
 
         return $this->rendered(
-            $this->types->select(array(
+            $this->types->select([
                 'options' => $options,
-            ))
+            ])
         );
     }
 
@@ -68,11 +69,11 @@ class CMB2_Type_Taxonomy_Select extends CMB2_Type_Taxonomy_Base
         $options = '';
 
         foreach ($all_terms as $term) {
-            $options .= $this->select_option(array(
+            $options .= $this->select_option([
                 'label'   => $term->name,
                 'value'   => $term->slug,
                 'checked' => $saved_term === $term->slug,
-            ));
+            ]);
         }
 
         return $options;

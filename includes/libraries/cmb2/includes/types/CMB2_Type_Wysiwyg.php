@@ -1,8 +1,9 @@
 <?php
+
 /**
  * CMB wysiwyg field type
  *
- * @since  2.2.2
+ * @since     2.2.2
  *
  * @category  WordPress_Plugin
  * @package   CMB2
@@ -18,20 +19,21 @@ class CMB2_Type_Wysiwyg extends CMB2_Type_Textarea
 
     /**
      * Handles outputting a 'wysiwyg' element
+     *
      * @since  1.1.0
      * @return string Form wysiwyg element
      */
-    public function render($args = array())
+    public function render($args = [])
     {
         $field = $this->field;
-        $a = $this->parse_args('wysiwyg', array(
+        $a     = $this->parse_args('wysiwyg', [
             'id'      => $this->_id(),
             'value'   => $field->escaped_value('stripslashes'),
             'desc'    => $this->_desc(true),
             'options' => $field->options(),
-        ));
+        ]);
 
-        if (! $field->group) {
+        if ( ! $field->group) {
             return $this->rendered($this->get_wp_editor($a) . $a['desc']);
         }
 
@@ -41,16 +43,16 @@ class CMB2_Type_Wysiwyg extends CMB2_Type_Textarea
         $field->add_js_dependencies('cmb2-wysiwyg');
 
         // Hook in our template-output to the footer.
-        add_action(is_admin() ? 'admin_footer' : 'wp_footer', array( $this, 'add_wysiwyg_template_for_group' ));
+        add_action(is_admin() ? 'admin_footer' : 'wp_footer', [$this, 'add_wysiwyg_template_for_group']);
 
         return $this->rendered(
-            sprintf('<div class="cmb2-wysiwyg-wrap">%s', parent::render(array(
+            sprintf('<div class="cmb2-wysiwyg-wrap">%s', parent::render([
                 'class'         => 'cmb2_textarea cmb2-wysiwyg-placeholder',
                 'data-groupid'  => $field->group->id(),
                 'data-iterator' => $field->group->index,
                 'data-fieldid'  => $field->id(true),
                 'desc'          => '</div>' . $this->_desc(true),
-            )))
+            ]))
         );
     }
 
@@ -58,34 +60,35 @@ class CMB2_Type_Wysiwyg extends CMB2_Type_Textarea
     {
         ob_start();
         wp_editor($args['value'], $args['id'], $args['options']);
+
         return ob_get_clean();
     }
 
     public function add_wysiwyg_template_for_group()
     {
-        $group_id = $this->field->group->id();
-        $field_id = $this->field->id(true);
-        $hash     = $this->field->hash_id();
-        $options  = $this->field->options();
+        $group_id                 = $this->field->group->id();
+        $field_id                 = $this->field->id(true);
+        $hash                     = $this->field->hash_id();
+        $options                  = $this->field->options();
         $options['textarea_name'] = 'cmb2_n_' . $group_id . $field_id;
 
         // Initate the editor with special id/value/name so we can retrieve the options in JS.
-        $editor = $this->get_wp_editor(array(
+        $editor = $this->get_wp_editor([
             'value'   => 'cmb2_v_' . $group_id . $field_id,
             'id'      => 'cmb2_i_' . $group_id . $field_id,
             'options' => $options,
-        ));
+        ]);
 
         // Then replace the special id/value/name with underscore placeholders.
-        $editor = str_replace(array(
+        $editor = str_replace([
             'cmb2_n_' . $group_id . $field_id,
             'cmb2_v_' . $group_id . $field_id,
             'cmb2_i_' . $group_id . $field_id,
-            ), array(
+        ], [
             '{{ data.name }}',
             '{{{ data.value }}}',
             '{{ data.id }}',
-        ), $editor);
+        ], $editor);
 
         // And put the editor instance in a JS template wrapper.
         echo '<script type="text/template" id="tmpl-cmb2-wysiwyg-' . $group_id . '-' . $field_id . '">';

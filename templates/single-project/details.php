@@ -1,33 +1,33 @@
 <?php
 // Prevent direct access.
-if (! defined('ABSPATH')) {
+if ( ! defined('ABSPATH')) {
     exit;
 }
 
-$project_id = (int) upstream_post_id();
+$project_id = (int)upstream_post_id();
 $project    = getUpStreamProjectDetailsById($project_id);
 
 $projectTimeframe           = "";
 $projectDateStartIsNotEmpty = $project->dateStart > 0;
 $projectDateEndIsNotEmpty   = $project->dateEnd > 0;
 if ($projectDateStartIsNotEmpty || $projectDateEndIsNotEmpty) {
-    if (! $projectDateEndIsNotEmpty) {
+    if ( ! $projectDateEndIsNotEmpty) {
         $projectTimeframe = '<i class="text-muted">' . __(
-            'Start Date',
+                'Start Date',
                 'upstream'
-        ) . ': </i>' . upstream_format_date($project->dateStart);
-    } elseif (! $projectDateStartIsNotEmpty) {
+            ) . ': </i>' . upstream_format_date($project->dateStart);
+    } elseif ( ! $projectDateStartIsNotEmpty) {
         $projectTimeframe = '<i class="text-muted">' . __(
-            'End Date',
+                'End Date',
                 'upstream'
-        ) . ': </i>' . upstream_format_date($project->dateEnd);
+            ) . ': </i>' . upstream_format_date($project->dateEnd);
     } else {
         $projectTimeframe = upstream_format_date($project->dateStart) . ' - ' . upstream_format_date($project->dateEnd);
     }
 }
 
 $pluginOptions   = get_option('upstream_general');
-$collapseDetails = isset($pluginOptions['collapse_project_details']) && (bool) $pluginOptions['collapse_project_details'] === true;
+$collapseDetails = isset($pluginOptions['collapse_project_details']) && (bool)$pluginOptions['collapse_project_details'] === true;
 
 $isClientsDisabled = is_clients_disabled();
 ?>
@@ -37,35 +37,35 @@ $isClientsDisabled = is_clients_disabled();
         <div class="x_title">
             <h2>
                 <?php printf(
-    '<i class="fa fa-info-circle"></i> ' . __('%s Details', 'upstream'),
+                    '<i class="fa fa-info-circle"></i> ' . __('%s Details', 'upstream'),
                     upstream_project_label()
-); ?>
+                ); ?>
                 <?php do_action('upstream:frontend.project.details.after_title', $project); ?>
             </h2>
             <ul class="nav navbar-right panel_toolbox">
                 <li>
                     <a class="collapse-link"><i
-                            class="fa fa-chevron-<?php echo $collapseDetails ? 'down' : 'up'; ?>"></i></a>
+                                class="fa fa-chevron-<?php echo $collapseDetails ? 'down' : 'up'; ?>"></i></a>
                 </li>
             </ul>
             <div class="clearfix"></div>
         </div>
         <div class="x_content" style="display: <?php echo $collapseDetails ? 'none' : 'block'; ?>;">
             <div class="row">
-                <?php if (! empty($projectTimeframe)): ?>
+                <?php if ( ! empty($projectTimeframe)): ?>
                     <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
                         <p class="title"><?php _e('Timeframe', 'upstream'); ?></p>
                         <span><?php echo $projectTimeframe; ?></span>
                     </div>
                 <?php endif; ?>
 
-                <?php if (! $isClientsDisabled && $project->client_id > 0): ?>
+                <?php if ( ! $isClientsDisabled && $project->client_id > 0): ?>
                     <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
                         <p class="title"><?php echo upstream_client_label(); ?></p>
                         <span><?php echo $project->client_id > 0 && ! empty($project->clientName) ? $project->clientName : '<i class="text-muted">(' . __(
-                        'none',
+                                    'none',
                                     'upstream'
-                    ) . ')</i>'; ?></span>
+                                ) . ')</i>'; ?></span>
                     </div>
                 <?php endif; ?>
 
@@ -77,13 +77,13 @@ $isClientsDisabled = is_clients_disabled();
                     <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
                         <p class="title"><?php _e('Owner', 'upstream'); ?></p>
                         <span><?php echo $project->owner_id > 0 ? upstream_user_avatar($project->owner_id) : '<i class="text-muted">(' . __(
-                                        'none',
+                                    'none',
                                     'upstream'
-                                    ) . ')</i>'; ?></span>
+                                ) . ')</i>'; ?></span>
                     </div>
                 <?php endif; ?>
 
-                <?php if (! $isClientsDisabled && $project->client_id > 0): ?>
+                <?php if ( ! $isClientsDisabled && $project->client_id > 0): ?>
                     <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
                         <p class="title"><?php printf(__('%s Users', 'upstream'), upstream_client_label()); ?></p>
                         <?php if (is_array($project->clientUsers) && count($project->clientUsers) > 0): ?>
@@ -101,11 +101,11 @@ $isClientsDisabled = is_clients_disabled();
 
                 <?php do_action('upstream:frontend.project.render_details', $project->id); ?>
             </div>
-            <?php if (! empty($project->description)): ?>
+            <?php if ( ! empty($project->description)): ?>
                 <div>
                     <p class="title"><?php _e('Description'); ?></p>
                     <blockquote
-                        style="font-size: 1em;"><?php echo htmlspecialchars_decode($project->description); ?></blockquote>
+                            style="font-size: 1em;"><?php echo htmlspecialchars_decode($project->description); ?></blockquote>
                 </div>
             <?php endif; ?>
         </div>

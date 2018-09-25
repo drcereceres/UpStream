@@ -1,11 +1,11 @@
 <?php
 
 // Exit if accessed directly
-if (! defined('ABSPATH')) {
+if ( ! defined('ABSPATH')) {
     exit;
 }
 
-if (! class_exists('UpStream_Admin_Metaboxes')) :
+if ( ! class_exists('UpStream_Admin_Metaboxes')) :
 
     /**
      * CMB2 Theme Options
@@ -23,7 +23,7 @@ if (! class_exists('UpStream_Admin_Metaboxes')) :
         public function __construct()
         {
             if (upstreamShouldRunCmb2()) {
-                add_action('cmb2_admin_init', [ $this, 'register_metaboxes' ]);
+                add_action('cmb2_admin_init', [$this, 'register_metaboxes']);
             }
 
             UpStream_Metaboxes_Clients::attachHooks();

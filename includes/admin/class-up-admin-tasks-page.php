@@ -1,11 +1,11 @@
 <?php
 
 // Exit if accessed directly
-if (! defined('ABSPATH')) {
+if ( ! defined('ABSPATH')) {
     exit;
 }
 
-if (! class_exists('WP_List_Table')) {
+if ( ! class_exists('WP_List_Table')) {
     require_once(ABSPATH . 'wp-admin/includes/class-wp-list-table.php');
 }
 
@@ -58,9 +58,9 @@ class Upstream_Task_List extends WP_List_Table
     {
         $views = [];
 
-        if (! empty($_REQUEST['status'])) {
+        if ( ! empty($_REQUEST['status'])) {
             $current = esc_html($_REQUEST['status']);
-        } elseif (! empty($_REQUEST['view'])) {
+        } elseif ( ! empty($_REQUEST['view'])) {
             $current = esc_html($_REQUEST['view']);
         } else {
             $current = 'all';
@@ -68,22 +68,22 @@ class Upstream_Task_List extends WP_List_Table
 
         //All link
         $all_class = ($current == 'all' ? ' class="current"' : '');
-        $all_url   = remove_query_arg([ 'status', 'view' ]);
+        $all_url   = remove_query_arg(['status', 'view']);
         $all_count = upstream_count_total('tasks');
 
         $views['all'] = "<a href='" . esc_url($all_url) . "' " . esc_attr($all_class) . " >" . __(
-            'All',
+                'All',
                 'upstream'
-        ) . "</a>(" . esc_html($all_count) . ")";
+            ) . "</a>(" . esc_html($all_count) . ")";
 
         //Mine link
         $mine_class    = ($current == 'mine' ? ' class="current"' : '');
-        $mine_url      = add_query_arg([ 'view' => 'mine', 'status' => false ]);
+        $mine_url      = add_query_arg(['view' => 'mine', 'status' => false]);
         $mine_count    = upstream_count_assigned_to('tasks');
         $views['mine'] = "<a href='" . esc_url($mine_url) . "' " . esc_attr($mine_class) . " >" . __(
-            'Mine',
+                'Mine',
                 'upstream'
-        ) . "</a>(" . esc_html($mine_count) . ")";
+            ) . "</a>(" . esc_html($mine_count) . ")";
 
         // links for other statuses
         $option   = get_option('upstream_tasks');
@@ -99,11 +99,11 @@ class Upstream_Task_List extends WP_List_Table
                     continue;
                 }
 
-                $stati           = strtolower($status['id']);
-                $class           = ($current == $stati ? ' class="current"' : '');
-                $url             = add_query_arg([ 'status' => $stati, 'view' => false, 'paged' => false ]);
-                $count           = isset($counts[ $status['name'] ]) ? $counts[ $status['name'] ] : 0;
-                $views[ $stati ] = "<a href='" . esc_url($url) . "' " . esc_attr($class) . " >" . esc_html($status['name']) . "</a>(" . esc_html($count) . ")";
+                $stati         = strtolower($status['id']);
+                $class         = ($current == $stati ? ' class="current"' : '');
+                $url           = add_query_arg(['status' => $stati, 'view' => false, 'paged' => false]);
+                $count         = isset($counts[$status['name']]) ? $counts[$status['name']] : 0;
+                $views[$stati] = "<a href='" . esc_url($url) . "' " . esc_attr($class) . " >" . esc_html($status['name']) . "</a>(" . esc_html($count) . ")";
             }
         }
 
@@ -123,14 +123,14 @@ class Upstream_Task_List extends WP_List_Table
 
         foreach ($rowset as $row) {
             if (isset($row['status'])
-                 && ! empty($row['status'])
-                 && isset($statuses[ $row['status'] ])
+                && ! empty($row['status'])
+                && isset($statuses[$row['status']])
             ) {
-                $statusTitle = $statuses[ $row['status'] ]['name'];
-                if (isset($data[ $statusTitle ])) {
-                    $data[ $statusTitle ] ++;
+                $statusTitle = $statuses[$row['status']]['name'];
+                if (isset($data[$statusTitle])) {
+                    $data[$statusTitle]++;
                 } else {
-                    $data[ $statusTitle ] = 1;
+                    $data[$statusTitle] = 1;
                 }
             }
         }
@@ -148,7 +148,7 @@ class Upstream_Task_List extends WP_List_Table
         $args = [
             'post_type'      => 'project',
             'post_status'    => 'publish',
-            'posts_per_page' => - 1,
+            'posts_per_page' => -1,
             'meta_query'     => [
                 [
                     'key'     => '_upstream_project_tasks',
@@ -161,22 +161,22 @@ class Upstream_Task_List extends WP_List_Table
         $the_query = new WP_Query($args);
 
         // The Loop
-        if (! $the_query->have_posts()) {
+        if ( ! $the_query->have_posts()) {
             return;
         }
 
         $tasks = [];
         while ($the_query->have_posts()) : $the_query->the_post();
 
-        $post_id = get_the_ID();
-        if (upstream_are_tasks_disabled($post_id)) {
-            continue;
-        }
+            $post_id = get_the_ID();
+            if (upstream_are_tasks_disabled($post_id)) {
+                continue;
+            }
 
-        $meta  = get_post_meta($post_id, '_upstream_project_tasks', true);
-        $owner = get_post_meta($post_id, '_upstream_project_owner', true);
+            $meta  = get_post_meta($post_id, '_upstream_project_tasks', true);
+            $owner = get_post_meta($post_id, '_upstream_project_owner', true);
 
-        if ($meta) :
+            if ($meta) :
                 foreach ($meta as $meta_val => $task) {
 
                     // set up the data for each column
@@ -205,7 +205,7 @@ class Upstream_Task_List extends WP_List_Table
                     $tasks[] = $task;
                 }
 
-        endif;
+            endif;
 
         endwhile;
 
@@ -222,7 +222,7 @@ class Upstream_Task_List extends WP_List_Table
         $option   = get_option('upstream_tasks');
         $statuses = isset($option['statuses']) ? $option['statuses'] : '';
 
-        if (! $statuses) {
+        if ( ! $statuses) {
             return false;
         }
 
@@ -246,72 +246,72 @@ class Upstream_Task_List extends WP_List_Table
         <div class="alignleft actions">
 
             <?php
-            if (! is_singular()) {
+            if ( ! is_singular()) {
                 $projects = $this->get_projects_unique();
-                if (! empty($projects)) {
+                if ( ! empty($projects)) {
                     ?>
 
                     <select name='project' id='project' class='postform'>
                         <option value=''><?php printf(__('Show all %s', 'upstream'), 'projects') ?></option>
                         <?php foreach ($projects as $project_id => $title) {
-                        ?>
+                            ?>
                             <option
-                                value="<?php echo $project_id ?>" <?php isset($_GET['project']) ? selected(
-                    $_GET['project'],
+                                    value="<?php echo $project_id ?>" <?php isset($_GET['project']) ? selected(
+                                $_GET['project'],
                                 $project_id
-                ) : ''; ?>><?php echo esc_html($title) ?></option>
-                        <?php
-                    } ?>
+                            ) : ''; ?>><?php echo esc_html($title) ?></option>
+                            <?php
+                        } ?>
                     </select>
 
-                <?php
+                    <?php
                 }
 
                 $assigned_to = $this->get_assigned_to_unique();
-                if (! empty($assigned_to)) {
+                if ( ! empty($assigned_to)) {
                     ?>
 
                     <select name='assigned_to' id='assigned_to' class='postform'>
                         <option value=''><?php printf(__('Show all %s', 'upstream'), 'users') ?></option>
                         <?php foreach ($assigned_to as $user_id => $user) {
-                        ?>
+                            ?>
                             <option
-                                value="<?php echo $user_id ?>" <?php isset($_GET['assigned_to']) ? selected(
-                    $_GET['assigned_to'],
+                                    value="<?php echo $user_id ?>" <?php isset($_GET['assigned_to']) ? selected(
+                                $_GET['assigned_to'],
                                 $user_id
-                ) : ''; ?>><?php echo esc_html($user) ?></option>
-                        <?php
-                    } ?>
+                            ) : ''; ?>><?php echo esc_html($user) ?></option>
+                            <?php
+                        } ?>
                     </select>
 
-                <?php
+                    <?php
                 }
 
                 $status = self::getTasksStatuses();
 
-                if (! empty($status)) {
+                if ( ! empty($status)) {
                     ?>
 
                     <select name='status' id='status' class='postform'>
                         <option value=''><?php printf(__('Show all %s', 'upstream'), 'statuses') ?></option>
                         <?php foreach ($status as $stati) {
-                        if (is_array($stati)) {
-                            $statusTitle = $stati['name'];
-                            $statusId    = $stati['id'];
-                        } else {
-                            $statusTitle = $stati;
-                            $statusId    = $stati;
-                        } ?>
+                            if (is_array($stati)) {
+                                $statusTitle = $stati['name'];
+                                $statusId    = $stati['id'];
+                            } else {
+                                $statusTitle = $stati;
+                                $statusId    = $stati;
+                            } ?>
                             <option
-                                value="<?php echo $statusId; ?>" <?php isset($_REQUEST['status']) ? selected(
+                                    value="<?php echo $statusId; ?>" <?php isset($_REQUEST['status']) ? selected(
                                 $_REQUEST['status'],
                                 $statusId
                             ) : ''; ?>><?php echo esc_html($statusTitle) ?></option>
-                        <?php
-                    } ?>
+                            <?php
+                        } ?>
                     </select>
 
-                <?php
+                    <?php
                 }
 
                 submit_button(__('Filter'), 'button', 'filter', false);
@@ -336,7 +336,7 @@ class Upstream_Task_List extends WP_List_Table
 
     private function get_assigned_to_unique()
     {
-        $tasks = (array) self::get_tasks();
+        $tasks = (array)self::get_tasks();
         if (count($tasks) === 0) {
             return;
         }
@@ -346,14 +346,14 @@ class Upstream_Task_List extends WP_List_Table
         $data = [];
 
         $setUserNameIntoData = function ($user_id) use (&$data) {
-            if (! isset($data[ $user_id ])) {
-                $data[ $user_id ] = upstream_users_name($user_id);
+            if ( ! isset($data[$user_id])) {
+                $data[$user_id] = upstream_users_name($user_id);
             }
         };
 
         foreach ($rowset as $assignees) {
-            if (! is_array($assignees)) {
-                $assignees = (array) $assignees;
+            if ( ! is_array($assignees)) {
+                $assignees = (array)$assignees;
             }
 
             $assignees = array_unique(array_filter(array_map('intval', $assignees)));
@@ -378,11 +378,11 @@ class Upstream_Task_List extends WP_List_Table
             $data = [];
 
             foreach ($rowset as $row) {
-                if (! empty($row['status'])
+                if ( ! empty($row['status'])
                      && isset($row['status'])
                 ) {
-                    $data[ $row['status'] ] = isset($statuses[ $row['status'] ])
-                        ? $statuses[ $row['status'] ]
+                    $data[$row['status']] = isset($statuses[$row['status']])
+                        ? $statuses[$row['status']]
                         : $row['status'];
                 }
             }
@@ -419,9 +419,9 @@ class Upstream_Task_List extends WP_List_Table
 
                 $output = '<a href="' . get_edit_post_link($item['project_id']) . '">' . esc_html($item['project']) . '</a>';
                 $output .= '<br>' . esc_html(upstream_project_progress($item['project_id'])) . '% ' . __(
-                    'Complete',
+                        'Complete',
                         'upstream'
-                );
+                    );
 
                 return $output;
 
@@ -430,26 +430,26 @@ class Upstream_Task_List extends WP_List_Table
                     self::$milestones = getMilestones();
                 }
 
-                if (! upstream_are_milestones_disabled($item['project_id'])) {
+                if ( ! upstream_are_milestones_disabled($item['project_id'])) {
                     if (isset($item['milestone']) && ! empty($item['milestone'])) {
                         $milestone = upstream_project_milestone_by_id($item['project_id'], $item['milestone']);
                         $progress  = $milestone['progress'] ? $milestone['progress'] : '0';
 
-                        $milestoneTitle = isset(self::$milestones[ $milestone['milestone'] ])
-                            ? self::$milestones[ $milestone['milestone'] ]['title']
+                        $milestoneTitle = isset(self::$milestones[$milestone['milestone']])
+                            ? self::$milestones[$milestone['milestone']]['title']
                             : $milestone['milestone'];
 
                         return $milestone ? esc_html($milestoneTitle) . '<br>' . esc_html($progress) . '% ' . __(
-                            'Complete',
+                                'Complete',
                                 'upstream'
-                        ) : '';
+                            ) : '';
                     }
                 }
 
                 return '<span><i style="color: #CCC;">' . __('none', 'upstream') . '</i></span>';
 
             case 'assigned_to':
-                $assignees = isset($item['assigned_to']) ? array_filter((array) $item['assigned_to']) : [];
+                $assignees = isset($item['assigned_to']) ? array_filter((array)$item['assigned_to']) : [];
                 if (count($assignees) > 0) {
                     $users = get_users([
                         'fields'  => [
@@ -463,7 +463,7 @@ class Upstream_Task_List extends WP_List_Table
 
                     $currentUserId = get_current_user_id();
                     foreach ($users as $user) {
-                        if ((int) $user->ID === $currentUserId) {
+                        if ((int)$user->ID === $currentUserId) {
                             $html[] = '<span class="mine">' . esc_html($user->display_name) . '</span>';
                         } else {
                             $html[] = '<span>' . esc_html($user->display_name) . '</span>';
@@ -474,23 +474,23 @@ class Upstream_Task_List extends WP_List_Table
                 } else {
                     return '<span><i style="color: #CCC;">' . __('none', 'upstream') . '</i></span>';
                 }
-                // no break
+            // no break
             case 'end_date':
-                if (isset($item['end_date']) && (int) $item['end_date'] > 0) {
+                if (isset($item['end_date']) && (int)$item['end_date'] > 0) {
                     return '<span class="end-date">' . upstream_format_date($item['end_date']) . '</span>';
                 } else {
                     return '<span><i style="color: #CCC;">' . __('none', 'upstream') . '</i></span>';
                 }
 
-                // no break
+            // no break
             case 'status':
-                if (! isset($item['status'])
+                if ( ! isset($item['status'])
                      || empty($item['status'])
                 ) {
                     return '<span><i style="color: #CCC;">' . __('none', 'upstream') . '</i></span>';
                 }
 
-                $status = self::$tasksStatuses[ $item['status'] ];
+                $status = self::$tasksStatuses[$item['status']];
 
                 if (is_array($status)) {
                     $statusTitle = $status['name'];
@@ -532,13 +532,13 @@ class Upstream_Task_List extends WP_List_Table
     public function get_sortable_columns()
     {
         $sortable_columns = [
-            'title'       => [ 'title', true ],
+            'title'       => ['title', true],
             // 'project'       => array( 'project', false ),
             // 'milestone'     => array( 'milestone', false ),
-            'assigned_to' => [ 'assigned_to', false ],
-            'end_date'    => [ 'end_date', false ],
-            'status'      => [ 'status', false ],
-            'progress'    => [ 'progress', false ],
+            'assigned_to' => ['assigned_to', false],
+            'end_date'    => ['end_date', false],
+            'status'      => ['status', false],
+            'progress'    => ['progress', false],
         ];
 
         return $sortable_columns;
@@ -590,7 +590,7 @@ class Upstream_Task_List extends WP_List_Table
         $tasks = self::sort_filter($tasks);
 
         // does the paging
-        if (! $tasks) {
+        if ( ! $tasks) {
             $output = 0;
         } else {
             $output = array_slice($tasks, ($page_number - 1) * $per_page, $per_page);
@@ -601,7 +601,7 @@ class Upstream_Task_List extends WP_List_Table
 
     public static function sort_filter($tasks = [])
     {
-        if (! is_array($tasks) || count($tasks) === 0) {
+        if ( ! is_array($tasks) || count($tasks) === 0) {
             return [];
         }
 
@@ -609,7 +609,7 @@ class Upstream_Task_List extends WP_List_Table
         $the_tasks = $tasks; // store the tasks array
         $status    = (isset($_REQUEST['status']) ? $_REQUEST['status'] : 'all');
         if ($status != 'all') {
-            if (! empty($the_tasks)) {
+            if ( ! empty($the_tasks)) {
                 $tasks = []; // reset the tasks array
                 foreach ($the_tasks as $key => $task) {
                     $stat = isset($task['status']) ? $task['status'] : null;
@@ -622,50 +622,50 @@ class Upstream_Task_List extends WP_List_Table
 
         $preset = isset($_REQUEST['view']) ? $_REQUEST['view'] : 'all';
         if ($preset === 'mine') {
-            $currentUserId = (int) get_current_user_id();
+            $currentUserId = (int)get_current_user_id();
 
             foreach ($tasks as $rowIndex => $row) {
-                $assignees = isset($row['assigned_to']) ? array_map('intval', (array) $row['assigned_to']) : [];
+                $assignees = isset($row['assigned_to']) ? array_map('intval', (array)$row['assigned_to']) : [];
 
-                if (! in_array($currentUserId, $assignees)) {
-                    unset($tasks[ $rowIndex ]);
+                if ( ! in_array($currentUserId, $assignees)) {
+                    unset($tasks[$rowIndex]);
                 }
             }
         }
 
         $project = (isset($_REQUEST['project']) ? $_REQUEST['project'] : '');
-        if (! empty($tasks) && ! empty($project)) {
+        if ( ! empty($tasks) && ! empty($project)) {
             foreach ($tasks as $key => $task) {
                 if ($task['project_id'] != $project) {
-                    unset($tasks[ $key ]);
+                    unset($tasks[$key]);
                 }
             }
         }
 
-        $assigned_to = isset($_REQUEST['assigned_to']) ? (int) $_REQUEST['assigned_to'] : 0;
+        $assigned_to = isset($_REQUEST['assigned_to']) ? (int)$_REQUEST['assigned_to'] : 0;
         if ($assigned_to > 0) {
             foreach ($tasks as $rowIndex => $row) {
-                $assignees = isset($row['assigned_to']) ? array_map('intval', (array) $row['assigned_to']) : [];
+                $assignees = isset($row['assigned_to']) ? array_map('intval', (array)$row['assigned_to']) : [];
 
-                if (! in_array($assigned_to, $assignees)) {
-                    unset($tasks[ $rowIndex ]);
+                if ( ! in_array($assigned_to, $assignees)) {
+                    unset($tasks[$rowIndex]);
                 }
             }
         }
 
         // sorting the tasks
-        if (! empty($_REQUEST['orderby'])) {
-            if (! empty($_REQUEST['order']) && $_REQUEST['order'] == 'asc') {
+        if ( ! empty($_REQUEST['orderby'])) {
+            if ( ! empty($_REQUEST['order']) && $_REQUEST['order'] == 'asc') {
                 $tmp = [];
                 foreach ($tasks as &$ma) {
-                    $tmp[] = &$ma[ esc_html($_REQUEST['orderby']) ];
+                    $tmp[] = &$ma[esc_html($_REQUEST['orderby'])];
                 }
                 array_multisort($tmp, SORT_ASC, $tasks);
             }
-            if (! empty($_REQUEST['order']) && $_REQUEST['order'] == 'desc') {
+            if ( ! empty($_REQUEST['order']) && $_REQUEST['order'] == 'desc') {
                 $tmp = [];
                 foreach ($tasks as &$ma) {
-                    $tmp[] = &$ma[ esc_html($_REQUEST['orderby']) ];
+                    $tmp[] = &$ma[esc_html($_REQUEST['orderby'])];
                 }
                 array_multisort($tmp, SORT_DESC, $tasks);
             }
@@ -676,7 +676,7 @@ class Upstream_Task_List extends WP_List_Table
 
     protected function get_table_classes()
     {
-        return [ 'widefat', 'striped', $this->_args['plural'] ];
+        return ['widefat', 'striped', $this->_args['plural']];
     }
 }
 
@@ -693,14 +693,14 @@ class Upstream_Admin_Tasks_Page
     // class constructor
     public function __construct()
     {
-        add_filter('set-screen-option', [ $this, 'set_screen' ], 10, 3);
-        add_action('admin_menu', [ $this, 'plugin_menu' ]);
+        add_filter('set-screen-option', [$this, 'set_screen'], 10, 3);
+        add_action('admin_menu', [$this, 'plugin_menu']);
     }
 
     /** Singleton instance */
     public static function get_instance()
     {
-        if (! isset(self::$instance)) {
+        if ( ! isset(self::$instance)) {
             self::$instance = new self();
         }
 
@@ -730,8 +730,8 @@ class Upstream_Admin_Tasks_Page
 
     public function plugin_menu()
     {
-        $count = (int) upstream_count_assigned_to_open('tasks');
-        if (! isUserEitherManagerOrAdmin() && $count <= 0) {
+        $count = (int)upstream_count_assigned_to_open('tasks');
+        if ( ! isUserEitherManagerOrAdmin() && $count <= 0) {
             return;
         }
 
@@ -741,10 +741,10 @@ class Upstream_Admin_Tasks_Page
             upstream_task_label_plural(),
             'edit_projects',
             'tasks',
-            [ $this, 'plugin_settings_page' ]
+            [$this, 'plugin_settings_page']
         );
 
-        add_action("load-$hook", [ $this, 'screen_option' ]);
+        add_action("load-$hook", [$this, 'screen_option']);
 
         global $submenu;
 
@@ -752,8 +752,8 @@ class Upstream_Admin_Tasks_Page
         if ($proj) {
             foreach ($proj as $key => $value) {
                 if (in_array('tasks', $value)) {
-                    $i                                              = (int) $key;
-                    $submenu['edit.php?post_type=project'][ $i ][0] .= $count ? " <span class='update-plugins count-1'><span class='update-count'>" . esc_html($count) . "</span></span>" : '';
+                    $i                                            = (int)$key;
+                    $submenu['edit.php?post_type=project'][$i][0] .= $count ? " <span class='update-plugins count-1'><span class='update-count'>" . esc_html($count) . "</span></span>" : '';
                 }
             }
         }
@@ -773,12 +773,14 @@ class Upstream_Admin_Tasks_Page
 
                 <div class="meta-box-sortables ui-sortable">
                     <?php $this->tasks_obj->views(); ?>
-                    <?php //$this->tasks_obj->display_tablenav( 'top' );?>
-                    <?php //$this->tasks_obj->search_box('search', 'search_id');?>
+                    <?php //$this->tasks_obj->display_tablenav( 'top' );
+                    ?>
+                    <?php //$this->tasks_obj->search_box('search', 'search_id');
+                    ?>
                     <form method="post">
                         <?php
                         $this->tasks_obj->prepare_items();
-        $this->tasks_obj->display(); ?>
+                        $this->tasks_obj->display(); ?>
                     </form>
                 </div>
             </div>

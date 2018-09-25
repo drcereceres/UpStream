@@ -1,11 +1,11 @@
 <?php
 
 // Exit if accessed directly
-if (! defined('ABSPATH')) {
+if ( ! defined('ABSPATH')) {
     exit;
 }
 
-if (! class_exists('UpStream_Admin_Project_Columns')) :
+if ( ! class_exists('UpStream_Admin_Project_Columns')) :
 
     /**
      * Admin columns
@@ -54,18 +54,18 @@ if (! class_exists('UpStream_Admin_Project_Columns')) :
 
         public function hooks()
         {
-            add_filter('manage_project_posts_columns', [ $this, 'project_columns' ]);
-            add_action('manage_project_posts_custom_column', [ $this, 'project_data' ], 10, 2);
+            add_filter('manage_project_posts_columns', [$this, 'project_columns']);
+            add_action('manage_project_posts_custom_column', [$this, 'project_data'], 10, 2);
 
             // sorting
-            add_filter('manage_edit-project_sortable_columns', [ $this, 'table_sorting' ]);
-            add_filter('request', [ $this, 'project_orderby_status' ]);
-            add_filter('request', [ $this, 'project_orderby_dates' ]);
-            add_filter('request', [ $this, 'project_orderby_progress' ]);
+            add_filter('manage_edit-project_sortable_columns', [$this, 'table_sorting']);
+            add_filter('request', [$this, 'project_orderby_status']);
+            add_filter('request', [$this, 'project_orderby_dates']);
+            add_filter('request', [$this, 'project_orderby_progress']);
 
             // filtering
-            add_action('restrict_manage_posts', [ $this, 'table_filtering' ]);
-            add_action('parse_query', [ $this, 'filter' ]);
+            add_action('restrict_manage_posts', [$this, 'table_filtering']);
+            add_action('parse_query', [$this, 'filter']);
         }
 
         /**
@@ -83,10 +83,10 @@ if (! class_exists('UpStream_Admin_Project_Columns')) :
             $user = wp_get_current_user();
 
             $this->allowAllProjects = count(array_intersect(
-                (array) $user->roles,
-                    [ 'administrator', 'upstream_manager' ]
-            )) > 0;
-            if (! $this->allowAllProjects) {
+                    (array)$user->roles,
+                    ['administrator', 'upstream_manager']
+                )) > 0;
+            if ( ! $this->allowAllProjects) {
                 // Retrieve all projects current user can access.
                 $allowedProjects = upstream_get_users_projects($user);
                 // Stores the projects ids so they can be used on filter() function.
@@ -110,7 +110,7 @@ if (! class_exists('UpStream_Admin_Project_Columns')) :
 
             /* Get taxonomies that should appear in the manage posts table. */
             $taxonomies = get_object_taxonomies($post_type, 'objects');
-            $taxonomies = wp_filter_object_list($taxonomies, [ 'show_admin_column' => true ], 'and', 'name');
+            $taxonomies = wp_filter_object_list($taxonomies, ['show_admin_column' => true], 'and', 'name');
 
             /* Allow devs to filter the taxonomy columns. */
             $taxonomies = apply_filters(
@@ -122,29 +122,29 @@ if (! class_exists('UpStream_Admin_Project_Columns')) :
 
             /* Loop through each taxonomy and add it as a column. */
             foreach ($taxonomies as $taxonomy) {
-                $columns[ 'taxonomy-' . $taxonomy ] = get_taxonomy($taxonomy)->labels->name;
+                $columns['taxonomy-' . $taxonomy] = get_taxonomy($taxonomy)->labels->name;
             }
 
             $defaults['owner'] = __('Owner', 'upstream');
 
-            if (! is_clients_disabled()) {
+            if ( ! is_clients_disabled()) {
                 $defaults['client'] = __('Client', 'upstream');
             }
 
             $defaults['start'] = __('Start', 'upstream');
             $defaults['end']   = __('End', 'upstream');
 
-            if (! upstream_disable_tasks()) {
+            if ( ! upstream_disable_tasks()) {
                 $defaults['tasks'] = upstream_task_label_plural();
             }
 
-            if (! upstream_disable_bugs()) {
+            if ( ! upstream_disable_bugs()) {
                 $defaults['bugs'] = upstream_bug_label_plural();
             }
             $defaults['progress'] = __('Progress', 'upstream');
             $defaults['messages'] = '<div style="text-align: center;"><span class="dashicons dashicons-admin-comments"></span><span class="s-hidden-on-tables">' . __('Comments') . '</span></div>';
 
-            $defaults = [ 'project-status' => '' ] + $defaults;
+            $defaults = ['project-status' => ''] + $defaults;
 
             return $defaults;
         }
@@ -163,7 +163,7 @@ if (! class_exists('UpStream_Admin_Project_Columns')) :
             if ($column_name === 'project-status') {
                 $status = upstream_project_status_color($post_id);
 
-                if (! empty($status['status'])) {
+                if ( ! empty($status['status'])) {
                     echo '<div title="' . esc_attr($status['status']) . '" style="width: 100%; position: absolute; top: 0px; left: 0px; overflow: hidden; height: 100%; border-left: 2px solid ' . esc_attr($status['color']) . '" class="' . esc_attr(strtolower($status['status'])) . '"></div>';
                 }
 
@@ -171,15 +171,15 @@ if (! class_exists('UpStream_Admin_Project_Columns')) :
             }
 
             if ($column_name === 'owner') {
-                $owner_id = (int) upstream_project_owner_id($post_id);
+                $owner_id = (int)upstream_project_owner_id($post_id);
                 if ($owner_id > 0) {
-                    if (! isset(self::$usersCache[ $owner_id ])) {
-                        $user                          = get_user_by('id', $owner_id);
-                        self::$usersCache[ $user->ID ] = $user->display_name;
+                    if ( ! isset(self::$usersCache[$owner_id])) {
+                        $user                        = get_user_by('id', $owner_id);
+                        self::$usersCache[$user->ID] = $user->display_name;
                         unset($user);
                     }
 
-                    echo self::$usersCache[ $owner_id ];
+                    echo self::$usersCache[$owner_id];
                 } else {
                     echo self::$noneTag;
                 }
@@ -188,15 +188,15 @@ if (! class_exists('UpStream_Admin_Project_Columns')) :
             }
 
             if ($column_name === 'client') {
-                $client_id = (int) upstream_project_client_id($post_id);
+                $client_id = (int)upstream_project_client_id($post_id);
                 if ($client_id > 0) {
-                    if (! isset($clientsCache[ $client_id ])) {
-                        $client                           = get_post($client_id);
-                        self::$clientsCache[ $client_id ] = $client->post_title;
+                    if ( ! isset($clientsCache[$client_id])) {
+                        $client                         = get_post($client_id);
+                        self::$clientsCache[$client_id] = $client->post_title;
                         unset($client);
                     }
 
-                    echo self::$clientsCache[ $client_id ];
+                    echo self::$clientsCache[$client_id];
                 } else {
                     echo self::$noneTag;
                 }
@@ -205,7 +205,7 @@ if (! class_exists('UpStream_Admin_Project_Columns')) :
             }
 
             if ($column_name === 'start') {
-                $startDate = (int) upstream_project_start_date($post_id);
+                $startDate = (int)upstream_project_start_date($post_id);
                 if ($startDate > 0) {
                     echo '<span class="start-date">' . upstream_format_date($startDate) . '</span>';
                 } else {
@@ -216,7 +216,7 @@ if (! class_exists('UpStream_Admin_Project_Columns')) :
             }
 
             if ($column_name === 'end') {
-                $endDate = (int) upstream_project_end_date($post_id);
+                $endDate = (int)upstream_project_end_date($post_id);
                 if ($endDate > 0) {
                     echo '<span class="end-date">' . upstream_format_date($endDate) . '</span>';
                 } else {
@@ -228,10 +228,10 @@ if (! class_exists('UpStream_Admin_Project_Columns')) :
 
             if ($column_name === 'tasks') {
                 if (self::$areTasksDisabled === null) {
-                    self::$areTasksDisabled = (bool) upstream_are_tasks_disabled();
+                    self::$areTasksDisabled = (bool)upstream_are_tasks_disabled();
                 }
 
-                if (! self::$areTasksDisabled) {
+                if ( ! self::$areTasksDisabled) {
                     $counts = upstream_project_tasks_counts($post_id);
 
                     if (empty($counts)) {
@@ -242,8 +242,8 @@ if (! class_exists('UpStream_Admin_Project_Columns')) :
                         }
 
                         foreach ($counts as $taskStatusId => $count) {
-                            $taskStatus = isset(self::$tasksStatuses[ $taskStatusId ])
-                                ? self::$tasksStatuses[ $taskStatusId ]
+                            $taskStatus = isset(self::$tasksStatuses[$taskStatusId])
+                                ? self::$tasksStatuses[$taskStatusId]
                                 : [
                                     'color' => '#aaaaaa',
                                     'name'  => $taskStatusId,
@@ -267,10 +267,10 @@ if (! class_exists('UpStream_Admin_Project_Columns')) :
 
             if ($column_name === 'bugs') {
                 if (self::$areBugsDisabled === null) {
-                    self::$areBugsDisabled = (bool) upstream_are_bugs_disabled();
+                    self::$areBugsDisabled = (bool)upstream_are_bugs_disabled();
                 }
 
-                if (! self::$areBugsDisabled) {
+                if ( ! self::$areBugsDisabled) {
                     $counts = upstream_project_bugs_counts($post_id);
                     if (empty($counts)) {
                         echo self::$noneTag;
@@ -280,8 +280,8 @@ if (! class_exists('UpStream_Admin_Project_Columns')) :
                         }
 
                         foreach ($counts as $bugStatusId => $count) {
-                            $bugStatus = isset(self::$bugsStatuses[ $bugStatusId ])
-                                ? self::$bugsStatuses[ $bugStatusId ]
+                            $bugStatus = isset(self::$bugsStatuses[$bugStatusId])
+                                ? self::$bugsStatuses[$bugStatusId]
                                 : [
                                     'color' => '#aaaaaa',
                                     'name'  => $bugStatusId,
@@ -304,7 +304,7 @@ if (! class_exists('UpStream_Admin_Project_Columns')) :
             }
 
             if ($column_name === 'progress') {
-                $progress = (int) upstream_project_progress($post_id);
+                $progress = (int)upstream_project_progress($post_id);
 
                 echo '<div style="text-align: center;">' . $progress . '%</div>';
 
@@ -314,7 +314,7 @@ if (! class_exists('UpStream_Admin_Project_Columns')) :
             if ($column_name === 'messages') {
                 echo '<div style="text-align: center;">';
 
-                $count = (int) getProjectCommentsCount($post_id);
+                $count = (int)getProjectCommentsCount($post_id);
                 if ($count > 0) {
                     echo '<a href="' . esc_url(get_edit_post_link($post_id) . '#_upstream_project_discussions') . '"><span>' . esc_html($count) . '</a></span>';
                 } else {
@@ -400,7 +400,7 @@ if (! class_exists('UpStream_Admin_Project_Columns')) :
 
             $postType = isset($_GET['post_type']) ? $_GET['post_type'] : null;
             if ($currentPage === 'edit.php'
-                 && $postType === 'project'
+                && $postType === 'project'
             ) {
                 $projectOptions = get_option('upstream_projects');
                 $statuses       = $projectOptions['statuses'];
@@ -413,9 +413,9 @@ if (! class_exists('UpStream_Admin_Project_Columns')) :
                     </option>
                     <?php foreach ($statuses as $status): ?>
                         <option value="<?php echo $status['name']; ?>" <?php selected(
-                    $selectedStatus,
+                            $selectedStatus,
                             $status['name']
-                ); ?>>
+                        ); ?>>
                             <?php echo $status['name'] ?>
                         </option>
                     <?php endforeach; ?>
@@ -425,14 +425,14 @@ if (! class_exists('UpStream_Admin_Project_Columns')) :
                 // Filter by Project Owner.
                 $users = upstream_admin_get_all_project_users();
 
-                $selectedOwner = isset($_GET['project-owner']) ? (int) $_GET['project-owner'] : - 1; ?>
+                $selectedOwner = isset($_GET['project-owner']) ? (int)$_GET['project-owner'] : -1; ?>
                 <select name="project-owner" id="project-owner" class="postform">
                     <option value="">
                         <?php printf(__('Show all %s', 'upstream'), 'owners'); ?>
                     </option>
                     <?php foreach ($users as $ownerId => $ownerName): ?>
                         <option
-                            value="<?php echo $ownerId; ?>" <?php echo $selectedOwner === $ownerId ? ' selected' : ''; ?>>
+                                value="<?php echo $ownerId; ?>" <?php echo $selectedOwner === $ownerId ? ' selected' : ''; ?>>
                             <?php echo $ownerName; ?>
                         </option>
                     <?php endforeach; ?>
@@ -441,14 +441,14 @@ if (! class_exists('UpStream_Admin_Project_Columns')) :
                 <?php
                 // Filter by Project Client.
                 $clients          = upstream_wp_get_clients();
-                $selectedClientId = isset($_GET['project-client']) ? (int) $_GET['project-client'] : - 1; ?>
+                $selectedClientId = isset($_GET['project-client']) ? (int)$_GET['project-client'] : -1; ?>
                 <select name="project-client" id="project-client" class="postform">
                     <option value="">
                         <?php printf(__('Show all %s', 'upstream'), upstream_client_label_plural(true)); ?>
                     </option>
                     <?php foreach ($clients as $clientId => $clientName): ?>
                         <option
-                            value="<?php echo $clientId; ?>" <?php echo $selectedClientId === (int) $clientId ? ' selected' : ''; ?>>
+                                value="<?php echo $clientId; ?>" <?php echo $selectedClientId === (int)$clientId ? ' selected' : ''; ?>>
                             <?php echo $clientName; ?>
                         </option>
                     <?php endforeach; ?>
@@ -461,7 +461,7 @@ if (! class_exists('UpStream_Admin_Project_Columns')) :
         public function filter($query)
         {
             $isAdmin = is_admin();
-            if (! $isAdmin) {
+            if ( ! $isAdmin) {
                 return;
             }
 
@@ -488,11 +488,11 @@ if (! class_exists('UpStream_Admin_Project_Columns')) :
             }
 
             $shouldExit = true;
-            $filters    = [ 'status', 'owner', 'client' ];
+            $filters    = ['status', 'owner', 'client'];
             foreach ($filters as $filterName) {
                 $filterKey = 'project-' . $filterName;
 
-                if (isset($_GET[ $filterKey ]) && ! empty($_GET[ $filterKey ])) {
+                if (isset($_GET[$filterKey]) && ! empty($_GET[$filterKey])) {
                     $shouldExit = false;
                 }
             }
@@ -501,16 +501,16 @@ if (! class_exists('UpStream_Admin_Project_Columns')) :
                 return;
             }
 
-            if (! $this->allowAllProjects && $query->filterAllowedProjects) {
+            if ( ! $this->allowAllProjects && $query->filterAllowedProjects) {
                 $query->query_vars            = array_merge($query->query_vars, [
-                    'post__in' => count($this->allowedProjects) === 0 ? [ 'making_sure_no_project_is_returned' ] : $this->allowedProjects,
+                    'post__in' => count($this->allowedProjects) === 0 ? ['making_sure_no_project_is_returned'] : $this->allowedProjects,
                 ]);
                 $query->filterAllowedProjects = null;
             }
 
             $metaQuery = [];
 
-            $projectStatus = isset($_GET['project-status']) ? (string) $_GET['project-status'] : '';
+            $projectStatus = isset($_GET['project-status']) ? (string)$_GET['project-status'] : '';
             if (strlen($projectStatus) > 0) {
                 $metaQuery[] = [
                     'key'     => '_upstream_project_status',
@@ -519,7 +519,7 @@ if (! class_exists('UpStream_Admin_Project_Columns')) :
                 ];
             }
 
-            $projectOwnerId = isset($_GET['project-owner']) ? (int) $_GET['project-owner'] : 0;
+            $projectOwnerId = isset($_GET['project-owner']) ? (int)$_GET['project-owner'] : 0;
             if ($projectOwnerId > 0) {
                 $metaQuery[] = [
                     'key'     => '_upstream_project_owner',
@@ -528,7 +528,7 @@ if (! class_exists('UpStream_Admin_Project_Columns')) :
                 ];
             }
 
-            $projectClientId = isset($_GET['project-client']) ? (int) $_GET['project-client'] : 0;
+            $projectClientId = isset($_GET['project-client']) ? (int)$_GET['project-client'] : 0;
             if ($projectClientId > 0) {
                 $metaQuery[] = [
                     'key'     => '_upstream_project_client',

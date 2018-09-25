@@ -1,7 +1,7 @@
 <?php
 
 // Exit if accessed directly
-if (! defined('ABSPATH')) {
+if ( ! defined('ABSPATH')) {
     exit;
 }
 
@@ -35,7 +35,7 @@ class UpStream_Project_Activity
     public function hooks()
     {
         if (isset($_POST['action']) && (isset($_POST['post_type']) && $_POST['post_type'] == 'project')) {
-            add_action('wp_insert_post_data', [ $this, 'init_update' ], 99, 2);
+            add_action('wp_insert_post_data', [$this, 'init_update'], 99, 2);
         }
         if (isset($_POST['upstream-nonce']) && (isset($_POST['post_id']))) { // posted in frontend
             $this->init_update(null, null);
@@ -64,8 +64,8 @@ class UpStream_Project_Activity
             }
 
             // reset our posted variable
-            $this->posted              = [];
-            $this->posted[ $group ][0] = $posted;
+            $this->posted            = [];
+            $this->posted[$group][0] = $posted;
 
             if (isset($posted['action']) && $posted['action'] == 'upstream_frontend_delete_item') {
                 $this->posted['frontend'] = 'delete';
@@ -84,7 +84,7 @@ class UpStream_Project_Activity
                 'upstream-files-nonce',
             ];
             foreach ($remove as $key) {
-                unset($this->posted[ $group ][0][ $key ]);
+                unset($this->posted[$group][0][$key]);
             }
         }
 
@@ -122,7 +122,7 @@ class UpStream_Project_Activity
         foreach ($this->posted as $key => $new_value) {
 
             // skip some of wordpress standard fields that we don't need
-            if ($this->match($key, [ 'nonce', 'action', 'refer', 'hidden' ])) {
+            if ($this->match($key, ['nonce', 'action', 'refer', 'hidden'])) {
                 continue;
             }
 
@@ -138,24 +138,24 @@ class UpStream_Project_Activity
                 /*
                  * check the simple string fields first
                  */
-                if (! is_array($new_value) || $key == '_upstream_project_client_users') {
+                if ( ! is_array($new_value) || $key == '_upstream_project_client_users') {
 
                     // handle date formatting differences first
-                    if ($this->match($key, [ 'project_start', 'project_end', 'date' ])) {
+                    if ($this->match($key, ['project_start', 'project_end', 'date'])) {
                         //$old_value = upstream_format_date( $old_value );
                         $new_value = upstream_timestamp_from_date($new_value);
                     }
 
                     // if we are adding a new item
-                    if (! $old_value && ! empty($new_value)) {
-                        $activity['single'][ $key ]['add'] = $new_value;
+                    if ( ! $old_value && ! empty($new_value)) {
+                        $activity['single'][$key]['add'] = $new_value;
                         continue;
                     }
 
                     // add the activity to our array
                     if ($old_value != $new_value) {
-                        $activity['single'][ $key ]['from'] = $old_value;
-                        $activity['single'][ $key ]['to']   = $new_value;
+                        $activity['single'][$key]['from'] = $old_value;
+                        $activity['single'][$key]['to']   = $new_value;
                     }
                 }
 
@@ -170,7 +170,7 @@ class UpStream_Project_Activity
                             foreach ($old_value as $old_old => $old_item) {
                                 // if the old id is not in the new items, we have deleted it
                                 if (isset($new_value[0]['id']) && $new_value[0]['id'] == $old_item['id']) {
-                                    $activity['group'][ $key ]['remove'][] = $old_item;
+                                    $activity['group'][$key]['remove'][] = $old_item;
                                 }
                             }
                         }
@@ -182,7 +182,7 @@ class UpStream_Project_Activity
                             foreach ($old_value as $old_index => $old_item) {
                                 // if the old id is not in the new items, we have deleted it
                                 if (isset($old_item['id']) && ! $this->in_array_r($old_item['id'], $new_value)) {
-                                    $activity['group'][ $key ]['remove'][] = $old_item;
+                                    $activity['group'][$key]['remove'][] = $old_item;
                                 }
                             }
                         }
@@ -196,11 +196,11 @@ class UpStream_Project_Activity
                         $existing_item = upstream_project_item_by_id($this->ID, $item_id);
 
                         // if we are adding a new item
-                        if (! $existing_item) {
+                        if ( ! $existing_item) {
 
                             // ignore if all fields are empty
                             if (array_filter($new_item)) {
-                                $activity['group'][ $key ]['add'][] = $new_item;
+                                $activity['group'][$key]['add'][] = $new_item;
                             }
                         }
 
@@ -210,7 +210,7 @@ class UpStream_Project_Activity
                             foreach ($new_item as $new_item_field_key => $new_item_field_val) {
 
                                 // check for date fields
-                                if ($this->match($new_item_field_key, [ 'date' ])) {
+                                if ($this->match($new_item_field_key, ['date'])) {
                                     // convert date to timestamp
                                     $new_item_field_val = upstream_timestamp_from_date($new_item_field_val);
                                 }
@@ -218,9 +218,9 @@ class UpStream_Project_Activity
                                 // we've added a new field
                                 // existing item is NOT set
                                 if (
-                                    ! isset($existing_item[ $new_item_field_key ])
+                                    ! isset($existing_item[$new_item_field_key])
                                     && ! empty($new_item_field_val)) {
-                                    $activity['group'][ $key ][ $existing_item['id'] ][ $new_item_field_key ]['add'] = $new_item_field_val;
+                                    $activity['group'][$key][$existing_item['id']][$new_item_field_key]['add'] = $new_item_field_val;
                                     continue;
                                 }
 
@@ -228,16 +228,16 @@ class UpStream_Project_Activity
                                 // existing item is set
                                 // new item is NOT set
                                 if (
-                                    (isset($existing_item[ $new_item_field_key ]) && ! isset($existing_item[ $new_item_field_key ]))
-                                    && ! empty($existing_item[ $new_item_field_key ])) {
-                                    $activity['group'][ $key ][ $existing_item['id'] ][ $new_item_field_key ]['remove'] = $existing_item[ $new_item_field_key ];
+                                    (isset($existing_item[$new_item_field_key]) && ! isset($existing_item[$new_item_field_key]))
+                                    && ! empty($existing_item[$new_item_field_key])) {
+                                    $activity['group'][$key][$existing_item['id']][$new_item_field_key]['remove'] = $existing_item[$new_item_field_key];
                                     continue;
                                 }
 
                                 // we've edited a field
-                                if (isset($existing_item[ $new_item_field_key ]) && $existing_item[ $new_item_field_key ] != $new_item_field_val) {
-                                    $activity['group'][ $key ][ $existing_item['id'] ][ $new_item_field_key ]['from'] = $existing_item[ $new_item_field_key ];
-                                    $activity['group'][ $key ][ $existing_item['id'] ][ $new_item_field_key ]['to']   = $new_item_field_val;
+                                if (isset($existing_item[$new_item_field_key]) && $existing_item[$new_item_field_key] != $new_item_field_val) {
+                                    $activity['group'][$key][$existing_item['id']][$new_item_field_key]['from'] = $existing_item[$new_item_field_key];
+                                    $activity['group'][$key][$existing_item['id']][$new_item_field_key]['to']   = $new_item_field_val;
                                 }
                             }
                         }
@@ -250,8 +250,8 @@ class UpStream_Project_Activity
             return;
         }
 
-        $data[ $time ]['fields']  = $activity;
-        $data[ $time ]['user_id'] = $user_id;
+        $data[$time]['fields']  = $activity;
+        $data[$time]['user_id'] = $user_id;
 
         $existing = get_post_meta($this->ID, '_upstream_project_activity', true);
         if ($existing) {
@@ -269,13 +269,13 @@ class UpStream_Project_Activity
      */
     public function match($haystack, $needle)
     {
-        if (! $needle) {
+        if ( ! $needle) {
             return;
         }
 
         // push single string into array for simplicity
-        if (! is_array($needle)) {
-            $needle = [ $needle ];
+        if ( ! is_array($needle)) {
+            $needle = [$needle];
         }
 
         foreach ($needle as $string) {
@@ -303,7 +303,7 @@ class UpStream_Project_Activity
         }
 
         $result = get_post_meta($this->ID, '_upstream_project_' . $meta, true);
-        if (! $result) {
+        if ( ! $result) {
             $result = null;
         }
 
@@ -314,10 +314,10 @@ class UpStream_Project_Activity
     {
         foreach ($haystack as $item) {
             if (($strict ? $item === $needle : $item == $needle) || (is_array($item) && $this->in_array_r(
-                $needle,
+                        $needle,
                         $item,
-                $strict
-            ))) {
+                        $strict
+                    ))) {
                 return true;
             }
         }
@@ -335,13 +335,13 @@ class UpStream_Project_Activity
         $this->ID = $post_id;
 
         // make the field names readable
-        $find    = [ '_', 'upstream' ];
-        $replace = [ ' ', '' ];
+        $find    = ['_', 'upstream'];
+        $replace = [' ', ''];
 
         // get the activity data
         $activity = $this->get_meta('_upstream_project_activity');
 
-        if (! $activity) {
+        if ( ! $activity) {
             return;
         }
 
@@ -358,9 +358,9 @@ class UpStream_Project_Activity
             echo '<div class="activity-item">';
             echo '<h4>' . esc_html(upstream_format_date($time) . ' ' . upstream_format_time($time)) . '</h4>';
             echo '<span class="user">' . esc_html(upstream_users_name($update['user_id'])) . ' (' . upstream_user_item(
-                $update['user_id'],
+                    $update['user_id'],
                     'role'
-            ) . ')</span>';
+                ) . ')</span>';
 
             /*
              * single field
@@ -408,11 +408,11 @@ class UpStream_Project_Activity
                                     continue;
                                 }
 
-                                $title        = isset($item['title']) ? $item['title'] : (isset($item['milestone']) ? $milestones[ $item['milestone'] ] : "");
+                                $title        = isset($item['title']) ? $item['title'] : (isset($item['milestone']) ? $milestones[$item['milestone']] : "");
                                 $item_removed .= '<span class="item">' . sprintf(
-                                    __('Deleted: %s', 'upstream'),
+                                        __('Deleted: %s', 'upstream'),
                                         '<span class="highlight">' . $title . '</span>'
-                                ) . '</span>';
+                                    ) . '</span>';
                             }
 
                             $group_output = $item_removed;
@@ -432,11 +432,11 @@ class UpStream_Project_Activity
                                     continue;
                                 }
 
-                                $title      = isset($item['title']) ? $item['title'] : (isset($item['milestone']) ? $milestones[ $item['milestone'] ] : "");
+                                $title      = isset($item['title']) ? $item['title'] : (isset($item['milestone']) ? $milestones[$item['milestone']] : "");
                                 $item_added .= '<span class="item">' . sprintf(
-                                    __('New Item: %s', 'upstream'),
+                                        __('New Item: %s', 'upstream'),
                                         '<span class="highlight">' . $title . '</span>'
-                                ) . '</span>';
+                                    ) . '</span>';
                             }
 
                             $group_output = $item_added;
@@ -452,35 +452,35 @@ class UpStream_Project_Activity
                                 $field_output = '';
                                 if (isset($field_data['add'])) {
                                     $item         = upstream_project_item_by_id($this->ID, $item_id);
-                                    $title        = isset($item['title']) ? $item['title'] : $milestones[ $item['milestone'] ];
+                                    $title        = isset($item['title']) ? $item['title'] : $milestones[$item['milestone']];
                                     $the_val      = $this->format_fields($field_id, $field_data['add']);
                                     $field_output .= '<span class="item">' . sprintf(
-                                        __(
-                                        'New: %s - %s on %s',
-                                            'upstream'
-                                    ),
-                                        $field_name,
+                                            __(
+                                                'New: %s - %s on %s',
+                                                'upstream'
+                                            ),
+                                            $field_name,
                                             (is_array($the_val) ? json_encode($the_val) : $the_val),
                                             '<span class="highlight">' . $title . '</span>'
-                                    ) . '</span>';
+                                        ) . '</span>';
                                 }
 
                                 if (isset($field_data['from'])) {
                                     $item  = upstream_project_item_by_id($this->ID, $item_id);
-                                    $title = isset($item['title']) ? $item['title'] : $milestones[ $item['milestone'] ];
+                                    $title = isset($item['title']) ? $item['title'] : $milestones[$item['milestone']];
                                     $from  = $this->format_fields($field_id, $field_data['from']);
                                     $to    = $this->format_fields($field_id, $field_data['to']);
 
                                     $field_output .= '<span class="item">' . sprintf(
-                                        __(
-                                        'Edit: %s from %s to %s on %s',
-                                            'upstream'
-                                    ),
-                                        $field_name,
-                                        is_array($from) ? count($from) : $from,
+                                            __(
+                                                'Edit: %s from %s to %s on %s',
+                                                'upstream'
+                                            ),
+                                            $field_name,
+                                            is_array($from) ? count($from) : $from,
                                             is_array($to) ? count($to) : $to,
                                             '<span class="highlight">' . $title . '</span>'
-                                    ) . '</span>';
+                                        ) . '</span>';
                                 }
 
                                 $group_output = $field_output;
@@ -504,7 +504,7 @@ class UpStream_Project_Activity
         $number = isset($_GET['activity_items']) ? $_GET['activity_items'] : 5;
         $number = $number == 'all' ? 99999999 : $number;
 
-        return (int) $number;
+        return (int)$number;
     }
 
     public function format_fields($field_id, $val)
@@ -538,14 +538,14 @@ class UpStream_Project_Activity
 
             case 'assigned_to':
             case 'owner':
-                if (! is_array($val)) {
-                    $val = (array) $val;
+                if ( ! is_array($val)) {
+                    $val = (array)$val;
                 }
 
                 $val     = array_unique(array_filter($val));
                 $the_val = [];
                 foreach ($val as $user_id) {
-                    $user_id = (int) $user_id;
+                    $user_id = (int)$user_id;
                     if ($user_id > 0) {
                         $the_val[] = upstream_users_name($user_id);
                     }

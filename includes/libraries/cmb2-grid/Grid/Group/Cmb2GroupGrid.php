@@ -8,7 +8,7 @@
 
 namespace Cmb2Grid\Grid\Group;
 
-if (! class_exists('\Cmb2Grid\Grid\Group\Cmb2GroupGrid')) {
+if ( ! class_exists('\Cmb2Grid\Grid\Group\Cmb2GroupGrid')) {
 
     /**
      * Description of Cmb2GroupGrid.
@@ -27,11 +27,12 @@ if (! class_exists('\Cmb2Grid\Grid\Group\Cmb2GroupGrid')) {
         public function addRow()
         {
             //parent::addRow();
-            $rows	 = $this->getRows();
-            $newRow	 = new GroupRow($this);
+            $rows   = $this->getRows();
+            $newRow = new GroupRow($this);
             $newRow->setParentFieldId($this->getParentFieldId());
-            $rows[]	 = $newRow;
+            $rows[] = $newRow;
             $this->setRows($rows);
+
             return $newRow;
         }
 

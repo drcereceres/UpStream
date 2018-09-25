@@ -1,11 +1,11 @@
 <?php
 
 // Exit if accessed directly
-if (! defined('ABSPATH')) {
+if ( ! defined('ABSPATH')) {
     exit;
 }
 
-if (! class_exists('UpStream_Options_Extensions')) :
+if ( ! class_exists('UpStream_Options_Extensions')) :
 
     /**
      * CMB2 Theme Options
@@ -64,7 +64,7 @@ if (! class_exists('UpStream_Options_Extensions')) :
              * Add-ons page
              */
             do_action('allex_enable_module_addons');
-            add_filter('allex_addons', [ 'UpStream_Options_Extensions', 'filterAllexAddons' ], 10, 2);
+            add_filter('allex_addons', ['UpStream_Options_Extensions', 'filterAllexAddons'], 10, 2);
 
             /**
              * Upgrade link
@@ -81,15 +81,15 @@ if (! class_exists('UpStream_Options_Extensions')) :
 
             add_action(
                 'cmb2_render_upstream_extensions_wrapper',
-                [ 'UpStream_Options_Extensions', 'renderExtensionsWrapper' ],
+                ['UpStream_Options_Extensions', 'renderExtensionsWrapper'],
                 10,
                 5
             );
 
-            add_filter('allex_upgrade_mailchimp_config', [ $this, 'filter_allex_upgrade_mailchimp_config' ], 10, 2);
-            add_action('allex_addon_update_license', [ $this, 'action_allex_addon_update_license' ], 10, 4);
-            add_filter('allex_addons_get_license_key', [ $this, 'filter_allex_addons_get_license_key' ], 10, 2);
-            add_filter('allex_addons_get_license_status', [ $this, 'filter_allex_addons_get_license_status' ], 10, 2);
+            add_filter('allex_upgrade_mailchimp_config', [$this, 'filter_allex_upgrade_mailchimp_config'], 10, 2);
+            add_action('allex_addon_update_license', [$this, 'action_allex_addon_update_license'], 10, 4);
+            add_filter('allex_addons_get_license_key', [$this, 'filter_allex_addons_get_license_key'], 10, 2);
+            add_filter('allex_addons_get_license_status', [$this, 'filter_allex_addons_get_license_status'], 10, 2);
         }
 
 
@@ -221,11 +221,11 @@ if (! class_exists('UpStream_Options_Extensions')) :
              */
             $extensions = get_option('upstream:extensions');
 
-            if (! is_array($extensions)) {
+            if ( ! is_array($extensions)) {
                 $extensions = [];
             }
 
-            $extensions[ $addon_slug ] = [
+            $extensions[$addon_slug] = [
                 'key'    => $license_key,
                 'status' => $license_status,
             ];
@@ -243,8 +243,8 @@ if (! class_exists('UpStream_Options_Extensions')) :
         {
             $extensions = get_option('upstream:extensions');
 
-            if (isset($extensions[ $addon_slug ]) && $extensions[ $addon_slug ]['key']) {
-                return $extensions[ $addon_slug ]['key'];
+            if (isset($extensions[$addon_slug]) && $extensions[$addon_slug]['key']) {
+                return $extensions[$addon_slug]['key'];
             }
 
             return $license_key;
@@ -260,8 +260,8 @@ if (! class_exists('UpStream_Options_Extensions')) :
         {
             $extensions = get_option('upstream:extensions');
 
-            if (isset($extensions[ $addon_slug ]) && $extensions[ $addon_slug ]['status']) {
-                return $extensions[ $addon_slug ]['status'];
+            if (isset($extensions[$addon_slug]) && $extensions[$addon_slug]['status']) {
+                return $extensions[$addon_slug]['status'];
             }
 
             return $license_status;
@@ -315,7 +315,7 @@ if (! class_exists('UpStream_Options_Extensions')) :
                 'desc'       => $this->description,
                 'show_on'    => [
                     'key'   => 'options-page',
-                    'value' => [ $this->id ],
+                    'value' => [$this->id],
                 ],
                 'fields'     => [
                     [

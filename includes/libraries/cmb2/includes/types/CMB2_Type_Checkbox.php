@@ -1,8 +1,9 @@
 <?php
+
 /**
  * CMB checkbox field type
  *
- * @since  2.2.2
+ * @since     2.2.2
  *
  * @category  WordPress_Plugin
  * @package   CMB2
@@ -28,20 +29,20 @@ class CMB2_Type_Checkbox extends CMB2_Type_Text
      * @param CMB2_Types $types
      * @param array      $args
      */
-    public function __construct(CMB2_Types $types, $args = array(), $is_checked = null)
+    public function __construct(CMB2_Types $types, $args = [], $is_checked = null)
     {
         parent::__construct($types, $args);
         $this->is_checked = $is_checked;
     }
 
-    public function render($args = array())
+    public function render($args = [])
     {
-        $defaults = array(
+        $defaults = [
             'type'  => 'checkbox',
             'class' => 'cmb2-option cmb2-list',
             'value' => 'on',
             'desc'  => '',
-        );
+        ];
 
         $meta_value = $this->field->escaped_value();
 

@@ -1,7 +1,7 @@
 <?php
 
 // Exit if accessed directly
-if (! defined('ABSPATH')) {
+if ( ! defined('ABSPATH')) {
     exit;
 }
 
@@ -17,7 +17,7 @@ class Upstream_Counts
     /** Class constructor */
     public function __construct($id)
     {
-        $this->projects = (array) $this->get_projects($id);
+        $this->projects = (array)$this->get_projects($id);
         $this->user     = upstream_user_data();
     }
 
@@ -31,14 +31,14 @@ class Upstream_Counts
         $args = [
             'post_type'      => 'project',
             'post_status'    => 'publish',
-            'posts_per_page' => - 1,
+            'posts_per_page' => -1,
         ];
 
-        if ((int) $id > 0) {
+        if ((int)$id > 0) {
             $args['include'] = $id;
         }
 
-        $projects = (array) get_posts($args);
+        $projects = (array)get_posts($args);
 
         return $projects;
     }
@@ -54,10 +54,10 @@ class Upstream_Counts
 
         $items = $this->get_items($type);
         if (count($items) > 0) {
-            $option   = (array) get_option("upstream_{$type}");
+            $option   = (array)get_option("upstream_{$type}");
             $statuses = isset($option['statuses']) ? $option['statuses'] : '';
 
-            if (! empty($statuses)) {
+            if ( ! empty($statuses)) {
                 if ($type === 'milestones') {
                     return $this->total($type);
                 }
@@ -68,12 +68,12 @@ class Upstream_Counts
             $types = wp_list_pluck($statuses, 'type', 'name');
 
             foreach ($items as $item) {
-                if (! isset($item['status'])) {
+                if ( ! isset($item['status'])) {
                     continue;
 
                     $itemStatus = $item['status'];
-                    if (isset($types[ $itemStatus ]) && $types[ $itemStatus ] === 'open') {
-                        $itemsOpenCount ++;
+                    if (isset($types[$itemStatus]) && $types[$itemStatus] === 'open') {
+                        $itemsOpenCount++;
                     }
                 }
             }
@@ -117,7 +117,7 @@ class Upstream_Counts
      */
     public function total($type)
     {
-        $items      = (array) $this->get_items($type);
+        $items      = (array)$this->get_items($type);
         $itemsCount = count($items);
 
         return $itemsCount;
@@ -139,17 +139,17 @@ class Upstream_Counts
             return 0;
         }
 
-        $currentUserId = (int) $this->user['id'];
+        $currentUserId = (int)$this->user['id'];
 
         $assignedItemsCount = 0;
 
         foreach ($rowset as $row) {
             $assignees = isset($row['assigned_to']) ? array_unique(array_filter(array_map(
                 'intval',
-                (array) $row['assigned_to']
+                (array)$row['assigned_to']
             ))) : [];
             if (in_array($currentUserId, $assignees)) {
-                $assignedItemsCount ++;
+                $assignedItemsCount++;
             }
         }
 
@@ -164,14 +164,14 @@ class Upstream_Counts
     public function assigned_to_open($type)
     {
         $items = $this->get_items($type);
-        if (! $items) {
+        if ( ! $items) {
             return '0';
         }
 
         $option   = get_option('upstream_' . $type);
         $statuses = isset($option['statuses']) ? $option['statuses'] : '';
 
-        if (! $statuses) {
+        if ( ! $statuses) {
             if ($type == 'milestones') {
                 return $this->total($type);
             } else {
@@ -183,8 +183,8 @@ class Upstream_Counts
 
         $count = 0;
         foreach ($items as $key => $item) {
-            $item = (array) $item;
-            if (! isset($item['assigned_to'])) {
+            $item = (array)$item;
+            if ( ! isset($item['assigned_to'])) {
                 continue;
             }
             if ($item['assigned_to'] != $this->user['id']) {
@@ -192,7 +192,7 @@ class Upstream_Counts
             }
             $item_status = isset($item['status']) ? $item['status'] : '';
 
-            if ((isset($types[ $item_status ]) && $types[ $item_status ] == 'open') || $item_status === "") {
+            if ((isset($types[$item_status]) && $types[$item_status] == 'open') || $item_status === "") {
                 $count += 1;
             }
         }

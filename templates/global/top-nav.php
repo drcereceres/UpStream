@@ -1,10 +1,10 @@
 <?php
-if (! defined('ABSPATH')) {
+if ( ! defined('ABSPATH')) {
     exit;
 }
 
-if (! is_archive()) {
-    $clientId   = (int) upstream_project_client_id();
+if ( ! is_archive()) {
+    $clientId   = (int)upstream_project_client_id();
     $clientLogo = upstream_client_logo($clientId);
 } else {
     $clientLogo = null;
@@ -28,7 +28,7 @@ $pluginOptions = get_option('upstream_general');
                 <li class="">
                     <a href="javascript:void(0);" class="user-profile dropdown-toggle" data-toggle="dropdown"
                        aria-expanded="false">
-                        <?php if (! empty($clientLogo)): ?>
+                        <?php if ( ! empty($clientLogo)): ?>
                             <img src="<?php echo $clientLogo; ?>" alt="" height="40"/>
                         <?php endif; ?>
 
@@ -38,9 +38,9 @@ $pluginOptions = get_option('upstream_general');
                         <li>
                             <a href="<?php echo get_post_type_archive_link('project'); ?>">
                                 <i class="fa fa-home pull-right"></i><?php printf(
-    __('My %s', 'upstream'),
+                                    __('My %s', 'upstream'),
                                     upstream_project_label_plural()
-); ?>
+                                ); ?>
                             </a>
                         </li>
                         <li>

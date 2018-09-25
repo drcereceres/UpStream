@@ -1,7 +1,7 @@
 <?php
 
 // Exit if accessed directly
-if (! defined('ABSPATH')) {
+if ( ! defined('ABSPATH')) {
     exit;
 }
 
@@ -87,7 +87,7 @@ class UpStream_Roles
 
         $theRoleIndetifier = 'upstream_client_user';
 
-        if (! $wp_roles->is_role($theRoleIndetifier)) {
+        if ( ! $wp_roles->is_role($theRoleIndetifier)) {
             add_role($theRoleIndetifier, __('UpStream Client User', 'upstream'), [
                 'read'         => true,
                 'upload_files' => true,
@@ -109,7 +109,7 @@ class UpStream_Roles
         global $wp_roles;
 
         if (class_exists('WP_Roles')) {
-            if (! isset($wp_roles)) {
+            if ( ! isset($wp_roles)) {
                 $wp_roles = new WP_Roles();
             }
         }
@@ -134,7 +134,7 @@ class UpStream_Roles
             }
 
             // Apply the default capabilities only once.
-            $not_set = (int) get_option('upstream_default_capabilities_set') !== 1;
+            $not_set = (int)get_option('upstream_default_capabilities_set') !== 1;
 
             if ($not_set) {
                 // By default add capability for adding images in comments too all roles.
@@ -159,10 +159,10 @@ class UpStream_Roles
     {
         $capabilities = [];
 
-        $capability_types = [ 'project', 'client' ];
+        $capability_types = ['project', 'client'];
 
         foreach ($capability_types as $capability_type) {
-            $capabilities[ $capability_type ] = [
+            $capabilities[$capability_type] = [
                 // Post type
                 "edit_{$capability_type}",
                 "read_{$capability_type}",
@@ -301,7 +301,7 @@ class UpStream_Roles
         global $wp_roles;
 
         if (class_exists('WP_Roles')) {
-            if (! isset($wp_roles)) {
+            if ( ! isset($wp_roles)) {
                 $wp_roles = new WP_Roles();
             }
         }

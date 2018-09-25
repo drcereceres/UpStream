@@ -1,11 +1,11 @@
 <?php
 
 // Exit if accessed directly
-if (! defined('ABSPATH')) {
+if ( ! defined('ABSPATH')) {
     exit;
 }
 
-if (! class_exists('UpStream_Options_Projects')) :
+if ( ! class_exists('UpStream_Options_Projects')) :
 
     /**
      * CMB2 Theme Options
@@ -92,7 +92,7 @@ if (! class_exists('UpStream_Options_Projects')) :
                     'title'      => $this->title,
                     'menu_title' => $this->menu_title,
                     'desc'       => $this->description,
-                    'show_on'    => [ 'key' => 'options-page', 'value' => [ $this->id ], ],
+                    'show_on'    => ['key' => 'options-page', 'value' => [$this->id],],
                     'show_names' => true,
                     'fields'     => [
                         [
@@ -101,9 +101,9 @@ if (! class_exists('UpStream_Options_Projects')) :
                             'type' => 'title',
                             'desc' => sprintf(
                                 __(
-                                'The statuses and colors that can be used for the main status of the %s.<br>These will become available in the %s Status dropdown within the %s',
-                                'upstream'
-                            ),
+                                    'The statuses and colors that can be used for the main status of the %s.<br>These will become available in the %s Status dropdown within the %s',
+                                    'upstream'
+                                ),
                                 upstream_project_label(),
                                 upstream_project_label(),
                                 upstream_project_label()
@@ -120,7 +120,7 @@ if (! class_exists('UpStream_Options_Projects')) :
                                 'remove_button' => __('Remove Entry', 'upstream'),
                                 'sortable'      => true, // beta
                             ],
-                            'sanitization_cb' => [ 'UpStream_Admin', 'onBeforeSave' ],
+                            'sanitization_cb' => ['UpStream_Admin', 'onBeforeSave'],
                             'fields'          => [
                                 [
                                     'name' => __('Hidden', 'upstream'),
@@ -150,12 +150,12 @@ if (! class_exists('UpStream_Options_Projects')) :
                                     'type'    => 'radio',
                                     'default' => 'open',
                                     'desc'    => __(
-                                        "A Status Name such as 'In Progress' or 'Overdue' would be considered Open.",
-                                            'upstream'
-                                    ) . '<br>' . __(
-                                                "A Status Name such as 'Complete' or 'Cancelled' would be considered Closed.",
-                                            'upstream'
-                                            ),
+                                                     "A Status Name such as 'In Progress' or 'Overdue' would be considered Open.",
+                                                     'upstream'
+                                                 ) . '<br>' . __(
+                                                     "A Status Name such as 'Complete' or 'Cancelled' would be considered Closed.",
+                                                     'upstream'
+                                                 ),
                                     'options' => [
                                         'open'   => __('Open', 'upstream'),
                                         'closed' => __('Closed', 'upstream'),
@@ -179,8 +179,8 @@ if (! class_exists('UpStream_Options_Projects')) :
          */
         public static function createProjectsStatusesIds()
         {
-            $continue = ! (bool) get_option('upstream:created_projects_args_ids');
-            if (! $continue) {
+            $continue = ! (bool)get_option('upstream:created_projects_args_ids');
+            if ( ! $continue) {
                 return;
             }
 
@@ -192,7 +192,7 @@ if (! class_exists('UpStream_Options_Projects')) :
 
                 $statuses = [];
                 foreach ($options['statuses'] as $row) {
-                    $statuses[ $row['name'] ] = $row['id'];
+                    $statuses[$row['name']] = $row['id'];
                 }
 
                 // Update existent Milestone data across all Projects.
@@ -208,12 +208,12 @@ if (! class_exists('UpStream_Options_Projects')) :
                 if (count($metas) > 0) {
                     foreach ($metas as $meta) {
                         if (empty($meta->meta_value)
-                             || ! isset($statuses[ $meta->meta_value ])
+                            || ! isset($statuses[$meta->meta_value])
                         ) {
                             continue;
                         }
 
-                        $meta->meta_value = $statuses[ $meta->meta_value ];
+                        $meta->meta_value = $statuses[$meta->meta_value];
 
                         update_post_meta($meta->post_id, '_upstream_project_status', $meta->meta_value);
                     }

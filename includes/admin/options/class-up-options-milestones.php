@@ -1,11 +1,11 @@
 <?php
 
 // Exit if accessed directly
-if (! defined('ABSPATH')) {
+if ( ! defined('ABSPATH')) {
     exit;
 }
 
-if (! class_exists('UpStream_Options_Milestones')) :
+if ( ! class_exists('UpStream_Options_Milestones')) :
 
     /**
      * CMB2 Theme Options
@@ -91,7 +91,7 @@ if (! class_exists('UpStream_Options_Milestones')) :
                     'title'      => $this->title,
                     'menu_title' => $this->menu_title,
                     'desc'       => $this->description,
-                    'show_on'    => [ 'key' => 'options-page', 'value' => [ $this->id ], ],
+                    'show_on'    => ['key' => 'options-page', 'value' => [$this->id],],
                     'show_names' => true,
                     'fields'     => [
                         [
@@ -100,9 +100,9 @@ if (! class_exists('UpStream_Options_Milestones')) :
                             'type' => 'title',
                             'desc' => sprintf(
                                 __(
-                                'Create your %1s and choose their colors. You can create an unlimited number and they can be used across any and all %2s.<br>They will appear in the %3s dropdown within each %4s.<br><strong>Tip:</strong> We think it works best to keep %5s colors to various shades of the one color, to help keep things looking neat and organized.',
-                                'upstream'
-                            ),
+                                    'Create your %1s and choose their colors. You can create an unlimited number and they can be used across any and all %2s.<br>They will appear in the %3s dropdown within each %4s.<br><strong>Tip:</strong> We think it works best to keep %5s colors to various shades of the one color, to help keep things looking neat and organized.',
+                                    'upstream'
+                                ),
                                 upstream_milestone_label_plural(),
                                 upstream_project_label_plural(),
                                 upstream_milestone_label(),
@@ -121,7 +121,7 @@ if (! class_exists('UpStream_Options_Milestones')) :
                                 'remove_button' => sprintf(__('Remove %s', 'upstream'), upstream_milestone_label()),
                                 'sortable'      => true, // beta
                             ],
-                            'sanitization_cb' => [ 'UpStream_Admin', 'onBeforeSave' ],
+                            'sanitization_cb' => ['UpStream_Admin', 'onBeforeSave'],
                             'fields'          => [
                                 [
                                     'name' => __('Hidden', 'upstream'),
@@ -156,8 +156,8 @@ if (! class_exists('UpStream_Options_Milestones')) :
          */
         public static function createMilestonesIds()
         {
-            $continue = ! (bool) get_option('upstream:created_milestones_args_ids');
-            if (! $continue) {
+            $continue = ! (bool)get_option('upstream:created_milestones_args_ids');
+            if ( ! $continue) {
                 return;
             }
 
@@ -202,9 +202,9 @@ if (! class_exists('UpStream_Options_Milestones')) :
                     };
 
                     foreach ($metas as $meta) {
-                        $projectId = (int) $meta->post_id;
+                        $projectId = (int)$meta->post_id;
 
-                        $data = array_filter(maybe_unserialize((string) $meta->meta_value));
+                        $data = array_filter(maybe_unserialize((string)$meta->meta_value));
                         $data = array_map($replaceMilestoneWithItsId, $data);
 
                         update_post_meta($projectId, '_upstream_project_milestones', $data);

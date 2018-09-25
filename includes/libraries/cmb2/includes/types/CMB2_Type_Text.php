@@ -1,8 +1,9 @@
 <?php
+
 /**
  * CMB text field type
  *
- * @since  2.2.2
+ * @since     2.2.2
  *
  * @category  WordPress_Plugin
  * @package   CMB2
@@ -28,7 +29,7 @@ class CMB2_Type_Text extends CMB2_Type_Base
      * @param CMB2_Types $types
      * @param array      $args
      */
-    public function __construct(CMB2_Types $types, $args = array(), $type = '')
+    public function __construct(CMB2_Types $types, $args = [], $type = '')
     {
         parent::__construct($types, $args);
         $this->type = $type ? $type : $this->type;
@@ -38,24 +39,26 @@ class CMB2_Type_Text extends CMB2_Type_Base
      * Handles outputting an 'input' element
      *
      * @since  1.1.0
+     *
      * @param  array $args Override arguments
+     *
      * @return string       Form input element
      */
-    public function render($args = array())
+    public function render($args = [])
     {
         $args = empty($args) ? $this->args : $args;
-        $a = $this->parse_args($this->type, array(
+        $a    = $this->parse_args($this->type, [
             'type'            => 'text',
             'class'           => 'regular-text',
             'name'            => $this->_name(),
             'id'              => $this->_id(),
             'value'           => $this->field->escaped_value(),
             'desc'            => $this->_desc(true),
-            'js_dependencies' => array(),
-        ), $args);
+            'js_dependencies' => [],
+        ], $args);
 
         return $this->rendered(
-            sprintf('<input%s/>%s', $this->concat_attrs($a, array( 'desc' )), $a['desc'])
+            sprintf('<input%s/>%s', $this->concat_attrs($a, ['desc']), $a['desc'])
         );
     }
 }

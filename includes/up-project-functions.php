@@ -1,7 +1,7 @@
 <?php
 
 // Exit if accessed directly
-if (! defined('ABSPATH')) {
+if ( ! defined('ABSPATH')) {
     exit;
 }
 
@@ -28,7 +28,7 @@ function upstream_get_all_project_statuses()
 
     $rowset = get_option('upstream_projects');
     foreach ($rowset['statuses'] as $status) {
-        $data[ $status['id'] ] = $status;
+        $data[$status['id']] = $status;
     }
 
     return $data;
@@ -41,15 +41,15 @@ function upstream_project_status_color($project_id = 0)
         'color'  => '#aaa',
     ];
 
-    $projectStatusId = (string) upstream_project_status($project_id);
-    if (! empty($projectStatusId)) {
+    $projectStatusId = (string)upstream_project_status($project_id);
+    if ( ! empty($projectStatusId)) {
         $rowset = get_option('upstream_projects');
-        if (! empty($rowset)
+        if ( ! empty($rowset)
              && ! empty($rowset['statuses'])
         ) {
             foreach ($rowset['statuses'] as $row) {
                 if (isset($row['id'])
-                     && $row['id'] === $projectStatusId
+                    && $row['id'] === $projectStatusId
                 ) {
                     $status['status'] = $row['name'];
                     $status['color']  = $row['color'];
@@ -115,7 +115,7 @@ function upstream_project_client_name($id = 0)
 function upstream_project_client_users($id = 0)
 {
     $project = new UpStream_Project($id);
-    $result  = (array) $project->get_meta('client_users');
+    $result  = (array)$project->get_meta('client_users');
     $result  = ! empty($result) ? array_filter($result, 'is_numeric') : '';
 
     return apply_filters('upstream_project_client_users', $result, $id);
@@ -166,7 +166,7 @@ function upstream_project_files($id = 0)
 
 function upstream_project_description($projectId = 0)
 {
-    $project = new UpStream_Project((int) $projectId);
+    $project = new UpStream_Project((int)$projectId);
     $result  = $project->get_meta('description');
 
     return apply_filters('upstream_project_description', $result, $projectId);
@@ -295,16 +295,16 @@ function upstream_project_item_by_id($id = 0, $item_id = 0)
 {
     $project = new UpStream_Project($id);
     $result  = $project->get_item_by_id($item_id, 'milestones');
-    if (! $result) {
+    if ( ! $result) {
         $result = $project->get_item_by_id($item_id, 'tasks');
     }
-    if (! $result) {
+    if ( ! $result) {
         $result = $project->get_item_by_id($item_id, 'bugs');
     }
-    if (! $result) {
+    if ( ! $result) {
         $result = $project->get_item_by_id($item_id, 'files');
     }
-    if (! $result) {
+    if ( ! $result) {
         $result = $project->get_item_by_id($item_id, 'discussion');
     }
 
@@ -322,7 +322,7 @@ function upstream_project_item_by_id($id = 0, $item_id = 0)
  */
 function upstream_count_total($type, $id = 0)
 {
-    if (! $id && is_admin()) {
+    if ( ! $id && is_admin()) {
         $id = isset($_GET['post']) ? $_GET['post'] : 'n/a';
     }
 
@@ -386,7 +386,7 @@ function getUpStreamProjectDetailsById($project_id)
         global $wpdb;
 
         $project              = new stdClass();
-        $project->id          = (int) $project_id;
+        $project->id          = (int)$project_id;
         $project->title       = $post->post_title;
         $project->description = "";
         $project->progress    = 0;
@@ -415,32 +415,32 @@ function getUpStreamProjectDetailsById($project_id)
             if ($meta->meta_key === '_upstream_project_description') {
                 $project->description = $meta->meta_value;
             } elseif ($meta->meta_key === '_upstream_project_progress') {
-                $project->progress = (int) $meta->meta_value;
+                $project->progress = (int)$meta->meta_value;
             } elseif ($meta->meta_key === '_upstream_project_status') {
                 $project->status = $meta->meta_value;
             } elseif ($meta->meta_key === '_upstream_project_client') {
-                $project->client_id = (int) $meta->meta_value;
+                $project->client_id = (int)$meta->meta_value;
             } elseif ($meta->meta_key === '_upstream_project_owner') {
-                $project->owner_id = (int) $meta->meta_value;
+                $project->owner_id = (int)$meta->meta_value;
             } elseif ($meta->meta_key === '_upstream_project_start') {
-                $project->dateStart = (int) $meta->meta_value;
+                $project->dateStart = (int)$meta->meta_value;
             } elseif ($meta->meta_key === '_upstream_project_end') {
-                $project->dateEnd = (int) $meta->meta_value;
+                $project->dateEnd = (int)$meta->meta_value;
             } elseif ($meta->meta_key === '_upstream_project_members') {
-                $project->members = (array) maybe_unserialize($meta->meta_value);
+                $project->members = (array)maybe_unserialize($meta->meta_value);
             } elseif ($meta->meta_key === '_upstream_project_client_users') {
-                $project->clientUsers = (array) maybe_unserialize($meta->meta_value);
+                $project->clientUsers = (array)maybe_unserialize($meta->meta_value);
             }
         }
 
-        $usersRowset = (array) get_users([
-            'fields' => [ 'ID', 'display_name' ],
+        $usersRowset = (array)get_users([
+            'fields' => ['ID', 'display_name'],
         ]);
 
         $users = [];
         foreach ($usersRowset as $user) {
-            $users[ (int) $user->ID ] = (object) [
-                'id'   => (int) $user->ID,
+            $users[(int)$user->ID] = (object)[
+                'id'   => (int)$user->ID,
                 'name' => $user->display_name,
             ];
         }
@@ -448,30 +448,30 @@ function getUpStreamProjectDetailsById($project_id)
         if ($project->client_id > 0) {
             $client = get_post($project->client_id);
             if ($client instanceof \WP_Post) {
-                if (! empty($client->post_title)) {
+                if ( ! empty($client->post_title)) {
                     $project->clientName = $client->post_title;
                 }
             }
         }
 
-        if ($project->owner_id > 0 && isset($users[ $project->owner_id ])) {
-            $project->ownerName = $users[ $project->owner_id ]->name;
+        if ($project->owner_id > 0 && isset($users[$project->owner_id])) {
+            $project->ownerName = $users[$project->owner_id]->name;
         }
 
         if (count($project->members) > 0) {
             foreach ($project->members as $memberIndex => $member_id) {
-                $member_id = (int) $member_id;
-                if ($member_id > 0 && isset($users[ $member_id ])) {
-                    $project->members[ $memberIndex ] = $users[ $member_id ];
+                $member_id = (int)$member_id;
+                if ($member_id > 0 && isset($users[$member_id])) {
+                    $project->members[$memberIndex] = $users[$member_id];
                 }
             }
         }
 
         if (count($project->clientUsers) > 0) {
             foreach ($project->clientUsers as $clientUserIndex => $clientUser_id) {
-                $clientUser_id = (int) $clientUser_id;
-                if ($clientUser_id > 0 && isset($users[ $clientUser_id ])) {
-                    $project->clientUsers[ $clientUserIndex ] = $users[ $clientUser_id ];
+                $clientUser_id = (int)$clientUser_id;
+                if ($clientUser_id > 0 && isset($users[$clientUser_id])) {
+                    $project->clientUsers[$clientUserIndex] = $users[$clientUser_id];
                 }
             }
         }
@@ -484,24 +484,24 @@ function getUpStreamProjectDetailsById($project_id)
 
 function countItemsForUserOnProject($itemType, $user_id, $project_id)
 {
-    $user_id = (int) $user_id;
-    if (! in_array($itemType, [ 'milestones', 'tasks', 'bugs' ])) {
+    $user_id = (int)$user_id;
+    if ( ! in_array($itemType, ['milestones', 'tasks', 'bugs'])) {
         return null;
     }
 
     $count = 0;
 
-    $metas = (array) get_post_meta((int) $project_id, '_upstream_project_' . $itemType);
-    $metas = count($metas) > 0 ? (array) $metas[0] : [];
+    $metas = (array)get_post_meta((int)$project_id, '_upstream_project_' . $itemType);
+    $metas = count($metas) > 0 ? (array)$metas[0] : [];
 
     if (isset($metas[0])) {
-        $metas = (array) $metas[0];
+        $metas = (array)$metas[0];
     }
 
     if (is_array($metas) && count($metas) > 0) {
         foreach ($metas as $meta) {
-            if (isset($meta['assigned_to']) && (int) $meta['assigned_to'] === $user_id) {
-                $count ++;
+            if (isset($meta['assigned_to']) && (int)$meta['assigned_to'] === $user_id) {
+                $count++;
             }
         }
     }
@@ -520,7 +520,7 @@ function countItemsForUserOnProject($itemType, $user_id, $project_id)
  */
 function getProjectCommentsCount($project_id)
 {
-    if (! is_numeric($project_id) || $project_id < 0) {
+    if ( ! is_numeric($project_id) || $project_id < 0) {
         return;
     }
 
@@ -530,5 +530,5 @@ function getProjectCommentsCount($project_id)
         'status'  => "approve",
     ]);
 
-    return (int) $commentsCount;
+    return (int)$commentsCount;
 }

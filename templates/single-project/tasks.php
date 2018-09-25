@@ -1,19 +1,19 @@
 <?php
 // Prevent direct access.
-if (! defined('ABSPATH')) {
+if ( ! defined('ABSPATH')) {
     exit;
 }
 
-if (! upstream_are_tasks_disabled()
+if ( ! upstream_are_tasks_disabled()
      && ! upstream_disable_tasks()):
 
     $collapseBox = isset($pluginOptions['collapse_project_tasks'])
-                   && (bool) $pluginOptions['collapse_project_tasks'] === true;
+                   && (bool)$pluginOptions['collapse_project_tasks'] === true;
 
     $tasksStatuses = get_option('upstream_tasks');
     $statuses      = [];
     foreach ($tasksStatuses['statuses'] as $status) {
-        $statuses[ $status['id'] ] = $status;
+        $statuses[$status['id']] = $status;
     }
 
     $itemType      = 'task';
@@ -31,28 +31,28 @@ if (! upstream_are_tasks_disabled()
     if ($areMilestonesEnabled) {
         $milestonesList = getMilestones();
         foreach ($milestonesList as $milestoneId => $milestone) {
-            $milestonesColors[ $milestoneId ] = $milestone['color'];
+            $milestonesColors[$milestoneId] = $milestone['color'];
         }
 
-        $meta = (array) get_post_meta($projectId, '_upstream_project_milestones', true);
+        $meta = (array)get_post_meta($projectId, '_upstream_project_milestones', true);
         foreach ($meta as $data) {
-            if (! isset($data['id'])
+            if ( ! isset($data['id'])
                  || ! isset($data['created_by'])
                  || ! isset($data['milestone'])
             ) {
                 continue;
             }
 
-            $milestones[ $data['id'] ] = [
+            $milestones[$data['id']] = [
                 'id'    => $data['id'],
                 'title' => '',
                 'color' => '',
             ];
 
-            $milestone = isset($milestonesList[ $data['milestone'] ]) ? $milestonesList[ $data['milestone'] ] : null;
+            $milestone = isset($milestonesList[$data['milestone']]) ? $milestonesList[$data['milestone']] : null;
             if ($milestone !== null) {
-                $milestones[ $data['id'] ]['title'] = $milestone['title'];
-                $milestones[ $data['id'] ]['color'] = $milestone['color'];
+                $milestones[$data['id']]['title'] = $milestone['title'];
+                $milestones[$data['id']]['color'] = $milestone['color'];
             }
         }
     }
@@ -138,17 +138,17 @@ if (! upstream_are_tasks_disabled()
                                         <li>
                                             <a href="#" data-action="export" data-type="txt">
                                                 <i class="fa fa-file-text-o"></i>&nbsp;&nbsp;<?php _e(
-        'Plain Text',
+                                                    'Plain Text',
                                                     'upstream'
-    ); ?>
+                                                ); ?>
                                             </a>
                                         </li>
                                         <li>
                                             <a href="#" data-action="export" data-type="csv">
                                                 <i class="fa fa-file-code-o"></i>&nbsp;&nbsp;<?php _e(
-                                                        'CSV',
+                                                    'CSV',
                                                     'upstream'
-                                                    ); ?>
+                                                ); ?>
                                             </a>
                                         </li>
                                     </ul>
@@ -171,17 +171,17 @@ if (! upstream_are_tasks_disabled()
                                         <li>
                                             <a href="#" data-action="export" data-type="txt">
                                                 <i class="fa fa-file-text-o"></i>&nbsp;&nbsp;<?php _e(
-                                                        'Plain Text',
+                                                    'Plain Text',
                                                     'upstream'
-                                                    ); ?>
+                                                ); ?>
                                             </a>
                                         </li>
                                         <li>
                                             <a href="#" data-action="export" data-type="csv">
                                                 <i class="fa fa-file-code-o"></i>&nbsp;&nbsp;<?php _e(
-                                                        'CSV',
+                                                    'CSV',
                                                     'upstream'
-                                                    ); ?>
+                                                ); ?>
                                             </a>
                                         </li>
                                     </ul>
@@ -209,16 +209,16 @@ if (! upstream_are_tasks_disabled()
                                         <option value></option>
                                         <option value="__none__"><?php _e('Nobody', 'upstream'); ?></option>
                                         <option value="<?php echo $currentUserId; ?>"><?php _e(
-                                                        'Me',
+                                                'Me',
                                                 'upstream'
-                                                    ); ?></option>
+                                            ); ?></option>
                                         <optgroup label="<?php _e('Users'); ?>">
                                             <?php foreach ($users as $user_id => $userName): ?>
                                                 <?php if ($user_id === $currentUserId) {
-                                                        continue;
-                                                    } ?>
+                                                    continue;
+                                                } ?>
                                                 <option
-                                                    value="<?php echo $user_id; ?>"><?php echo $userName; ?></option>
+                                                        value="<?php echo $user_id; ?>"><?php echo $userName; ?></option>
                                             <?php endforeach; ?>
                                         </optgroup>
                                     </select>
@@ -236,7 +236,7 @@ if (! upstream_are_tasks_disabled()
                                         <optgroup label="<?php _e('Status', 'upstream'); ?>">
                                             <?php foreach ($statuses as $status): ?>
                                                 <option
-                                                    value="<?php echo esc_attr($status['id']); ?>"><?php echo esc_html($status['name']); ?></option>
+                                                        value="<?php echo esc_attr($status['id']); ?>"><?php echo esc_html($status['name']); ?></option>
                                             <?php endforeach; ?>
                                         </optgroup>
                                     </select>
@@ -256,7 +256,7 @@ if (! upstream_are_tasks_disabled()
                                             <optgroup label="<?php echo upstream_milestone_label_plural(); ?>">
                                                 <?php foreach ($milestones as $milestone_id => $milestone): ?>
                                                     <option
-                                                        value="<?php echo $milestone_id; ?>"><?php echo $milestone['title']; ?></option>
+                                                            value="<?php echo $milestone_id; ?>"><?php echo $milestone['title']; ?></option>
                                                 <?php endforeach; ?>
                                             </optgroup>
                                         </select>
@@ -288,20 +288,20 @@ if (! upstream_are_tasks_disabled()
                             </div>
 
                             <?php do_action(
-                                                    'upstream:project.tasks.filters',
-                                                    $tableSettings,
-                                                    $columnsSchema,
+                                'upstream:project.tasks.filters',
+                                $tableSettings,
+                                $columnsSchema,
                                 $projectId
-                                                ); ?>
+                            ); ?>
                         </div>
                     </form>
                     <?php \UpStream\Frontend\renderTable(
-                                    $tableSettings,
-                                    $columnsSchema,
-                                    $rowset,
-                                    'task',
+                        $tableSettings,
+                        $columnsSchema,
+                        $rowset,
+                        'task',
                         $projectId
-                                ); ?>
+                    ); ?>
                 </div>
             </div>
         </div>

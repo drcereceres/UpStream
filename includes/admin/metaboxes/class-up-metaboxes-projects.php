@@ -1,11 +1,11 @@
 <?php
 
 // Exit if accessed directly
-if (! defined('ABSPATH')) {
+if ( ! defined('ABSPATH')) {
     exit;
 }
 
-if (! class_exists('UpStream_Metaboxes_Projects')) :
+if ( ! class_exists('UpStream_Metaboxes_Projects')) :
 
 
     /**
@@ -58,22 +58,22 @@ if (! class_exists('UpStream_Metaboxes_Projects')) :
             do_action('upstream_admin_notices_errors');
 
             // Ensure WordPress can generate and display custom slugs for the project by making it public temporarily fast.
-            add_action('edit_form_before_permalink', [ $this, 'makeProjectTemporarilyPublic' ]);
+            add_action('edit_form_before_permalink', [$this, 'makeProjectTemporarilyPublic']);
             // Ensure the made public project are non-public as it should.
-            add_action('edit_form_after_title', [ $this, 'makeProjectPrivateOnceAgain' ]);
+            add_action('edit_form_after_title', [$this, 'makeProjectPrivateOnceAgain']);
 
-            add_action('cmb2_render_comments', [ $this, 'renderCommentsField' ], 10, 5);
+            add_action('cmb2_render_comments', [$this, 'renderCommentsField'], 10, 5);
 
             // Prevent action being hooked twice.
             global $wp_filter;
-            if (! isset($wp_filter['cmb2_render_select2'])) {
+            if ( ! isset($wp_filter['cmb2_render_select2'])) {
                 // Add select2 field type.
-                add_action('cmb2_render_select2', [ $this, 'renderSelect2Field' ], 10, 5);
+                add_action('cmb2_render_select2', [$this, 'renderSelect2Field'], 10, 5);
             }
 
-            if (! isset($wp_filter['cmb2_sanitize_select2'])) {
+            if ( ! isset($wp_filter['cmb2_sanitize_select2'])) {
                 // Add select2 field type sanitization callback.
-                add_action('cmb2_sanitize_select2', [ $this, 'sanitizeSelect2Field' ], 10, 5);
+                add_action('cmb2_sanitize_select2', [$this, 'sanitizeSelect2Field'], 10, 5);
             }
         }
 
@@ -91,19 +91,19 @@ if (! class_exists('UpStream_Metaboxes_Projects')) :
                     self::$instance->overview();
                 }
 
-                if (! upstream_disable_milestones()) {
+                if ( ! upstream_disable_milestones()) {
                     self::$instance->milestones();
                 }
 
-                if (! upstream_disable_tasks()) {
+                if ( ! upstream_disable_tasks()) {
                     self::$instance->tasks();
                 }
 
-                if (! upstream_disable_bugs()) {
+                if ( ! upstream_disable_bugs()) {
                     self::$instance->bugs();
                 }
 
-                if (! upstream_disable_files()) {
+                if ( ! upstream_disable_files()) {
                     self::$instance->files();
                 }
 
@@ -137,12 +137,12 @@ if (! class_exists('UpStream_Metaboxes_Projects')) :
             $areTasksDisabled           = upstream_are_tasks_disabled();
             $areBugsDisabled            = upstream_are_bugs_disabled();
 
-            if ((! $areMilestonesDisabled && $areMilestonesDisabledAtAll) || ! $areTasksDisabled || ! $areBugsDisabled) {
+            if (( ! $areMilestonesDisabled && $areMilestonesDisabledAtAll) || ! $areTasksDisabled || ! $areBugsDisabled) {
                 $metabox = new_cmb2_box([
                     'id'           => $this->prefix . 'overview',
                     'title'        => $this->project_label . __(' Overview', 'upstream') .
                                       '<span class="progress align-right"><progress value="' . upstream_project_progress() . '" max="100"></progress> <span>' . upstream_project_progress() . '%</span></span>',
-                    'object_types' => [ $this->type ],
+                    'object_types' => [$this->type],
                 ]);
 
                 //Create a default grid
@@ -150,25 +150,25 @@ if (! class_exists('UpStream_Metaboxes_Projects')) :
 
                 $columnsList = [];
 
-                if (! $areMilestonesDisabled && ! $areMilestonesDisabledAtAll) {
+                if ( ! $areMilestonesDisabled && ! $areMilestonesDisabledAtAll) {
                     array_push($columnsList, $metabox->add_field([
                         'name'  => '<span>' . upstream_count_total(
-                            'milestones',
+                                'milestones',
                                 upstream_post_id()
-                        ) . '</span> ' . upstream_milestone_label_plural(),
+                            ) . '</span> ' . upstream_milestone_label_plural(),
                         'id'    => $this->prefix . 'milestones',
                         'type'  => 'title',
                         'after' => 'upstream_output_overview_counts',
                     ]));
                 }
 
-                if (! upstream_disable_tasks()) {
-                    if (! $areTasksDisabled) {
+                if ( ! upstream_disable_tasks()) {
+                    if ( ! $areTasksDisabled) {
                         $grid2 = $metabox->add_field([
                             'name'  => '<span>' . upstream_count_total(
-                                'tasks',
+                                    'tasks',
                                     upstream_post_id()
-                            ) . '</span> ' . upstream_task_label_plural(),
+                                ) . '</span> ' . upstream_task_label_plural(),
                             'desc'  => '',
                             'id'    => $this->prefix . 'tasks',
                             'type'  => 'title',
@@ -178,12 +178,12 @@ if (! class_exists('UpStream_Metaboxes_Projects')) :
                     }
                 }
 
-                if (! $areBugsDisabled) {
+                if ( ! $areBugsDisabled) {
                     $grid3 = $metabox->add_field([
                         'name'  => '<span>' . upstream_count_total(
-                            'bugs',
+                                'bugs',
                                 upstream_post_id()
-                        ) . '</span> ' . upstream_bug_label_plural(),
+                            ) . '</span> ' . upstream_bug_label_plural(),
                         'desc'  => '',
                         'id'    => $this->prefix . 'bugs',
                         'type'  => 'title',
@@ -223,7 +223,7 @@ if (! class_exists('UpStream_Metaboxes_Projects')) :
             $metabox = new_cmb2_box([
                 'id'           => $this->prefix . 'milestones',
                 'title'        => '<span class="dashicons dashicons-flag"></span> ' . esc_html($label_plural),
-                'object_types' => [ $this->type ],
+                'object_types' => [$this->type],
             ]);
 
             //Create a default grid
@@ -243,7 +243,7 @@ if (! class_exists('UpStream_Metaboxes_Projects')) :
                 ],
             ]);
 
-            if (! $areMilestonesDisabled) {
+            if ( ! $areMilestonesDisabled) {
                 $group_field_id = $metabox->add_field([
                     'id'           => $this->prefix . 'milestones',
                     'type'         => 'group',
@@ -274,9 +274,9 @@ if (! class_exists('UpStream_Metaboxes_Projects')) :
                     $fields[0]['before_row'] = '
                     <div class="up-c-tabs-header nav-tab-wrapper nav-tab-wrapper">
                       <a href="#" class="nav-tab nav-tab-active up-o-tab up-o-tab-data" role="tab" data-target=".up-c-tab-content-data">' . __(
-                        'Data',
+                            'Data',
                             'upstream'
-                    ) . '</a>
+                        ) . '</a>
                       <a href="#" class="nav-tab up-o-tab up-o-tab-comments" role="tab" data-target=".up-c-tab-content-comments">' . __('Comments') . '</a>
                     </div>
                     <div class="up-c-tabs-content">
@@ -333,7 +333,7 @@ if (! class_exists('UpStream_Metaboxes_Projects')) :
                     'date_format' => 'Y-m-d',
                     'permissions' => 'milestone_start_date_field',
                     'before'      => 'upstream_add_field_attributes',
-                    'escape_cb'   => [ 'UpStream_Admin', 'escapeCmb2TimestampField' ],
+                    'escape_cb'   => ['UpStream_Admin', 'escapeCmb2TimestampField'],
                     'attributes'  => [
                         //'data-validation'     => 'required',
                     ],
@@ -345,7 +345,7 @@ if (! class_exists('UpStream_Metaboxes_Projects')) :
                     'date_format' => 'Y-m-d',
                     'permissions' => 'milestone_end_date_field',
                     'before'      => 'upstream_add_field_attributes',
-                    'escape_cb'   => [ 'UpStream_Admin', 'escapeCmb2TimestampField' ],
+                    'escape_cb'   => ['UpStream_Admin', 'escapeCmb2TimestampField'],
                     'attributes'  => [
                         //'data-validation'     => 'required',
                     ],
@@ -387,39 +387,39 @@ if (! class_exists('UpStream_Metaboxes_Projects')) :
                 // loop through ordered fields and add them to the group
                 if ($fields) {
                     foreach ($fields as $key => $value) {
-                        $fields[ $key ] = $metabox->add_group_field($group_field_id, $value);
+                        $fields[$key] = $metabox->add_group_field($group_field_id, $value);
                     }
                 }
 
                 // loop through number of rows
-                for ($i = 0; $i < $rows; $i ++) {
+                for ($i = 0; $i < $rows; $i++) {
 
                     // add each row
-                    $row[ $i ] = $cmb2GroupGrid->addRow();
+                    $row[$i] = $cmb2GroupGrid->addRow();
 
                     // this is our hidden row that must remain as is
                     if ($i == 0) {
-                        $row[0]->addColumns([ $fields[0], $fields[1], $fields[2] ]);
+                        $row[0]->addColumns([$fields[0], $fields[1], $fields[2]]);
                     } else {
 
                         // this allows up to 4 columns in each row
                         $array = [];
-                        if (isset($fields[ $i * 10 ])) {
-                            $array[] = $fields[ $i * 10 ];
+                        if (isset($fields[$i * 10])) {
+                            $array[] = $fields[$i * 10];
                         }
-                        if (isset($fields[ $i * 10 + 1 ])) {
-                            $array[] = $fields[ $i * 10 + 1 ];
+                        if (isset($fields[$i * 10 + 1])) {
+                            $array[] = $fields[$i * 10 + 1];
                         }
-                        if (isset($fields[ $i * 10 + 2 ])) {
-                            $array[] = $fields[ $i * 10 + 2 ];
+                        if (isset($fields[$i * 10 + 2])) {
+                            $array[] = $fields[$i * 10 + 2];
                         }
-                        if (isset($fields[ $i * 10 + 3 ])) {
-                            $array[] = $fields[ $i * 10 + 3 ];
+                        if (isset($fields[$i * 10 + 3])) {
+                            $array[] = $fields[$i * 10 + 3];
                         }
 
                         // add the fields as columns
                         // probably don't need this to be filterable but will leave it for now
-                        $row[ $i ]->addColumns(
+                        $row[$i]->addColumns(
                             apply_filters("upstream_milestone_row_{$i}_columns", $array)
                         );
                     }
@@ -458,9 +458,9 @@ if (! class_exists('UpStream_Metaboxes_Projects')) :
                 </div>
                 <div class="up-c-filter">
                     <label for="<?php echo $prefix . 'assignee'; ?>" class="up-s-mb-2"><?php _e(
-                'Assignee',
+                            'Assignee',
                             'upstream'
-            ); ?></label>
+                        ); ?></label>
                     <select id="<?php echo $prefix . 'assignee'; ?>" class="up-o-filter o-select2"
                             data-column="assigned_to" data-placeholder="" data-compare-operator="contains" multiple>
                         <option></option>
@@ -468,9 +468,9 @@ if (! class_exists('UpStream_Metaboxes_Projects')) :
                         <option value="__none__"><?php _e('Nobody', 'upstream'); ?></option>
                         <optgroup label="<?php _e('Users'); ?>">
                             <?php foreach ($users as $userId => $userName): ?>
-                                <?php if ((int) $userId === $currentUserId) {
-                continue;
-            } ?>
+                                <?php if ((int)$userId === $currentUserId) {
+                                    continue;
+                                } ?>
                                 <option value="<?php echo $userId; ?>"><?php echo $userName; ?></option>
                             <?php endforeach; ?>
                         </optgroup>
@@ -512,16 +512,16 @@ if (! class_exists('UpStream_Metaboxes_Projects')) :
             $projectId     = upstream_post_id();
 
             $milestones = [];
-            $meta       = (array) get_post_meta($projectId, '_upstream_project_milestones', true);
+            $meta       = (array)get_post_meta($projectId, '_upstream_project_milestones', true);
             foreach ($meta as $data) {
-                if (! isset($data['id'])
+                if ( ! isset($data['id'])
                      || ! isset($data['created_by'])
                      || ! isset($data['milestone'])
                 ) {
                     continue;
                 }
 
-                $milestones[ $data['id'] ] = $data['milestone'];
+                $milestones[$data['id']] = $data['milestone'];
             }
             unset($data, $meta);
 
@@ -534,9 +534,9 @@ if (! class_exists('UpStream_Metaboxes_Projects')) :
                 </div>
                 <div class="up-c-filter">
                     <label for="<?php echo $prefix . 'assignee'; ?>" class="up-s-mb-2"><?php _e(
-                'Assignee',
+                            'Assignee',
                             'upstream'
-            ); ?></label>
+                        ); ?></label>
                     <select id="<?php echo $prefix . 'assignee'; ?>" class="up-o-filter o-select2"
                             data-column="assigned_to" multiple data-placeholder="" data-compare-operator="contains">
                         <option></option>
@@ -544,9 +544,9 @@ if (! class_exists('UpStream_Metaboxes_Projects')) :
                         <option value="__none__"><?php _e('Nobody', 'upstream'); ?></option>
                         <optgroup label="<?php _e('Users'); ?>">
                             <?php foreach ($users as $userId => $userName): ?>
-                                <?php if ((int) $userId === $currentUserId) {
-                continue;
-            } ?>
+                                <?php if ((int)$userId === $currentUserId) {
+                                    continue;
+                                } ?>
                                 <option value="<?php echo $userId; ?>"><?php echo $userName; ?></option>
                             <?php endforeach; ?>
                         </optgroup>
@@ -554,9 +554,9 @@ if (! class_exists('UpStream_Metaboxes_Projects')) :
                 </div>
                 <div class="up-c-filter">
                     <label for="<?php echo $prefix . 'status'; ?>" class="up-s-mb-2"><?php _e(
-                                    'Status',
+                            'Status',
                             'upstream'
-                                ); ?></label>
+                        ); ?></label>
                     <select id="<?php echo $prefix . 'status'; ?>" class="up-o-filter o-select2" data-column="status"
                             data-placeholder="" multiple data-compare-operator="contains">
                         <option></option>
@@ -570,7 +570,7 @@ if (! class_exists('UpStream_Metaboxes_Projects')) :
                 </div>
                 <?php
                 if (upstream_are_milestones_disabled()
-                     && upstream_disable_milestones()): ?>
+                    && upstream_disable_milestones()): ?>
                     <div class="up-c-filter">
                         <label for="<?php echo $prefix . 'milestone'; ?>"
                                class="up-s-mb-2"><?php echo upstream_milestone_label(); ?></label>
@@ -631,9 +631,9 @@ if (! class_exists('UpStream_Metaboxes_Projects')) :
                 </div>
                 <div class="up-c-filter">
                     <label for="<?php echo $prefix . 'assignee'; ?>" class="up-s-mb-2"><?php _e(
-                'Assignee',
+                            'Assignee',
                             'upstream'
-            ); ?></label>
+                        ); ?></label>
                     <select id="<?php echo $prefix . 'assignee'; ?>" class="up-o-filter o-select2"
                             data-column="assigned_to" data-placeholder="" multiple data-compare-operator="contains">
                         <option></option>
@@ -641,9 +641,9 @@ if (! class_exists('UpStream_Metaboxes_Projects')) :
                         <option value="__none__"><?php _e('Nobody', 'upstream'); ?></option>
                         <optgroup label="<?php _e('Users'); ?>">
                             <?php foreach ($users as $userId => $userName): ?>
-                                <?php if ((int) $userId === $currentUserId) {
-                continue;
-            } ?>
+                                <?php if ((int)$userId === $currentUserId) {
+                                    continue;
+                                } ?>
                                 <option value="<?php echo $userId; ?>"><?php echo $userName; ?></option>
                             <?php endforeach; ?>
                         </optgroup>
@@ -651,9 +651,9 @@ if (! class_exists('UpStream_Metaboxes_Projects')) :
                 </div>
                 <div class="up-c-filter">
                     <label for="<?php echo $prefix . 'severity'; ?>" class="up-s-mb-2"><?php _e(
-                                    'Severities',
+                            'Severities',
                             'upstream'
-                                ); ?></label>
+                        ); ?></label>
                     <select id="<?php echo $prefix . 'severity'; ?>" class="up-o-filter o-select2"
                             data-column="severity" data-placeholder="" multiple data-compare-operator="contains">
                         <option></option>
@@ -661,16 +661,16 @@ if (! class_exists('UpStream_Metaboxes_Projects')) :
                         <optgroup label="<?php _e('Severities', 'upstream'); ?>">
                             <?php foreach ($severities as $severity): ?>
                                 <option
-                                    value="<?php echo $severity['name']; ?>"><?php echo $severity['name']; ?></option>
+                                        value="<?php echo $severity['name']; ?>"><?php echo $severity['name']; ?></option>
                             <?php endforeach; ?>
                         </optgroup>
                     </select>
                 </div>
                 <div class="up-c-filter">
                     <label for="<?php echo $prefix . 'status'; ?>" class="up-s-mb-2"><?php _e(
-                                'Status',
+                            'Status',
                             'upstream'
-                            ); ?></label>
+                        ); ?></label>
                     <select id="<?php echo $prefix . 'status'; ?>" class="up-o-filter o-select2" data-column="status"
                             data-placeholder="" multiple data-compare-operator="contains">
                         <option></option>
@@ -718,9 +718,9 @@ if (! class_exists('UpStream_Metaboxes_Projects')) :
                 </div>
                 <div class="up-c-filter">
                     <label for="<?php echo $prefix . 'uploaded_by'; ?>" class="up-s-mb-2"><?php _e(
-                'Uploaded by',
+                            'Uploaded by',
                             'upstream'
-            ); ?></label>
+                        ); ?></label>
                     <select id="<?php echo $prefix . 'uploaded_by'; ?>" class="up-o-filter o-select2"
                             data-column="created_by" data-placeholder="" multiple data-compare-operator="contains">
                         <option></option>
@@ -728,9 +728,9 @@ if (! class_exists('UpStream_Metaboxes_Projects')) :
                         <option value="__none__"><?php _e('Nobody', 'upstream'); ?></option>
                         <optgroup label="<?php _e('Users'); ?>">
                             <?php foreach ($users as $userId => $userName): ?>
-                                <?php if ((int) $userId === $currentUserId) {
-                continue;
-            } ?>
+                                <?php if ((int)$userId === $currentUserId) {
+                                    continue;
+                                } ?>
                                 <option value="<?php echo $userId; ?>"><?php echo $userName; ?></option>
                             <?php endforeach; ?>
                         </optgroup>
@@ -767,7 +767,7 @@ if (! class_exists('UpStream_Metaboxes_Projects')) :
             $metabox = new_cmb2_box([
                 'id'           => $this->prefix . 'tasks',
                 'title'        => '<span class="dashicons dashicons-admin-tools"></span> ' . esc_html($label_plural),
-                'object_types' => [ $this->type ],
+                'object_types' => [$this->type],
             ]);
 
             //Create a default grid
@@ -802,7 +802,7 @@ if (! class_exists('UpStream_Metaboxes_Projects')) :
                 'before_group' => $this->getTasksFiltersHtml(),
             ]);
 
-            if (! $areTasksDisabled) {
+            if ( ! $areTasksDisabled) {
                 $fields = [];
 
                 $fields[0] = [
@@ -820,9 +820,9 @@ if (! class_exists('UpStream_Metaboxes_Projects')) :
                     $fields[0]['before_row'] = '
                     <div class="up-c-tabs-header nav-tab-wrapper nav-tab-wrapper">
                       <a href="#" class="nav-tab nav-tab-active up-o-tab up-o-tab-data" role="tab" data-target=".up-c-tab-content-data">' . __(
-                        'Data',
+                            'Data',
                             'upstream'
-                    ) . '</a>
+                        ) . '</a>
                       <a href="#" class="nav-tab up-o-tab up-o-tab-comments" role="tab" data-target=".up-c-tab-content-comments">' . __('Comments') . '</a>
                     </div>
                     <div class="up-c-tabs-content">
@@ -902,7 +902,7 @@ if (! class_exists('UpStream_Metaboxes_Projects')) :
                     'date_format' => 'Y-m-d',
                     'permissions' => 'task_start_date_field',
                     'before'      => 'upstream_add_field_attributes',
-                    'escape_cb'   => [ 'UpStream_Admin', 'escapeCmb2TimestampField' ],
+                    'escape_cb'   => ['UpStream_Admin', 'escapeCmb2TimestampField'],
                 ];
                 $fields[31] = [
                     'name'        => __("End Date", 'upstream'),
@@ -911,7 +911,7 @@ if (! class_exists('UpStream_Metaboxes_Projects')) :
                     'date_format' => 'Y-m-d',
                     'permissions' => 'task_end_date_field',
                     'before'      => 'upstream_add_field_attributes',
-                    'escape_cb'   => [ 'UpStream_Admin', 'escapeCmb2TimestampField' ],
+                    'escape_cb'   => ['UpStream_Admin', 'escapeCmb2TimestampField'],
                 ];
 
                 $fields[40] = [
@@ -927,7 +927,7 @@ if (! class_exists('UpStream_Metaboxes_Projects')) :
                     'escape_cb'   => 'applyOEmbedFiltersToWysiwygEditorContent',
                 ];
 
-                if (! upstream_are_milestones_disabled() && ! upstream_disable_milestones()) {
+                if ( ! upstream_are_milestones_disabled() && ! upstream_disable_milestones()) {
                     $fields[41] = [
                         'name'             => '<span class="dashicons dashicons-flag"></span> ' . esc_html(upstream_milestone_label()),
                         'id'               => 'milestone',
@@ -978,41 +978,41 @@ if (! class_exists('UpStream_Metaboxes_Projects')) :
                 // loop through ordered fields and add them to the group
                 if ($fields) {
                     foreach ($fields as $key => $value) {
-                        $fields[ $key ] = $metabox->add_group_field($group_field_id, $value);
+                        $fields[$key] = $metabox->add_group_field($group_field_id, $value);
                     }
                 }
 
                 // loop through number of rows
-                for ($i = 0; $i < 7; $i ++) {
+                for ($i = 0; $i < 7; $i++) {
 
                     // add each row
-                    $row[ $i ] = $cmb2GroupGrid->addRow();
+                    $row[$i] = $cmb2GroupGrid->addRow();
 
                     // this is our hidden row that must remain as is
                     if ($i == 0) {
-                        $row[0]->addColumns([ $fields[0], $fields[1], $fields[2] ]);
+                        $row[0]->addColumns([$fields[0], $fields[1], $fields[2]]);
                     } else {
 
                         // this allows up to 4 columns in each row
                         $array = [];
-                        if (isset($fields[ $i * 10 ])) {
-                            $array[] = $fields[ $i * 10 ];
+                        if (isset($fields[$i * 10])) {
+                            $array[] = $fields[$i * 10];
                         }
-                        if (isset($fields[ $i * 10 + 1 ])) {
-                            $array[] = $fields[ $i * 10 + 1 ];
+                        if (isset($fields[$i * 10 + 1])) {
+                            $array[] = $fields[$i * 10 + 1];
                         }
-                        if (isset($fields[ $i * 10 + 2 ])) {
-                            $array[] = $fields[ $i * 10 + 2 ];
+                        if (isset($fields[$i * 10 + 2])) {
+                            $array[] = $fields[$i * 10 + 2];
                         }
-                        if (isset($fields[ $i * 10 + 3 ])) {
-                            $array[] = $fields[ $i * 10 + 3 ];
+                        if (isset($fields[$i * 10 + 3])) {
+                            $array[] = $fields[$i * 10 + 3];
                         }
 
                         if (empty($array)) {
                             continue;
                         }
                         // add the fields as columns
-                        $row[ $i ]->addColumns(
+                        $row[$i]->addColumns(
                             apply_filters("upstream_task_row_{$i}_columns", $array)
                         );
                     }
@@ -1035,14 +1035,14 @@ if (! class_exists('UpStream_Metaboxes_Projects')) :
 
         public static function renderCommentsField($field, $escapedValue, $object_id, $objectType, $fieldType)
         {
-            if (! self::$commentsFieldsNonce) {
+            if ( ! self::$commentsFieldsNonce) {
                 echo '<input type="hidden" id="project_all_items_comments_nonce" value="' . wp_create_nonce('project.get_all_items_comments') . '">';
                 self::$commentsFieldsNonce = true;
             }
 
             $field_id = $field->args['id'];
 
-            if (! isset(self::$itemsCommentsSectionCache[ $field_id ])) {
+            if ( ! isset(self::$itemsCommentsSectionCache[$field_id])) {
                 $editorIdentifier = $field_id . '_editor';
 
                 preg_match('/^_upstream_project_([a-z]+)_([0-9]+)_comments/i', $field_id, $matches);
@@ -1061,7 +1061,7 @@ if (! class_exists('UpStream_Metaboxes_Projects')) :
                     'textarea_name' => $editorIdentifier,
                 ]);
 
-                self::$itemsCommentsSectionCache[ $field_id ] = 1;
+                self::$itemsCommentsSectionCache[$field_id] = 1;
             }
         }
 
@@ -1092,8 +1092,8 @@ if (! class_exists('UpStream_Metaboxes_Projects')) :
             $metabox = new_cmb2_box([
                 'id'           => $this->prefix . 'bugs',
                 'title'        => '<span class="dashicons dashicons-warning"></span> ' . esc_html($label_plural),
-                'object_types' => [ $this->type ],
-                'attributes'   => [ 'data-test' => 'test' ],
+                'object_types' => [$this->type],
+                'attributes'   => ['data-test' => 'test'],
             ]);
 
             //Create a default grid
@@ -1128,7 +1128,7 @@ if (! class_exists('UpStream_Metaboxes_Projects')) :
                 'before_group' => $this->getBugsFiltersHtml(),
             ]);
 
-            if (! $areBugsDisabled) {
+            if ( ! $areBugsDisabled) {
                 $fields = [];
 
                 $fields[0] = [
@@ -1145,9 +1145,9 @@ if (! class_exists('UpStream_Metaboxes_Projects')) :
                     $fields[0]['before_row'] = '
                     <div class="up-c-tabs-header nav-tab-wrapper nav-tab-wrapper">
                       <a href="#" class="nav-tab nav-tab-active up-o-tab up-o-tab-data" role="tab" data-target=".up-c-tab-content-data">' . __(
-                        'Data',
+                            'Data',
                             'upstream'
-                    ) . '</a>
+                        ) . '</a>
                       <a href="#" class="nav-tab up-o-tab up-o-tab-comments" role="tab" data-target=".up-c-tab-content-comments">' . __('Comments') . '</a>
                     </div>
                     <div class="up-c-tabs-content">
@@ -1252,7 +1252,7 @@ if (! class_exists('UpStream_Metaboxes_Projects')) :
                     'date_format' => 'Y-m-d',
                     'permissions' => 'bug_due_date_field',
                     'before'      => 'upstream_add_field_attributes',
-                    'escape_cb'   => [ 'UpStream_Admin', 'escapeCmb2TimestampField' ],
+                    'escape_cb'   => ['UpStream_Admin', 'escapeCmb2TimestampField'],
                 ];
 
                 if ($allowComments) {
@@ -1277,38 +1277,38 @@ if (! class_exists('UpStream_Metaboxes_Projects')) :
                 // loop through ordered fields and add them to the group
                 if ($fields) {
                     foreach ($fields as $key => $value) {
-                        $fields[ $key ] = $metabox->add_group_field($group_field_id, $value);
+                        $fields[$key] = $metabox->add_group_field($group_field_id, $value);
                     }
                 }
 
                 // loop through number of rows
-                for ($i = 0; $i < $rows; $i ++) {
+                for ($i = 0; $i < $rows; $i++) {
 
                     // add each row
-                    $row[ $i ] = $cmb2GroupGrid->addRow();
+                    $row[$i] = $cmb2GroupGrid->addRow();
 
                     // this is our hidden row that must remain as is
                     if ($i == 0) {
-                        $row[0]->addColumns([ $fields[0], $fields[1], $fields[2] ]);
+                        $row[0]->addColumns([$fields[0], $fields[1], $fields[2]]);
                     } else {
 
                         // this allows up to 4 columns in each row
                         $array = [];
-                        if (isset($fields[ $i * 10 ])) {
-                            $array[] = $fields[ $i * 10 ];
+                        if (isset($fields[$i * 10])) {
+                            $array[] = $fields[$i * 10];
                         }
-                        if (isset($fields[ $i * 10 + 1 ])) {
-                            $array[] = $fields[ $i * 10 + 1 ];
+                        if (isset($fields[$i * 10 + 1])) {
+                            $array[] = $fields[$i * 10 + 1];
                         }
-                        if (isset($fields[ $i * 10 + 2 ])) {
-                            $array[] = $fields[ $i * 10 + 2 ];
+                        if (isset($fields[$i * 10 + 2])) {
+                            $array[] = $fields[$i * 10 + 2];
                         }
-                        if (isset($fields[ $i * 10 + 3 ])) {
-                            $array[] = $fields[ $i * 10 + 3 ];
+                        if (isset($fields[$i * 10 + 3])) {
+                            $array[] = $fields[$i * 10 + 3];
                         }
 
                         // add the fields as columns
-                        $row[ $i ]->addColumns(
+                        $row[$i]->addColumns(
                             apply_filters("upstream_bug_row_{$i}_columns", $array)
                         );
                     }
@@ -1340,10 +1340,10 @@ if (! class_exists('UpStream_Metaboxes_Projects')) :
             $metabox = new_cmb2_box([
                 'id'           => $this->prefix . 'details',
                 'title'        => '<span class="dashicons dashicons-admin-generic"></span> ' . sprintf(__(
-                    "%s Details",
+                        "%s Details",
                         'upstream'
-                ), $this->project_label),
-                'object_types' => [ $this->type ],
+                    ), $this->project_label),
+                'object_types' => [$this->type],
                 'context'      => 'side',
                 'priority'     => 'high',
             ]);
@@ -1376,7 +1376,7 @@ if (! class_exists('UpStream_Metaboxes_Projects')) :
                 'save_field'       => upstream_admin_permissions('project_owner_field'),
             ];
 
-            if (! is_clients_disabled()) {
+            if ( ! is_clients_disabled()) {
                 $client_label = upstream_client_label();
 
                 $fields[2] = [
@@ -1413,7 +1413,7 @@ if (! class_exists('UpStream_Metaboxes_Projects')) :
                 'before'      => 'upstream_add_field_attributes',
                 'show_on_cb'  => 'upstream_show_project_start_date_field',
                 'save_field'  => upstream_admin_permissions('upstream_start_date_field'),
-                'escape_cb'   => [ 'UpStream_Admin', 'escapeCmb2TimestampField' ],
+                'escape_cb'   => ['UpStream_Admin', 'escapeCmb2TimestampField'],
             ];
             $fields[11] = [
                 'name'        => __('End Date', 'upstream'),
@@ -1425,7 +1425,7 @@ if (! class_exists('UpStream_Metaboxes_Projects')) :
                 'before'      => 'upstream_add_field_attributes',
                 'show_on_cb'  => 'upstream_show_project_end_date_field',
                 'save_field'  => upstream_admin_permissions('project_end_date_field'),
-                'escape_cb'   => [ 'UpStream_Admin', 'escapeCmb2TimestampField' ],
+                'escape_cb'   => ['UpStream_Admin', 'escapeCmb2TimestampField'],
             ];
 
             $fields[12] = [
@@ -1450,12 +1450,12 @@ if (! class_exists('UpStream_Metaboxes_Projects')) :
             // loop through ordered fields and add them to the group
             if ($fields) {
                 foreach ($fields as $key => $value) {
-                    $fields[ $key ] = $metabox->add_field($value);
+                    $fields[$key] = $metabox->add_field($value);
                 }
             }
 
             $row = $cmb2Grid->addRow();
-            $row->addColumns([ $fields[10], $fields[11] ]);
+            $row->addColumns([$fields[10], $fields[11]]);
         }
 
 
@@ -1483,7 +1483,7 @@ if (! class_exists('UpStream_Metaboxes_Projects')) :
             $metabox = new_cmb2_box([
                 'id'           => $this->prefix . 'files',
                 'title'        => '<span class="dashicons dashicons-paperclip"></span> ' . esc_html($label_plural),
-                'object_types' => [ $this->type ],
+                'object_types' => [$this->type],
             ]);
 
             //Create a default grid
@@ -1519,7 +1519,7 @@ if (! class_exists('UpStream_Metaboxes_Projects')) :
                 ],
             ]);
 
-            if (! $areFilesDisabled) {
+            if ( ! $areFilesDisabled) {
                 $fields = [];
 
                 // start row
@@ -1527,7 +1527,7 @@ if (! class_exists('UpStream_Metaboxes_Projects')) :
                     'id'         => 'id',
                     'type'       => 'text',
                     'before'     => 'upstream_add_field_attributes',
-                    'attributes' => [ 'class' => 'hidden' ],
+                    'attributes' => ['class' => 'hidden'],
                 ];
 
                 $allowComments = upstreamAreCommentsEnabledOnFiles();
@@ -1535,9 +1535,9 @@ if (! class_exists('UpStream_Metaboxes_Projects')) :
                     $fields[0]['before_row'] = '
                     <div class="up-c-tabs-header nav-tab-wrapper nav-tab-wrapper">
                       <a href="#" class="nav-tab nav-tab-active up-o-tab up-o-tab-data" role="tab" data-target=".up-c-tab-content-data">' . __(
-                        'Data',
+                            'Data',
                             'upstream'
-                    ) . '</a>
+                        ) . '</a>
                       <a href="#" class="nav-tab up-o-tab up-o-tab-comments" role="tab" data-target=".up-c-tab-content-comments">' . __('Comments') . '</a>
                     </div>
                     <div class="up-c-tabs-content">
@@ -1547,12 +1547,12 @@ if (! class_exists('UpStream_Metaboxes_Projects')) :
                 $fields[1] = [
                     'id'         => 'created_by',
                     'type'       => 'text',
-                    'attributes' => [ 'class' => 'hidden' ],
+                    'attributes' => ['class' => 'hidden'],
                 ];
                 $fields[2] = [
                     'id'         => 'created_time',
                     'type'       => 'text',
-                    'attributes' => [ 'class' => 'hidden' ],
+                    'attributes' => ['class' => 'hidden'],
                 ];
 
                 // start row
@@ -1624,38 +1624,38 @@ if (! class_exists('UpStream_Metaboxes_Projects')) :
                 // loop through ordered fields and add them to the group
                 if ($fields) {
                     foreach ($fields as $key => $value) {
-                        $fields[ $key ] = $metabox->add_group_field($group_field_id, $value);
+                        $fields[$key] = $metabox->add_group_field($group_field_id, $value);
                     }
                 }
 
                 // loop through number of rows
-                for ($i = 0; $i < $rows; $i ++) {
+                for ($i = 0; $i < $rows; $i++) {
 
                     // add each row
-                    $row[ $i ] = $cmb2GroupGrid->addRow();
+                    $row[$i] = $cmb2GroupGrid->addRow();
 
                     // this is our hidden row that must remain as is
                     if ($i == 0) {
-                        $row[0]->addColumns([ $fields[0], $fields[1], $fields[2] ]);
+                        $row[0]->addColumns([$fields[0], $fields[1], $fields[2]]);
                     } else {
 
                         // this allows up to 4 columns in each row
                         $array = [];
-                        if (isset($fields[ $i * 10 ])) {
-                            $array[] = $fields[ $i * 10 ];
+                        if (isset($fields[$i * 10])) {
+                            $array[] = $fields[$i * 10];
                         }
-                        if (isset($fields[ $i * 10 + 1 ])) {
-                            $array[] = $fields[ $i * 10 + 1 ];
+                        if (isset($fields[$i * 10 + 1])) {
+                            $array[] = $fields[$i * 10 + 1];
                         }
-                        if (isset($fields[ $i * 10 + 2 ])) {
-                            $array[] = $fields[ $i * 10 + 2 ];
+                        if (isset($fields[$i * 10 + 2])) {
+                            $array[] = $fields[$i * 10 + 2];
                         }
-                        if (isset($fields[ $i * 10 + 3 ])) {
-                            $array[] = $fields[ $i * 10 + 3 ];
+                        if (isset($fields[$i * 10 + 3])) {
+                            $array[] = $fields[$i * 10 + 3];
                         }
 
                         // add the fields as columns
-                        $row[ $i ]->addColumns(
+                        $row[$i]->addColumns(
                             apply_filters("upstream_file_row_{$i}_columns", $array)
                         );
                     }
@@ -1685,7 +1685,7 @@ if (! class_exists('UpStream_Metaboxes_Projects')) :
             $metabox = new_cmb2_box([
                 'id'           => $this->prefix . 'activity',
                 'title'        => '<span class="dashicons dashicons-update"></span> ' . __('Activity', 'upstream'),
-                'object_types' => [ $this->type ],
+                'object_types' => [$this->type],
                 'context'      => 'side', //  'normal', 'advanced', or 'side'
                 'priority'     => 'low',  //  'high', 'core', 'default' or 'low'
             ]);
@@ -1716,18 +1716,18 @@ if (! class_exists('UpStream_Metaboxes_Projects')) :
             $areCommentsDisabled     = upstream_are_comments_disabled();
             $userHasAdminPermissions = upstream_admin_permissions('disable_project_comments');
 
-            if (! self::$allowProjectComments || ($areCommentsDisabled && ! $userHasAdminPermissions)) {
+            if ( ! self::$allowProjectComments || ($areCommentsDisabled && ! $userHasAdminPermissions)) {
                 return;
             }
 
             $metabox = new_cmb2_box([
                 'id'           => $this->prefix . 'discussions',
                 'title'        => '<span class="dashicons dashicons-format-chat"></span> ' . upstream_discussion_label(),
-                'object_types' => [ $this->type ],
+                'object_types' => [$this->type],
                 'priority'     => 'low',
             ]);
 
-            if (! $areCommentsDisabled) {
+            if ( ! $areCommentsDisabled) {
                 $metabox->add_field([
                     'name'         => __('Add new Comment'),
                     'desc'         => '',
@@ -1832,7 +1832,7 @@ if (! class_exists('UpStream_Metaboxes_Projects')) :
                 }
 
                 // Check if the project exists.
-                $project_id = (int) $_GET['project_id'];
+                $project_id = (int)$_GET['project_id'];
                 if ($project_id <= 0) {
                     throw new \Exception(__("Invalid Project.", 'upstream'));
                 }
@@ -1847,7 +1847,7 @@ if (! class_exists('UpStream_Metaboxes_Projects')) :
                 foreach ($usersRowset as $userRow) {
                     $userRow->ID *= 1;
 
-                    $usersCache[ $userRow->ID ] = (object) [
+                    $usersCache[$userRow->ID] = (object)[
                         'id'     => $userRow->ID,
                         'name'   => $userRow->display_name,
                         'avatar' => getUserAvatarURL($userRow->ID),
@@ -1868,33 +1868,33 @@ if (! class_exists('UpStream_Metaboxes_Projects')) :
                 ) : true;
                 $userCanModerate          = ! $userHasAdminCapabilities ? user_can($user, 'moderate_comments') : true;
                 $userCanDelete            = ! $userHasAdminCapabilities ? $userCanModerate || user_can(
-                    $user,
+                        $user,
                         'delete_project_discussion'
-                ) : true;
+                    ) : true;
 
-                $commentsStatuses = [ 'approve' ];
+                $commentsStatuses = ['approve'];
                 if ($userHasAdminCapabilities || $userCanModerate) {
                     $commentsStatuses[] = 'hold';
                 }
 
-                $itemsTypes = [ 'milestones', 'tasks', 'bugs', 'files' ];
+                $itemsTypes = ['milestones', 'tasks', 'bugs', 'files'];
                 foreach ($itemsTypes as $itemType) {
                     $itemTypeSingular = rtrim($itemType, 's');
-                    $rowset           = array_filter((array) get_post_meta(
+                    $rowset           = array_filter((array)get_post_meta(
                         $project_id,
                         '_upstream_project_' . $itemType,
                         true
                     ));
                     if (count($rowset) > 0) {
                         foreach ($rowset as $row) {
-                            if (! is_array($row)
+                            if ( ! is_array($row)
                                  || ! isset($row['id'])
                                  || empty($row['id'])
                             ) {
                                 continue;
                             }
 
-                            $comments = (array) get_comments([
+                            $comments = (array)get_comments([
                                 'post_id'    => $project_id,
                                 'status'     => $commentsStatuses,
                                 'meta_query' => [
@@ -1911,10 +1911,10 @@ if (! class_exists('UpStream_Metaboxes_Projects')) :
                             ]);
 
                             if (count($comments) > 0) {
-                                $response['data'][ $itemType ][ $row['id'] ] = [];
+                                $response['data'][$itemType][$row['id']] = [];
 
                                 foreach ($comments as $comment) {
-                                    $author = $usersCache[ (int) $comment->user_id ];
+                                    $author = $usersCache[(int)$comment->user_id];
 
                                     $date = DateTime::createFromFormat('Y-m-d H:i:s', $comment->comment_date_gmt);
 
@@ -1941,7 +1941,7 @@ if (! class_exists('UpStream_Metaboxes_Projects')) :
                                     $commentData->created_at->localized = $date->format($theDateTimeFormat);
 
                                     $commentsCache = [];
-                                    if ((int) $comment->comment_parent > 0) {
+                                    if ((int)$comment->comment_parent > 0) {
                                         $parent        = get_comment($comment->comment_parent);
                                         $commentsCache = [
                                             $parent->comment_ID => json_decode(json_encode([
@@ -1954,7 +1954,7 @@ if (! class_exists('UpStream_Metaboxes_Projects')) :
 
                                     ob_start();
                                     upstream_admin_display_message_item($commentData, $commentsCache);
-                                    $response['data'][ $itemType ][ $row['id'] ][] = ob_get_contents();
+                                    $response['data'][$itemType][$row['id']][] = ob_get_contents();
                                     ob_end_clean();
                                 }
                             }
@@ -1984,35 +1984,35 @@ if (! class_exists('UpStream_Metaboxes_Projects')) :
          */
         public static function renderSelect2Field($field, $value, $object_id, $objectType, $fieldType)
         {
-            if (! is_array($value)) {
-                $value = explode('#', (string) $value);
+            if ( ! is_array($value)) {
+                $value = explode('#', (string)$value);
             }
 
             $value = array_filter(array_unique($value));
 
             $fieldName = $field->args['_name'];
-            if (! preg_match('/\[\]$/', $fieldName)) {
+            if ( ! preg_match('/\[\]$/', $fieldName)) {
                 $fieldName .= '[]';
             }
 
             $options = [];
             if (count($field->args['options']) === 0) {
-                if (! empty($field->args['options_cb']) && is_callable($field->args['options_cb'])) {
+                if ( ! empty($field->args['options_cb']) && is_callable($field->args['options_cb'])) {
                     $options = call_user_func($field->args['options_cb']);
                 }
             } ?>
             <select
-                id="<?php echo $field->args['id']; ?>"
-                name="<?php echo esc_attr($fieldName); ?>"
-                class="o-select2"
-                multiple
-                data-placeholder="<?php _e('None', 'upstream'); ?>"
-                tabindex="-1">
+                    id="<?php echo $field->args['id']; ?>"
+                    name="<?php echo esc_attr($fieldName); ?>"
+                    class="o-select2"
+                    multiple
+                    data-placeholder="<?php _e('None', 'upstream'); ?>"
+                    tabindex="-1">
                 <?php foreach ($options as $optionValue => $optionTitle): ?>
                     <option value="<?php echo esc_attr($optionValue); ?>"<?php echo in_array(
-                $optionValue,
+                        $optionValue,
                         $value
-            ) ? ' selected' : ''; ?>><?php echo esc_html($optionTitle); ?></option>
+                    ) ? ' selected' : ''; ?>><?php echo esc_html($optionTitle); ?></option>
                 <?php endforeach; ?>
             </select>
             <?php
@@ -2032,7 +2032,7 @@ if (! class_exists('UpStream_Metaboxes_Projects')) :
          */
         public static function sanitizeSelect2Field($overrideValue, $value, $object_id, $object_type, $sanitizer)
         {
-            $value = array_filter(array_unique((array) $value));
+            $value = array_filter(array_unique((array)$value));
 
             return $value;
         }

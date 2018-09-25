@@ -3,7 +3,7 @@
 namespace UpStream;
 
 // Prevent direct access.
-if (! defined('ABSPATH')) {
+if ( ! defined('ABSPATH')) {
     exit;
 }
 
@@ -55,24 +55,24 @@ class Comments
      */
     private function attachHooks()
     {
-        add_action('wp_ajax_upstream:project.add_comment', [ self::$namespace, 'storeComment' ]);
-        add_action('wp_ajax_upstream:project.add_comment_reply', [ $this, 'storeCommentReply' ]);
-        add_action('wp_ajax_upstream:project.trash_comment', [ self::$namespace, 'trashComment' ]);
-        add_action('wp_ajax_upstream:project.unapprove_comment', [ self::$namespace, 'unapproveComment' ]);
-        add_action('wp_ajax_upstream:project.approve_comment', [ self::$namespace, 'approveComment' ]);
-        add_action('wp_ajax_upstream:project.fetch_comments', [ self::$namespace, 'fetchComments' ]);
+        add_action('wp_ajax_upstream:project.add_comment', [self::$namespace, 'storeComment']);
+        add_action('wp_ajax_upstream:project.add_comment_reply', [$this, 'storeCommentReply']);
+        add_action('wp_ajax_upstream:project.trash_comment', [self::$namespace, 'trashComment']);
+        add_action('wp_ajax_upstream:project.unapprove_comment', [self::$namespace, 'unapproveComment']);
+        add_action('wp_ajax_upstream:project.approve_comment', [self::$namespace, 'approveComment']);
+        add_action('wp_ajax_upstream:project.fetch_comments', [self::$namespace, 'fetchComments']);
 
-        add_filter('comment_notification_subject', [ self::$namespace, 'defineNotificationHeader' ], 10, 2);
-        add_filter('comment_notification_recipients', [ self::$namespace, 'defineNotificationRecipients' ], 10, 2);
+        add_filter('comment_notification_subject', [self::$namespace, 'defineNotificationHeader'], 10, 2);
+        add_filter('comment_notification_recipients', [self::$namespace, 'defineNotificationRecipients'], 10, 2);
 
-        add_filter('upstream_allowed_tags_in_comments', [ self::$namespace, 'filter_allowed_tags' ]);
+        add_filter('upstream_allowed_tags_in_comments', [self::$namespace, 'filter_allowed_tags']);
         add_filter(
             'comment_notification_headers',
-            [ self::$namespace, 'filter_comment_notification_headers' ],
+            [self::$namespace, 'filter_comment_notification_headers'],
             10,
             2
         );
-        add_filter('comment_notification_text', [ self::$namespace, 'filter_comment_notification_text' ], 10, 2);
+        add_filter('comment_notification_text', [self::$namespace, 'filter_comment_notification_text'], 10, 2);
     }
 
     /**
@@ -83,8 +83,8 @@ class Comments
      */
     public static function removeCommentType()
     {
-        $didRemoveCommentsType = (bool) get_option('upstream:remove_comments_type');
-        if (! $didRemoveCommentsType) {
+        $didRemoveCommentsType = (bool)get_option('upstream:remove_comments_type');
+        if ( ! $didRemoveCommentsType) {
             global $wpdb;
 
             $wpdb->query(sprintf(
@@ -115,68 +115,68 @@ class Comments
         $allowed_tags = array_merge($allowed_tags, $allowedtags);
 
         // Add basic tags.
-        if (! array_key_exists('p', $allowed_tags)) {
+        if ( ! array_key_exists('p', $allowed_tags)) {
             $allowed_tags['p'] = [
                 'class' => true,
                 'id'    => true,
             ];
         }
 
-        if (! array_key_exists('br', $allowed_tags)) {
+        if ( ! array_key_exists('br', $allowed_tags)) {
             $allowed_tags['br'] = [];
         }
 
-        if (! array_key_exists('strong', $allowed_tags)) {
+        if ( ! array_key_exists('strong', $allowed_tags)) {
             $allowed_tags['strong'] = [
                 'class' => true,
-                'id' => true,
+                'id'    => true,
             ];
         }
 
-        if (! array_key_exists('em', $allowed_tags)) {
+        if ( ! array_key_exists('em', $allowed_tags)) {
             $allowed_tags['em'] = [
                 'class' => true,
-                'id' => true,
+                'id'    => true,
             ];
         }
 
-        if (! array_key_exists('span', $allowed_tags)) {
+        if ( ! array_key_exists('span', $allowed_tags)) {
             $allowed_tags['span'] = [
                 'class' => true,
-                'id' => true,
+                'id'    => true,
                 'style' => true,
             ];
         }
 
-        if (! array_key_exists('del', $allowed_tags)) {
+        if ( ! array_key_exists('del', $allowed_tags)) {
             $allowed_tags['del'] = [
                 'class' => true,
-                'id' => true,
+                'id'    => true,
             ];
         }
 
-        if (! array_key_exists('ul', $allowed_tags)) {
+        if ( ! array_key_exists('ul', $allowed_tags)) {
             $allowed_tags['ul'] = [
                 'class' => true,
-                'id' => true,
+                'id'    => true,
             ];
         }
 
-        if (! array_key_exists('ol', $allowed_tags)) {
+        if ( ! array_key_exists('ol', $allowed_tags)) {
             $allowed_tags['ol'] = [
                 'class' => true,
-                'id' => true,
+                'id'    => true,
             ];
         }
 
-        if (! array_key_exists('li', $allowed_tags)) {
+        if ( ! array_key_exists('li', $allowed_tags)) {
             $allowed_tags['li'] = [
                 'class' => true,
-                'id' => true,
+                'id'    => true,
             ];
         }
 
-        if (! array_key_exists('a', $allowed_tags)) {
+        if ( ! array_key_exists('a', $allowed_tags)) {
             $allowed_tags['a'] = [
                 'class'   => true,
                 'id'      => true,
@@ -199,12 +199,12 @@ class Comments
         }
 
         // If the current can't post images, we return current supported tags.
-        if (! current_user_can('upstream_comment_images')) {
+        if ( ! current_user_can('upstream_comment_images')) {
             return $allowed_tags;
         }
 
         // The user can post images, so let's allow the img tag.
-        if (! is_array($allowed_tags)) {
+        if ( ! is_array($allowed_tags)) {
             $allowed_tags = [];
         }
 
@@ -267,17 +267,17 @@ class Comments
             }
 
             // Verify nonce.
-            if (! check_ajax_referer($nonceIdentifier, 'nonce', false)) {
+            if ( ! check_ajax_referer($nonceIdentifier, 'nonce', false)) {
                 throw new \Exception(__("Invalid nonce.", 'upstream'));
             }
 
             // Check if the user has enough permissions to insert a new comment.
-            if (! upstream_admin_permissions('publish_project_discussion')) {
+            if ( ! upstream_admin_permissions('publish_project_discussion')) {
                 throw new \Exception(__("You're not allowed to do this.", 'upstream'));
             }
 
             // Check if the project exists.
-            $project_id = (int) $_POST['project_id'];
+            $project_id = (int)$_POST['project_id'];
             if ($project_id <= 0) {
                 throw new \Exception(__("Invalid Project.", 'upstream'));
             }
@@ -307,7 +307,7 @@ class Comments
             wp_new_comment_notify_moderator($comment->id);
             wp_notify_postauthor($comment->id);
 
-            $useAdminLayout = ! isset($_POST['teeny']) ? true : (bool) $_POST['teeny'] === false;
+            $useAdminLayout = ! isset($_POST['teeny']) ? true : (bool)$_POST['teeny'] === false;
 
             $response['comment_html'] = stripslashes($comment->render(true, $useAdminLayout));
 
@@ -331,7 +331,7 @@ class Comments
      */
     public static function isItemTypeValid($itemType)
     {
-        $itemTypes = [ 'project', 'milestone', 'task', 'bug', 'file' ];
+        $itemTypes = ['project', 'milestone', 'task', 'bug', 'file'];
 
         return in_array($itemType, $itemTypes);
     }
@@ -380,12 +380,12 @@ class Comments
             }
 
             // Check if the user has enough permissions to insert a new comment.
-            if (! upstream_admin_permissions('publish_project_discussion')) {
+            if ( ! upstream_admin_permissions('publish_project_discussion')) {
                 throw new \Exception(__("You're not allowed to do this.", 'upstream'));
             }
 
             // Check if the project exists.
-            $project_id = (int) $_POST['project_id'];
+            $project_id = (int)$_POST['project_id'];
             if ($project_id <= 0) {
                 throw new \Exception(__("Invalid Project.", 'upstream'));
             }
@@ -398,7 +398,7 @@ class Comments
             $user_id = get_current_user_id();
 
             $comment                    = new Comment(stripslashes($_POST['content']), $project_id, $user_id);
-            $comment->parent_id         = (int) $_POST['parent_id'];
+            $comment->parent_id         = (int)$_POST['parent_id'];
             $comment->created_by->ip    = preg_replace('/[^0-9a-fA-F:., ]/', '', $_SERVER['REMOTE_ADDR']);
             $comment->created_by->agent = isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : null;
 
@@ -410,7 +410,7 @@ class Comments
                 update_comment_meta($comment->id, 'id', $_POST['item_id']);
             }
 
-            $useAdminLayout = ! isset($_POST['teeny']) ? true : (bool) $_POST['teeny'] === false;
+            $useAdminLayout = ! isset($_POST['teeny']) ? true : (bool)$_POST['teeny'] === false;
 
             $parent = get_comment($comment->parent_id);
 
@@ -465,7 +465,7 @@ class Comments
             }
 
             // Check if the project exists.
-            $project_id = (int) $_POST['project_id'];
+            $project_id = (int)$_POST['project_id'];
             if ($project_id <= 0) {
                 throw new \Exception(__("Invalid Project.", 'upstream'));
             }
@@ -476,30 +476,30 @@ class Comments
             }
 
             // Check if the parent comment exists.
-            $comment_id = (int) $_POST['comment_id'];
+            $comment_id = (int)$_POST['comment_id'];
             $comment    = get_comment($comment_id);
 
             if (empty($comment)
-                 // Check if the comment belongs to that project.
-                 || (
-                     isset($comment->comment_post_ID)
-                      && (int) $comment->comment_post_ID !== $project_id
-                 )
+                // Check if the comment belongs to that project.
+                || (
+                    isset($comment->comment_post_ID)
+                    && (int)$comment->comment_post_ID !== $project_id
+                )
             ) {
                 throw new \Exception(_x('Comment not found.', 'Removing a comment in projects', 'upstream'));
             }
 
-            $user_id = (int) get_current_user_id();
+            $user_id = (int)get_current_user_id();
 
-            if (! upstream_admin_permissions('delete_project_discussion')
+            if ( ! upstream_admin_permissions('delete_project_discussion')
                  && ! current_user_can('moderate_comments')
-                 && (int) $comment->user_id !== $user_id
+                 && (int)$comment->user_id !== $user_id
             ) {
                 throw new \Exception(__("You're not allowed to do this.", 'upstream'));
             }
 
             $success = wp_trash_comment($comment);
-            if (! $success) {
+            if ( ! $success) {
                 throw new \Exception(__("It wasn't possible to delete this comment.", 'upstream'));
             }
 
@@ -527,14 +527,14 @@ class Comments
         ];
 
         try {
-            $comment_id = isset($_POST['comment_id']) ? (int) $_POST['comment_id'] : 0;
+            $comment_id = isset($_POST['comment_id']) ? (int)$_POST['comment_id'] : 0;
             $comment    = self::toggleCommentApprovalStatus($comment_id, false);
 
             $comments = [];
             if ($comment->parent_id > 0) {
                 $parentComment = get_comment($comment->parent_id);
                 if (is_numeric($parentComment->comment_approved)) {
-                    if ((bool) $parentComment->comment_approved) {
+                    if ((bool)$parentComment->comment_approved) {
                         $comments = [
                             $comment->parent_id => json_decode(json_encode([
                                 'created_by' => [
@@ -564,7 +564,7 @@ class Comments
                 unset($parentComment);
             }
 
-            $useAdminLayout = ! isset($_POST['teeny']) ? true : (bool) $_POST['teeny'] === false;
+            $useAdminLayout = ! isset($_POST['teeny']) ? true : (bool)$_POST['teeny'] === false;
 
             $response['comment_html'] = $comment->render(true, $useAdminLayout, $comments);
 
@@ -613,12 +613,12 @@ class Comments
         }
 
         // Check if the user has enough permissions to do this.
-        if (! current_user_can('moderate_comments')) {
+        if ( ! current_user_can('moderate_comments')) {
             throw new \Exception(__("You're not allowed to do this.", 'upstream'));
         }
 
         // Check if the project potentially exists.
-        $project_id = (int) $_POST['project_id'];
+        $project_id = (int)$_POST['project_id'];
         if ($project_id <= 0) {
             throw new \Exception(sprintf(__('Invalid "%s" parameter.', 'upstream'), 'project_id'));
         }
@@ -629,12 +629,12 @@ class Comments
         }
 
         $comment = Comment::load($_POST['comment_id']);
-        if (! ($comment instanceof Comment)) {
+        if ( ! ($comment instanceof Comment)) {
             throw new \Exception(__('Comment not found.', 'upstream'));
         }
 
-        $success = (bool) $isApproved ? $comment->approve() : $comment->unapprove();
-        if (! $success) {
+        $success = (bool)$isApproved ? $comment->approve() : $comment->unapprove();
+        if ( ! $success) {
             throw new \Exception(__('Unable to save the data into database.', 'upstream'));
         }
 
@@ -657,14 +657,14 @@ class Comments
         ];
 
         try {
-            $comment_id = isset($_POST['comment_id']) ? (int) $_POST['comment_id'] : 0;
+            $comment_id = isset($_POST['comment_id']) ? (int)$_POST['comment_id'] : 0;
             $comment    = self::toggleCommentApprovalStatus($comment_id, true);
 
             $comments = [];
             if ($comment->parent_id > 0) {
                 $parentComment = get_comment($comment->parent_id);
                 if (is_numeric($parentComment->comment_approved)) {
-                    if ((bool) $parentComment->comment_approved) {
+                    if ((bool)$parentComment->comment_approved) {
                         $comments = [
                             $comment->parent_id => json_decode(json_encode([
                                 'created_by' => [
@@ -694,7 +694,7 @@ class Comments
                 unset($parentComment);
             }
 
-            $useAdminLayout = ! isset($_POST['teeny']) ? true : (bool) $_POST['teeny'] === false;
+            $useAdminLayout = ! isset($_POST['teeny']) ? true : (bool)$_POST['teeny'] === false;
 
             $response['comment_html'] = $comment->render(true, $useAdminLayout, $comments);
 
@@ -737,7 +737,7 @@ class Comments
             }
 
             // Check if the project potentially exists.
-            $project_id = (int) $_GET['project_id'];
+            $project_id = (int)$_GET['project_id'];
             if ($project_id <= 0) {
                 throw new \Exception(__("Invalid Project.", 'upstream'));
             }
@@ -760,7 +760,7 @@ class Comments
             }
 
             // Verify nonce.
-            if (! check_ajax_referer($nonceIdentifier, 'nonce', false)) {
+            if ( ! check_ajax_referer($nonceIdentifier, 'nonce', false)) {
                 throw new \Exception(__("Invalid nonce.", 'upstream'));
             }
 
@@ -769,7 +769,7 @@ class Comments
                 throw new \Exception(__("Commenting is disabled on this project.", 'upstream'));
             }
 
-            $useAdminLayout = ! isset($_GET['teeny']) ? true : (bool) $_GET['teeny'] === false;
+            $useAdminLayout = ! isset($_GET['teeny']) ? true : (bool)$_GET['teeny'] === false;
 
             $usersCache  = [];
             $usersRowset = get_users([
@@ -781,7 +781,7 @@ class Comments
             foreach ($usersRowset as $userRow) {
                 $userRow->ID *= 1;
 
-                $usersCache[ $userRow->ID ] = (object) [
+                $usersCache[$userRow->ID] = (object)[
                     'id'     => $userRow->ID,
                     'name'   => $userRow->display_name,
                     'avatar' => getUserAvatarURL($userRow->ID),
@@ -802,16 +802,16 @@ class Comments
             ) : true;
             $userCanModerate          = ! $userHasAdminCapabilities ? user_can($user, 'moderate_comments') : true;
             $userCanDelete            = ! $userHasAdminCapabilities ? $userCanModerate || user_can(
-                $user,
+                    $user,
                     'delete_project_discussion'
-            ) : true;
+                ) : true;
 
-            $commentsStatuses = [ 'approve' ];
+            $commentsStatuses = ['approve'];
             if ($userHasAdminCapabilities || $userCanModerate) {
                 $commentsStatuses[] = 'hold';
             }
 
-            $itemsRowset = (array) get_post_meta(
+            $itemsRowset = (array)get_post_meta(
                 $project_id,
                 '_upstream_project_' . $commentTargetItemType . 's',
                 true
@@ -824,7 +824,7 @@ class Comments
                         }
                     }
 
-                    $comments = (array) get_comments([
+                    $comments = (array)get_comments([
                         'post_id'    => $project_id,
                         'status'     => $commentsStatuses,
                         'meta_query' => [
@@ -843,13 +843,13 @@ class Comments
                     if (count($comments) > 0) {
                         $commentsCache = [];
                         foreach ($comments as $comment) {
-                            $author = $usersCache[ (int) $comment->user_id ];
+                            $author = $usersCache[(int)$comment->user_id];
 
                             $date = \DateTime::createFromFormat('Y-m-d H:i:s', $comment->comment_date_gmt);
 
                             $commentData = json_decode(json_encode([
-                                'id'             => (int) $comment->comment_ID,
-                                'parent_id'      => (int) $comment->comment_parent,
+                                'id'             => (int)$comment->comment_ID,
+                                'parent_id'      => (int)$comment->comment_parent,
                                 'content'        => $comment->comment_content,
                                 'state'          => $comment->comment_approved,
                                 'created_by'     => $author,
@@ -870,15 +870,15 @@ class Comments
 
                             $commentData->created_at->localized = $date->format($theDateTimeFormat);
 
-                            $commentsCache[ $commentData->id ] = $commentData;
+                            $commentsCache[$commentData->id] = $commentData;
                         }
 
                         foreach ($commentsCache as $comment) {
                             if ($comment->parent_id > 0) {
-                                if (isset($commentsCache[ $comment->parent_id ])) {
-                                    $commentsCache[ $comment->parent_id ]->replies[] = $comment;
+                                if (isset($commentsCache[$comment->parent_id])) {
+                                    $commentsCache[$comment->parent_id]->replies[] = $comment;
                                 } else {
-                                    unset($commentsCache[ $comment->id ]);
+                                    unset($commentsCache[$comment->id]);
                                 }
                             }
                         }
@@ -925,17 +925,17 @@ class Comments
         $transientExpiration = 60 * 2;
 
         $comment = get_comment($comment_id);
-        $comment = (object) [
-            'id'         => (int) $comment->comment_ID,
-            'project_id' => (int) $comment->comment_post_ID,
-            'parent'     => (int) $comment->comment_parent,
-            'created_by' => (int) $comment->user_id,
+        $comment = (object)[
+            'id'         => (int)$comment->comment_ID,
+            'project_id' => (int)$comment->comment_post_ID,
+            'parent'     => (int)$comment->comment_parent,
+            'created_by' => (int)$comment->user_id,
             'target'     => get_comment_meta($comment_id, 'type', true),
-            'target_id'  => (int) $comment->comment_post_ID,
+            'target_id'  => (int)$comment->comment_post_ID,
         ];
 
         // Check if we need to skip further data processing.
-        if (! in_array($comment->target, [ 'project', 'milestone', 'task', 'bug', 'file' ])) {
+        if ( ! in_array($comment->target, ['project', 'milestone', 'task', 'bug', 'file'])) {
             return $recipients;
         }
 
@@ -962,10 +962,10 @@ class Comments
                 }
 
                 // Prepare user data.
-                $user = (object) [
-                    'id'    => (int) $user->ID,
-                    'name'  => (string) $user->display_name,
-                    'email' => (string) $user->user_email,
+                $user = (object)[
+                    'id'    => (int)$user->ID,
+                    'name'  => (string)$user->display_name,
+                    'email' => (string)$user->user_email,
                 ];
 
                 // Cache user.
@@ -976,20 +976,20 @@ class Comments
         };
 
         $fetchProjectMetaAsMap = function ($project_id, $key, &$map) use ($transientExpiration, $getUser) {
-            $rowset = (array) get_post_meta($project_id, '_upstream_project_' . $key . 's', true);
+            $rowset = (array)get_post_meta($project_id, '_upstream_project_' . $key . 's', true);
             foreach ($rowset as $row) {
                 $titleKey = $key !== 'milestone' ? 'title' : 'milestone';
 
                 if (isset($row['id'])
-                     && ! empty($row['id'])
-                     && isset($row[ $titleKey ])
-                     && ! empty($row[ $titleKey ])
+                    && ! empty($row['id'])
+                    && isset($row[$titleKey])
+                    && ! empty($row[$titleKey])
                 ) {
-                    $item = (object) [
+                    $item = (object)[
                         'id'          => $row['id'],
-                        'title'       => $row[ $titleKey ],
-                        'assigned_to' => isset($row['assigned_to']) ? (int) $row['assigned_to'] : 0,
-                        'created_by'  => isset($row['created_by']) ? (int) $row['created_by'] : 0,
+                        'title'       => $row[$titleKey],
+                        'assigned_to' => isset($row['assigned_to']) ? (int)$row['assigned_to'] : 0,
+                        'created_by'  => isset($row['created_by']) ? (int)$row['created_by'] : 0,
                         'type'        => $key,
                     ];
 
@@ -1011,7 +1011,7 @@ class Comments
                         }
                     }
 
-                    $map[ $item->id ] = $item;
+                    $map[$item->id] = $item;
                 }
             }
         };
@@ -1019,11 +1019,11 @@ class Comments
         $project = get_transient('upstream:comment_notification.project:' . $comment->project_id);
         if (empty($project)) {
             $project = get_post($comment->project_id);
-            $project = (object) [
-                'id'          => (int) $project->ID,
+            $project = (object)[
+                'id'          => (int)$project->ID,
                 'title'       => $project->post_title,
-                'created_by'  => (int) $project->post_author,
-                'owner_id'    => (int) get_post_meta($project->ID, '_upstream_project_owner', true),
+                'created_by'  => (int)$project->post_author,
+                'owner_id'    => (int)get_post_meta($project->ID, '_upstream_project_owner', true),
                 'owner_email' => '',
                 'milestones'  => [],
                 'tasks'       => [],
@@ -1035,10 +1035,10 @@ class Comments
                 $owner = get_transient('upstream:comment_notification.user:' . $project->owner_id);
                 if (empty($owner)) {
                     $owner = get_user_by('id', $project->owner_id);
-                    $owner = (object) [
+                    $owner = (object)[
                         'id'    => $project->owner_id,
-                        'name'  => (string) $owner->display_name,
-                        'email' => (string) $owner->user_email,
+                        'name'  => (string)$owner->display_name,
+                        'email' => (string)$owner->user_email,
                     ];
 
                     set_transient('upstream:comment_notification.user:' . $owner->id, $owner, $transientExpiration);
@@ -1071,7 +1071,7 @@ class Comments
             );
         } else {
             if ($comment->target !== 'project'
-                 && empty($project->{$comment->target . 's'})
+                && empty($project->{$comment->target . 's'})
             ) {
                 $fetchProjectMetaAsMap($project->id, $comment->target, $project->{$comment->target . 's'});
 
@@ -1093,12 +1093,12 @@ class Comments
 
                 $parentExists = ! empty($parentComment);
                 if ($parentExists) {
-                    if (! isset($usersCache[ $parentComment->user_id ])) {
-                        $usersCache[ $parentComment->user_id ]         = $getUser($parentComment->user_id);
-                        $usersCache[ $parentComment->user_id ]->notify = userCanReceiveCommentRepliesNotification($parentComment->user_id);
+                    if ( ! isset($usersCache[$parentComment->user_id])) {
+                        $usersCache[$parentComment->user_id]         = $getUser($parentComment->user_id);
+                        $usersCache[$parentComment->user_id]->notify = userCanReceiveCommentRepliesNotification($parentComment->user_id);
                     }
 
-                    $user = &$usersCache[ $parentComment->user_id ];
+                    $user = &$usersCache[$parentComment->user_id];
 
                     $parentCommentAuthor = $getUser($parentComment->user_id);
 
@@ -1106,7 +1106,7 @@ class Comments
                         $recipients[] = $parentCommentAuthor->email;
                     }
 
-                    $parent_id = (int) $parentComment->comment_parent;
+                    $parent_id = (int)$parentComment->comment_parent;
                 }
             } while ($parentExists);
         }
@@ -1134,7 +1134,7 @@ class Comments
         $comment = get_transient('upstream:comment_notification.comment:' . $comment_id);
         // Check if we need to skip further data processing in case of comments written outside UpStream's scope.
         if (empty($comment)
-             || in_array($comment->target, [ 'project', 'milestone', 'task', 'bug', 'file' ])
+            || in_array($comment->target, ['project', 'milestone', 'task', 'bug', 'file'])
         ) {
             return $subject;
         }
@@ -1154,12 +1154,12 @@ class Comments
         );
 
         if ($comment->target !== 'project') {
-            $meta = (array) get_post_meta($project->id, '_upstream_project_' . $comment->target . 's', true);
+            $meta = (array)get_post_meta($project->id, '_upstream_project_' . $comment->target . 's', true);
             foreach ($meta as $item) {
                 if (isset($item['id']) && $item['id'] === $comment->target_id) {
                     $titleKey = $comment->target === 'milestone' ? 'milestone' : 'title';
-                    if (isset($item[ $titleKey ])) {
-                        $subject .= sprintf(': "%s"', $item[ $titleKey ]);
+                    if (isset($item[$titleKey])) {
+                        $subject .= sprintf(': "%s"', $item[$titleKey]);
                     }
 
                     break;

@@ -1,5 +1,5 @@
 <?php
-if (! defined('ABSPATH')) {
+if ( ! defined('ABSPATH')) {
     exit;
 }
 
@@ -12,7 +12,7 @@ $headerText = upstream_login_heading();
 
 $pluginOptions = get_option('upstream_general');
 
-$shouldDisplayClientLogo = isset($pluginOptions['login_client_logo']) ? (bool) $pluginOptions['login_client_logo'] : false;
+$shouldDisplayClientLogo = isset($pluginOptions['login_client_logo']) ? (bool)$pluginOptions['login_client_logo'] : false;
 if ($shouldDisplayClientLogo) {
     $clientLogoURL = upstream_client_logo();
 }
@@ -35,7 +35,7 @@ $userEmail = ! empty($_POST) && isset($_POST['user_email']) ? $_POST['user_email
     <?php endif; ?>
 
     <div class="account-wall">
-        <?php if (! empty($headerText)): ?>
+        <?php if ( ! empty($headerText)): ?>
             <header>
                 <h3 class="text-center"><?php echo $headerText; ?></h3>
             </header>

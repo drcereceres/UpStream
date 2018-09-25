@@ -1,8 +1,9 @@
 <?php
+
 /**
  * CMB taxonomy_multicheck field type
  *
- * @since  2.2.2
+ * @since     2.2.2
  *
  * @category  WordPress_Plugin
  * @package   CMB2
@@ -23,19 +24,19 @@ class CMB2_Type_Taxonomy_Multicheck_Hierarchical extends CMB2_Type_Taxonomy_Mult
     public function render()
     {
         return $this->rendered(
-            $this->types->radio(array(
+            $this->types->radio([
                 'class'   => $this->get_wrapper_classes(),
                 'options' => $this->get_term_options(),
-            ), 'taxonomy_multicheck_hierarchical')
+            ], 'taxonomy_multicheck_hierarchical')
         );
     }
 
     protected function list_term_input($term, $saved_terms)
     {
-        $options = parent::list_term_input($term, $saved_terms);
+        $options  = parent::list_term_input($term, $saved_terms);
         $children = $this->build_children($term, $saved_terms);
 
-        if (! empty($children)) {
+        if ( ! empty($children)) {
             $options .= $children;
         }
 

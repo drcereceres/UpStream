@@ -1,8 +1,9 @@
 <?php
+
 /**
  * CMB base field type
  *
- * @since  2.2.2
+ * @since     2.2.2
  *
  * @category  WordPress_Plugin
  * @package   CMB2
@@ -38,14 +39,15 @@ abstract class CMB2_Type_Base
      * Constructor
      *
      * @since 2.2.2
+     *
      * @param CMB2_Types $types
      * @param array      $args
      */
-    public function __construct(CMB2_Types $types, $args = array())
+    public function __construct(CMB2_Types $types, $args = [])
     {
-        $this->types = $types;
-        $args['rendered'] = isset($args['rendered']) ? (bool) $args['rendered'] : true;
-        $this->args = $args;
+        $this->types      = $types;
+        $args['rendered'] = isset($args['rendered']) ? (bool)$args['rendered'] : true;
+        $this->args       = $args;
     }
 
     /**
@@ -60,7 +62,9 @@ abstract class CMB2_Type_Base
      * Stores the rendered field output.
      *
      * @since  2.2.2
+     *
      * @param  string|CMB2_Type_Base $rendered Rendered output.
+     *
      * @return string|CMB2_Type_Base           Rendered output or this object.
      */
     public function rendered($rendered)
@@ -91,12 +95,14 @@ abstract class CMB2_Type_Base
      * Handles parsing and filtering attributes while preserving any passed in via field config.
      *
      * @since  1.1.0
+     *
      * @param  string $element        Element for filter
      * @param  array  $type_defaults  Type default arguments
      * @param  array  $type_overrides Type override arguments
+     *
      * @return array                  Parsed and filtered arguments
      */
-    public function parse_args($element, $type_defaults, $type_overrides = array())
+    public function parse_args($element, $type_defaults, $type_overrides = [])
     {
         $args = $this->parse_args_from_overrides($type_overrides);
 
@@ -105,8 +111,9 @@ abstract class CMB2_Type_Base
          * The dynamic portion of the hook name, $element, refers to the field type.
          *
          * @since 1.1.0
+         *
          * @param array  $args              The array of attribute arguments.
-         * @param array  $type_defaults          The array of default values.
+         * @param array  $type_defaults     The array of default values.
          * @param array  $field             The `CMB2_Field` object.
          * @param object $field_type_object This `CMB2_Types` object.
          */
@@ -114,7 +121,7 @@ abstract class CMB2_Type_Base
 
         $args = wp_parse_args($args, $type_defaults);
 
-        if (! empty($args['js_dependencies'])) {
+        if ( ! empty($args['js_dependencies'])) {
             $this->field->add_js_dependencies($args['js_dependencies']);
         }
 
@@ -125,10 +132,12 @@ abstract class CMB2_Type_Base
      * Handles parsing and filtering attributes while preserving any passed in via field config.
      *
      * @since  2.2.4
-     * @param  array  $type_overrides Type override arguments
+     *
+     * @param  array $type_overrides Type override arguments
+     *
      * @return array                  Parsed arguments
      */
-    protected function parse_args_from_overrides($type_overrides = array())
+    protected function parse_args_from_overrides($type_overrides = [])
     {
         $type_overrides = empty($type_overrides) ? $this->args : $type_overrides;
 
@@ -147,6 +156,7 @@ abstract class CMB2_Type_Base
      * Fall back to CMB2_Types methods
      *
      * @param string $field
+     *
      * @throws Exception Throws an exception if the field is invalid.
      * @return mixed
      */
@@ -158,7 +168,7 @@ abstract class CMB2_Type_Base
             case '_desc':
             case '_text':
             case 'concat_attrs':
-                return call_user_func_array(array( $this->types, $name ), $arguments);
+                return call_user_func_array([$this->types, $name], $arguments);
             default:
                 throw new Exception(sprintf(esc_html__('Invalid %1$s method: %2$s', 'cmb2'), __CLASS__, $name));
         }
@@ -168,6 +178,7 @@ abstract class CMB2_Type_Base
      * Magic getter for our object.
      *
      * @param string $field
+     *
      * @throws Exception Throws an exception if the field is invalid.
      * @return mixed
      */

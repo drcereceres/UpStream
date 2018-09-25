@@ -1,8 +1,9 @@
 <?php
+
 /**
  * CMB taxonomy_multicheck field type
  *
- * @since  2.2.2
+ * @since     2.2.2
  *
  * @category  WordPress_Plugin
  * @package   CMB2
@@ -23,18 +24,18 @@ class CMB2_Type_Taxonomy_Radio_Hierarchical extends CMB2_Type_Taxonomy_Radio
     public function render()
     {
         return $this->rendered(
-            $this->types->radio(array(
+            $this->types->radio([
                 'options' => $this->get_term_options(),
-            ), 'taxonomy_radio_hierarchical')
+            ], 'taxonomy_radio_hierarchical')
         );
     }
 
     protected function list_term_input($term, $saved_term)
     {
-        $options = parent::list_term_input($term, $saved_term);
+        $options  = parent::list_term_input($term, $saved_term);
         $children = $this->build_children($term, $saved_term);
 
-        if (! empty($children)) {
+        if ( ! empty($children)) {
             $options .= $children;
         }
 

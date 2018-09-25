@@ -1,8 +1,9 @@
 <?php
+
 /**
  * CMB colorpicker field type
  *
- * @since  2.2.2
+ * @since     2.2.2
  *
  * @category  WordPress_Plugin
  * @package   CMB2
@@ -28,13 +29,13 @@ class CMB2_Type_Colorpicker extends CMB2_Type_Text
      * @param CMB2_Types $types
      * @param array      $args
      */
-    public function __construct(CMB2_Types $types, $args = array(), $value = '')
+    public function __construct(CMB2_Types $types, $args = [], $value = '')
     {
         parent::__construct($types, $args);
         $this->value = $value ? $value : $this->value;
     }
 
-    public function render($args = array())
+    public function render($args = [])
     {
         $meta_value = $this->value ? $this->value : $this->field->escaped_value();
 
@@ -54,17 +55,17 @@ class CMB2_Type_Colorpicker extends CMB2_Type_Text
 
         wp_enqueue_style('wp-color-picker');
 
-        $args = wp_parse_args($args, array(
+        $args = wp_parse_args($args, [
             'class' => 'cmb2-text-small',
-        ));
+        ]);
 
         $args['class']           .= ' cmb2-colorpicker';
         $args['value']           = $meta_value;
-        $args['js_dependencies'] = array( 'wp-color-picker' );
+        $args['js_dependencies'] = ['wp-color-picker'];
 
         if ($this->field->options('alpha')) {
             $args['js_dependencies'][] = 'wp-color-picker-alpha';
-            $args['data-alpha'] = 'true';
+            $args['data-alpha']        = 'true';
         }
 
         $args = wp_parse_args($this->args, $args);

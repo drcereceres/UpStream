@@ -1,11 +1,11 @@
 <?php
 
 // Exit if accessed directly
-if (! defined('ABSPATH')) {
+if ( ! defined('ABSPATH')) {
     exit;
 }
 
-if (! class_exists('UpStream_Options_Bugs')) :
+if ( ! class_exists('UpStream_Options_Bugs')) :
 
     /**
      * CMB2 Theme Options
@@ -91,7 +91,7 @@ if (! class_exists('UpStream_Options_Bugs')) :
                     'title'      => $this->title,
                     'menu_title' => $this->menu_title,
                     'desc'       => $this->description,
-                    'show_on'    => [ 'key' => 'options-page', 'value' => [ $this->id ], ],
+                    'show_on'    => ['key' => 'options-page', 'value' => [$this->id],],
                     'show_names' => true,
                     'fields'     => [
                         [
@@ -114,7 +114,7 @@ if (! class_exists('UpStream_Options_Bugs')) :
                                 'remove_button' => __('Remove Entry', 'upstream'),
                                 'sortable'      => true, // beta
                             ],
-                            'sanitization_cb' => [ 'UpStream_Admin', 'onBeforeSave' ],
+                            'sanitization_cb' => ['UpStream_Admin', 'onBeforeSave'],
                             'fields'          => [
                                 [
                                     'name' => __('Hidden', 'upstream'),
@@ -144,12 +144,12 @@ if (! class_exists('UpStream_Options_Bugs')) :
                                     'type'    => 'radio',
                                     'default' => 'open',
                                     'desc'    => __(
-                                        "A Status Name such as 'In Progress' or 'Overdue' would be considered Open.",
-                                            'upstream'
-                                    ) . '<br>' . __(
-                                                "A Status Name such as 'Complete' or 'Cancelled' would be considered Closed.",
-                                            'upstream'
-                                            ),
+                                                     "A Status Name such as 'In Progress' or 'Overdue' would be considered Open.",
+                                                     'upstream'
+                                                 ) . '<br>' . __(
+                                                     "A Status Name such as 'Complete' or 'Cancelled' would be considered Closed.",
+                                                     'upstream'
+                                                 ),
                                     'options' => [
                                         'open'   => __('Open', 'upstream'),
                                         'closed' => __('Closed', 'upstream'),
@@ -219,8 +219,8 @@ if (! class_exists('UpStream_Options_Bugs')) :
          */
         public static function createBugsStatusesIds()
         {
-            $continue = ! (bool) get_option('upstream:created_bugs_args_ids');
-            if (! $continue) {
+            $continue = ! (bool)get_option('upstream:created_bugs_args_ids');
+            if ( ! $continue) {
                 return;
             }
 
@@ -243,7 +243,7 @@ if (! class_exists('UpStream_Options_Bugs')) :
 
                 if (count($metas) > 0) {
                     $getBugArgIdByTitle = function ($needle, $argName = 'statuses') use (&$bugs) {
-                        foreach ($bugs[ $argName ] as $bug) {
+                        foreach ($bugs[$argName] as $bug) {
                             if ($needle === $bug['name']) {
                                 return $bug['id'];
                             }
@@ -254,7 +254,7 @@ if (! class_exists('UpStream_Options_Bugs')) :
 
                     $replaceBugArgsWithItsIds = function ($bug) use (&$getBugArgIdByTitle) {
                         if (isset($bug['status'])
-                             && ! empty($bug['status'])
+                            && ! empty($bug['status'])
                         ) {
                             $bugArgId = $getBugArgIdByTitle($bug['status']);
                             if ($bugArgId !== false) {
@@ -263,7 +263,7 @@ if (! class_exists('UpStream_Options_Bugs')) :
                         }
 
                         if (isset($bug['severity'])
-                             && ! empty($bug['severity'])
+                            && ! empty($bug['severity'])
                         ) {
                             $bugArgId = $getBugArgIdByTitle($bug['severity'], 'severities');
                             if ($bugArgId !== false) {
@@ -279,9 +279,9 @@ if (! class_exists('UpStream_Options_Bugs')) :
                             continue;
                         }
 
-                        $projectId = (int) $meta->post_id;
+                        $projectId = (int)$meta->post_id;
 
-                        $data = array_filter(maybe_unserialize((string) $meta->meta_value));
+                        $data = array_filter(maybe_unserialize((string)$meta->meta_value));
                         $data = array_map($replaceBugArgsWithItsIds, $data);
 
                         update_post_meta($projectId, '_upstream_project_bugs', $data);

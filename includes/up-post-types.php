@@ -1,7 +1,7 @@
 <?php
 
 // Exit if accessed directly
-if (! defined('ABSPATH')) {
+if ( ! defined('ABSPATH')) {
     exit;
 }
 
@@ -41,7 +41,7 @@ function upstream_setup_post_types()
     ]);
 
     foreach ($project_labels as $key => $value) {
-        $project_labels[ $key ] = sprintf($value, upstream_project_label(), upstream_project_label_plural());
+        $project_labels[$key] = sprintf($value, upstream_project_label(), upstream_project_label_plural());
     }
 
     $project_args = [
@@ -53,12 +53,12 @@ function upstream_setup_post_types()
         'menu_icon'          => 'dashicons-arrow-up-alt',
         'menu_position'      => 56,
         'query_var'          => true,
-        'rewrite'            => [ 'slug' => $project_base, 'with_front' => false ],
+        'rewrite'            => ['slug' => $project_base, 'with_front' => false],
         'capability_type'    => 'project',
         'map_meta_cap'       => true,
         'has_archive'        => $project_base,
         'hierarchical'       => false,
-        'supports'           => apply_filters('upstream_project_supports', [ 'title', 'revisions', 'author' ]),
+        'supports'           => apply_filters('upstream_project_supports', ['title', 'revisions', 'author']),
     ];
     register_post_type('project', apply_filters('upstream_project_post_type_args', $project_args));
 
@@ -91,7 +91,7 @@ function upstream_setup_post_types()
     ]);
 
     foreach ($client_labels as $key => $value) {
-        $client_labels[ $key ] = sprintf($value, upstream_client_label(), upstream_client_label_plural());
+        $client_labels[$key] = sprintf($value, upstream_client_label(), upstream_client_label_plural());
     }
 
     $client_args = [
@@ -101,12 +101,12 @@ function upstream_setup_post_types()
         'show_ui'            => true,
         'show_in_menu'       => false,
         'query_var'          => true,
-        'rewrite'            => [ 'slug' => $client_base, 'with_front' => false ],
+        'rewrite'            => ['slug' => $client_base, 'with_front' => false],
         'capability_type'    => 'client',
         'map_meta_cap'       => true,
         'has_archive'        => false,
         'hierarchical'       => false,
-        'supports'           => apply_filters('upstream_client_supports', [ 'title', 'revisions' ]),
+        'supports'           => apply_filters('upstream_client_supports', ['title', 'revisions']),
     ];
     register_post_type('client', apply_filters('upstream_client_post_type_args', $client_args));
 }
@@ -150,7 +150,7 @@ function upstream_setup_taxonomies()
             'show_ui'           => true,
             'show_admin_column' => true,
             'query_var'         => 'project_category',
-            'rewrite'           => [ 'slug' => $slug . '/category', 'with_front' => false, 'hierarchical' => true ],
+            'rewrite'           => ['slug' => $slug . '/category', 'with_front' => false, 'hierarchical' => true],
             'capabilities'      => [
                 'manage_terms' => 'manage_project_terms',
                 'edit_terms'   => 'edit_project_terms',
@@ -159,7 +159,7 @@ function upstream_setup_taxonomies()
             ],
         ]
     );
-    register_taxonomy('project_category', [ 'project' ], $category_args);
+    register_taxonomy('project_category', ['project'], $category_args);
     register_taxonomy_for_object_type('project_category', 'project');
 
     /** Tags **/
@@ -200,7 +200,7 @@ function upstream_setup_taxonomies()
         ],
     ];
 
-    register_taxonomy('upstream_tag', [ 'project' ], $tagsArgs);
+    register_taxonomy('upstream_tag', ['project'], $tagsArgs);
     register_taxonomy_for_object_type('upstream_tag', 'project');
 }
 

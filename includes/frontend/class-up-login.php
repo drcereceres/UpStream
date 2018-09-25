@@ -1,5 +1,5 @@
 <?php
-if (! defined('ABSPATH')) {
+if ( ! defined('ABSPATH')) {
     exit;
 }
 
@@ -60,7 +60,7 @@ final class UpStream_Login
             unset($_SESSION['upstream']);
         }
 
-        if (! empty($_GET) && isset($_GET['action']) && $_GET['action'] === 'logout') {
+        if ( ! empty($_GET) && isset($_GET['action']) && $_GET['action'] === 'logout') {
             unset($_GET['action']);
         }
     }
@@ -76,10 +76,10 @@ final class UpStream_Login
      */
     private function validateLogInPostData()
     {
-        if (! isset($_POST['upstream_login_nonce']) || ! wp_verify_nonce(
-            $_POST['upstream_login_nonce'],
+        if ( ! isset($_POST['upstream_login_nonce']) || ! wp_verify_nonce(
+                $_POST['upstream_login_nonce'],
                 'upstream-login-nonce'
-        )) {
+            )) {
             return false;
         }
 
@@ -118,7 +118,7 @@ final class UpStream_Login
     private function authenticateData($data)
     {
         try {
-            if (! isset($data['username']) || ! isset($data['password'])) {
+            if ( ! isset($data['username']) || ! isset($data['password'])) {
                 throw new \Exception(__("Invalid email address and/or password.", 'upstream'));
             }
 
@@ -128,20 +128,20 @@ final class UpStream_Login
                 throw new \Exception(__("Invalid email address and/or password.", 'upstream'));
             }
 
-            $userRoles = (array) $user->roles;
+            $userRoles = (array)$user->roles;
             // Check if this user has a valid UpStream Role to log in.
             if (count(array_intersect(
-                $userRoles,
-                    [ 'administrator', 'upstream_manager', 'upstream_user', 'upstream_client_user' ]
-            )) === 0) {
+                    $userRoles,
+                    ['administrator', 'upstream_manager', 'upstream_user', 'upstream_client_user']
+                )) === 0) {
                 throw new \Exception(__("You don't have enough permissions to log in here.", 'upstream'));
             }
 
-            $project_id  = (int) upstream_post_id();
+            $project_id  = (int)upstream_post_id();
             $canContinue = false;
 
             // Make sure he can be authenticated if he's an admin/manager.
-            if (count(array_intersect($userRoles, [ 'administrator', 'upstream_manager' ])) > 0) {
+            if (count(array_intersect($userRoles, ['administrator', 'upstream_manager'])) > 0) {
                 $canContinue = true;
             } elseif (is_clients_disabled()) {
                 throw new \Exception(__("Invalid email address and/or password.", 'upstream'));
@@ -154,13 +154,13 @@ final class UpStream_Login
                     $metaKeyName = '_upstream_project_client_users';
                 }
 
-                $meta = (array) get_post_meta($project_id, $metaKeyName);
+                $meta = (array)get_post_meta($project_id, $metaKeyName);
                 if (count($meta) > 0) {
-                    $canContinue = in_array((string) $user->ID, $meta[0]);
+                    $canContinue = in_array((string)$user->ID, $meta[0]);
                 }
             }
 
-            if (! $canContinue) {
+            if ( ! $canContinue) {
                 throw new \Exception(__("Sorry, you are not allowed to access this project.", 'upstream'));
             }
 
@@ -175,9 +175,9 @@ final class UpStream_Login
             }
 
             // Retrieve the project's client id.
-            $client_id = (array) get_post_meta($project_id, '_upstream_project_client');
+            $client_id = (array)get_post_meta($project_id, '_upstream_project_client');
             if (count($client_id) > 0) {
-                $client_id = (int) $client_id[0];
+                $client_id = (int)$client_id[0];
             } else {
                 $client_id = 0;
             }
@@ -245,7 +245,7 @@ final class UpStream_Login
      */
     public function getFeedbackMessage()
     {
-        $feedbackMessage = (string) $this->feedbackMessage;
+        $feedbackMessage = (string)$this->feedbackMessage;
 
         $this->feedbackMessage = "";
 

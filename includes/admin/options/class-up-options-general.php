@@ -1,11 +1,11 @@
 <?php
 
 // Exit if accessed directly
-if (! defined('ABSPATH')) {
+if ( ! defined('ABSPATH')) {
     exit;
 }
 
-if (! class_exists('UpStream_Options_General')) :
+if ( ! class_exists('UpStream_Options_General')) :
 
     /**
      * CMB2 Theme Options
@@ -88,7 +88,7 @@ if (! class_exists('UpStream_Options_General')) :
             $roles = get_editable_roles();
 
             foreach ($roles as $role => $data) {
-                $list[ $role ] = $data['name'];
+                $list[$role] = $data['name'];
             }
 
             return $list;
@@ -113,7 +113,7 @@ if (! class_exists('UpStream_Options_General')) :
                     'title'      => $this->title,
                     'menu_title' => $this->menu_title,
                     'desc'       => $this->description,
-                    'show_on'    => [ 'key' => 'options-page', 'value' => [ $this->id ], ],
+                    'show_on'    => ['key' => 'options-page', 'value' => [$this->id],],
                     'show_names' => true,
                     'fields'     => [
 
@@ -174,9 +174,9 @@ if (! class_exists('UpStream_Options_General')) :
                             'type'       => 'title',
                             'desc'       => sprintf(
                                 __(
-                                'Various options for the %1s login page and the frontend view. <br>%2s can view their projects by visiting %3s (URL is available after adding a %s).',
-                                'upstream'
-                            ),
+                                    'Various options for the %1s login page and the frontend view. <br>%2s can view their projects by visiting %3s (URL is available after adding a %s).',
+                                    'upstream'
+                                ),
                                 upstream_client_label(),
                                 upstream_client_label_plural(),
                                 $project_url,
@@ -591,11 +591,12 @@ if (! class_exists('UpStream_Options_General')) :
                          * Maintenance
                          */
                         [
-                            'name' => __('Maintenance', 'upstream'),
-                            'id'   => 'maintenance_title',
-                            'type' => 'title',
-                            'before_row'        => '<hr>',
-                            'desc' => __('General options for maintenance only. Be careful enabling any of these options.', 'upstream'),
+                            'name'       => __('Maintenance', 'upstream'),
+                            'id'         => 'maintenance_title',
+                            'type'       => 'title',
+                            'before_row' => '<hr>',
+                            'desc'       => __('General options for maintenance only. Be careful enabling any of these options.',
+                                'upstream'),
                         ],
                         [
                             'name'              => __('Debug', 'upstream'),

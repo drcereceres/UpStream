@@ -1,14 +1,14 @@
 <?php
 // Prevent direct access.
-if (! defined('ABSPATH')) {
+if ( ! defined('ABSPATH')) {
     exit;
 }
 
-if (! upstream_are_milestones_disabled()
+if ( ! upstream_are_milestones_disabled()
      && ! upstream_disable_milestones()):
 
     $collapseBox = isset($pluginOptions['collapse_project_milestones'])
-                   && (bool) $pluginOptions['collapse_project_milestones'] === true;
+                   && (bool)$pluginOptions['collapse_project_milestones'] === true;
 
     $itemType      = 'milestone';
     $currentUserId = get_current_user_id();
@@ -83,17 +83,17 @@ if (! upstream_are_milestones_disabled()
                                         <li>
                                             <a href="#" data-action="export" data-type="txt">
                                                 <i class="fa fa-file-text-o"></i>&nbsp;&nbsp;<?php _e(
-                                'Plain Text',
+                                                    'Plain Text',
                                                     'upstream'
-                            ); ?>
+                                                ); ?>
                                             </a>
                                         </li>
                                         <li>
                                             <a href="#" data-action="export" data-type="csv">
                                                 <i class="fa fa-file-code-o"></i>&nbsp;&nbsp;<?php _e(
-                                                        'CSV',
+                                                    'CSV',
                                                     'upstream'
-                                                    ); ?>
+                                                ); ?>
                                             </a>
                                         </li>
                                     </ul>
@@ -116,17 +116,17 @@ if (! upstream_are_milestones_disabled()
                                         <li>
                                             <a href="#" data-action="export" data-type="txt">
                                                 <i class="fa fa-file-text-o"></i>&nbsp;&nbsp;<?php _e(
-                                                        'Plain Text',
+                                                    'Plain Text',
                                                     'upstream'
-                                                    ); ?>
+                                                ); ?>
                                             </a>
                                         </li>
                                         <li>
                                             <a href="#" data-action="export" data-type="csv">
                                                 <i class="fa fa-file-code-o"></i>&nbsp;&nbsp;<?php _e(
-                                                        'CSV',
+                                                    'CSV',
                                                     'upstream'
-                                                    ); ?>
+                                                ); ?>
                                             </a>
                                         </li>
                                     </ul>
@@ -154,16 +154,16 @@ if (! upstream_are_milestones_disabled()
                                         <option value></option>
                                         <option value="__none__"><?php _e('Nobody', 'upstream'); ?></option>
                                         <option value="<?php echo $currentUserId; ?>"><?php _e(
-                                  'Me',
+                                                'Me',
                                                 'upstream'
-                              ); ?></option>
+                                            ); ?></option>
                                         <optgroup label="<?php _e('Users'); ?>">
                                             <?php foreach ($users as $user_id => $userName): ?>
                                                 <?php if ($user_id === $currentUserId) {
-                                  continue;
-                              } ?>
+                                                    continue;
+                                                } ?>
                                                 <option
-                                                    value="<?php echo $user_id; ?>"><?php echo $userName; ?></option>
+                                                        value="<?php echo $user_id; ?>"><?php echo $userName; ?></option>
                                             <?php endforeach; ?>
                                         </optgroup>
                                     </select>
@@ -195,20 +195,20 @@ if (! upstream_are_milestones_disabled()
                             </div>
 
                             <?php do_action(
-                                                    'upstream:project.milestones.filters',
-                                                    $tableSettings,
-                                                    $columnsSchema,
+                                'upstream:project.milestones.filters',
+                                $tableSettings,
+                                $columnsSchema,
                                 $projectId
-                                                ); ?>
+                            ); ?>
                         </div>
                     </form>
                     <?php \UpStream\Frontend\renderTable(
-                                    $tableSettings,
-                                    $columnsSchema,
-                                    $projectMilestones,
+                        $tableSettings,
+                        $columnsSchema,
+                        $projectMilestones,
                         'milestone',
-                                    $projectId
-                                ); ?>
+                        $projectId
+                    ); ?>
                 </div>
             </div>
         </div>

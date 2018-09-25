@@ -1,5 +1,5 @@
 <?php
-if (! defined('ABSPATH')) {
+if ( ! defined('ABSPATH')) {
     exit;
 }
 
@@ -52,7 +52,8 @@ if ($isSingle) {
                         <ul class="nav child_menu">
                             <li>
                                 <a href="<?php echo esc_attr($projectsListUrl); ?>">
-                                    <i class="fa fa-columns"></i> <?php printf(__('All %s', 'upstream'), $i18n['LB_PROJECTS']); ?>
+                                    <i class="fa fa-columns"></i> <?php printf(__('All %s', 'upstream'),
+                                        $i18n['LB_PROJECTS']); ?>
                                 </a>
 
                                 <?php do_action('upstream_sidebar_after_all_projects_link'); ?>
@@ -76,7 +77,7 @@ if ($isSingle) {
                             <ul class="nav child_menu" style="display: block;">
                                 <?php do_action('upstream_sidebar_before_single_menu'); ?>
 
-                                <?php if (! $areMilestonesDisabledForThisProject && ! $areMilestonesDisabledAtAll): ?>
+                                <?php if ( ! $areMilestonesDisabledForThisProject && ! $areMilestonesDisabledAtAll): ?>
                                     <li>
                                         <a href="#milestones">
                                             <i class="fa fa-flag"></i> <?php echo upstream_milestone_label_plural(); ?>
@@ -88,7 +89,7 @@ if ($isSingle) {
                                                     upstream_post_id()
                                                 );
                                             } else {
-                                                $itemsCount = (int) upstream_count_assigned_to('milestones');
+                                                $itemsCount = (int)upstream_count_assigned_to('milestones');
                                             }
 
                                             if ($itemsCount > 0): ?>
@@ -100,7 +101,7 @@ if ($isSingle) {
                                     </li>
                                 <?php endif; ?>
 
-                                <?php if (! $areTasksDisabledForThisProject && ! $areTasksDisabledAtAll): ?>
+                                <?php if ( ! $areTasksDisabledForThisProject && ! $areTasksDisabledAtAll): ?>
                                     <li>
                                         <a href="#tasks">
                                             <i class="fa fa-wrench"></i> <?php echo $i18n['LB_TASKS']; ?>
@@ -112,7 +113,7 @@ if ($isSingle) {
                                                     upstream_post_id()
                                                 );
                                             } else {
-                                                $itemsCount = (int) upstream_count_assigned_to('tasks');
+                                                $itemsCount = (int)upstream_count_assigned_to('tasks');
                                             }
 
                                             if ($itemsCount > 0): ?>
@@ -125,7 +126,7 @@ if ($isSingle) {
                                     </li>
                                 <?php endif; ?>
 
-                                <?php if (! $areBugsDisabledAtAll && ! $areBugsDisabledForThisProject): ?>
+                                <?php if ( ! $areBugsDisabledAtAll && ! $areBugsDisabledForThisProject): ?>
                                     <li>
                                         <a href="#bugs">
                                             <i class="fa fa-bug"></i> <?php echo $i18n['LB_BUGS']; ?>
@@ -137,7 +138,7 @@ if ($isSingle) {
                                                     upstream_post_id()
                                                 );
                                             } else {
-                                                $itemsCount = (int) upstream_count_assigned_to('bugs');
+                                                $itemsCount = (int)upstream_count_assigned_to('bugs');
                                             }
 
                                             if ($itemsCount > 0): ?>
@@ -150,7 +151,7 @@ if ($isSingle) {
                                     </li>
                                 <?php endif; ?>
 
-                                <?php if (! $areFilesDisabledForThisProject && ! upstream_disable_files()): ?>
+                                <?php if ( ! $areFilesDisabledForThisProject && ! upstream_disable_files()): ?>
                                     <li>
                                         <a href="#files">
                                             <i class="fa fa-file"></i> <?php echo upstream_file_label_plural(); ?>
@@ -158,7 +159,7 @@ if ($isSingle) {
                                     </li>
                                 <?php endif; ?>
 
-                                <?php if (! $areCommentsDisabled): ?>
+                                <?php if ( ! $areCommentsDisabled): ?>
                                     <li>
                                         <a href="#discussion">
                                             <i class="fa fa-comments"></i>

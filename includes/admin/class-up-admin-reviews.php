@@ -9,7 +9,7 @@
  */
 
 // Exit if accessed directly or already defined.
-if (! defined('ABSPATH') || class_exists('UpStream_Admin_Reviews')) {
+if ( ! defined('ABSPATH') || class_exists('UpStream_Admin_Reviews')) {
     return;
 }
 

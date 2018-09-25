@@ -39,8 +39,8 @@ function cmb2_bootstrap()
      *
      * @since  2.0.2
      */
-    $cmb_config_arrays = apply_filters('cmb2_meta_boxes', array());
-    foreach ((array) $cmb_config_arrays as $cmb_config) {
+    $cmb_config_arrays = apply_filters('cmb2_meta_boxes', []);
+    foreach ((array)$cmb_config_arrays as $cmb_config) {
         new CMB2($cmb_config);
     }
 

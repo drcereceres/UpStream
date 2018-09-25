@@ -1,11 +1,11 @@
 <?php
 // Prevent direct access.
-if (! defined('ABSPATH')) {
+if ( ! defined('ABSPATH')) {
     exit;
 }
 
-$user_id          = (int) get_current_user_id();
-$project_id       = (int) upstream_post_id();
+$user_id          = (int)get_current_user_id();
+$project_id       = (int)upstream_post_id();
 $progressValue    = upstream_project_progress();
 $currentTimestamp = time();
 
@@ -20,31 +20,31 @@ if ($areMilestonesEnabled) {
     ];
 
     $milestones = get_post_meta($project_id, '_upstream_project_milestones');
-    $milestones = ! empty($milestones) ? (array) $milestones[0] : [];
+    $milestones = ! empty($milestones) ? (array)$milestones[0] : [];
 
     if (isset($milestones[0]) && ! isset($milestones[0]['id'])) {
-        $milestones = (array) $milestones[0];
+        $milestones = (array)$milestones[0];
     }
 
     $milestonesCounts['total'] = count($milestones);
     if ($milestonesCounts['total'] > 0) {
         foreach ($milestones as $milestone) {
-            if (isset($milestone['assigned_to']) && (int) $milestone['assigned_to'] === $user_id) {
-                $milestonesCounts['mine'] ++;
+            if (isset($milestone['assigned_to']) && (int)$milestone['assigned_to'] === $user_id) {
+                $milestonesCounts['mine']++;
             }
 
-            $progress = isset($milestone['progress']) ? (float) $milestone['progress'] : 0;
+            $progress = isset($milestone['progress']) ? (float)$milestone['progress'] : 0;
             if ($progress < 100) {
-                $milestonesCounts['open'] ++;
+                $milestonesCounts['open']++;
 
                 if (isset($milestone['end_date'])
-                     && (int) $milestone['end_date'] > 0
-                     && (int) $milestone['end_date'] < $currentTimestamp
+                    && (int)$milestone['end_date'] > 0
+                    && (int)$milestone['end_date'] < $currentTimestamp
                 ) {
-                    $milestonesCounts['overdue'] ++;
+                    $milestonesCounts['overdue']++;
                 }
             } else {
-                $milestonesCounts['finished'] ++;
+                $milestonesCounts['finished']++;
             }
         }
     }
@@ -63,43 +63,43 @@ if ($areTasksEnabled) {
     $tasksOptions = get_option('upstream_tasks');
     $tasksMap     = [];
     foreach ($tasksOptions['statuses'] as $task) {
-        $tasksMap[ $task['id'] ] = $task['type'];
+        $tasksMap[$task['id']] = $task['type'];
     }
     unset($tasksOptions);
 
     $tasks = get_post_meta($project_id, '_upstream_project_tasks');
-    $tasks = ! empty($tasks) ? (array) $tasks[0] : [];
+    $tasks = ! empty($tasks) ? (array)$tasks[0] : [];
 
     if (isset($tasks[0]) && ! isset($tasks[0]['id'])) {
-        $tasks = (array) $tasks[0];
+        $tasks = (array)$tasks[0];
     }
 
     $tasksCounts['total'] = count($tasks);
     if ($tasksCounts['total'] > 0) {
         foreach ($tasks as $task) {
-            if (isset($task['assigned_to']) && (int) $task['assigned_to'] === $user_id) {
-                $tasksCounts['mine'] ++;
+            if (isset($task['assigned_to']) && (int)$task['assigned_to'] === $user_id) {
+                $tasksCounts['mine']++;
             }
 
-            $progress = isset($task['progress']) ? (float) $task['progress'] : 0;
+            $progress = isset($task['progress']) ? (float)$task['progress'] : 0;
             if ($progress < 100) {
                 if (isset($task['status'])
-                     && isset($tasksMap[ $task['status'] ])
-                     && $tasksMap[ $task['status'] ] === "closed"
+                    && isset($tasksMap[$task['status']])
+                    && $tasksMap[$task['status']] === "closed"
                 ) {
-                    $tasksCounts['closed'] ++;
+                    $tasksCounts['closed']++;
                 } else {
-                    $tasksCounts['open'] ++;
+                    $tasksCounts['open']++;
 
                     if (isset($task['end_date'])
-                         && (int) $task['end_date'] > 0
-                         && (int) $task['end_date'] < $currentTimestamp
+                        && (int)$task['end_date'] > 0
+                        && (int)$task['end_date'] < $currentTimestamp
                     ) {
-                        $tasksCounts['overdue'] ++;
+                        $tasksCounts['overdue']++;
                     }
                 }
             } else {
-                $tasksCounts['closed'] ++;
+                $tasksCounts['closed']++;
             }
         }
     }
@@ -118,38 +118,38 @@ if ($areBugsEnabled) {
     $bugsOptions = get_option('upstream_bugs');
     $bugsMap     = [];
     foreach ($bugsOptions['statuses'] as $bug) {
-        $bugsMap[ $bug['id'] ] = $bug['type'];
+        $bugsMap[$bug['id']] = $bug['type'];
     }
     unset($bugsOptions);
 
     $bugs = get_post_meta($project_id, '_upstream_project_bugs');
-    $bugs = ! empty($bugs) ? (array) $bugs[0] : [];
+    $bugs = ! empty($bugs) ? (array)$bugs[0] : [];
 
     if (isset($bugs[0]) && ! isset($bugs[0]['id'])) {
-        $bugs = (array) $bugs[0];
+        $bugs = (array)$bugs[0];
     }
 
     $bugsCounts['total'] = count($bugs);
     if ($bugsCounts['total'] > 0) {
         foreach ($bugs as $bug) {
-            if (isset($bug['assigned_to']) && (int) $bug['assigned_to'] === $user_id) {
-                $bugsCounts['mine'] ++;
+            if (isset($bug['assigned_to']) && (int)$bug['assigned_to'] === $user_id) {
+                $bugsCounts['mine']++;
             }
 
             if (isset($bug['status'])
-                 && ! empty($bug['status'])
-                 && isset($bugsMap[ $bug['status'] ])
-                 && $bugsMap[ $bug['status'] ] === "closed"
+                && ! empty($bug['status'])
+                && isset($bugsMap[$bug['status']])
+                && $bugsMap[$bug['status']] === "closed"
             ) {
-                $bugsCounts['closed'] ++;
+                $bugsCounts['closed']++;
             } else {
-                $bugsCounts['open'] ++;
+                $bugsCounts['open']++;
 
                 if (isset($bug['due_date'])
-                     && (int) $bug['due_date'] > 0
-                     && (int) $bug['due_date'] < $currentTimestamp
+                    && (int)$bug['due_date'] > 0
+                    && (int)$bug['due_date'] < $currentTimestamp
                 ) {
-                    $bugsCounts['overdue'] ++;
+                    $bugsCounts['overdue']++;
                 }
             }
         }
@@ -181,10 +181,10 @@ if ($areBugsEnabled) {
                         </div>
                         <i class="fa fa-flag fa-2x" data-toggle="tooltip"
                            title="<?php printf(
-    '%s %s',
-    upstream_milestone_label_plural(),
+                               '%s %s',
+                               upstream_milestone_label_plural(),
                                __('Overview', 'upstream')
-); ?>"
+                           ); ?>"
                            style="position: absolute; color: #ECF0F1; right: 8px; margin-top: -2px"></i>
                     </div>
                 </div>
@@ -213,10 +213,10 @@ if ($areBugsEnabled) {
                         </div>
                         <i class="fa fa-wrench fa-2x" data-toggle="tooltip"
                            title="<?php printf(
-                                   '%s %s',
-                                   upstream_task_label_plural(),
+                               '%s %s',
+                               upstream_task_label_plural(),
                                __('Overview', 'upstream')
-                               ); ?>"
+                           ); ?>"
                            style="position: absolute; color: #ECF0F1; right: 8px; margin-top: -2px"></i>
                     </div>
                 </div>
@@ -245,10 +245,10 @@ if ($areBugsEnabled) {
                         </div>
                         <i class="fa fa-bug fa-2x" data-toggle="tooltip"
                            title="<?php printf(
-                                   '%s %s',
-                                   upstream_bug_label_plural(),
+                               '%s %s',
+                               upstream_bug_label_plural(),
                                __('Overview', 'upstream')
-                               ); ?>"
+                           ); ?>"
                            style="position: absolute; color: #ECF0F1; right: 8px; margin-top: -2px"></i>
                     </div>
                 </div>

@@ -1,7 +1,7 @@
 <?php
 
 // Exit if accessed directly
-if (! defined('ABSPATH')) {
+if ( ! defined('ABSPATH')) {
     return;
 }
 
@@ -31,17 +31,17 @@ class UpStream_Debug
      */
     public static function write($message, $id = null)
     {
-        if (! static::$initialized) {
+        if ( ! static::$initialized) {
             static::init();
         }
 
         // Make sure we have a string to write.
-        if (! is_string($message)) {
+        if ( ! is_string($message)) {
             $message = print_r($message, true);
         }
 
         // Prepend the id, if set.
-        if (! empty($id)) {
+        if ( ! empty($id)) {
             $message = $id . ' --> ' . $message;
         }
 
@@ -58,17 +58,17 @@ class UpStream_Debug
      */
     public static function init()
     {
-        if (! static::is_enabled()) {
+        if ( ! static::is_enabled()) {
             return;
         }
 
         static::$path = str_replace('//', '/', WP_CONTENT_DIR . '/' . static::FILE);
 
         // Admin bar.
-        add_action('admin_bar_menu', [ 'UpStream_Debug', 'admin_bar_menu' ], 99);
+        add_action('admin_bar_menu', ['UpStream_Debug', 'admin_bar_menu'], 99);
 
         // Admin menu.
-        add_action('admin_menu', [ 'UpStream_Debug', 'admin_menu' ]);
+        add_action('admin_menu', ['UpStream_Debug', 'admin_menu']);
 
         static::$initialized = true;
     }
@@ -84,7 +84,7 @@ class UpStream_Debug
 
         return array_key_exists('debug', $option)
                && ! empty($option['debug'])
-               && (int) $option['debug'][0] === 1;
+               && (int)$option['debug'][0] === 1;
     }
 
     public static function admin_bar_menu()
@@ -109,7 +109,7 @@ class UpStream_Debug
             __('Debug Log'),
             'activate_plugins',
             'upstream_debug_log',
-            [ 'UpStream_Debug', 'view_log_page' ]
+            ['UpStream_Debug', 'view_log_page']
         );
     }
 
@@ -184,26 +184,26 @@ class UpStream_Debug
     protected static function handle_actions()
     {
         // Are we on the correct page?
-        if (! array_key_exists('page', $_GET) || $_GET['page'] !== static::PAGE_SLUG) {
+        if ( ! array_key_exists('page', $_GET) || $_GET['page'] !== static::PAGE_SLUG) {
             return;
         }
 
         // Do we have an action?
-        if (! array_key_exists('action', $_GET) || empty($_GET['action'])) {
+        if ( ! array_key_exists('action', $_GET) || empty($_GET['action'])) {
             return;
         }
 
         $action = preg_replace('/[^a-z0-9_\-]/i', '', $_GET['action']);
 
         // Do we have a nonce?
-        if (! array_key_exists('_wpnonce', $_GET) || empty($_GET['_wpnonce'])) {
+        if ( ! array_key_exists('_wpnonce', $_GET) || empty($_GET['_wpnonce'])) {
             static::$messages[] = __('Action nonce not found.', 'upstream');
 
             return;
         }
 
         // Check the nonce.
-        if (! wp_verify_nonce($_GET['_wpnonce'], $action)) {
+        if ( ! wp_verify_nonce($_GET['_wpnonce'], $action)) {
             static::$messages[] = __('Invalid action nonce.', 'upstream');
 
             return;

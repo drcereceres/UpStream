@@ -1,7 +1,7 @@
 <?php
 
 // Exit if accessed directly.
-if (! defined('ABSPATH')) {
+if ( ! defined('ABSPATH')) {
     exit;
 }
 
@@ -42,7 +42,7 @@ class UpStream_Style_Output
      */
     private function init_hooks()
     {
-        add_action('upstream_footer_text', [ $this, 'footer_text' ]);
+        add_action('upstream_footer_text', [$this, 'footer_text']);
 
         $this->registerDeprecatedAlertHooks();
     }
@@ -55,8 +55,8 @@ class UpStream_Style_Output
      */
     private function registerDeprecatedAlertHooks()
     {
-        add_action('upstream_before_single_message', [ $this, 'deprecatedBeforeSingleMessageAlert' ]);
-        add_action('upstream_after_single_message', [ $this, 'deprecatedAfterSingleMessageAlert' ]);
+        add_action('upstream_before_single_message', [$this, 'deprecatedBeforeSingleMessageAlert']);
+        add_action('upstream_after_single_message', [$this, 'deprecatedAfterSingleMessageAlert']);
     }
 
     /**
@@ -122,7 +122,7 @@ class UpStream_Style_Output
      */
     private function css($item)
     {
-        $css = isset($this->opt[ $item ]) && $this->opt[ $item ] != '' ? $this->opt[ $item ] : '';
+        $css = isset($this->opt[$item]) && $this->opt[$item] != '' ? $this->opt[$item] : '';
 
         return esc_html($css);
     }

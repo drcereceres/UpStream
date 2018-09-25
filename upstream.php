@@ -12,11 +12,11 @@
 use UpStream\Comments;
 
 // Exit if accessed directly.
-if (! defined('ABSPATH')) {
+if ( ! defined('ABSPATH')) {
     exit;
 }
 
-if (! class_exists('UpStream')) :
+if ( ! class_exists('UpStream')) :
 
     /**
      * Main UpStream Class.
@@ -119,19 +119,19 @@ if (! class_exists('UpStream')) :
          */
         private function init_hooks()
         {
-            add_action('init', [ $this, 'init' ], 0);
-            add_filter('plugin_row_meta', [ $this, 'plugin_row_meta' ], 10, 2);
-            add_filter('plugin_action_links_upstream/upstream.php', [ $this, 'handleActionLinks' ]);
-            add_filter('http_request_host_is_external', [ 'UpStream', 'allowExternalUpdateHost' ], 10, 3);
+            add_action('init', [$this, 'init'], 0);
+            add_filter('plugin_row_meta', [$this, 'plugin_row_meta'], 10, 2);
+            add_filter('plugin_action_links_upstream/upstream.php', [$this, 'handleActionLinks']);
+            add_filter('http_request_host_is_external', ['UpStream', 'allowExternalUpdateHost'], 10, 3);
             add_filter('quicktags_settings', 'upstream_tinymce_quicktags_settings');
             add_filter('tiny_mce_before_init', 'upstream_tinymce_before_init_setup_toolbar');
             add_filter('tiny_mce_before_init', 'upstream_tinymce_before_init');
             add_filter('teeny_mce_before_init', 'upstream_tinymce_before_init_setup_toolbar');
-            add_filter('comments_clauses', [ $this, 'filterCommentsOnDashboard' ], 10, 2);
-            add_filter('views_dashboard', [ 'UpStream_Admin', 'commentStatusLinks' ], 10, 1);
+            add_filter('comments_clauses', [$this, 'filterCommentsOnDashboard'], 10, 2);
+            add_filter('views_dashboard', ['UpStream_Admin', 'commentStatusLinks'], 10, 1);
 
             if (is_admin()) {
-                add_action('admin_init', [ $this->container['reviews'], 'init' ]);
+                add_action('admin_init', [$this->container['reviews'], 'init']);
             }
 
             // Render additional update info if needed.
@@ -139,7 +139,7 @@ if (! class_exists('UpStream')) :
             if ($pagenow === "plugins.php") {
                 add_action(
                     'in_plugin_update_message-' . UPSTREAM_PLUGIN_BASENAME,
-                    [ $this, 'renderAdditionalUpdateInfo' ],
+                    [$this, 'renderAdditionalUpdateInfo'],
                     20,
                     2
                 );
@@ -231,19 +231,19 @@ if (! class_exists('UpStream')) :
         public function limitClientUsersToolbarItems($wp_admin_bar)
         {
             $user      = wp_get_current_user();
-            $userRoles = (array) $user->roles;
+            $userRoles = (array)$user->roles;
 
             if (count(array_intersect(
-                $userRoles,
-                    [ 'administrator', 'upstream_manager' ]
-            )) === 0 && in_array(
-                        'upstream_client_user',
+                    $userRoles,
+                    ['administrator', 'upstream_manager']
+                )) === 0 && in_array(
+                    'upstream_client_user',
                     $userRoles
-                    )) {
-                $menuItems = [ 'about', 'comments', 'new-content' ];
+                )) {
+                $menuItems = ['about', 'comments', 'new-content'];
 
-                if (! is_admin()) {
-                    $menuItems = array_merge($menuItems, [ 'dashboard', 'edit' ]);
+                if ( ! is_admin()) {
+                    $menuItems = array_merge($menuItems, ['dashboard', 'edit']);
                 }
 
                 foreach ($menuItems as $menuItem) {
@@ -286,7 +286,7 @@ if (! class_exists('UpStream')) :
          */
         private function define($name, $value)
         {
-            if (! defined($name)) {
+            if ( ! defined($name)) {
                 define($name, $value);
             }
         }
@@ -304,7 +304,7 @@ if (! class_exists('UpStream')) :
                 case 'admin':
                     return is_admin();
                 case 'frontend':
-                    return (! is_admin() || defined('DOING_AJAX')) && ! defined('DOING_CRON');
+                    return ( ! is_admin() || defined('DOING_AJAX')) && ! defined('DOING_CRON');
             }
         }
 
@@ -336,7 +336,7 @@ if (! class_exists('UpStream')) :
             if ($this->is_request('admin')) {
                 global $pagenow;
 
-                $isMultisite = (bool) is_multisite();
+                $isMultisite = (bool)is_multisite();
                 $loadCmb2    = false;
 
                 if ($isMultisite) {
@@ -346,26 +346,26 @@ if (! class_exists('UpStream')) :
                         $_SERVER['PHP_SELF']
                     ) : '';
                 } else {
-                    $currentPage = (string) $pagenow;
+                    $currentPage = (string)$pagenow;
                 }
 
-                if (in_array($currentPage, [ 'post.php', 'post-new.php' ])) {
+                if (in_array($currentPage, ['post.php', 'post-new.php'])) {
                     $postType = isset($_REQUEST['post_type']) ? $_REQUEST['post_type'] : null;
                     if (empty($postType)) {
-                        $projectId = isset($_REQUEST['post']) ? (int) $_REQUEST['post'] : 0;
+                        $projectId = isset($_REQUEST['post']) ? (int)$_REQUEST['post'] : 0;
                         $postType  = get_post_type($projectId);
                     }
 
-                    if (! empty($postType)) {
+                    if ( ! empty($postType)) {
                         $postTypesUsingCmb2 = apply_filters(
                             'upstream:post_types_using_cmb2',
-                            [ 'project', 'client' ]
+                            ['project', 'client']
                         );
                         $loadCmb2           = in_array($postType, $postTypesUsingCmb2);
                     }
                 } elseif ($currentPage === 'admin.php'
-                           && isset($_REQUEST['page'])
-                           && preg_match('/^upstream_/i', $_REQUEST['page'])
+                          && isset($_REQUEST['page'])
+                          && preg_match('/^upstream_/i', $_REQUEST['page'])
                 ) {
                     $loadCmb2 = true;
                 }
@@ -425,22 +425,22 @@ if (! class_exists('UpStream')) :
             \UpStream\Migrations\Comments::run();
 
             $user      = wp_get_current_user();
-            $userRoles = (array) $user->roles;
+            $userRoles = (array)$user->roles;
             if (count(array_intersect(
-                $userRoles,
-                    [ 'administrator', 'upstream_manager' ]
-            )) === 0 && in_array(
-                        'upstream_client_user',
+                    $userRoles,
+                    ['administrator', 'upstream_manager']
+                )) === 0 && in_array(
+                    'upstream_client_user',
                     $userRoles
-                    )) {
-                add_filter('admin_init', [ $this, 'limitClientUsersAdminAccess' ]);
-                add_filter('admin_head', [ $this, 'limitClientUsersMenu' ]);
-                add_action('admin_bar_menu', [ $this, 'limitClientUsersToolbarItems' ], 999);
+                )) {
+                add_filter('admin_init', [$this, 'limitClientUsersAdminAccess']);
+                add_filter('admin_head', [$this, 'limitClientUsersMenu']);
+                add_action('admin_bar_menu', [$this, 'limitClientUsersToolbarItems'], 999);
             }
 
             // Starting from v1.12.5 UpStream Users role won't have 'edit_others_projects' capability by default.
-            $editOtherProjectsPermissionWereRemoved = (bool) get_option('upstream:role_upstream_users:drop_edit_others_projects');
-            if (! $editOtherProjectsPermissionWereRemoved) {
+            $editOtherProjectsPermissionWereRemoved = (bool)get_option('upstream:role_upstream_users:drop_edit_others_projects');
+            if ( ! $editOtherProjectsPermissionWereRemoved) {
                 $role = get_role('upstream_user');
                 $role->remove_cap('edit_others_projects');
                 unset($role);
@@ -490,19 +490,19 @@ if (! class_exists('UpStream')) :
             if ($file == UPSTREAM_PLUGIN_BASENAME) {
                 $row_meta = [
                     'docs'        => '<a href="' . esc_url('http://upstreamplugin.com/documentation') . '" title="' . esc_attr(__(
-                        'View Documentation',
+                            'View Documentation',
                             'upstream'
-                    )) . '">' . __('Docs', 'upstream') . '</a>',
+                        )) . '">' . __('Docs', 'upstream') . '</a>',
                     'quick-start' => '<a href="' . esc_url('http://upstreamplugin.com/quick-start-guide') . '" title="' . esc_attr(__(
-                        'View Quick Start Guide',
+                            'View Quick Start Guide',
                             'upstream'
-                    )) . '">' . __('Quick Start Guide', 'upstream') . '</a>',
+                        )) . '">' . __('Quick Start Guide', 'upstream') . '</a>',
                 ];
 
                 return array_merge($links, $row_meta);
             }
 
-            return (array) $links;
+            return (array)$links;
         }
 
         /**
@@ -600,8 +600,8 @@ if (! class_exists('UpStream')) :
             global $pagenow;
 
             if (is_admin()
-                 && $pagenow === "index.php"
-                 && ! isUserEitherManagerOrAdmin()
+                && $pagenow === "index.php"
+                && ! isUserEitherManagerOrAdmin()
             ) {
                 global $wpdb;
 
@@ -609,17 +609,17 @@ if (! class_exists('UpStream')) :
 
                 $user = wp_get_current_user();
                 if (in_array('upstream_user', $user->roles) || in_array('upstream_client_user', $user->roles)) {
-                    $projects = (array) upstream_get_users_projects($user);
+                    $projects = (array)upstream_get_users_projects($user);
                     if (count($projects) === 0) {
                         $queryArgs['where'] = "(post.ID = -1)";
                     } else {
                         $queryArgs['where'] = "(post.post_type = 'project' AND post.ID IN (" . implode(
-                            ', ',
+                                ', ',
                                 array_keys($projects)
-                        ) . "))";
+                            ) . "))";
 
                         $userCanModerateComments = user_can($user, 'moderate_comments');
-                        if (! $userCanModerateComments) {
+                        if ( ! $userCanModerateComments) {
                             $queryArgs['where'] .= " AND ( comment_approved = '1' )";
                         } else {
                             $queryArgs['where'] .= " AND ( comment_approved = '1' OR comment_approved = '0' )";

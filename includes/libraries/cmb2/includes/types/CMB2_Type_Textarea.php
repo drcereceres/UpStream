@@ -1,8 +1,9 @@
 <?php
+
 /**
  * CMB textarea field type
  *
- * @since  2.2.2
+ * @since     2.2.2
  *
  * @category  WordPress_Plugin
  * @package   CMB2
@@ -17,13 +18,15 @@ class CMB2_Type_Textarea extends CMB2_Type_Base
      * Handles outputting an 'textarea' element
      *
      * @since  1.1.0
+     *
      * @param  array $args Override arguments
+     *
      * @return string       Form textarea element
      */
-    public function render($args = array())
+    public function render($args = [])
     {
         $args = empty($args) ? $this->args : $args;
-        $a = $this->parse_args('textarea', array(
+        $a    = $this->parse_args('textarea', [
             'class' => 'cmb2_textarea',
             'name'  => $this->_name(),
             'id'    => $this->_id(),
@@ -31,10 +34,10 @@ class CMB2_Type_Textarea extends CMB2_Type_Base
             'rows'  => 10,
             'value' => $this->field->escaped_value('esc_textarea'),
             'desc'  => $this->_desc(true),
-        ), $args);
+        ], $args);
 
         return $this->rendered(
-            sprintf('<textarea%s>%s</textarea>%s', $this->concat_attrs($a, array( 'desc', 'value' )), $a['value'], $a['desc'])
+            sprintf('<textarea%s>%s</textarea>%s', $this->concat_attrs($a, ['desc', 'value']), $a['value'], $a['desc'])
         );
     }
 }

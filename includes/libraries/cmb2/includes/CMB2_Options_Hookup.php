@@ -1,9 +1,10 @@
 <?php
+
 /**
  * Handles hooking CMB2 forms/metaboxes into the post/attachement/user screens
  * and handles hooking in and saving those fields.
  *
- * @since  2.0.0
+ * @since     2.0.0
  *
  * @category  WordPress_Plugin
  * @package   CMB2
@@ -34,11 +35,12 @@ class CMB2_Options_Hookup extends CMB2_hookup
      * Constructor
      *
      * @since 2.0.0
+     *
      * @param CMB2 $cmb The CMB2 object to hookup
      */
     public function __construct(CMB2 $cmb, $option_key)
     {
-        $this->cmb = $cmb;
+        $this->cmb        = $cmb;
         $this->option_key = $option_key;
     }
 
@@ -48,7 +50,7 @@ class CMB2_Options_Hookup extends CMB2_hookup
             return;
         }
 
-        if (! $this->cmb->prop('autoload', true)) {
+        if ( ! $this->cmb->prop('autoload', true)) {
             // Disable option autoload if requested.
             add_filter("cmb2_should_autoload_{$this->option_key}", '__return_false');
         }
@@ -57,20 +59,20 @@ class CMB2_Options_Hookup extends CMB2_hookup
         register_setting('cmb2', $this->option_key);
 
         // Handle saving the data.
-        add_action('admin_post_' . $this->option_key, array( $this, 'save_options' ));
+        add_action('admin_post_' . $this->option_key, [$this, 'save_options']);
 
         // Optionally network_admin_menu.
         $hook = $this->cmb->prop('admin_menu_hook');
 
         // Hook in to add our menu.
-        add_action($hook, array( $this, 'options_page_menu_hooks' ));
+        add_action($hook, [$this, 'options_page_menu_hooks']);
 
         // If in the network admin, need to use get/update_site_option.
         if ('network_admin_menu' === $hook) {
             // Override CMB's getter.
-            add_filter("cmb2_override_option_get_{$this->option_key}", array( $this, 'network_get_override' ), 10, 2);
+            add_filter("cmb2_override_option_get_{$this->option_key}", [$this, 'network_get_override'], 10, 2);
             // Override CMB's setter.
-            add_filter("cmb2_override_option_save_{$this->option_key}", array( $this, 'network_update_override' ), 10, 2);
+            add_filter("cmb2_override_option_save_{$this->option_key}", [$this, 'network_update_override'], 10, 2);
         }
     }
 
@@ -87,7 +89,7 @@ class CMB2_Options_Hookup extends CMB2_hookup
         $title       = $this->cmb->prop('title');
         $menu_title  = $this->cmb->prop('menu_title', $title);
         $capability  = $this->cmb->prop('capability');
-        $callback    = array( $this, 'options_page_output' );
+        $callback    = [$this, 'options_page_output'];
 
         if ($parent_slug) {
             $page_hook = add_submenu_page(
@@ -112,7 +114,7 @@ class CMB2_Options_Hookup extends CMB2_hookup
 
         if ($this->cmb->prop('cmb_styles')) {
             // Include CMB CSS in the head to avoid FOUC
-            add_action("admin_print_styles-{$page_hook}", array( 'CMB2_hookup', 'enqueue_cmb_css' ));
+            add_action("admin_print_styles-{$page_hook}", ['CMB2_hookup', 'enqueue_cmb_css']);
         }
 
         $this->maybe_register_message();
@@ -149,21 +151,21 @@ class CMB2_Options_Hookup extends CMB2_hookup
              * Unless there are other reasons for notifications, the callback should only
              * `add_settings_error()` if `$args['should_notify']` is truthy.
              *
-             * @param CMB2  $cmb The CMB2 object.
-             * @param array $args {
-             *     An array of message arguments
+             * @param CMB2  $cmb             The CMB2 object.
+             * @param array $args            {
+             *                               An array of message arguments
              *
-             *     @type bool   $is_options_page Whether current page is this options page.
-             *     @type bool   $should_notify   Whether options were saved and we should be notified.
-             *     @type bool   $is_updated      Whether options were updated with save (or stayed the same).
-             *     @type string $setting         For add_settings_error(), Slug title of the setting to which
+             * @type bool   $is_options_page Whether current page is this options page.
+             * @type bool   $should_notify   Whether options were saved and we should be notified.
+             * @type bool   $is_updated      Whether options were updated with save (or stayed the same).
+             * @type string $setting         For add_settings_error(), Slug title of the setting to which
              *                                   this error applies.
-             *     @type string $code            For add_settings_error(), Slug-name to identify the error.
+             * @type string $code            For add_settings_error(), Slug-name to identify the error.
              *                                   Used as part of 'id' attribute in HTML output.
-             *     @type string $message         For add_settings_error(), The formatted message text to display
+             * @type string $message         For add_settings_error(), The formatted message text to display
              *                                   to the user (will be shown inside styled `<div>` and `<p>` tags).
              *                                   Will be 'Settings updated.' if $is_updated is true, else 'Nothing to update.'
-             *     @type string $type            For add_settings_error(), Message type, controls HTML class.
+             * @type string $type            For add_settings_error(), Message type, controls HTML class.
              *                                   Accepts 'error', 'updated', '', 'notice-warning', etc.
              *                                   Will be 'updated' if $is_updated is true, else 'notice-warning'.
              * }
@@ -191,24 +193,26 @@ class CMB2_Options_Hookup extends CMB2_hookup
         }
 
         $tabs = $this->get_tab_group_tabs(); ?>
-		<div class="wrap cmb2-options-page option-<?php echo $this->option_key; ?>">
-			<?php if ($this->cmb->prop('title')) : ?>
-				<h2><?php echo wp_kses_post($this->cmb->prop('title')); ?></h2>
-			<?php endif; ?>
-			<?php if (! empty($tabs)) : ?>
-				<h2 class="nav-tab-wrapper">
-					<?php foreach ($tabs as $option_key => $tab_title) : ?>
-						<a class="nav-tab<?php if (self::is_page($option_key)) : ?> nav-tab-active<?php endif; ?>" href="<?php menu_page_url($option_key); ?>"><?php echo wp_kses_post($tab_title); ?></a>
-					<?php endforeach; ?>
-				</h2>
-			<?php endif; ?>
-			<form class="cmb-form" action="<?php echo esc_url(admin_url('admin-post.php')); ?>" method="POST" id="<?php echo $this->cmb->cmb_id; ?>" enctype="multipart/form-data" encoding="multipart/form-data">
-				<input type="hidden" name="action" value="<?php echo esc_attr($this->option_key); ?>">
-				<?php $this->options_page_metabox(); ?>
-				<?php submit_button(esc_attr($this->cmb->prop('save_button')), 'primary', 'submit-cmb'); ?>
-			</form>
-		</div>
-		<?php
+        <div class="wrap cmb2-options-page option-<?php echo $this->option_key; ?>">
+            <?php if ($this->cmb->prop('title')) : ?>
+                <h2><?php echo wp_kses_post($this->cmb->prop('title')); ?></h2>
+            <?php endif; ?>
+            <?php if ( ! empty($tabs)) : ?>
+                <h2 class="nav-tab-wrapper">
+                    <?php foreach ($tabs as $option_key => $tab_title) : ?>
+                        <a class="nav-tab<?php if (self::is_page($option_key)) : ?> nav-tab-active<?php endif; ?>"
+                           href="<?php menu_page_url($option_key); ?>"><?php echo wp_kses_post($tab_title); ?></a>
+                    <?php endforeach; ?>
+                </h2>
+            <?php endif; ?>
+            <form class="cmb-form" action="<?php echo esc_url(admin_url('admin-post.php')); ?>" method="POST"
+                  id="<?php echo $this->cmb->cmb_id; ?>" enctype="multipart/form-data" encoding="multipart/form-data">
+                <input type="hidden" name="action" value="<?php echo esc_attr($this->option_key); ?>">
+                <?php $this->options_page_metabox(); ?>
+                <?php submit_button(esc_attr($this->cmb->prop('save_button')), 'primary', 'submit-cmb'); ?>
+            </form>
+        </div>
+        <?php
     }
 
     /**
@@ -239,7 +243,7 @@ class CMB2_Options_Hookup extends CMB2_hookup
     public function get_tab_group_tabs()
     {
         $tab_group = $this->cmb->prop('tab_group');
-        $tabs      = array();
+        $tabs      = [];
 
         if ($tab_group) {
             $boxes = CMB2_Boxes::get_by('tab_group', $tab_group);
@@ -248,11 +252,11 @@ class CMB2_Options_Hookup extends CMB2_hookup
                 $option_key = $cmb->options_page_keys();
 
                 // Must have an option key, must be an options page box.
-                if (! isset($option_key[0]) || 'options-page' !== $cmb->mb_object_type()) {
+                if ( ! isset($option_key[0]) || 'options-page' !== $cmb->mb_object_type()) {
                     continue;
                 }
 
-                $tabs[ $option_key[0] ] = $cmb->prop('tab_title', $cmb->prop('title'));
+                $tabs[$option_key[0]] = $cmb->prop('tab_title', $cmb->prop('title'));
             }
         }
 
@@ -278,7 +282,7 @@ class CMB2_Options_Hookup extends CMB2_hookup
     public function save_options()
     {
         $url = wp_get_referer();
-        if (! $url) {
+        if ( ! $url) {
             $url = admin_url();
         }
 
@@ -301,6 +305,7 @@ class CMB2_Options_Hookup extends CMB2_hookup
 
     /**
      * Replaces get_option with get_site_option
+     *
      * @since 2.2.5
      * @return mixed Value set for the network option.
      */
@@ -311,6 +316,7 @@ class CMB2_Options_Hookup extends CMB2_hookup
 
     /**
      * Replaces update_option with update_site_option
+     *
      * @since 2.2.5
      * @return bool Success/Failure
      */
@@ -337,6 +343,7 @@ class CMB2_Options_Hookup extends CMB2_hookup
      * Magic getter for our object.
      *
      * @param string $field
+     *
      * @throws Exception Throws an exception if the field is invalid.
      * @return mixed
      */

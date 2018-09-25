@@ -1,8 +1,9 @@
 <?php
+
 /**
  * CMB taxonomy_radio field type
  *
- * @since  2.2.2
+ * @since     2.2.2
  *
  * @category  WordPress_Plugin
  * @package   CMB2
@@ -17,9 +18,9 @@ class CMB2_Type_Taxonomy_Radio extends CMB2_Type_Taxonomy_Base
     public function render()
     {
         return $this->rendered(
-            $this->types->radio(array(
+            $this->types->radio([
                 'options' => $this->get_term_options(),
-            ), 'taxonomy_radio')
+            ], 'taxonomy_radio')
         );
     }
 
@@ -27,7 +28,7 @@ class CMB2_Type_Taxonomy_Radio extends CMB2_Type_Taxonomy_Base
     {
         $all_terms = $this->get_terms();
 
-        if (! $all_terms || is_wp_error($all_terms)) {
+        if ( ! $all_terms || is_wp_error($all_terms)) {
             return $this->no_terms_result($all_terms);
         }
 
@@ -35,7 +36,7 @@ class CMB2_Type_Taxonomy_Radio extends CMB2_Type_Taxonomy_Base
         $option_none = $this->field->args('show_option_none');
         $options     = '';
 
-        if (! empty($option_none)) {
+        if ( ! empty($option_none)) {
             $field_id = $this->_id();
 
             /**
@@ -58,10 +59,10 @@ class CMB2_Type_Taxonomy_Radio extends CMB2_Type_Taxonomy_Base
              */
             $option_none_value = apply_filters("cmb2_taxonomy_radio_{$field_id}_default_value", $option_none_value);
 
-            $options .= $this->list_term_input((object) array(
+            $options .= $this->list_term_input((object)[
                 'slug' => $option_none_value,
                 'name' => $option_none,
-            ), $saved_term);
+            ], $saved_term);
         }
 
         $options .= $this->loop_terms($all_terms, $saved_term);
@@ -81,10 +82,10 @@ class CMB2_Type_Taxonomy_Radio extends CMB2_Type_Taxonomy_Base
 
     protected function list_term_input($term, $saved_term)
     {
-        $args = array(
+        $args = [
             'value' => $term->slug,
             'label' => $term->name,
-        );
+        ];
 
         if ($saved_term == $term->slug) {
             $args['checked'] = 'checked';

@@ -1,7 +1,7 @@
 <?php
 
 // Exit if accessed directly
-if (! defined('ABSPATH')) {
+if ( ! defined('ABSPATH')) {
     exit;
 }
 
@@ -33,7 +33,7 @@ class UpStream_Autoloader
             spl_autoload_register("__autoload");
         }
 
-        spl_autoload_register([ $this, 'autoload' ]);
+        spl_autoload_register([$this, 'autoload']);
 
         $this->include_path = untrailingslashit(plugin_dir_path(UPSTREAM_PLUGIN_FILE)) . '/includes/';
     }
@@ -55,7 +55,7 @@ class UpStream_Autoloader
             $path = $this->include_path . 'admin/metaboxes/';
         }
 
-        if (empty($path) || (! $this->load_file($path . $file) && strpos($class, 'upstream_') === 0)) {
+        if (empty($path) || ( ! $this->load_file($path . $file) && strpos($class, 'upstream_') === 0)) {
             $this->load_file($this->include_path . $file);
         }
     }

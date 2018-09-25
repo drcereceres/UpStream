@@ -1,11 +1,11 @@
 <?php
 
 // Exit if accessed directly
-if (! defined('ABSPATH')) {
+if ( ! defined('ABSPATH')) {
     exit;
 }
 
-if (! class_exists('UpStream_Admin_Options')) :
+if ( ! class_exists('UpStream_Admin_Options')) :
 
     /**
      * CMB2 Theme Options
@@ -91,11 +91,11 @@ if (! class_exists('UpStream_Admin_Options')) :
          */
         public function hooks()
         {
-            add_action('admin_init', [ $this, 'init' ]);
-            add_action('admin_menu', [ $this, 'add_options_pages' ]);
+            add_action('admin_init', [$this, 'init']);
+            add_action('admin_menu', [$this, 'add_options_pages']);
 
-            add_filter('cmb2_set_options', [ $this, 'filter_cmb2_set_options' ], 10, 2);
-            add_filter('allex_upgrade_show_sidebar_ad', [ $this, 'filter_allex_upgrade_show_sidebar_ad' ], 20, 3);
+            add_filter('cmb2_set_options', [$this, 'filter_cmb2_set_options'], 10, 2);
+            add_filter('allex_upgrade_show_sidebar_ad', [$this, 'filter_allex_upgrade_show_sidebar_ad'], 20, 3);
         }
 
         /**
@@ -122,7 +122,7 @@ if (! class_exists('UpStream_Admin_Options')) :
                         $this->menu_title,
                         'manage_upstream',
                         $option_tab['id'],
-                        [ $this, 'admin_page_display' ],
+                        [$this, 'admin_page_display'],
                         'dashicons-arrow-up-alt'
                     ); //Link admin menu to first tab
 
@@ -132,7 +132,7 @@ if (! class_exists('UpStream_Admin_Options')) :
                         $option_tab['menu_title'],
                         'manage_upstream',
                         $option_tab['id'],
-                        [ $this, 'admin_page_display' ]
+                        [$this, 'admin_page_display']
                     ); //Duplicate menu link for first submenu page
                 } else {
                     $this->options_pages[] = add_submenu_page(
@@ -141,14 +141,14 @@ if (! class_exists('UpStream_Admin_Options')) :
                         $option_tab['menu_title'],
                         'manage_upstream',
                         $option_tab['id'],
-                        [ $this, 'admin_page_display' ]
+                        [$this, 'admin_page_display']
                     );
                 }
             }
 
             foreach ($this->options_pages as $page) {
                 // Include CMB CSS in the head to avoid FOUC
-                add_action("admin_print_styles-{$page}", [ 'CMB2_hookup', 'enqueue_cmb_css' ]);
+                add_action("admin_print_styles-{$page}", ['CMB2_hookup', 'enqueue_cmb_css']);
             }
         }
 
@@ -195,44 +195,44 @@ if (! class_exists('UpStream_Admin_Options')) :
                     <div class="<?php echo $show_sidebar ? 'col-md-8' : 'col-md-12'; ?>">
                         <!-- Options Page Nav Tabs -->
                         <h2 class="nav-tab-wrapper">
-							<?php foreach ($option_tabs as $option_tab) :
+                            <?php foreach ($option_tabs as $option_tab) :
                                 $tab_slug = $option_tab['id'];
-            $nav_class = 'nav-tab';
-            if ($tab_slug == $_GET['page']) {
-                $nav_class   .= ' nav-tab-active'; //add active class to current tab
+                                $nav_class = 'nav-tab';
+                                if ($tab_slug == $_GET['page']) {
+                                    $nav_class   .= ' nav-tab-active'; //add active class to current tab
                                     $tab_forms[] = $option_tab; //add current tab to forms to be rendered
-            } ?>
+                                } ?>
                                 <a class="<?php echo esc_attr($nav_class); ?>"
                                    href="<?php esc_url(menu_page_url($tab_slug)); ?>"><?php esc_attr_e(
-                                    $option_tab['title'],
+                                        $option_tab['title'],
                                         'upstream'
-                                ); ?></a>
-							<?php endforeach; ?>
+                                    ); ?></a>
+                            <?php endforeach; ?>
                         </h2>
                         <!-- End of Nav Tabs -->
 
-						<?php foreach ($tab_forms as $tab_form) : //render all tab forms (normaly just 1 form)?>
+                        <?php foreach ($tab_forms as $tab_form) : //render all tab forms (normaly just 1 form)?>
                             <div id="<?php esc_attr_e($tab_form['id']); ?>" class="cmb-form group">
                                 <div class="metabox-holder">
                                     <div class="postbox pad">
                                         <h3 class="title"><?php //esc_html_e($tab_form['title'], 'upstream');?></h3>
                                         <div class="desc"><?php echo $tab_form['desc'] ?></div>
-										<?php cmb2_metabox_form($tab_form, $tab_form['id']); ?>
+                                        <?php cmb2_metabox_form($tab_form, $tab_form['id']); ?>
                                     </div>
                                 </div>
                             </div>
-						<?php endforeach; ?>
+                        <?php endforeach; ?>
                     </div>
 
-					<?php if ($show_sidebar) : ?>
+                    <?php if ($show_sidebar) : ?>
                         <div class="col-md-3">
                             <?php do_action('allex_upgrade_sidebar_ad', 'upstream'); ?>
                         </div>
-					<?php endif; ?>
+                    <?php endif; ?>
                 </div>
             </div>
 
-			<?php
+            <?php
         }
 
 
@@ -247,7 +247,7 @@ if (! class_exists('UpStream_Admin_Options')) :
             //add_action( "cmb2_save_options-page_fields_{$this->metabox_id}", array( $this, 'settings_notices' ), 10, 2 );
 
             // Only need to initiate the array once per page-load
-            if (! empty($this->option_metabox)) {
+            if ( ! empty($this->option_metabox)) {
                 return $this->option_metabox;
             }
 
@@ -260,12 +260,12 @@ if (! class_exists('UpStream_Admin_Options')) :
             $milestone_options      = new UpStream_Options_Milestones();
             $this->option_metabox[] = $milestone_options->options();
 
-            if (! upstream_disable_tasks()) {
+            if ( ! upstream_disable_tasks()) {
                 $task_options           = new UpStream_Options_Tasks();
                 $this->option_metabox[] = $task_options->options();
             }
 
-            if (! upstream_disable_bugs()) {
+            if ( ! upstream_disable_bugs()) {
                 $bug_options            = new UpStream_Options_Bugs();
                 $this->option_metabox[] = $bug_options->options();
             }
@@ -290,7 +290,7 @@ if (! class_exists('UpStream_Admin_Options')) :
         {
 
             // Allowed fields to retrieve
-            if (in_array($field, [ 'key', 'fields', 'title', 'options_pages' ], true)) {
+            if (in_array($field, ['key', 'fields', 'title', 'options_pages'], true)) {
                 return $this->{$field};
             }
             if ('option_metabox' === $field) {
@@ -311,7 +311,7 @@ if (! class_exists('UpStream_Admin_Options')) :
             $roles = get_editable_roles();
 
             foreach ($roles as $role => $data) {
-                $list[ $role ] = $data['name'];
+                $list[$role] = $data['name'];
             }
 
             return $list;

@@ -8,11 +8,11 @@ namespace Cmb2Grid\Grid;
  * @author Pablo Pacheco <pablo.pacheco@origgami.com.br>
  */
 
-if (! class_exists('\Cmb2Grid\Grid\Row')) {
+if ( ! class_exists('\Cmb2Grid\Grid\Row')) {
     class Row
     {
         private $grid;
-        private $columns = array();
+        private $columns = [];
 
         public function __construct(Cmb2Grid $grid)
         {
@@ -56,12 +56,12 @@ if (! class_exists('\Cmb2Grid\Grid\Row')) {
             $field       = $firstColumn->getField();
             $this->openRow($field);
 
-            $lastColumn = $columns[ (count($columns) - 1) ];
+            $lastColumn = $columns[(count($columns) - 1)];
             $field      = $lastColumn->getField();
             $this->closeRow($field);
         }
 
-        public function addColumns(array $fields = array())
+        public function addColumns(array $fields = [])
         {
             foreach ($fields as $key => $field) {
                 $this->addColumn($field);
@@ -77,7 +77,7 @@ if (! class_exists('\Cmb2Grid\Grid\Row')) {
             $columnWidth  = round(12 / $columnsCount);
             /*@var $column Column*/
             foreach ($columns as $key => $column) {
-                if (! $column->getColumnClass()) {
+                if ( ! $column->getColumnClass()) {
                     $column->setBootstrapColumnClass($columnWidth);
                 } else {
                     $column->setColumnClassCmb2();
@@ -91,6 +91,7 @@ if (! class_exists('\Cmb2Grid\Grid\Row')) {
             $columns   = $this->getColumns();
             $columns[] = $column;
             $this->setColumns($columns);
+
             return $column;
         }
 

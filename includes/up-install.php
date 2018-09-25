@@ -1,7 +1,7 @@
 <?php
 
 // Exit if accessed directly
-if (! defined('ABSPATH')) {
+if ( ! defined('ABSPATH')) {
     exit;
 }
 
@@ -158,7 +158,7 @@ function upstream_add_default_options()
 
     // general options
     $general = get_option('upstream_general');
-    if (! $general || empty($general)) {
+    if ( ! $general || empty($general)) {
         $general['project']['single']   = 'Project';
         $general['project']['plural']   = 'Projects';
         $general['client']['single']    = 'Client';
@@ -182,16 +182,16 @@ function upstream_add_default_options()
     $generateRandomId = function () use (&$cachedIds) {
         do {
             $randomId = upstreamGenerateRandomString(5, 'abcdefghijklmnopqrstuvwxyz0123456789');
-        } while (isset($cachedIds[ $randomId ])); // Isset is faster than in_array in this case.
+        } while (isset($cachedIds[$randomId])); // Isset is faster than in_array in this case.
 
-        $cachedIds[ $randomId ] = null;
+        $cachedIds[$randomId] = null;
 
         return $randomId;
     };
 
     // project options
     $projects = get_option('upstream_projects');
-    if (! $projects || empty($projects)) {
+    if ( ! $projects || empty($projects)) {
         $projects['statuses'][0]['name']  = 'In Progress';
         $projects['statuses'][0]['color'] = '#5cbfd1';
         $projects['statuses'][0]['type']  = 'open';
@@ -212,7 +212,7 @@ function upstream_add_default_options()
 
     // milestone options
     $milestones = get_option('upstream_milestones');
-    if (! $milestones || empty($milestones)) {
+    if ( ! $milestones || empty($milestones)) {
         $milestones['milestones'][0]['title'] = 'Wireframe';
         $milestones['milestones'][0]['color'] = '#3ca9c4';
         $milestones['milestones'][0]['id']    = $generateRandomId();
@@ -238,7 +238,7 @@ function upstream_add_default_options()
 
     // task options
     $tasks = get_option('upstream_tasks');
-    if (! $tasks || empty($tasks)) {
+    if ( ! $tasks || empty($tasks)) {
         $tasks['statuses'][0]['name']  = 'In Progress';
         $tasks['statuses'][0]['color'] = '#5cbfd1';
         $tasks['statuses'][0]['type']  = 'open';
@@ -264,7 +264,7 @@ function upstream_add_default_options()
 
     // bug options
     $bugs = get_option('upstream_bugs');
-    if (! $bugs || empty($bugs)) {
+    if ( ! $bugs || empty($bugs)) {
         $bugs['statuses'][0]['name']  = 'In Progress';
         $bugs['statuses'][0]['color'] = '#5cbfd1';
         $bugs['statuses'][0]['type']  = 'open';
@@ -339,7 +339,7 @@ add_action('wpmu_new_blog', 'upstream_new_blog_created', 10, 6);
  */
 function upstream_after_install()
 {
-    if (! is_admin()) {
+    if ( ! is_admin()) {
         return;
     }
 
@@ -351,7 +351,7 @@ function upstream_after_install()
         //upstream_add_default_project();
         delete_transient('_upstream_activation_redirect');
 
-        if (! isset($_GET['activate-multi'])) {
+        if ( ! isset($_GET['activate-multi'])) {
             set_transient('_upstream_redirected', true, 360);
             wp_redirect(admin_url('post-new.php?post_type=project'));
             exit;
@@ -373,17 +373,17 @@ function upstream_install_success_notice()
         $class   = 'notice notice-info is-dismissible';
         $message = '<strong>' . __('Success! UpStream is up and running.', 'upstream') . '</strong><br>';
         $message .= __(
-            'Step 1. Please go through each settings tab below and configure the options.',
-                'upstream'
-        ) . '<br>';
+                        'Step 1. Please go through each settings tab below and configure the options.',
+                        'upstream'
+                    ) . '<br>';
         $message .= __(
-            'Step 2. Add a new Client by navigating to <strong>Projects > New Client</strong>',
-                'upstream'
-        ) . '<br>';
+                        'Step 2. Add a new Client by navigating to <strong>Projects > New Client</strong>',
+                        'upstream'
+                    ) . '<br>';
         $message .= __(
-            'Step 3. Add your first Project by navigating to <strong>Projects > New Project</strong>',
-                'upstream'
-        ) . '<br>';
+                        'Step 3. Add your first Project by navigating to <strong>Projects > New Project</strong>',
+                        'upstream'
+                    ) . '<br>';
 
         printf('<div class="%1$s"><p>%2$s</p></div>', $class, $message);
     }

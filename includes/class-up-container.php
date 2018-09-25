@@ -32,7 +32,8 @@ class Container extends \Pimple\Container
             };
 
             $instance['framework'] = function ($c) {
-                return new Core($c['PLUGIN_BASENAME'], $c['EDD_API_URL'], $c['PLUGIN_AUTHOR'], $c['SUBSCRIPTION_AD_URL']);
+                return new Core($c['PLUGIN_BASENAME'], $c['EDD_API_URL'], $c['PLUGIN_AUTHOR'],
+                    $c['SUBSCRIPTION_AD_URL']);
             };
 
             if (is_admin()) {

@@ -1,7 +1,7 @@
 <?php
 
 // Exit if accessed directly
-if (! defined('ABSPATH')) {
+if ( ! defined('ABSPATH')) {
     exit;
 }
 
@@ -12,29 +12,29 @@ if (! defined('ABSPATH')) {
 function upstream_post_id()
 {
     $post_id = 0;
-    if (! $post_id) {
+    if ( ! $post_id) {
         $post_id = get_the_ID();
     }
-    if (! $post_id) {
-        $post_id = isset($_GET['post']) ? (int) $_GET['post'] : 0;
+    if ( ! $post_id) {
+        $post_id = isset($_GET['post']) ? (int)$_GET['post'] : 0;
     }
-    if (! $post_id) {
-        $post_id = isset($_POST['post']) ? (int) $_POST['post'] : 0;
+    if ( ! $post_id) {
+        $post_id = isset($_POST['post']) ? (int)$_POST['post'] : 0;
     }
-    if (! $post_id) {
-        $post_id = isset($_POST['post_ID']) ? (int) $_POST['post_ID'] : 0;
+    if ( ! $post_id) {
+        $post_id = isset($_POST['post_ID']) ? (int)$_POST['post_ID'] : 0;
     }
-    if (! $post_id) {
-        $post_id = isset($_POST['post_id']) ? (int) $_POST['post_id'] : 0;
+    if ( ! $post_id) {
+        $post_id = isset($_POST['post_id']) ? (int)$_POST['post_id'] : 0;
     }
-    if (! $post_id) {
-        $post_id = isset($_POST['post']) ? (int) $_POST['post'] : 0;
+    if ( ! $post_id) {
+        $post_id = isset($_POST['post']) ? (int)$_POST['post'] : 0;
     }
-    if (! $post_id) {
+    if ( ! $post_id) {
         global $wp_query;
         $post_id = $wp_query->get_queried_object_id();
     }
-    if (! $post_id) {
+    if ( ! $post_id) {
         if (isset($_POST['formdata'])) {
             parse_str($_POST['formdata'], $posted);
             $post_id = $posted['post_id'];
@@ -49,8 +49,8 @@ function upstream_post_id()
 function upstream_logout_url()
 {
     if (
-        (! empty($_SESSION) && isset($_SESSION['upstream']) && isset($_SESSION['upstream']['user_id'])) ||
-        (! is_user_logged_in())
+        ( ! empty($_SESSION) && isset($_SESSION['upstream']) && isset($_SESSION['upstream']['user_id'])) ||
+        ( ! is_user_logged_in())
     ) {
         return '?action=logout';
     } else {
@@ -66,7 +66,7 @@ function upstream_logout_url()
 function upstream_disable_bugs()
 {
     $options      = get_option('upstream_general');
-    $disable_bugs = isset($options['disable_bugs']) ? $options['disable_bugs'] : [ 'no' ];
+    $disable_bugs = isset($options['disable_bugs']) ? $options['disable_bugs'] : ['no'];
     if ($disable_bugs[0] == 'yes') {
         return true;
     }
@@ -151,11 +151,11 @@ function upstream_get_users_client_id($user_id)
 // basically a wrapper for upstream_user_data()
 function upstream_current_user($item = null)
 {
-    if (! $item) {
+    if ( ! $item) {
         return;
     }
     $user_data = upstream_user_data(upstream_current_user_id());
-    $return    = isset($user_data[ $item ]) ? $user_data[ $item ] : '';
+    $return    = isset($user_data[$item]) ? $user_data[$item] : '';
 
     return $return;
 }
@@ -165,11 +165,11 @@ function upstream_current_user($item = null)
 // basically a wrapper for upstream_user_data()
 function upstream_user_item($id = 0, $item = null)
 {
-    if (! $item || ! $id) {
+    if ( ! $item || ! $id) {
         return;
     }
     $user_data = upstream_user_data($id);
-    $return    = isset($user_data[ $item ]) ? $user_data[ $item ] : '';
+    $return    = isset($user_data[$item]) ? $user_data[$item] : '';
 
     return $return;
 }
@@ -177,7 +177,7 @@ function upstream_user_item($id = 0, $item = null)
 // get the user avatar with full name in tooltips
 function upstream_user_avatar($user_id, $displayTooltip = true)
 {
-    if (! $user_id) {
+    if ( ! $user_id) {
         return;
     }
     // get user data & ignore current user.
@@ -191,7 +191,7 @@ function upstream_user_avatar($user_id, $displayTooltip = true)
         '
         <img class="avatar" src="%s" %s />',
         esc_attr($url),
-        (bool) $displayTooltip ? sprintf(
+        (bool)$displayTooltip ? sprintf(
             'title="%s" data-toggle="tooltip" data-placement="top" data-original-title="%1$s"',
             $userDisplayName
         ) : ''
@@ -206,7 +206,7 @@ function upstream_user_data($data = 0, $ignore_current = false)
 {
 
     // if no data sent, find current user email
-    if (! $data && ! $ignore_current) {
+    if ( ! $data && ! $ignore_current) {
         $data = upstream_get_email_address();
     }
 
@@ -218,7 +218,7 @@ function upstream_user_data($data = 0, $ignore_current = false)
         $wp_user = wp_get_current_user();
     }
 
-    if (! function_exists('is_plugin_active')) {
+    if ( ! function_exists('is_plugin_active')) {
         include_once ABSPATH . 'wp-admin/includes/plugin.php';
     }
 
@@ -228,8 +228,8 @@ function upstream_user_data($data = 0, $ignore_current = false)
         $role = '';
 
         if (isset($wp_user->roles)
-             && is_array($wp_user->roles)
-             && count($wp_user->roles) > 0
+            && is_array($wp_user->roles)
+            && count($wp_user->roles) > 0
         ) {
             $role = ucwords(array_values($wp_user->roles)[0]);
         }
@@ -268,7 +268,7 @@ function upstream_user_data($data = 0, $ignore_current = false)
                 global $wp_query;
 
                 // Make sure WP_Query is loaded.
-                if (! ($wp_query instanceof \WP_Query)) {
+                if ( ! ($wp_query instanceof \WP_Query)) {
                     $wp_query = new WP_Query();
                 }
 
@@ -295,7 +295,7 @@ function upstream_user_data($data = 0, $ignore_current = false)
             }
 
             if (empty($user_data['avatar'])) {
-                if (! function_exists('get_avatar_url')) {
+                if ( ! function_exists('get_avatar_url')) {
                     require_once ABSPATH . 'wp-includes/link-template.php';
                 }
 
@@ -314,7 +314,7 @@ function upstream_user_data($data = 0, $ignore_current = false)
             `meta_value` REGEXP '.*\"" . $type . "\";s:[0-9]+:\"" . $data . "\".*'"
         );
 
-        if (! $users) {
+        if ( ! $users) {
             return;
         }
 
@@ -323,7 +323,7 @@ function upstream_user_data($data = 0, $ignore_current = false)
         foreach ($metavalue as $key => $user) {
 
             // get the matching user
-            if (in_array($data, [ $user['id'], $user['email'] ])) {
+            if (in_array($data, [$user['id'], $user['email']])) {
                 $fname     = isset($user['fname']) ? trim($user['fname']) : '';
                 $lname     = isset($user['lname']) ? trim($user['lname']) : '';
                 $user_data = [
@@ -347,7 +347,7 @@ function upstream_user_data($data = 0, $ignore_current = false)
                         'html'    => false,
                     ]);
                 } else {
-                    if (! function_exists('get_avatar_url')) {
+                    if ( ! function_exists('get_avatar_url')) {
                         require_once ABSPATH . 'wp-includes/link-template.php';
                     }
 
@@ -397,14 +397,14 @@ function upstream_get_email_address($user = 0)
     }
 
     // this assumes we are a logged in wordpress user looking for our own info
-    if (! $user && upstream_user_type() == 'wp') {
+    if ( ! $user && upstream_user_type() == 'wp') {
         $wp_user = get_user_by('id', get_current_user_id());
         $email   = $wp_user->user_email;
     }
 
     // this assumes we are a logged in client user looking for our own info
-    if (! $user && upstream_user_type() == 'client') {
-        if (! isset($_SESSION['upstream'])) {
+    if ( ! $user && upstream_user_type() == 'client') {
+        if ( ! isset($_SESSION['upstream'])) {
             return null;
         }
 
@@ -430,7 +430,7 @@ function upstream_users_name($id = 0, $show_email = false)
 {
     $user = upstream_user_data($id, true);
 
-    if (! $user) {
+    if ( ! $user) {
         return;
     }
 
@@ -463,16 +463,16 @@ function upstream_get_users_projects($user)
 
     $data = [];
 
-    $rowset = (array) get_posts([
+    $rowset = (array)get_posts([
         'post_type'      => "project",
         'post_status'    => "publish",
-        'posts_per_page' => - 1,
+        'posts_per_page' => -1,
     ]);
 
     if (count($rowset) > 0) {
         foreach ($rowset as $project) {
             if (upstream_user_can_access_project($user, $project->ID)) {
-                $data[ $project->ID ] = $project;
+                $data[$project->ID] = $project;
             }
         }
     }
@@ -524,7 +524,7 @@ function upstream_format_date($timestamp, $dateFormat = null)
         $dateFormat = get_option('date_format', 'Y-m-d');
     }
 
-    if (! $timestamp) {
+    if ( ! $timestamp) {
         $date = null;
     } else {
         $datetime = new \DateTime();
@@ -565,7 +565,7 @@ function upstream_date_unixtime($timestamp)
  */
 function upstream_format_time($timestamp)
 {
-    if (! $timestamp) {
+    if ( ! $timestamp) {
         $time = null;
     } else {
         $time = date_i18n(get_option('time_format'), $timestamp, false);
@@ -581,18 +581,18 @@ function upstream_timestamp_from_date($value)
 {
 
     // if blank, return empty string
-    if (! $value || empty($value)) {
+    if ( ! $value || empty($value)) {
         return '';
     }
 
     $timestamp = null;
 
     // if already a timestamp, return the timestamp
-    if (is_numeric($value) && (int) $value == $value) {
+    if (is_numeric($value) && (int)$value == $value) {
         $timestamp = $value;
     }
 
-    if (! $timestamp) {
+    if ( ! $timestamp) {
         if (empty($value)) {
             return 0;
         }
@@ -744,10 +744,10 @@ function upstream_admin_support_label($option)
 function upstream_are_milestones_disabled($post_id = 0)
 {
     $areMilestonesDisabled = false;
-    $post_id               = (int) $post_id;
+    $post_id               = (int)$post_id;
 
     if ($post_id <= 0) {
-        $post_id = (int) upstream_post_id();
+        $post_id = (int)upstream_post_id();
     }
 
     if ($post_id > 0) {
@@ -771,10 +771,10 @@ function upstream_are_milestones_disabled($post_id = 0)
 function upstream_are_tasks_disabled($post_id = 0)
 {
     $areTasksDisabled = false;
-    $post_id          = (int) $post_id;
+    $post_id          = (int)$post_id;
 
     if ($post_id <= 0) {
-        $post_id = (int) upstream_post_id();
+        $post_id = (int)upstream_post_id();
     }
 
     if ($post_id > 0) {
@@ -798,10 +798,10 @@ function upstream_are_tasks_disabled($post_id = 0)
 function upstream_are_bugs_disabled($post_id = 0)
 {
     $areBugsDisabled = false;
-    $post_id         = (int) $post_id;
+    $post_id         = (int)$post_id;
 
     if ($post_id <= 0) {
-        $post_id = (int) upstream_post_id();
+        $post_id = (int)upstream_post_id();
     }
 
     if ($post_id > 0) {
@@ -825,10 +825,10 @@ function upstream_are_bugs_disabled($post_id = 0)
 function upstream_are_files_disabled($post_id = 0)
 {
     $areBugsDisabled = false;
-    $post_id         = (int) $post_id;
+    $post_id         = (int)$post_id;
 
     if ($post_id <= 0) {
-        $post_id = (int) upstream_post_id();
+        $post_id = (int)upstream_post_id();
     }
 
     if ($post_id > 0) {
@@ -893,7 +893,7 @@ function upstream_disable_tasks()
 {
     $options = get_option('upstream_general');
 
-    $disable_tasks = isset($options['disable_tasks']) ? (array) $options['disable_tasks'] : [ 'no' ];
+    $disable_tasks = isset($options['disable_tasks']) ? (array)$options['disable_tasks'] : ['no'];
 
     $areTasksDisabled = $disable_tasks[0] === 'yes';
 
@@ -904,7 +904,7 @@ function upstream_disable_milestones()
 {
     $options = get_option('upstream_general');
 
-    $disable_milestones = isset($options['disable_milestones']) ? (array) $options['disable_milestones'] : [ 'no' ];
+    $disable_milestones = isset($options['disable_milestones']) ? (array)$options['disable_milestones'] : ['no'];
 
     $areMilestonesDisabled = $disable_milestones[0] === 'yes';
 
@@ -915,7 +915,7 @@ function upstream_disable_files()
 {
     $options = get_option('upstream_general');
 
-    $disable_files = isset($options['disable_files']) ? (array) $options['disable_files'] : [ 'no' ];
+    $disable_files = isset($options['disable_files']) ? (array)$options['disable_files'] : ['no'];
 
     $areFilesDisabled = $disable_files[0] === 'yes';
 
@@ -942,7 +942,7 @@ function applyOEmbedFiltersToWysiwygEditorContent($content, $field_args, $field)
 {
     global $wp_embed;
 
-    $content = (string) $content;
+    $content = (string)$content;
 
     if (strlen($content) > 0) {
         $content = $wp_embed->autoembed($content);
@@ -968,7 +968,7 @@ function upstream_are_comments_disabled($post_id = 0)
 {
     // General settings
     $pluginOptions = get_option('upstream_general');
-    $disabled      = isset($pluginOptions['disable_project_comments']) && (bool) $pluginOptions['disable_project_comments'] === false;
+    $disabled      = isset($pluginOptions['disable_project_comments']) && (bool)$pluginOptions['disable_project_comments'] === false;
 
     if ($disabled) {
         return true;
@@ -976,10 +976,10 @@ function upstream_are_comments_disabled($post_id = 0)
 
     // Project's settings
     $areCommentsDisabled = false;
-    $post_id             = (int) $post_id;
+    $post_id             = (int)$post_id;
 
     if ($post_id <= 0) {
-        $post_id = (int) upstream_post_id();
+        $post_id = (int)upstream_post_id();
     }
 
     if ($post_id > 0) {
@@ -1001,7 +1001,7 @@ function is_project_categorization_disabled()
 {
     $options = get_option('upstream_general');
 
-    $isDisabled = isset($options['disable_categories']) ? (bool) $options['disable_categories'] : false;
+    $isDisabled = isset($options['disable_categories']) ? (bool)$options['disable_categories'] : false;
 
     return $isDisabled;
 }
@@ -1017,7 +1017,7 @@ function is_clients_disabled()
 {
     $options = get_option('upstream_general');
 
-    $isDisabled = isset($options['disable_clients']) ? (bool) $options['disable_clients'] : false;
+    $isDisabled = isset($options['disable_clients']) ? (bool)$options['disable_clients'] : false;
 
     return $isDisabled;
 }
@@ -1031,7 +1031,7 @@ function select_users_by_default()
 {
     $options = get_option('upstream_general');
 
-    $enabled = isset($options['pre_select_users']) ? (bool) $options['pre_select_users'] : false;
+    $enabled = isset($options['pre_select_users']) ? (bool)$options['pre_select_users'] : false;
 
     return $enabled;
 }
@@ -1047,12 +1047,12 @@ function select_users_by_default()
  */
 function getUserAvatarURL($user_id)
 {
-    $user_id = (int) $user_id;
+    $user_id = (int)$user_id;
     if ($user_id <= 0) {
         return false;
     }
 
-    if (! function_exists('is_plugin_active')) {
+    if ( ! function_exists('is_plugin_active')) {
         include_once ABSPATH . 'wp-admin/includes/plugin.php';
     }
 
@@ -1061,7 +1061,7 @@ function getUserAvatarURL($user_id)
     // Check if BuddyPress is running so we can borrow its functions.
     $isBuddyPressRunning = is_plugin_active('buddypress/bp-loader.php') && class_exists('BuddyPress') && function_exists('bp_core_fetch_avatar');
     if ($isBuddyPressRunning) {
-        $avatarURL = (string) bp_core_fetch_avatar([
+        $avatarURL = (string)bp_core_fetch_avatar([
             'item_id' => $user_id,
             'type'    => "thumb",
             'html'    => false,
@@ -1073,7 +1073,7 @@ function getUserAvatarURL($user_id)
         global $wp_query;
 
         // Make sure WP_Query is loaded.
-        if (! ($wp_query instanceof \WP_Query)) {
+        if ( ! ($wp_query instanceof \WP_Query)) {
             $wp_query = new WP_Query();
         }
 
@@ -1088,7 +1088,7 @@ function getUserAvatarURL($user_id)
             wpua_functions_init();
 
             // Retrieve the current user avatar URL.
-            $avatarURL = (string) get_wp_user_avatar_src($user_id);
+            $avatarURL = (string)get_wp_user_avatar_src($user_id);
         } catch (Exception $e) {
             // Do nothing.
         }
@@ -1096,15 +1096,15 @@ function getUserAvatarURL($user_id)
 
     // Check if Custom User Profile Photo is running so we can borrow its functions.
     if (empty($avatarURL) && is_plugin_active('custom-user-profile-photo/3five_cupp.php') && function_exists('get_cupp_meta')) {
-        $avatarURL = (string) get_cupp_meta($user_id);
+        $avatarURL = (string)get_cupp_meta($user_id);
     }
 
     if (empty($avatarURL)) {
-        if (! function_exists('get_avatar_url')) {
+        if ( ! function_exists('get_avatar_url')) {
             require_once ABSPATH . 'wp-includes/link-template.php';
         }
 
-        $avatarURL = (string) get_avatar_url($user_id, 96, get_option('avatar_default', 'mystery'));
+        $avatarURL = (string)get_avatar_url($user_id, 96, get_option('avatar_default', 'mystery'));
     }
 
     return $avatarURL;
@@ -1124,7 +1124,7 @@ function isUserEitherManagerOrAdmin($user = null)
     }
 
     if ($user->ID > 0 && isset($user->roles)) {
-        return count(array_intersect((array) $user->roles, [ 'administrator', 'upstream_manager' ])) > 0;
+        return count(array_intersect((array)$user->roles, ['administrator', 'upstream_manager'])) > 0;
     }
 
     return false;
@@ -1147,8 +1147,8 @@ function upstreamGenerateRandomString(
     $randomString       = "";
     $maxCharsPoolLength = mb_strlen($charsPool, '8bit') - 1;
 
-    for ($lengthIndex = 0; $lengthIndex < $length; ++ $lengthIndex) {
-        $randomString .= $charsPool[ random_int(0, $maxCharsPoolLength) ];
+    for ($lengthIndex = 0; $lengthIndex < $length; ++$lengthIndex) {
+        $randomString .= $charsPool[random_int(0, $maxCharsPoolLength)];
     }
 
     return $randomString;
@@ -1167,22 +1167,22 @@ function upstreamAreProjectCommentsEnabled()
     $options    = get_option('upstream_general');
     $optionName = 'disable_project_comments';
     // Check if the option exists.
-    if (isset($options[ $optionName ])) {
-        $allow = (bool) $options[ $optionName ];
+    if (isset($options[$optionName])) {
+        $allow = (bool)$options[$optionName];
     } else {
         $legacyOptionName = 'disable_discussion';
         // Check if user has legacy option set.
-        if (isset($options[ $legacyOptionName ])) {
-            if (is_array($options[ $legacyOptionName ]) || is_object($options[ $legacyOptionName ])) {
-                $options[ $legacyOptionName ] = json_decode(json_encode($options[ $legacyOptionName ]), true);
-                if (! empty($options[ $legacyOptionName ])) {
-                    $options[ $legacyOptionName ] = array_reverse($options[ $legacyOptionName ]);
-                    $legacyOptionValue            = array_pop($options[ $legacyOptionName ]);
+        if (isset($options[$legacyOptionName])) {
+            if (is_array($options[$legacyOptionName]) || is_object($options[$legacyOptionName])) {
+                $options[$legacyOptionName] = json_decode(json_encode($options[$legacyOptionName]), true);
+                if ( ! empty($options[$legacyOptionName])) {
+                    $options[$legacyOptionName] = array_reverse($options[$legacyOptionName]);
+                    $legacyOptionValue          = array_pop($options[$legacyOptionName]);
                 } else {
                     $legacyOptionValue = "";
                 }
             } else {
-                $legacyOptionValue = (string) $options[ $legacyOptionName ];
+                $legacyOptionValue = (string)$options[$legacyOptionName];
             }
 
             if (is_string($legacyOptionValue)) {
@@ -1191,10 +1191,10 @@ function upstreamAreProjectCommentsEnabled()
                 $allow = true;
             }
 
-            unset($options[ $legacyOptionName ]);
+            unset($options[$legacyOptionName]);
 
             // Migrate existent legacy option.
-            $options[ $optionName ] = (int) ! $allow;
+            $options[$optionName] = (int) ! $allow;
 
             // Update options.
             update_option('upstream_general', $options);
@@ -1220,7 +1220,7 @@ function upstreamAreCommentsEnabledOnMilestones()
 
     $optionName = 'disable_comments_on_milestones';
 
-    $allow = isset($options[ $optionName ]) ? (bool) $options[ $optionName ] : true;
+    $allow = isset($options[$optionName]) ? (bool)$options[$optionName] : true;
 
     return $allow;
 }
@@ -1238,7 +1238,7 @@ function upstreamAreCommentsEnabledOnTasks()
 
     $optionName = 'disable_comments_on_tasks';
 
-    $allow = isset($options[ $optionName ]) ? (bool) $options[ $optionName ] : true;
+    $allow = isset($options[$optionName]) ? (bool)$options[$optionName] : true;
 
     return $allow;
 }
@@ -1256,7 +1256,7 @@ function upstreamAreCommentsEnabledOnBugs()
 
     $optionName = 'disable_comments_on_bugs';
 
-    $allow = isset($options[ $optionName ]) ? (bool) $options[ $optionName ] : true;
+    $allow = isset($options[$optionName]) ? (bool)$options[$optionName] : true;
 
     return $allow;
 }
@@ -1274,7 +1274,7 @@ function upstreamAreCommentsEnabledOnFiles()
 
     $optionName = 'disable_comments_on_files';
 
-    $allow = isset($options[ $optionName ]) ? (bool) $options[ $optionName ] : true;
+    $allow = isset($options[$optionName]) ? (bool)$options[$optionName] : true;
 
     return $allow;
 }
@@ -1343,27 +1343,27 @@ function upstreamShouldRunCmb2()
     global $pagenow;
 
     if ($pagenow === 'post.php'
-         || $pagenow === 'post-new.php'
+        || $pagenow === 'post-new.php'
     ) {
-        $post_id  = isset($_GET['post']) ? (int) $_GET['post'] : 0;
+        $post_id  = isset($_GET['post']) ? (int)$_GET['post'] : 0;
         $postType = get_post_type($post_id);
         if (empty($postType)) {
             $postType = isset($_GET['post_type']) ? $_GET['post_type'] : '';
             if (empty($postType)
-                 && isset($_POST['post_type'])
+                && isset($_POST['post_type'])
             ) {
                 $postType = $_POST['post_type'];
             }
         }
 
-        $postTypesUsingCmb2 = apply_filters('upstream:post_types_using_cmb2', [ 'project', 'client' ]);
+        $postTypesUsingCmb2 = apply_filters('upstream:post_types_using_cmb2', ['project', 'client']);
 
         if (in_array($postType, $postTypesUsingCmb2)) {
             return true;
         }
     } elseif ($pagenow === 'admin.php'
-               && isset($_GET['page'])
-               && preg_match('/^upstream_/i', $_GET['page'])
+              && isset($_GET['page'])
+              && preg_match('/^upstream_/i', $_GET['page'])
     ) {
         return true;
     }
@@ -1376,11 +1376,11 @@ function upstreamGetUsersMap()
     $map = [];
 
     $rowset = get_users([
-        'fields' => [ 'ID', 'display_name' ],
+        'fields' => ['ID', 'display_name'],
     ]);
 
     foreach ($rowset as $user) {
-        $map[ (int) $user->ID ] = $user->display_name;
+        $map[(int)$user->ID] = $user->display_name;
     }
 
     return $map;
@@ -1423,11 +1423,11 @@ function upstreamGetDateFormatForJsDatepicker()
 
 function userCanReceiveCommentRepliesNotification($user_id = 0)
 {
-    if (! is_numeric($user_id)) {
+    if ( ! is_numeric($user_id)) {
         return false;
     }
 
-    if ((int) $user_id <= 0) {
+    if ((int)$user_id <= 0) {
         $user_id = get_current_user_id();
     }
 
@@ -1447,11 +1447,11 @@ function getMilestones()
 {
     $data = [];
 
-    $milestones = (array) get_option('upstream_milestones');
+    $milestones = (array)get_option('upstream_milestones');
     if (isset($milestones['milestones'])) {
         foreach ($milestones['milestones'] as $milestone) {
             if (isset($milestone['id'])) {
-                $data[ $milestone['id'] ] = $milestone;
+                $data[$milestone['id']] = $milestone;
             }
         }
     }
@@ -1473,7 +1473,7 @@ function getMilestonesTitles()
     $milestones = getMilestones();
     foreach ($milestones as $milestone) {
         if (isset($milestone['id'])) {
-            $data[ $milestone['id'] ] = $milestone['title'];
+            $data[$milestone['id']] = $milestone['title'];
         }
     }
 
@@ -1491,11 +1491,11 @@ function getTasksStatuses()
 {
     $data = [];
 
-    $tasks = (array) get_option('upstream_tasks');
+    $tasks = (array)get_option('upstream_tasks');
     if (isset($tasks['statuses'])) {
         foreach ($tasks['statuses'] as $task) {
             if (isset($task['id'])) {
-                $data[ $task['id'] ] = $task;
+                $data[$task['id']] = $task;
             }
         }
     }
@@ -1517,7 +1517,7 @@ function getTasksStatusesTitles()
     $tasks = getTasksStatuses();
     foreach ($tasks as $task) {
         if (isset($task['id'])) {
-            $data[ $task['id'] ] = $task['name'];
+            $data[$task['id']] = $task['name'];
         }
     }
 
@@ -1529,11 +1529,11 @@ function getBugsStatuses()
 {
     $data = [];
 
-    $bugs = (array) get_option('upstream_bugs');
+    $bugs = (array)get_option('upstream_bugs');
     if (isset($bugs['statuses'])) {
         foreach ($bugs['statuses'] as $bugStatus) {
             if (isset($bugStatus['id'])) {
-                $data[ $bugStatus['id'] ] = $bugStatus;
+                $data[$bugStatus['id']] = $bugStatus;
             }
         }
     }
@@ -1545,11 +1545,11 @@ function getBugsSeverities()
 {
     $data = [];
 
-    $bugs = (array) get_option('upstream_bugs');
+    $bugs = (array)get_option('upstream_bugs');
     if (isset($bugs['severities'])) {
         foreach ($bugs['severities'] as $bugSeverity) {
             if (isset($bugSeverity['id'])) {
-                $data[ $bugSeverity['id'] ] = $bugSeverity;
+                $data[$bugSeverity['id']] = $bugSeverity;
             }
         }
     }
@@ -1561,7 +1561,7 @@ function upstream_media_unrestricted_roles()
 {
     $option = get_option('upstream_general');
 
-    return isset($option['media_unrestricted_roles']) ? $option['media_unrestricted_roles'] : [ 'administrator' ];
+    return isset($option['media_unrestricted_roles']) ? $option['media_unrestricted_roles'] : ['administrator'];
 }
 
 
@@ -1580,7 +1580,7 @@ function upstream_media_unrestricted_roles()
  */
 function upstreamGetTimeZone()
 {
-    $tz = (string) get_option('timezone_string');
+    $tz = (string)get_option('timezone_string');
 
     try {
         $theTimeZone = new DateTimeZone($tz);

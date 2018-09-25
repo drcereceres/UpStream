@@ -2,12 +2,12 @@
 
 namespace Cmb2Grid;
 
-if (! defined('CMB2GRID_DIR')) {
+if ( ! defined('CMB2GRID_DIR')) {
     define('CMB2GRID_DIR', trailingslashit(dirname(__FILE__)));
 }
 
 
-if (! class_exists('\Cmb2Grid\Cmb2GridPlugin')) {
+if ( ! class_exists('\Cmb2Grid\Cmb2GridPlugin')) {
     require_once dirname(__FILE__) . '/DesignPatterns/Singleton.php';
 
     class Cmb2GridPlugin extends DesignPatterns\Singleton
@@ -16,14 +16,14 @@ if (! class_exists('\Cmb2Grid\Cmb2GridPlugin')) {
 
         protected function __construct()
         {
-            if (! is_admin()) {
+            if ( ! is_admin()) {
                 return;
             }
 
-            spl_autoload_register(array( $this, 'auto_load' ));
+            spl_autoload_register([$this, 'auto_load']);
 
-            add_action('admin_head', array( $this, 'wpHead' ));
-            add_action('admin_enqueue_scripts', array( $this, 'admin_enqueue_scripts' ));
+            add_action('admin_head', [$this, 'wpHead']);
+            add_action('admin_enqueue_scripts', [$this, 'admin_enqueue_scripts']);
             //$this->test();
         }
 
@@ -46,7 +46,7 @@ if (! class_exists('\Cmb2Grid\Cmb2GridPlugin')) {
             static $sep;
             static $length;
 
-            if (! isset($prefix, $base_dir, $sep)) {
+            if ( ! isset($prefix, $base_dir, $sep)) {
                 // Project-specific namespace prefix.
                 $prefix = __NAMESPACE__ . '\\';
 
@@ -85,24 +85,48 @@ if (! class_exists('\Cmb2Grid\Cmb2GridPlugin')) {
         public function admin_enqueue_scripts()
         {
             $suffix = ((defined('SCRIPT_DEBUG') && SCRIPT_DEBUG) ? '' : '.min');
-            wp_enqueue_style('cmb2_grid_bootstrap_light', $this->url('assets/css/bootstrap' . $suffix . '.css'), null, self::VERSION);
+            wp_enqueue_style('cmb2_grid_bootstrap_light', $this->url('assets/css/bootstrap' . $suffix . '.css'), null,
+                self::VERSION);
         }
 
         public function wpHead()
         {
             ?>
-			<style>
-				.cmb2GridRow .cmb-row{border:none !important;padding:0 !important}
-				.cmb2GridRow .cmb-th label:after{border:none !important}
-				.cmb2GridRow .cmb-th{width:100% !important}
-				.cmb2GridRow .cmb-td{width:100% !important}
-				.cmb2GridRow input[type="text"], .cmb2GridRow textarea, .cmb2GridRow select{width:100%}
+            <style>
+                .cmb2GridRow .cmb-row {
+                    border: none !important;
+                    padding: 0 !important
+                }
 
-				.cmb2GridRow .cmb-repeat-group-wrap{max-width:100% !important;}
-				.cmb2GridRow .cmb-group-title{margin:0 !important;}
-				.cmb2GridRow .cmb-repeat-group-wrap .cmb-row .cmbhandle, .cmb2GridRow .postbox-container .cmb-row .cmbhandle{right:0 !important}
-			</style>
-			<?php
+                .cmb2GridRow .cmb-th label:after {
+                    border: none !important
+                }
+
+                .cmb2GridRow .cmb-th {
+                    width: 100% !important
+                }
+
+                .cmb2GridRow .cmb-td {
+                    width: 100% !important
+                }
+
+                .cmb2GridRow input[type="text"], .cmb2GridRow textarea, .cmb2GridRow select {
+                    width: 100%
+                }
+
+                .cmb2GridRow .cmb-repeat-group-wrap {
+                    max-width: 100% !important;
+                }
+
+                .cmb2GridRow .cmb-group-title {
+                    margin: 0 !important;
+                }
+
+                .cmb2GridRow .cmb-repeat-group-wrap .cmb-row .cmbhandle, .cmb2GridRow .postbox-container .cmb-row .cmbhandle {
+                    right: 0 !important
+                }
+            </style>
+            <?php
         }
 
         // Based on CMB2_Utils url() method.
@@ -116,11 +140,11 @@ if (! class_exists('\Cmb2Grid\Cmb2GridPlugin')) {
                 // Windows
                 $content_dir = str_replace('/', DIRECTORY_SEPARATOR, WP_CONTENT_DIR);
                 $content_url = str_replace($content_dir, WP_CONTENT_URL, CMB2GRID_DIR);
-                $cmb2_url	 = str_replace(DIRECTORY_SEPARATOR, '/', $content_url);
+                $cmb2_url    = str_replace(DIRECTORY_SEPARATOR, '/', $content_url);
             } else {
                 $cmb2_url = str_replace(
-                    array( WP_CONTENT_DIR, WP_PLUGIN_DIR ),
-                    array( WP_CONTENT_URL, WP_PLUGIN_URL ),
+                    [WP_CONTENT_DIR, WP_PLUGIN_DIR],
+                    [WP_CONTENT_URL, WP_PLUGIN_URL],
                     CMB2GRID_DIR
                 );
             }
@@ -140,11 +164,11 @@ if (! class_exists('\Cmb2Grid\Cmb2GridPlugin')) {
 
 /* Instantiate the class on plugins_loaded. */
 // wp_installing() function was introduced in WP 4.4.
-if ((function_exists('wp_installing') && wp_installing() === false) || (! function_exists('wp_installing') && (! defined('WP_INSTALLING') || WP_INSTALLING === false))) {
+if ((function_exists('wp_installing') && wp_installing() === false) || ( ! function_exists('wp_installing') && ( ! defined('WP_INSTALLING') || WP_INSTALLING === false))) {
     add_action('plugins_loaded', '\\' . __NAMESPACE__ . '\init');
 }
 
-if (! function_exists('\Cmb2Grid\init')) {
+if ( ! function_exists('\Cmb2Grid\init')) {
     /**
      * Initialize the class only if CMB2 is detected.
      *
@@ -153,7 +177,7 @@ if (! function_exists('\Cmb2Grid\init')) {
     function init()
     {
         if (defined('CMB2_LOADED')) {
-            if (! defined('CMB2GRID_DIR')) {
+            if ( ! defined('CMB2GRID_DIR')) {
                 define('CMB2GRID_DIR', trailingslashit(dirname(__FILE__)));
             }
             Cmb2GridPlugin::getInstance();

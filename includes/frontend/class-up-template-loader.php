@@ -1,7 +1,7 @@
 <?php
 
 // Exit if accessed directly
-if (! defined('ABSPATH')) {
+if ( ! defined('ABSPATH')) {
     exit;
 }
 
@@ -16,7 +16,7 @@ class UpStream_Template_Loader
      */
     public function __construct()
     {
-        add_filter('template_include', [ $this, 'template_loader' ]);
+        add_filter('template_include', [$this, 'template_loader']);
     }
 
     /**
@@ -47,7 +47,7 @@ class UpStream_Template_Loader
             $user_id    = get_current_user_id();
             $project_id = upstream_post_id();
 
-            if (! upstream_user_can_access_project($user_id, $project_id)) {
+            if ( ! upstream_user_can_access_project($user_id, $project_id)) {
                 wp_redirect(get_post_type_archive_link('project'));
                 exit;
             }
@@ -74,7 +74,7 @@ class UpStream_Template_Loader
         /*
          * Login page if not logged in
          */
-        if (! upstream_is_user_logged_in()) {
+        if ( ! upstream_is_user_logged_in()) {
             $file                      = 'login.php';
             $GLOBALS['login_template'] = true;
         }

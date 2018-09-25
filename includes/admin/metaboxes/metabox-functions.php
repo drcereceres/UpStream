@@ -1,7 +1,7 @@
 <?php
 
 // Exit if accessed directly
-if (! defined('ABSPATH')) {
+if ( ! defined('ABSPATH')) {
     exit;
 }
 
@@ -111,9 +111,9 @@ function upstream_form_do_js_validation($post_id, $cmb)
 
                     $('#major-publishing-actions .notice').remove();
                     $('#major-publishing-actions').append($('<div class="notice notice-error"><?php _e(
-        'Missing some required fields',
+                        'Missing some required fields',
                         'upstream'
-    ) ?></div>').hide().fadeIn(500));
+                    ) ?></div>').hide().fadeIn(500));
 
                     $htmlbody.delay(500).animate({
                         scrollTop: ($first_error_row.offset().top - 100)
@@ -145,12 +145,12 @@ add_action('cmb2_after_form', 'upstream_form_do_js_validation', 10, 2);
  */
 function upstream_output_overview_counts($field_args, $field)
 {
-    $project_id         = $field->object_id ? (int) $field->object_id : upstream_post_id();
-    $user_id            = (int) get_current_user_id();
+    $project_id         = $field->object_id ? (int)$field->object_id : upstream_post_id();
+    $user_id            = (int)get_current_user_id();
     $itemTypeMetaPrefix = "_upstream_project_";
     $itemType           = str_replace($itemTypeMetaPrefix, "", $field_args['id']);
 
-    $isDisabled = (string) get_post_meta($project_id, $itemTypeMetaPrefix . 'disable_' . $itemType, true);
+    $isDisabled = (string)get_post_meta($project_id, $itemTypeMetaPrefix . 'disable_' . $itemType, true);
     if ($isDisabled === "on") {
         return;
     }
@@ -162,15 +162,15 @@ function upstream_output_overview_counts($field_args, $field)
     $rowset = ! empty($rowset) ? $rowset[0] : [];
 
     if ($itemType === "milestones") {
-        if (! empty($rowset)) {
+        if ( ! empty($rowset)) {
             foreach ($rowset as $row) {
-                if (isset($row['assigned_to']) && (int) $row['assigned_to'] === $user_id) {
-                    $countMine ++;
+                if (isset($row['assigned_to']) && (int)$row['assigned_to'] === $user_id) {
+                    $countMine++;
                 }
             }
         }
 
-        $countOpen = count((array) $rowset);
+        $countOpen = count((array)$rowset);
     } elseif (is_array($rowset) && count($rowset) > 0) {
         $options  = get_option('upstream_' . $itemType);
         $statuses = isset($options['statuses']) ? $options['statuses'] : [];
@@ -178,18 +178,18 @@ function upstream_output_overview_counts($field_args, $field)
         $statuses = wp_list_pluck($statuses, 'type', 'id');
 
         foreach ($rowset as $row) {
-            if (isset($row['assigned_to']) && (int) $row['assigned_to'] === $user_id) {
-                $countMine ++;
+            if (isset($row['assigned_to']) && (int)$row['assigned_to'] === $user_id) {
+                $countMine++;
             }
 
             if (
                 ! isset($row['status'])
                 || empty($row['status'])
                 || (
-                    isset($statuses[ $row['status'] ]) && $statuses[ $row['status'] ] === "open"
+                    isset($statuses[$row['status']]) && $statuses[$row['status']] === "open"
                 )
             ) {
-                $countOpen ++;
+                $countOpen++;
             }
         }
     } ?>
@@ -199,10 +199,10 @@ function upstream_output_overview_counts($field_args, $field)
         </h4>
         <h4>
             <span
-                class="count open<?php echo esc_attr($countMine > 0 ? ' mine' : ''); ?>"><?php echo (int) $countMine ?></span> <?php _e(
-        'Mine',
+                    class="count open<?php echo esc_attr($countMine > 0 ? ' mine' : ''); ?>"><?php echo (int)$countMine ?></span> <?php _e(
+                'Mine',
                 'upstream'
-    ); ?>
+            ); ?>
         </h4>
     </div>
     <?php
@@ -226,7 +226,7 @@ function upstream_activity_buttons($field_args, $field)
     $_20   = '';
     $_all  = '';
 
-    if (! isset($_GET['activity_items']) || (isset($_GET['activity_items']) && $_GET['activity_items'] == '10')) {
+    if ( ! isset($_GET['activity_items']) || (isset($_GET['activity_items']) && $_GET['activity_items'] == '10')) {
         $_10 = $class;
     }
     if (isset($_GET['activity_items']) && $_GET['activity_items'] == '20') {
@@ -238,17 +238,17 @@ function upstream_activity_buttons($field_args, $field)
 
     $edit_buttons = '<div class="button-wrap">';
     $edit_buttons .= '<a class="button button-small' . esc_attr($_10) . '" href="' . esc_url(add_query_arg(
-        'activity_items',
+            'activity_items',
             '10'
-    )) . '" >' . __('Last 10', 'upstream') . '</a> ';
+        )) . '" >' . __('Last 10', 'upstream') . '</a> ';
     $edit_buttons .= '<a class="button button-small' . esc_attr($_20) . '" href="' . esc_url(add_query_arg(
-        'activity_items',
+            'activity_items',
             '20'
-    )) . '" >' . __('Last 20', 'upstream') . '</a> ';
+        )) . '" >' . __('Last 20', 'upstream') . '</a> ';
     $edit_buttons .= '<a class="button button-small' . esc_attr($_all) . '" href="' . esc_url(add_query_arg(
-        'activity_items',
+            'activity_items',
             'all'
-    )) . '" >' . __('View All', 'upstream') . '</a> ';
+        )) . '" >' . __('View All', 'upstream') . '</a> ';
     $edit_buttons .= '</div>';
 
     return $edit_buttons;
@@ -283,7 +283,7 @@ function upstream_admin_get_options_milestones()
     $array      = [];
     if ($milestones) {
         foreach ($milestones as $milestone) {
-            $array[ $milestone['id'] ] = $milestone['title'];
+            $array[$milestone['id']] = $milestone['title'];
         }
     }
 
@@ -304,7 +304,7 @@ function upstream_admin_output_milestone_hidden_data($field_args, $field)
 
         // get the current saved milestones
         $saved = get_post_meta($field->object_id, '_upstream_project_milestones', true);
-        if (! $saved) {
+        if ( ! $saved) {
             $progress = '0';
         } else {
             $progress = wp_list_pluck($saved, 'progress', 'milestone');
@@ -314,8 +314,8 @@ function upstream_admin_output_milestone_hidden_data($field_args, $field)
             echo '<li>
                 <span class="title">' . esc_html($milestone['title']) . '</span>
                 <span class="color">' . esc_html($milestone['color']) . '</span>';
-            if (isset($progress[ $milestone['title'] ])) { // if we have progress
-                echo '<span class="m-progress">' . $progress[ $milestone['title'] ] . '</span>';
+            if (isset($progress[$milestone['title']])) { // if we have progress
+                echo '<span class="m-progress">' . $progress[$milestone['title']] . '</span>';
             }
             echo '</li>';
         }
@@ -330,14 +330,14 @@ function upstream_admin_output_milestone_hidden_data($field_args, $field)
 function upstream_admin_get_project_milestones($field)
 {
     $milestonesTitles  = getMilestonesTitles();
-    $projectMilestones = (array) get_post_meta((int) $field->object_id, '_upstream_project_milestones', true);
+    $projectMilestones = (array)get_post_meta((int)$field->object_id, '_upstream_project_milestones', true);
 
     $data = [];
 
     if (count($projectMilestones) > 0) {
         foreach ($projectMilestones as $milestone) {
             if (isset($milestone['milestone'])) {
-                $data[ $milestone['id'] ] = isset($milestonesTitles[ $milestone['milestone'] ]) ? $milestonesTitles[ $milestone['milestone'] ] : $milestone['milestone'];
+                $data[$milestone['id']] = isset($milestonesTitles[$milestone['milestone']]) ? $milestonesTitles[$milestone['milestone']] : $milestone['milestone'];
             }
         }
     }
@@ -361,7 +361,7 @@ function upstream_admin_get_task_statuses()
     $array    = [];
     if ($statuses) {
         foreach ($statuses as $status) {
-            $array[ $status['id'] ] = $status['name'];
+            $array[$status['id']] = $status['name'];
         }
     }
 
@@ -406,7 +406,7 @@ function upstream_admin_get_bug_statuses()
     $array    = [];
     if ($statuses) {
         foreach ($statuses as $status) {
-            $array[ $status['id'] ] = $status['name'];
+            $array[$status['id']] = $status['name'];
         }
     }
 
@@ -426,7 +426,7 @@ function upstream_admin_get_bug_severities()
     $array      = [];
     if ($severities) {
         foreach ($severities as $severity) {
-            $array[ $severity['id'] ] = $severity['name'];
+            $array[$severity['id']] = $severity['name'];
         }
     }
 
@@ -476,7 +476,7 @@ function upstreamRenderCommentsBox(
     $renderControls = true,
     $returnAsHtml = false
 ) {
-    $project_id = (int) $project_id;
+    $project_id = (int)$project_id;
     if ($project_id <= 0) {
         $project_id = upstream_post_id();
         if ($project_id <= 0) {
@@ -490,7 +490,7 @@ function upstreamRenderCommentsBox(
 
     $itemType = trim(strtolower($itemType));
     if (
-        ! in_array($itemType, [ 'project', 'milestone', 'task', 'bug', 'file' ])
+        ! in_array($itemType, ['project', 'milestone', 'task', 'bug', 'file'])
         || ($itemType !== "project" && empty($item_id))
     ) {
         return;
@@ -499,8 +499,8 @@ function upstreamRenderCommentsBox(
     $rowsetUsers = get_users();
     $users       = [];
     foreach ($rowsetUsers as $user) {
-        $users[ (int) $user->ID ] = (object) [
-            'id'     => (int) $user->ID,
+        $users[(int)$user->ID] = (object)[
+            'id'     => (int)$user->ID,
             'name'   => $user->display_name,
             'avatar' => getUserAvatarURL($user->ID),
         ];
@@ -512,11 +512,11 @@ function upstreamRenderCommentsBox(
     $userCanComment           = ! $userHasAdminCapabilities ? user_can($user, 'publish_project_discussion') : true;
     $userCanModerate          = ! $userHasAdminCapabilities ? user_can($user, 'moderate_comments') : true;
     $userCanDelete            = ! $userHasAdminCapabilities ? ($userCanModerate || user_can(
-        $user,
+            $user,
             'delete_project_discussion'
-    )) : true;
+        )) : true;
 
-    $commentsStatuses = [ 'approve' ];
+    $commentsStatuses = ['approve'];
     if ($userHasAdminCapabilities || $userCanModerate) {
         $commentsStatuses[] = 'hold';
     }
@@ -546,7 +546,7 @@ function upstreamRenderCommentsBox(
         ];
     }
 
-    $rowset = (array) get_comments($queryParams);
+    $rowset = (array)get_comments($queryParams);
 
     $commentsCache = [];
     if (count($rowset) > 0) {
@@ -556,16 +556,16 @@ function upstreamRenderCommentsBox(
         $currentTimestamp  = time();
 
         foreach ($rowset as $row) {
-            $author = $users[ (int) $row->user_id ];
+            $author = $users[(int)$row->user_id];
 
-            $date = DateTime::createFromFormat('Y-m-d H:i:s', $row->comment_date_gmt);
+            $date          = DateTime::createFromFormat('Y-m-d H:i:s', $row->comment_date_gmt);
             $dateTimestamp = $date->getTimestamp();
 
             $comment = json_decode(json_encode([
-                'id'             => (int) $row->comment_ID,
-                'parent_id'      => (int) $row->comment_parent,
+                'id'             => (int)$row->comment_ID,
+                'parent_id'      => (int)$row->comment_parent,
                 'content'        => $row->comment_content,
-                'state'          => (int) $row->comment_approved,
+                'state'          => (int)$row->comment_approved,
                 'replies'        => [],
                 'created_by'     => $author,
                 'created_at'     => [
@@ -588,15 +588,15 @@ function upstreamRenderCommentsBox(
                 $comment->currentUserCap->can_delete = true;
             }
 
-            $commentsCache[ $comment->id ] = $comment;
+            $commentsCache[$comment->id] = $comment;
         }
 
         foreach ($commentsCache as $comment) {
             if ($comment->parent_id > 0) {
-                if (isset($commentsCache[ $comment->parent_id ])) {
-                    $commentsCache[ $comment->parent_id ]->replies[] = $comment;
+                if (isset($commentsCache[$comment->parent_id])) {
+                    $commentsCache[$comment->parent_id]->replies[] = $comment;
                 } else {
-                    unset($commentsCache[ $comment->id ]);
+                    unset($commentsCache[$comment->id]);
                 }
             }
         }
@@ -609,7 +609,7 @@ function upstreamRenderCommentsBox(
     $commentsCacheCount = count($commentsCache);
 
     if ($commentsCacheCount === 0
-         && ! is_admin()
+        && ! is_admin()
     ) {
         printf('<p data-empty><i class="s-text-color-gray">%s</i></p>', __('none', 'upstream'));
     } ?>
@@ -646,24 +646,24 @@ function upstream_admin_display_message_item($comment, $comments = [], $renderCo
 {
     global $wp_embed;
 
-    $isApproved              = (int) $comment->state === 1;
-    $currentUserCapabilities = (object) [
-        'can_reply'    => isset($comment->currentUserCap->can_reply) ? (bool) $comment->currentUserCap->can_reply : false,
-        'can_moderate' => isset($comment->currentUserCap->can_moderate) ? (bool) $comment->currentUserCap->can_moderate : false,
-        'can_delete'   => isset($comment->currentUserCap->can_delete) ? (bool) $comment->currentUserCap->can_delete : false,
+    $isApproved              = (int)$comment->state === 1;
+    $currentUserCapabilities = (object)[
+        'can_reply'    => isset($comment->currentUserCap->can_reply) ? (bool)$comment->currentUserCap->can_reply : false,
+        'can_moderate' => isset($comment->currentUserCap->can_moderate) ? (bool)$comment->currentUserCap->can_moderate : false,
+        'can_delete'   => isset($comment->currentUserCap->can_delete) ? (bool)$comment->currentUserCap->can_delete : false,
     ]; ?>
     <div class="o-comment s-status-<?php echo $isApproved ? 'approved' : 'unapproved'; ?>"
          id="comment-<?php echo $comment->id; ?>" data-id="<?php echo $comment->id; ?>">
         <div class="o-comment__body">
             <div class="o-comment__body__left">
                 <img class="o-comment__user_photo" src="<?php echo $comment->created_by->avatar; ?>" width="30">
-                <?php if (! $isApproved && $currentUserCapabilities->can_moderate): ?>
+                <?php if ( ! $isApproved && $currentUserCapabilities->can_moderate): ?>
                     <div class="u-text-center">
                         <i class="fa fa-eye-slash u-color-gray"
                            title="<?php _e(
-        "This comment and its replies are not visible by regular users.",
+                               "This comment and its replies are not visible by regular users.",
                                'upstream'
-    ); ?>" style="margin-top: 2px;"></i>
+                           ); ?>" style="margin-top: 2px;"></i>
                     </div>
                 <?php endif; ?>
             </div>
@@ -677,7 +677,7 @@ function upstream_admin_display_message_item($comment, $comments = [], $renderCo
                     </div>
                 </div>
                 <div
-                    class="o-comment__content"><?php echo $wp_embed->autoembed(wpautop($comment->content)); ?></div>
+                        class="o-comment__content"><?php echo $wp_embed->autoembed(wpautop($comment->content)); ?></div>
                 <div class="o-comment__body__footer">
             <?php
             if ($renderControls) {
@@ -743,24 +743,24 @@ function upstream_display_message_item($comment, $comments = [], $renderControls
 {
     global $wp_embed;
 
-    $isApproved              = (int) $comment->state === 1;
-    $currentUserCapabilities = (object) [
-        'can_reply'    => isset($comment->currentUserCap->can_reply) ? (bool) $comment->currentUserCap->can_reply : false,
-        'can_moderate' => isset($comment->currentUserCap->can_moderate) ? (bool) $comment->currentUserCap->can_moderate : false,
-        'can_delete'   => isset($comment->currentUserCap->can_delete) ? (bool) $comment->currentUserCap->can_delete : false,
+    $isApproved              = (int)$comment->state === 1;
+    $currentUserCapabilities = (object)[
+        'can_reply'    => isset($comment->currentUserCap->can_reply) ? (bool)$comment->currentUserCap->can_reply : false,
+        'can_moderate' => isset($comment->currentUserCap->can_moderate) ? (bool)$comment->currentUserCap->can_moderate : false,
+        'can_delete'   => isset($comment->currentUserCap->can_delete) ? (bool)$comment->currentUserCap->can_delete : false,
     ]; ?>
     <div class="o-comment s-status-<?php echo $isApproved ? 'approved' : 'unapproved'; ?>"
          id="comment-<?php echo $comment->id; ?>" data-id="<?php echo $comment->id; ?>">
         <div class="o-comment__body">
             <div class="o-comment__body__left">
                 <img class="o-comment__user_photo" src="<?php echo $comment->created_by->avatar; ?>" width="30">
-                <?php if (! $isApproved && $currentUserCapabilities->can_moderate): ?>
+                <?php if ( ! $isApproved && $currentUserCapabilities->can_moderate): ?>
                     <div class="u-text-center">
                         <i class="fa fa-eye-slash u-color-gray" data-toggle="tooltip"
                            title="<?php _e(
-        "This comment and its replies are not visible by regular users.",
+                               "This comment and its replies are not visible by regular users.",
                                'upstream'
-    ); ?>" style="margin-top: 2px;"></i>
+                           ); ?>" style="margin-top: 2px;"></i>
                     </div>
                 <?php endif; ?>
             </div>
@@ -772,7 +772,7 @@ function upstream_display_message_item($comment, $comments = [], $renderControls
                          title="<?php echo $comment->created_at->localized; ?>"><?php echo $comment->created_at->humanized; ?></div>
                 </div>
                 <div
-                    class="o-comment__content"><?php echo $wp_embed->autoembed(wpautop($comment->content)); ?></div>
+                        class="o-comment__content"><?php echo $wp_embed->autoembed(wpautop($comment->content)); ?></div>
                 <div class="o-comment__body__footer">
             <?php
             if ($renderControls) {
@@ -809,7 +809,7 @@ function upstream_add_field_attributes($args, $field)
      * if the user does not have permission for that field
      */
     if (isset($args['permissions'])) {
-        if (! upstream_admin_permissions($args['permissions'])) {
+        if ( ! upstream_admin_permissions($args['permissions'])) {
             $field->args['attributes']['disabled']      = 'disabled';
             $field->args['attributes']['readonly']      = 'readonly';
             $field->args['attributes']['data-disabled'] = 'true';
@@ -824,56 +824,56 @@ function upstream_add_field_attributes($args, $field)
     if (isset($field->group->args['repeatable']) && $field->group->args['repeatable'] == '1') :
 
         $i          = filter_var($field->args['id'], FILTER_SANITIZE_NUMBER_INT);
-    $created_by = isset($field->group->value[ $i ]['created_by']) ? (int) $field->group->value[ $i ]['created_by'] : 0;
-    $assignees  = isset($field->group->value[ $i ]['assigned_to']) ? $field->group->value[ $i ]['assigned_to'] : [];
-    if (! is_array($assignees)) {
-        $assignees = (array) $assignees;
-    }
+        $created_by = isset($field->group->value[$i]['created_by']) ? (int)$field->group->value[$i]['created_by'] : 0;
+        $assignees  = isset($field->group->value[$i]['assigned_to']) ? $field->group->value[$i]['assigned_to'] : [];
+        if ( ! is_array($assignees)) {
+            $assignees = (array)$assignees;
+        }
 
-    $assignees = array_map('intval', array_unique(array_filter($assignees)));
+        $assignees = array_map('intval', array_unique(array_filter($assignees)));
 
-    $currentUserId = (int) upstream_current_user_id();
-    // if the user is assigned to or item is created by
-    if ($created_by === $currentUserId
-             || in_array($currentUserId, $assignees)
+        $currentUserId = (int)upstream_current_user_id();
+        // if the user is assigned to or item is created by
+        if ($created_by === $currentUserId
+            || in_array($currentUserId, $assignees)
         ) {
-        // clear the disabled attributes
-        unset($field->args['attributes']['disabled']);
-        unset($field->args['attributes']['readonly']);
-        $field->args['attributes']['data-disabled'] = 'false';
+            // clear the disabled attributes
+            unset($field->args['attributes']['disabled']);
+            unset($field->args['attributes']['readonly']);
+            $field->args['attributes']['data-disabled'] = 'false';
 
-        // data-owner attribute is used for the delete button
-        if ($field->args['_id'] == 'id') {
+            // data-owner attribute is used for the delete button
+            if ($field->args['_id'] == 'id') {
+                $field->args['attributes']['data-owner'] = 'true';
+            }
+        }
+        // to ensure admin and managers can delete anything
+        if (upstream_admin_permissions()) {
             $field->args['attributes']['data-owner'] = 'true';
         }
-    }
-    // to ensure admin and managers can delete anything
-    if (upstream_admin_permissions()) {
-        $field->args['attributes']['data-owner'] = 'true';
-    }
 
-    // add users avatars
-    $user_createdby = upstream_user_data($created_by, true);
-    if ($field->args['_id'] == 'id') {
-        $field->args['attributes']['data-user_created_by']   = $user_createdby['full_name'];
-        $field->args['attributes']['data-avatar_created_by'] = $user_createdby['avatar'];
+        // add users avatars
+        $user_createdby = upstream_user_data($created_by, true);
+        if ($field->args['_id'] == 'id') {
+            $field->args['attributes']['data-user_created_by']   = $user_createdby['full_name'];
+            $field->args['attributes']['data-avatar_created_by'] = $user_createdby['avatar'];
 
-        $field->args['attributes']['data-user_assigned']   = '';
-        $field->args['attributes']['data-avatar_assigned'] = '';
-        if (count($assignees) > 0) {
-            $usersData = [];
-            foreach ($assignees as $user_id) {
-                $userData = upstream_user_data($user_id, true);
+            $field->args['attributes']['data-user_assigned']   = '';
+            $field->args['attributes']['data-avatar_assigned'] = '';
+            if (count($assignees) > 0) {
+                $usersData = [];
+                foreach ($assignees as $user_id) {
+                    $userData = upstream_user_data($user_id, true);
 
-                $usersData[] = [
+                    $usersData[] = [
                         'name'   => $userData['full_name'],
                         'avatar' => $userData['avatar'],
                     ];
-            }
+                }
 
-            $field->args['attributes']['data-assignees'] = json_encode([ 'data' => $usersData ]);
+                $field->args['attributes']['data-assignees'] = json_encode(['data' => $usersData]);
+            }
         }
-    }
 
     endif;
 }
@@ -910,7 +910,7 @@ function upstream_admin_get_project_statuses()
     $array    = [];
     if ($statuses) {
         foreach ($statuses as $status) {
-            $array[ $status['id'] ] = $status['name'];
+            $array[$status['id']] = $status['name'];
         }
     }
 
@@ -927,23 +927,23 @@ function upstream_admin_get_all_project_users()
     $projectClientUsers = [];
     $projectId          = upstream_post_id();
     if ($projectId > 0) {
-        $projectClientId = (int) get_post_meta($projectId, '_upstream_project_client', true);
+        $projectClientId = (int)get_post_meta($projectId, '_upstream_project_client', true);
         if ($projectClientId > 0) {
             $projectClientUsersIds = array_filter(array_map(
                 'intval',
-                (array) get_post_meta($projectId, '_upstream_project_client_users', true)
+                (array)get_post_meta($projectId, '_upstream_project_client_users', true)
             ));
             if (count($projectClientUsersIds) > 0) {
-                $projectClientUsers = (array) get_users([
+                $projectClientUsers = (array)get_users([
                     'include' => $projectClientUsersIds,
-                    'fields'  => [ 'ID', 'display_name' ],
+                    'fields'  => ['ID', 'display_name'],
                 ]);
             }
         }
     }
 
     $args = apply_filters('upstream_user_roles_for_projects', [
-        'fields'   => [ 'ID', 'display_name' ],
+        'fields'   => ['ID', 'display_name'],
         'role__in' => [
             'upstream_manager',
             'upstream_user',
@@ -958,7 +958,7 @@ function upstream_admin_get_all_project_users()
     $rowset = array_merge($systemUsers, $projectClientUsers);
     if (count($rowset) > 0) {
         foreach ($rowset as $user) {
-            $users[ (int) $user->ID ] = $user->display_name;
+            $users[(int)$user->ID] = $user->display_name;
         }
     }
 
@@ -974,14 +974,14 @@ function upstream_admin_get_all_clients()
     $args    = [
         'post_type'      => 'client',
         'post_status'    => 'publish',
-        'posts_per_page' => - 1,
+        'posts_per_page' => -1,
         'no_found_rows'  => true, // for performance
     ];
     $clients = get_posts($args);
-    $array   = [ '' => __('Not Assigned', 'upstream') ];
+    $array   = ['' => __('Not Assigned', 'upstream')];
     if ($clients) {
         foreach ($clients as $client) {
-            $array[ $client->ID ] = $client->post_title;
+            $array[$client->ID] = $client->post_title;
         }
     }
 
@@ -996,28 +996,28 @@ function upstream_admin_get_all_clients_users($field, $client_id = 0)
 {
     // Get the currently selected client id.
     if (empty($client_id) || $client_id < 0) {
-        $client_id = (int) get_post_meta($field->object_id, '_upstream_project_client', true);
+        $client_id = (int)get_post_meta($field->object_id, '_upstream_project_client', true);
     }
 
     if ($client_id > 0) {
         $usersList       = [];
-        $clientUsersList = array_filter((array) get_post_meta($client_id, '_upstream_new_client_users', true));
+        $clientUsersList = array_filter((array)get_post_meta($client_id, '_upstream_new_client_users', true));
 
         $clientUsersIdsList = [];
         foreach ($clientUsersList as $clientUser) {
-            if (! empty($clientUser)) {
+            if ( ! empty($clientUser)) {
                 array_push($clientUsersIdsList, $clientUser['user_id']);
             }
         }
 
         if (count($clientUsersIdsList) > 0) {
-            $rowset = (array) get_users([
-                'fields'  => [ 'ID', 'display_name', 'user_email' ],
+            $rowset = (array)get_users([
+                'fields'  => ['ID', 'display_name', 'user_email'],
                 'include' => $clientUsersIdsList,
             ]);
 
             foreach ($rowset as $user) {
-                $usersList[ (int) $user->ID ] = $user->display_name . ' <a href="mailto:' . esc_html($user->user_email) . '" target="_blank"><span class="dashicons dashicons-email-alt"></span></a>';
+                $usersList[(int)$user->ID] = $user->display_name . ' <a href="mailto:' . esc_html($user->user_email) . '" target="_blank"><span class="dashicons dashicons-email-alt"></span></a>';
             }
 
             return $usersList;
@@ -1036,23 +1036,23 @@ function upstream_get_all_client_users($client_id = 0)
 {
     // Get the currently selected client id.
     if (empty($client_id) || $client_id < 0) {
-        $client_id = (int) get_post_meta($field->object_id, '_upstream_project_client', true);
+        $client_id = (int)get_post_meta($field->object_id, '_upstream_project_client', true);
     }
 
     if ($client_id > 0) {
         $usersList       = [];
-        $clientUsersList = array_filter((array) get_post_meta($client_id, '_upstream_new_client_users', true));
+        $clientUsersList = array_filter((array)get_post_meta($client_id, '_upstream_new_client_users', true));
 
         $clientUsersIdsList = [];
         foreach ($clientUsersList as $clientUser) {
-            if (! empty($clientUser)) {
+            if ( ! empty($clientUser)) {
                 array_push($clientUsersIdsList, $clientUser['user_id']);
             }
         }
 
         if (count($clientUsersIdsList) > 0) {
-            $rowset = (array) get_users([
-                'fields'  => [ 'ID', 'display_name', 'user_email' ],
+            $rowset = (array)get_users([
+                'fields'  => ['ID', 'display_name', 'user_email'],
                 'include' => $clientUsersIdsList,
             ]);
 
@@ -1078,8 +1078,8 @@ function upstream_get_all_client_users($client_id = 0)
 add_action('wp_ajax_upstream_admin_ajax_get_clients_users', 'upstream_admin_ajax_get_clients_users');
 function upstream_admin_ajax_get_clients_users()
 {
-    $project_id = isset($_POST['project_id']) ? (int) $_POST['project_id'] : 0;
-    $client_id  = isset($_POST['client_id']) ? (int) $_POST['client_id'] : 0;
+    $project_id = isset($_POST['project_id']) ? (int)$_POST['project_id'] : 0;
+    $client_id  = isset($_POST['client_id']) ? (int)$_POST['client_id'] : 0;
 
     if ($project_id <= 0) {
         wp_send_json_error([
@@ -1102,7 +1102,7 @@ function upstream_admin_ajax_get_clients_users()
         } else {
             $output = "";
 
-            $currentProjectClientUsers = (array) get_post_meta($project_id, '_upstream_project_client_users');
+            $currentProjectClientUsers = (array)get_post_meta($project_id, '_upstream_project_client_users');
             $currentProjectClientUsers = ! empty($currentProjectClientUsers) ? $currentProjectClientUsers[0] : [];
 
             // Check if the users should be pre-selected by default.
@@ -1118,7 +1118,7 @@ function upstream_admin_ajax_get_clients_users()
                     ($checked ? ' checked' : ''),
                     $userName
                 );
-                $userIndex ++;
+                $userIndex++;
             }
 
             wp_send_json_success($output);
@@ -1142,7 +1142,7 @@ function upstream_wp_get_clients()
     $data = [];
 
     foreach ($rowset as $row) {
-        $data[ $row->ID ] = $row->post_title;
+        $data[$row->ID] = $row->post_title;
     }
 
     return $data;

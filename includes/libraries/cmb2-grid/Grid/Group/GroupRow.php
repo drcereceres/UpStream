@@ -8,7 +8,7 @@
 
 namespace Cmb2Grid\Grid\Group;
 
-if (! class_exists('\Cmb2Grid\Grid\Group\GroupRow')) {
+if ( ! class_exists('\Cmb2Grid\Grid\Group\GroupRow')) {
 
     /**
      * Description of GroupRow.
@@ -40,20 +40,20 @@ if (! class_exists('\Cmb2Grid\Grid\Group\GroupRow')) {
 
         protected function closeGroupRow(\CMB2_Field $field, $fieldID)
         {
-            if (! isset($field->args['fields'][ $fieldID ]['after_row'])) {
-                $field->args['fields'][ $fieldID ]['after_row'] = '';
+            if ( ! isset($field->args['fields'][$fieldID]['after_row'])) {
+                $field->args['fields'][$fieldID]['after_row'] = '';
             }
 
-            $field->args['fields'][ $fieldID ]['after_row'] .= '</div>';
+            $field->args['fields'][$fieldID]['after_row'] .= '</div>';
         }
 
         protected function openGroupRow(\CMB2_Field $field, $fieldID)
         {
-            if (! isset($field->args['fields'][ $fieldID ]['before_row'])) {
-                $field->args['fields'][ $fieldID ]['before_row'] = '';
+            if ( ! isset($field->args['fields'][$fieldID]['before_row'])) {
+                $field->args['fields'][$fieldID]['before_row'] = '';
             }
 
-            $field->args['fields'][ $fieldID ]['before_row'] .= '<div class="row cmb2GridRow">';
+            $field->args['fields'][$fieldID]['before_row'] .= '<div class="row cmb2GridRow">';
         }
 
         protected function handleRow()
@@ -62,27 +62,28 @@ if (! class_exists('\Cmb2Grid\Grid\Group\GroupRow')) {
 
             /* @var $firstColumn GroupColumn */
             $firstColumn = $columns[0];
-            $field		 = $firstColumn->getField();
-            $fieldID	 = $firstColumn->getFieldId();
+            $field       = $firstColumn->getField();
+            $fieldID     = $firstColumn->getFieldId();
             $this->openGroupRow($field, $fieldID);
 
-            $lastColumn	 = $columns[ (count($columns) - 1) ];
-            $field		 = $lastColumn->getField();
-            $fieldID	 = $lastColumn->getFieldId();
+            $lastColumn = $columns[(count($columns) - 1)];
+            $field      = $lastColumn->getField();
+            $fieldID    = $lastColumn->getFieldId();
             $this->closeGroupRow($field, $fieldID);
         }
 
         protected function addColumn($field)
         {
             //parent::addColumn( $field );
-            $column		 = new GroupColumn($field, $this->getGrid());
-            $columns	 = $this->getColumns();
-            $columns[]	 = $column;
+            $column    = new GroupColumn($field, $this->getGrid());
+            $columns   = $this->getColumns();
+            $columns[] = $column;
             $this->setColumns($columns);
+
             return $column;
         }
 
-        public function addColumns(array $fields = array())
+        public function addColumns(array $fields = [])
         {
             //parent::addColumns($fields);
             foreach ($fields as $key => $field) {

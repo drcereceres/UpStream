@@ -1,7 +1,7 @@
 <?php
 
 // Exit if accessed directly
-if (! defined('ABSPATH')) {
+if ( ! defined('ABSPATH')) {
     exit;
 }
 
@@ -26,7 +26,7 @@ function upstream_enqueue_styles_scripts()
         }
     }
     // Dequeueing scripts
-    $scripts_to_keep = [ 'jquery' ];
+    $scripts_to_keep = ['jquery'];
     if (is_array($wp_scripts->queue)) {
         foreach ($wp_scripts->queue as $script) {
             if (in_array($script, $scripts_to_keep)) {
@@ -64,7 +64,7 @@ function upstream_enqueue_styles_scripts()
         $up_ver,
         'all'
     );
-    wp_enqueue_style('upstream', $up_url . $css_dir . 'upstream.css', [ 'admin-bar' ], $up_ver, 'all');
+    wp_enqueue_style('upstream', $up_url . $css_dir . 'upstream.css', ['admin-bar'], $up_ver, 'all');
 
     if (isset($GLOBALS['login_template'])) {
         wp_enqueue_style('up-login', $up_url . $css_dir . 'login.css', [], $up_ver, 'all');
@@ -93,24 +93,24 @@ function upstream_enqueue_styles_scripts()
     wp_enqueue_script('up-filesaver', $up_url . $js_dir . 'vendor/FileSaver.min.js', [], $up_ver, true);
     wp_enqueue_script('up-tableexport', $up_url . $js_dir . 'vendor/tableexport.min.js', [], $up_ver, true);
     wp_enqueue_script('up-select2', $up_url . $js_dir . 'vendor/select2.full.min.js', [], $up_ver, true);
-    wp_enqueue_script('up-chosen', $up_url . $lib_dir . '/chosen/chosen.jquery.min.js', [ 'jquery' ], $up_ver, true);
-    wp_enqueue_script('up-bootstrap', $up_url . $js_dir . 'bootstrap.min.js', [ 'jquery' ], $up_ver, true);
-    wp_enqueue_script('up-fastclick', $up_url . $js_dir . 'fastclick.js', [ 'jquery' ], $up_ver, true);
-    wp_enqueue_script('up-nprogress', $up_url . $js_dir . 'nprogress.js', [ 'jquery' ], $up_ver, true);
+    wp_enqueue_script('up-chosen', $up_url . $lib_dir . '/chosen/chosen.jquery.min.js', ['jquery'], $up_ver, true);
+    wp_enqueue_script('up-bootstrap', $up_url . $js_dir . 'bootstrap.min.js', ['jquery'], $up_ver, true);
+    wp_enqueue_script('up-fastclick', $up_url . $js_dir . 'fastclick.js', ['jquery'], $up_ver, true);
+    wp_enqueue_script('up-nprogress', $up_url . $js_dir . 'nprogress.js', ['jquery'], $up_ver, true);
 
     wp_enqueue_script(
         'upstream-datepicker',
         $up_url . $js_dir . 'vendor/bootstrap-datepicker-1.8.0/js/bootstrap-datepicker.min.js',
-        [ 'jquery', 'up-bootstrap' ],
+        ['jquery', 'up-bootstrap'],
         $up_ver,
         true
     );
-    wp_enqueue_script('up-modal', $up_url . $js_dir . 'vendor/modal.min.js', [ 'jquery' ], $up_ver, true);
+    wp_enqueue_script('up-modal', $up_url . $js_dir . 'vendor/modal.min.js', ['jquery'], $up_ver, true);
 
     wp_enqueue_script(
         'upstream',
         $up_url . $js_dir . 'upstream.js',
-        [ 'jquery', 'up-modal', 'admin-bar' ],
+        ['jquery', 'up-modal', 'admin-bar'],
         $up_ver,
         true
     );
@@ -161,7 +161,7 @@ function upstream_deregister_assets()
     $postType = get_post_type();
 
     if ($isAdmin
-         || $postType !== 'project'
+        || $postType !== 'project'
     ) {
         return;
     }

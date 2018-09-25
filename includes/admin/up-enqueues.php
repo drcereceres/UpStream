@@ -1,7 +1,7 @@
 <?php
 
 // Exit if accessed directly
-if (! defined('ABSPATH')) {
+if ( ! defined('ABSPATH')) {
     exit;
 }
 
@@ -12,7 +12,7 @@ if (! defined('ABSPATH')) {
 function upstream_load_admin_scripts($hook)
 {
     $isAdmin = is_admin();
-    if (! $isAdmin) {
+    if ( ! $isAdmin) {
         return;
     }
 
@@ -23,7 +23,7 @@ function upstream_load_admin_scripts($hook)
 
     $assetsDir = UPSTREAM_PLUGIN_URL . 'includes/admin/assets/';
 
-    $admin_deps = [ 'jquery', 'cmb2-scripts', 'allex' ];
+    $admin_deps = ['jquery', 'cmb2-scripts', 'allex'];
 
     global $pagenow;
 
@@ -35,7 +35,7 @@ function upstream_load_admin_scripts($hook)
         false
     );
 
-    if (in_array($pagenow, [ 'edit.php', 'post.php', 'post-new.php' ])) {
+    if (in_array($pagenow, ['edit.php', 'post.php', 'post-new.php'])) {
         if ($postType === 'project') {
             global $post_type_object;
 
@@ -83,8 +83,10 @@ function upstream_load_admin_scripts($hook)
                     'LB_UNAPPROVING'                    => __('Unapproving...', 'upstream'),
                     'LB_APPROVE'                        => __('Approve'),
                     'LB_APPROVING'                      => __('Approving...', 'upstream'),
-                    'MSG_ARE_YOU_SURE'                  => __('Are you sure? This action cannot be undone.', 'upstream'),
-                    'MSG_COMMENT_NOT_VIS'               => __('This comment is not visible by regular users.', 'upstream'),
+                    'MSG_ARE_YOU_SURE'                  => __('Are you sure? This action cannot be undone.',
+                        'upstream'),
+                    'MSG_COMMENT_NOT_VIS'               => __('This comment is not visible by regular users.',
+                        'upstream'),
                     'LB_ASSIGNED_TO'                    => __('Assigned To', 'upstream'),
                     'MSG_TITLE_CANT_BE_EMPTY'           => __('Title can\'t be empty', 'upstream'),
                     'MSG_INVALID_INTERVAL_BETWEEN_DATE' => __('Invalid interval between dates.', 'upstream'),
@@ -115,21 +117,22 @@ function upstream_load_admin_scripts($hook)
             ]);
         }
 
-        $postTypesUsingCmb2 = apply_filters('upstream:post_types_using_cmb2', [ 'project', 'client' ]);
+        $postTypesUsingCmb2 = apply_filters('upstream:post_types_using_cmb2', ['project', 'client']);
 
         if (in_array($postType, $postTypesUsingCmb2)) {
             wp_enqueue_style('upstream-admin', $assetsDir . 'css/upstream.css', [], UPSTREAM_VERSION);
         }
     } elseif ($pagenow === 'admin.php'
-               && isset($_GET['page'])
-               && preg_match('/^upstream_/i', $_GET['page'])
+              && isset($_GET['page'])
+              && preg_match('/^upstream_/i', $_GET['page'])
     ) {
         wp_enqueue_style('upstream-admin', $assetsDir . 'css/upstream.css', [], UPSTREAM_VERSION);
     }
 
     wp_enqueue_style('upstream-admin-icon', $assetsDir . 'css/admin-upstream-icon.css', [], UPSTREAM_VERSION);
     wp_enqueue_style('upstream-admin-style', $assetsDir . 'css/admin.css', ['allex'], UPSTREAM_VERSION);
-    wp_enqueue_style('up-fontawesome', UPSTREAM_PLUGIN_URL . 'templates/assets/css/fontawesome.min.css', [], UPSTREAM_VERSION, 'all');
+    wp_enqueue_style('up-fontawesome', UPSTREAM_PLUGIN_URL . 'templates/assets/css/fontawesome.min.css', [],
+        UPSTREAM_VERSION, 'all');
 }
 
 add_action('admin_enqueue_scripts', 'upstream_load_admin_scripts', 100);

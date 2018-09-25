@@ -1,8 +1,9 @@
 <?php
+
 /**
  * CMB2 field display base.
  *
- * @since 2.2.2
+ * @since     2.2.2
  *
  * @category  WordPress_Plugin
  * @package   CMB2
@@ -33,7 +34,9 @@ class CMB2_Field_Display
      * Get the corresponding display class for the field type.
      *
      * @since  2.2.2
+     *
      * @param  CMB2_Field $field
+     *
      * @return CMB2_Field_Display
      */
     public static function get(CMB2_Field $field)
@@ -110,6 +113,7 @@ class CMB2_Field_Display
      * Setup our class vars
      *
      * @since 2.2.2
+     *
      * @param CMB2_Field $field A CMB2 field object
      */
     public function __construct(CMB2_Field $field)
@@ -136,8 +140,7 @@ class CMB2_Field_Display
                 echo '<ul class="cmb2-' . str_replace('_', '-', $this->field->type()) . '">';
                 foreach ($this->field->value as $val) {
                     $this->value = $val;
-                    echo '<li>', $this->_display(), '</li>';
-                    ;
+                    echo '<li>', $this->_display(), '</li>';;
                 }
                 echo '</ul>';
             }
@@ -222,13 +225,13 @@ class CMB2_Display_Select extends CMB2_Field_Display
         $options = $this->field->options();
 
         $fallback = $this->field->args('show_option_none');
-        if (! $fallback && isset($options[''])) {
+        if ( ! $fallback && isset($options[''])) {
             $fallback = $options[''];
         }
-        if (! $this->value && $fallback) {
+        if ( ! $this->value && $fallback) {
             echo $fallback;
-        } elseif (isset($options[ $this->value ])) {
-            echo $options[ $this->value ];
+        } elseif (isset($options[$this->value])) {
+            echo $options[$this->value];
         } else {
             echo esc_attr($this->value);
         }
@@ -250,10 +253,10 @@ class CMB2_Display_Multicheck extends CMB2_Field_Display
 
         $options = $this->field->options();
 
-        $output = array();
+        $output = [];
         foreach ($this->value as $val) {
-            if (isset($options[ $val ])) {
-                $output[] = $options[ $val ];
+            if (isset($options[$val])) {
+                $output[] = $options[$val];
             } else {
                 $output[] = esc_attr($val);
             }
@@ -330,13 +333,13 @@ class CMB2_Display_Text_Date_Timezone extends CMB2_Field_Display
             return;
         }
 
-        $datetime = maybe_unserialize($this->value);
+        $datetime    = maybe_unserialize($this->value);
         $this->value = $tzstring = '';
 
         if ($datetime && $datetime instanceof DateTime) {
-            $tz       = $datetime->getTimezone();
-            $tzstring = $tz->getName();
-            $this->value    = $datetime->getTimestamp();
+            $tz          = $datetime->getTimezone();
+            $tzstring    = $tz->getName();
+            $this->value = $datetime->getTimestamp();
         }
 
         $date = $this->field->get_timestamp_format('date_format', $this->value);
@@ -363,8 +366,8 @@ class CMB2_Display_Taxonomy_Radio extends CMB2_Field_Display
 
         if (is_wp_error($terms) || empty($terms) && ($default = $this->field->get_default())) {
             $term = get_term_by('slug', $default, $taxonomy);
-        } elseif (! empty($terms)) {
-            $term = $terms[ key($terms) ];
+        } elseif ( ! empty($terms)) {
+            $term = $terms[key($terms)];
         }
 
         if ($term) {
@@ -389,7 +392,7 @@ class CMB2_Display_Taxonomy_Multicheck extends CMB2_Field_Display
         $terms    = $type->get_object_terms();
 
         if (is_wp_error($terms) || empty($terms) && ($default = $this->field->get_default())) {
-            $terms = array();
+            $terms = [];
             if (is_array($default)) {
                 foreach ($default as $slug) {
                     $terms[] = get_term_by('slug', $slug, $taxonomy);
@@ -400,9 +403,9 @@ class CMB2_Display_Taxonomy_Multicheck extends CMB2_Field_Display
         }
 
         if (is_array($terms)) {
-            $links = array();
+            $links = [];
             foreach ($terms as $term) {
-                $link = get_edit_term_link($term->term_id, $taxonomy);
+                $link    = get_edit_term_link($term->term_id, $taxonomy);
                 $links[] = '<a href="' . esc_url($link) . '">' . esc_html($term->name) . '</a>';
             }
             // Then loop and output.
@@ -431,9 +434,9 @@ class CMB2_Display_File extends CMB2_Field_Display
         $types = new CMB2_Types($this->field);
         $type  = $types->get_new_render_type($this->field->type(), 'CMB2_Type_File_Base');
 
-        $id = $this->field->get_field_clone(array(
+        $id = $this->field->get_field_clone([
             'id' => $this->field->_id() . '_id',
-        ))->escaped_value('absint');
+        ])->escaped_value('absint');
 
         $this->file_output($this->value, $id, $type);
     }
@@ -449,11 +452,11 @@ class CMB2_Display_File extends CMB2_Field_Display
             $img_size = $this->field->args('preview_size');
 
             if ($id) {
-                $image = wp_get_attachment_image($id, $img_size, null, array(
+                $image = wp_get_attachment_image($id, $img_size, null, [
                     'class' => 'cmb-image-display',
-                ));
+                ]);
             } else {
-                $size = is_array($img_size) ? $img_size[0] : 200;
+                $size  = is_array($img_size) ? $img_size[0] : 200;
                 $image = '<img class="cmb-image-display" style="max-width: ' . absint($size) . 'px; width: 100%; height: auto;" src="' . $url_value . '" alt="" />';
             }
 
@@ -502,18 +505,18 @@ class CMB2_Display_oEmbed extends CMB2_Field_Display
      */
     protected function _display()
     {
-        if (! $this->value) {
+        if ( ! $this->value) {
             return;
         }
 
-        cmb2_do_oembed(array(
+        cmb2_do_oembed([
             'url'         => $this->value,
             'object_id'   => $this->field->object_id,
             'object_type' => $this->field->object_type,
-            'oembed_args' => array(
+            'oembed_args' => [
                 'width' => '300',
-            ),
+            ],
             'field_id'    => $this->field->id(),
-        ));
+        ]);
     }
 }

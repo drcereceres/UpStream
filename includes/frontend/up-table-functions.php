@@ -26,12 +26,12 @@ function getMilestonesFields($areCommentsEnabled = null)
                 &
                 $milestones
             ) {
-                $milestone = ! isset($milestones[ $columnValue ])
+                $milestone = ! isset($milestones[$columnValue])
                     ? '<span title="' . __(
                         "This Milestone doesn't exist anymore.",
                         'upstream'
                     ) . '">' . $columnValue . ' <small><i class="fa fa-ban"></i></small></span>'
-                    : $milestones[ $columnValue ];
+                    : $milestones[$columnValue];
 
                 return $milestone;
             },
@@ -46,8 +46,8 @@ function getMilestonesFields($areCommentsEnabled = null)
             'label'          => upstream_task_label_plural(),
             'isEditable'     => false,
             'renderCallback' => function ($columnName, $columnValue, $column, $row, $rowType, $projectId) {
-                $tasksOpenCount = isset($row['task_open']) ? (int) $row['task_open'] : 0;
-                $tasksCount     = isset($row['task_count']) ? (int) $row['task_count'] : 0;
+                $tasksOpenCount = isset($row['task_open']) ? (int)$row['task_open'] : 0;
+                $tasksCount     = isset($row['task_count']) ? (int)$row['task_count'] : 0;
 
                 return sprintf(
                     '%d %s / %d %s',
@@ -91,7 +91,7 @@ function getMilestonesFields($areCommentsEnabled = null)
         $areCommentsEnabled = upstreamAreCommentsEnabledOnMilestones();
     }
 
-    if (! $areCommentsEnabled) {
+    if ( ! $areCommentsEnabled) {
         unset($schema['comments']);
     }
 
@@ -127,11 +127,11 @@ function getTasksFields($statuses = [], $milestones = [], $areMilestonesEnabled 
                 &$options
             ) {
                 if (strlen($columnValue) > 0) {
-                    if (isset($statuses[ $columnValue ])) {
+                    if (isset($statuses[$columnValue])) {
                         $columnValue = sprintf(
                             '<span class="label up-o-label" style="background-color: %s;">%s</span>',
-                            $statuses[ $columnValue ]['color'],
-                            $statuses[ $columnValue ]['name']
+                            $statuses[$columnValue]['color'],
+                            $statuses[$columnValue]['name']
                         );
                     } else {
                         $columnValue = sprintf(
@@ -164,28 +164,28 @@ function getTasksFields($statuses = [], $milestones = [], $areMilestonesEnabled 
                 if (strlen($columnValue) > 0) {
                     if ($milestones === null) {
                         $milestones = [];
-                        $meta       = (array) get_post_meta(upstream_post_id(), '_upstream_project_milestones', true);
+                        $meta       = (array)get_post_meta(upstream_post_id(), '_upstream_project_milestones', true);
                         foreach ($meta as $data) {
-                            if (! isset($data['id'])
+                            if ( ! isset($data['id'])
                                  || ! isset($data['created_by'])
                                  || ! isset($data['milestone'])
                             ) {
                                 continue;
                             }
 
-                            $milestones[ $data['id'] ] = [
+                            $milestones[$data['id']] = [
                                 'title' => $data['milestone'],
-                                'color' => $milestonesColors[ $data['milestone'] ],
+                                'color' => $milestonesColors[$data['milestone']],
                                 'id'    => $data['id'],
                             ];
                         }
                     }
 
-                    if (isset($milestones[ $columnValue ])) {
+                    if (isset($milestones[$columnValue])) {
                         $columnValue = sprintf(
                             '<span class="label up-o-label" style="background-color: %s;">%s</span>',
-                            $milestones[ $columnValue ]['color'],
-                            $milestones[ $columnValue ]['title']
+                            $milestones[$columnValue]['color'],
+                            $milestones[$columnValue]['title']
                         );
                     } else {
                         $columnValue = sprintf(
@@ -233,7 +233,7 @@ function getTasksFields($statuses = [], $milestones = [], $areMilestonesEnabled 
         unset($schema['milestone']);
     }
 
-    if (! $areCommentsEnabled) {
+    if ( ! $areCommentsEnabled) {
         unset($schema['comments']);
     }
 
@@ -273,11 +273,11 @@ function getBugsFields($severities = [], $statuses = [], $areCommentsEnabled = n
                 &$options
             ) {
                 if (strlen($columnValue) > 0) {
-                    if (isset($severities[ $columnValue ])) {
+                    if (isset($severities[$columnValue])) {
                         $columnValue = sprintf(
                             '<span class="label up-o-label" style="background-color: %s;">%s</span>',
-                            $severities[ $columnValue ]['color'],
-                            $severities[ $columnValue ]['name']
+                            $severities[$columnValue]['color'],
+                            $severities[$columnValue]['name']
                         );
                     } else {
                         $columnValue = sprintf(
@@ -304,11 +304,11 @@ function getBugsFields($severities = [], $statuses = [], $areCommentsEnabled = n
                 &$options
             ) {
                 if (strlen($columnValue) > 0) {
-                    if (isset($statuses[ $columnValue ])) {
+                    if (isset($statuses[$columnValue])) {
                         $columnValue = sprintf(
                             '<span class="label up-o-label" style="background-color: %s;">%s</span>',
-                            $statuses[ $columnValue ]['color'],
-                            $statuses[ $columnValue ]['name']
+                            $statuses[$columnValue]['color'],
+                            $statuses[$columnValue]['name']
                         );
                     } else {
                         $columnValue = sprintf(
@@ -352,7 +352,7 @@ function getBugsFields($severities = [], $statuses = [], $areCommentsEnabled = n
         $areCommentsEnabled = upstreamAreCommentsEnabledOnBugs();
     }
 
-    if (! $areCommentsEnabled) {
+    if ( ! $areCommentsEnabled) {
         unset($schema['comments']);
     }
 
@@ -406,7 +406,7 @@ function getFilesFields($areCommentsEnabled = null)
         $areCommentsEnabled = upstreamAreCommentsEnabledOnFiles();
     }
 
-    if (! $areCommentsEnabled) {
+    if ( ! $areCommentsEnabled) {
         unset($schema['comments']);
     }
 
@@ -437,11 +437,11 @@ function getProjectFields($statuses = [])
                 &$options
             ) {
                 if (strlen($columnValue) > 0) {
-                    if (isset($statuses[ $columnValue ])) {
+                    if (isset($statuses[$columnValue])) {
                         $columnValue = sprintf(
                             '<span class="label up-o-label" style="background-color: %s;">%s</span>',
-                            $statuses[ $columnValue ]['color'],
-                            $statuses[ $columnValue ]['name']
+                            $statuses[$columnValue]['color'],
+                            $statuses[$columnValue]['name']
                         );
                     } else {
                         $columnValue = sprintf(
@@ -478,11 +478,11 @@ function getProjectFields($statuses = [])
                 &$options
             ) {
                 if (strlen($columnValue) > 0) {
-                    if (isset($statuses[ $columnValue ])) {
+                    if (isset($statuses[$columnValue])) {
                         $columnValue = sprintf(
                             '<span class="label up-o-label" style="background-color: %s;">%s</span>',
-                            $statuses[ $columnValue ]['color'],
-                            $statuses[ $columnValue ]['name']
+                            $statuses[$columnValue]['color'],
+                            $statuses[$columnValue]['name']
                         );
                     } else {
                         $columnValue = sprintf(
@@ -530,12 +530,12 @@ function renderTableHeaderColumn($identifier, $data)
         ) : $data['class']) : '',
     ];
 
-    $isHidden = isset($data['isHidden']) && (bool) $data['isHidden'];
+    $isHidden = isset($data['isHidden']) && (bool)$data['isHidden'];
     if ($isHidden) {
         return;
     }
 
-    $isOrderable = isset($data['isOrderable']) && (bool) $data['isOrderable'];
+    $isOrderable = isset($data['isOrderable']) && (bool)$data['isOrderable'];
     if ($isOrderable) {
         $attrs['class'] .= ' is-clickable is-orderable';
         $attrs['role']  = 'button';
@@ -556,7 +556,7 @@ function renderTableHeader($columns = [])
 {
     ob_start(); ?>
     <thead>
-    <?php if (! empty($columns)): ?>
+    <?php if ( ! empty($columns)): ?>
         <tr scope="row">
             <?php
             foreach ($columns as $columnIdentifier => $column) {
@@ -574,7 +574,7 @@ function renderTableHeader($columns = [])
 
 function renderTableColumnValue($columnName, $columnValue, $column, $row, $rowType, $projectId)
 {
-    $isHidden = isset($column['isHidden']) && (bool) $column['isHidden'] === true;
+    $isHidden = isset($column['isHidden']) && (bool)$column['isHidden'] === true;
 
     $html       = sprintf('<i class="s-text-color-gray">%s</i>', __('none', 'upstream'));
     $columnType = isset($column['type']) ? $column['type'] : 'raw';
@@ -585,8 +585,8 @@ function renderTableColumnValue($columnName, $columnValue, $column, $row, $rowTy
     }
 
     if ($columnType === 'user') {
-        if (! is_array($columnValue)) {
-            $columnValue = (array) $columnValue;
+        if ( ! is_array($columnValue)) {
+            $columnValue = (array)$columnValue;
         }
 
         $usersIds   = array_filter(array_unique($columnValue));
@@ -614,14 +614,14 @@ function renderTableColumnValue($columnName, $columnValue, $column, $row, $rowTy
 
         unset($usersCount, $usersIds);
     } elseif ($columnType === 'percentage') {
-        $html = sprintf('%d%%', (int) $columnValue);
+        $html = sprintf('%d%%', (int)$columnValue);
     } elseif ($columnType === 'date') {
-        $columnValue = (int) $columnValue;
+        $columnValue = (int)$columnValue;
         if ($columnValue > 0) {
             $html = upstream_format_date($columnValue);
         }
     } elseif ($columnType === 'wysiwyg') {
-        $columnValue = preg_replace('/(?!>[\s]*).\r?\n(?![\s]*<)/', '$0<br />', trim((string) $columnValue));
+        $columnValue = preg_replace('/(?!>[\s]*).\r?\n(?![\s]*<)/', '$0<br />', trim((string)$columnValue));
         if (strlen($columnValue) > 0) {
             $html = sprintf('<blockquote>%s</blockquote>', html_entity_decode($columnValue));
         } else {
@@ -661,25 +661,25 @@ function renderTableColumnValue($columnName, $columnValue, $column, $row, $rowTy
             $html = '<br>' . $html;
         }
     } elseif ($columnType === 'array') {
-        $columnValue = array_filter((array) $columnValue);
+        $columnValue = array_filter((array)$columnValue);
 
         if (isset($column['options'])) {
             $values = [];
 
             if (is_array($column['options'])) {
                 foreach ($columnValue as $value) {
-                    if (isset($column['options'][ $value ])) {
-                        $values[] = $column['options'][ $value ];
+                    if (isset($column['options'][$value])) {
+                        $values[] = $column['options'][$value];
                     }
                 }
             }
 
             $values = implode(', ', $values);
-        } elseif (! empty($columnValue)) {
+        } elseif ( ! empty($columnValue)) {
             $values = implode(', ', $columnValue);
         }
 
-        if (! empty($values)) {
+        if ( ! empty($values)) {
             if ($isHidden) {
                 $html = '<br><span data-value="' . implode(',', $columnValue) . '">' . $values . '</span>';
             } else {
@@ -689,7 +689,7 @@ function renderTableColumnValue($columnName, $columnValue, $column, $row, $rowTy
             $html = '<br>' . $html;
         }
     } elseif ($columnType === 'colorpicker') {
-        $columnValue = trim((string) $columnValue);
+        $columnValue = trim((string)$columnValue);
         if (strlen($columnValue) > 0) {
             $html = '<br><div class="up-c-color-square has-tooltip" data-toggle="tooltip" title="' . $columnValue . '">';
             $html .= '<div style="background-color: ' . $columnValue . '"></div>';
@@ -704,7 +704,7 @@ function renderTableColumnValue($columnName, $columnValue, $column, $row, $rowTy
             $columnValue = $columnValue[0];
         }
 
-        $columnValue = trim((string) $columnValue);
+        $columnValue = trim((string)$columnValue);
 
         if (strlen($columnValue) > 0) {
             if ($columnValue === '__none__') {
@@ -724,7 +724,7 @@ function renderTableColumnValue($columnName, $columnValue, $column, $row, $rowTy
             $columnValue = $columnValue[0];
         }
 
-        $columnValue = trim((string) $columnValue);
+        $columnValue = trim((string)$columnValue);
         if (strlen($columnValue) > 0) {
             $html = esc_html($columnValue);
         }
@@ -763,32 +763,32 @@ function renderTableBody($data, $visibleColumnsSchema, $hiddenColumnsSchema, $ro
             'data-id' => $id,
         ];
 
-    if (! empty($hiddenColumnsSchema)) {
-        $rowAttrs['class']         .= ' is-expandable';
-        $rowAttrs['aria-expanded'] = 'false';
-    }
+        if ( ! empty($hiddenColumnsSchema)) {
+            $rowAttrs['class']         .= ' is-expandable';
+            $rowAttrs['aria-expanded'] = 'false';
+        }
 
-    $isFirst = true; ?>
+        $isFirst = true; ?>
         <tr <?php echo arrayToAttrs($rowAttrs); ?>>
             <?php foreach ($visibleColumnsSchema as $columnName => $column):
-                $columnValue = isset($row[ $columnName ]) ? $row[ $columnName ] : null;
+                $columnValue = isset($row[$columnName]) ? $row[$columnName] : null;
 
-    if ($column['type'] === 'user') {
-        if (! is_array($columnValue)) {
-            $columnValue = [ (int) $columnValue ];
-        }
-    }
+                if ($column['type'] === 'user') {
+                    if ( ! is_array($columnValue)) {
+                        $columnValue = [(int)$columnValue];
+                    }
+                }
 
-    $columnAttrs = [
+                $columnAttrs = [
                     'data-column' => $columnName,
                     'data-value'  => $column['type'] === 'user' ? implode(',', $columnValue) : $columnValue,
                     'data-type'   => $column['type'],
                 ];
 
-    if ($isFirst) {
-        $columnAttrs['class'] = 'is-clickable';
-        $columnAttrs['role']  = 'button';
-    } ?>
+                if ($isFirst) {
+                    $columnAttrs['class'] = 'is-clickable';
+                    $columnAttrs['role']  = 'button';
+                } ?>
                 <td <?php echo arrayToAttrs($columnAttrs); ?>>
                     <?php if ($isFirst): ?>
                         <i class="fa fa-angle-right"></i>&nbsp;
@@ -800,29 +800,29 @@ function renderTableBody($data, $visibleColumnsSchema, $hiddenColumnsSchema, $ro
             <?php endforeach; ?>
         </tr>
 
-        <?php if (! empty($hiddenColumnsSchema)): ?>
+        <?php if ( ! empty($hiddenColumnsSchema)): ?>
         <tr data-parent="<?php echo $id; ?>" aria-expanded="false" style="display: none;">
             <td colspan="<?php echo $visibleColumnsSchemaCount; ?>">
                 <div>
                     <?php foreach ($hiddenColumnsSchema as $columnName => $column):
-                        $columnValue = isset($row[ $columnName ]) ? $row[ $columnName ] : null; ?>
+                        $columnValue = isset($row[$columnName]) ? $row[$columnName] : null; ?>
                         <div class="form-group" data-column="<?php echo $columnName; ?>">
                             <label><?php echo isset($column['label']) ? $column['label'] : ''; ?></label>
                             <?php renderTableColumnValue(
-                            $columnName,
-                            $columnValue,
-                            $column,
-                            $row,
-                            $rowType,
+                                $columnName,
+                                $columnValue,
+                                $column,
+                                $row,
+                                $rowType,
                                 $projectId
-                        ); ?>
+                            ); ?>
                         </div>
                     <?php endforeach; ?>
                 </div>
             </td>
         </tr>
-        <?php endif;
-    $isRowIndexOdd = ! $isRowIndexOdd; ?>
+    <?php endif;
+        $isRowIndexOdd = ! $isRowIndexOdd; ?>
     <?php endforeach; ?>
     <?php else: ?>
         <tr data-empty>
@@ -844,7 +844,7 @@ function renderTable($tableAttrs = [], $columnsSchema = [], $data = [], $itemTyp
     $tableAttrs['class'] = array_filter(isset($tableAttrs['class']) ? (! is_array($tableAttrs['class']) ? explode(
         ' ',
         $tableAttrs['class']
-    ) : (array) $tableAttrs['class']) : []);
+    ) : (array)$tableAttrs['class']) : []);
     $tableAttrs['class'] = array_unique(array_merge($tableAttrs['class'], [
         'o-data-table',
         'table',
@@ -861,10 +861,10 @@ function renderTable($tableAttrs = [], $columnsSchema = [], $data = [], $itemTyp
     $hiddenColumnsSchema  = [];
 
     foreach ($columnsSchema as $columnName => $columnArgs) {
-        if (isset($columnArgs['isHidden']) && (bool) $columnArgs['isHidden'] === true) {
-            $hiddenColumnsSchema[ $columnName ] = $columnArgs;
+        if (isset($columnArgs['isHidden']) && (bool)$columnArgs['isHidden'] === true) {
+            $hiddenColumnsSchema[$columnName] = $columnArgs;
         } else {
-            $visibleColumnsSchema[ $columnName ] = $columnArgs;
+            $visibleColumnsSchema[$columnName] = $columnArgs;
         }
     }
 
@@ -878,15 +878,15 @@ function renderTable($tableAttrs = [], $columnsSchema = [], $data = [], $itemTyp
 
 function renderTableFilter($filterType, $columnName, $args = [], $renderFormGroup = true)
 {
-    if (! in_array($filterType, [ 'search', 'select' ])
+    if ( ! in_array($filterType, ['search', 'select'])
          || empty($columnName)
     ) {
         return false;
     }
 
-    $renderFormGroup = (bool) $renderFormGroup;
+    $renderFormGroup = (bool)$renderFormGroup;
 
-    $isHidden = ! isset($args['hidden']) || (isset($args['hidden']) && (bool) $args['hidden'] === true);
+    $isHidden = ! isset($args['hidden']) || (isset($args['hidden']) && (bool)$args['hidden'] === true);
 
     ob_start();
 
@@ -938,7 +938,7 @@ function renderTableFilter($filterType, $columnName, $args = [], $renderFormGrou
             <?php
             if (isset($args['options']) && is_array($args['options']) && count($args['options'])): ?>
                 <?php foreach ($args['options'] as $optionValue => $optionLabel): ?>
-                    <option value="<?php echo (string) $optionValue; ?>"><?php echo $optionLabel; ?></option>
+                    <option value="<?php echo (string)$optionValue; ?>"><?php echo $optionLabel; ?></option>
                 <?php endforeach; ?>
             <?php endif; ?>
         </select>

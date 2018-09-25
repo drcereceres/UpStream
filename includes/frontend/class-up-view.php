@@ -1,6 +1,6 @@
 <?php
 // Prevent direct access.
-if (! defined('ABSPATH')) {
+if ( ! defined('ABSPATH')) {
     exit;
 }
 
@@ -33,28 +33,28 @@ class UpStream_View
 
         if (count(self::$milestones) === 0) {
             $data   = [];
-            $rowset = array_filter((array) $project->get_meta('milestones'));
+            $rowset = array_filter((array)$project->get_meta('milestones'));
 
             foreach ($rowset as $row) {
-                $row['created_by']   = (int) $row['created_by'];
-                $row['created_time'] = isset($row['created_time']) ? (int) $row['created_time'] : 0;
+                $row['created_by']   = (int)$row['created_by'];
+                $row['created_time'] = isset($row['created_time']) ? (int)$row['created_time'] : 0;
 
                 $assignees = [];
                 if (isset($row['assigned_to'])) {
                     $assignees = array_map(
                         'intval',
-                        ! is_array($row['assigned_to']) ? (array) $row['assigned_to'] : $row['assigned_to']
+                        ! is_array($row['assigned_to']) ? (array)$row['assigned_to'] : $row['assigned_to']
                     );
                 }
 
                 $row['assigned_to'] = $assignees;
 
-                $row['progress']   = isset($row['progress']) ? (float) $row['progress'] : 0.00;
-                $row['notes']      = isset($row['notes']) ? (string) $row['notes'] : '';
-                $row['start_date'] = ! isset($row['start_date']) || ! is_numeric($row['start_date']) || $row['start_date'] < 0 ? 0 : (int) $row['start_date'];
-                $row['end_date']   = ! isset($row['end_date']) || ! is_numeric($row['end_date']) || $row['end_date'] < 0 ? 0 : (int) $row['end_date'];
+                $row['progress']   = isset($row['progress']) ? (float)$row['progress'] : 0.00;
+                $row['notes']      = isset($row['notes']) ? (string)$row['notes'] : '';
+                $row['start_date'] = ! isset($row['start_date']) || ! is_numeric($row['start_date']) || $row['start_date'] < 0 ? 0 : (int)$row['start_date'];
+                $row['end_date']   = ! isset($row['end_date']) || ! is_numeric($row['end_date']) || $row['end_date'] < 0 ? 0 : (int)$row['end_date'];
 
-                $data[ $row['id'] ] = $row;
+                $data[$row['id']] = $row;
             }
 
             $data = apply_filters('upstream_project_milestones', $data, $projectId);
@@ -87,26 +87,26 @@ class UpStream_View
 
         if (count(self::$tasks) === 0) {
             $data   = [];
-            $rowset = array_filter((array) $project->get_meta('tasks'));
+            $rowset = array_filter((array)$project->get_meta('tasks'));
 
             foreach ($rowset as $row) {
-                $row['created_by']   = (int) $row['created_by'];
-                $row['created_time'] = isset($row['created_time']) ? (int) $row['created_time'] : 0;
+                $row['created_by']   = (int)$row['created_by'];
+                $row['created_time'] = isset($row['created_time']) ? (int)$row['created_time'] : 0;
                 $assignees           = [];
                 if (isset($row['assigned_to'])) {
                     $assignees = array_map(
                         'intval',
-                        ! is_array($row['assigned_to']) ? (array) $row['assigned_to'] : $row['assigned_to']
+                        ! is_array($row['assigned_to']) ? (array)$row['assigned_to'] : $row['assigned_to']
                     );
                 }
 
                 $row['assigned_to'] = $assignees;
-                $row['progress']    = isset($row['progress']) ? (float) $row['progress'] : 0.00;
-                $row['notes']       = isset($row['notes']) ? (string) $row['notes'] : '';
-                $row['start_date']  = ! isset($row['start_date']) || ! is_numeric($row['start_date']) || $row['start_date'] < 0 ? 0 : (int) $row['start_date'];
-                $row['end_date']    = ! isset($row['end_date']) || ! is_numeric($row['end_date']) || $row['end_date'] < 0 ? 0 : (int) $row['end_date'];
+                $row['progress']    = isset($row['progress']) ? (float)$row['progress'] : 0.00;
+                $row['notes']       = isset($row['notes']) ? (string)$row['notes'] : '';
+                $row['start_date']  = ! isset($row['start_date']) || ! is_numeric($row['start_date']) || $row['start_date'] < 0 ? 0 : (int)$row['start_date'];
+                $row['end_date']    = ! isset($row['end_date']) || ! is_numeric($row['end_date']) || $row['end_date'] < 0 ? 0 : (int)$row['end_date'];
 
-                $data[ $row['id'] ] = $row;
+                $data[$row['id']] = $row;
             }
 
             $data = apply_filters('upstream_project_milestones', $data, $projectId);
@@ -123,34 +123,34 @@ class UpStream_View
     {
         $rowset = [];
 
-        $meta = (array) get_post_meta($projectId, '_upstream_project_bugs', true);
+        $meta = (array)get_post_meta($projectId, '_upstream_project_bugs', true);
         foreach ($meta as $data) {
-            if (! isset($data['id'])
+            if ( ! isset($data['id'])
                  || ! isset($data['created_by'])
             ) {
                 continue;
             }
 
-            $data['created_by']   = (int) $data['created_by'];
-            $data['created_time'] = isset($data['created_time']) ? (int) $data['created_time'] : 0;
+            $data['created_by']   = (int)$data['created_by'];
+            $data['created_time'] = isset($data['created_time']) ? (int)$data['created_time'] : 0;
 
             $assignees = [];
             if (isset($data['assigned_to'])) {
                 $assignees = array_map(
                     'intval',
-                    ! is_array($data['assigned_to']) ? (array) $data['assigned_to'] : $data['assigned_to']
+                    ! is_array($data['assigned_to']) ? (array)$data['assigned_to'] : $data['assigned_to']
                 );
             }
 
             $data['assigned_to'] = $assignees;
 
-            $data['description'] = isset($data['description']) ? (string) $data['description'] : '';
-            $data['severity']    = isset($data['severity']) ? (string) $data['severity'] : '';
-            $data['status']      = isset($data['status']) ? (string) $data['status'] : '';
-            $data['start_date']  = ! isset($data['start_date']) || ! is_numeric($data['start_date']) || $data['start_date'] < 0 ? 0 : (int) $data['start_date'];
-            $data['end_date']    = ! isset($data['end_date']) || ! is_numeric($data['end_date']) || $data['end_date'] < 0 ? 0 : (int) $data['end_date'];
+            $data['description'] = isset($data['description']) ? (string)$data['description'] : '';
+            $data['severity']    = isset($data['severity']) ? (string)$data['severity'] : '';
+            $data['status']      = isset($data['status']) ? (string)$data['status'] : '';
+            $data['start_date']  = ! isset($data['start_date']) || ! is_numeric($data['start_date']) || $data['start_date'] < 0 ? 0 : (int)$data['start_date'];
+            $data['end_date']    = ! isset($data['end_date']) || ! is_numeric($data['end_date']) || $data['end_date'] < 0 ? 0 : (int)$data['end_date'];
 
-            $rowset[ $data['id'] ] = $data;
+            $rowset[$data['id']] = $data;
         }
 
         return $rowset;

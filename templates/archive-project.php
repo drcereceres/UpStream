@@ -1,6 +1,6 @@
 <?php
 // Prevent direct access.
-if (! defined('ABSPATH')) {
+if ( ! defined('ABSPATH')) {
     exit;
 }
 
@@ -45,7 +45,7 @@ $i18n = [
     'LB_COMPLETE'       => __('%s Complete', 'upstream'),
 ];
 
-$currentUser = (object) upstream_user_data(@$_SESSION['upstream']['user_id']);
+$currentUser = (object)upstream_user_data(@$_SESSION['upstream']['user_id']);
 
 $statuses = upstream_get_all_project_statuses();
 
@@ -53,19 +53,19 @@ $projectsList = [];
 if (isset($currentUser->projects)) {
     if (is_array($currentUser->projects) && count($currentUser->projects) > 0) {
         foreach ($currentUser->projects as $project_id => $project) {
-            $data = (object) [
+            $data = (object)[
                 'id'                 => $project_id,
-                'author'             => (int) $project->post_author,
-                'created_at'         => (string) $project->post_date_gmt,
-                'modified_at'        => (string) $project->post_modified_gmt,
+                'author'             => (int)$project->post_author,
+                'created_at'         => (string)$project->post_date_gmt,
+                'modified_at'        => (string)$project->post_modified_gmt,
                 'title'              => $project->post_title,
                 'slug'               => $project->post_name,
                 'status'             => $project->post_status,
                 'permalink'          => get_permalink($project_id),
-                'startDateTimestamp' => (int) upstream_project_start_date($project_id),
-                'endDateTimestamp'   => (int) upstream_project_end_date($project_id),
-                'progress'           => (float) upstream_project_progress($project_id),
-                'status'             => (string) upstream_project_status($project_id),
+                'startDateTimestamp' => (int)upstream_project_start_date($project_id),
+                'endDateTimestamp'   => (int)upstream_project_end_date($project_id),
+                'progress'           => (float)upstream_project_progress($project_id),
+                'status'             => (string)upstream_project_status($project_id),
                 'clientName'         => null,
                 'categories'         => [],
                 'features'           => [
@@ -73,20 +73,20 @@ if (isset($currentUser->projects)) {
                 ],
             ];
 
-            $data->startDate = (string) upstream_format_date($data->startDateTimestamp);
-            $data->endDate   = (string) upstream_format_date($data->endDateTimestamp);
+            $data->startDate = (string)upstream_format_date($data->startDateTimestamp);
+            $data->endDate   = (string)upstream_format_date($data->endDateTimestamp);
 
             if ($areClientsEnabled) {
-                $data->clientName = trim((string) upstream_project_client_name($project_id));
+                $data->clientName = trim((string)upstream_project_client_name($project_id));
             }
 
-            if (isset($statuses[ $data->status ])) {
-                $data->status = $statuses[ $data->status ];
+            if (isset($statuses[$data->status])) {
+                $data->status = $statuses[$data->status];
             }
 
             $data->timeframe = $data->startDate;
-            if (! empty($data->endDate)) {
-                if (! empty($data->timeframe)) {
+            if ( ! empty($data->endDate)) {
+                if ( ! empty($data->timeframe)) {
                     $data->timeframe .= ' - ';
                 } else {
                     $data->timeframe = '<i>' . $i18n['LB_ENDS_AT'] . '</i>';
@@ -95,14 +95,14 @@ if (isset($currentUser->projects)) {
                 $data->timeframe .= $data->endDate;
             }
 
-            $categories = (array) wp_get_object_terms($data->id, 'project_category');
+            $categories = (array)wp_get_object_terms($data->id, 'project_category');
             if (count($categories) > 0) {
                 foreach ($categories as $category) {
-                    $data->categories[ $category->term_id ] = $category->name;
+                    $data->categories[$category->term_id] = $category->name;
                 }
             }
 
-            $projectsList[ $project_id ] = $data;
+            $projectsList[$project_id] = $data;
         }
 
         unset($project, $project_id);
@@ -117,7 +117,7 @@ upstream_get_template_part('global/header.php');
 include_once 'global/sidebar.php';
 upstream_get_template_part('global/top-nav.php');
 
-$categories = (array) get_terms([
+$categories = (array)get_terms([
     'taxonomy'   => 'project_category',
     'hide_empty' => false,
 ]);
@@ -134,11 +134,11 @@ $tableSettings = [
 ];
 $columnsSchema = \UpStream\Frontend\getProjectFields();
 
-$hiddenColumnsSchema  = [];
+$hiddenColumnsSchema = [];
 
 foreach ($columnsSchema as $columnName => $columnArgs) {
-    if (isset($columnArgs['isHidden']) && (bool) $columnArgs['isHidden'] === true) {
-        $hiddenColumnsSchema[ $columnName ] = $columnArgs;
+    if (isset($columnArgs['isHidden']) && (bool)$columnArgs['isHidden'] === true) {
+        $hiddenColumnsSchema[$columnName] = $columnArgs;
     }
 }
 
@@ -179,7 +179,8 @@ foreach ($columnsSchema as $columnName => $columnArgs) {
                                             </div>
                                             <div class="form-group">
                                                 <div class="btn-group">
-                                                    <a href="#projects-filters" role="button" class="btn btn-default btn-xs"
+                                                    <a href="#projects-filters" role="button"
+                                                       class="btn btn-default btn-xs"
                                                        data-toggle="collapse" aria-expanded="false"
                                                        aria-controls="projects-filters">
                                                         <i class="fa fa-filter"></i> <?php echo esc_html($i18n['LB_TOGGLE_FILTERS']); ?>
@@ -265,11 +266,11 @@ foreach ($columnsSchema as $columnName => $columnArgs) {
                                                             multiple>
                                                         <option value></option>
                                                         <option
-                                                            value="__none__"><?php echo esc_html($i18n['LB_NONE_UCF']); ?></option>
+                                                                value="__none__"><?php echo esc_html($i18n['LB_NONE_UCF']); ?></option>
                                                         <optgroup label="<?php echo esc_html($i18n['LB_STATUSES']); ?>">
                                                             <?php foreach ($statuses as $status): ?>
                                                                 <option
-                                                                    value="<?php echo esc_attr($status['id']); ?>"><?php echo esc_html($status['name']); ?></option>
+                                                                        value="<?php echo esc_attr($status['id']); ?>"><?php echo esc_html($status['name']); ?></option>
                                                             <?php endforeach; ?>
                                                         </optgroup>
                                                     </select>
@@ -285,18 +286,20 @@ foreach ($columnsSchema as $columnName => $columnArgs) {
                                                             multiple data-compare-operator="contains">
                                                         <option value></option>
                                                         <option
-                                                            value="__none__"><?php echo esc_html($i18n['LB_NONE_UCF']); ?></option>
-                                                        <optgroup label="<?php echo esc_html($i18n['LB_CATEGORIES']); ?>">
+                                                                value="__none__"><?php echo esc_html($i18n['LB_NONE_UCF']); ?></option>
+                                                        <optgroup
+                                                                label="<?php echo esc_html($i18n['LB_CATEGORIES']); ?>">
                                                             <?php foreach ($categories as $category): ?>
                                                                 <option
-                                                                    value="<?php echo esc_attr($category->term_id); ?>"><?php echo esc_html($category->name); ?></option>
+                                                                        value="<?php echo esc_attr($category->term_id); ?>"><?php echo esc_html($category->name); ?></option>
                                                             <?php endforeach; ?>
                                                         </optgroup>
                                                     </select>
                                                 </div>
                                             </div>
 
-                                            <?php do_action('upstream:project.filters', $tableSettings, $columnsSchema); ?>
+                                            <?php do_action('upstream:project.filters', $tableSettings,
+                                                $columnsSchema); ?>
                                         </div>
                                     </form>
                                     <table id="projects"
@@ -315,7 +318,8 @@ foreach ($columnsSchema as $columnName => $columnArgs) {
                         </span>
                                             </th>
                                             <?php if ($areClientsEnabled): ?>
-                                                <th class="is-clickable is-orderable" data-column="client" role="button">
+                                                <th class="is-clickable is-orderable" data-column="client"
+                                                    role="button">
                                                     <?php echo esc_html($i18n['LB_CLIENT']); ?>
                                                     <span class="pull-right o-order-direction">
                           <i class="fa fa-sort"></i>
@@ -344,7 +348,8 @@ foreach ($columnsSchema as $columnName => $columnArgs) {
                                                 <?php echo esc_html($i18n['LB_CATEGORIES']); ?>
                                             </th>
 
-                                            <?php do_action('upstream:project.columns.header', $tableSettings, $columnsSchema); ?>
+                                            <?php do_action('upstream:project.columns.header', $tableSettings,
+                                                $columnsSchema); ?>
                                         </tr>
                                         </thead>
                                         <tbody>
@@ -352,13 +357,15 @@ foreach ($columnsSchema as $columnName => $columnArgs) {
                                         $isProjectIndexOdd = true;
                                         foreach ($projectsList as $projectIndex => $project): ?>
                                             <?php
-                                            $project = apply_filters('upstream_frontend_project_data', $project, $project->id);
+                                            $project = apply_filters('upstream_frontend_project_data', $project,
+                                                $project->id);
                                             ?>
                                             <tr class="t-row-<?php echo $isProjectIndexOdd ? 'odd' : 'even'; ?>"
                                                 data-id="<?php echo $project->id; ?>">
                                                 <td data-column="title"
                                                     data-value="<?php echo esc_attr($project->title); ?>">
-                                                    <?php do_action('upstream:frontend.project.details.before_title', $project); ?>
+                                                    <?php do_action('upstream:frontend.project.details.before_title',
+                                                        $project); ?>
                                                     <a href="<?php echo $project->permalink; ?>">
                                                         <?php echo esc_html($project->title); ?>
                                                     </a>
@@ -385,21 +392,21 @@ foreach ($columnsSchema as $columnName => $columnArgs) {
                                                     data-value="<?php echo esc_attr($project->progress); ?>">
                                                     <div class="progress" style="margin-bottom: 0; height: 10px;">
                                                         <div
-                                                            class="progress-bar<?php echo $project->progress >= 100 ? ' progress-bar-success' : ""; ?>"
-                                                            role="progressbar"
-                                                            aria-valuenow="<?php echo esc_attr($project->progress); ?>"
-                                                            aria-valuemin="0" aria-valuemax="100"
-                                                            style="width: <?php echo $project->progress; ?>%;">
+                                                                class="progress-bar<?php echo $project->progress >= 100 ? ' progress-bar-success' : ""; ?>"
+                                                                role="progressbar"
+                                                                aria-valuenow="<?php echo esc_attr($project->progress); ?>"
+                                                                aria-valuemin="0" aria-valuemax="100"
+                                                                style="width: <?php echo $project->progress; ?>%;">
                                                             <span class="sr-only"><?php printf(
-                                                $i18n['LB_COMPLETE'],
+                                                                    $i18n['LB_COMPLETE'],
                                                                     $project->progress . '%'
-                                            ); ?></span>
+                                                                ); ?></span>
                                                         </div>
                                                     </div>
                                                     <small><?php printf(
-                                                                        $i18n['LB_COMPLETE'],
+                                                            $i18n['LB_COMPLETE'],
                                                             $project->progress . '%'
-                                                                    ); ?></small>
+                                                        ); ?></small>
                                                 </td>
                                                 <?php
                                                 if ($project->status !== null && is_array($project->status)) {
@@ -423,24 +430,26 @@ foreach ($columnsSchema as $columnName => $columnArgs) {
                                                 </td>
                                                 <td data-column="categories"
                                                     data-value="<?php echo count($project->categories) ? esc_attr(implode(
-                                                    ',',
-                                                        array_keys((array) $project->categories)
-                                                )) : '__none__'; ?>">
+                                                        ',',
+                                                        array_keys((array)$project->categories)
+                                                    )) : '__none__'; ?>">
                                                     <?php if (count($project->categories) > 0): ?>
                                                         <?php echo esc_attr(implode(
                                                             ', ',
-                                                            array_values((array) $project->categories)
+                                                            array_values((array)$project->categories)
                                                         )); ?>
                                                     <?php else: ?>
                                                         <i class="s-text-color-gray"><?php echo esc_html($i18n['LB_NONE']); ?></i>
                                                     <?php endif; ?>
                                                 </td>
 
-                                                <?php do_action('upstream:project.columns.data', $tableSettings, $columnsSchema, $project->id); ?>
+                                                <?php do_action('upstream:project.columns.data', $tableSettings,
+                                                    $columnsSchema, $project->id); ?>
                                             </tr>
 
-                                            <?php if (! empty($hiddenColumnsSchema)): ?>
-                                                <tr data-parent="<?php echo $project->id; ?>" aria-expanded="false" style="display: none;">
+                                            <?php if ( ! empty($hiddenColumnsSchema)): ?>
+                                                <tr data-parent="<?php echo $project->id; ?>" aria-expanded="false"
+                                                    style="display: none;">
                                                     <td>
                                                         <div>
                                                             <?php foreach ($hiddenColumnsSchema as $columnName => $column):
@@ -453,16 +462,17 @@ foreach ($columnsSchema as $columnName => $columnArgs) {
                                                                     $columnValue = $columnValue['value'];
                                                                 }
                                                                 ?>
-                                                                <div class="form-group" data-column="<?php echo $columnName; ?>">
+                                                                <div class="form-group"
+                                                                     data-column="<?php echo $columnName; ?>">
                                                                     <label><?php echo isset($column['label']) ? $column['label'] : ''; ?></label>
                                                                     <?php UpStream\Frontend\renderTableColumnValue(
-                                                                    $columnName,
-                                                                    $columnValue,
-                                                                    $column,
-                                                                    (array)$project,
-                                                                    'project',
+                                                                        $columnName,
+                                                                        $columnValue,
+                                                                        $column,
+                                                                        (array)$project,
+                                                                        'project',
                                                                         $project->id
-                                                                ); ?>
+                                                                    ); ?>
                                                                 </div>
                                                             <?php endforeach; ?>
                                                         </div>
@@ -477,9 +487,9 @@ foreach ($columnsSchema as $columnName => $columnArgs) {
                                 </div>
                             <?php else: ?>
                                 <p><?php _e(
-                                            "It seems that you're not participating in any project right now.",
+                                        "It seems that you're not participating in any project right now.",
                                         'upstream'
-                                        ); ?></p>
+                                    ); ?></p>
                             <?php endif; ?>
                         </div>
                     </div>

@@ -1,7 +1,7 @@
 <?php
 
 // Exit if accessed directly
-if (! defined('ABSPATH')) {
+if ( ! defined('ABSPATH')) {
     exit;
 }
 
@@ -20,8 +20,8 @@ function upstream_permissions($capability = null, $item_id = null)
 
     // these guys can do whatever they want
     if (upstream_project_owner_id() == upstream_current_user_id() ||
-         current_user_can('upstream_manager') ||
-         current_user_can('administrator')) {
+        current_user_can('upstream_manager') ||
+        current_user_can('administrator')) {
         $return = true;
     }
 
@@ -51,7 +51,7 @@ function upstream_permissions($capability = null, $item_id = null)
 
         // for client users
         // get their capabilities, stored within the meta of the Client post type
-        if (! is_int($current_user)) {
+        if ( ! is_int($current_user)) {
             $client_users = get_post_meta(
                 upstream_project_client_id(upstream_post_id()),
                 '_upstream_client_users',
@@ -84,7 +84,7 @@ function upstream_permissions($capability = null, $item_id = null)
     // used for the 'Actions' column to allow editing/deleting buttons
     if (isset($item_id)) {
         $item        = upstream_project_item_by_id(upstream_post_id(), $item_id);
-        $assigned_to = isset($item['assigned_to']) ? ( array ) $item['assigned_to'] : [];
+        $assigned_to = isset($item['assigned_to']) ? ( array )$item['assigned_to'] : [];
         $created_by  = isset($item['created_by']) ? $item['created_by'] : null;
         if (in_array($current_user, $assigned_to) || $created_by == $current_user) {
             $return = true;
@@ -111,7 +111,7 @@ function upstream_permissions($capability = null, $item_id = null)
  * Permission checks are always run through here.
  * Return true if they are allowed.
  *
- * @param  string      $capability
+ * @param  string $capability
  *
  * @return bool
  */
@@ -127,8 +127,8 @@ function upstream_admin_permissions($capability = null)
      * These guys can do whatever they want
      */
     if (upstream_project_owner_id() == upstream_current_user_id() ||
-         current_user_can('upstream_manager') ||
-         current_user_can('administrator')) {
+        current_user_can('upstream_manager') ||
+        current_user_can('administrator')) {
         $return = true;
     }
 
@@ -145,7 +145,7 @@ function upstream_admin_permissions($capability = null)
      * If project status is closed, block all fields (except for status) from being edited/deleted
      */
     if ((isset($capability) && $capability != 'project_status_field') &&
-         upstream_project_status_type() == 'closed') {
+        upstream_project_status_type() == 'closed') {
         $return = false;
     }
 
@@ -163,9 +163,9 @@ function upstream_get_client_users_permissions()
 {
     $permissions = [];
 
-    $permissionsList = (array) apply_filters('upstream:users.permissions', []);
+    $permissionsList = (array)apply_filters('upstream:users.permissions', []);
     foreach ($permissionsList as $permission) {
-        $permissions[ $permission['key'] ] = $permission;
+        $permissions[$permission['key']] = $permission;
     }
 
     return $permissions;
@@ -183,7 +183,7 @@ function upstream_get_client_users_permissions()
  */
 function upstream_user_can_access_project($user_id, $project_id)
 {
-    $project_id = is_numeric($project_id) ? (int) $project_id : 0;
+    $project_id = is_numeric($project_id) ? (int)$project_id : 0;
     if ($project_id <= 0) {
         return false;
     }
@@ -193,7 +193,7 @@ function upstream_user_can_access_project($user_id, $project_id)
         return false;
     }
 
-    $userIsAdmin = count(array_intersect((array) $user->roles, [ 'administrator', 'upstream_manager' ])) > 0;
+    $userIsAdmin = count(array_intersect((array)$user->roles, ['administrator', 'upstream_manager'])) > 0;
     if ($userIsAdmin) {
         return true;
     }
@@ -202,8 +202,8 @@ function upstream_user_can_access_project($user_id, $project_id)
 
     if (in_array('upstream_client_user', $user->roles)) {
         // Check if client user is allowed on this project.
-        $meta = (array) get_post_meta($project_id, '_upstream_project_client_users');
-        $meta = ! empty($meta) ? (array) $meta[0] : [];
+        $meta = (array)get_post_meta($project_id, '_upstream_project_client_users');
+        $meta = ! empty($meta) ? (array)$meta[0] : [];
         $meta = empty($meta) ? [] : $meta;
 
         if (in_array($user->ID, $meta)) {
@@ -211,12 +211,12 @@ function upstream_user_can_access_project($user_id, $project_id)
         }
     }
 
-    if (! $userCanAccessProject && user_can($user, 'edit_published_projects')) {
+    if ( ! $userCanAccessProject && user_can($user, 'edit_published_projects')) {
         // Check if user is a member of the project.
         $projectMembers = upstream_project_members_ids($project_id);
         if (is_array($projectMembers) && in_array($user->ID, $projectMembers)) {
             $userCanAccessProject = true;
-        } elseif ($user->ID == (int) $projectMembers) {
+        } elseif ($user->ID == (int)$projectMembers) {
             $userCanAccessProject = true;
         }
     }

@@ -7,7 +7,7 @@ namespace Cmb2Grid\Grid;
  *
  * @author Pablo Pacheco <pablo.pacheco@origgami.com.br>
  */
-if (! class_exists('\Cmb2Grid\Grid\Column')) {
+if ( ! class_exists('\Cmb2Grid\Grid\Column')) {
     class Column
     {
         private $field;
@@ -48,7 +48,7 @@ if (! class_exists('\Cmb2Grid\Grid\Column')) {
         public function setColumnClassCmb2()
         {
             $columnClass = $this->getColumnClass();
-            $field		 = $this->getField();
+            $field       = $this->getField();
             //error_log( print_r( $field, true ) );
 
 

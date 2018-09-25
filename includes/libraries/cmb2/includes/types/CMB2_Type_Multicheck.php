@@ -1,8 +1,9 @@
 <?php
+
 /**
  * CMB multicheck field type
  *
- * @since  2.2.2
+ * @since     2.2.2
  *
  * @category  WordPress_Plugin
  * @package   CMB2
@@ -20,20 +21,20 @@ class CMB2_Type_Multicheck extends CMB2_Type_Radio
      */
     public $type = 'checkbox';
 
-    public function render($args = array())
+    public function render($args = [])
     {
         $classes = false === $this->field->args('select_all_button')
             ? 'cmb2-checkbox-list no-select-all cmb2-list'
             : 'cmb2-checkbox-list cmb2-list';
 
-        $args = $this->parse_args($this->type, array(
+        $args = $this->parse_args($this->type, [
             'class'   => $classes,
-            'options' => $this->concat_items(array(
+            'options' => $this->concat_items([
                 'name'   => $this->_name() . '[]',
                 'method' => 'list_input_checkbox',
-            )),
-            'desc' => $this->_desc(true),
-        ));
+            ]),
+            'desc'    => $this->_desc(true),
+        ]);
 
         return $this->rendered($this->ul($args));
     }

@@ -1,7 +1,7 @@
 <?php
 
 // Exit if accessed directly
-if (! defined('ABSPATH')) {
+if ( ! defined('ABSPATH')) {
     exit;
 }
 
@@ -52,9 +52,9 @@ function upstream_render_labels_field_callback($field, $value, $object_id, $obje
         'plural' => '',
     ]); ?>
     <div class="alignleft"><p><label for="<?php echo $field_type->_id('_single'); ?>'"><?php _e(
-        'Single',
+                    'Single',
                     'upstream'
-    ); ?></label></p>
+                ); ?></label></p>
         <?php echo $field_type->input([
             'name'  => $field_type->_name('[single]'),
             'id'    => $field_type->_id('_single'),
@@ -63,9 +63,9 @@ function upstream_render_labels_field_callback($field, $value, $object_id, $obje
         ]); ?>
     </div>
     <div class="alignleft"><p><label for="<?php echo $field_type->_id('_plural'); ?>'"><?php _e(
-            'Plural',
+                    'Plural',
                     'upstream'
-        ); ?></label></p>
+                ); ?></label></p>
         <?php echo $field_type->input([
             'name'  => $field_type->_name('[plural]'),
             'id'    => $field_type->_id('_plural'),

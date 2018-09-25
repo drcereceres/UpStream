@@ -1,8 +1,9 @@
 <?php
+
 /**
  * CMB title field type
  *
- * @since  2.2.2
+ * @since     2.2.2
  *
  * @category  WordPress_Plugin
  * @package   CMB2
@@ -23,23 +24,23 @@ class CMB2_Type_Title extends CMB2_Type_Base
         $name = $this->field->args('name');
         $tag  = 'span';
 
-        if (! empty($name)) {
+        if ( ! empty($name)) {
             $tag = $this->field->object_type == 'post' ? 'h5' : 'h3';
         }
 
-        $a = $this->parse_args('title', array(
+        $a = $this->parse_args('title', [
             'tag'   => $tag,
             'class' => empty($name) ? 'cmb2-metabox-title-anchor' : 'cmb2-metabox-title',
             'name'  => $name,
             'desc'  => $this->_desc(true),
             'id'    => str_replace('_', '-', sanitize_html_class($this->field->id())),
-        ));
+        ]);
 
         return $this->rendered(
             sprintf(
                 '<%1$s %2$s>%3$s</%1$s>%4$s',
                 $a['tag'],
-                $this->concat_attrs($a, array( 'tag', 'name', 'desc' )),
+                $this->concat_attrs($a, ['tag', 'name', 'desc']),
                 $a['name'],
                 $a['desc']
             )
