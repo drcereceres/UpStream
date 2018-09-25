@@ -1,7 +1,7 @@
 <?php
 
 // Exit if accessed directly
-if ( ! defined( 'ABSPATH' ) ) {
+if (! defined('ABSPATH')) {
     exit;
 }
 
@@ -12,36 +12,36 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @since 1.0
  * @return void
  */
-function upstream_setup_post_types() {
-
+function upstream_setup_post_types()
+{
     $project_base = upstream_get_project_base();
     $client_base  = upstream_get_client_base();
 
-    $project_labels = apply_filters( 'upstream_project_labels', [
-        'name'                  => _x( '%2$s', 'project post type name', 'upstream' ),
-        'singular_name'         => _x( '%1$s', 'singular project post type name', 'upstream' ),
-        'add_new'               => __( 'New %1s', 'upstream' ),
-        'add_new_item'          => __( 'Add New %1$s', 'upstream' ),
-        'edit_item'             => __( 'Edit %1$s', 'upstream' ),
-        'new_item'              => __( 'New %1$s', 'upstream' ),
-        'all_items'             => __( '%2$s', 'upstream' ),
-        'view_item'             => __( 'View %1$s', 'upstream' ),
-        'search_items'          => __( 'Search %2$s', 'upstream' ),
-        'not_found'             => __( 'No %2$s found', 'upstream' ),
-        'not_found_in_trash'    => __( 'No %2$s found in Trash', 'upstream' ),
+    $project_labels = apply_filters('upstream_project_labels', [
+        'name'                  => _x('%2$s', 'project post type name', 'upstream'),
+        'singular_name'         => _x('%1$s', 'singular project post type name', 'upstream'),
+        'add_new'               => __('New %1s', 'upstream'),
+        'add_new_item'          => __('Add New %1$s', 'upstream'),
+        'edit_item'             => __('Edit %1$s', 'upstream'),
+        'new_item'              => __('New %1$s', 'upstream'),
+        'all_items'             => __('%2$s', 'upstream'),
+        'view_item'             => __('View %1$s', 'upstream'),
+        'search_items'          => __('Search %2$s', 'upstream'),
+        'not_found'             => __('No %2$s found', 'upstream'),
+        'not_found_in_trash'    => __('No %2$s found in Trash', 'upstream'),
         'parent_item_colon'     => '',
-        'menu_name'             => _x( '%2$s', 'project post type menu name', 'upstream' ),
-        'featured_image'        => __( '%1$s Image', 'upstream' ),
-        'set_featured_image'    => __( 'Set %1$s Image', 'upstream' ),
-        'remove_featured_image' => __( 'Remove %1$s Image', 'upstream' ),
-        'use_featured_image'    => __( 'Use as %1$s Image', 'upstream' ),
-        'filter_items_list'     => __( 'Filter %2$s list', 'upstream' ),
-        'items_list_navigation' => __( '%2$s list navigation', 'upstream' ),
-        'items_list'            => __( '%2$s list', 'upstream' ),
-    ] );
+        'menu_name'             => _x('%2$s', 'project post type menu name', 'upstream'),
+        'featured_image'        => __('%1$s Image', 'upstream'),
+        'set_featured_image'    => __('Set %1$s Image', 'upstream'),
+        'remove_featured_image' => __('Remove %1$s Image', 'upstream'),
+        'use_featured_image'    => __('Use as %1$s Image', 'upstream'),
+        'filter_items_list'     => __('Filter %2$s list', 'upstream'),
+        'items_list_navigation' => __('%2$s list navigation', 'upstream'),
+        'items_list'            => __('%2$s list', 'upstream'),
+    ]);
 
-    foreach ( $project_labels as $key => $value ) {
-        $project_labels[ $key ] = sprintf( $value, upstream_project_label(), upstream_project_label_plural() );
+    foreach ($project_labels as $key => $value) {
+        $project_labels[ $key ] = sprintf($value, upstream_project_label(), upstream_project_label_plural());
     }
 
     $project_args = [
@@ -58,40 +58,40 @@ function upstream_setup_post_types() {
         'map_meta_cap'       => true,
         'has_archive'        => $project_base,
         'hierarchical'       => false,
-        'supports'           => apply_filters( 'upstream_project_supports', [ 'title', 'revisions', 'author' ] ),
+        'supports'           => apply_filters('upstream_project_supports', [ 'title', 'revisions', 'author' ]),
     ];
-    register_post_type( 'project', apply_filters( 'upstream_project_post_type_args', $project_args ) );
+    register_post_type('project', apply_filters('upstream_project_post_type_args', $project_args));
 
-    if ( is_clients_disabled() ) {
+    if (is_clients_disabled()) {
         return;
     }
 
     /* Client Post Type */
-    $client_labels = apply_filters( 'upstream_client_labels', [
-        'name'                  => _x( '%2$s', 'project post type name', 'upstream' ),
-        'singular_name'         => _x( '%1$s', 'singular project post type name', 'upstream' ),
-        'add_new'               => __( 'New %1s', 'upstream' ),
-        'add_new_item'          => __( 'Add New %1$s', 'upstream' ),
-        'edit_item'             => __( 'Edit %1$s', 'upstream' ),
-        'new_item'              => __( 'New %1$s', 'upstream' ),
-        'all_items'             => __( '%2$s', 'upstream' ),
-        'view_item'             => __( 'View %1$s', 'upstream' ),
-        'search_items'          => __( 'Search %2$s', 'upstream' ),
-        'not_found'             => __( 'No %2$s found', 'upstream' ),
-        'not_found_in_trash'    => __( 'No %2$s found in Trash', 'upstream' ),
+    $client_labels = apply_filters('upstream_client_labels', [
+        'name'                  => _x('%2$s', 'project post type name', 'upstream'),
+        'singular_name'         => _x('%1$s', 'singular project post type name', 'upstream'),
+        'add_new'               => __('New %1s', 'upstream'),
+        'add_new_item'          => __('Add New %1$s', 'upstream'),
+        'edit_item'             => __('Edit %1$s', 'upstream'),
+        'new_item'              => __('New %1$s', 'upstream'),
+        'all_items'             => __('%2$s', 'upstream'),
+        'view_item'             => __('View %1$s', 'upstream'),
+        'search_items'          => __('Search %2$s', 'upstream'),
+        'not_found'             => __('No %2$s found', 'upstream'),
+        'not_found_in_trash'    => __('No %2$s found in Trash', 'upstream'),
         'parent_item_colon'     => '',
-        'menu_name'             => _x( '%2$s', 'project post type menu name', 'upstream' ),
-        'featured_image'        => __( '%1$s Image', 'upstream' ),
-        'set_featured_image'    => __( 'Set %1$s Image', 'upstream' ),
-        'remove_featured_image' => __( 'Remove %1$s Image', 'upstream' ),
-        'use_featured_image'    => __( 'Use as %1$s Image', 'upstream' ),
-        'filter_items_list'     => __( 'Filter %2$s list', 'upstream' ),
-        'items_list_navigation' => __( '%2$s list navigation', 'upstream' ),
-        'items_list'            => __( '%2$s list', 'upstream' ),
-    ] );
+        'menu_name'             => _x('%2$s', 'project post type menu name', 'upstream'),
+        'featured_image'        => __('%1$s Image', 'upstream'),
+        'set_featured_image'    => __('Set %1$s Image', 'upstream'),
+        'remove_featured_image' => __('Remove %1$s Image', 'upstream'),
+        'use_featured_image'    => __('Use as %1$s Image', 'upstream'),
+        'filter_items_list'     => __('Filter %2$s list', 'upstream'),
+        'items_list_navigation' => __('%2$s list navigation', 'upstream'),
+        'items_list'            => __('%2$s list', 'upstream'),
+    ]);
 
-    foreach ( $client_labels as $key => $value ) {
-        $client_labels[ $key ] = sprintf( $value, upstream_client_label(), upstream_client_label_plural() );
+    foreach ($client_labels as $key => $value) {
+        $client_labels[ $key ] = sprintf($value, upstream_client_label(), upstream_client_label_plural());
     }
 
     $client_args = [
@@ -106,12 +106,12 @@ function upstream_setup_post_types() {
         'map_meta_cap'       => true,
         'has_archive'        => false,
         'hierarchical'       => false,
-        'supports'           => apply_filters( 'upstream_client_supports', [ 'title', 'revisions' ] ),
+        'supports'           => apply_filters('upstream_client_supports', [ 'title', 'revisions' ]),
     ];
-    register_post_type( 'client', apply_filters( 'upstream_client_post_type_args', $client_args ) );
+    register_post_type('client', apply_filters('upstream_client_post_type_args', $client_args));
 }
 
-add_action( 'init', 'upstream_setup_post_types', 1 );
+add_action('init', 'upstream_setup_post_types', 1);
 
 /**
  * Registers the custom taxonomies for the projects custom post type
@@ -119,31 +119,34 @@ add_action( 'init', 'upstream_setup_post_types', 1 );
  * @since 1.0
  * @return void
  */
-function upstream_setup_taxonomies() {
-    if ( is_project_categorization_disabled() ) {
+function upstream_setup_taxonomies()
+{
+    if (is_project_categorization_disabled()) {
         return;
     }
 
-    $slug = defined( 'UPSTREAM_CAT_SLUG' ) ? UPSTREAM_CAT_SLUG : 'projects';
+    $slug = defined('UPSTREAM_CAT_SLUG') ? UPSTREAM_CAT_SLUG : 'projects';
 
     /** Categories */
     $category_labels = [
-        'name'              => _x( 'Category', 'taxonomy general name', 'upstream' ),
-        'singular_name'     => _x( 'Category', 'taxonomy singular name', 'upstream' ),
-        'search_items'      => sprintf( __( 'Search %s Categories', 'upstream' ), upstream_project_label() ),
-        'all_items'         => sprintf( __( 'All %s Categories', 'upstream' ), upstream_project_label() ),
-        'parent_item'       => sprintf( __( 'Parent %s Category', 'upstream' ), upstream_project_label() ),
-        'parent_item_colon' => sprintf( __( 'Parent %s Category:', 'upstream' ), upstream_project_label() ),
-        'edit_item'         => sprintf( __( 'Edit %s Category', 'upstream' ), upstream_project_label() ),
-        'update_item'       => sprintf( __( 'Update %s Category', 'upstream' ), upstream_project_label() ),
-        'add_new_item'      => sprintf( __( 'Add New %s Category', 'upstream' ), upstream_project_label() ),
-        'new_item_name'     => sprintf( __( 'New %s Category Name', 'upstream' ), upstream_project_label() ),
-        'menu_name'         => __( 'Categories', 'upstream' ),
+        'name'              => _x('Category', 'taxonomy general name', 'upstream'),
+        'singular_name'     => _x('Category', 'taxonomy singular name', 'upstream'),
+        'search_items'      => sprintf(__('Search %s Categories', 'upstream'), upstream_project_label()),
+        'all_items'         => sprintf(__('All %s Categories', 'upstream'), upstream_project_label()),
+        'parent_item'       => sprintf(__('Parent %s Category', 'upstream'), upstream_project_label()),
+        'parent_item_colon' => sprintf(__('Parent %s Category:', 'upstream'), upstream_project_label()),
+        'edit_item'         => sprintf(__('Edit %s Category', 'upstream'), upstream_project_label()),
+        'update_item'       => sprintf(__('Update %s Category', 'upstream'), upstream_project_label()),
+        'add_new_item'      => sprintf(__('Add New %s Category', 'upstream'), upstream_project_label()),
+        'new_item_name'     => sprintf(__('New %s Category Name', 'upstream'), upstream_project_label()),
+        'menu_name'         => __('Categories', 'upstream'),
     ];
 
-    $category_args = apply_filters( 'upstream_project_category_args', [
+    $category_args = apply_filters(
+        'upstream_project_category_args',
+        [
             'hierarchical'      => true,
-            'labels'            => apply_filters( '_upstream_project_category_labels', $category_labels ),
+            'labels'            => apply_filters('_upstream_project_category_labels', $category_labels),
             'show_ui'           => true,
             'show_admin_column' => true,
             'query_var'         => 'project_category',
@@ -156,31 +159,31 @@ function upstream_setup_taxonomies() {
             ],
         ]
     );
-    register_taxonomy( 'project_category', [ 'project' ], $category_args );
-    register_taxonomy_for_object_type( 'project_category', 'project' );
+    register_taxonomy('project_category', [ 'project' ], $category_args);
+    register_taxonomy_for_object_type('project_category', 'project');
 
     /** Tags **/
     $tagsLabels = [
-        'name'                       => _x( 'Tags', 'taxonomy (tag) general name', 'upstream' ),
-        'singular_name'              => _x( 'Tag', 'taxonomy (tag) singular name', 'upstream' ),
-        'search_items'               => __( 'Search Tags', 'upstream' ),
-        'popular_items'              => __( 'Popular Tags' ),
-        'all_items'                  => __( 'All Tags', 'upstream' ),
+        'name'                       => _x('Tags', 'taxonomy (tag) general name', 'upstream'),
+        'singular_name'              => _x('Tag', 'taxonomy (tag) singular name', 'upstream'),
+        'search_items'               => __('Search Tags', 'upstream'),
+        'popular_items'              => __('Popular Tags'),
+        'all_items'                  => __('All Tags', 'upstream'),
         'parent_item'                => null,
         'parent_item_colon'          => null,
-        'edit_item'                  => __( 'Edit Tag', 'upstream' ),
-        'update_item'                => __( 'Update Tag', 'upstream' ),
-        'add_new_item'               => __( 'Add New Tag', 'upstream' ),
-        'new_item_name'              => __( 'New Tag Name', 'upstream' ),
-        'add_or_remove_items'        => __( 'Add or remove tags' ),
-        'separate_items_with_commas' => __( 'Separate tags with commas' ),
-        'choose_from_most_used'      => __( 'Choose from the most used tags' ),
-        'menu_name'                  => __( 'Tags', 'upstream' ),
+        'edit_item'                  => __('Edit Tag', 'upstream'),
+        'update_item'                => __('Update Tag', 'upstream'),
+        'add_new_item'               => __('Add New Tag', 'upstream'),
+        'new_item_name'              => __('New Tag Name', 'upstream'),
+        'add_or_remove_items'        => __('Add or remove tags'),
+        'separate_items_with_commas' => __('Separate tags with commas'),
+        'choose_from_most_used'      => __('Choose from the most used tags'),
+        'menu_name'                  => __('Tags', 'upstream'),
     ];
 
     $tagsArgs = [
         'hierarchical'      => false,
-        'labels'            => apply_filters( '_upstream_project_tags_labels', $tagsLabels ),
+        'labels'            => apply_filters('_upstream_project_tags_labels', $tagsLabels),
         'show_ui'           => true,
         'show_admin_column' => true,
         'query_var'         => 'upstream_tag',
@@ -197,8 +200,8 @@ function upstream_setup_taxonomies() {
         ],
     ];
 
-    register_taxonomy( 'upstream_tag', [ 'project' ], $tagsArgs );
-    register_taxonomy_for_object_type( 'upstream_tag', 'project' );
+    register_taxonomy('upstream_tag', [ 'project' ], $tagsArgs);
+    register_taxonomy_for_object_type('upstream_tag', 'project');
 }
 
-add_action( 'init', 'upstream_setup_taxonomies', 0 );
+add_action('init', 'upstream_setup_taxonomies', 0);

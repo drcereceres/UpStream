@@ -12,7 +12,7 @@ namespace {
     if (!defined('PASSWORD_BCRYPT')) {
         /**
          * PHPUnit Process isolation caches constants, but not function declarations.
-         * So we need to check if the constants are defined separately from 
+         * So we need to check if the constants are defined separately from
          * the functions to enable supporting process isolation in userland
          * code.
          */
@@ -32,7 +32,8 @@ namespace {
          *
          * @return string|false The hashed password, or false on error.
          */
-        function password_hash($password, $algo, array $options = array()) {
+        function password_hash($password, $algo, array $options = array())
+        {
             if (!function_exists('crypt')) {
                 trigger_error("Crypt must be loaded for password_hash to function", E_USER_WARNING);
                 return null;
@@ -86,6 +87,7 @@ namespace {
                             $salt = (string) $options['salt'];
                             break;
                         }
+                        // no break
                     case 'array':
                     case 'resource':
                     default:
@@ -177,7 +179,8 @@ namespace {
          *
          * @return array The array of information about the hash.
          */
-        function password_get_info($hash) {
+        function password_get_info($hash)
+        {
             $return = array(
                 'algo' => 0,
                 'algoName' => 'unknown',
@@ -203,7 +206,8 @@ namespace {
          *
          * @return boolean True if the password needs to be rehashed.
          */
-        function password_needs_rehash($hash, $algo, array $options = array()) {
+        function password_needs_rehash($hash, $algo, array $options = array())
+        {
             $info = password_get_info($hash);
             if ($info['algo'] != $algo) {
                 return true;
@@ -227,7 +231,8 @@ namespace {
          *
          * @return boolean If the password matches the hash
          */
-        function password_verify($password, $hash) {
+        function password_verify($password, $hash)
+        {
             if (!function_exists('crypt')) {
                 trigger_error("Crypt must be loaded for password_verify to function", E_USER_WARNING);
                 return false;
@@ -264,7 +269,8 @@ namespace PasswordCompat\binary {
          * @internal
          * @return int The number of bytes
          */
-        function _strlen($binary_string) {
+        function _strlen($binary_string)
+        {
             if (function_exists('mb_strlen')) {
                 return mb_strlen($binary_string, '8bit');
             }
@@ -283,7 +289,8 @@ namespace PasswordCompat\binary {
          * @internal
          * @return string The substring
          */
-        function _substr($binary_string, $start, $length) {
+        function _substr($binary_string, $start, $length)
+        {
             if (function_exists('mb_substr')) {
                 return mb_substr($binary_string, $start, $length, '8bit');
             }
@@ -295,8 +302,9 @@ namespace PasswordCompat\binary {
          *
          * @return boolean the check result
          */
-        function check() {
-            static $pass = NULL;
+        function check()
+        {
+            static $pass = null;
 
             if (is_null($pass)) {
                 if (function_exists('crypt')) {
@@ -309,6 +317,5 @@ namespace PasswordCompat\binary {
             }
             return $pass;
         }
-
     }
 }

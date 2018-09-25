@@ -1,18 +1,19 @@
 <?php
 
 // Exit if accessed directly
-if ( ! defined( 'ABSPATH' ) ) {
+if (! defined('ABSPATH')) {
     exit;
 }
 
-if ( ! class_exists( 'UpStream_Options_Tasks' ) ) :
+if (! class_exists('UpStream_Options_Tasks')) :
 
     /**
      * CMB2 Theme Options
      *
      * @version 0.1.0
      */
-    class UpStream_Options_Tasks {
+    class UpStream_Options_Tasks
+    {
 
         /**
          * Array of metaboxes/fields
@@ -54,7 +55,8 @@ if ( ! class_exists( 'UpStream_Options_Tasks' ) ) :
          *
          * @since 0.1.0
          */
-        public function __construct() {
+        public function __construct()
+        {
             // Set our title
             $this->title      = upstream_task_label_plural();
             $this->menu_title = $this->title;
@@ -66,8 +68,9 @@ if ( ! class_exists( 'UpStream_Options_Tasks' ) ) :
          *
          * @return Myprefix_Admin
          **/
-        public static function get_instance() {
-            if ( is_null( self::$instance ) ) {
+        public static function get_instance()
+        {
+            if (is_null(self::$instance)) {
                 self::$instance = new self();
             }
 
@@ -80,9 +83,11 @@ if ( ! class_exists( 'UpStream_Options_Tasks' ) ) :
          *
          * @since  0.1.0
          */
-        public function options() {
-
-            $options = apply_filters( $this->id . '_option_fields', [
+        public function options()
+        {
+            $options = apply_filters(
+                $this->id . '_option_fields',
+                [
                     'id'         => $this->id, // upstream_tasks
                     'title'      => $this->title,
                     'menu_title' => $this->menu_title,
@@ -91,12 +96,18 @@ if ( ! class_exists( 'UpStream_Options_Tasks' ) ) :
                     'show_names' => true,
                     'fields'     => [
                         [
-                            'name' => __( 'Statuses', 'upstream' ),
+                            'name' => __('Statuses', 'upstream'),
                             'id'   => 'status_title',
                             'type' => 'title',
-                            'desc' => sprintf( __( 'The statuses and colors that can be used for the status of %s.<br>These will become available in the %s Status dropdown within each %s',
-                                'upstream' ), upstream_task_label_plural(), upstream_task_label(),
-                                upstream_task_label() ),
+                            'desc' => sprintf(
+                                __(
+                                'The statuses and colors that can be used for the status of %s.<br>These will become available in the %s Status dropdown within each %s',
+                                'upstream'
+                            ),
+                                upstream_task_label_plural(),
+                                upstream_task_label(),
+                                upstream_task_label()
+                            ),
                         ],
                         [
                             'id'              => 'statuses',
@@ -104,46 +115,50 @@ if ( ! class_exists( 'UpStream_Options_Tasks' ) ) :
                             'name'            => '',
                             'description'     => '',
                             'options'         => [
-                                'group_title'   => __( 'Status {#}', 'upstream' ),
-                                'add_button'    => __( 'Add Status', 'upstream' ),
-                                'remove_button' => __( 'Remove Entry', 'upstream' ),
+                                'group_title'   => __('Status {#}', 'upstream'),
+                                'add_button'    => __('Add Status', 'upstream'),
+                                'remove_button' => __('Remove Entry', 'upstream'),
                                 'sortable'      => true, // beta
                             ],
                             'sanitization_cb' => [ 'UpStream_Admin', 'onBeforeSave' ],
                             'fields'          => [
                                 [
-                                    'name' => __( 'Hidden', 'upstream' ),
+                                    'name' => __('Hidden', 'upstream'),
                                     'id'   => 'id',
                                     'type' => 'hidden',
                                 ],
                                 [
-                                    'name'       => __( 'Status Color', 'upstream' ),
+                                    'name'       => __('Status Color', 'upstream'),
                                     'id'         => 'color',
                                     'type'       => 'colorpicker',
                                     'attributes' => [
-                                        'data-colorpicker' => json_encode( [
+                                        'data-colorpicker' => json_encode([
                                             // Iris Options set here as values in the 'data-colorpicker' array
                                             'palettes' => upstream_colorpicker_default_colors(),
                                             'width'    => 300,
-                                        ] ),
+                                        ]),
                                     ],
                                 ],
                                 [
-                                    'name' => __( 'Status Name', 'upstream' ),
+                                    'name' => __('Status Name', 'upstream'),
                                     'id'   => 'name',
                                     'type' => 'text',
                                 ],
                                 [
-                                    'name'    => __( 'Type of Status', 'upstream' ),
+                                    'name'    => __('Type of Status', 'upstream'),
                                     'id'      => 'type',
                                     'type'    => 'radio',
                                     'default' => 'open',
-                                    'desc'    => __( "A Status Name such as 'In Progress' or 'Overdue' would be considered Open.",
-                                            'upstream' ) . '<br>' . __( "A Status Name such as 'Complete' or 'Cancelled' would be considered Closed.",
-                                            'upstream' ),
+                                    'desc'    => __(
+                                        "A Status Name such as 'In Progress' or 'Overdue' would be considered Open.",
+                                            'upstream'
+                                    ) . '<br>' . __(
+                                                "A Status Name such as 'Complete' or 'Cancelled' would be considered Closed.",
+                                            'upstream'
+                                            ),
                                     'options' => [
-                                        'open'   => __( 'Open', 'upstream' ),
-                                        'closed' => __( 'Closed', 'upstream' ),
+                                        'open'   => __('Open', 'upstream'),
+                                        'closed' => __('Closed', 'upstream'),
                                     ],
                                 ],
                             ],
@@ -155,7 +170,6 @@ if ( ! class_exists( 'UpStream_Options_Tasks' ) ) :
             );
 
             return $options;
-
         }
 
         /**
@@ -164,34 +178,35 @@ if ( ! class_exists( 'UpStream_Options_Tasks' ) ) :
          * @since   1.17.0
          * @static
          */
-        public static function createTasksStatusesIds() {
-            $continue = ! (bool) get_option( 'upstream:created_tasks_args_ids' );
-            if ( ! $continue ) {
+        public static function createTasksStatusesIds()
+        {
+            $continue = ! (bool) get_option('upstream:created_tasks_args_ids');
+            if (! $continue) {
                 return;
             }
 
-            $tasks = get_option( 'upstream_tasks' );
-            if ( isset( $tasks['statuses'] ) ) {
-                $tasks['statuses'] = UpStream_Admin::createMissingIdsInSet( $tasks['statuses'] );
+            $tasks = get_option('upstream_tasks');
+            if (isset($tasks['statuses'])) {
+                $tasks['statuses'] = UpStream_Admin::createMissingIdsInSet($tasks['statuses']);
 
-                update_option( 'upstream_tasks', $tasks );
+                update_option('upstream_tasks', $tasks);
 
                 $tasks = $tasks['statuses'];
 
                 // Update existent Tasks status across all Projects.
                 global $wpdb;
 
-                $metas = $wpdb->get_results( sprintf(
+                $metas = $wpdb->get_results(sprintf(
                     'SELECT `post_id`, `meta_value`
                 FROM `%s`
                 WHERE `meta_key` = "_upstream_project_tasks"',
                     $wpdb->prefix . 'postmeta'
-                ) );
+                ));
 
-                if ( count( $metas ) > 0 ) {
-                    $getTaskStatusIdByTitle = function ( $needle ) use ( &$tasks ) {
-                        foreach ( $tasks as $task ) {
-                            if ( $needle === $task['name'] ) {
+                if (count($metas) > 0) {
+                    $getTaskStatusIdByTitle = function ($needle) use (&$tasks) {
+                        foreach ($tasks as $task) {
+                            if ($needle === $task['name']) {
                                 return $task['id'];
                             }
                         }
@@ -199,10 +214,10 @@ if ( ! class_exists( 'UpStream_Options_Tasks' ) ) :
                         return false;
                     };
 
-                    $replaceTaskStatusWithItsId = function ( $task ) use ( &$getTaskStatusIdByTitle ) {
-                        if ( isset( $task['status'] ) ) {
-                            $taskId = $getTaskStatusIdByTitle( $task['status'] );
-                            if ( $taskId !== false ) {
+                    $replaceTaskStatusWithItsId = function ($task) use (&$getTaskStatusIdByTitle) {
+                        if (isset($task['status'])) {
+                            $taskId = $getTaskStatusIdByTitle($task['status']);
+                            if ($taskId !== false) {
                                 $task['status'] = $taskId;
                             }
                         }
@@ -210,26 +225,24 @@ if ( ! class_exists( 'UpStream_Options_Tasks' ) ) :
                         return $task;
                     };
 
-                    foreach ( $metas as $meta ) {
-                        if ( empty( $meta->meta_value ) ) {
+                    foreach ($metas as $meta) {
+                        if (empty($meta->meta_value)) {
                             continue;
                         }
 
                         $projectId = (int) $meta->post_id;
 
-                        $data = array_filter( maybe_unserialize( (string) $meta->meta_value ) );
-                        $data = array_map( $replaceTaskStatusWithItsId, $data );
+                        $data = array_filter(maybe_unserialize((string) $meta->meta_value));
+                        $data = array_map($replaceTaskStatusWithItsId, $data);
 
-                        update_post_meta( $projectId, '_upstream_project_tasks', $data );
+                        update_post_meta($projectId, '_upstream_project_tasks', $data);
                     }
                 }
 
-                update_option( 'upstream:created_tasks_args_ids', 1 );
+                update_option('upstream:created_tasks_args_ids', 1);
             }
         }
     }
 
 
 endif;
-
-

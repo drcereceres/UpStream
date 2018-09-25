@@ -1,18 +1,19 @@
 <?php
 
 // Exit if accessed directly
-if ( ! defined( 'ABSPATH' ) ) {
+if (! defined('ABSPATH')) {
     exit;
 }
 
-if ( ! class_exists( 'UpStream_Options_Bugs' ) ) :
+if (! class_exists('UpStream_Options_Bugs')) :
 
     /**
      * CMB2 Theme Options
      *
      * @version 0.1.0
      */
-    class UpStream_Options_Bugs {
+    class UpStream_Options_Bugs
+    {
 
         /**
          * ID of metabox
@@ -54,7 +55,8 @@ if ( ! class_exists( 'UpStream_Options_Bugs' ) ) :
          *
          * @since 0.1.0
          */
-        public function __construct() {
+        public function __construct()
+        {
             // Set our title
             $this->title      = upstream_bug_label_plural();
             $this->menu_title = $this->title;
@@ -66,8 +68,9 @@ if ( ! class_exists( 'UpStream_Options_Bugs' ) ) :
          *
          * @return Myprefix_Admin
          **/
-        public static function get_instance() {
-            if ( is_null( self::$instance ) ) {
+        public static function get_instance()
+        {
+            if (is_null(self::$instance)) {
                 self::$instance = new self();
             }
 
@@ -79,9 +82,11 @@ if ( ! class_exists( 'UpStream_Options_Bugs' ) ) :
          *
          * @since  0.1.0
          */
-        public function options() {
-
-            $options = apply_filters( $this->id . '_option_fields', [
+        public function options()
+        {
+            $options = apply_filters(
+                $this->id . '_option_fields',
+                [
                     'id'         => $this->id, // upstream_tasks
                     'title'      => $this->title,
                     'menu_title' => $this->menu_title,
@@ -90,11 +95,13 @@ if ( ! class_exists( 'UpStream_Options_Bugs' ) ) :
                     'show_names' => true,
                     'fields'     => [
                         [
-                            'name' => __( 'Statuses', 'upstream' ),
+                            'name' => __('Statuses', 'upstream'),
                             'id'   => 'status_title',
                             'type' => 'title',
-                            'desc' => sprintf( __( 'The statuses and colors that can be used for the status of %s.<br>These will become available in the %s Status dropdown within each %s',
-                                'upstream' ), upstream_bug_label_plural(), upstream_bug_label(), upstream_bug_label() ),
+                            'desc' => sprintf(__(
+                                'The statuses and colors that can be used for the status of %s.<br>These will become available in the %s Status dropdown within each %s',
+                                'upstream'
+                            ), upstream_bug_label_plural(), upstream_bug_label(), upstream_bug_label()),
                         ],
                         [
                             'id'              => 'statuses',
@@ -102,56 +109,62 @@ if ( ! class_exists( 'UpStream_Options_Bugs' ) ) :
                             'name'            => '',
                             'description'     => '',
                             'options'         => [
-                                'group_title'   => __( 'Status {#}', 'upstream' ),
-                                'add_button'    => __( 'Add Status', 'upstream' ),
-                                'remove_button' => __( 'Remove Entry', 'upstream' ),
+                                'group_title'   => __('Status {#}', 'upstream'),
+                                'add_button'    => __('Add Status', 'upstream'),
+                                'remove_button' => __('Remove Entry', 'upstream'),
                                 'sortable'      => true, // beta
                             ],
                             'sanitization_cb' => [ 'UpStream_Admin', 'onBeforeSave' ],
                             'fields'          => [
                                 [
-                                    'name' => __( 'Hidden', 'upstream' ),
+                                    'name' => __('Hidden', 'upstream'),
                                     'id'   => 'id',
                                     'type' => 'hidden',
                                 ],
                                 [
-                                    'name'       => __( 'Status Color', 'upstream' ),
+                                    'name'       => __('Status Color', 'upstream'),
                                     'id'         => 'color',
                                     'type'       => 'colorpicker',
                                     'attributes' => [
-                                        'data-colorpicker' => json_encode( [
+                                        'data-colorpicker' => json_encode([
                                             // Iris Options set here as values in the 'data-colorpicker' array
                                             'palettes' => upstream_colorpicker_default_colors(),
                                             'width'    => 300,
-                                        ] ),
+                                        ]),
                                     ],
                                 ],
                                 [
-                                    'name' => __( 'Status Name', 'upstream' ),
+                                    'name' => __('Status Name', 'upstream'),
                                     'id'   => 'name',
                                     'type' => 'text',
                                 ],
                                 [
-                                    'name'    => __( 'Type of Status', 'upstream' ),
+                                    'name'    => __('Type of Status', 'upstream'),
                                     'id'      => 'type',
                                     'type'    => 'radio',
                                     'default' => 'open',
-                                    'desc'    => __( "A Status Name such as 'In Progress' or 'Overdue' would be considered Open.",
-                                            'upstream' ) . '<br>' . __( "A Status Name such as 'Complete' or 'Cancelled' would be considered Closed.",
-                                            'upstream' ),
+                                    'desc'    => __(
+                                        "A Status Name such as 'In Progress' or 'Overdue' would be considered Open.",
+                                            'upstream'
+                                    ) . '<br>' . __(
+                                                "A Status Name such as 'Complete' or 'Cancelled' would be considered Closed.",
+                                            'upstream'
+                                            ),
                                     'options' => [
-                                        'open'   => __( 'Open', 'upstream' ),
-                                        'closed' => __( 'Closed', 'upstream' ),
+                                        'open'   => __('Open', 'upstream'),
+                                        'closed' => __('Closed', 'upstream'),
                                     ],
                                 ],
                             ],
                         ],
                         [
-                            'name' => __( 'Severity', 'upstream' ),
+                            'name' => __('Severity', 'upstream'),
                             'id'   => 'severity_title',
                             'type' => 'title',
-                            'desc' => sprintf( __( 'The severity and colors that can be used for the severity of %s.<br>These will become available in the %s Severity dropdown within each %s',
-                                'upstream' ), upstream_bug_label_plural(), upstream_bug_label(), upstream_bug_label() ),
+                            'desc' => sprintf(__(
+                                'The severity and colors that can be used for the severity of %s.<br>These will become available in the %s Severity dropdown within each %s',
+                                'upstream'
+                            ), upstream_bug_label_plural(), upstream_bug_label(), upstream_bug_label()),
                         ],
                         [
                             'id'          => 'severities',
@@ -159,31 +172,31 @@ if ( ! class_exists( 'UpStream_Options_Bugs' ) ) :
                             'name'        => '',
                             'description' => '',
                             'options'     => [
-                                'group_title'   => __( 'Severity {#}', 'upstream' ),
-                                'add_button'    => __( 'Add Severity', 'upstream' ),
-                                'remove_button' => __( 'Remove Entry', 'upstream' ),
+                                'group_title'   => __('Severity {#}', 'upstream'),
+                                'add_button'    => __('Add Severity', 'upstream'),
+                                'remove_button' => __('Remove Entry', 'upstream'),
                                 'sortable'      => true, // beta
                             ],
                             'fields'      => [
                                 [
-                                    'name' => __( 'Hidden', 'upstream' ),
+                                    'name' => __('Hidden', 'upstream'),
                                     'id'   => 'id',
                                     'type' => 'hidden',
                                 ],
                                 [
-                                    'name'       => __( 'Severity Color', 'upstream' ),
+                                    'name'       => __('Severity Color', 'upstream'),
                                     'id'         => 'color',
                                     'type'       => 'colorpicker',
                                     'attributes' => [
-                                        'data-colorpicker' => json_encode( [
+                                        'data-colorpicker' => json_encode([
                                             // Iris Options set here as values in the 'data-colorpicker' array
                                             'palettes' => upstream_colorpicker_default_colors(),
                                             'width'    => 300,
-                                        ] ),
+                                        ]),
                                     ],
                                 ],
                                 [
-                                    'name' => __( 'Severity Name', 'upstream' ),
+                                    'name' => __('Severity Name', 'upstream'),
                                     'id'   => 'name',
                                     'type' => 'text',
                                 ],
@@ -196,7 +209,6 @@ if ( ! class_exists( 'UpStream_Options_Bugs' ) ) :
             );
 
             return $options;
-
         }
 
         /**
@@ -205,33 +217,34 @@ if ( ! class_exists( 'UpStream_Options_Bugs' ) ) :
          * @since   1.17.0
          * @static
          */
-        public static function createBugsStatusesIds() {
-            $continue = ! (bool) get_option( 'upstream:created_bugs_args_ids' );
-            if ( ! $continue ) {
+        public static function createBugsStatusesIds()
+        {
+            $continue = ! (bool) get_option('upstream:created_bugs_args_ids');
+            if (! $continue) {
                 return;
             }
 
-            $bugs = get_option( 'upstream_bugs' );
-            if ( isset( $bugs['statuses'] ) && isset( $bugs['severities'] ) ) {
-                $bugs['statuses']   = UpStream_Admin::createMissingIdsInSet( $bugs['statuses'] );
-                $bugs['severities'] = UpStream_Admin::createMissingIdsInSet( $bugs['severities'] );
+            $bugs = get_option('upstream_bugs');
+            if (isset($bugs['statuses']) && isset($bugs['severities'])) {
+                $bugs['statuses']   = UpStream_Admin::createMissingIdsInSet($bugs['statuses']);
+                $bugs['severities'] = UpStream_Admin::createMissingIdsInSet($bugs['severities']);
 
-                update_option( 'upstream_bugs', $bugs );
+                update_option('upstream_bugs', $bugs);
 
                 // Update existent Bugs statuses/severities across all Projects.
                 global $wpdb;
 
-                $metas = $wpdb->get_results( sprintf(
+                $metas = $wpdb->get_results(sprintf(
                     'SELECT `post_id`, `meta_value`
                 FROM `%s`
                 WHERE `meta_key` = "_upstream_project_bugs"',
                     $wpdb->prefix . 'postmeta'
-                ) );
+                ));
 
-                if ( count( $metas ) > 0 ) {
-                    $getBugArgIdByTitle = function ( $needle, $argName = 'statuses' ) use ( &$bugs ) {
-                        foreach ( $bugs[ $argName ] as $bug ) {
-                            if ( $needle === $bug['name'] ) {
+                if (count($metas) > 0) {
+                    $getBugArgIdByTitle = function ($needle, $argName = 'statuses') use (&$bugs) {
+                        foreach ($bugs[ $argName ] as $bug) {
+                            if ($needle === $bug['name']) {
                                 return $bug['id'];
                             }
                         }
@@ -239,21 +252,21 @@ if ( ! class_exists( 'UpStream_Options_Bugs' ) ) :
                         return false;
                     };
 
-                    $replaceBugArgsWithItsIds = function ( $bug ) use ( &$getBugArgIdByTitle ) {
-                        if ( isset( $bug['status'] )
-                             && ! empty( $bug['status'] )
+                    $replaceBugArgsWithItsIds = function ($bug) use (&$getBugArgIdByTitle) {
+                        if (isset($bug['status'])
+                             && ! empty($bug['status'])
                         ) {
-                            $bugArgId = $getBugArgIdByTitle( $bug['status'] );
-                            if ( $bugArgId !== false ) {
+                            $bugArgId = $getBugArgIdByTitle($bug['status']);
+                            if ($bugArgId !== false) {
                                 $bug['status'] = $bugArgId;
                             }
                         }
 
-                        if ( isset( $bug['severity'] )
-                             && ! empty( $bug['severity'] )
+                        if (isset($bug['severity'])
+                             && ! empty($bug['severity'])
                         ) {
-                            $bugArgId = $getBugArgIdByTitle( $bug['severity'], 'severities' );
-                            if ( $bugArgId !== false ) {
+                            $bugArgId = $getBugArgIdByTitle($bug['severity'], 'severities');
+                            if ($bugArgId !== false) {
                                 $bug['severity'] = $bugArgId;
                             }
                         }
@@ -261,21 +274,21 @@ if ( ! class_exists( 'UpStream_Options_Bugs' ) ) :
                         return $bug;
                     };
 
-                    foreach ( $metas as $meta ) {
-                        if ( empty( $meta->meta_value ) ) {
+                    foreach ($metas as $meta) {
+                        if (empty($meta->meta_value)) {
                             continue;
                         }
 
                         $projectId = (int) $meta->post_id;
 
-                        $data = array_filter( maybe_unserialize( (string) $meta->meta_value ) );
-                        $data = array_map( $replaceBugArgsWithItsIds, $data );
+                        $data = array_filter(maybe_unserialize((string) $meta->meta_value));
+                        $data = array_map($replaceBugArgsWithItsIds, $data);
 
-                        update_post_meta( $projectId, '_upstream_project_bugs', $data );
+                        update_post_meta($projectId, '_upstream_project_bugs', $data);
                     }
                 }
 
-                update_option( 'upstream:created_bugs_args_ids', 1 );
+                update_option('upstream:created_bugs_args_ids', 1);
             }
         }
     }

@@ -1,13 +1,13 @@
 <?php
 // Prevent direct access.
-if ( ! defined( 'ABSPATH' ) ) {
+if (! defined('ABSPATH')) {
     exit;
 }
 
-if ( ! upstream_are_files_disabled()
-     && ! upstream_disable_files() ):
+if (! upstream_are_files_disabled()
+     && ! upstream_disable_files()):
 
-    $collapseBox = isset( $pluginOptions['collapse_project_files'] )
+    $collapseBox = isset($pluginOptions['collapse_project_files'])
                    && (bool) $pluginOptions['collapse_project_files'] === true;
 
     $itemType      = 'file';
@@ -17,30 +17,30 @@ if ( ! upstream_are_files_disabled()
     $rowset    = [];
     $projectId = upstream_post_id();
 
-    $meta = (array) get_post_meta( $projectId, '_upstream_project_files', true );
-    foreach ( $meta as $data ) {
-        if ( ! isset( $data['id'] )
-             || ! isset( $data['created_by'] )
+    $meta = (array) get_post_meta($projectId, '_upstream_project_files', true);
+    foreach ($meta as $data) {
+        if (! isset($data['id'])
+             || ! isset($data['created_by'])
         ) {
             continue;
         }
 
         $data['created_by']   = (int) $data['created_by'];
-        $data['created_time'] = isset( $data['created_time'] ) ? (int) $data['created_time'] : 0;
-        $data['title']        = isset( $data['title'] ) ? (string) $data['title'] : '';
-        $data['file_id']      = isset( $data['file_id'] ) ? (int) $data['file_id'] : 0;
-        $data['description']  = isset( $data['description'] ) ? (string) $data['description'] : '';
+        $data['created_time'] = isset($data['created_time']) ? (int) $data['created_time'] : 0;
+        $data['title']        = isset($data['title']) ? (string) $data['title'] : '';
+        $data['file_id']      = isset($data['file_id']) ? (int) $data['file_id'] : 0;
+        $data['description']  = isset($data['description']) ? (string) $data['description'] : '';
 
         $rowset[ $data['id'] ] = $data;
     }
 
     $l = [
-        'LB_TITLE'       => __( 'Title', 'upstream' ),
-        'LB_NONE'        => __( 'none', 'upstream' ),
-        'LB_DESCRIPTION' => __( 'Description', 'upstream' ),
-        'LB_COMMENTS'    => __( 'Comments', 'upstream' ),
-        'LB_FILE'        => __( 'File', 'upstream' ),
-        'LB_UPLOADED_AT' => __( 'Upload Date', 'upstream' ),
+        'LB_TITLE'       => __('Title', 'upstream'),
+        'LB_NONE'        => __('none', 'upstream'),
+        'LB_DESCRIPTION' => __('Description', 'upstream'),
+        'LB_COMMENTS'    => __('Comments', 'upstream'),
+        'LB_FILE'        => __('File', 'upstream'),
+        'LB_UPLOADED_AT' => __('Upload Date', 'upstream'),
     ];
 
     $areCommentsEnabled = upstreamAreCommentsEnabledOnFiles();
@@ -52,7 +52,7 @@ if ( ! upstream_are_files_disabled()
         'data-order-dir'  => 'DESC',
     ];
 
-    $columnsSchema = \UpStream\Frontend\getFilesFields( $areCommentsEnabled );
+    $columnsSchema = \UpStream\Frontend\getFilesFields($areCommentsEnabled);
     ?>
     <div class="col-md-12 col-sm-12 col-xs-12">
         <div class="x_panel">
@@ -66,7 +66,7 @@ if ( ! upstream_are_files_disabled()
                             <i class="fa fa-chevron-<?php echo $collapseBox ? 'down' : 'up'; ?>"></i>
                         </a>
                     </li>
-                    <?php do_action( 'upstream_project_files_top_right' ); ?>
+                    <?php do_action('upstream_project_files_top_right'); ?>
                 </ul>
                 <div class="clearfix"></div>
             </div>
@@ -88,24 +88,28 @@ if ( ! upstream_are_files_disabled()
                                 <div class="btn-group">
                                     <a href="#files-filters" role="button" class="btn btn-default btn-xs"
                                        data-toggle="collapse" aria-expanded="false" aria-controls="files-filters">
-                                        <i class="fa fa-filter"></i> <?php _e( 'Toggle Filters', 'upstream' ); ?>
+                                        <i class="fa fa-filter"></i> <?php _e('Toggle Filters', 'upstream'); ?>
                                     </a>
                                     <button type="button" class="btn btn-default dropdown-toggle btn-xs"
                                             data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                        <i class="fa fa-download"></i> <?php _e( 'Export', 'upstream' ); ?>
+                                        <i class="fa fa-download"></i> <?php _e('Export', 'upstream'); ?>
                                         <span class="caret"></span>
                                     </button>
                                     <ul class="dropdown-menu dropdown-menu-right">
                                         <li>
                                             <a href="#" data-action="export" data-type="txt">
-                                                <i class="fa fa-file-text-o"></i>&nbsp;&nbsp;<?php _e( 'Plain Text',
-                                                    'upstream' ); ?>
+                                                <i class="fa fa-file-text-o"></i>&nbsp;&nbsp;<?php _e(
+        'Plain Text',
+                                                    'upstream'
+    ); ?>
                                             </a>
                                         </li>
                                         <li>
                                             <a href="#" data-action="export" data-type="csv">
-                                                <i class="fa fa-file-code-o"></i>&nbsp;&nbsp;<?php _e( 'CSV',
-                                                    'upstream' ); ?>
+                                                <i class="fa fa-file-code-o"></i>&nbsp;&nbsp;<?php _e(
+                                                        'CSV',
+                                                    'upstream'
+                                                    ); ?>
                                             </a>
                                         </li>
                                     </ul>
@@ -116,25 +120,29 @@ if ( ! upstream_are_files_disabled()
                             <div>
                                 <a href="#files-filters" role="button" class="btn btn-default btn-xs"
                                    data-toggle="collapse" aria-expanded="false" aria-controls="files-filters">
-                                    <i class="fa fa-filter"></i> <?php _e( 'Toggle Filters', 'upstream' ); ?>
+                                    <i class="fa fa-filter"></i> <?php _e('Toggle Filters', 'upstream'); ?>
                                 </a>
                                 <div class="btn-group">
                                     <button type="button" class="btn btn-default dropdown-toggle btn-xs"
                                             data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                        <i class="fa fa-download"></i> <?php _e( 'Export', 'upstream' ); ?>
+                                        <i class="fa fa-download"></i> <?php _e('Export', 'upstream'); ?>
                                         <span class="caret"></span>
                                     </button>
                                     <ul class="dropdown-menu dropdown-menu-right">
                                         <li>
                                             <a href="#" data-action="export" data-type="txt">
-                                                <i class="fa fa-file-text-o"></i>&nbsp;&nbsp;<?php _e( 'Plain Text',
-                                                    'upstream' ); ?>
+                                                <i class="fa fa-file-text-o"></i>&nbsp;&nbsp;<?php _e(
+                                                        'Plain Text',
+                                                    'upstream'
+                                                    ); ?>
                                             </a>
                                         </li>
                                         <li>
                                             <a href="#" data-action="export" data-type="csv">
-                                                <i class="fa fa-file-code-o"></i>&nbsp;&nbsp;<?php _e( 'CSV',
-                                                    'upstream' ); ?>
+                                                <i class="fa fa-file-code-o"></i>&nbsp;&nbsp;<?php _e(
+                                                        'CSV',
+                                                    'upstream'
+                                                    ); ?>
                                             </a>
                                         </li>
                                     </ul>
@@ -158,15 +166,17 @@ if ( ! upstream_are_files_disabled()
                                         <i class="fa fa-user"></i>
                                     </div>
                                     <select class="form-control o-select2" data-column="created_by"
-                                            data-placeholder="<?php _e( 'Uploader', 'upstream' ); ?>" multiple>
+                                            data-placeholder="<?php _e('Uploader', 'upstream'); ?>" multiple>
                                         <option value></option>
-                                        <option value="<?php echo $currentUserId; ?>"><?php _e( 'Me',
-                                                'upstream' ); ?></option>
-                                        <optgroup label="<?php _e( 'Users' ); ?>">
-                                            <?php foreach ( $users as $user_id => $userName ): ?>
-                                                <?php if ( $user_id === $currentUserId ) {
-                                                    continue;
-                                                } ?>
+                                        <option value="<?php echo $currentUserId; ?>"><?php _e(
+                                                        'Me',
+                                                'upstream'
+                                                    ); ?></option>
+                                        <optgroup label="<?php _e('Users'); ?>">
+                                            <?php foreach ($users as $user_id => $userName): ?>
+                                                <?php if ($user_id === $currentUserId) {
+                                                        continue;
+                                                    } ?>
                                                 <option
                                                     value="<?php echo $user_id; ?>"><?php echo $userName; ?></option>
                                             <?php endforeach; ?>
@@ -180,14 +190,16 @@ if ( ! upstream_are_files_disabled()
                                         <i class="fa fa-user"></i>
                                     </div>
                                     <select class="form-control o-select2" data-column="assigned_to"
-                                            data-placeholder="<?php _e( 'Assignee', 'upstream' ); ?>" multiple>
+                                            data-placeholder="<?php _e('Assignee', 'upstream'); ?>" multiple>
                                         <option value></option>
-                                        <option value="__none__"><?php _e( 'Nobody', 'upstream' ); ?></option>
-                                        <option value="<?php echo $currentUserId; ?>"><?php _e( 'Me',
-                                                'upstream' ); ?></option>
-                                        <optgroup label="<?php _e( 'Users' ); ?>">
-                                            <?php foreach ( $users as $user_id => $userName ): ?>
-                                                <?php if ( $user_id === $currentUserId ) {
+                                        <option value="__none__"><?php _e('Nobody', 'upstream'); ?></option>
+                                        <option value="<?php echo $currentUserId; ?>"><?php _e(
+                                                    'Me',
+                                                'upstream'
+                                                ); ?></option>
+                                        <optgroup label="<?php _e('Users'); ?>">
+                                            <?php foreach ($users as $user_id => $userName): ?>
+                                                <?php if ($user_id === $currentUserId) {
                                                     continue;
                                                 } ?>
                                                 <option
@@ -210,12 +222,21 @@ if ( ! upstream_are_files_disabled()
                                        data-column="created_time" data-compare-operator=">=">
                             </div>
 
-                            <?php do_action( 'upstream:project.files.filters', $tableSettings, $columnsSchema,
-                                $projectId ); ?>
+                            <?php do_action(
+                                                    'upstream:project.files.filters',
+                                                    $tableSettings,
+                                                    $columnsSchema,
+                                $projectId
+                                                ); ?>
                         </div>
                     </form>
-                    <?php \UpStream\Frontend\renderTable( $tableSettings, $columnsSchema, $rowset, 'file',
-                        $projectId ); ?>
+                    <?php \UpStream\Frontend\renderTable(
+                                    $tableSettings,
+                                    $columnsSchema,
+                                    $rowset,
+                                    'file',
+                        $projectId
+                                ); ?>
                 </div>
             </div>
         </div>

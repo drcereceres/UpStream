@@ -8,37 +8,41 @@
 
 namespace Cmb2Grid\Grid\Group;
 
-if ( ! class_exists( '\Cmb2Grid\Grid\Group\Cmb2GroupGrid' ) ) {
+if (! class_exists('\Cmb2Grid\Grid\Group\Cmb2GroupGrid')) {
 
-	/**
-	 * Description of Cmb2GroupGrid.
-	 *
-	 * @author Pablo
-	 */
-	class Cmb2GroupGrid extends \Cmb2Grid\Grid\Cmb2Grid {
+    /**
+     * Description of Cmb2GroupGrid.
+     *
+     * @author Pablo
+     */
+    class Cmb2GroupGrid extends \Cmb2Grid\Grid\Cmb2Grid
+    {
+        protected $parentFieldId;
 
-		protected $parentFieldId;
+        public function __construct($meta_box_config)
+        {
+            parent::__construct($meta_box_config);
+        }
 
-		public function __construct( $meta_box_config ) {
-			parent::__construct( $meta_box_config );
-		}
+        public function addRow()
+        {
+            //parent::addRow();
+            $rows	 = $this->getRows();
+            $newRow	 = new GroupRow($this);
+            $newRow->setParentFieldId($this->getParentFieldId());
+            $rows[]	 = $newRow;
+            $this->setRows($rows);
+            return $newRow;
+        }
 
-		public function addRow() {
-			//parent::addRow();
-			$rows	 = $this->getRows();
-			$newRow	 = new GroupRow( $this );
-			$newRow->setParentFieldId( $this->getParentFieldId() );
-			$rows[]	 = $newRow;
-			$this->setRows( $rows );
-			return $newRow;
-		}
+        public function getParentFieldId()
+        {
+            return $this->parentFieldId;
+        }
 
-		function getParentFieldId() {
-			return $this->parentFieldId;
-		}
-
-		function setParentFieldId( $parentFieldId ) {
-			$this->parentFieldId = $parentFieldId;
-		}
-	}
+        public function setParentFieldId($parentFieldId)
+        {
+            $this->parentFieldId = $parentFieldId;
+        }
+    }
 }

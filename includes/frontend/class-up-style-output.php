@@ -1,17 +1,17 @@
 <?php
 
 // Exit if accessed directly.
-if ( ! defined( 'ABSPATH' ) ) {
+if (! defined('ABSPATH')) {
     exit;
 }
 
 /**
  * Run the extension after UpStream is loaded.
  */
-add_action( 'upstream_loaded', 'upstream_run_styles' );
-function upstream_run_styles() {
+add_action('upstream_loaded', 'upstream_run_styles');
+function upstream_run_styles()
+{
     return UpStream_Style_Output::instance();
-
 }
 
 /**
@@ -19,7 +19,8 @@ function upstream_run_styles() {
  *
  * @since 1.0.0
  */
-class UpStream_Style_Output {
+class UpStream_Style_Output
+{
 
     /**
      * @var UpStream The one true UpStream Style Output
@@ -28,9 +29,10 @@ class UpStream_Style_Output {
     protected static $_instance = null;
     private $opt = '';
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->init_hooks();
-        $this->opt = get_option( 'upstream_style' );
+        $this->opt = get_option('upstream_style');
     }
 
     /**
@@ -38,8 +40,9 @@ class UpStream_Style_Output {
      *
      * @since  1.0.0
      */
-    private function init_hooks() {
-        add_action( 'upstream_footer_text', [ $this, 'footer_text' ] );
+    private function init_hooks()
+    {
+        add_action('upstream_footer_text', [ $this, 'footer_text' ]);
 
         $this->registerDeprecatedAlertHooks();
     }
@@ -50,16 +53,18 @@ class UpStream_Style_Output {
      * @since   1.12.2
      * @access  private
      */
-    private function registerDeprecatedAlertHooks() {
-        add_action( 'upstream_before_single_message', [ $this, 'deprecatedBeforeSingleMessageAlert' ] );
-        add_action( 'upstream_after_single_message', [ $this, 'deprecatedAfterSingleMessageAlert' ] );
+    private function registerDeprecatedAlertHooks()
+    {
+        add_action('upstream_before_single_message', [ $this, 'deprecatedBeforeSingleMessageAlert' ]);
+        add_action('upstream_after_single_message', [ $this, 'deprecatedAfterSingleMessageAlert' ]);
     }
 
     /**
      * @since 1.0.0
      */
-    public static function instance() {
-        if ( is_null( self::$_instance ) ) {
+    public static function instance()
+    {
+        if (is_null(self::$_instance)) {
             self::$_instance = new self();
         }
 
@@ -71,8 +76,9 @@ class UpStream_Style_Output {
      *
      * @since  1.0.0
      */
-    public function footer_text( $text ) {
-        if ( isset( $this->opt['footer_text'] ) && ! empty( $this->opt['footer_text'] ) ) {
+    public function footer_text($text)
+    {
+        if (isset($this->opt['footer_text']) && ! empty($this->opt['footer_text'])) {
             $text = $this->opt['footer_text'];
         }
 
@@ -85,9 +91,13 @@ class UpStream_Style_Output {
      *
      * @since   1.12.2
      */
-    public function deprecatedBeforeSingleMessageAlert() {
-        _deprecated_function( 'The action "upstream_before_single_message"', UPSTREAM_VERSION,
-            '"upstream:project.discussion:before_comment"' );
+    public function deprecatedBeforeSingleMessageAlert()
+    {
+        _deprecated_function(
+            'The action "upstream_before_single_message"',
+            UPSTREAM_VERSION,
+            '"upstream:project.discussion:before_comment"'
+        );
     }
 
     /**
@@ -96,9 +106,13 @@ class UpStream_Style_Output {
      *
      * @since   1.12.2
      */
-    public function deprecatedAfterSingleMessageAlert() {
-        _deprecated_function( 'The action "upstream_after_single_message"', UPSTREAM_VERSION,
-            '"upstream:project.discussion:after_comment"' );
+    public function deprecatedAfterSingleMessageAlert()
+    {
+        _deprecated_function(
+            'The action "upstream_after_single_message"',
+            UPSTREAM_VERSION,
+            '"upstream:project.discussion:after_comment"'
+        );
     }
 
     /**
@@ -106,9 +120,10 @@ class UpStream_Style_Output {
      *
      * @since  1.0.0
      */
-    private function css( $item ) {
-        $css = isset( $this->opt[ $item ] ) && $this->opt[ $item ] != '' ? $this->opt[ $item ] : '';
+    private function css($item)
+    {
+        $css = isset($this->opt[ $item ]) && $this->opt[ $item ] != '' ? $this->opt[ $item ] : '';
 
-        return esc_html( $css );
+        return esc_html($css);
     }
 }

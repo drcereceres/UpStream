@@ -1,7 +1,7 @@
 <?php
 
 // Exit if accessed directly
-if ( ! defined( 'ABSPATH' ) ) {
+if (! defined('ABSPATH')) {
     exit;
 }
 
@@ -10,7 +10,8 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * @since 1.0
  */
-class UpStream_Client {
+class UpStream_Client
+{
 
     /**
      * The client ID
@@ -62,24 +63,24 @@ class UpStream_Client {
      *
      * @since 1.0
      */
-    public function __construct( $_id = false, $_args = [] ) {
+    public function __construct($_id = false, $_args = [])
+    {
 
         // if no id is sent, then go through the varous ways of getting the id
         // may need to check the order more closely to ensure we get it right
-        if ( ! $_id ) {
+        if (! $_id) {
             $user_id = upstream_current_user_id();
-            $_id     = upstream_get_users_client_id( $user_id );
+            $_id     = upstream_get_users_client_id($user_id);
         }
 
-        if ( ! $_id ) {
+        if (! $_id) {
             $_id = upstream_project_client_id();
         }
 
 
-        $client = WP_Post::get_instance( $_id );
+        $client = WP_Post::get_instance($_id);
 
-        return $this->setup_client( $client );
-
+        return $this->setup_client($client);
     }
 
     /**
@@ -91,23 +92,23 @@ class UpStream_Client {
      *
      * @return bool             If the setup was successful or not
      */
-    private function setup_client( $client ) {
-
-        if ( ! is_object( $client ) ) {
+    private function setup_client($client)
+    {
+        if (! is_object($client)) {
             return false;
         }
 
-        if ( ! is_a( $client, 'WP_Post' ) ) {
+        if (! is_a($client, 'WP_Post')) {
             return false;
         }
 
-        if ( 'client' !== $client->post_type ) {
+        if ('client' !== $client->post_type) {
             return false;
         }
 
         // sets the value of each key
-        foreach ( $client as $key => $value ) {
-            switch ( $key ) {
+        foreach ($client as $key => $value) {
+            switch ($key) {
                 default:
                     $this->$key = $value;
                     break;
@@ -115,14 +116,15 @@ class UpStream_Client {
         }
 
         return true;
-
     }
 
-    public function init() {
-        add_action( 'init', [ $this, 'hooks' ] );
+    public function init()
+    {
+        add_action('init', [ $this, 'hooks' ]);
     }
 
-    public function hooks() {
+    public function hooks()
+    {
         //add_action( 'wp_insert_post', array( $this, 'update_project_meta_admin' ), 1, 3 );
         //add_action( "cmb2_post_process_fields__upstream_project_bugs", array( $this, 'bug_changes' ), 10, 2 );
     }
@@ -137,14 +139,13 @@ class UpStream_Client {
      *
      * @return mixed
      */
-    public function get_meta( $meta ) {
-        $result = get_post_meta( $this->ID, $this->meta_prefix . $meta, true );
-        if ( ! $result ) {
+    public function get_meta($meta)
+    {
+        $result = get_post_meta($this->ID, $this->meta_prefix . $meta, true);
+        if (! $result) {
             $result = null;
         }
 
         return $result;
     }
-
-
 }

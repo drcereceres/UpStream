@@ -1,13 +1,13 @@
 <?php
 // Prevent direct access.
-if ( ! defined( 'ABSPATH' ) ) {
+if (! defined('ABSPATH')) {
     exit;
 }
 ?>
 
-<?php if ( upstreamAreProjectCommentsEnabled() && ! upstream_are_comments_disabled() ):
-    $pluginOptions = get_option( 'upstream_general' );
-    $collapseBox = isset( $pluginOptions['collapse_project_discussion'] ) && (bool) $pluginOptions['collapse_project_discussion'] === true;
+<?php if (upstreamAreProjectCommentsEnabled() && ! upstream_are_comments_disabled()):
+    $pluginOptions = get_option('upstream_general');
+    $collapseBox = isset($pluginOptions['collapse_project_discussion']) && (bool) $pluginOptions['collapse_project_discussion'] === true;
     ?>
 
     <div class="col-xs-12 col-sm-12 col-md-12">
@@ -22,7 +22,7 @@ if ( ! defined( 'ABSPATH' ) ) {
                             <i class="fa fa-chevron-<?php echo $collapseBox ? 'down' : 'up'; ?>"></i>
                         </a>
                     </li>
-                    <?php do_action( 'upstream_project_discussion_top_right' ); ?>
+                    <?php do_action('upstream_project_discussion_top_right'); ?>
                 </ul>
                 <div class="clearfix"></div>
             </div>
