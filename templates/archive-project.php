@@ -142,6 +142,8 @@ foreach ($columnsSchema as $columnName => $columnArgs) {
     }
 }
 
+$filter_closed_items = upstream_filter_closed_items();
+
 ?>
 
     <div class="right_col" role="main">
@@ -266,11 +268,17 @@ foreach ($columnsSchema as $columnName => $columnArgs) {
                                                             multiple>
                                                         <option value></option>
                                                         <option
-                                                                value="__none__"><?php echo esc_html($i18n['LB_NONE_UCF']); ?></option>
+                                                                value="__none__" <?php echo $filter_closed_items ? 'selected' : ''; ?>><?php echo esc_html($i18n['LB_NONE_UCF']); ?></option>
                                                         <optgroup label="<?php echo esc_html($i18n['LB_STATUSES']); ?>">
                                                             <?php foreach ($statuses as $status): ?>
+                                                                <?php
+                                                                $attr = ' ';
+                                                                if ($filter_closed_items && 'open' === $status['type']) :
+                                                                    $attr .= ' selected';
+                                                                endif;
+                                                                ?>
                                                                 <option
-                                                                        value="<?php echo esc_attr($status['id']); ?>"><?php echo esc_html($status['name']); ?></option>
+                                                                        value="<?php echo esc_attr($status['id']); ?>"<?php echo $attr; ?>><?php echo esc_html($status['name']); ?></option>
                                                             <?php endforeach; ?>
                                                         </optgroup>
                                                     </select>

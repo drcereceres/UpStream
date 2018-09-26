@@ -654,6 +654,13 @@ function upstream_wrap_escaped_chars($value)
     return "&#39;" . str_replace('\\', '', $value[0]) . "&#39;";
 }
 
+function upstream_filter_closed_items()
+{
+    $option = get_option('upstream_general');
+
+    return isset($option['filter_closed_items']) ? (bool)$option['filter_closed_items'] : true;
+}
+
 function upstream_logo_url()
 {
     $option = get_option('upstream_general');

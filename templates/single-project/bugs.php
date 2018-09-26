@@ -54,6 +54,8 @@ if ( ! upstream_are_bugs_disabled()
     ];
 
     $columnsSchema = \UpStream\Frontend\getBugsFields($severities, $statuses, $areCommentsEnabled);
+
+    $filter_closed_items = upstream_filter_closed_items();
     ?>
     <div class="col-md-12 col-sm-12 col-xs-12">
         <div class="x_panel">
@@ -212,11 +214,18 @@ if ( ! upstream_are_bugs_disabled()
                                     <select class="form-control o-select2" data-column="status"
                                             data-placeholder="<?php _e('Status', 'upstream'); ?>" multiple>
                                         <option value></option>
-                                        <option value="__none__"><?php _e('None', 'upstream'); ?></option>
+                                        <option value="__none__" <?php echo $filter_closed_items ? 'selected' : ''; ?>><?php _e('None',
+                                                'upstream'); ?></option>
                                         <optgroup label="<?php _e('Status', 'upstream'); ?>">
                                             <?php foreach ($statuses as $status): ?>
+                                                <?php
+                                                $attr = ' ';
+                                                if ($filter_closed_items && 'open' === $status['type']) :
+                                                    $attr .= ' selected';
+                                                endif;
+                                                ?>
                                                 <option
-                                                        value="<?php echo esc_attr($status['id']); ?>"><?php echo esc_html($status['name']); ?></option>
+                                                        value="<?php echo esc_attr($status['id']); ?>"<?php echo $attr; ?>><?php echo esc_html($status['name']); ?></option>
                                             <?php endforeach; ?>
                                         </optgroup>
                                     </select>

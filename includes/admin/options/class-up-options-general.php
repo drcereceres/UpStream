@@ -118,6 +118,29 @@ if ( ! class_exists('UpStream_Options_General')) :
                     'fields'     => [
 
                         /**
+                         * General
+                         */
+                        [
+                            'name' => __('General', 'upstream'),
+                            'id'   => 'general_title',
+                            'type' => 'title',
+                        ],
+                        [
+                            'name' => __('Filter Closed Items', 'upstream'),
+                            'id'   => 'filter_closed_items',
+                            'type' => 'radio_inline',
+                            'default' => '1',
+                            'desc' => __(
+                                'Choose whether Projects, Tasks and Bugs will only display items filtering "open" statuses by default. Items with "closed" statuses will still be loaded.',
+                                'upstream'
+                            ),
+                            'options' => [
+                                0 => __('No', 'upstream'),
+                                1 => __('Yes', 'upstream'),
+                            ],
+                        ],
+
+                        /**
                          * Labels
                          */
                         [
@@ -128,6 +151,7 @@ if ( ! class_exists('UpStream_Options_General')) :
                                 'Here you can change the labels of various items. You could change Client to Customer or Bugs to Issues for example.<br>These labels will change on the frontend as well as in the admin area.',
                                 'upstream'
                             ),
+                            'before_row' => '<hr>',
                         ],
                         [
                             'name' => __('Project Label', 'upstream'),
