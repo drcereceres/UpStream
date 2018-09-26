@@ -65,7 +65,6 @@ foreach ($projectStatuses as $status) {
         $openStatuses[] = $status['id'];
     }
 }
-var_dump($openStatuses);
 
 $projectsList = [];
 if (isset($currentUser->projects)) {
