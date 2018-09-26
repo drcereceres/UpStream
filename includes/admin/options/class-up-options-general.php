@@ -129,7 +129,7 @@ if ( ! class_exists('UpStream_Options_General')) :
                             'name' => __('Filter Closed Items', 'upstream'),
                             'id'   => 'filter_closed_items',
                             'type' => 'radio_inline',
-                            'default' => '1',
+                            'default' => '0',
                             'desc' => __(
                                 'Choose whether Projects, Tasks and Bugs will only display items filtering "open" statuses by default. Items with "closed" statuses will still be loaded.',
                                 'upstream'
@@ -139,6 +139,21 @@ if ( ! class_exists('UpStream_Options_General')) :
                                 1 => __('Yes', 'upstream'),
                             ],
                         ],
+                        [
+                            'name' => __('Archive Closed Items', 'upstream'),
+                            'id'   => 'archive_closed_items',
+                            'type' => 'radio_inline',
+                            'default' => '1',
+                            'desc' => __(
+                                'Choose whether closed Projects, Tasks and Bugs won\'t be loaded or displayed in the front-end.',
+                                'upstream'
+                            ),
+                            'options' => [
+                                0 => __('No', 'upstream'),
+                                1 => __('Yes', 'upstream'),
+                            ],
+                        ],
+
 
                         /**
                          * Labels

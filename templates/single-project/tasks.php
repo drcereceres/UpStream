@@ -10,10 +10,17 @@ if ( ! upstream_are_tasks_disabled()
     $collapseBox = isset($pluginOptions['collapse_project_tasks'])
                    && (bool)$pluginOptions['collapse_project_tasks'] === true;
 
+    $archiveClosedItems = upstream_archive_closed_items();
+
     $tasksStatuses = get_option('upstream_tasks');
     $statuses      = [];
     $openStatuses  = [];
     foreach ($tasksStatuses['statuses'] as $status) {
+        // If closed items will be archived, we do not need to display closed statuses.
+        if ($archiveClosedItems && 'open' !== $status['type']) {
+            continue;
+        }
+
         $statuses[$status['id']] = $status;
 
         if ('open' === $status['type']) {
@@ -63,6 +70,15 @@ if ( ! upstream_are_tasks_disabled()
     }
 
     $rowset = UpStream_View::getTasks($projectId);
+
+    // If should archive closed items, we filter the rowset.
+    if ($archiveClosedItems) {
+        foreach ($rowset as $id => $task) {
+            if ( ! in_array($task['status'], $openStatuses) && ! empty($task['status'])) {
+                unset($rowset[$id]);
+            }
+        }
+    }
 
     $l = [
         'LB_MILESTONE'          => upstream_milestone_label(),

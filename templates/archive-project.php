@@ -20,6 +20,8 @@ $supportUrl        = upstream_admin_support($pluginOptions);
 $logOutUrl         = upstream_logout_url();
 $areClientsEnabled = ! is_clients_disabled();
 
+$archiveClosedItems = upstream_archive_closed_items();
+
 $i18n = [
     'LB_PROJECT'        => upstream_project_label(),
     'LB_PROJECTS'       => upstream_project_label_plural(),
@@ -47,7 +49,23 @@ $i18n = [
 
 $currentUser = (object)upstream_user_data(@$_SESSION['upstream']['user_id']);
 
-$statuses = upstream_get_all_project_statuses();
+$projectStatuses = upstream_get_all_project_statuses();
+
+$statuses      = [];
+$openStatuses  = [];
+foreach ($projectStatuses as $status) {
+    // If closed items will be archived, we do not need to display closed statuses.
+    if ($archiveClosedItems && 'open' !== $status['type']) {
+        continue;
+    }
+
+    $statuses[$status['id']] = $status;
+
+    if ('open' === $status['type']) {
+        $openStatuses[] = $status['id'];
+    }
+}
+var_dump($openStatuses);
 
 $projectsList = [];
 if (isset($currentUser->projects)) {
@@ -72,6 +90,13 @@ if (isset($currentUser->projects)) {
                     '',
                 ],
             ];
+
+            // If should archive closed items, we filter the rowset.
+            if ($archiveClosedItems) {
+                if ( ! empty($data->status) && ! in_array($data->status, $openStatuses)) {
+                    continue;
+                }
+            }
 
             $data->startDate = (string)upstream_format_date($data->startDateTimestamp);
             $data->endDate   = (string)upstream_format_date($data->endDateTimestamp);

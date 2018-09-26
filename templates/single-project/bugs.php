@@ -10,11 +10,23 @@ if ( ! upstream_are_bugs_disabled()
     $collapseBox = isset($pluginOptions['collapse_project_bugs'])
                    && (bool)$pluginOptions['collapse_project_bugs'] === true;
 
+    $archiveClosedItems = upstream_archive_closed_items();
+
     $bugsSettings = get_option('upstream_bugs');
     $bugsStatuses = $bugsSettings['statuses'];
     $statuses     = [];
+    $openStatuses = [];
     foreach ($bugsStatuses as $status) {
+        // If closed items will be archived, we do not need to display closed statuses.
+        if ($archiveClosedItems && 'open' !== $status['type']) {
+            continue;
+        }
+
         $statuses[$status['id']] = $status;
+
+        if ('open' === $status['type']) {
+            $openStatuses[] = $status['id'];
+        }
     }
 
     $bugsSeverities = $bugsSettings['severities'];
@@ -31,6 +43,15 @@ if ( ! upstream_are_bugs_disabled()
     $projectId = upstream_post_id();
 
     $rowset = UpStream_View::getBugs($projectId);
+
+    // If should archive closed items, we filter the rowset.
+    if ($archiveClosedItems) {
+        foreach ($rowset as $id => $bug) {
+            if ( ! in_array($bug['status'], $openStatuses) && ! empty($bug['status'])) {
+                unset($rowset[$id]);
+            }
+        }
+    }
 
     $l = [
         'LB_TITLE'         => __('Title', 'upstream'),

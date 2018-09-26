@@ -658,7 +658,14 @@ function upstream_filter_closed_items()
 {
     $option = get_option('upstream_general');
 
-    return isset($option['filter_closed_items']) ? (bool)$option['filter_closed_items'] : true;
+    return isset($option['filter_closed_items']) ? (bool)$option['filter_closed_items'] : false;
+}
+
+function upstream_archive_closed_items()
+{
+    $option = get_option('upstream_general');
+
+    return isset($option['archive_closed_items']) ? (bool)$option['archive_closed_items'] : true;
 }
 
 function upstream_logo_url()
