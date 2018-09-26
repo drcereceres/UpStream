@@ -142,12 +142,15 @@ If you were having date issues within Projects, please clear your cache and re-s
 The format is based on [Keep a Changelog](http://keepachangelog.com)
 and this project adheres to [Semantic Versioning](http://semver.org).
 
-= [1.21.2] - UNRELEASED =
+= [1.22.0] - UNRELEASED =
 
 Fixed:
 * Fixed filter for custom fields in projects in the front-end;
+* Fixed Add Comment label for translators and updated the POT file;
 
 Added:
+* Added option in the General Settings to filter closed items/projects by default;
+* Added option in the General Settings to archive closed items/projects in the front-end. Those items won't be loaded, so can't be filtered;
 * Added actions specific for adding new columns to the project's table in the front-end;
 
 = [1.21.1] - 2018-09-19 =
