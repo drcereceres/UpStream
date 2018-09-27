@@ -147,6 +147,7 @@ and this project adheres to [Semantic Versioning](http://semver.org).
 Fixed:
 * Fixed filter for custom fields in projects in the front-end;
 * Fixed Add Comment label for translators and updated the POT file;
+* Fixed capabilities for Project's fields;
 
 Added:
 * Added option in the General Settings to filter closed items/projects by default;
