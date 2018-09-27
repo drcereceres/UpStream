@@ -1412,7 +1412,7 @@ if ( ! class_exists('UpStream_Metaboxes_Projects')) :
                 'permissions' => 'project_start_date_field',
                 'before'      => 'upstream_add_field_attributes',
                 'show_on_cb'  => 'upstream_show_project_start_date_field',
-                'save_field'  => upstream_admin_permissions('upstream_start_date_field'),
+                'save_field'  => upstream_admin_permissions('project_start_date_field'),
                 'escape_cb'   => ['UpStream_Admin', 'escapeCmb2TimestampField'],
             ];
             $fields[11] = [

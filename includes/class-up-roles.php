@@ -184,7 +184,19 @@ class UpStream_Roles
                 "delete_{$capability_type}_terms",
                 "assign_{$capability_type}_terms",
 
+                "delete_project_discussion",
                 "edit_project_author",
+                "project_owner_field",
+                "project_status_field",
+                "project_client_field",
+                "project_users_field",
+                "project_start_date_field",
+                "project_end_date_field",
+                //"project_description",
+                "publish_project_bugs",
+                "publish_project_discussion",
+                "publish_project_files",
+                "publish_project_tasks",
                 "manage_upstream",
             ];
         }
@@ -221,12 +233,12 @@ class UpStream_Roles
              * Giving the role access to these fields, means that
              * they can edit OTHER users tasks, bugs, milestones
              * but only the fields added to their capabilities.
-             * And this will only work in the WP admin. Not with the frontend extension.
+             * And this will only work in the WP admin.
              */
             //'project_status_field',
             //'project_owner_field',
             //'project_client_field',
-            'project_users_field',
+            //'project_users_field',
             //'project_start_date_field',
             //'project_end_date_field',
 

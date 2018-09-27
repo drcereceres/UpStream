@@ -12,7 +12,6 @@ if ( ! defined('ABSPATH')) {
  */
 function upstream_permissions($capability = null, $item_id = null)
 {
-
     // set the return variable that can be overwritten after all checks
     // set the return variable that can be overwritten after all checks
     $return       = false;
@@ -69,17 +68,6 @@ function upstream_permissions($capability = null, $item_id = null)
         }
     }
 
-    // this is for WP user only
-    // used to ensure the display of all fields when editing/publishing an item that they have permission for.
-    // Permissions would have already been granted to DISPLAY the edit button for example.
-    // So if this has already been granted, then we should display all fields
-    //if( is_int( $current_user ) && isset( $capability ) ) {
-    if (strpos($capability, 'field') !== false) {
-        $return = true;
-    }
-    //}
-
-
     // if we have an individual item and they are the creator or have been assigned this item
     // used for the 'Actions' column to allow editing/deleting buttons
     if (isset($item_id)) {
@@ -97,6 +85,7 @@ function upstream_permissions($capability = null, $item_id = null)
     if ($capability != 'project_status_field' && upstream_project_status_type() == 'closed') {
         $return = false;
     }
+
 
     return apply_filters('upstream_permissions', $return);
 }
