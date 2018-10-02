@@ -409,7 +409,7 @@ if ( ! class_exists('UpStream_Admin_Project_Columns')) :
                 $selectedStatus = isset($_GET['project-status']) ? $_GET['project-status'] : ''; ?>
                 <select name="project-status" id="project-status" class="postform">
                     <option value="">
-                        <?php printf(__('Show all %s', 'upstream'), 'statuses'); ?>
+                        <?php printf(__('Show all %s', 'upstream'), __('statuses', 'upstream')); ?>
                     </option>
                     <?php foreach ($statuses as $status): ?>
                         <option value="<?php echo $status['name']; ?>" <?php selected(
@@ -428,7 +428,7 @@ if ( ! class_exists('UpStream_Admin_Project_Columns')) :
                 $selectedOwner = isset($_GET['project-owner']) ? (int)$_GET['project-owner'] : -1; ?>
                 <select name="project-owner" id="project-owner" class="postform">
                     <option value="">
-                        <?php printf(__('Show all %s', 'upstream'), 'owners'); ?>
+                        <?php printf(__('Show all %s', 'upstream'), __('owners', 'upstream')); ?>
                     </option>
                     <?php foreach ($users as $ownerId => $ownerName): ?>
                         <option
