@@ -272,6 +272,7 @@ $filter_closed_items = upstream_filter_closed_items();
                                                            data-column="title" data-compare-operator="contains">
                                                 </div>
                                             </div>
+                                            <?php if (!is_clients_disabled()) : ?>
                                             <div class="form-group">
                                                 <div class="input-group">
                                                     <div class="input-group-addon">
@@ -282,6 +283,7 @@ $filter_closed_items = upstream_filter_closed_items();
                                                            data-column="client" data-compare-operator="contains">
                                                 </div>
                                             </div>
+                                            <?php endif; ?>
                                             <div class="form-group">
                                                 <div class="input-group">
                                                     <div class="input-group-addon">

@@ -439,22 +439,23 @@ if ( ! class_exists('UpStream_Admin_Project_Columns')) :
                 </select>
 
                 <?php
-                // Filter by Project Client.
-                $clients          = upstream_wp_get_clients();
-                $selectedClientId = isset($_GET['project-client']) ? (int)$_GET['project-client'] : -1; ?>
-                <select name="project-client" id="project-client" class="postform">
-                    <option value="">
-                        <?php printf(__('Show all %s', 'upstream'), upstream_client_label_plural(true)); ?>
-                    </option>
-                    <?php foreach ($clients as $clientId => $clientName): ?>
-                        <option
-                                value="<?php echo $clientId; ?>" <?php echo $selectedClientId === (int)$clientId ? ' selected' : ''; ?>>
-                            <?php echo $clientName; ?>
+                if (!is_clients_disabled()) {
+                    // Filter by Project Client.
+                    $clients          = upstream_wp_get_clients();
+                    $selectedClientId = isset($_GET['project-client']) ? (int)$_GET['project-client'] : -1; ?>
+                    <select name="project-client" id="project-client" class="postform">
+                        <option value="">
+                            <?php printf(__('Show all %s', 'upstream'), upstream_client_label_plural(true)); ?>
                         </option>
-                    <?php endforeach; ?>
-                </select>
-
-                <?php
+                        <?php foreach ($clients as $clientId => $clientName): ?>
+                            <option
+                                    value="<?php echo $clientId; ?>" <?php echo $selectedClientId === (int)$clientId ? ' selected' : ''; ?>>
+                                <?php echo $clientName; ?>
+                            </option>
+                        <?php endforeach; ?>
+                    </select>
+                    <?php
+                }
             }
         }
 
