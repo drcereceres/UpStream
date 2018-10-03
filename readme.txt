@@ -142,12 +142,15 @@ If you were having date issues within Projects, please clear your cache and re-s
 The format is based on [Keep a Changelog](http://keepachangelog.com)
 and this project adheres to [Semantic Versioning](http://semver.org).
 
-= [1.22.0] - UNRELEASED =
+= [1.22.0] - 2018-10-03 =
 
 Fixed:
 * Fixed filter for custom fields in projects in the front-end;
 * Fixed Add Comment label for translators and updated the POT file;
 * Fixed capabilities for Project's fields;
+* Fixed compatibility with 3rd party JavaScript scripts and the load event method. It was missed sometimes, so now we use ".on('load', ...)";
+* Fixed client filters removing them when Clients are disabled;
+* Fixed labels "statuses" and "owners" for translators - updated POT file;
 
 Added:
 * Added option in the General Settings to filter closed items/projects by default;
