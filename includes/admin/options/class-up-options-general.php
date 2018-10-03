@@ -131,7 +131,7 @@ if ( ! class_exists('UpStream_Options_General')) :
                             'type' => 'radio_inline',
                             'default' => '0',
                             'desc' => __(
-                                'Choose whether Projects, Tasks and Bugs will only display items filtering "open" statuses by default. Items with "closed" statuses will still be loaded.',
+                                'Choose whether Projects, Tasks and Bugs will only display items filtering "open" statuses by default. Items with "closed" statuses will still be loaded. This option only applies if "Archive Closed Items" is set to "No"',
                                 'upstream'
                             ),
                             'options' => [
@@ -145,7 +145,7 @@ if ( ! class_exists('UpStream_Options_General')) :
                             'type' => 'radio_inline',
                             'default' => '1',
                             'desc' => __(
-                                'Choose whether closed Projects, Tasks and Bugs won\'t be loaded or displayed in the front-end.',
+                                'Using the Archive feature means that Closed items are not loaded on the frontend. This can speed up your site if you have projects with many items. Do not use the Archive feature if you want users to find Closed items.',
                                 'upstream'
                             ),
                             'options' => [
