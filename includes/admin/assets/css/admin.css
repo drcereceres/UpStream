@@ -5,3 +5,7 @@ a#upstream-upgrade-link,
     color: #5facd2 !important;
     font-weight: bold;
 }
+
+.upstream_options .cmb-th+.cmb-td {
+    width: calc(100% - 250px);
+}
