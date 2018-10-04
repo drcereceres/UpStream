@@ -187,17 +187,42 @@ class UpStream_Roles
                 "delete_project_discussion",
                 "edit_project_author",
                 "project_owner_field",
+                "project_title_field",
                 "project_status_field",
                 "project_client_field",
                 "project_users_field",
                 "project_start_date_field",
                 "project_end_date_field",
-                //"project_description",
+//                "project_description_field",
+                "publish_project_milestones",
                 "publish_project_bugs",
                 "publish_project_discussion",
                 "publish_project_files",
                 "publish_project_tasks",
                 "manage_upstream",
+
+                "task_title_field",
+                "task_assigned_to_field",
+                "task_status_field",
+                "task_progress_field",
+                "task_milestone_field",
+                "task_start_date_field",
+                "task_end_date_field",
+                "task_notes_field",
+
+                "bug_title_field",
+                "bug_assigned_to_field",
+                "bug_severity_field",
+                "bug_status_field",
+                "bug_due_date_field",
+                "bug_description_field",
+                "bug_file_field",
+
+                "milestone_milestone_field",
+                "milestone_assigned_to_field",
+                "milestone_start_date_field",
+                "milestone_end_date_field",
+                "milestone_notes_field",
             ];
         }
 
@@ -235,12 +260,14 @@ class UpStream_Roles
              * but only the fields added to their capabilities.
              * And this will only work in the WP admin.
              */
+            //'project_title_field',
             //'project_status_field',
             //'project_owner_field',
             //'project_client_field',
             //'project_users_field',
             //'project_start_date_field',
             //'project_end_date_field',
+            //"project_description_field",
 
             // individual milestone fields
             //'milestone_milestone_field',
@@ -268,7 +295,7 @@ class UpStream_Roles
             // 'bug_files_field',
             // 'bug_due_date_field',
 
-            //'publish_project_milestones', // enables the 'Add Milestone' button within project
+            'publish_project_milestones', // enables the 'Add Milestone' button within project
             'publish_project_tasks', // enables the 'Add Task' button within project
             'publish_project_bugs', // enables the 'Add Bug' button within project
             'publish_project_files', // enables the 'Add Files' button within project
