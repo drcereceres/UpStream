@@ -131,7 +131,7 @@ if ( ! class_exists('UpStream_Options_General')) :
                             'type' => 'radio_inline',
                             'default' => '0',
                             'desc' => __(
-                                'Choose whether Projects, Tasks and Bugs will only display items filtering "open" statuses by default. Items with "closed" statuses will still be loaded. This option only applies if "Archive Closed Items" is set to "No"',
+                                'Choose whether Projects, Tasks and Bugs will only display items that have “open” statuses. Items with “closed” statuses will still be loaded on the page, but users will have to use filters to view them. This option only applies if “Archive Closed Items” is set to “No”',
                                 'upstream'
                             ),
                             'options' => [
