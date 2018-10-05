@@ -785,6 +785,8 @@ function renderTableBody($data, $visibleColumnsSchema, $hiddenColumnsSchema, $ro
                     'data-type'   => $column['type'],
                 ];
 
+                $columnAttrs['data-order'] = isset($row['oder']) ? $row['order'] : $columnAttrs['data-value'];
+
                 if ($isFirst) {
                     $columnAttrs['class'] = 'is-clickable';
                     $columnAttrs['role']  = 'button';

@@ -61,6 +61,8 @@ if ( ! class_exists('UpStream_Options_General')) :
             $this->title       = __('General', 'upstream');
             $this->menu_title  = $this->title;
             $this->description = '';
+
+            add_action('wp_ajax_upstream_admin_reset_capabilities', [$this, 'reset_capabilities']);
         }
 
         /**
@@ -126,11 +128,11 @@ if ( ! class_exists('UpStream_Options_General')) :
                             'type' => 'title',
                         ],
                         [
-                            'name' => __('Filter Closed Items', 'upstream'),
-                            'id'   => 'filter_closed_items',
-                            'type' => 'radio_inline',
+                            'name'    => __('Filter Closed Items', 'upstream'),
+                            'id'      => 'filter_closed_items',
+                            'type'    => 'radio_inline',
                             'default' => '0',
-                            'desc' => __(
+                            'desc'    => __(
                                 'Choose whether Projects, Tasks and Bugs will only display items that have “open” statuses. Items with “closed” statuses will still be loaded on the page, but users will have to use filters to view them. This option only applies if “Archive Closed Items” is set to “No”',
                                 'upstream'
                             ),
@@ -140,11 +142,11 @@ if ( ! class_exists('UpStream_Options_General')) :
                             ],
                         ],
                         [
-                            'name' => __('Archive Closed Items', 'upstream'),
-                            'id'   => 'archive_closed_items',
-                            'type' => 'radio_inline',
+                            'name'    => __('Archive Closed Items', 'upstream'),
+                            'id'      => 'archive_closed_items',
+                            'type'    => 'radio_inline',
                             'default' => '1',
-                            'desc' => __(
+                            'desc'    => __(
                                 'Using the Archive feature means that Closed items are not loaded on the frontend. This can speed up your site if you have projects with many items. Do not use the Archive feature if you want users to find Closed items.',
                                 'upstream'
                             ),
@@ -159,10 +161,10 @@ if ( ! class_exists('UpStream_Options_General')) :
                          * Labels
                          */
                         [
-                            'name' => __('Labels', 'upstream'),
-                            'id'   => 'labels_title',
-                            'type' => 'title',
-                            'desc' => __(
+                            'name'       => __('Labels', 'upstream'),
+                            'id'         => 'labels_title',
+                            'type'       => 'title',
+                            'desc'       => __(
                                 'Here you can change the labels of various items. You could change Client to Customer or Bugs to Issues for example.<br>These labels will change on the frontend as well as in the admin area.',
                                 'upstream'
                             ),
@@ -638,6 +640,18 @@ if ( ! class_exists('UpStream_Options_General')) :
                                 'upstream'),
                         ],
                         [
+                            'name'    => __('Reset capabilities', 'upstream'),
+                            'id'      => 'reset_capabilities',
+                            'type'    => 'button',
+                            'label'   => __('Reset', 'upstream'),
+                            'desc'    => __(
+                                'Clicking this button will reset all the capabilities to the default set for the following user roles: administrator, upstream_manager, upstream_user and upstream_client_user. This can\'t be undone.',
+                                'upstream'
+                            ),
+                            'onclick' => 'upstream_reset_capabilities(event);',
+                            'nonce'   => wp_create_nonce('upstream_reset_capabilities'),
+                        ],
+                        [
                             'name'              => __('Debug', 'upstream'),
                             'id'                => 'debug',
                             'type'              => 'multicheck',
@@ -671,6 +685,33 @@ if ( ! class_exists('UpStream_Options_General')) :
             );
 
             return $options;
+        }
+
+        public function reset_capabilities()
+        {
+            $return = '';
+            $abort  = false;
+
+            if ( ! isset($_POST['nonce'])) {
+                $return = 'error';
+                $abort  = true;
+            }
+
+            if ( ! wp_verify_nonce($_POST['nonce'], 'upstream_reset_capabilities')) {
+                $return = 'error';
+                $abort  = true;
+            }
+
+            if ( ! $abort) {
+                // Reset capabilities
+                $roles = new UpStream_Roles();
+                $roles->add_caps();
+
+                $return = 'success';
+            }
+
+            echo wp_json_encode($return);
+            wp_die();
         }
     }
 

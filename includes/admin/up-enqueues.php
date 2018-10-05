@@ -35,6 +35,14 @@ function upstream_load_admin_scripts($hook)
         false
     );
 
+    wp_localize_script('upstream-admin', 'upstreamAdminStrings', [
+        'LB_RESETTING'                   => __('Resetting...', 'upstream'),
+        'MSG_CONFIRM_RESET_CAPABILITIES' => __('Are you sure you want to reset the capabilities?', 'upstream'),
+        'MSG_CAPABILITIES_RESETED'       => __('Success!', 'upstream'),
+        'MSG_CAPABILITIES_ERROR'         => __('Error!', 'upstream'),
+    ]);
+
+
     if (in_array($pagenow, ['edit.php', 'post.php', 'post-new.php'])) {
         if ($postType === 'project') {
             global $post_type_object;
