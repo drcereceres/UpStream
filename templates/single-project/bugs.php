@@ -31,7 +31,9 @@ if ( ! upstream_are_bugs_disabled()
 
     $bugsSeverities = $bugsSettings['severities'];
     $severities     = [];
-    foreach ($bugsSeverities as $severity) {
+    foreach ($bugsSeverities as $index => $severity) {
+        $severity['order'] = $index;
+
         $severities[$severity['id']] = $severity;
     }
     unset($bugsSeverities);
