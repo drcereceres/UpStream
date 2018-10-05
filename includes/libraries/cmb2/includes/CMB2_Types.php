@@ -629,6 +629,11 @@ class CMB2_Types
         return $this->get_new_render_type(__FUNCTION__, 'CMB2_Type_Wysiwyg', $args)->render();
     }
 
+    public function button($args = [])
+    {
+        return $this->get_new_render_type(__FUNCTION__, 'CMB2_Type_Button', $args)->render();
+    }
+
     public function text_date($args = [])
     {
         return $this->get_new_render_type(__FUNCTION__, 'CMB2_Type_Text_Date', $args)->render();
