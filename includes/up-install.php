@@ -96,6 +96,7 @@ function upstream_install($network_wide = false)
 
 register_activation_hook(UPSTREAM_PLUGIN_FILE, 'upstream_install');
 register_deactivation_hook(UPSTREAM_PLUGIN_FILE, 'upstream_uninstall');
+add_action('upstream_update_data', 'upstream_update_data', 10, 2);
 
 /**
  * Run the UpStream Instsall process
@@ -139,6 +140,8 @@ function upstream_run_install()
     if (is_network_admin() || isset($_GET['activate-multi'])) {
         return;
     }
+
+    do_action('upstream_update_data', $current_version, UPSTREAM_VERSION);
 
     // Add the transient to redirect
     set_transient('_upstream_activation_redirect', true, 30);
@@ -391,46 +394,33 @@ function upstream_install_success_notice()
 
 add_action('admin_notices', 'upstream_install_success_notice');
 
-// function upstream_add_default_project() {
+function upstream_update_data($old_version, $new_version)
+{
+    // Ignore if we are on the same version.
+    if ($old_version === $new_version) {
+        return;
+    }
 
-//  // Create project object
-//  $project = array(
-//    'post_title'      => 'Default UpStream Project',
-//    'post_content'    => '',
-//    'post_status'     => 'publish',
-//    'post_author'     => get_current_user_id(),
-//    'post_type'       => 'project',
-//  );
+    if (version_compare($new_version, '1.22.0', '=')) {
+        // Make sure administrator and managers are able to
+        $roles = [
+            'upstream_manager',
+            'administrator',
+            'upstream_user',
+        ];
 
-//  // Insert the post into the database
-//  $id = wp_insert_post( $project );
+        foreach ($roles as $role) {
+            $role = get_role($role);
 
-//  if( $id ) {
-
-//      $milestones[0] = array(
-//          'milestone'     => 'Wireframe',
-//          'start_date'    => current_time( 'timestamp', false ),
-//          'end_date'      => current_time( 'timestamp' ) + ( 60 * 60 * 24 * 7 ),
-//      );
-//      update_post_meta( $id, '_upstream_project_milestones', $milestones );
-
-//      $tasks[0] = array(
-//          'title'         => 'Test Task number 1',
-//          'start_date'    => current_time( 'timestamp', false ),
-//          'end_date'      => current_time( 'timestamp' ) + ( 60 * 60 * 24 * 5 ),
-//          'status'        => 'In Progress',
-//          'progress'      => '50',
-//      );
-//      update_post_meta( $id, '_upstream_project_tasks', $tasks );
-
-//      update_post_meta( $id, '_upstream_project_start', current_time( 'timestamp', false ) );
-//      update_post_meta( $id, '_upstream_project_end', current_time( 'timestamp' ) + ( 60 * 60 * 24 * 7 ) );
-//      update_post_meta( $id, '_upstream_project_owner', get_current_user_id() );
-//      update_post_meta( $id, '_upstream_project_status', 'In Progress' );
-
-//      $project = new UpStream_Project( $id );
-//      $project->update_project_meta();
-
-//  }
-
-// }
+            if (is_object($role)) {
+                $role->add_cap('project_title_field', true);
+                $role->add_cap('project_status_field', true);
+                $role->add_cap('project_owner_field', true);
+                $role->add_cap('project_client_field', true);
+                $role->add_cap('project_users_field', true);
+                $role->add_cap('project_start_date_field', true);
+                $role->add_cap('project_end_date_field', true);
+            }
+        }
+    }
+}
