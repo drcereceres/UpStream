@@ -425,6 +425,7 @@ function upstream_update_data($old_version, $new_version)
     }
 
     if (version_compare($old_version, '1.22.1', '<')) {
+        // Force to fix bug statuses and severities with empty ID.
         delete_option('upstream:created_bugs_args_ids');
 
         UpStream_Options_Bugs::createBugsStatusesIds();
