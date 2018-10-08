@@ -333,6 +333,8 @@ class CMB2_Field extends CMB2_Base
      */
     public function update_data($new_value, $single = true)
     {
+        $new_value = apply_filters('cmb2_field_new_value', $new_value, $single, $this->args(), $this);
+
         $a = $this->data_args([
             'single' => $single,
         ]);

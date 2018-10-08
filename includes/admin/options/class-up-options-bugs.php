@@ -61,6 +61,8 @@ if ( ! class_exists('UpStream_Options_Bugs')) :
             $this->title      = upstream_bug_label_plural();
             $this->menu_title = $this->title;
             //$this->description = sprintf( __( '%s Description', 'upstream' ), upstream_bug_label() );
+
+            add_filter('cmb2_field_new_value', [$this, 'cmb2_field_new_value'], 10, 4);
         }
 
         /**
@@ -106,7 +108,7 @@ if ( ! class_exists('UpStream_Options_Bugs')) :
                         [
                             'id'              => 'statuses',
                             'type'            => 'group',
-                            'name'            => '',
+                            'name'            => 'Statuses',
                             'description'     => '',
                             'options'         => [
                                 'group_title'   => __('Status {#}', 'upstream'),
@@ -169,7 +171,7 @@ if ( ! class_exists('UpStream_Options_Bugs')) :
                         [
                             'id'          => 'severities',
                             'type'        => 'group',
-                            'name'        => '',
+                            'name'        => 'Severities',
                             'description' => '',
                             'options'     => [
                                 'group_title'   => __('Severity {#}', 'upstream'),
@@ -223,6 +225,7 @@ if ( ! class_exists('UpStream_Options_Bugs')) :
             if ( ! $continue) {
                 return;
             }
+
 
             $bugs = get_option('upstream_bugs');
             if (isset($bugs['statuses']) && isset($bugs['severities'])) {
@@ -290,6 +293,19 @@ if ( ! class_exists('UpStream_Options_Bugs')) :
 
                 update_option('upstream:created_bugs_args_ids', 1);
             }
+        }
+
+        public function cmb2_field_new_value($new_value, $single, $args, $field)
+        {
+            if ( ! isset($field->data_to_save) || ! isset($field->data_to_save['object_id']) || ! $field->data_to_save['object_id'] === 'upstream_bugs') {
+                return $new_value;
+            }
+
+            if (isset($args['name']) && in_array($args['name'], ['Severities', 'Statuses'])) {
+                $new_value = UpStream_Admin::createMissingIdsInSet($new_value);
+            }
+
+            return $new_value;
         }
     }
 
