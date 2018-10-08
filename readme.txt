@@ -146,6 +146,7 @@ and this project adheres to [Semantic Versioning](http://semver.org).
 
 Fixed:
 * Fixed ordering for Milestone, Tasks and Bugs columns in the front-end;
+* Fixed date format in datepicker fields when the date format has "S";
 
 Added:
 * Added option to order the table of tasks by status;
