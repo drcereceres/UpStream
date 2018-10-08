@@ -1422,7 +1422,8 @@ function upstreamGetDateFormatForJsDatepicker()
         'i' => 'mm',  // Minute with leading 0,
         's' => 'ss',  // Second with leading 0,
         'a' => 'tt',  // am/pm
-        'A' => 'TT'   // AM/PM
+        'A' => 'TT',   // AM/PM
+        'S' => '',   // th, rd, st
     ];
 
     foreach ($supported_options as $php => $js) {
