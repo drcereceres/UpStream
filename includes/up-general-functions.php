@@ -1463,8 +1463,10 @@ function getMilestones()
 
     $milestones = (array)get_option('upstream_milestones');
     if (isset($milestones['milestones'])) {
-        foreach ($milestones['milestones'] as $milestone) {
+        foreach ($milestones['milestones'] as $index => $milestone) {
             if (isset($milestone['id'])) {
+                $milestone['order'] = $index;
+
                 $data[$milestone['id']] = $milestone;
             }
         }
@@ -1507,8 +1509,10 @@ function getTasksStatuses()
 
     $tasks = (array)get_option('upstream_tasks');
     if (isset($tasks['statuses'])) {
-        foreach ($tasks['statuses'] as $task) {
+        foreach ($tasks['statuses'] as $index => $task) {
             if (isset($task['id'])) {
+                $task['order'] = $index;
+
                 $data[$task['id']] = $task;
             }
         }
@@ -1545,8 +1549,10 @@ function getBugsStatuses()
 
     $bugs = (array)get_option('upstream_bugs');
     if (isset($bugs['statuses'])) {
-        foreach ($bugs['statuses'] as $bugStatus) {
+        foreach ($bugs['statuses'] as $index => $bugStatus) {
             if (isset($bugStatus['id'])) {
+                $bugStatus['order'] = $index;
+
                 $data[$bugStatus['id']] = $bugStatus;
             }
         }
@@ -1561,8 +1567,10 @@ function getBugsSeverities()
 
     $bugs = (array)get_option('upstream_bugs');
     if (isset($bugs['severities'])) {
-        foreach ($bugs['severities'] as $bugSeverity) {
+        foreach ($bugs['severities'] as $index => $bugSeverity) {
             if (isset($bugSeverity['id'])) {
+                $bugSeverity['order'] = $index;
+
                 $data[$bugSeverity['id']] = $bugSeverity;
             }
         }

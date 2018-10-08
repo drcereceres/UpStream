@@ -309,7 +309,13 @@ jQuery(document).ready(function ($) {
             trs.each(function (trIndex) {
                 var tr = $(this);
 
-                columnValue = $('[data-column="' + columnName + '"]', tr).attr('data-value') || '';
+                // Check if the column has an specific value for ordering.
+                if ($('[data-column="' + columnName + '"]', tr).attr('data-order')) {
+                    columnValue = $('[data-column="' + columnName + '"]', tr).attr('data-order');
+                } else {
+                    // Fallback to the value.
+                    columnValue = $('[data-column="' + columnName + '"]', tr).attr('data-value') || '';
+                }
 
                 data.push({
                     index: trIndex,

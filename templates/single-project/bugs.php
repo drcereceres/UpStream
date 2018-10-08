@@ -8,7 +8,7 @@ if ( ! upstream_are_bugs_disabled()
      && ! upstream_disable_bugs()):
 
     $collapseBox = isset($pluginOptions['collapse_project_bugs'])
-                   && (bool)$pluginOptions['collapse_project_bugs'] === true;
+                   && (bool)$pluginOptions['collapse_project_   bugs'] === true;
 
     $archiveClosedItems = upstream_archive_closed_items();
 
@@ -79,6 +79,7 @@ if ( ! upstream_are_bugs_disabled()
     $columnsSchema = \UpStream\Frontend\getBugsFields($severities, $statuses, $areCommentsEnabled);
 
     $filter_closed_items = upstream_filter_closed_items();
+
     ?>
     <div class="col-md-12 col-sm-12 col-xs-12">
         <div class="x_panel">

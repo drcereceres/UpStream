@@ -121,6 +121,7 @@ function getTasksFields($statuses = [], $milestones = [], $areMilestonesEnabled 
         'status'      => [
             'type'           => 'custom',
             'label'          => __('Status', 'upstream'),
+            'isOrderable'    => true,
             'renderCallback' => function ($columnName, $columnValue, $column, $row, $rowType, $projectId) use (
                 &
                 $statuses,
@@ -572,6 +573,43 @@ function renderTableHeader($columns = [])
     echo $html;
 }
 
+/**
+ * @param array $users
+ *
+ * @return string
+ */
+function getUsersDisplayName($users)
+{
+    $html = 0;
+
+    $usersIds   = array_filter(array_unique($users));
+    $usersCount = count($usersIds);
+
+    if ($usersCount > 1) {
+        $users = get_users([
+            'include' => $usersIds,
+        ]);
+
+        $columnValue = [];
+        foreach ($users as $user) {
+            $columnValue[] = $user->display_name;
+        }
+        unset($user, $users);
+
+        $html = implode(',<br>', $columnValue);
+    } elseif ($usersCount === 1) {
+        $user = get_user_by('id', $usersIds[0]);
+
+        $html = $user->display_name;
+
+        unset($user);
+    }
+
+    unset($usersCount, $usersIds);
+
+    return $html;
+}
+
 function renderTableColumnValue($columnName, $columnValue, $column, $row, $rowType, $projectId)
 {
     $isHidden = isset($column['isHidden']) && (bool)$column['isHidden'] === true;
@@ -589,30 +627,7 @@ function renderTableColumnValue($columnName, $columnValue, $column, $row, $rowTy
             $columnValue = (array)$columnValue;
         }
 
-        $usersIds   = array_filter(array_unique($columnValue));
-        $usersCount = count($usersIds);
-
-        if ($usersCount > 1) {
-            $users = get_users([
-                'include' => $usersIds,
-            ]);
-
-            $columnValue = [];
-            foreach ($users as $user) {
-                $columnValue[] = $user->display_name;
-            }
-            unset($user, $users);
-
-            $html = implode(',<br>', $columnValue);
-        } elseif ($usersCount === 1) {
-            $user = get_user_by('id', $usersIds[0]);
-
-            $html = $user->display_name;
-
-            unset($user);
-        }
-
-        unset($usersCount, $usersIds);
+        $html = getUsersDisplayName($columnValue);
     } elseif ($columnType === 'percentage') {
         $html = sprintf('%d%%', (int)$columnValue);
     } elseif ($columnType === 'date') {
@@ -785,7 +800,11 @@ function renderTableBody($data, $visibleColumnsSchema, $hiddenColumnsSchema, $ro
                     'data-type'   => $column['type'],
                 ];
 
-                $columnAttrs['data-order'] = isset($row['oder']) ? $row['order'] : $columnAttrs['data-value'];
+                // Check if we have an specific value in the column, for ordering.
+                $columnAttrs['data-order'] = $columnAttrs['data-value'];
+                if (isset($row[$columnName . '_order'])) {
+                    $columnAttrs['data-order'] = $row[$columnName . '_order'];
+                }
 
                 if ($isFirst) {
                     $columnAttrs['class'] = 'is-clickable';

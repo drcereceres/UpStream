@@ -142,6 +142,14 @@ If you were having date issues within Projects, please clear your cache and re-s
 The format is based on [Keep a Changelog](http://keepachangelog.com)
 and this project adheres to [Semantic Versioning](http://semver.org).
 
+= [1.22.1] - UNRELEASED =
+
+Fixed:
+* Fixed ordering for Milestone, Tasks and Bugs columns in the front-end;
+
+Added:
+* Added option to order the table of tasks by status;
+
 = [1.22.0] - 2018-10-03 =
 
 Fixed:

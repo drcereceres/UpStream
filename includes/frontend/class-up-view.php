@@ -35,7 +35,11 @@ class UpStream_View
             $data   = [];
             $rowset = array_filter((array)$project->get_meta('milestones'));
 
+            $milestones = getMilestones();
+
             foreach ($rowset as $row) {
+                $row['milestone_order'] = @$milestones[$row['milestone']]['order'];
+
                 $row['created_by']   = (int)$row['created_by'];
                 $row['created_time'] = isset($row['created_time']) ? (int)$row['created_time'] : 0;
 
@@ -48,6 +52,11 @@ class UpStream_View
                 }
 
                 $row['assigned_to'] = $assignees;
+
+                if ( ! empty($assignees)) {
+                    // Get the name of assignees to fix ordering.
+                    $row['assigned_to_order'] = \UpStream\Frontend\getUsersDisplayName($assignees);
+                }
 
                 $row['progress']   = isset($row['progress']) ? (float)$row['progress'] : 0.00;
                 $row['notes']      = isset($row['notes']) ? (string)$row['notes'] : '';
@@ -89,6 +98,8 @@ class UpStream_View
             $data   = [];
             $rowset = array_filter((array)$project->get_meta('tasks'));
 
+            $statuses = getTasksStatuses();
+
             foreach ($rowset as $row) {
                 $row['created_by']   = (int)$row['created_by'];
                 $row['created_time'] = isset($row['created_time']) ? (int)$row['created_time'] : 0;
@@ -101,10 +112,17 @@ class UpStream_View
                 }
 
                 $row['assigned_to'] = $assignees;
-                $row['progress']    = isset($row['progress']) ? (float)$row['progress'] : 0.00;
-                $row['notes']       = isset($row['notes']) ? (string)$row['notes'] : '';
-                $row['start_date']  = ! isset($row['start_date']) || ! is_numeric($row['start_date']) || $row['start_date'] < 0 ? 0 : (int)$row['start_date'];
-                $row['end_date']    = ! isset($row['end_date']) || ! is_numeric($row['end_date']) || $row['end_date'] < 0 ? 0 : (int)$row['end_date'];
+
+                if ( ! empty($assignees)) {
+                    // Get the name of assignees to fix ordering.
+                    $row['assigned_to_order'] = \UpStream\Frontend\getUsersDisplayName($assignees);
+                }
+
+                $row['status_order'] = isset($row['status']) ? @$statuses[$row['status']]['order'] : '0';
+                $row['progress']     = isset($row['progress']) ? (float)$row['progress'] : 0.00;
+                $row['notes']        = isset($row['notes']) ? (string)$row['notes'] : '';
+                $row['start_date']   = ! isset($row['start_date']) || ! is_numeric($row['start_date']) || $row['start_date'] < 0 ? 0 : (int)$row['start_date'];
+                $row['end_date']     = ! isset($row['end_date']) || ! is_numeric($row['end_date']) || $row['end_date'] < 0 ? 0 : (int)$row['end_date'];
 
                 $data[$row['id']] = $row;
             }
@@ -122,6 +140,9 @@ class UpStream_View
     public static function getBugs($projectId = 0)
     {
         $rowset = [];
+
+        $severities = getBugsSeverities();
+        $statuses   = getBugsStatuses();
 
         $meta = (array)get_post_meta($projectId, '_upstream_project_bugs', true);
         foreach ($meta as $data) {
@@ -144,11 +165,18 @@ class UpStream_View
 
             $data['assigned_to'] = $assignees;
 
-            $data['description'] = isset($data['description']) ? (string)$data['description'] : '';
-            $data['severity']    = isset($data['severity']) ? (string)$data['severity'] : '';
-            $data['status']      = isset($data['status']) ? (string)$data['status'] : '';
-            $data['start_date']  = ! isset($data['start_date']) || ! is_numeric($data['start_date']) || $data['start_date'] < 0 ? 0 : (int)$data['start_date'];
-            $data['end_date']    = ! isset($data['end_date']) || ! is_numeric($data['end_date']) || $data['end_date'] < 0 ? 0 : (int)$data['end_date'];
+            if ( ! empty($assignees)) {
+                // Get the name of assignees to fix ordering.
+                $data['assigned_to_order'] = \UpStream\Frontend\getUsersDisplayName($assignees);
+            }
+
+            $data['description']    = isset($data['description']) ? (string)$data['description'] : '';
+            $data['severity']       = isset($data['severity']) ? (string)$data['severity'] : '';
+            $data['severity_order'] = isset($data['severity']) ? @$severities[$data['severity']]['order'] : '0';
+            $data['status']         = isset($data['status']) ? (string)$data['status'] : '';
+            $data['status_order']   = isset($data['status']) ? @$statuses[$data['status']]['order'] : '0';
+            $data['start_date']     = ! isset($data['start_date']) || ! is_numeric($data['start_date']) || $data['start_date'] < 0 ? 0 : (int)$data['start_date'];
+            $data['end_date']       = ! isset($data['end_date']) || ! is_numeric($data['end_date']) || $data['end_date'] < 0 ? 0 : (int)$data['end_date'];
 
             $rowset[$data['id']] = $data;
         }
