@@ -59,7 +59,6 @@ if ($remove) {
     /** Delete all the Plugin Options */
     delete_option('upstream_extensions');
     delete_option('upstream_bugs');
-    delete_option('upstream_bugs');
     delete_option('upstream_tasks');
     delete_option('upstream_milestones');
     delete_option('upstream_projects');
