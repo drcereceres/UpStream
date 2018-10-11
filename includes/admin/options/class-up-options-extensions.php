@@ -90,8 +90,9 @@ if ( ! class_exists('UpStream_Options_Extensions')) :
             add_action('allex_addon_update_license', [$this, 'action_allex_addon_update_license'], 10, 4);
             add_filter('allex_addons_get_license_key', [$this, 'filter_allex_addons_get_license_key'], 10, 2);
             add_filter('allex_addons_get_license_status', [$this, 'filter_allex_addons_get_license_status'], 10, 2);
-        }
 
+            do_action('allex_set_license_key_links', 'upstream', '/wp-admin/admin.php?page=upstream_extensions');
+        }
 
         /**
          * Returns true if there is one or more installed extension.
