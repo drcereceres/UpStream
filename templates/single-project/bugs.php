@@ -1,28 +1,42 @@
 <?php
 // Prevent direct access.
-if ( ! defined( 'ABSPATH' ) ) {
+if ( ! defined('ABSPATH')) {
     exit;
 }
 
 if ( ! upstream_are_bugs_disabled()
-     && ! upstream_disable_bugs() ):
+     && ! upstream_disable_bugs()):
 
-    $collapseBox = isset( $pluginOptions['collapse_project_bugs'] )
-                   && (bool) $pluginOptions['collapse_project_bugs'] === true;
+    $collapseBox = isset($pluginOptions['collapse_project_bugs'])
+                   && (bool)$pluginOptions['collapse_project_   bugs'] === true;
 
-    $bugsSettings = get_option( 'upstream_bugs' );
+    $archiveClosedItems = upstream_archive_closed_items();
+
+    $bugsSettings = get_option('upstream_bugs');
     $bugsStatuses = $bugsSettings['statuses'];
     $statuses     = [];
-    foreach ( $bugsStatuses as $status ) {
-        $statuses[ $status['id'] ] = $status;
+    $openStatuses = [];
+    foreach ($bugsStatuses as $status) {
+        // If closed items will be archived, we do not need to display closed statuses.
+        if ($archiveClosedItems && 'open' !== $status['type']) {
+            continue;
+        }
+
+        $statuses[$status['id']] = $status;
+
+        if ('open' === $status['type']) {
+            $openStatuses[] = $status['id'];
+        }
     }
 
     $bugsSeverities = $bugsSettings['severities'];
     $severities     = [];
-    foreach ( $bugsSeverities as $severity ) {
-        $severities[ $severity['id'] ] = $severity;
+    foreach ($bugsSeverities as $index => $severity) {
+        $severity['order'] = $index;
+
+        $severities[$severity['id']] = $severity;
     }
-    unset( $bugsSeverities );
+    unset($bugsSeverities);
 
     $itemType      = 'bug';
     $currentUserId = get_current_user_id();
@@ -30,18 +44,27 @@ if ( ! upstream_are_bugs_disabled()
 
     $projectId = upstream_post_id();
 
-    $rowset = UpStream_View::getBugs( $projectId );
+    $rowset = UpStream_View::getBugs($projectId);
+
+    // If should archive closed items, we filter the rowset.
+    if ($archiveClosedItems) {
+        foreach ($rowset as $id => $bug) {
+            if ( ! in_array($bug['status'], $openStatuses) && ! empty($bug['status'])) {
+                unset($rowset[$id]);
+            }
+        }
+    }
 
     $l = [
-        'LB_TITLE'         => __( 'Title', 'upstream' ),
-        'LB_NONE'          => __( 'none', 'upstream' ),
-        'LB_DESCRIPTION'   => __( 'Description', 'upstream' ),
-        'LB_COMMENTS'      => __( 'Comments', 'upstream' ),
+        'LB_TITLE'         => __('Title', 'upstream'),
+        'LB_NONE'          => __('none', 'upstream'),
+        'LB_DESCRIPTION'   => __('Description', 'upstream'),
+        'LB_COMMENTS'      => __('Comments', 'upstream'),
         'MSG_INVALID_USER' => sprintf(
-            _x( 'invalid %s', '%s: column name. Error message when data reference is not found', 'upstream' ),
-            strtolower( __( 'User' ) )
+            _x('invalid %s', '%s: column name. Error message when data reference is not found', 'upstream'),
+            strtolower(__('User'))
         ),
-        'LB_DUE_DATE'      => __( 'Due Date', 'upstream' ),
+        'LB_DUE_DATE'      => __('Due Date', 'upstream'),
     ];
 
     $areCommentsEnabled = upstreamAreCommentsEnabledOnBugs();
@@ -53,7 +76,10 @@ if ( ! upstream_are_bugs_disabled()
         'data-order-dir'  => 'DESC',
     ];
 
-    $columnsSchema = \UpStream\Frontend\getBugsFields( $severities, $statuses, $areCommentsEnabled );
+    $columnsSchema = \UpStream\Frontend\getBugsFields($severities, $statuses, $areCommentsEnabled);
+
+    $filter_closed_items = upstream_filter_closed_items();
+
     ?>
     <div class="col-md-12 col-sm-12 col-xs-12">
         <div class="x_panel">
@@ -67,7 +93,7 @@ if ( ! upstream_are_bugs_disabled()
                             <i class="fa fa-chevron-<?php echo $collapseBox ? 'down' : 'up'; ?>"></i>
                         </a>
                     </li>
-                    <?php do_action( 'upstream_project_bugs_top_right' ); ?>
+                    <?php do_action('upstream_project_bugs_top_right'); ?>
                 </ul>
                 <div class="clearfix"></div>
             </div>
@@ -89,24 +115,28 @@ if ( ! upstream_are_bugs_disabled()
                                 <div class="btn-group">
                                     <a href="#bugs-filters" role="button" class="btn btn-default btn-xs"
                                        data-toggle="collapse" aria-expanded="false" aria-controls="bugs-filters">
-                                        <i class="fa fa-filter"></i> <?php _e( 'Toggle Filters', 'upstream' ); ?>
+                                        <i class="fa fa-filter"></i> <?php _e('Toggle Filters', 'upstream'); ?>
                                     </a>
                                     <button type="button" class="btn btn-default dropdown-toggle btn-xs"
                                             data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                        <i class="fa fa-download"></i> <?php _e( 'Export', 'upstream' ); ?>
+                                        <i class="fa fa-download"></i> <?php _e('Export', 'upstream'); ?>
                                         <span class="caret"></span>
                                     </button>
                                     <ul class="dropdown-menu dropdown-menu-right">
                                         <li>
                                             <a href="#" data-action="export" data-type="txt">
-                                                <i class="fa fa-file-text-o"></i>&nbsp;&nbsp;<?php _e( 'Plain Text',
-                                                    'upstream' ); ?>
+                                                <i class="fa fa-file-text-o"></i>&nbsp;&nbsp;<?php _e(
+                                                    'Plain Text',
+                                                    'upstream'
+                                                ); ?>
                                             </a>
                                         </li>
                                         <li>
                                             <a href="#" data-action="export" data-type="csv">
-                                                <i class="fa fa-file-code-o"></i>&nbsp;&nbsp;<?php _e( 'CSV',
-                                                    'upstream' ); ?>
+                                                <i class="fa fa-file-code-o"></i>&nbsp;&nbsp;<?php _e(
+                                                    'CSV',
+                                                    'upstream'
+                                                ); ?>
                                             </a>
                                         </li>
                                     </ul>
@@ -117,25 +147,29 @@ if ( ! upstream_are_bugs_disabled()
                             <div>
                                 <a href="#bugs-filters" role="button" class="btn btn-default btn-xs"
                                    data-toggle="collapse" aria-expanded="false" aria-controls="bugs-filters">
-                                    <i class="fa fa-filter"></i> <?php _e( 'Toggle Filters', 'upstream' ); ?>
+                                    <i class="fa fa-filter"></i> <?php _e('Toggle Filters', 'upstream'); ?>
                                 </a>
                                 <div class="btn-group">
                                     <button type="button" class="btn btn-default dropdown-toggle btn-xs"
                                             data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                        <i class="fa fa-download"></i> <?php _e( 'Export', 'upstream' ); ?>
+                                        <i class="fa fa-download"></i> <?php _e('Export', 'upstream'); ?>
                                         <span class="caret"></span>
                                     </button>
                                     <ul class="dropdown-menu dropdown-menu-right">
                                         <li>
                                             <a href="#" data-action="export" data-type="txt">
-                                                <i class="fa fa-file-text-o"></i>&nbsp;&nbsp;<?php _e( 'Plain Text',
-                                                    'upstream' ); ?>
+                                                <i class="fa fa-file-text-o"></i>&nbsp;&nbsp;<?php _e(
+                                                    'Plain Text',
+                                                    'upstream'
+                                                ); ?>
                                             </a>
                                         </li>
                                         <li>
                                             <a href="#" data-action="export" data-type="csv">
-                                                <i class="fa fa-file-code-o"></i>&nbsp;&nbsp;<?php _e( 'CSV',
-                                                    'upstream' ); ?>
+                                                <i class="fa fa-file-code-o"></i>&nbsp;&nbsp;<?php _e(
+                                                    'CSV',
+                                                    'upstream'
+                                                ); ?>
                                             </a>
                                         </li>
                                     </ul>
@@ -159,18 +193,20 @@ if ( ! upstream_are_bugs_disabled()
                                         <i class="fa fa-user"></i>
                                     </div>
                                     <select class="form-control o-select2" data-column="assigned_to"
-                                            data-placeholder="<?php _e( 'Assignee', 'upstream' ); ?>" multiple>
+                                            data-placeholder="<?php _e('Assignee', 'upstream'); ?>" multiple>
                                         <option value></option>
-                                        <option value="__none__"><?php _e( 'Nobody', 'upstream' ); ?></option>
-                                        <option value="<?php echo $currentUserId; ?>"><?php _e( 'Me',
-                                                'upstream' ); ?></option>
-                                        <optgroup label="<?php _e( 'Users' ); ?>">
-                                            <?php foreach ( $users as $user_id => $userName ): ?>
-                                                <?php if ( $user_id === $currentUserId ) {
+                                        <option value="__none__"><?php _e('Nobody', 'upstream'); ?></option>
+                                        <option value="<?php echo $currentUserId; ?>"><?php _e(
+                                                'Me',
+                                                'upstream'
+                                            ); ?></option>
+                                        <optgroup label="<?php _e('Users'); ?>">
+                                            <?php foreach ($users as $user_id => $userName): ?>
+                                                <?php if ($user_id === $currentUserId) {
                                                     continue;
                                                 } ?>
                                                 <option
-                                                    value="<?php echo $user_id; ?>"><?php echo $userName; ?></option>
+                                                        value="<?php echo $user_id; ?>"><?php echo $userName; ?></option>
                                             <?php endforeach; ?>
                                         </optgroup>
                                     </select>
@@ -182,13 +218,13 @@ if ( ! upstream_are_bugs_disabled()
                                         <i class="fa fa-asterisk"></i>
                                     </div>
                                     <select class="form-control o-select2" data-column="severity"
-                                            data-placeholder="<?php _e( 'Severity', 'upstream' ); ?>" multiple>
+                                            data-placeholder="<?php _e('Severity', 'upstream'); ?>" multiple>
                                         <option value></option>
-                                        <option value="__none__"><?php _e( 'None', 'upstream' ); ?></option>
-                                        <optgroup label="<?php _e( 'Severity', 'upstream' ); ?>">
-                                            <?php foreach ( $severities as $severity ): ?>
+                                        <option value="__none__"><?php _e('None', 'upstream'); ?></option>
+                                        <optgroup label="<?php _e('Severity', 'upstream'); ?>">
+                                            <?php foreach ($severities as $severity): ?>
                                                 <option
-                                                    value="<?php echo esc_attr( $severity['id'] ); ?>"><?php echo esc_html( $severity['name'] ); ?></option>
+                                                        value="<?php echo esc_attr($severity['id']); ?>"><?php echo esc_html($severity['name']); ?></option>
                                             <?php endforeach; ?>
                                         </optgroup>
                                     </select>
@@ -200,13 +236,20 @@ if ( ! upstream_are_bugs_disabled()
                                         <i class="fa fa-bookmark"></i>
                                     </div>
                                     <select class="form-control o-select2" data-column="status"
-                                            data-placeholder="<?php _e( 'Status', 'upstream' ); ?>" multiple>
+                                            data-placeholder="<?php _e('Status', 'upstream'); ?>" multiple>
                                         <option value></option>
-                                        <option value="__none__"><?php _e( 'None', 'upstream' ); ?></option>
-                                        <optgroup label="<?php _e( 'Status', 'upstream' ); ?>">
-                                            <?php foreach ( $statuses as $status ): ?>
+                                        <option value="__none__" <?php echo $filter_closed_items ? 'selected' : ''; ?>><?php _e('None',
+                                                'upstream'); ?></option>
+                                        <optgroup label="<?php _e('Status', 'upstream'); ?>">
+                                            <?php foreach ($statuses as $status): ?>
+                                                <?php
+                                                $attr = ' ';
+                                                if ($filter_closed_items && 'open' === $status['type']) :
+                                                    $attr .= ' selected';
+                                                endif;
+                                                ?>
                                                 <option
-                                                    value="<?php echo esc_attr( $status['id'] ); ?>"><?php echo esc_html( $status['name'] ); ?></option>
+                                                        value="<?php echo esc_attr($status['id']); ?>"<?php echo $attr; ?>><?php echo esc_html($status['name']); ?></option>
                                             <?php endforeach; ?>
                                         </optgroup>
                                     </select>
@@ -225,12 +268,21 @@ if ( ! upstream_are_bugs_disabled()
                                        data-compare-operator=">=">
                             </div>
 
-                            <?php do_action( 'upstream:project.bugs.filters', $tableSettings, $columnsSchema,
-                                $projectId ); ?>
+                            <?php do_action(
+                                'upstream:project.bugs.filters',
+                                $tableSettings,
+                                $columnsSchema,
+                                $projectId
+                            ); ?>
                         </div>
                     </form>
-                    <?php \UpStream\Frontend\renderTable( $tableSettings, $columnsSchema, $rowset, 'bug',
-                        $projectId ); ?>
+                    <?php \UpStream\Frontend\renderTable(
+                        $tableSettings,
+                        $columnsSchema,
+                        $rowset,
+                        'bug',
+                        $projectId
+                    ); ?>
                 </div>
             </div>
         </div>

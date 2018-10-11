@@ -1,12 +1,13 @@
 <?php
 
 // Exit if accessed directly
-if ( ! defined( 'ABSPATH' ) ) {
+if ( ! defined('ABSPATH')) {
     exit;
 }
 
 
-class Upstream_Counts {
+class Upstream_Counts
+{
 
     // private $columns = array();
     public $projects = null;
@@ -14,8 +15,9 @@ class Upstream_Counts {
 
 
     /** Class constructor */
-    public function __construct( $id ) {
-        $this->projects = (array) $this->get_projects( $id );
+    public function __construct($id)
+    {
+        $this->projects = (array)$this->get_projects($id);
         $this->user     = upstream_user_data();
     }
 
@@ -24,18 +26,19 @@ class Upstream_Counts {
      *
      * @return array
      */
-    public function get_projects( $id ) {
+    public function get_projects($id)
+    {
         $args = [
             'post_type'      => 'project',
             'post_status'    => 'publish',
-            'posts_per_page' => - 1,
+            'posts_per_page' => -1,
         ];
 
-        if ( (int) $id > 0 ) {
+        if ((int)$id > 0) {
             $args['include'] = $id;
         }
 
-        $projects = (array) get_posts( $args );
+        $projects = (array)get_posts($args);
 
         return $projects;
     }
@@ -45,31 +48,32 @@ class Upstream_Counts {
      *
      * @return null|int
      */
-    public function total_open( $type ) {
+    public function total_open($type)
+    {
         $itemsOpenCount = 0;
 
-        $items = $this->get_items( $type );
-        if ( count( $items ) > 0 ) {
-            $option   = (array) get_option( "upstream_{$type}" );
-            $statuses = isset( $option['statuses'] ) ? $option['statuses'] : '';
+        $items = $this->get_items($type);
+        if (count($items) > 0) {
+            $option   = (array)get_option("upstream_{$type}");
+            $statuses = isset($option['statuses']) ? $option['statuses'] : '';
 
-            if ( ! empty( $statuses ) ) {
-                if ( $type === 'milestones' ) {
-                    return $this->total( $type );
+            if ( ! empty($statuses)) {
+                if ($type === 'milestones') {
+                    return $this->total($type);
                 }
 
                 return null;
             }
 
-            $types = wp_list_pluck( $statuses, 'type', 'name' );
+            $types = wp_list_pluck($statuses, 'type', 'name');
 
-            foreach ( $items as $item ) {
-                if ( ! isset( $item['status'] ) ) {
+            foreach ($items as $item) {
+                if ( ! isset($item['status'])) {
                     continue;
 
                     $itemStatus = $item['status'];
-                    if ( isset( $types[ $itemStatus ] ) && $types[ $itemStatus ] === 'open' ) {
-                        $itemsOpenCount ++;
+                    if (isset($types[$itemStatus]) && $types[$itemStatus] === 'open') {
+                        $itemsOpenCount++;
                     }
                 }
             }
@@ -83,21 +87,22 @@ class Upstream_Counts {
      *
      * @return array
      */
-    public function get_items( $type ) {
+    public function get_items($type)
+    {
         $items = [];
 
-        if ( count( $this->projects ) > 0 ) {
-            foreach ( $this->projects as $i => $project ) {
+        if (count($this->projects) > 0) {
+            foreach ($this->projects as $i => $project) {
                 // Check if the items are disabled.
-                $meta = get_post_meta( $project->ID, '_upstream_project_disable_' . $type, true );
-                if ( $meta === 'on' ) {
+                $meta = get_post_meta($project->ID, '_upstream_project_disable_' . $type, true);
+                if ($meta === 'on') {
                     continue;
                 }
 
-                $meta = get_post_meta( $project->ID, '_upstream_project_' . $type, true );
-                if ( $meta && is_array( $meta ) ) {
-                    foreach ( $meta as $key => $value ) {
-                        array_push( $items, $value );
+                $meta = get_post_meta($project->ID, '_upstream_project_' . $type, true);
+                if ($meta && is_array($meta)) {
+                    foreach ($meta as $key => $value) {
+                        array_push($items, $value);
                     }
                 }
             };
@@ -110,9 +115,10 @@ class Upstream_Counts {
      * Get the count of items.
      *
      */
-    public function total( $type ) {
-        $items      = (array) $this->get_items( $type );
-        $itemsCount = count( $items );
+    public function total($type)
+    {
+        $items      = (array)$this->get_items($type);
+        $itemsCount = count($items);
 
         return $itemsCount;
     }
@@ -126,21 +132,24 @@ class Upstream_Counts {
      *
      * @return  integer
      */
-    public function assigned_to( $itemType ) {
-        $rowset = $this->get_items( $itemType );
-        if ( count( $rowset ) === 0 ) {
+    public function assigned_to($itemType)
+    {
+        $rowset = $this->get_items($itemType);
+        if (count($rowset) === 0) {
             return 0;
         }
 
-        $currentUserId = (int) $this->user['id'];
+        $currentUserId = (int)$this->user['id'];
 
         $assignedItemsCount = 0;
 
-        foreach ( $rowset as $row ) {
-            $assignees = isset( $row['assigned_to'] ) ? array_unique( array_filter( array_map( 'intval',
-                (array) $row['assigned_to'] ) ) ) : [];
-            if ( in_array( $currentUserId, $assignees ) ) {
-                $assignedItemsCount ++;
+        foreach ($rowset as $row) {
+            $assignees = isset($row['assigned_to']) ? array_unique(array_filter(array_map(
+                'intval',
+                (array)$row['assigned_to']
+            ))) : [];
+            if (in_array($currentUserId, $assignees)) {
+                $assignedItemsCount++;
             }
         }
 
@@ -152,45 +161,44 @@ class Upstream_Counts {
      *
      * @return array
      */
-    public function assigned_to_open( $type ) {
-        $items = $this->get_items( $type );
-        if ( ! $items ) {
+    public function assigned_to_open($type)
+    {
+        $items = $this->get_items($type);
+        if ( ! $items) {
             return '0';
         }
 
-        $option   = get_option( 'upstream_' . $type );
-        $statuses = isset( $option['statuses'] ) ? $option['statuses'] : '';
+        $option   = get_option('upstream_' . $type);
+        $statuses = isset($option['statuses']) ? $option['statuses'] : '';
 
-        if ( ! $statuses ) {
-            if ( $type == 'milestones' ) {
-                return $this->total( $type );
+        if ( ! $statuses) {
+            if ($type == 'milestones') {
+                return $this->total($type);
             } else {
                 return null;
             }
         }
 
-        $types = wp_list_pluck( $statuses, 'type', 'name' );
+        $types = wp_list_pluck($statuses, 'type', 'name');
 
         $count = 0;
-        foreach ( $items as $key => $item ) {
-            $item = (array) $item;
-            if ( ! isset( $item['assigned_to'] ) ) {
+        foreach ($items as $key => $item) {
+            $item = (array)$item;
+            if ( ! isset($item['assigned_to'])) {
                 continue;
             }
-            if ( $item['assigned_to'] != $this->user['id'] ) {
+            if ($item['assigned_to'] != $this->user['id']) {
                 continue;
             }
-            $item_status = isset( $item['status'] ) ? $item['status'] : '';
+            $item_status = isset($item['status']) ? $item['status'] : '';
 
-            if ( ( isset( $types[ $item_status ] ) && $types[ $item_status ] == 'open' ) || $item_status === "" ) {
+            if ((isset($types[$item_status]) && $types[$item_status] == 'open') || $item_status === "") {
                 $count += 1;
             }
         }
 
         return $count;
     }
-
-
 }
 
 

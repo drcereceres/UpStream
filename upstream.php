@@ -4,7 +4,7 @@
  * Description: A WordPress Project Management plugin by UpStream.
  * Author: UpStream
  * Author URI: https://upstreamplugin.com
- * Version: 1.21.1
+ * Version: 1.22.1-beta.3
  * Text Domain: upstream
  * Domain Path: /languages
  */
@@ -12,18 +12,19 @@
 use UpStream\Comments;
 
 // Exit if accessed directly.
-if ( ! defined( 'ABSPATH' ) ) {
+if ( ! defined('ABSPATH')) {
     exit;
 }
 
-if ( ! class_exists( 'UpStream' ) ) :
+if ( ! class_exists('UpStream')) :
 
     /**
      * Main UpStream Class.
      *
      * @since 1.0.0
      */
-    final class UpStream {
+    final class UpStream
+    {
         /**
          * @var UpStream The one true UpStream
          * @since 1.0.0
@@ -43,8 +44,9 @@ if ( ! class_exists( 'UpStream' ) ) :
         /**
          * Main UpStream Instance.
          */
-        public static function instance() {
-            if ( is_null( self::$_instance ) ) {
+        public static function instance()
+        {
+            if (is_null(self::$_instance)) {
                 self::$_instance = new self();
             }
 
@@ -59,8 +61,9 @@ if ( ! class_exists( 'UpStream' ) ) :
          *
          * @since   1.0.0
          */
-        public function __clone() {
-            _doing_it_wrong( __FUNCTION__, 'You\'re not supposed to clone this class.', UPSTREAM_VERSION );
+        public function __clone()
+        {
+            _doing_it_wrong(__FUNCTION__, 'You\'re not supposed to clone this class.', UPSTREAM_VERSION);
         }
 
         /**
@@ -68,8 +71,9 @@ if ( ! class_exists( 'UpStream' ) ) :
          *
          * @since   1.0.0
          */
-        public function __wakeup() {
-            _doing_it_wrong( __FUNCTION__, 'You\'re not supposed to unserialize this class.', UPSTREAM_VERSION );
+        public function __wakeup()
+        {
+            _doing_it_wrong(__FUNCTION__, 'You\'re not supposed to unserialize this class.', UPSTREAM_VERSION);
         }
 
         /**
@@ -77,11 +81,13 @@ if ( ! class_exists( 'UpStream' ) ) :
          *
          * @since   1.10.2
          */
-        public function __sleep() {
-            _doing_it_wrong( __FUNCTION__, 'You\'re not supposed to serialize this class.', UPSTREAM_VERSION );
+        public function __sleep()
+        {
+            _doing_it_wrong(__FUNCTION__, 'You\'re not supposed to serialize this class.', UPSTREAM_VERSION);
         }
 
-        public function __construct() {
+        public function __construct()
+        {
             $this->define_constants();
             $this->includes();
 
@@ -91,19 +97,19 @@ if ( ! class_exists( 'UpStream' ) ) :
             // Initialize the Allex Framework.
             $this->init_framework();
 
-            if ( UpStream_Debug::is_enabled() ) {
+            if (UpStream_Debug::is_enabled()) {
                 UpStream_Debug::init();
             }
 
             $this->init_hooks();
 
-            if ( session_status() === PHP_SESSION_NONE ) {
+            if (session_status() === PHP_SESSION_NONE) {
                 session_start();
             }
 
             $this->init_twig();
 
-            do_action( 'upstream_loaded' );
+            do_action('upstream_loaded');
         }
 
         /**
@@ -111,43 +117,50 @@ if ( ! class_exists( 'UpStream' ) ) :
          *
          * @since  1.0.0
          */
-        private function init_hooks() {
-            add_action( 'init', [ $this, 'init' ], 0 );
-            add_filter( 'plugin_row_meta', [ $this, 'plugin_row_meta' ], 10, 2 );
-            add_filter( 'plugin_action_links_upstream/upstream.php', [ $this, 'handleActionLinks' ] );
-            add_filter( 'http_request_host_is_external', [ 'UpStream', 'allowExternalUpdateHost' ], 10, 3 );
-            add_filter( 'quicktags_settings', 'upstream_tinymce_quicktags_settings' );
-            add_filter( 'tiny_mce_before_init', 'upstream_tinymce_before_init_setup_toolbar' );
-            add_filter( 'tiny_mce_before_init', 'upstream_tinymce_before_init' );
-            add_filter( 'teeny_mce_before_init', 'upstream_tinymce_before_init_setup_toolbar' );
-            add_filter( 'comments_clauses', [ $this, 'filterCommentsOnDashboard' ], 10, 2 );
-            add_filter( 'views_dashboard', [ 'UpStream_Admin', 'commentStatusLinks' ], 10, 1 );
+        private function init_hooks()
+        {
+            add_action('init', [$this, 'init'], 0);
+            add_filter('plugin_row_meta', [$this, 'plugin_row_meta'], 10, 2);
+            add_filter('plugin_action_links_upstream/upstream.php', [$this, 'handleActionLinks']);
+            add_filter('http_request_host_is_external', ['UpStream', 'allowExternalUpdateHost'], 10, 3);
+            add_filter('quicktags_settings', 'upstream_tinymce_quicktags_settings');
+            add_filter('tiny_mce_before_init', 'upstream_tinymce_before_init_setup_toolbar');
+            add_filter('tiny_mce_before_init', 'upstream_tinymce_before_init');
+            add_filter('teeny_mce_before_init', 'upstream_tinymce_before_init_setup_toolbar');
+            add_filter('comments_clauses', [$this, 'filterCommentsOnDashboard'], 10, 2);
+            add_filter('views_dashboard', ['UpStream_Admin', 'commentStatusLinks'], 10, 1);
 
-            if ( is_admin() ) {
-                add_action( 'admin_init', [ $this->container['reviews'], 'init' ] );
+            if (is_admin()) {
+                add_action('admin_init', [$this->container['reviews'], 'init']);
             }
 
             // Render additional update info if needed.
             global $pagenow;
-            if ( $pagenow === "plugins.php" ) {
-                add_action( 'in_plugin_update_message-' . UPSTREAM_PLUGIN_BASENAME,
-                    [ $this, 'renderAdditionalUpdateInfo' ], 20, 2 );
+            if ($pagenow === "plugins.php") {
+                add_action(
+                    'in_plugin_update_message-' . UPSTREAM_PLUGIN_BASENAME,
+                    [$this, 'renderAdditionalUpdateInfo'],
+                    20,
+                    2
+                );
             }
         }
 
         /**
          * Initialize the Alledia Framework.
          */
-        private function init_framework() {
+        private function init_framework()
+        {
             $this->container['framework']->init();
         }
 
         /**
          * Initialize the twig environment.
          */
-        private function init_twig() {
-            $loader = new Twig_Loader_Filesystem( __DIR__ . '/twig' );
-            $twig   = new Twig_Environment( $loader );
+        private function init_twig()
+        {
+            $loader = new Twig_Loader_Filesystem(__DIR__ . '/twig');
+            $twig   = new Twig_Environment($loader);
 
             $this->twig = $twig;
         }
@@ -162,8 +175,9 @@ if ( ! class_exists( 'UpStream' ) ) :
          *
          * @return string
          */
-        public function twig_render( $twig_file, $context = [] ) {
-            return $this->twig->render( $twig_file, $context );
+        public function twig_render($twig_file, $context = [])
+        {
+            return $this->twig->render($twig_file, $context);
         }
 
         /**
@@ -173,12 +187,13 @@ if ( ! class_exists( 'UpStream' ) ) :
          *
          * @global  $pagenow
          */
-        public function limitClientUsersAdminAccess() {
+        public function limitClientUsersAdminAccess()
+        {
             global $pagenow;
 
             $profilePage = 'profile.php';
-            if ( $pagenow !== $profilePage && $pagenow !== "edit.php" && ! wp_doing_ajax() ) {
-                wp_redirect( admin_url( $profilePage ) );
+            if ($pagenow !== $profilePage && $pagenow !== "edit.php" && ! wp_doing_ajax()) {
+                wp_redirect(admin_url($profilePage));
                 exit;
             }
         }
@@ -190,17 +205,18 @@ if ( ! class_exists( 'UpStream' ) ) :
          *
          * @global  $menu
          */
-        public function limitClientUsersMenu() {
+        public function limitClientUsersMenu()
+        {
             global $menu;
 
-            foreach ( $menu as $menuIndex => $menuData ) {
-                $menuFile = isset( $menuData[2] ) ? $menuData[2] : null;
-                if ( $menuFile !== null ) {
-                    if ( $menuFile === 'profile.php' || $menuFile === 'edit.php?post_type=project' ) {
+            foreach ($menu as $menuIndex => $menuData) {
+                $menuFile = isset($menuData[2]) ? $menuData[2] : null;
+                if ($menuFile !== null) {
+                    if ($menuFile === 'profile.php' || $menuFile === 'edit.php?post_type=project') {
                         continue;
                     }
 
-                    remove_menu_page( $menuFile );
+                    remove_menu_page($menuFile);
                 }
             }
         }
@@ -212,21 +228,26 @@ if ( ! class_exists( 'UpStream' ) ) :
          *
          * @param   \WP_Admin_Bar $wp_admin_bar
          */
-        public function limitClientUsersToolbarItems( $wp_admin_bar ) {
+        public function limitClientUsersToolbarItems($wp_admin_bar)
+        {
             $user      = wp_get_current_user();
-            $userRoles = (array) $user->roles;
+            $userRoles = (array)$user->roles;
 
-            if ( count( array_intersect( $userRoles,
-                    [ 'administrator', 'upstream_manager' ] ) ) === 0 && in_array( 'upstream_client_user',
-                    $userRoles ) ) {
-                $menuItems = [ 'about', 'comments', 'new-content' ];
+            if (count(array_intersect(
+                    $userRoles,
+                    ['administrator', 'upstream_manager']
+                )) === 0 && in_array(
+                    'upstream_client_user',
+                    $userRoles
+                )) {
+                $menuItems = ['about', 'comments', 'new-content'];
 
-                if ( ! is_admin() ) {
-                    $menuItems = array_merge( $menuItems, [ 'dashboard', 'edit' ] );
+                if ( ! is_admin()) {
+                    $menuItems = array_merge($menuItems, ['dashboard', 'edit']);
                 }
 
-                foreach ( $menuItems as $menuItem ) {
-                    $wp_admin_bar->remove_menu( $menuItem );
+                foreach ($menuItems as $menuItem) {
+                    $wp_admin_bar->remove_menu($menuItem);
                 }
             }
         }
@@ -234,7 +255,8 @@ if ( ! class_exists( 'UpStream' ) ) :
         /**
          * @return Container
          */
-        public function get_container() {
+        public function get_container()
+        {
             return $this->container;
         }
 
@@ -243,12 +265,13 @@ if ( ! class_exists( 'UpStream' ) ) :
          *
          * @since  1.0.0
          */
-        private function define_constants() {
+        private function define_constants()
+        {
             $upload_dir = wp_upload_dir();
-            $this->define( 'UPSTREAM_PLUGIN_FILE', __FILE__ );
-            $this->define( 'UPSTREAM_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
-            $this->define( 'UPSTREAM_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
-            $this->define( 'UPSTREAM_PLUGIN_BASENAME', plugin_basename( __FILE__ ) );
+            $this->define('UPSTREAM_PLUGIN_FILE', __FILE__);
+            $this->define('UPSTREAM_PLUGIN_DIR', plugin_dir_path(__FILE__));
+            $this->define('UPSTREAM_PLUGIN_URL', plugin_dir_url(__FILE__));
+            $this->define('UPSTREAM_PLUGIN_BASENAME', plugin_basename(__FILE__));
 
             include_once __DIR__ . '/includes.php';
         }
@@ -261,9 +284,10 @@ if ( ! class_exists( 'UpStream' ) ) :
          * @param  string      $name
          * @param  string|bool $value
          */
-        private function define( $name, $value ) {
-            if ( ! defined( $name ) ) {
-                define( $name, $value );
+        private function define($name, $value)
+        {
+            if ( ! defined($name)) {
+                define($name, $value);
             }
         }
 
@@ -274,12 +298,13 @@ if ( ! class_exists( 'UpStream' ) ) :
          * @since  1.0.0
          * @return bool
          */
-        private function is_request( $type ) {
-            switch ( $type ) {
-                case 'admin' :
+        private function is_request($type)
+        {
+            switch ($type) {
+                case 'admin':
                     return is_admin();
-                case 'frontend' :
-                    return ( ! is_admin() || defined( 'DOING_AJAX' ) ) && ! defined( 'DOING_CRON' );
+                case 'frontend':
+                    return ( ! is_admin() || defined('DOING_AJAX')) && ! defined('DOING_CRON');
             }
         }
 
@@ -288,9 +313,10 @@ if ( ! class_exists( 'UpStream' ) ) :
          *
          * @since  1.0.0
          */
-        public function includes() {
+        public function includes()
+        {
             // When composer is used in a global scope the folder won't exist here. So we need to check before load it.
-            if ( file_exists( __DIR__ . '/vendor/autoload.php' ) ) {
+            if (file_exists(__DIR__ . '/vendor/autoload.php')) {
                 require_once __DIR__ . '/vendor/autoload.php';
             }
 
@@ -307,39 +333,44 @@ if ( ! class_exists( 'UpStream' ) ) :
             include_once __DIR__ . '/includes/trait-up-singleton.php';
             include_once __DIR__ . '/includes/abs-class-up-struct.php';
 
-            if ( $this->is_request( 'admin' ) ) {
+            if ($this->is_request('admin')) {
                 global $pagenow;
 
-                $isMultisite = (bool) is_multisite();
+                $isMultisite = (bool)is_multisite();
                 $loadCmb2    = false;
 
-                if ( $isMultisite ) {
-                    $currentPage = isset( $_SERVER['PHP_SELF'] ) ? preg_replace( '/^\/wp-admin\//i', '',
-                        $_SERVER['PHP_SELF'] ) : '';
+                if ($isMultisite) {
+                    $currentPage = isset($_SERVER['PHP_SELF']) ? preg_replace(
+                        '/^\/wp-admin\//i',
+                        '',
+                        $_SERVER['PHP_SELF']
+                    ) : '';
                 } else {
-                    $currentPage = (string) $pagenow;
+                    $currentPage = (string)$pagenow;
                 }
 
-                if ( in_array( $currentPage, [ 'post.php', 'post-new.php' ] ) ) {
-                    $postType = isset( $_REQUEST['post_type'] ) ? $_REQUEST['post_type'] : null;
-                    if ( empty( $postType ) ) {
-                        $projectId = isset( $_REQUEST['post'] ) ? (int) $_REQUEST['post'] : 0;
-                        $postType  = get_post_type( $projectId );
+                if (in_array($currentPage, ['post.php', 'post-new.php'])) {
+                    $postType = isset($_REQUEST['post_type']) ? $_REQUEST['post_type'] : null;
+                    if (empty($postType)) {
+                        $projectId = isset($_REQUEST['post']) ? (int)$_REQUEST['post'] : 0;
+                        $postType  = get_post_type($projectId);
                     }
 
-                    if ( ! empty( $postType ) ) {
-                        $postTypesUsingCmb2 = apply_filters( 'upstream:post_types_using_cmb2',
-                            [ 'project', 'client' ] );
-                        $loadCmb2           = in_array( $postType, $postTypesUsingCmb2 );
+                    if ( ! empty($postType)) {
+                        $postTypesUsingCmb2 = apply_filters(
+                            'upstream:post_types_using_cmb2',
+                            ['project', 'client']
+                        );
+                        $loadCmb2           = in_array($postType, $postTypesUsingCmb2);
                     }
-                } elseif ( $currentPage === 'admin.php'
-                           && isset( $_REQUEST['page'] )
-                           && preg_match( '/^upstream_/i', $_REQUEST['page'] )
+                } elseif ($currentPage === 'admin.php'
+                          && isset($_REQUEST['page'])
+                          && preg_match('/^upstream_/i', $_REQUEST['page'])
                 ) {
                     $loadCmb2 = true;
                 }
 
-                if ( $loadCmb2 ) {
+                if ($loadCmb2) {
                     include_once __DIR__ . '/includes/libraries/cmb2/init.php';
                     include_once __DIR__ . '/includes/libraries/cmb2-grid/Cmb2GridPlugin.php';
                 }
@@ -350,7 +381,7 @@ if ( ! class_exists( 'UpStream' ) ) :
                 include_once __DIR__ . '/includes/admin/class-up-admin-reviews.php';
             }
 
-            if ( $this->is_request( 'frontend' ) ) {
+            if ($this->is_request('frontend')) {
                 include_once __DIR__ . '/includes/frontend/class-up-template-loader.php';
                 include_once __DIR__ . '/includes/frontend/class-up-login.php';
                 include_once __DIR__ . '/includes/frontend/class-up-style-output.php';
@@ -372,9 +403,10 @@ if ( ! class_exists( 'UpStream' ) ) :
         /**
          * Init UpStream when WordPress Initialises.
          */
-        public function init() {
+        public function init()
+        {
             // Before init action.
-            do_action( 'before_upstream_init' );
+            do_action('before_upstream_init');
             // Set up localisation.
             $this->load_plugin_textdomain();
             // Load class instances.
@@ -382,7 +414,7 @@ if ( ! class_exists( 'UpStream' ) ) :
             $this->project_activity = new UpStream_Project_Activity();
 
             // If PHP < 5.5, loads a library intended to provide forward compatibility with the password_* functions that ship with PHP 5.5.
-            if ( version_compare( PHP_VERSION, '5.5', '<' ) ) {
+            if (version_compare(PHP_VERSION, '5.5', '<')) {
                 require_once UPSTREAM_PLUGIN_DIR . 'includes/libraries/password_compat-1.0.4/lib/password.php';
             }
 
@@ -393,23 +425,27 @@ if ( ! class_exists( 'UpStream' ) ) :
             \UpStream\Migrations\Comments::run();
 
             $user      = wp_get_current_user();
-            $userRoles = (array) $user->roles;
-            if ( count( array_intersect( $userRoles,
-                    [ 'administrator', 'upstream_manager' ] ) ) === 0 && in_array( 'upstream_client_user',
-                    $userRoles ) ) {
-                add_filter( 'admin_init', [ $this, 'limitClientUsersAdminAccess' ] );
-                add_filter( 'admin_head', [ $this, 'limitClientUsersMenu' ] );
-                add_action( 'admin_bar_menu', [ $this, 'limitClientUsersToolbarItems' ], 999 );
+            $userRoles = (array)$user->roles;
+            if (count(array_intersect(
+                    $userRoles,
+                    ['administrator', 'upstream_manager']
+                )) === 0 && in_array(
+                    'upstream_client_user',
+                    $userRoles
+                )) {
+                add_filter('admin_init', [$this, 'limitClientUsersAdminAccess']);
+                add_filter('admin_head', [$this, 'limitClientUsersMenu']);
+                add_action('admin_bar_menu', [$this, 'limitClientUsersToolbarItems'], 999);
             }
 
             // Starting from v1.12.5 UpStream Users role won't have 'edit_others_projects' capability by default.
-            $editOtherProjectsPermissionWereRemoved = (bool) get_option( 'upstream:role_upstream_users:drop_edit_others_projects' );
-            if ( ! $editOtherProjectsPermissionWereRemoved ) {
-                $role = get_role( 'upstream_user' );
-                $role->remove_cap( 'edit_others_projects' );
-                unset( $role );
+            $editOtherProjectsPermissionWereRemoved = (bool)get_option('upstream:role_upstream_users:drop_edit_others_projects');
+            if ( ! $editOtherProjectsPermissionWereRemoved) {
+                $role = get_role('upstream_user');
+                $role->remove_cap('edit_others_projects');
+                unset($role);
 
-                update_option( 'upstream:role_upstream_users:drop_edit_others_projects', 1 );
+                update_option('upstream:role_upstream_users:drop_edit_others_projects', 1);
             }
 
             UpStream_Options_Projects::createProjectsStatusesIds();
@@ -420,7 +456,7 @@ if ( ! class_exists( 'UpStream' ) ) :
             Comments::instantiate();
 
             // Init action.
-            do_action( 'upstream_init' );
+            do_action('upstream_init');
         }
 
         /**
@@ -432,11 +468,12 @@ if ( ! class_exists( 'UpStream' ) ) :
          *      - WP_LANG_DIR/upstream/upstream-LOCALE.mo
          *      - WP_LANG_DIR/plugins/upstream-LOCALE.mo
          */
-        public function load_plugin_textdomain() {
-            $locale = apply_filters( 'plugin_locale', get_locale(), 'upstream' );
+        public function load_plugin_textdomain()
+        {
+            $locale = apply_filters('plugin_locale', get_locale(), 'upstream');
 
-            load_textdomain( 'upstream', WP_LANG_DIR . '/upstream/upstream-' . $locale . '.mo' );
-            load_plugin_textdomain( 'upstream', false, plugin_basename( dirname( __FILE__ ) ) . '/languages' );
+            load_textdomain('upstream', WP_LANG_DIR . '/upstream/upstream-' . $locale . '.mo');
+            load_plugin_textdomain('upstream', false, plugin_basename(dirname(__FILE__)) . '/languages');
         }
 
 
@@ -448,19 +485,24 @@ if ( ! class_exists( 'UpStream' ) ) :
          *
          * @return  array
          */
-        public function plugin_row_meta( $links, $file ) {
-            if ( $file == UPSTREAM_PLUGIN_BASENAME ) {
+        public function plugin_row_meta($links, $file)
+        {
+            if ($file == UPSTREAM_PLUGIN_BASENAME) {
                 $row_meta = [
-                    'docs'        => '<a href="' . esc_url( 'http://upstreamplugin.com/documentation' ) . '" title="' . esc_attr( __( 'View Documentation',
-                            'upstream' ) ) . '">' . __( 'Docs', 'upstream' ) . '</a>',
-                    'quick-start' => '<a href="' . esc_url( 'http://upstreamplugin.com/quick-start-guide' ) . '" title="' . esc_attr( __( 'View Quick Start Guide',
-                            'upstream' ) ) . '">' . __( 'Quick Start Guide', 'upstream' ) . '</a>',
+                    'docs'        => '<a href="' . esc_url('http://upstreamplugin.com/documentation') . '" title="' . esc_attr(__(
+                            'View Documentation',
+                            'upstream'
+                        )) . '">' . __('Docs', 'upstream') . '</a>',
+                    'quick-start' => '<a href="' . esc_url('http://upstreamplugin.com/quick-start-guide') . '" title="' . esc_attr(__(
+                            'View Quick Start Guide',
+                            'upstream'
+                        )) . '">' . __('Quick Start Guide', 'upstream') . '</a>',
                 ];
 
-                return array_merge( $links, $row_meta );
+                return array_merge($links, $row_meta);
             }
 
-            return (array) $links;
+            return (array)$links;
         }
 
         /**
@@ -473,12 +515,13 @@ if ( ! class_exists( 'UpStream' ) ) :
          *
          * @return  array
          */
-        public static function handleActionLinks( $links ) {
+        public static function handleActionLinks($links)
+        {
             $links['settings'] = sprintf(
                 '<a href="%s" title="%2$s" aria-label="%2$s">%3$s</a>',
-                admin_url( 'admin.php?page=upstream_general' ),
-                __( 'Open Settings Page', 'upstream' ),
-                __( 'Settings', 'upstream' )
+                admin_url('admin.php?page=upstream_general'),
+                __('Open Settings Page', 'upstream'),
+                __('Settings', 'upstream')
             );
 
             return $links;
@@ -496,8 +539,9 @@ if ( ! class_exists( 'UpStream' ) ) :
          *
          * @return  boolean
          */
-        public static function allowExternalUpdateHost( $isAllowed, $host, $url ) {
-            if ( $host === 'upstreamplugin.com' ) {
+        public static function allowExternalUpdateHost($isAllowed, $host, $url)
+        {
+            if ($host === 'upstreamplugin.com') {
                 return true;
             }
 
@@ -515,18 +559,24 @@ if ( ! class_exists( 'UpStream' ) ) :
          * @param   array  $pluginData Plugin metadata.
          * @param   object $response   Metadata about the available plugin update.
          */
-        public static function renderAdditionalUpdateInfo( $pluginData, $response ) {
-            $updateNoticeTitleHtml = sprintf( '<strong style="font-size: 1.25em; display: block; margin-top: 10px;">%s</strong>',
-                __( 'Update notice:', 'upstream' ) );
+        public static function renderAdditionalUpdateInfo($pluginData, $response)
+        {
+            $updateNoticeTitleHtml = sprintf(
+                '<strong style="font-size: 1.25em; display: block; margin-top: 10px;">%s</strong>',
+                __('Update notice:', 'upstream')
+            );
 
-            if ( version_compare( UPSTREAM_VERSION, "1.12.5", "<" ) ) {
+            if (version_compare(UPSTREAM_VERSION, "1.12.5", "<")) {
                 printf(
                     $updateNoticeTitleHtml .
-                    _x( 'Starting from <strong>%s</strong> <code>%s</code> capability was removed from <code>%s</code> users role.',
-                        '1st %s: plugin version, 2nd %s: capability name, 3rd: UpStream User role', 'upstream' ),
+                    _x(
+                        'Starting from <strong>%s</strong> <code>%s</code> capability was removed from <code>%s</code> users role.',
+                        '1st %s: plugin version, 2nd %s: capability name, 3rd: UpStream User role',
+                        'upstream'
+                    ),
                     'v1.12.5',
                     'edit_others_projects',
-                    __( 'UpStream User', 'upstream' )
+                    __('UpStream User', 'upstream')
                 );
             }
         }
@@ -545,28 +595,31 @@ if ( ! class_exists( 'UpStream' ) ) :
          *
          * @return  array   $queryArgs
          */
-        public static function filterCommentsOnDashboard( $queryArgs, $query ) {
+        public static function filterCommentsOnDashboard($queryArgs, $query)
+        {
             global $pagenow;
 
-            if ( is_admin()
-                 && $pagenow === "index.php"
-                 && ! isUserEitherManagerOrAdmin()
+            if (is_admin()
+                && $pagenow === "index.php"
+                && ! isUserEitherManagerOrAdmin()
             ) {
                 global $wpdb;
 
                 $queryArgs['join'] = 'LEFT JOIN ' . $wpdb->prefix . 'posts AS post ON post.ID = ' . $wpdb->prefix . 'comments.comment_post_ID';
 
                 $user = wp_get_current_user();
-                if ( in_array( 'upstream_user', $user->roles ) || in_array( 'upstream_client_user', $user->roles ) ) {
-                    $projects = (array) upstream_get_users_projects( $user );
-                    if ( count( $projects ) === 0 ) {
+                if (in_array('upstream_user', $user->roles) || in_array('upstream_client_user', $user->roles)) {
+                    $projects = (array)upstream_get_users_projects($user);
+                    if (count($projects) === 0) {
                         $queryArgs['where'] = "(post.ID = -1)";
                     } else {
-                        $queryArgs['where'] = "(post.post_type = 'project' AND post.ID IN (" . implode( ', ',
-                                array_keys( $projects ) ) . "))";
+                        $queryArgs['where'] = "(post.post_type = 'project' AND post.ID IN (" . implode(
+                                ', ',
+                                array_keys($projects)
+                            ) . "))";
 
-                        $userCanModerateComments = user_can( $user, 'moderate_comments' );
-                        if ( ! $userCanModerateComments ) {
+                        $userCanModerateComments = user_can($user, 'moderate_comments');
+                        if ( ! $userCanModerateComments) {
                             $queryArgs['where'] .= " AND ( comment_approved = '1' )";
                         } else {
                             $queryArgs['where'] .= " AND ( comment_approved = '1' OR comment_approved = '0' )";
@@ -591,7 +644,8 @@ endif;
  * @since  1.0.0
  * @return UpStream
  */
-function UpStream() {
+function UpStream()
+{
     return UpStream::instance();
 }
 

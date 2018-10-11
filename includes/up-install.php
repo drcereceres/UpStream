@@ -1,7 +1,7 @@
 <?php
 
 // Exit if accessed directly
-if ( ! defined( 'ABSPATH' ) ) {
+if ( ! defined('ABSPATH')) {
     exit;
 }
 
@@ -32,55 +32,61 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * @uses    wp_die()
  */
-function upstream_check_min_requirements() {
+function upstream_check_min_requirements()
+{
     global $wp_version;
 
     $minWPVersionRequired  = "4.5";
     $minPHPVersionRequired = "5.6";
 
     // Check PHP version.
-    if ( version_compare( PHP_VERSION, $minPHPVersionRequired, '<' ) ) {
+    if (version_compare(PHP_VERSION, $minPHPVersionRequired, '<')) {
         $errorMessage = sprintf(
-            '<p>' . __( 'It seems you are running an outdated version of PHP: <code>%s</code>.', 'upstream' ) . '</p>' .
-            '<p>' . __( 'For security reasons, UpStream requires at least PHP version <code>%s</code> to run.',
-                'upstream' ) . '</p>' .
-            '<p>' . __( 'Please, consider upgrading your PHP version.', 'upstream' ) . '</p><br /><br />',
+            '<p>' . __('It seems you are running an outdated version of PHP: <code>%s</code>.', 'upstream') . '</p>' .
+            '<p>' . __(
+                'For security reasons, UpStream requires at least PHP version <code>%s</code> to run.',
+                'upstream'
+            ) . '</p>' .
+            '<p>' . __('Please, consider upgrading your PHP version.', 'upstream') . '</p><br /><br />',
             PHP_VERSION,
             $minPHPVersionRequired
         );
     } // Check WordPress version.
-    elseif ( version_compare( $wp_version, $minWPVersionRequired, '<' ) ) {
+    elseif (version_compare($wp_version, $minWPVersionRequired, '<')) {
         $errorMessage = sprintf(
-            '<p>' . __( 'It seems you are running an outdated version of WordPress: <code>%s</code>.',
-                'upstream' ) . '</p>' .
-            '<p>' . __( 'For security reasons, UpStream requires at least version <code>%s</code> to run.',
-                'upstream' ) . '</p>' .
-            '<p>' . __( 'Please, consider upgrading your WordPress.', 'upstream' ) . '</p><br /><br />',
+            '<p>' . __(
+                'It seems you are running an outdated version of WordPress: <code>%s</code>.',
+                'upstream'
+            ) . '</p>' .
+            '<p>' . __(
+                'For security reasons, UpStream requires at least version <code>%s</code> to run.',
+                'upstream'
+            ) . '</p>' .
+            '<p>' . __('Please, consider upgrading your WordPress.', 'upstream') . '</p><br /><br />',
             $wp_version,
             $minWPVersionRequired
         );
     }
 
-    if ( isset( $errorMessage ) ) {
-        $errorMessage .= '<a class="button" href="javascript:history.back();">' . __( 'Go Back', 'upstream' ) . '</a>';
+    if (isset($errorMessage)) {
+        $errorMessage .= '<a class="button" href="javascript:history.back();">' . __('Go Back', 'upstream') . '</a>';
 
-        wp_die( $errorMessage );
+        wp_die($errorMessage);
     }
 }
 
-function upstream_install( $network_wide = false ) {
+function upstream_install($network_wide = false)
+{
     global $wpdb;
 
     upstream_check_min_requirements();
 
-    if ( is_multisite() && $network_wide ) {
-
-        foreach ( $wpdb->get_col( "SELECT blog_id FROM $wpdb->blogs LIMIT 100" ) as $blog_id ) {
-            switch_to_blog( $blog_id );
+    if (is_multisite() && $network_wide) {
+        foreach ($wpdb->get_col("SELECT blog_id FROM $wpdb->blogs LIMIT 100") as $blog_id) {
+            switch_to_blog($blog_id);
             upstream_run_install();
             restore_current_blog();
         }
-
     } else {
         upstream_run_install();
     }
@@ -88,8 +94,9 @@ function upstream_install( $network_wide = false ) {
     flush_rewrite_rules();
 }
 
-register_activation_hook( UPSTREAM_PLUGIN_FILE, 'upstream_install' );
-register_deactivation_hook( UPSTREAM_PLUGIN_FILE, 'upstream_uninstall' );
+register_activation_hook(UPSTREAM_PLUGIN_FILE, 'upstream_install');
+register_deactivation_hook(UPSTREAM_PLUGIN_FILE, 'upstream_uninstall');
+add_action('upstream_update_data', 'upstream_update_data', 10, 2);
 
 /**
  * Run the UpStream Instsall process
@@ -97,8 +104,8 @@ register_deactivation_hook( UPSTREAM_PLUGIN_FILE, 'upstream_uninstall' );
  * @since  2.5
  * @return void
  */
-function upstream_run_install() {
-
+function upstream_run_install()
+{
     global $wpdb, $wp_version;
 
     // Setup the Downloads Custom Post Type
@@ -111,15 +118,15 @@ function upstream_run_install() {
     upstream_add_default_options();
 
     // Clear the permalinks
-    flush_rewrite_rules( false );
+    flush_rewrite_rules(false);
 
     // Add Upgraded From Option
-    $current_version = get_option( 'upstream_version' );
-    if ( $current_version ) {
-        update_option( 'upstream_version_upgraded_from', $current_version );
+    $current_version = get_option('upstream_version');
+    if ($current_version) {
+        update_option('upstream_version_upgraded_from', $current_version);
     }
 
-    update_option( 'upstream_version', UPSTREAM_VERSION );
+    update_option('upstream_version', UPSTREAM_VERSION);
 
     // Create UpStream roles
     $roles = new UpStream_Roles;
@@ -130,29 +137,31 @@ function upstream_run_install() {
     // if ( ! $current_version ) {}
 
     // Bail if activating from network, or bulk
-    if ( is_network_admin() || isset( $_GET['activate-multi'] ) ) {
+    if (is_network_admin() || isset($_GET['activate-multi'])) {
         return;
     }
 
-    // Add the transient to redirect
-    set_transient( '_upstream_activation_redirect', true, 30 );
+    do_action('upstream_update_data', $current_version, UPSTREAM_VERSION);
 
+    // Add the transient to redirect
+    set_transient('_upstream_activation_redirect', true, 30);
 }
 
 /**
  * Runs the UpStream uninstall process.
  */
-function upstream_uninstall() {
+function upstream_uninstall()
+{
     flush_rewrite_rules();
 }
 
 
-function upstream_add_default_options() {
+function upstream_add_default_options()
+{
 
     // general options
-    $general = get_option( 'upstream_general' );
-    if ( ! $general || empty( $general ) ) {
-
+    $general = get_option('upstream_general');
+    if ( ! $general || empty($general)) {
         $general['project']['single']   = 'Project';
         $general['project']['plural']   = 'Projects';
         $general['client']['single']    = 'Client';
@@ -167,26 +176,25 @@ function upstream_add_default_options() {
         $general['file']['plural']      = 'Files';
 
         $general['login_heading'] = 'Project Login';
-        $general['admin_email']   = get_bloginfo( 'admin_email' );
+        $general['admin_email']   = get_bloginfo('admin_email');
 
-        update_option( 'upstream_general', $general );
+        update_option('upstream_general', $general);
     }
 
     $cachedIds        = [];
-    $generateRandomId = function () use ( &$cachedIds ) {
+    $generateRandomId = function () use (&$cachedIds) {
         do {
-            $randomId = upstreamGenerateRandomString( 5, 'abcdefghijklmnopqrstuvwxyz0123456789' );
-        } while ( isset( $cachedIds[ $randomId ] ) ); // Isset is faster than in_array in this case.
+            $randomId = upstreamGenerateRandomString(5, 'abcdefghijklmnopqrstuvwxyz0123456789');
+        } while (isset($cachedIds[$randomId])); // Isset is faster than in_array in this case.
 
-        $cachedIds[ $randomId ] = null;
+        $cachedIds[$randomId] = null;
 
         return $randomId;
     };
 
     // project options
-    $projects = get_option( 'upstream_projects' );
-    if ( ! $projects || empty( $projects ) ) {
-
+    $projects = get_option('upstream_projects');
+    if ( ! $projects || empty($projects)) {
         $projects['statuses'][0]['name']  = 'In Progress';
         $projects['statuses'][0]['color'] = '#5cbfd1';
         $projects['statuses'][0]['type']  = 'open';
@@ -202,13 +210,12 @@ function upstream_add_default_options() {
         $projects['statuses'][2]['type']  = 'closed';
         $projects['statuses'][2]['id']    = $generateRandomId();
 
-        update_option( 'upstream_projects', $projects );
+        update_option('upstream_projects', $projects);
     }
 
     // milestone options
-    $milestones = get_option( 'upstream_milestones' );
-    if ( ! $milestones || empty( $milestones ) ) {
-
+    $milestones = get_option('upstream_milestones');
+    if ( ! $milestones || empty($milestones)) {
         $milestones['milestones'][0]['title'] = 'Wireframe';
         $milestones['milestones'][0]['color'] = '#3ca9c4';
         $milestones['milestones'][0]['id']    = $generateRandomId();
@@ -229,13 +236,12 @@ function upstream_add_default_options() {
         $milestones['milestones'][4]['color'] = '#1fc1b1';
         $milestones['milestones'][4]['id']    = $generateRandomId();
 
-        update_option( 'upstream_milestones', $milestones );
+        update_option('upstream_milestones', $milestones);
     }
 
     // task options
-    $tasks = get_option( 'upstream_tasks' );
-    if ( ! $tasks || empty( $tasks ) ) {
-
+    $tasks = get_option('upstream_tasks');
+    if ( ! $tasks || empty($tasks)) {
         $tasks['statuses'][0]['name']  = 'In Progress';
         $tasks['statuses'][0]['color'] = '#5cbfd1';
         $tasks['statuses'][0]['type']  = 'open';
@@ -256,13 +262,12 @@ function upstream_add_default_options() {
         $tasks['statuses'][3]['type']  = 'closed';
         $tasks['statuses'][3]['id']    = $generateRandomId();
 
-        update_option( 'upstream_tasks', $tasks );
+        update_option('upstream_tasks', $tasks);
     }
 
     // bug options
-    $bugs = get_option( 'upstream_bugs' );
-    if ( ! $bugs || empty( $bugs ) ) {
-
+    $bugs = get_option('upstream_bugs');
+    if ( ! $bugs || empty($bugs)) {
         $bugs['statuses'][0]['name']  = 'In Progress';
         $bugs['statuses'][0]['color'] = '#5cbfd1';
         $bugs['statuses'][0]['type']  = 'open';
@@ -295,9 +300,8 @@ function upstream_add_default_options() {
         $bugs['severities'][2]['color'] = '#d1a65c';
         $bugs['severities'][2]['id']    = $generateRandomId();
 
-        update_option( 'upstream_bugs', $bugs );
+        update_option('upstream_bugs', $bugs);
     }
-
 }
 
 
@@ -315,17 +319,16 @@ function upstream_add_default_options() {
  *
  * @return void
  */
-function upstream_new_blog_created( $blog_id, $user_id, $domain, $path, $site_id, $meta ) {
-
-    if ( is_plugin_active_for_network( plugin_basename( UPSTREAM_PLUGIN_FILE ) ) ) {
-        switch_to_blog( $blog_id );
+function upstream_new_blog_created($blog_id, $user_id, $domain, $path, $site_id, $meta)
+{
+    if (is_plugin_active_for_network(plugin_basename(UPSTREAM_PLUGIN_FILE))) {
+        switch_to_blog($blog_id);
         upstream_install();
         restore_current_blog();
     }
-
 }
 
-add_action( 'wpmu_new_blog', 'upstream_new_blog_created', 10, 6 );
+add_action('wpmu_new_blog', 'upstream_new_blog_created', 10, 6);
 
 
 /**
@@ -337,96 +340,94 @@ add_action( 'wpmu_new_blog', 'upstream_new_blog_created', 10, 6 );
  * @since 1.0.0
  * @return void
  */
-function upstream_after_install() {
-
-    if ( ! is_admin() ) {
+function upstream_after_install()
+{
+    if ( ! is_admin()) {
         return;
     }
 
-    $activated = get_transient( '_upstream_activation_redirect' );
+    $activated = get_transient('_upstream_activation_redirect');
 
-    if ( false !== $activated ) {
+    if (false !== $activated) {
 
         // add the default options
         //upstream_add_default_project();
-        delete_transient( '_upstream_activation_redirect' );
+        delete_transient('_upstream_activation_redirect');
 
-        if ( ! isset( $_GET['activate-multi'] ) ) {
-            set_transient( '_upstream_redirected', true, 360 );
-            wp_redirect( admin_url( 'post-new.php?post_type=project' ) );
+        if ( ! isset($_GET['activate-multi'])) {
+            set_transient('_upstream_redirected', true, 360);
+            wp_redirect(admin_url('post-new.php?post_type=project'));
             exit;
         }
-
     }
-
 }
 
-add_action( 'admin_init', 'upstream_after_install' );
+add_action('admin_init', 'upstream_after_install');
 
 
-function upstream_install_success_notice() {
+function upstream_install_success_notice()
+{
+    $redirected = get_transient('_upstream_redirected');
 
-    $redirected = get_transient( '_upstream_redirected' );
-
-    if ( false !== $redirected && isset( $_GET['page'] ) && $_GET['page'] == 'upstream_general' ) {
+    if (false !== $redirected && isset($_GET['page']) && $_GET['page'] == 'upstream_general') {
         // Delete the transient
         //delete_transient( '_upstream_redirected' );
 
         $class   = 'notice notice-info is-dismissible';
-        $message = '<strong>' . __( 'Success! UpStream is up and running.', 'upstream' ) . '</strong><br>';
-        $message .= __( 'Step 1. Please go through each settings tab below and configure the options.',
-                'upstream' ) . '<br>';
-        $message .= __( 'Step 2. Add a new Client by navigating to <strong>Projects > New Client</strong>',
-                'upstream' ) . '<br>';
-        $message .= __( 'Step 3. Add your first Project by navigating to <strong>Projects > New Project</strong>',
-                'upstream' ) . '<br>';
+        $message = '<strong>' . __('Success! UpStream is up and running.', 'upstream') . '</strong><br>';
+        $message .= __(
+                        'Step 1. Please go through each settings tab below and configure the options.',
+                        'upstream'
+                    ) . '<br>';
+        $message .= __(
+                        'Step 2. Add a new Client by navigating to <strong>Projects > New Client</strong>',
+                        'upstream'
+                    ) . '<br>';
+        $message .= __(
+                        'Step 3. Add your first Project by navigating to <strong>Projects > New Project</strong>',
+                        'upstream'
+                    ) . '<br>';
 
-        printf( '<div class="%1$s"><p>%2$s</p></div>', $class, $message );
+        printf('<div class="%1$s"><p>%2$s</p></div>', $class, $message);
     }
 }
 
-add_action( 'admin_notices', 'upstream_install_success_notice' );
+add_action('admin_notices', 'upstream_install_success_notice');
 
-// function upstream_add_default_project() {
+function upstream_update_data($old_version, $new_version)
+{
+    // Ignore if we are on the same version.
+    if ($old_version === $new_version) {
+        return;
+    }
 
-//  // Create project object
-//  $project = array(
-//    'post_title'      => 'Default UpStream Project',
-//    'post_content'    => '',
-//    'post_status'     => 'publish',
-//    'post_author'     => get_current_user_id(),
-//    'post_type'       => 'project',
-//  );
+    if (version_compare($new_version, '1.22.0', '=')) {
+        // Make sure administrator and managers are able to
+        $roles = [
+            'upstream_manager',
+            'administrator',
+            'upstream_user',
+        ];
 
-//  // Insert the post into the database
-//  $id = wp_insert_post( $project );
+        foreach ($roles as $role) {
+            $role = get_role($role);
 
-//  if( $id ) {
+            if (is_object($role)) {
+                $role->add_cap('project_title_field', true);
+                $role->add_cap('project_status_field', true);
+                $role->add_cap('project_owner_field', true);
+                $role->add_cap('project_client_field', true);
+                $role->add_cap('project_users_field', true);
+                $role->add_cap('project_start_date_field', true);
+                $role->add_cap('project_end_date_field', true);
+            }
+        }
+    }
 
-//      $milestones[0] = array(
-//          'milestone'     => 'Wireframe',
-//          'start_date'    => current_time( 'timestamp', false ),
-//          'end_date'      => current_time( 'timestamp' ) + ( 60 * 60 * 24 * 7 ),
-//      );
-//      update_post_meta( $id, '_upstream_project_milestones', $milestones );
+    if (version_compare($old_version, '1.22.1', '<')) {
+        // Force to fix bug statuses and severities with empty ID.
+        delete_option('upstream:created_bugs_args_ids');
 
-//      $tasks[0] = array(
-//          'title'         => 'Test Task number 1',
-//          'start_date'    => current_time( 'timestamp', false ),
-//          'end_date'      => current_time( 'timestamp' ) + ( 60 * 60 * 24 * 5 ),
-//          'status'        => 'In Progress',
-//          'progress'      => '50',
-//      );
-//      update_post_meta( $id, '_upstream_project_tasks', $tasks );
-
-//      update_post_meta( $id, '_upstream_project_start', current_time( 'timestamp', false ) );
-//      update_post_meta( $id, '_upstream_project_end', current_time( 'timestamp' ) + ( 60 * 60 * 24 * 7 ) );
-//      update_post_meta( $id, '_upstream_project_owner', get_current_user_id() );
-//      update_post_meta( $id, '_upstream_project_status', 'In Progress' );
-
-//      $project = new UpStream_Project( $id );
-//      $project->update_project_meta();
-
-//  }
-
-// }
+        UpStream_Options_Bugs::createBugsStatusesIds();
+    }
+}

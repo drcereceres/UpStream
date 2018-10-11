@@ -1,19 +1,31 @@
 <?php
 // Prevent direct access.
-if ( ! defined( 'ABSPATH' ) ) {
+if ( ! defined('ABSPATH')) {
     exit;
 }
 
 if ( ! upstream_are_tasks_disabled()
-     && ! upstream_disable_tasks() ):
+     && ! upstream_disable_tasks()):
 
-    $collapseBox = isset( $pluginOptions['collapse_project_tasks'] )
-                   && (bool) $pluginOptions['collapse_project_tasks'] === true;
+    $collapseBox = isset($pluginOptions['collapse_project_tasks'])
+                   && (bool)$pluginOptions['collapse_project_tasks'] === true;
 
-    $tasksStatuses = get_option( 'upstream_tasks' );
+    $archiveClosedItems = upstream_archive_closed_items();
+
+    $tasksStatuses = get_option('upstream_tasks');
     $statuses      = [];
-    foreach ( $tasksStatuses['statuses'] as $status ) {
-        $statuses[ $status['id'] ] = $status;
+    $openStatuses  = [];
+    foreach ($tasksStatuses['statuses'] as $status) {
+        // If closed items will be archived, we do not need to display closed statuses.
+        if ($archiveClosedItems && 'open' !== $status['type']) {
+            continue;
+        }
+
+        $statuses[$status['id']] = $status;
+
+        if ('open' === $status['type']) {
+            $openStatuses[] = $status['id'];
+        }
     }
 
     $itemType      = 'task';
@@ -28,55 +40,64 @@ if ( ! upstream_are_tasks_disabled()
     $milestonesColors     = [];
     $milestones           = [];
 
-    if ( $areMilestonesEnabled ) {
+    if ($areMilestonesEnabled) {
         $milestonesList = getMilestones();
-        foreach ( $milestonesList as $milestoneId => $milestone ) {
-            $milestonesColors[ $milestoneId ] = $milestone['color'];
+        foreach ($milestonesList as $milestoneId => $milestone) {
+            $milestonesColors[$milestoneId] = $milestone['color'];
         }
 
-        $meta = (array) get_post_meta( $projectId, '_upstream_project_milestones', true );
-        foreach ( $meta as $data ) {
-            if ( ! isset( $data['id'] )
-                 || ! isset( $data['created_by'] )
-                 || ! isset( $data['milestone'] )
+        $meta = (array)get_post_meta($projectId, '_upstream_project_milestones', true);
+        foreach ($meta as $data) {
+            if ( ! isset($data['id'])
+                 || ! isset($data['created_by'])
+                 || ! isset($data['milestone'])
             ) {
                 continue;
             }
 
-            $milestones[ $data['id'] ] = [
+            $milestones[$data['id']] = [
                 'id'    => $data['id'],
                 'title' => '',
                 'color' => '',
             ];
 
-            $milestone = isset( $milestonesList[ $data['milestone'] ] ) ? $milestonesList[ $data['milestone'] ] : null;
-            if ( $milestone !== null ) {
-                $milestones[ $data['id'] ]['title'] = $milestone['title'];
-                $milestones[ $data['id'] ]['color'] = $milestone['color'];
+            $milestone = isset($milestonesList[$data['milestone']]) ? $milestonesList[$data['milestone']] : null;
+            if ($milestone !== null) {
+                $milestones[$data['id']]['title'] = $milestone['title'];
+                $milestones[$data['id']]['color'] = $milestone['color'];
             }
         }
     }
 
-    $rowset = UpStream_View::getTasks( $projectId );
+    $rowset = UpStream_View::getTasks($projectId);
+
+    // If should archive closed items, we filter the rowset.
+    if ($archiveClosedItems) {
+        foreach ($rowset as $id => $task) {
+            if ( ! in_array($task['status'], $openStatuses) && ! empty($task['status'])) {
+                unset($rowset[$id]);
+            }
+        }
+    }
 
     $l = [
         'LB_MILESTONE'          => upstream_milestone_label(),
-        'LB_TITLE'              => __( 'Title', 'upstream' ),
-        'LB_NONE'               => __( 'none', 'upstream' ),
-        'LB_NOTES'              => __( 'Notes', 'upstream' ),
-        'LB_COMMENTS'           => __( 'Comments', 'upstream' ),
+        'LB_TITLE'              => __('Title', 'upstream'),
+        'LB_NONE'               => __('none', 'upstream'),
+        'LB_NOTES'              => __('Notes', 'upstream'),
+        'LB_COMMENTS'           => __('Comments', 'upstream'),
         'MSG_INVALID_USER'      => sprintf(
-            _x( 'invalid %s', '%s: column name. Error message when data reference is not found', 'upstream' ),
-            strtolower( __( 'User' ) )
+            _x('invalid %s', '%s: column name. Error message when data reference is not found', 'upstream'),
+            strtolower(__('User'))
         ),
-        'MSG_INVALID_MILESTONE' => __( 'invalid milestone', 'upstream' ),
-        'LB_START_DATE'         => __( 'Starting after', 'upstream' ),
-        'LB_END_DATE'           => __( 'Ending before', 'upstream' ),
+        'MSG_INVALID_MILESTONE' => __('invalid milestone', 'upstream'),
+        'LB_START_DATE'         => __('Starting after', 'upstream'),
+        'LB_END_DATE'           => __('Ending before', 'upstream'),
     ];
 
     $l['MSG_INVALID_MILESTONE'] = sprintf(
-        _x( 'invalid %s', '%s: column name. Error message when data reference is not found', 'upstream' ),
-        strtolower( $l['LB_MILESTONE'] )
+        _x('invalid %s', '%s: column name. Error message when data reference is not found', 'upstream'),
+        strtolower($l['LB_MILESTONE'])
     );
 
     $tableSettings = [
@@ -86,8 +107,14 @@ if ( ! upstream_are_tasks_disabled()
         'data-order-dir'  => 'DESC',
     ];
 
-    $columnsSchema = \UpStream\Frontend\getTasksFields( $statuses, $milestones, $areMilestonesEnabled,
-        $areCommentsEnabled );
+    $columnsSchema = \UpStream\Frontend\getTasksFields(
+        $statuses,
+        $milestones,
+        $areMilestonesEnabled,
+        $areCommentsEnabled
+    );
+
+    $filter_closed_items = upstream_filter_closed_items();
     ?>
     <div class="col-md-12 col-sm-12 col-xs-12">
         <div class="x_panel">
@@ -101,7 +128,7 @@ if ( ! upstream_are_tasks_disabled()
                             <i class="fa fa-chevron-<?php echo $collapseBox ? 'down' : 'up'; ?>"></i>
                         </a>
                     </li>
-                    <?php do_action( 'upstream_project_tasks_top_right' ); ?>
+                    <?php do_action('upstream_project_tasks_top_right'); ?>
                 </ul>
                 <div class="clearfix"></div>
             </div>
@@ -123,24 +150,28 @@ if ( ! upstream_are_tasks_disabled()
                                 <div class="btn-group">
                                     <a href="#tasks-filters" role="button" class="btn btn-default btn-xs"
                                        data-toggle="collapse" aria-expanded="false" aria-controls="tasks-filters">
-                                        <i class="fa fa-filter"></i> <?php _e( 'Toggle Filters', 'upstream' ); ?>
+                                        <i class="fa fa-filter"></i> <?php _e('Toggle Filters', 'upstream'); ?>
                                     </a>
                                     <button type="button" class="btn btn-default dropdown-toggle btn-xs"
                                             data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                        <i class="fa fa-download"></i> <?php _e( 'Export', 'upstream' ); ?>
+                                        <i class="fa fa-download"></i> <?php _e('Export', 'upstream'); ?>
                                         <span class="caret"></span>
                                     </button>
                                     <ul class="dropdown-menu dropdown-menu-right">
                                         <li>
                                             <a href="#" data-action="export" data-type="txt">
-                                                <i class="fa fa-file-text-o"></i>&nbsp;&nbsp;<?php _e( 'Plain Text',
-                                                    'upstream' ); ?>
+                                                <i class="fa fa-file-text-o"></i>&nbsp;&nbsp;<?php _e(
+                                                    'Plain Text',
+                                                    'upstream'
+                                                ); ?>
                                             </a>
                                         </li>
                                         <li>
                                             <a href="#" data-action="export" data-type="csv">
-                                                <i class="fa fa-file-code-o"></i>&nbsp;&nbsp;<?php _e( 'CSV',
-                                                    'upstream' ); ?>
+                                                <i class="fa fa-file-code-o"></i>&nbsp;&nbsp;<?php _e(
+                                                    'CSV',
+                                                    'upstream'
+                                                ); ?>
                                             </a>
                                         </li>
                                     </ul>
@@ -151,25 +182,29 @@ if ( ! upstream_are_tasks_disabled()
                             <div>
                                 <a href="#tasks-filters" role="button" class="btn btn-default btn-xs"
                                    data-toggle="collapse" aria-expanded="false" aria-controls="tasks-filters">
-                                    <i class="fa fa-filter"></i> <?php _e( 'Toggle Filters', 'upstream' ); ?>
+                                    <i class="fa fa-filter"></i> <?php _e('Toggle Filters', 'upstream'); ?>
                                 </a>
                                 <div class="btn-group">
                                     <button type="button" class="btn btn-default dropdown-toggle btn-xs"
                                             data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                        <i class="fa fa-download"></i> <?php _e( 'Export', 'upstream' ); ?>
+                                        <i class="fa fa-download"></i> <?php _e('Export', 'upstream'); ?>
                                         <span class="caret"></span>
                                     </button>
                                     <ul class="dropdown-menu dropdown-menu-right">
                                         <li>
                                             <a href="#" data-action="export" data-type="txt">
-                                                <i class="fa fa-file-text-o"></i>&nbsp;&nbsp;<?php _e( 'Plain Text',
-                                                    'upstream' ); ?>
+                                                <i class="fa fa-file-text-o"></i>&nbsp;&nbsp;<?php _e(
+                                                    'Plain Text',
+                                                    'upstream'
+                                                ); ?>
                                             </a>
                                         </li>
                                         <li>
                                             <a href="#" data-action="export" data-type="csv">
-                                                <i class="fa fa-file-code-o"></i>&nbsp;&nbsp;<?php _e( 'CSV',
-                                                    'upstream' ); ?>
+                                                <i class="fa fa-file-code-o"></i>&nbsp;&nbsp;<?php _e(
+                                                    'CSV',
+                                                    'upstream'
+                                                ); ?>
                                             </a>
                                         </li>
                                     </ul>
@@ -193,18 +228,20 @@ if ( ! upstream_are_tasks_disabled()
                                         <i class="fa fa-user"></i>
                                     </div>
                                     <select class="form-control o-select2" data-column="assigned_to" multiple
-                                            data-placeholder="<?php _e( 'Assignee', 'upstream' ); ?>">
+                                            data-placeholder="<?php _e('Assignee', 'upstream'); ?>">
                                         <option value></option>
-                                        <option value="__none__"><?php _e( 'Nobody', 'upstream' ); ?></option>
-                                        <option value="<?php echo $currentUserId; ?>"><?php _e( 'Me',
-                                                'upstream' ); ?></option>
-                                        <optgroup label="<?php _e( 'Users' ); ?>">
-                                            <?php foreach ( $users as $user_id => $userName ): ?>
-                                                <?php if ( $user_id === $currentUserId ) {
+                                        <option value="__none__"><?php _e('Nobody', 'upstream'); ?></option>
+                                        <option value="<?php echo $currentUserId; ?>"><?php _e(
+                                                'Me',
+                                                'upstream'
+                                            ); ?></option>
+                                        <optgroup label="<?php _e('Users'); ?>">
+                                            <?php foreach ($users as $user_id => $userName): ?>
+                                                <?php if ($user_id === $currentUserId) {
                                                     continue;
                                                 } ?>
                                                 <option
-                                                    value="<?php echo $user_id; ?>"><?php echo $userName; ?></option>
+                                                        value="<?php echo $user_id; ?>"><?php echo $userName; ?></option>
                                             <?php endforeach; ?>
                                         </optgroup>
                                     </select>
@@ -216,20 +253,26 @@ if ( ! upstream_are_tasks_disabled()
                                         <i class="fa fa-bookmark"></i>
                                     </div>
                                     <select class="form-control o-select2" data-column="status"
-                                            data-placeholder="<?php _e( 'Status', 'upstream' ); ?>" multiple>
-                                        <option value></option>
-                                        <option value="__none__"><?php _e( 'None', 'upstream' ); ?></option>
-                                        <optgroup label="<?php _e( 'Status', 'upstream' ); ?>">
-                                            <?php foreach ( $statuses as $status ): ?>
+                                            data-placeholder="<?php _e('Status', 'upstream'); ?>" multiple>
+                                        <option value="__none__" <?php echo $filter_closed_items ? 'selected' : ''; ?>><?php _e('None',
+                                                'upstream'); ?></option>
+                                        <optgroup label="<?php _e('Status', 'upstream'); ?>">
+                                            <?php foreach ($statuses as $status): ?>
+                                                <?php
+                                                $attr = ' ';
+                                                if ($filter_closed_items && 'open' === $status['type']) :
+                                                    $attr .= ' selected';
+                                                endif;
+                                                ?>
                                                 <option
-                                                    value="<?php echo esc_attr( $status['id'] ); ?>"><?php echo esc_html( $status['name'] ); ?></option>
+                                                        value="<?php echo esc_attr($status['id']); ?>"<?php echo $attr; ?>><?php echo esc_html($status['name']); ?></option>
                                             <?php endforeach; ?>
                                         </optgroup>
                                     </select>
                                 </div>
                             </div>
                             <?php
-                            if ( $areMilestonesEnabled ): ?>
+                            if ($areMilestonesEnabled): ?>
                                 <div class="form-group">
                                     <div class="input-group">
                                         <div class="input-group-addon">
@@ -238,11 +281,11 @@ if ( ! upstream_are_tasks_disabled()
                                         <select class="form-control o-select2" data-column="milestone"
                                                 data-placeholder="<?php echo $l['LB_MILESTONE']; ?>" multiple>
                                             <option value></option>
-                                            <option value="__none__"><?php _e( 'None', 'upstream' ); ?></option>
+                                            <option value="__none__"><?php _e('None', 'upstream'); ?></option>
                                             <optgroup label="<?php echo upstream_milestone_label_plural(); ?>">
-                                                <?php foreach ( $milestones as $milestone_id => $milestone ): ?>
+                                                <?php foreach ($milestones as $milestone_id => $milestone): ?>
                                                     <option
-                                                        value="<?php echo $milestone_id; ?>"><?php echo $milestone['title']; ?></option>
+                                                            value="<?php echo $milestone_id; ?>"><?php echo $milestone['title']; ?></option>
                                                 <?php endforeach; ?>
                                             </optgroup>
                                         </select>
@@ -273,12 +316,21 @@ if ( ! upstream_are_tasks_disabled()
                                        data-compare-operator="<=">
                             </div>
 
-                            <?php do_action( 'upstream:project.tasks.filters', $tableSettings, $columnsSchema,
-                                $projectId ); ?>
+                            <?php do_action(
+                                'upstream:project.tasks.filters',
+                                $tableSettings,
+                                $columnsSchema,
+                                $projectId
+                            ); ?>
                         </div>
                     </form>
-                    <?php \UpStream\Frontend\renderTable( $tableSettings, $columnsSchema, $rowset, 'task',
-                        $projectId ); ?>
+                    <?php \UpStream\Frontend\renderTable(
+                        $tableSettings,
+                        $columnsSchema,
+                        $rowset,
+                        'task',
+                        $projectId
+                    ); ?>
                 </div>
             </div>
         </div>

@@ -1,7 +1,7 @@
 <?php
 
 // Exit if accessed directly
-if ( ! defined( 'ABSPATH' ) ) {
+if ( ! defined('ABSPATH')) {
     exit;
 }
 
@@ -14,7 +14,8 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @category    Class
  * @author      UpStream
  */
-class UpStream_Autoloader {
+class UpStream_Autoloader
+{
 
     /**
      * Path to the includes directory.
@@ -26,14 +27,15 @@ class UpStream_Autoloader {
     /**
      * The Constructor.
      */
-    public function __construct() {
-        if ( function_exists( "__autoload" ) ) {
-            spl_autoload_register( "__autoload" );
+    public function __construct()
+    {
+        if (function_exists("__autoload")) {
+            spl_autoload_register("__autoload");
         }
 
-        spl_autoload_register( [ $this, 'autoload' ] );
+        spl_autoload_register([$this, 'autoload']);
 
-        $this->include_path = untrailingslashit( plugin_dir_path( UPSTREAM_PLUGIN_FILE ) ) . '/includes/';
+        $this->include_path = untrailingslashit(plugin_dir_path(UPSTREAM_PLUGIN_FILE)) . '/includes/';
     }
 
     /**
@@ -41,21 +43,21 @@ class UpStream_Autoloader {
      *
      * @param string $class
      */
-    public function autoload( $class ) {
-        $class = strtolower( $class );
-        $file  = $this->get_file_name_from_class( $class );
+    public function autoload($class)
+    {
+        $class = strtolower($class);
+        $file  = $this->get_file_name_from_class($class);
         $path  = '';
 
-        if ( strpos( $class, 'upstream_options' ) === 0 ) {
+        if (strpos($class, 'upstream_options') === 0) {
             $path = $this->include_path . 'admin/options/';
-        } elseif ( strpos( $class, 'upstream_metaboxes' ) === 0 ) {
+        } elseif (strpos($class, 'upstream_metaboxes') === 0) {
             $path = $this->include_path . 'admin/metaboxes/';
         }
 
-        if ( empty( $path ) || ( ! $this->load_file( $path . $file ) && strpos( $class, 'upstream_' ) === 0 ) ) {
-            $this->load_file( $this->include_path . $file );
+        if (empty($path) || ( ! $this->load_file($path . $file) && strpos($class, 'upstream_') === 0)) {
+            $this->load_file($this->include_path . $file);
         }
-
     }
 
     /**
@@ -65,10 +67,11 @@ class UpStream_Autoloader {
      *
      * @return string
      */
-    private function get_file_name_from_class( $class ) {
-        $class = str_replace( 'upstream', 'up', $class );
+    private function get_file_name_from_class($class)
+    {
+        $class = str_replace('upstream', 'up', $class);
 
-        return 'class-' . str_replace( '_', '-', $class ) . '.php';
+        return 'class-' . str_replace('_', '-', $class) . '.php';
     }
 
     /**
@@ -78,17 +81,16 @@ class UpStream_Autoloader {
      *
      * @return bool successful or not
      */
-    private function load_file( $path ) {
-        if ( $path && is_readable( $path ) ) {
-            include_once( $path );
+    private function load_file($path)
+    {
+        if ($path && is_readable($path)) {
+            include_once($path);
 
             return true;
         }
 
         return false;
     }
-
-
 }
 
 new UpStream_Autoloader();

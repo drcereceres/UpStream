@@ -4,7 +4,7 @@ Tags: project, manage, management, project management, project manager, wordpres
 Requires at least: 4.5
 Tested up to: 4.9
 Requires PHP: 5.6
-Stable tag: 1.21.1
+Stable tag: 1.22.0
 License: GPL-3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -142,6 +142,31 @@ If you were having date issues within Projects, please clear your cache and re-s
 The format is based on [Keep a Changelog](http://keepachangelog.com)
 and this project adheres to [Semantic Versioning](http://semver.org).
 
+= [1.22.1] - UNRELEASED =
+
+Fixed:
+* Fixed ordering for Milestone, Tasks and Bugs columns in the front-end;
+* Fixed date format in datepicker fields when the date format has "S";
+
+Added:
+* Added option to order the table of tasks by status;
+
+= [1.22.0] - 2018-10-03 =
+
+Fixed:
+* Fixed filter for custom fields in projects in the front-end;
+* Fixed Add Comment label for translators and updated the POT file;
+* Fixed capabilities for Project's fields;
+* Fixed compatibility with 3rd party JavaScript scripts and the load event method. It was missed sometimes, so now we use ".on('load', ...)";
+* Fixed client filters removing them when Clients are disabled;
+* Fixed labels "statuses" and "owners" for translators - updated POT file;
+
+Added:
+* Added option in the General Settings to filter closed items/projects by default;
+* Added option in the General Settings to archive closed items/projects in the front-end. Those items won't be loaded, so can't be filtered;
+* Added actions specific for adding new columns to the project's table in the front-end;
+* Added missed capabilities to roles;
+
 = [1.21.1] - 2018-09-19 =
 
 Fixed:
@@ -149,7 +174,6 @@ Fixed:
 * Fixed a syntax error in the HTML of a metabox properly closing a P tag;
 * Fixed license key activation and upgrade form when installed alongside PublishPress - requires to update PublishPress as well;
 * Fixed wrong URL for assets on Windows machines;
-
 
 Added:
 * Added action hook when the project meta is being updated;

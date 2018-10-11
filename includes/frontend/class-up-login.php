@@ -1,9 +1,10 @@
 <?php
-if ( ! defined( 'ABSPATH' ) ) {
+if ( ! defined('ABSPATH')) {
     exit;
 }
 
-final class UpStream_Login {
+final class UpStream_Login
+{
     /**
      * Represent the feedback message for the current action.
      *
@@ -19,7 +20,8 @@ final class UpStream_Login {
      *
      * @since   1.0.0
      */
-    public function __construct() {
+    public function __construct()
+    {
         $this->performUserLoginAction();
     }
 
@@ -29,16 +31,17 @@ final class UpStream_Login {
      * @since   1.0.0
      * @access  private
      */
-    private function performUserLoginAction() {
-        $action              = isset( $_GET['action'] ) ? $_GET['action'] : null;
-        $userIsTryingToLogin = isset( $_POST['login'] );
+    private function performUserLoginAction()
+    {
+        $action              = isset($_GET['action']) ? $_GET['action'] : null;
+        $userIsTryingToLogin = isset($_POST['login']);
 
-        if ( $action === "logout" && ! $userIsTryingToLogin ) {
+        if ($action === "logout" && ! $userIsTryingToLogin) {
             UpStream_Login::doDestroySession();
-        } elseif ( $userIsTryingToLogin ) {
+        } elseif ($userIsTryingToLogin) {
             $data = $this->validateLogInPostData();
-            if ( is_array( $data ) ) {
-                $this->authenticateData( $data );
+            if (is_array($data)) {
+                $this->authenticateData($data);
             }
         }
     }
@@ -49,15 +52,16 @@ final class UpStream_Login {
      * @since   1.9.0
      * @static
      */
-    public static function doDestroySession() {
+    public static function doDestroySession()
+    {
         wp_logout();
 
-        if ( session_status() === PHP_SESSION_ACTIVE && isset( $_SESSION['upstream'] ) ) {
-            unset( $_SESSION['upstream'] );
+        if (session_status() === PHP_SESSION_ACTIVE && isset($_SESSION['upstream'])) {
+            unset($_SESSION['upstream']);
         }
 
-        if ( ! empty( $_GET ) && isset( $_GET['action'] ) && $_GET['action'] === 'logout' ) {
-            unset( $_GET['action'] );
+        if ( ! empty($_GET) && isset($_GET['action']) && $_GET['action'] === 'logout') {
+            unset($_GET['action']);
         }
     }
 
@@ -70,26 +74,29 @@ final class UpStream_Login {
      *
      * @return  array | bool
      */
-    private function validateLogInPostData() {
-        if ( ! isset( $_POST['upstream_login_nonce'] ) || ! wp_verify_nonce( $_POST['upstream_login_nonce'],
-                'upstream-login-nonce' ) ) {
+    private function validateLogInPostData()
+    {
+        if ( ! isset($_POST['upstream_login_nonce']) || ! wp_verify_nonce(
+                $_POST['upstream_login_nonce'],
+                'upstream-login-nonce'
+            )) {
             return false;
         }
 
         $postData = [
-            'username' => isset( $_POST['user_email'] ) ? sanitize_text_field( trim( $_POST['user_email'] ) ) : "",
-            'password' => isset( $_POST['user_password'] ) ? $_POST['user_password'] : "",
+            'username' => isset($_POST['user_email']) ? sanitize_text_field(trim($_POST['user_email'])) : "",
+            'password' => isset($_POST['user_password']) ? $_POST['user_password'] : "",
         ];
 
-        if ( empty( $postData['username'] ) ) {
-            $this->feedbackMessage = __( "Email address field cannot be empty.", 'upstream' );
-        } elseif ( strlen( $postData['username'] ) < 3 || ! is_email( $postData['username'] ) ) {
-            $this->feedbackMessage = __( "Invalid email address and/or password.", 'upstream' );
+        if (empty($postData['username'])) {
+            $this->feedbackMessage = __("Email address field cannot be empty.", 'upstream');
+        } elseif (strlen($postData['username']) < 3 || ! is_email($postData['username'])) {
+            $this->feedbackMessage = __("Invalid email address and/or password.", 'upstream');
         } else {
-            if ( empty( $postData['password'] ) ) {
-                $this->feedbackMessage = __( "Password field cannot be empty.", 'upstream' );
-            } elseif ( strlen( $postData['password'] ) < 5 ) {
-                $this->feedbackMessage = __( "Invalid email address and/or password.", 'upstream' );
+            if (empty($postData['password'])) {
+                $this->feedbackMessage = __("Password field cannot be empty.", 'upstream');
+            } elseif (strlen($postData['password']) < 5) {
+                $this->feedbackMessage = __("Invalid email address and/or password.", 'upstream');
             } else {
                 return $postData;
             }
@@ -108,66 +115,69 @@ final class UpStream_Login {
      *
      * @return  bool
      */
-    private function authenticateData( $data ) {
+    private function authenticateData($data)
+    {
         try {
-            if ( ! isset( $data['username'] ) || ! isset( $data['password'] ) ) {
-                throw new \Exception( __( "Invalid email address and/or password.", 'upstream' ) );
+            if ( ! isset($data['username']) || ! isset($data['password'])) {
+                throw new \Exception(__("Invalid email address and/or password.", 'upstream'));
             }
 
             // Check if there's a user using that email.
-            $user = get_user_by( 'email', $data['username'] );
-            if ( empty( $user ) ) {
-                throw new \Exception( __( "Invalid email address and/or password.", 'upstream' ) );
+            $user = get_user_by('email', $data['username']);
+            if (empty($user)) {
+                throw new \Exception(__("Invalid email address and/or password.", 'upstream'));
             }
 
-            $userRoles = (array) $user->roles;
+            $userRoles = (array)$user->roles;
             // Check if this user has a valid UpStream Role to log in.
-            if ( count( array_intersect( $userRoles,
-                    [ 'administrator', 'upstream_manager', 'upstream_user', 'upstream_client_user' ] ) ) === 0 ) {
-                throw new \Exception( __( "You don't have enough permissions to log in here.", 'upstream' ) );
+            if (count(array_intersect(
+                    $userRoles,
+                    ['administrator', 'upstream_manager', 'upstream_user', 'upstream_client_user']
+                )) === 0) {
+                throw new \Exception(__("You don't have enough permissions to log in here.", 'upstream'));
             }
 
-            $project_id  = (int) upstream_post_id();
+            $project_id  = (int)upstream_post_id();
             $canContinue = false;
 
             // Make sure he can be authenticated if he's an admin/manager.
-            if ( count( array_intersect( $userRoles, [ 'administrator', 'upstream_manager' ] ) ) > 0 ) {
+            if (count(array_intersect($userRoles, ['administrator', 'upstream_manager'])) > 0) {
                 $canContinue = true;
-            } elseif ( is_clients_disabled() ) {
-                throw new \Exception( __( "Invalid email address and/or password.", 'upstream' ) );
+            } elseif (is_clients_disabled()) {
+                throw new \Exception(__("Invalid email address and/or password.", 'upstream'));
             } else {
                 // Check if he, as an UpStream User, is a current member of this project.
-                if ( in_array( 'upstream_user', $userRoles ) ) {
+                if (in_array('upstream_user', $userRoles)) {
                     $metaKeyName = '_upstream_project_members';
                 } else {
                     // Check if he, as an UpStream Client User, is allowed to log in in this project.
                     $metaKeyName = '_upstream_project_client_users';
                 }
 
-                $meta = (array) get_post_meta( $project_id, $metaKeyName );
-                if ( count( $meta ) > 0 ) {
-                    $canContinue = in_array( (string) $user->ID, $meta[0] );
+                $meta = (array)get_post_meta($project_id, $metaKeyName);
+                if (count($meta) > 0) {
+                    $canContinue = in_array((string)$user->ID, $meta[0]);
                 }
             }
 
-            if ( ! $canContinue ) {
-                throw new \Exception( __( "Sorry, you are not allowed to access this project.", 'upstream' ) );
+            if ( ! $canContinue) {
+                throw new \Exception(__("Sorry, you are not allowed to access this project.", 'upstream'));
             }
 
-            $user = wp_signon( [
+            $user = wp_signon([
                 'user_login'    => $data['username'],
                 'user_password' => $data['password'],
                 'remember'      => false,
-            ] );
+            ]);
 
-            if ( is_wp_error( $user ) ) {
-                throw new \Exception( __( "Invalid email address and/or password.", 'upstream' ) );
+            if (is_wp_error($user)) {
+                throw new \Exception(__("Invalid email address and/or password.", 'upstream'));
             }
 
             // Retrieve the project's client id.
-            $client_id = (array) get_post_meta( $project_id, '_upstream_project_client' );
-            if ( count( $client_id ) > 0 ) {
-                $client_id = (int) $client_id[0];
+            $client_id = (array)get_post_meta($project_id, '_upstream_project_client');
+            if (count($client_id) > 0) {
+                $client_id = (int)$client_id[0];
             } else {
                 $client_id = 0;
             }
@@ -178,11 +188,11 @@ final class UpStream_Login {
                 'user_id'    => $user->ID,
             ];
 
-            $projectPermalink = get_the_permalink( $project_id );
-            wp_redirect( esc_url( $projectPermalink ) );
+            $projectPermalink = get_the_permalink($project_id);
+            wp_redirect(esc_url($projectPermalink));
 
             return true;
-        } catch ( \Exception $e ) {
+        } catch (\Exception $e) {
             $this->feedbackMessage = $e->getMessage();
 
             return false;
@@ -197,15 +207,16 @@ final class UpStream_Login {
      *
      * @return  bool
      */
-    public static function userIsLoggedIn() {
-        if ( session_status() === PHP_SESSION_NONE ) {
+    public static function userIsLoggedIn()
+    {
+        if (session_status() === PHP_SESSION_NONE) {
             return false;
         }
 
         $userIsLoggedIn = (
-            isset( $_SESSION['upstream'] ) &&
-            ! empty( $_SESSION['upstream']['client_id'] ) &&
-            ! empty( $_SESSION['upstream']['user_id'] )
+            isset($_SESSION['upstream']) &&
+            ! empty($_SESSION['upstream']['client_id']) &&
+            ! empty($_SESSION['upstream']['user_id'])
         );
 
         return $userIsLoggedIn;
@@ -218,8 +229,9 @@ final class UpStream_Login {
      *
      * @return  bool
      */
-    public function hasFeedbackMessage() {
-        $hasFeedbackMessage = ! empty( $this->feedbackMessage );
+    public function hasFeedbackMessage()
+    {
+        $hasFeedbackMessage = ! empty($this->feedbackMessage);
 
         return $hasFeedbackMessage;
     }
@@ -231,8 +243,9 @@ final class UpStream_Login {
      *
      * @return  string
      */
-    public function getFeedbackMessage() {
-        $feedbackMessage = (string) $this->feedbackMessage;
+    public function getFeedbackMessage()
+    {
+        $feedbackMessage = (string)$this->feedbackMessage;
 
         $this->feedbackMessage = "";
 
@@ -245,9 +258,10 @@ final class UpStream_Login {
      * @since   1.9.0
      * @access  private
      */
-    private function doLogOut() {
+    private function doLogOut()
+    {
         UpStream_Login::doDestroySession();
 
-        $this->feedbackMessage = __( "You were just logged out.", 'upstream' );
+        $this->feedbackMessage = __("You were just logged out.", 'upstream');
     }
 }

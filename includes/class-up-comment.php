@@ -3,7 +3,7 @@
 namespace UpStream;
 
 // Prevent direct access.
-if ( ! defined( 'ABSPATH' ) ) {
+if ( ! defined('ABSPATH')) {
     exit;
 }
 
@@ -12,7 +12,8 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * @since   1.13.0
  */
-class Comment extends Struct {
+class Comment extends Struct
+{
     /**
      * Comment ID.
      *
@@ -105,44 +106,47 @@ class Comment extends Struct {
      * @param   int    $project_id Project ID.
      * @param   int    $user_id    Author ID.
      */
-    public function __construct( $content = "", $project_id = 0, $user_id = 0 ) {
-        if ( ! empty( $content ) ) {
-        	// Make sure the comment content is always filtered.
-	        $allowed_tags = apply_filters('upstream_allowed_tags_in_comments', []);
-	        $this->content  = wp_kses($content, wp_kses_allowed_html( $allowed_tags ));
+    public function __construct($content = "", $project_id = 0, $user_id = 0)
+    {
+        if ( ! empty($content)) {
+            // Make sure the comment content is always filtered.
+            $allowed_tags  = apply_filters('upstream_allowed_tags_in_comments', []);
+            $this->content = wp_kses($content, wp_kses_allowed_html($allowed_tags));
         }
 
-        if ( (int) $project_id <= 0 ) {
+        if ((int)$project_id <= 0) {
             $this->project_id = upstream_post_id();
         } else {
-            $this->project_id = (int) $project_id;
+            $this->project_id = (int)$project_id;
         }
 
-        if ( (int) $user_id > 0 ) {
-            $author = get_user_by( 'id', $user_id );
+        if ((int)$user_id > 0) {
+            $author = get_user_by('id', $user_id);
         }
 
         $user = wp_get_current_user();
 
-        $userHasAdminCapabilities = isUserEitherManagerOrAdmin( $user );
-        $userCanModerateComments  = ! $userHasAdminCapabilities ? user_can( $user, 'moderate_comments' ) : true;
-        $this->currentUserCap     = (object) [
-            'can_reply'    => ! $userHasAdminCapabilities ? user_can( $user, 'publish_project_discussion' ) : true,
+        $userHasAdminCapabilities = isUserEitherManagerOrAdmin($user);
+        $userCanModerateComments  = ! $userHasAdminCapabilities ? user_can($user, 'moderate_comments') : true;
+        $this->currentUserCap     = (object)[
+            'can_reply'    => ! $userHasAdminCapabilities ? user_can($user, 'publish_project_discussion') : true,
             'can_moderate' => $userCanModerateComments,
-            'can_delete'   => ! $userHasAdminCapabilities ? $userCanModerateComments || user_can( $user,
-                    'delete_project_discussion' ) : true,
+            'can_delete'   => ! $userHasAdminCapabilities ? $userCanModerateComments || user_can(
+                    $user,
+                    'delete_project_discussion'
+                ) : true,
         ];
 
-        $this->author = isset( $author ) ? $author : $user;
+        $this->author = isset($author) ? $author : $user;
 
-        $this->created_by = (object) [
+        $this->created_by = (object)[
             'id'     => $author->ID,
             'name'   => $author->display_name,
-            'avatar' => getUserAvatarURL( $author->ID ),
+            'avatar' => getUserAvatarURL($author->ID),
             'email'  => $author->user_email,
         ];
 
-        $this->created_at = (object) [
+        $this->created_at = (object)[
             'timestamp' => 0,
             'utc'       => "",
             'localized' => "",
@@ -163,7 +167,8 @@ class Comment extends Struct {
      *
      * @return  array
      */
-    public static function arrayToWPPatterns( $customData ) {
+    public static function arrayToWPPatterns($customData)
+    {
         $defaultData = [
             'comment_post_ID'      => 0,
             'comment_author'       => "",
@@ -178,7 +183,7 @@ class Comment extends Struct {
             'comment_type'         => '',
         ];
 
-        $data = array_merge( $defaultData, (array) $customData );
+        $data = array_merge($defaultData, (array)$customData);
 
         return $data;
     }
@@ -193,21 +198,22 @@ class Comment extends Struct {
      *
      * return   Comment
      */
-    public static function load( $comment_id ) {
-        $data = get_comment( $comment_id );
+    public static function load($comment_id)
+    {
+        $data = get_comment($comment_id);
 
-        if ( empty( $data ) ) {
+        if (empty($data)) {
             return null;
         }
 
-        $comment                        = new Comment( $data->comment_content, $data->comment_post_ID, $data->user_id );
-        $comment->id                    = (int) $data->comment_ID;
-        $comment->created_at->timestamp = strtotime( $data->comment_date_gmt );
+        $comment                        = new Comment($data->comment_content, $data->comment_post_ID, $data->user_id);
+        $comment->id                    = (int)$data->comment_ID;
+        $comment->created_at->timestamp = strtotime($data->comment_date_gmt);
         $comment->created_at->utc       = $data->comment_date_gmt;
         $comment->created_at->localized = $data->comment_date;
         $comment->updateHumanizedDate();
-        $comment->state     = self::convertStateToInt( $data->comment_approved );
-        $comment->parent_id = (int) $data->comment_parent;
+        $comment->state     = self::convertStateToInt($data->comment_approved);
+        $comment->parent_id = (int)$data->comment_parent;
 
         return $comment;
     }
@@ -222,17 +228,18 @@ class Comment extends Struct {
      *
      * @return  int
      */
-    public static function convertStateToInt( $state ) {
-        if ( is_numeric( $state ) ) {
-            $state = (int) $state;
-        } elseif ( $state === 'approve' ) {
+    public static function convertStateToInt($state)
+    {
+        if (is_numeric($state)) {
+            $state = (int)$state;
+        } elseif ($state === 'approve') {
             $state = 1;
-        } elseif ( $state === 'hold' ) {
+        } elseif ($state === 'hold') {
             $state = 0;
-        } elseif ( $state === 'trash' ) {
-            $state = - 1;
-        } elseif ( $state === 'spam' ) {
-            $state = - 2;
+        } elseif ($state === 'trash') {
+            $state = -1;
+        } elseif ($state === 'spam') {
+            $state = -2;
         }
 
         return $state;
@@ -245,8 +252,9 @@ class Comment extends Struct {
      *
      * @return  mixed   int if inserted or bool if updated
      */
-    public function save() {
-        if ( $this->isNew() ) {
+    public function save()
+    {
+        if ($this->isNew()) {
             $this->doFilters();
 
             $data = $this->toWpPatterns();
@@ -260,31 +268,31 @@ class Comment extends Struct {
             */
 
             $this->created_at->timestamp = time();
-            $this->created_at->utc       = date( 'Y-m-d H:i:s', $this->created_at->timestamp );
+            $this->created_at->utc       = date('Y-m-d H:i:s', $this->created_at->timestamp);
             $data['comment_date_gmt']    = $this->created_at->utc;
 
-            $integrityCheck = wp_allow_comment( $data, true );
+            $integrityCheck = wp_allow_comment($data, true);
 
-            $this->state = $integrityCheck !== "spam" ? (int) $integrityCheck : $integrityCheck;
+            $this->state = $integrityCheck !== "spam" ? (int)$integrityCheck : $integrityCheck;
 
-            $dateFormat        = get_option( 'date_format' );
-            $timeFormat        = get_option( 'time_format' );
-            $theDateTimeFormat = $dateFormat . ' ' . $timeFormat;
-            $date              = \DateTime::createFromFormat( 'Y-m-d H:i:s', $this->created_at->utc );
-            $this->created_at->localized = $date->format( $theDateTimeFormat );
-            $data['comment_date']        = $date->format( 'Y-m-d H:i:s' );
+            $dateFormat                  = get_option('date_format');
+            $timeFormat                  = get_option('time_format');
+            $theDateTimeFormat           = $dateFormat . ' ' . $timeFormat;
+            $date                        = \DateTime::createFromFormat('Y-m-d H:i:s', $this->created_at->utc);
+            $this->created_at->localized = $date->format($theDateTimeFormat);
+            $data['comment_date']        = $date->format('Y-m-d H:i:s');
 
-            $this->created_at->humanized = _x( 'just now', 'Comment was very recently added.', 'upstream' );
+            $this->created_at->humanized = _x('just now', 'Comment was very recently added.', 'upstream');
 
             $allowed_tags = apply_filters('upstream_allowed_tags_in_comments', []);
 
-	        $data['comment_content'] = wp_kses($data['comment_content'], wp_kses_allowed_html( $allowed_tags ));
+            $data['comment_content'] = wp_kses($data['comment_content'], wp_kses_allowed_html($allowed_tags));
 
             $a = $this->html2text($data['comment_content']);
 
-            $comment_id = wp_insert_comment( $data );
-            if ( ! $comment_id ) {
-                throw new \Exception( __( 'Unable to save the data into database.', 'upstream' ) );
+            $comment_id = wp_insert_comment($data);
+            if ( ! $comment_id) {
+                throw new \Exception(__('Unable to save the data into database.', 'upstream'));
             }
 
             $this->id = $comment_id;
@@ -292,17 +300,19 @@ class Comment extends Struct {
             return $this->id;
         } else {
             $data    = $this->toWpPatterns();
-            $success = (bool) wp_update_comment( $data );
-            if ( ! $success ) {
-                throw new \Exception( __( 'Unable to save the data into database.', 'upstream' ) );
+            $success = (bool)wp_update_comment($data);
+            if ( ! $success) {
+                throw new \Exception(__('Unable to save the data into database.', 'upstream'));
             }
 
             return true;
         }
     }
 
-    function html2text($Document) {
-        $Rules = array ('@<script[^>]*?>.*?</script>@si',
+    public function html2text($Document)
+    {
+        $Rules   = [
+            '@<script[^>]*?>.*?</script>@si',
             '@<[\/\!]*?[^<>]*?>@si',
             '@([\r\n])[\s]+@',
             '@&(quot|#34);@i',
@@ -315,9 +325,10 @@ class Comment extends Struct {
             '@&(pound|#163);@i',
             '@&(copy|#169);@i',
             '@&(reg|#174);@i',
-            '@&#(d+);@e'
-        );
-        $Replace = array ('',
+            '@&#(d+);@e',
+        ];
+        $Replace = [
+            '',
             '',
             '',
             '',
@@ -330,8 +341,9 @@ class Comment extends Struct {
             chr(163),
             chr(169),
             chr(174),
-            'chr()'
-        );
+            'chr()',
+        ];
+
         return preg_replace($Rules, $Replace, $Document);
     }
 
@@ -342,8 +354,9 @@ class Comment extends Struct {
      *
      * @return  bool
      */
-    public function isNew() {
-        return (int) $this->id <= 0;
+    public function isNew()
+    {
+        return (int)$this->id <= 0;
     }
 
     /**
@@ -353,12 +366,13 @@ class Comment extends Struct {
      *
      * @uses    wp_filter_comment
      */
-    public function doFilters() {
+    public function doFilters()
+    {
         $data = $this->toWpPatterns();
 
-        $safeData = wp_filter_comment( $data );
+        $safeData = wp_filter_comment($data);
 
-        $this->created_by->id    = (int) $safeData['user_id'];
+        $this->created_by->id    = (int)$safeData['user_id'];
         $this->created_by->agent = $safeData['comment_agent'];
         $this->created_by->name  = $safeData['comment_author'];
         $this->created_by->email = $safeData['comment_author_email'];
@@ -373,19 +387,20 @@ class Comment extends Struct {
      *
      * @return  array
      */
-    public function toWpPatterns() {
+    public function toWpPatterns()
+    {
         $data = [
-            'comment_id'           => (int) $this->id,
-            'comment_post_ID'      => (int) $this->project_id,
+            'comment_id'           => (int)$this->id,
+            'comment_post_ID'      => (int)$this->project_id,
             'comment_author_url'   => "",
-            'user_id'              => (int) $this->created_by->id,
+            'user_id'              => (int)$this->created_by->id,
             'comment_author'       => $this->created_by->name,
             'comment_author_email' => $this->created_by->email,
             'comment_content'      => $this->content,
-            'comment_approved'     => self::convertStateToWpPatterns( $this->state ),
-            'comment_author_IP'    => isset( $this->created_by->ip ) ? $this->created_by->ip : "",
-            'comment_agent'        => isset( $this->created_by->agent ) ? $this->created_by->agent : "",
-            'comment_parent'       => (int) $this->parent_id > 0 ? $this->parent_id : 0,
+            'comment_approved'     => self::convertStateToWpPatterns($this->state),
+            'comment_author_IP'    => isset($this->created_by->ip) ? $this->created_by->ip : "",
+            'comment_agent'        => isset($this->created_by->agent) ? $this->created_by->agent : "",
+            'comment_parent'       => (int)$this->parent_id > 0 ? $this->parent_id : 0,
             'comment_type'         => '',
         ];
 
@@ -402,15 +417,16 @@ class Comment extends Struct {
      *
      * @return  mixed
      */
-    public static function convertStateToWpPatterns( $state ) {
-        if ( is_numeric( $state ) ) {
-            $state = (int) $state;
-            if ( $state === - 1 ) {
+    public static function convertStateToWpPatterns($state)
+    {
+        if (is_numeric($state)) {
+            $state = (int)$state;
+            if ($state === -1) {
                 $state = 'trash';
             }
-        } elseif ( $state === 'approve' ) {
+        } elseif ($state === 'approve') {
             $state = 1;
-        } elseif ( $state === 'hold' ) {
+        } elseif ($state === 'hold') {
             $state = 0;
         }
 
@@ -424,10 +440,11 @@ class Comment extends Struct {
      *
      * @return  bool
      */
-    public function unapprove() {
-        if ( ! $this->isNew() ) {
-            $success = self::updateApprovalState( $this->id, 0 );
-            if ( $success ) {
+    public function unapprove()
+    {
+        if ( ! $this->isNew()) {
+            $success = self::updateApprovalState($this->id, 0);
+            if ($success) {
                 $this->state = 0;
             }
 
@@ -449,17 +466,18 @@ class Comment extends Struct {
      *
      * @return  bool
      */
-    protected static function updateApprovalState( $comment_id, $newState ) {
-        if ( ! in_array( strtolower( (string) $newState ), [ '1', '0', 'spam', 'trash' ] ) ) {
+    protected static function updateApprovalState($comment_id, $newState)
+    {
+        if ( ! in_array(strtolower((string)$newState), ['1', '0', 'spam', 'trash'])) {
             return false;
         }
 
         $data = [
-            'comment_ID'       => (int) $comment_id,
+            'comment_ID'       => (int)$comment_id,
             'comment_approved' => $newState,
         ];
 
-        $success = (bool) wp_update_comment( $data );
+        $success = (bool)wp_update_comment($data);
 
         return $success;
     }
@@ -471,10 +489,11 @@ class Comment extends Struct {
      *
      * @return  bool
      */
-    public function approve() {
-        if ( ! $this->isNew() ) {
-            $success = self::updateApprovalState( $this->id, 1 );
-            if ( $success ) {
+    public function approve()
+    {
+        if ( ! $this->isNew()) {
+            $success = self::updateApprovalState($this->id, 1);
+            if ($success) {
                 $this->state = 1;
             }
 
@@ -495,28 +514,35 @@ class Comment extends Struct {
      *
      * @return  string  Will only return something if $return is true.
      */
-    public function render( $return = false, $useAdminLayout = true, $commentsCache = [] ) {
-        if ( empty( $this->currentUserCap ) ) {
+    public function render($return = false, $useAdminLayout = true, $commentsCache = [])
+    {
+        if (empty($this->currentUserCap)) {
             $user                               = wp_get_current_user();
             $userHasAdminCapabilities           = isUserEitherManagerOrAdmin();
-            $this->currentUserCap->can_reply    = ! $userHasAdminCapabilities ? user_can( $user,
-                'publish_project_discussion' ) : true;
-            $userCanModerate                    = ! $userHasAdminCapabilities ? user_can( $user,
-                'moderate_comments' ) : true;
+            $this->currentUserCap->can_reply    = ! $userHasAdminCapabilities ? user_can(
+                $user,
+                'publish_project_discussion'
+            ) : true;
+            $userCanModerate                    = ! $userHasAdminCapabilities ? user_can(
+                $user,
+                'moderate_comments'
+            ) : true;
             $this->currentUserCap->can_moderate = $userCanModerate;
-            $this->currentUserCap->can_delete   = ! $userHasAdminCapabilities ? ( $userCanModerate || user_can( $user,
-                    'delete_project_discussion' ) || $user->ID === (int) $created_by->id ) : true;
+            $this->currentUserCap->can_delete   = ! $userHasAdminCapabilities ? ($userCanModerate || user_can(
+                    $user,
+                    'delete_project_discussion'
+                ) || $user->ID === (int)$created_by->id) : true;
         }
 
         $this->updateHumanizedDate();
 
-        if ( (bool) $return === true ) {
+        if ((bool)$return === true) {
             ob_start();
 
-            if ( (bool) $useAdminLayout === true ) {
-                upstream_admin_display_message_item( $this, $commentsCache );
+            if ((bool)$useAdminLayout === true) {
+                upstream_admin_display_message_item($this, $commentsCache);
             } else {
-                upstream_display_message_item( $this, $commentsCache );
+                upstream_display_message_item($this, $commentsCache);
             }
 
             $html = ob_get_contents();
@@ -525,10 +551,10 @@ class Comment extends Struct {
 
             return $html;
         } else {
-            if ( (bool) $useAdminLayout === true ) {
-                upstream_admin_display_message_item( $this, $commentsCache );
+            if ((bool)$useAdminLayout === true) {
+                upstream_admin_display_message_item($this, $commentsCache);
             } else {
-                upstream_display_message_item( $this, $commentsCache );
+                upstream_display_message_item($this, $commentsCache);
             }
         }
     }
@@ -538,19 +564,20 @@ class Comment extends Struct {
      *
      * @since   1.13.0
      */
-    public function updateHumanizedDate() {
-        $dateFormat        = get_option( 'date_format' );
-        $timeFormat        = get_option( 'time_format' );
+    public function updateHumanizedDate()
+    {
+        $dateFormat        = get_option('date_format');
+        $timeFormat        = get_option('time_format');
         $theDateTimeFormat = $dateFormat . ' ' . $timeFormat;
         $currentTimestamp  = time();
 
-        $date = \DateTime::createFromFormat( 'Y-m-d H:i:s', $this->created_at->utc );
+        $date          = \DateTime::createFromFormat('Y-m-d H:i:s', $this->created_at->utc);
         $dateTimestamp = $date->getTimestamp();
 
-        $this->created_at->localized = $date->format( $theDateTimeFormat );
+        $this->created_at->localized = $date->format($theDateTimeFormat);
         $this->created_at->humanized = sprintf(
-            _x( '%s ago', '%s = human-readable time difference', 'upstream' ),
-            human_time_diff( $dateTimestamp, $currentTimestamp )
+            _x('%s ago', '%s = human-readable time difference', 'upstream'),
+            human_time_diff($dateTimestamp, $currentTimestamp)
         );
     }
 }

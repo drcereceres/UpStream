@@ -1,27 +1,29 @@
 <?php
 
 // Exit if accessed directly
-if ( ! defined( 'ABSPATH' ) ) {
+if ( ! defined('ABSPATH')) {
     exit;
 }
 
-if ( ! class_exists( 'UpStream_Admin_Metaboxes' ) ) :
+if ( ! class_exists('UpStream_Admin_Metaboxes')) :
 
     /**
      * CMB2 Theme Options
      *
      * @version 0.1.0
      */
-    class UpStream_Admin_Metaboxes {
+    class UpStream_Admin_Metaboxes
+    {
 
         /**
          * Constructor
          *
          * @since 0.1.0
          */
-        public function __construct() {
-            if ( upstreamShouldRunCmb2() ) {
-                add_action( 'cmb2_admin_init', [ $this, 'register_metaboxes' ] );
+        public function __construct()
+        {
+            if (upstreamShouldRunCmb2()) {
+                add_action('cmb2_admin_init', [$this, 'register_metaboxes']);
             }
 
             UpStream_Metaboxes_Clients::attachHooks();
@@ -32,7 +34,8 @@ if ( ! class_exists( 'UpStream_Admin_Metaboxes' ) ) :
          *
          * @since  0.1.0
          */
-        public function register_metaboxes() {
+        public function register_metaboxes()
+        {
 
             /**
              * Load the metaboxes for project post type
@@ -43,7 +46,6 @@ if ( ! class_exists( 'UpStream_Admin_Metaboxes' ) ) :
             // Load all Client metaboxes (post_type="client").
             UpStream_Metaboxes_Clients::instantiate();
         }
-
     }
 
     new UpStream_Admin_Metaboxes();

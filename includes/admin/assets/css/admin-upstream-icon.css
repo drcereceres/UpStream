@@ -2,14 +2,14 @@
     font-family: "upstream";
     src: url("../font/upstream.eot");
     src: url("../font/upstream.eot?#iefix") format("embedded-opentype"),
-         url("../font/upstream.woff") format("woff"),
-         url("../font/upstream.ttf") format("truetype"),
-         url("../font/upstream.svg#upstream") format("svg");
+    url("../font/upstream.woff") format("woff"),
+    url("../font/upstream.ttf") format("truetype"),
+    url("../font/upstream.svg#upstream") format("svg");
     font-weight: normal;
     font-style: normal;
 }
 
-@media screen and (-webkit-min-device-pixel-ratio:0) {
+@media screen and (-webkit-min-device-pixel-ratio: 0) {
     @font-face {
         font-family: "upstream";
         src: url("../font/upstream.svg#upstream") format("svg");
@@ -22,7 +22,7 @@
 #menu-posts-project .dashicons-arrow-up-alt:after,
 #toplevel_page_upstream_general .dashicons-arrow-up-alt:before,
 #toplevel_page_upstream_general .dashicons-arrow-up-alt:after {
-    font-family: upstream  !important;
+    font-family: upstream !important;
     font-size: 18px;
     font-style: normal;
 }

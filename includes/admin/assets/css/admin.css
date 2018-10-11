@@ -5,3 +5,17 @@ a#upstream-upgrade-link,
     color: #5facd2 !important;
     font-weight: bold;
 }
+
+.upstream_options .cmb-th+.cmb-td {
+    width: calc(100% - 250px);
+}
+
+.upstream_float_success {
+    padding-left: 10px;
+    line-height: 28px;
+}
+
+.upstream_float_error {
+    padding-left: 10px;
+    line-height: 28px;
+}

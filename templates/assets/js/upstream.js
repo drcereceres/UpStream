@@ -157,7 +157,7 @@ jQuery(document).ready(function ($) {
 
     NProgress.start();
 
-    $(window).load(function () {
+    $(window).on('load', function () {
         NProgress.done();
     });
 })(window, window.document, jQuery, NProgress || null);
@@ -309,7 +309,13 @@ jQuery(document).ready(function ($) {
             trs.each(function (trIndex) {
                 var tr = $(this);
 
-                columnValue = $('[data-column="' + columnName + '"]', tr).attr('data-value') || '';
+                // Check if the column has an specific value for ordering.
+                if ($('[data-column="' + columnName + '"]', tr).attr('data-order')) {
+                    columnValue = $('[data-column="' + columnName + '"]', tr).attr('data-order');
+                } else {
+                    // Fallback to the value.
+                    columnValue = $('[data-column="' + columnName + '"]', tr).attr('data-value') || '';
+                }
 
                 data.push({
                     index: trIndex,
@@ -517,22 +523,51 @@ jQuery(document).ready(function ($) {
             var filteredRows = $('tbody tr[data-id]:visible', table);
             if (filteredRows.length === 0) {
                 var thsCount = $('thead th', table).length;
-                $('tbody', table).append($('<tr data-empty-row><td colspan="' + thsCount + '" class="text-center">No results</td></tr>'));
+                var tr = $('<tr data-empty-row><td colspan="' + thsCount + '" class="text-center">No results</td></tr>');
+                var tBody = $('tbody', table);
+
+                if (tBody.children('[data-empty-row]').length === 0) {
+                    setTimeout(function () {
+                        tBody.append(tr);
+                    }, 300);
+                }
             } else {
                 $('tbody tr[data-id]:visible', table).addClass('is-filtered');
             }
         }
 
-        $('.c-data-table .c-data-table__filters .o-select2').on('change', function (e) {
-            e.preventDefault();
+        var filterDataTable = function (e, self) {
+            if (typeof e === 'object' && e != null) {
+                e.preventDefault();
+            }
 
-            var self = $(this);
+            if (typeof self === 'undefined') {
+                self = $(this);
+            } else {
+                self = $(self);
+            }
 
             var filterColumn = self.attr('data-column');
             var filterValue = self.val() || [];
 
             sortTable(filterColumn, filterValue || '', $(self.parents('form').get(0)));
-        });
+        };
+
+        $('.c-data-table .c-data-table__filters .o-select2').on('change', filterDataTable);
+
+        // Force refresh the data tables, to apply default filters
+        var statusFilter = $('.c-data-table__filters #projects-filters .o-select2[data-column="status"]')[0];
+        if (typeof statusFilter !== 'undefined') {
+            filterDataTable(null, statusFilter);
+        }
+        statusFilter = $('.c-data-table__filters #tasks-filters .o-select2[data-column="status"]')[0];
+        if (typeof statusFilter !== 'undefined') {
+            filterDataTable(null, statusFilter);
+        }
+        statusFilter = $('.c-data-table__filters #bugs-filters .o-select2[data-column="status"]')[0];
+        if (typeof statusFilter !== 'undefined') {
+            filterDataTable(null, statusFilter);
+        }
 
         $('.c-data-table .c-data-table__filters input[type="search"]').on('keyup', function (e) {
             e.preventDefault();
