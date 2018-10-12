@@ -359,11 +359,11 @@ $filter_closed_items = upstream_filter_closed_items();
                           <i class="fa fa-sort"></i>
                         </span>
                                                 </th>
-                                                <th>
+                                                <th data-column="client-users">
                                                     <?php printf(__('%s Users', 'upstream'), $i18n['LB_CLIENT']); ?>
                                                 </th>
                                             <?php endif; ?>
-                                            <th>
+                                            <th data-column="members">
                                                 <?php printf(__('%s Members', 'upstream'), $i18n['LB_PROJECT']); ?>
                                             </th>
                                             <th class="is-clickable is-orderable" data-column="progress" role="button">
@@ -378,7 +378,7 @@ $filter_closed_items = upstream_filter_closed_items();
                           <i class="fa fa-sort"></i>
                         </span>
                                             </th>
-                                            <th style="max-width: 250px;">
+                                            <th style="max-width: 250px;" data-column="categories">
                                                 <?php echo esc_html($i18n['LB_CATEGORIES']); ?>
                                             </th>
 
