@@ -415,11 +415,11 @@ $filter_closed_items = upstream_filter_closed_items();
                                                             <i class="s-text-color-gray"><?php echo esc_html($i18n['LB_NONE']); ?></i>
                                                         <?php endif; ?>
                                                     </td>
-                                                    <td>
+                                                    <td data-column="client-users">
                                                         <?php upstream_output_client_users($project->id); ?>
                                                     </td>
                                                 <?php endif; ?>
-                                                <td>
+                                                <td data-column="members">
                                                     <?php upstream_output_project_members($project->id); ?>
                                                 </td>
                                                 <td data-column="progress"
