@@ -74,6 +74,9 @@ if ( ! upstream_are_tasks_disabled()
     // If should archive closed items, we filter the rowset.
     if ($archiveClosedItems) {
         foreach ($rowset as $id => $task) {
+            if ( ! isset($task['status'])) {
+                continue;
+            }
             if ( ! in_array($task['status'], $openStatuses) && ! empty($task['status'])) {
                 unset($rowset[$id]);
             }
