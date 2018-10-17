@@ -211,7 +211,7 @@ $filter_closed_items = upstream_filter_closed_items();
                                                        aria-controls="projects-filters">
                                                         <i class="fa fa-filter"></i> <?php echo esc_html($i18n['LB_TOGGLE_FILTERS']); ?>
                                                     </a>
-                                                    <button type="button" class="btn btn-default dropdown-toggle btn-xs"
+                                                    <button type="button" class="btn btn-default dropdown-toggle btn-xs upstream-export-button"
                                                             data-toggle="dropdown" aria-haspopup="true"
                                                             aria-expanded="false">
                                                         <i class="fa fa-download"></i> <?php echo esc_html($i18n['LB_EXPORT']); ?>
@@ -240,7 +240,7 @@ $filter_closed_items = upstream_filter_closed_items();
                                                     <i class="fa fa-filter"></i> <?php echo esc_html($i18n['LB_TOGGLE_FILTERS']); ?>
                                                 </a>
                                                 <div class="btn-group">
-                                                    <button type="button" class="btn btn-default dropdown-toggle btn-xs"
+                                                    <button type="button" class="btn btn-default dropdown-toggle btn-xs upstream-export-button"
                                                             data-toggle="dropdown" aria-haspopup="true"
                                                             aria-expanded="false">
                                                         <i class="fa fa-download"></i> <?php echo esc_html($i18n['LB_EXPORT']); ?>

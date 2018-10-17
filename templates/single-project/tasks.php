@@ -155,7 +155,7 @@ if ( ! upstream_are_tasks_disabled()
                                        data-toggle="collapse" aria-expanded="false" aria-controls="tasks-filters">
                                         <i class="fa fa-filter"></i> <?php _e('Toggle Filters', 'upstream'); ?>
                                     </a>
-                                    <button type="button" class="btn btn-default dropdown-toggle btn-xs"
+                                    <button type="button" class="btn btn-default dropdown-toggle btn-xs upstream-export-button"
                                             data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                         <i class="fa fa-download"></i> <?php _e('Export', 'upstream'); ?>
                                         <span class="caret"></span>
@@ -188,7 +188,7 @@ if ( ! upstream_are_tasks_disabled()
                                     <i class="fa fa-filter"></i> <?php _e('Toggle Filters', 'upstream'); ?>
                                 </a>
                                 <div class="btn-group">
-                                    <button type="button" class="btn btn-default dropdown-toggle btn-xs"
+                                    <button type="button" class="btn btn-default dropdown-toggle btn-xs upstream-export-button"
                                             data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                         <i class="fa fa-download"></i> <?php _e('Export', 'upstream'); ?>
                                         <span class="caret"></span>
