@@ -31,9 +31,14 @@ class Container extends \Pimple\Container
                 return 'https://upstreamplugin.us4.list-manage.com/subscribe/post?u=a42978bc16dd60d0ce3cac4d4&amp;id=83b571c8f0';
             };
 
+            $instance['UPDATES_DOC_URL'] = function ($c) {
+                //@todo: Update this link adding an specific page for this subject.
+                return 'http://upstreamplugin.com/docs/';
+            };
+
             $instance['framework'] = function ($c) {
                 return new Core($c['PLUGIN_BASENAME'], $c['EDD_API_URL'], $c['PLUGIN_AUTHOR'],
-                    $c['SUBSCRIPTION_AD_URL']);
+                    $c['SUBSCRIPTION_AD_URL'], $c['UPDATES_DOC_URL']);
             };
 
             if (is_admin()) {
