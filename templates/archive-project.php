@@ -211,7 +211,7 @@ $filter_closed_items = upstream_filter_closed_items();
                                                        aria-controls="projects-filters">
                                                         <i class="fa fa-filter"></i> <?php echo esc_html($i18n['LB_TOGGLE_FILTERS']); ?>
                                                     </a>
-                                                    <button type="button" class="btn btn-default dropdown-toggle btn-xs"
+                                                    <button type="button" class="btn btn-default dropdown-toggle btn-xs upstream-export-button"
                                                             data-toggle="dropdown" aria-haspopup="true"
                                                             aria-expanded="false">
                                                         <i class="fa fa-download"></i> <?php echo esc_html($i18n['LB_EXPORT']); ?>
@@ -240,7 +240,7 @@ $filter_closed_items = upstream_filter_closed_items();
                                                     <i class="fa fa-filter"></i> <?php echo esc_html($i18n['LB_TOGGLE_FILTERS']); ?>
                                                 </a>
                                                 <div class="btn-group">
-                                                    <button type="button" class="btn btn-default dropdown-toggle btn-xs"
+                                                    <button type="button" class="btn btn-default dropdown-toggle btn-xs upstream-export-button"
                                                             data-toggle="dropdown" aria-haspopup="true"
                                                             aria-expanded="false">
                                                         <i class="fa fa-download"></i> <?php echo esc_html($i18n['LB_EXPORT']); ?>
@@ -359,11 +359,11 @@ $filter_closed_items = upstream_filter_closed_items();
                           <i class="fa fa-sort"></i>
                         </span>
                                                 </th>
-                                                <th>
+                                                <th data-column="client-users">
                                                     <?php printf(__('%s Users', 'upstream'), $i18n['LB_CLIENT']); ?>
                                                 </th>
                                             <?php endif; ?>
-                                            <th>
+                                            <th data-column="members">
                                                 <?php printf(__('%s Members', 'upstream'), $i18n['LB_PROJECT']); ?>
                                             </th>
                                             <th class="is-clickable is-orderable" data-column="progress" role="button">
@@ -378,7 +378,7 @@ $filter_closed_items = upstream_filter_closed_items();
                           <i class="fa fa-sort"></i>
                         </span>
                                             </th>
-                                            <th style="max-width: 250px;">
+                                            <th style="max-width: 250px;" data-column="categories">
                                                 <?php echo esc_html($i18n['LB_CATEGORIES']); ?>
                                             </th>
 
@@ -415,11 +415,11 @@ $filter_closed_items = upstream_filter_closed_items();
                                                             <i class="s-text-color-gray"><?php echo esc_html($i18n['LB_NONE']); ?></i>
                                                         <?php endif; ?>
                                                     </td>
-                                                    <td>
+                                                    <td data-column="client-users">
                                                         <?php upstream_output_client_users($project->id); ?>
                                                     </td>
                                                 <?php endif; ?>
-                                                <td>
+                                                <td data-column="members">
                                                     <?php upstream_output_project_members($project->id); ?>
                                                 </td>
                                                 <td data-column="progress"
