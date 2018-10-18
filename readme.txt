@@ -142,14 +142,20 @@ If you were having date issues within Projects, please clear your cache and re-s
 The format is based on [Keep a Changelog](http://keepachangelog.com)
 and this project adheres to [Semantic Versioning](http://semver.org).
 
-= [1.22.1] - UNRELEASED =
+= [1.22.1] - 2018-10-18 =
 
 Fixed:
 * Fixed ordering for Milestone, Tasks and Bugs columns in the front-end;
 * Fixed date format in datepicker fields when the date format has "S";
+* Fixed default CSS classes for the body element in the front-end page;
+* Fixed PHP warning when status is not defined;
 
 Added:
 * Added option to order the table of tasks by status;
+* Added action link in the plugins list to set the license key;
+* Added warning in the plugin list if there is no license key set, or if automatic update is not available;
+* Added specific classes and data-column attributes to the cells of data tables in the front-end, to allow customize the style or hide them using CSS;
+* Added CSS class to the export buttons;
 
 = [1.22.0] - 2018-10-03 =
 
