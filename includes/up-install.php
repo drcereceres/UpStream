@@ -136,6 +136,8 @@ function upstream_run_install()
         upstream_run_fresh_install();
     } else {
         upstream_run_reinstall();
+
+        do_action('upstream_update_data', $current_version, UPSTREAM_VERSION);
     }
 
     // Bail if activating from network, or bulk
@@ -143,7 +145,6 @@ function upstream_run_install()
         return;
     }
 
-    do_action('upstream_update_data', $current_version, UPSTREAM_VERSION);
 
     // Add the transient to redirect
     set_transient('_upstream_activation_redirect', true, 30);
