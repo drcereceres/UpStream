@@ -7,6 +7,7 @@
         window.upstream_reset_capabilities = function(event) {
             var $btn = $(event.target);
             var label = $btn.text();
+            var buttonSlug = $btn.data('slug');
 
             if (!confirm(upstreamAdminStrings.MSG_CONFIRM_RESET_CAPABILITIES)) {
                 return;
@@ -17,7 +18,8 @@
                 type: 'post',
                 data: {
                     action: 'upstream_admin_reset_capabilities',
-                    nonce: $btn.data('nonce')
+                    nonce: $btn.data('nonce'),
+                    role: buttonSlug
                 },
                 beforeSend: function() {
                     $btn.text(upstreamAdminStrings.LB_RESETTING);
@@ -34,10 +36,10 @@
                     }, 4000);
                 },
                 success: function (response) {
-                    $msg = $('<span>' + upstreamAdminStrings.MSG_CAPABILITIES_RESETED + '</span>');
+                    $msg = $('<span class="allex-success-message">' + upstreamAdminStrings.MSG_CAPABILITIES_RESETED + '</span>');
                     $msg.addClass('upstream_float_success');
 
-                    $btn.after($msg);
+                    $btn.parent().append($msg);
 
                     window.setTimeout(function() {
                         $msg.fadeOut();

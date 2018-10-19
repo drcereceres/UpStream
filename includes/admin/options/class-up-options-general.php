@@ -640,10 +640,22 @@ if ( ! class_exists('UpStream_Options_General')) :
                                 'upstream'),
                         ],
                         [
-                            'name'    => __('Reset capabilities', 'upstream'),
-                            'id'      => 'reset_capabilities',
-                            'type'    => 'button',
-                            'label'   => __('Reset', 'upstream'),
+                            'name'    => __('Add default UpStream capabilities', 'upstream'),
+                            'id'      => 'add_default_capabilities',
+                            'type'    => 'buttonsgroup',
+                            'count'   => 4,
+                            'labels'  => [
+                                __('Administrator', 'upstream'),
+                                __('UpStream Manager', 'upstream'),
+                                __('UpStream User', 'upstream'),
+                                __('UpStream Client User', 'upstream'),
+                            ],
+                            'slugs'   => [
+                                'administrator',
+                                'upstream_manager',
+                                'upstream_user',
+                                'upstream_client_user',
+                            ],
                             'desc'    => __(
                                 'Clicking this button will reset all the capabilities to the default set for the following user roles: administrator, upstream_manager, upstream_user and upstream_client_user. This can\'t be undone.',
                                 'upstream'
@@ -702,10 +714,22 @@ if ( ! class_exists('UpStream_Options_General')) :
                 $abort  = true;
             }
 
+            $validRoles = [
+                'administrator',
+                'upstream_manager',
+                'upstream_user',
+                'upstream_client_user',
+            ];
+
+            if ( ! isset($_POST['role']) || ! in_array($_POST['role'], $validRoles)) {
+                $return = 'error';
+                $abort  = true;
+            }
+
             if ( ! $abort) {
                 // Reset capabilities
                 $roles = new UpStream_Roles();
-                $roles->add_default_caps();
+                $roles->add_default_caps($_POST['role']);
 
                 $return = 'success';
             }

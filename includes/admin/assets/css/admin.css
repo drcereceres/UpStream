@@ -6,7 +6,7 @@ a#upstream-upgrade-link,
     font-weight: bold;
 }
 
-.upstream_options .cmb-th+.cmb-td {
+.upstream_options .cmb-th + .cmb-td {
     width: calc(100% - 250px);
 }
 
@@ -18,4 +18,12 @@ a#upstream-upgrade-link,
 .upstream_float_error {
     padding-left: 10px;
     line-height: 28px;
+}
+
+.allex-success-message {
+    color: darkgreen;
+    background: #beffe3;
+    padding: 10px;
+    display: block;
+    width: 100%;
 }

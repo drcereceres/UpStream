@@ -88,12 +88,14 @@ class UpStream_Roles
     /**
      * Add default UpStream capabilities
      *
+     * @param string    $role
+     *
      * @access public
      * @since  1.0.0
      * @global WP_Roles $wp_roles
      * @return void
      */
-    public function add_default_caps()
+    public function add_default_caps($role = null)
     {
         global $wp_roles;
 
@@ -105,21 +107,62 @@ class UpStream_Roles
 
         if (is_object($wp_roles)) {
 
-            // Add the main post type capabilities
-            $capabilities = $this->get_upstream_manager_caps();
-            foreach ($capabilities as $cap_group) {
-                foreach ($cap_group as $cap) {
-                    $wp_roles->add_cap('upstream_manager', $cap);
-                    $wp_roles->add_cap('administrator', $cap);
-                }
+            if (is_null($role)) {
+                $rolesName = [
+                    'administrator',
+                    'upstream_manager',
+                    'upstream_user',
+                    'upstream_client_user',
+                ];
+            } else {
+                $rolesName = [$role];
             }
 
-            // Add the main post type capabilities
-            $capabilities = $this->get_upstream_user_caps();
-            foreach ($capabilities as $cap_group) {
-                foreach ($cap_group as $cap) {
-                    $wp_roles->add_cap('upstream_user', $cap);
-                    $wp_roles->add_cap('upstream_client_user', $cap);
+            foreach ($rolesName as $roleName) {
+                switch ($roleName) {
+                    case 'administrator':
+                        // Add the main post type capabilities
+                        $capabilities = $this->get_upstream_manager_caps();
+                        foreach ($capabilities as $cap_group) {
+                            foreach ($cap_group as $cap) {
+                                $wp_roles->add_cap($roleName, $cap);
+                            }
+                        }
+
+                        break;
+
+                    case 'upstream_manager':
+                        // Add the main post type capabilities
+                        $capabilities = $this->get_upstream_manager_caps();
+                        foreach ($capabilities as $cap_group) {
+                            foreach ($cap_group as $cap) {
+                                $wp_roles->add_cap($roleName, $cap);
+                            }
+                        }
+
+                        break;
+
+                    case 'upstream_user':
+                        // Add the main post type capabilities
+                        $capabilities = $this->get_upstream_user_caps();
+                        foreach ($capabilities as $cap_group) {
+                            foreach ($cap_group as $cap) {
+                                $wp_roles->add_cap($roleName, $cap);
+                            }
+                        }
+
+                        break;
+
+                    case 'upstream_client_user':
+                        // Add the main post type capabilities
+                        $capabilities = $this->get_upstream_user_caps();
+                        foreach ($capabilities as $cap_group) {
+                            foreach ($cap_group as $cap) {
+                                $wp_roles->add_cap($roleName, $cap);
+                            }
+                        }
+
+                        break;
                 }
             }
 
