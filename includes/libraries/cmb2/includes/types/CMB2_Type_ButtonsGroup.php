@@ -11,15 +11,14 @@
  * @license   GPL-2.0+
  * @link      https://cmb2.io
  */
-class CMB2_Type_Button extends CMB2_Type_Base
+class CMB2_Type_ButtonsGroup extends CMB2_Type_Base
 {
-
     /**
      * The type of field
      *
      * @var string
      */
-    public $type = 'button';
+    public $type = 'buttonsgroup';
 
     /**
      * Handles outputting an 'title' element
@@ -29,29 +28,43 @@ class CMB2_Type_Button extends CMB2_Type_Base
     public function render()
     {
         $class = $this->field->args('class');
+        $count = (int)$this->field->args('count');
 
         $args = $this->parse_args($this->type, [
             'id'      => $this->_id(),
             'desc'    => $this->_desc(true),
-            'label'   => $this->field->args('label'),
+            'labels'  => (array)$this->field->args('labels'),
+            'slugs'   => (array)$this->field->args('slugs'),
             'class'   => ! empty($class) ? $class : 'button-secondary',
+            'count'   => ! empty($count) ? $count : 1,
             'onclick' => $this->field->args('onclick'),
             'nonce'   => $this->field->args('nonce'),
         ]);
 
-        $html = sprintf('<button class="%s" id="%s" data-nonce="%s">%s</button>',
-            $args['class'],
-            $args['id'],
-            $args['nonce'],
-            $args['label']);
+        $html      = '';
+        $selectors = [];
 
-        $html .= $args['desc'];
+        for ($i = 0; $i < $count; $i++) {
+            $id          = $args['id'] . '_' . $i;
+            $selectors[] = '#' . $id;
 
-        $selector = '#' . $args['id'];
+            $html .= sprintf('<button class="%s" id="%s" data-nonce="%s" data-slug="%s">%s</button>',
+                $args['class'],
+                $id,
+                $args['nonce'],
+                $args['slugs'][$i],
+                $args['labels'][$i]);
+
+        }
+
+        $selector = implode(', ', $selectors);
 
         $html .= '<script>';
         $html .= 'jQuery("' . $selector . '").on("click", function(event){event.preventDefault(); ' . $args['onclick'] . '});';
         $html .= '</script>';
+
+
+        $html .= $args['desc'];
 
         return $this->rendered($html);
     }
