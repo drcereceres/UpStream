@@ -418,9 +418,6 @@ if ( ! class_exists('UpStream')) :
                 require_once UPSTREAM_PLUGIN_DIR . 'includes/libraries/password_compat-1.0.4/lib/password.php';
             }
 
-            // Make sure "UpStream Client Users" role is added in existent instances.
-            UpStream_Roles::addClientUsersRole();
-
             // Executes the Legacy Client Users Migration script if needed.
             \UpStream\Migrations\Comments::run();
 

@@ -705,7 +705,7 @@ if ( ! class_exists('UpStream_Options_General')) :
             if ( ! $abort) {
                 // Reset capabilities
                 $roles = new UpStream_Roles();
-                $roles->add_caps();
+                $roles->add_default_caps();
 
                 $return = 'success';
             }

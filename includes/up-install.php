@@ -99,30 +99,30 @@ register_deactivation_hook(UPSTREAM_PLUGIN_FILE, 'upstream_uninstall');
 add_action('upstream_update_data', 'upstream_update_data', 10, 2);
 
 /**
- * Run the UpStream Instsall process
+ * Run the UpStream Install process
  *
  * @since  2.5
  * @return void
  */
 function upstream_run_install()
 {
-    global $wpdb, $wp_version;
-
     // Setup the Downloads Custom Post Type
     upstream_setup_post_types();
 
     // Setup the Download Taxonomies
     upstream_setup_taxonomies();
 
-    // add the default options
+    // Add the default options
     upstream_add_default_options();
 
     // Clear the permalinks
     flush_rewrite_rules(false);
 
-    // Add Upgraded From Option
-    $current_version = get_option('upstream_version');
-    if ($current_version) {
+    // Add upgraded_from option
+    $current_version = get_option('upstream_version', false);
+    $freshInstall    = empty($current_version);
+
+    if ( ! $freshInstall) {
         update_option('upstream_version_upgraded_from', $current_version);
     }
 
@@ -131,10 +131,12 @@ function upstream_run_install()
     // Create UpStream roles
     $roles = new UpStream_Roles;
     $roles->add_roles();
-    $roles->add_caps();
 
-    // when upgrading
-    // if ( ! $current_version ) {}
+    if ($freshInstall) {
+        upstream_run_fresh_install();
+    } else {
+        upstream_run_reinstall();
+    }
 
     // Bail if activating from network, or bulk
     if (is_network_admin() || isset($_GET['activate-multi'])) {
@@ -145,6 +147,30 @@ function upstream_run_install()
 
     // Add the transient to redirect
     set_transient('_upstream_activation_redirect', true, 30);
+}
+
+/**
+ * Run the fresh UpStream Install process
+ *
+ * @since  2.5
+ * @return void
+ */
+function upstream_run_fresh_install()
+{
+    // Add default capabilities for roles.
+    $roles = new UpStream_Roles;
+    $roles->add_default_caps();
+}
+
+/**
+ * Run the UpStream Reinstall process
+ *
+ * @since  2.5
+ * @return void
+ */
+function upstream_run_reinstall()
+{
+
 }
 
 /**

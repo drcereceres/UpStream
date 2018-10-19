@@ -34,61 +34,51 @@ class UpStream_Roles
      */
     public function add_roles()
     {
-        add_role('upstream_manager', __('UpStream Manager', 'upstream'), [
-            'read'                   => true,
-            'edit_posts'             => true,
-            'delete_posts'           => true,
-            'unfiltered_html'        => true,
-            'upload_files'           => true,
-            'export'                 => true,
-            'import'                 => true,
-            'delete_others_pages'    => true,
-            'delete_others_posts'    => true,
-            'delete_pages'           => true,
-            'delete_private_pages'   => true,
-            'delete_private_posts'   => true,
-            'delete_published_pages' => true,
-            'delete_published_posts' => true,
-            'edit_others_pages'      => true,
-            'edit_others_posts'      => true,
-            'edit_pages'             => true,
-            'edit_private_pages'     => true,
-            'edit_private_posts'     => true,
-            'edit_published_pages'   => true,
-            'edit_published_posts'   => true,
-            'manage_categories'      => true,
-            'manage_links'           => true,
-            'moderate_comments'      => true,
-            'publish_pages'          => true,
-            'publish_posts'          => true,
-            'read_private_pages'     => true,
-            'read_private_posts'     => true,
-        ]);
-        add_role('upstream_user', __('UpStream User', 'upstream'), [
-            'read'         => true,
-            'edit_posts'   => true,
-            'upload_files' => true,
-        ]);
-
-        self::addClientUsersRole();
-    }
-
-    /**
-     * Method responsible for creating the 'upstream_client_user' role if it doesn't exist yet.
-     *
-     * @since   1.11.0
-     * @static
-     *
-     * @global  $wp_roles
-     */
-    public static function addClientUsersRole()
-    {
         global $wp_roles;
 
-        $theRoleIndetifier = 'upstream_client_user';
+        if ( ! $wp_roles->is_role('upstream_manager')) {
+            add_role('upstream_manager', __('UpStream Manager', 'upstream'), [
+                'read'                   => true,
+                'edit_posts'             => true,
+                'delete_posts'           => true,
+                'unfiltered_html'        => true,
+                'upload_files'           => true,
+                'export'                 => true,
+                'import'                 => true,
+                'delete_others_pages'    => true,
+                'delete_others_posts'    => true,
+                'delete_pages'           => true,
+                'delete_private_pages'   => true,
+                'delete_private_posts'   => true,
+                'delete_published_pages' => true,
+                'delete_published_posts' => true,
+                'edit_others_pages'      => true,
+                'edit_others_posts'      => true,
+                'edit_pages'             => true,
+                'edit_private_pages'     => true,
+                'edit_private_posts'     => true,
+                'edit_published_pages'   => true,
+                'edit_published_posts'   => true,
+                'manage_categories'      => true,
+                'manage_links'           => true,
+                'moderate_comments'      => true,
+                'publish_pages'          => true,
+                'publish_posts'          => true,
+                'read_private_pages'     => true,
+                'read_private_posts'     => true,
+            ]);
+        }
 
-        if ( ! $wp_roles->is_role($theRoleIndetifier)) {
-            add_role($theRoleIndetifier, __('UpStream Client User', 'upstream'), [
+        if ( ! $wp_roles->is_role('upstream_user')) {
+            add_role('upstream_user', __('UpStream User', 'upstream'), [
+                'read'         => true,
+                'edit_posts'   => true,
+                'upload_files' => true,
+            ]);
+        }
+
+        if ( ! $wp_roles->is_role('upstream_client_user')) {
+            add_role('upstream_client_user', __('UpStream Client User', 'upstream'), [
                 'read'         => true,
                 'upload_files' => true,
             ]);
@@ -96,15 +86,14 @@ class UpStream_Roles
     }
 
     /**
-     * Add new UpStream specific capabilities
-     * Called during installation
+     * Add default UpStream capabilities
      *
      * @access public
      * @since  1.0.0
      * @global WP_Roles $wp_roles
      * @return void
      */
-    public function add_caps()
+    public function add_default_caps()
     {
         global $wp_roles;
 
@@ -130,6 +119,7 @@ class UpStream_Roles
             foreach ($capabilities as $cap_group) {
                 foreach ($cap_group as $cap) {
                     $wp_roles->add_cap('upstream_user', $cap);
+                    $wp_roles->add_cap('upstream_client_user', $cap);
                 }
             }
 
@@ -193,7 +183,7 @@ class UpStream_Roles
                 "project_users_field",
                 "project_start_date_field",
                 "project_end_date_field",
-//                "project_description_field",
+                //                "project_description_field",
                 "publish_project_milestones",
                 "publish_project_bugs",
                 "publish_project_discussion",
