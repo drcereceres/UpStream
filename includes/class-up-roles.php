@@ -206,7 +206,7 @@ class UpStream_Roles
                 "bug_status_field",
                 "bug_due_date_field",
                 "bug_description_field",
-                "bug_file_field",
+                "bug_files_field",
 
                 "milestone_milestone_field",
                 "milestone_assigned_to_field",
