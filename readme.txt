@@ -142,6 +142,19 @@ If you were having date issues within Projects, please clear your cache and re-s
 The format is based on [Keep a Changelog](http://keepachangelog.com)
 and this project adheres to [Semantic Versioning](http://semver.org).
 
+= [1.22.2] - 2018-10-24 =
+
+Fixed:
+* Fixed updates to do not reset capabilities for UpStream user roles every time a package is installed;
+* Fixed updates to only run upgrade routines when it is really an update, ignoring them on fresh installs or re-installations;
+* Fixed updates to do not redirect to the projects after installing. It will only redirect after a fresh install;
+* Fixed basic capabilities for UpStream's Users and Client Users so them are able to see and edit all the fields by default;
+* Fixed a typo in the capability "bug_files_field" added for admins. It was setting "bug_file_field" instead.
+* Fixed a PHP warning in the admin when TinyMCE don't have the "selector" index.
+
+Changed:
+* Changed the button to reset capabilities, splitting it in 4 buttons, one per user role: Administrator, UpStream Managers, UpStream Users, UpStream Client Users;
+
 = [1.22.1] - 2018-10-18 =
 
 Fixed:
