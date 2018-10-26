@@ -527,10 +527,7 @@ function upstream_format_date($timestamp, $dateFormat = null)
     if ( ! $timestamp) {
         $date = null;
     } else {
-        $datetime = new \DateTime();
-        $datetime->setTimestamp($timestamp);
-
-        $date = $datetime->format($dateFormat);
+        $date = date_i18n($dateFormat, $timestamp);
     }
 
     return apply_filters('upstream_format_date', $date, $timestamp);
