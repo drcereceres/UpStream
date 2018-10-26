@@ -470,7 +470,7 @@ class UpStream_Project
                         $count++; // count
 
                         // add open tasks count to the milestone
-                        if (isset($task['status']) && $this->is_open_tasks($task['status'])) {
+                        if ((!isset($task['status']) || empty($task['status'])) || (isset($task['status']) && $this->is_open_tasks($task['status']))) {
                             $open++;
                         }
                     }
@@ -486,7 +486,7 @@ class UpStream_Project
                 $m['task_open'] = $open++;
             } // add the number of open tasks in this milestone
 
-            // make sure the milestone has at least 1 task assigned otherwise it doesn't count
+            // make sure the milestone has at lea   st 1 task assigned otherwise it doesn't count
             if ($count > 0) {
                 $totals[$m['milestone']]['count']    = $count;
                 $totals[$m['milestone']]['progress'] = $percentage;
@@ -527,6 +527,7 @@ class UpStream_Project
             return;
         }
 
+
         $option   = get_option('upstream_tasks');
         $statuses = isset($option['statuses']) ? $option['statuses'] : '';
 
@@ -534,7 +535,7 @@ class UpStream_Project
             return;
         }
 
-        $types = wp_list_pluck($statuses, 'type', 'name');
+        $types = wp_list_pluck($statuses, 'type', 'id');
 
         foreach ($types as $name => $type) {
             if ($type == 'open' && $task_status == $name) {
