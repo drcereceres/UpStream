@@ -63,6 +63,7 @@ if ( ! class_exists('UpStream_Options_General')) :
             $this->description = '';
 
             add_action('wp_ajax_upstream_admin_reset_capabilities', [$this, 'reset_capabilities']);
+            add_action('wp_ajax_upstream_admin_refresh_projects_meta', [$this, 'refresh_projects_meta']);
         }
 
         /**
@@ -664,6 +665,18 @@ if ( ! class_exists('UpStream_Options_General')) :
                             'nonce'   => wp_create_nonce('upstream_reset_capabilities'),
                         ],
                         [
+                            'name'    => __('Refresh Projects Meta Data', 'upstream'),
+                            'id'      => 'refresh_projects_meta',
+                            'type'    => 'button',
+                            'label'   => __('Refresh', 'upstream'),
+                            'desc'    => __(
+                                'Clicking this button will recalculate the meta data for all the projects, including: project members, milestones\' tasks statuses, created time, project author. This can\'t be undone and can take some time if you have many projects.',
+                                'upstream'
+                            ),
+                            'onclick' => 'upstream_refresh_projects_meta(event);',
+                            'nonce'   => wp_create_nonce('upstream_refresh_projects_meta'),
+                        ],
+                        [
                             'name'              => __('Debug', 'upstream'),
                             'id'                => 'debug',
                             'type'              => 'multicheck',
@@ -730,6 +743,43 @@ if ( ! class_exists('UpStream_Options_General')) :
                 // Reset capabilities
                 $roles = new UpStream_Roles();
                 $roles->add_default_caps($_POST['role']);
+
+                $return = 'success';
+            }
+
+            echo wp_json_encode($return);
+            wp_die();
+        }
+
+        public function refresh_projects_meta()
+        {
+            $return = '';
+            $abort  = false;
+
+            if ( ! isset($_POST['nonce'])) {
+                $return = 'error';
+                $abort  = true;
+            }
+
+            if ( ! wp_verify_nonce($_POST['nonce'], 'upstream_refresh_projects_meta')) {
+                $return = 'error';
+                $abort  = true;
+            }
+
+            if ( ! $abort) {
+                if ( ! class_exists('Upstream_Counts')) {
+                    include_once UPSTREAM_PLUGIN_DIR . '/includes/class-up-counts.php';
+                }
+
+                $counts   = new Upstream_Counts(0);
+                $projects = $counts->projects;
+
+                if ( ! empty($projects)) {
+                    foreach ($projects as $project) {
+                        $projectObject = new UpStream_Project($project->ID);
+                        $projectObject->update_project_meta();
+                    }
+                }
 
                 $return = 'success';
             }
