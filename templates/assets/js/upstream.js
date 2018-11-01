@@ -37,6 +37,69 @@
 
 // Sidebar
 jQuery(document).ready(function ($) {
+    $.fn.datepicker.dates['en'] = {
+        days: [
+            upstream.langs.LB_SUNDAY,
+            upstream.langs.LB_MONDAY,
+            upstream.langs.LB_TUESDAY,
+            upstream.langs.LB_WEDNESDAY,
+            upstream.langs.LB_THURSDAY,
+            upstream.langs.LB_FRIDAY,
+            upstream.langs.LB_SATURDAY
+        ],
+        daysShort: [
+            upstream.langs.LB_SUN,
+            upstream.langs.LB_MON,
+            upstream.langs.LB_TUE,
+            upstream.langs.LB_WED,
+            upstream.langs.LB_THU,
+            upstream.langs.LB_FRI,
+            upstream.langs.LB_SAT
+        ],
+        daysMin: [
+            upstream.langs.LB_SU,
+            upstream.langs.LB_MO,
+            upstream.langs.LB_TU,
+            upstream.langs.LB_WE,
+            upstream.langs.LB_TH,
+            upstream.langs.LB_FR,
+            upstream.langs.LB_SA
+        ],
+        months: [
+            upstream.langs.LB_JANUARY,
+            upstream.langs.LB_FEBRUARY,
+            upstream.langs.LB_MARCH,
+            upstream.langs.LB_APRIL,
+            upstream.langs.LB_MAY,
+            upstream.langs.LB_JUNE,
+            upstream.langs.LB_JULY,
+            upstream.langs.LB_AUGUST,
+            upstream.langs.LB_SEPTEMBER,
+            upstream.langs.LB_OCTOBER,
+            upstream.langs.LB_NOVEMBER,
+            upstream.langs.LB_DECEMBER
+        ],
+        monthsShort: [
+            upstream.langs.LB_JAN,
+            upstream.langs.LB_FEB,
+            upstream.langs.LB_MAR,
+            upstream.langs.LB_APR,
+            upstream.langs.LB_MAY,
+            upstream.langs.LB_JUN,
+            upstream.langs.LB_JUL,
+            upstream.langs.LB_AUG,
+            upstream.langs.LB_SEP,
+            upstream.langs.LB_OCT,
+            upstream.langs.LB_NOV,
+            upstream.langs.LB_DEC
+        ],
+        today: upstream.langs.LB_TODAY,
+        clear: upstream.langs.LB_CLEAR,
+        format: 'mm/dd/yyyy',
+        titleFormat: 'MM yyyy', /* Leverages same syntax as 'format' */
+        weekStart: 0
+    };
+
     $('[data-toggle="tooltip"]').tooltip();
 
     // TODO: This is some kind of easy fix, maybe we can improve this

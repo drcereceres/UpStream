@@ -1837,6 +1837,190 @@ msgstr ""
 msgid "Search:"
 msgstr ""
 
+#: includes/frontend/up-enqueues.php:145
+msgid "Sunday"
+msgstr ""
+
+#: includes/frontend/up-enqueues.php:146
+msgid "Monday"
+msgstr ""
+
+#: includes/frontend/up-enqueues.php:147
+msgid "Tuesday"
+msgstr ""
+
+#: includes/frontend/up-enqueues.php:148
+msgid "Wednesday"
+msgstr ""
+
+#: includes/frontend/up-enqueues.php:149
+msgid "Thursday"
+msgstr ""
+
+#: includes/frontend/up-enqueues.php:150
+msgid "Friday"
+msgstr ""
+
+#: includes/frontend/up-enqueues.php:151
+msgid "Saturday"
+msgstr ""
+
+#: includes/frontend/up-enqueues.php:152
+msgid "Sun"
+msgstr ""
+
+#: includes/frontend/up-enqueues.php:153
+msgid "Mon"
+msgstr ""
+
+#: includes/frontend/up-enqueues.php:154
+msgid "Tue"
+msgstr ""
+
+#: includes/frontend/up-enqueues.php:155
+msgid "Wed"
+msgstr ""
+
+#: includes/frontend/up-enqueues.php:156
+msgid "Thu"
+msgstr ""
+
+#: includes/frontend/up-enqueues.php:157
+msgid "Fri"
+msgstr ""
+
+#: includes/frontend/up-enqueues.php:158
+msgid "Sat"
+msgstr ""
+
+#: includes/frontend/up-enqueues.php:159
+msgid "Su"
+msgstr ""
+
+#: includes/frontend/up-enqueues.php:160
+msgid "Mo"
+msgstr ""
+
+#: includes/frontend/up-enqueues.php:161
+msgid "Tu"
+msgstr ""
+
+#: includes/frontend/up-enqueues.php:162
+msgid "We"
+msgstr ""
+
+#: includes/frontend/up-enqueues.php:163
+msgid "Th"
+msgstr ""
+
+#: includes/frontend/up-enqueues.php:164
+msgid "Fr"
+msgstr ""
+
+#: includes/frontend/up-enqueues.php:165
+msgid "Sa"
+msgstr ""
+
+#: includes/frontend/up-enqueues.php:166
+msgid "January"
+msgstr ""
+
+#: includes/frontend/up-enqueues.php:167
+msgid "February"
+msgstr ""
+
+#: includes/frontend/up-enqueues.php:168
+msgid "March"
+msgstr ""
+
+#: includes/frontend/up-enqueues.php:169
+msgid "April"
+msgstr ""
+
+#: includes/frontend/up-enqueues.php:170
+msgid "May"
+msgstr ""
+
+#: includes/frontend/up-enqueues.php:171
+msgid "June"
+msgstr ""
+
+#: includes/frontend/up-enqueues.php:172
+msgid "July"
+msgstr ""
+
+#: includes/frontend/up-enqueues.php:173
+msgid "August"
+msgstr ""
+
+#: includes/frontend/up-enqueues.php:174
+msgid "September"
+msgstr ""
+
+#: includes/frontend/up-enqueues.php:175
+msgid "October"
+msgstr ""
+
+#: includes/frontend/up-enqueues.php:176
+msgid "November"
+msgstr ""
+
+#: includes/frontend/up-enqueues.php:177
+msgid "December"
+msgstr ""
+
+#: includes/frontend/up-enqueues.php:178
+msgid "Jan"
+msgstr ""
+
+#: includes/frontend/up-enqueues.php:179
+msgid "Feb"
+msgstr ""
+
+#: includes/frontend/up-enqueues.php:180
+msgid "Mar"
+msgstr ""
+
+#: includes/frontend/up-enqueues.php:181
+msgid "Apr"
+msgstr ""
+
+#: includes/frontend/up-enqueues.php:182
+msgid "Jun"
+msgstr ""
+
+#: includes/frontend/up-enqueues.php:183
+msgid "Jul"
+msgstr ""
+
+#: includes/frontend/up-enqueues.php:184
+msgid "Aug"
+msgstr ""
+
+#: includes/frontend/up-enqueues.php:185
+msgid "Sep"
+msgstr ""
+
+#: includes/frontend/up-enqueues.php:186
+msgid "Oct"
+msgstr ""
+
+#: includes/frontend/up-enqueues.php:187
+msgid "Nov"
+msgstr ""
+
+#: includes/frontend/up-enqueues.php:188
+msgid "Dec"
+msgstr ""
+
+#: includes/frontend/up-enqueues.php:189
+msgid "Today"
+msgstr ""
+
+#: includes/frontend/up-enqueues.php:190
+msgid "Clear"
+msgstr ""
+
 #: includes/frontend/up-table-functions.php:31
 #: includes/frontend/up-table-functions.php:194
 msgid "This Milestone doesn't exist anymore."
