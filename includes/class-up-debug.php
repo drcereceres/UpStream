@@ -31,6 +31,10 @@ class UpStream_Debug
      */
     public static function write($message, $id = null)
     {
+        if ( ! static::is_enabled()) {
+            return;
+        }
+
         if ( ! static::$initialized) {
             static::init();
         }
