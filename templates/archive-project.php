@@ -50,10 +50,15 @@ $i18n = [
 $currentUser = (object)upstream_user_data(@$_SESSION['upstream']['user_id']);
 
 $projectStatuses = upstream_get_all_project_statuses();
+$projectOrder    = [];
 
 $statuses      = [];
 $openStatuses  = [];
-foreach ($projectStatuses as $status) {
+// We start from 1 instead of 0 because the 0 position is used for "__none__".
+$statusIndex = 1;
+foreach ($projectStatuses as $statusId => $status) {
+    $projectOrder[$statusIndex++] = $statusId;
+
     // If closed items will be archived, we do not need to display closed statuses.
     if ($archiveClosedItems && 'open' !== $status['type']) {
         continue;
@@ -450,11 +455,15 @@ $filter_closed_items = upstream_filter_closed_items();
                                                         'id'    => '',
                                                         'name'  => '',
                                                         'color' => '#aaa',
+                                                        'order' => '0',
                                                     ];
                                                 }
+
+                                                $statusOrder = array_search($status['id'], $projectOrder);
                                                 ?>
                                                 <td data-column="status"
-                                                    data-value="<?php echo ! empty($status['id']) ? esc_attr($status['id']) : '__none__'; ?>">
+                                                    data-value="<?php echo ! empty($status['id']) ? esc_attr($status['id']) : '__none__'; ?>"
+                                                    data-order="<?php echo $statusOrder > 0 ? $statusOrder : '0'; ?>">
                                                     <?php if ($project->status !== null || empty($status['id']) || empty($status['name'])): ?>
                                                         <span class="label up-o-label"
                                                               style="background-color: <?php echo esc_attr($status['color']); ?>;"><?php echo ! empty($status['name']) ? esc_html($status['name']) : $i18n['LB_NONE']; ?></span>
