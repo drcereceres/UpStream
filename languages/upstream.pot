@@ -272,7 +272,7 @@ msgstr ""
 
 #: includes/admin/class-up-admin-pointers.php:183
 #: includes/admin/metaboxes/class-up-metaboxes-projects.php:1395
-#: templates/archive-project.php:363 templates/single-project/details.php:88
+#: templates/archive-project.php:368 templates/single-project/details.php:88
 #, php-format
 msgid "%s Users"
 msgstr ""
@@ -1689,67 +1689,67 @@ msgctxt "Comment notification subject"
 msgid "New comment on %s"
 msgstr ""
 
-#: includes/class-up-debug.php:96 includes/class-up-debug.php:151
+#: includes/class-up-debug.php:100 includes/class-up-debug.php:155
 msgid "UpStream Debug Log"
 msgstr ""
 
-#: includes/class-up-debug.php:108 includes/class-up-debug.php:109
+#: includes/class-up-debug.php:112 includes/class-up-debug.php:113
 msgid "Debug Log"
 msgstr ""
 
-#: includes/class-up-debug.php:152
+#: includes/class-up-debug.php:156
 msgid "File info"
 msgstr ""
 
-#: includes/class-up-debug.php:153
+#: includes/class-up-debug.php:157
 msgid "Path"
 msgstr ""
 
-#: includes/class-up-debug.php:154
+#: includes/class-up-debug.php:158
 msgid "Log content"
 msgstr ""
 
-#: includes/class-up-debug.php:155
+#: includes/class-up-debug.php:159
 msgid "Size"
 msgstr ""
 
-#: includes/class-up-debug.php:156
+#: includes/class-up-debug.php:160
 msgid "Created on"
 msgstr ""
 
-#: includes/class-up-debug.php:157
+#: includes/class-up-debug.php:161
 msgid "Modified on"
 msgstr ""
 
-#: includes/class-up-debug.php:158
+#: includes/class-up-debug.php:162
 msgid "Delete file"
 msgstr ""
 
-#: includes/class-up-debug.php:159
+#: includes/class-up-debug.php:163
 msgid "Debug data"
 msgstr ""
 
-#: includes/class-up-debug.php:160
+#: includes/class-up-debug.php:164
 msgid "Log File"
 msgstr ""
 
-#: includes/class-up-debug.php:163
+#: includes/class-up-debug.php:167
 msgid "Log file not found."
 msgstr ""
 
-#: includes/class-up-debug.php:165
+#: includes/class-up-debug.php:169
 msgid "If you see any error or look for information regarding UpStream, please don't hesitate to contact the support team. E-mail us:"
 msgstr ""
 
-#: includes/class-up-debug.php:169
+#: includes/class-up-debug.php:173
 msgid "Click to delete the log file. Be careful, this operation can not be undone. "
 msgstr ""
 
-#: includes/class-up-debug.php:212
+#: includes/class-up-debug.php:216
 msgid "Action nonce not found."
 msgstr ""
 
-#: includes/class-up-debug.php:219
+#: includes/class-up-debug.php:223
 msgid "Invalid action nonce."
 msgstr ""
 
@@ -2517,12 +2517,12 @@ msgstr ""
 msgid "%s Complete"
 msgstr ""
 
-#: templates/archive-project.php:367
+#: templates/archive-project.php:372
 #, php-format
 msgid "%s Members"
 msgstr ""
 
-#: templates/archive-project.php:524
+#: templates/archive-project.php:533
 msgid "It seems that you're not participating in any project right now."
 msgstr ""
 
