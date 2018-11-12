@@ -389,6 +389,7 @@ if ( ! class_exists('UpStream')) :
                 include_once __DIR__ . '/includes/frontend/up-template-functions.php';
                 include_once __DIR__ . '/includes/frontend/up-table-functions.php';
                 include_once __DIR__ . '/includes/frontend/class-up-view.php';
+                include_once __DIR__ . '/includes/frontend/class-ajax.php';
             }
 
             include_once __DIR__ . '/includes/up-general-functions.php';
@@ -451,6 +452,10 @@ if ( ! class_exists('UpStream')) :
             UpStream_Options_Bugs::createBugsStatusesIds();
 
             Comments::instantiate();
+
+            if ($this->is_request('frontend')) {
+                UpStream_Ajax::instantiate();
+            }
 
             // Init action.
             do_action('upstream_init');

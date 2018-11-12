@@ -878,6 +878,7 @@ function renderTable($tableAttrs = [], $columnsSchema = [], $data = [], $itemTyp
     $tableAttrs['cellspacing'] = 0;
     $tableAttrs['width']       = '100%';
 
+
     $visibleColumnsSchema = [];
     $hiddenColumnsSchema  = [];
 
@@ -886,6 +887,18 @@ function renderTable($tableAttrs = [], $columnsSchema = [], $data = [], $itemTyp
             $hiddenColumnsSchema[$columnName] = $columnArgs;
         } else {
             $visibleColumnsSchema[$columnName] = $columnArgs;
+        }
+    }
+
+    // Get the table ordering, if set.
+    $tableId = array_key_exists('id', $tableAttrs) ? $tableAttrs['id'] : '';
+
+    if ( ! empty($tableId)) {
+        $ordering = getTableOrder($tableId);
+
+        if ( ! empty($ordering)) {
+            $tableAttrs['data-ordered-by'] = $ordering['column'];
+            $tableAttrs['data-order-dir']  = $ordering['orderDir'];
         }
     }
 
@@ -977,4 +990,52 @@ function renderTableFilter($filterType, $columnName, $args = [], $renderFormGrou
     ob_end_clean();
 
     echo $filterHtml;
+}
+
+/**
+ * @param $tableId
+ *
+ * @return string
+ */
+function getTableOrderOption($tableId)
+{
+    $userId = get_current_user_id();
+
+    return 'upstream_ordering_' . $userId . '_' . $tableId;
+}
+
+/**
+ * @param $tableId
+ * @param $column
+ * @param $dir
+ */
+function updateTableOrder($tableId, $column, $dir)
+{
+    // Update the ordering data for the table.
+    $data = maybe_serialize([
+        'column'   => $column,
+        'orderDir' => $dir,
+    ]);
+
+    $option = getTableOrderOption($tableId);
+
+    update_option($option, $data);
+}
+
+/**
+ * @param $tableId
+ *
+ * @return array
+ */
+function getTableOrder($tableId)
+{
+    $option = getTableOrderOption($tableId);
+
+    $value = maybe_unserialize(get_option($option));
+
+    if ( ! is_array($value) || ! array_key_exists('column', $value) || ! array_key_exists('orderDir', $value)) {
+        $value = false;
+    }
+
+    return $value;
 }

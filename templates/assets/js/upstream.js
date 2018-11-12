@@ -431,6 +431,8 @@ jQuery(document).ready(function ($) {
 
             var self = $(this);
             var wrapper = $(self.parent());
+            var table = wrapper.parents('table');
+            var column = self.attr('data-column');
 
             $('.o-order-direction', wrapper).remove();
             $('th.is-orderable[role="button"]', wrapper).append(createOrderDirectionEl(null));
@@ -450,7 +452,20 @@ jQuery(document).ready(function ($) {
             self.append(createOrderDirectionEl(newOrderDir));
             self.addClass('is-ordered');
 
-            orderTable(self.attr('data-column'), newOrderDir, $(self.parents('table.o-data-table')));
+            orderTable(column, newOrderDir, $(self.parents('table.o-data-table')));
+
+            // Store the current ordering data to persist after page load.
+            $.ajax({
+                url: ajaxurl,
+                type: 'post',
+                data: {
+                    action: 'upstream_ordering_update',
+                    nonce: upstream.security,
+                    column: column,
+                    orderDir: newOrderDir,
+                    tableId: table.attr('id')
+                }
+            });
         });
 
         function sortTable (columnName, columnValue, filtersWrapper) {
@@ -824,10 +839,11 @@ jQuery(document).ready(function ($) {
             var self = $(this);
 
             var table = $('.o-data-table', self);
-            var order_dir = table.attr('data-order-dir') || 'DESC';
             var order_by = table.attr('data-ordered-by') || '';
+            var order_dir = table.attr('data-order-dir') || 'DESC';
 
             if (order_by.length > 0) {
+                console.log(order_by, order_dir);
                 orderTable(order_by, order_dir, table);
             }
         });

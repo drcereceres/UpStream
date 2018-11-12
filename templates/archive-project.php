@@ -52,8 +52,8 @@ $currentUser = (object)upstream_user_data(@$_SESSION['upstream']['user_id']);
 $projectStatuses = upstream_get_all_project_statuses();
 $projectOrder    = [];
 
-$statuses      = [];
-$openStatuses  = [];
+$statuses     = [];
+$openStatuses = [];
 // We start from 1 instead of 0 because the 0 position is used for "__none__".
 $statusIndex = 1;
 foreach ($projectStatuses as $statusId => $status) {
@@ -173,6 +173,13 @@ foreach ($columnsSchema as $columnName => $columnArgs) {
 
 $filter_closed_items = upstream_filter_closed_items();
 
+$ordering = \UpStream\Frontend\getTableOrder('projects');
+$orderBy  = '';
+$orderDir = '';
+if ( ! empty($ordering)) {
+    $orderBy  = $ordering['column'];
+    $orderDir = $ordering['orderDir'];
+}
 ?>
 
     <div class="right_col" role="main">
@@ -216,7 +223,8 @@ $filter_closed_items = upstream_filter_closed_items();
                                                        aria-controls="projects-filters">
                                                         <i class="fa fa-filter"></i> <?php echo esc_html($i18n['LB_TOGGLE_FILTERS']); ?>
                                                     </a>
-                                                    <button type="button" class="btn btn-default dropdown-toggle btn-xs upstream-export-button"
+                                                    <button type="button"
+                                                            class="btn btn-default dropdown-toggle btn-xs upstream-export-button"
                                                             data-toggle="dropdown" aria-haspopup="true"
                                                             aria-expanded="false">
                                                         <i class="fa fa-download"></i> <?php echo esc_html($i18n['LB_EXPORT']); ?>
@@ -245,7 +253,8 @@ $filter_closed_items = upstream_filter_closed_items();
                                                     <i class="fa fa-filter"></i> <?php echo esc_html($i18n['LB_TOGGLE_FILTERS']); ?>
                                                 </a>
                                                 <div class="btn-group">
-                                                    <button type="button" class="btn btn-default dropdown-toggle btn-xs upstream-export-button"
+                                                    <button type="button"
+                                                            class="btn btn-default dropdown-toggle btn-xs upstream-export-button"
                                                             data-toggle="dropdown" aria-haspopup="true"
                                                             aria-expanded="false">
                                                         <i class="fa fa-download"></i> <?php echo esc_html($i18n['LB_EXPORT']); ?>
@@ -277,17 +286,17 @@ $filter_closed_items = upstream_filter_closed_items();
                                                            data-column="title" data-compare-operator="contains">
                                                 </div>
                                             </div>
-                                            <?php if (!is_clients_disabled()) : ?>
-                                            <div class="form-group">
-                                                <div class="input-group">
-                                                    <div class="input-group-addon">
-                                                        <i class="fa fa-user"></i>
+                                            <?php if ( ! is_clients_disabled()) : ?>
+                                                <div class="form-group">
+                                                    <div class="input-group">
+                                                        <div class="input-group-addon">
+                                                            <i class="fa fa-user"></i>
+                                                        </div>
+                                                        <input type="search" class="form-control"
+                                                               placeholder="<?php echo esc_attr($i18n['LB_CLIENTS']); ?>"
+                                                               data-column="client" data-compare-operator="contains">
                                                     </div>
-                                                    <input type="search" class="form-control"
-                                                           placeholder="<?php echo esc_attr($i18n['LB_CLIENTS']); ?>"
-                                                           data-column="client" data-compare-operator="contains">
                                                 </div>
-                                            </div>
                                             <?php endif; ?>
                                             <div class="form-group">
                                                 <div class="input-group">
@@ -346,8 +355,8 @@ $filter_closed_items = upstream_filter_closed_items();
                                            cellspacing="0"
                                            width="100%"
                                            data-type="project"
-                                           data-ordered-by=""
-                                           data-order-dir="">
+                                           data-ordered-by="<?php echo esc_attr($orderBy); ?>"
+                                           data-order-dir="<?php echo esc_attr($orderDir); ?>">
                                         <thead>
                                         <tr>
                                             <th class="is-clickable is-orderable" data-column="title" role="button">
