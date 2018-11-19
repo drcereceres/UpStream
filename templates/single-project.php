@@ -127,8 +127,13 @@ while (have_posts()) : the_post(); ?>
 
             <div class="clearfix"></div>
 
-
-            <?php do_action('upstream:frontend.project.renderAfterDetails'); ?>
+            <?php
+            /**
+             * @deprecated upstream_single_project_sections
+             */
+            do_action('upstream:frontend.project.renderAfterDetails');
+            ?>
+            <?php do_action('upstream_single_project_sections'); ?>
 
             <?php if ( ! upstream_are_milestones_disabled() && ! upstream_disable_milestones()): ?>
                 <div class="row">
