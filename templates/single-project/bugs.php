@@ -8,7 +8,13 @@ if ( ! upstream_are_bugs_disabled()
      && ! upstream_disable_bugs()):
 
     $collapseBox = isset($pluginOptions['collapse_project_bugs'])
-                   && (bool)$pluginOptions['collapse_project_   bugs'] === true;
+                   && (bool)$pluginOptions['collapse_project_bugs'] === true;
+
+    $collapseBoxState = \UpStream\Frontend\getSectionCollapseState('bugs');
+
+    if ( ! is_null($collapseBoxState)) {
+        $collapseBox = $collapseBoxState === 'closed';
+    }
 
     $archiveClosedItems = upstream_archive_closed_items();
 
@@ -82,7 +88,7 @@ if ( ! upstream_are_bugs_disabled()
 
     ?>
     <div class="col-md-12 col-sm-12 col-xs-12">
-        <div class="x_panel">
+        <div class="x_panel" data-section="bugs">
             <div class="x_title">
                 <h2>
                     <i class="fa fa-bug"></i> <?php echo upstream_bug_label_plural(); ?>

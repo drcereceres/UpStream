@@ -10,6 +10,12 @@ if ( ! upstream_are_files_disabled()
     $collapseBox = isset($pluginOptions['collapse_project_files'])
                    && (bool)$pluginOptions['collapse_project_files'] === true;
 
+    $collapseBoxState = \UpStream\Frontend\getSectionCollapseState('files');
+
+    if ( ! is_null($collapseBoxState)) {
+        $collapseBox = $collapseBoxState === 'closed';
+    }
+
     $itemType      = 'file';
     $currentUserId = get_current_user_id();
     $users         = upstream_admin_get_all_project_users();
@@ -55,7 +61,7 @@ if ( ! upstream_are_files_disabled()
     $columnsSchema = \UpStream\Frontend\getFilesFields($areCommentsEnabled);
     ?>
     <div class="col-md-12 col-sm-12 col-xs-12">
-        <div class="x_panel">
+        <div class="x_panel" data-section="files">
             <div class="x_title">
                 <h2>
                     <i class="fa fa-file"></i> <?php echo upstream_file_label_plural(); ?>

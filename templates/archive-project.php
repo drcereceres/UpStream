@@ -187,7 +187,7 @@ if ( ! empty($ordering)) {
         <?php if ($projectsView) : ?>
             <div class="row">
                 <div class="col-md-12">
-                    <div class="x_panel">
+                    <div class="x_panel" data-section="projects">
                         <div class="x_title">
                             <h2><i class="fa fa-briefcase"></i> <?php echo esc_html($i18n['LB_PROJECTS']); ?></h2>
                             <ul class="nav navbar-right panel_toolbox">

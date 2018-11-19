@@ -1039,3 +1039,44 @@ function getTableOrder($tableId)
 
     return $value;
 }
+
+/**
+ * @param $section
+ *
+ * @return string
+ */
+function getSectionCollapseStateOption($section)
+{
+    $userId = get_current_user_id();
+
+    return 'upstream_collapse_state_' . $userId . '_' . $section;
+}
+
+/**
+ * @param $section
+ * @param $state
+ */
+function updateSectionCollapseState($section, $state)
+{
+    $option = getSectionCollapseStateOption($section);
+
+    update_option($option, $state);
+}
+
+/**
+ * @param $section
+ *
+ * @return array
+ */
+function getSectionCollapseState($section)
+{
+    $option = getSectionCollapseStateOption($section);
+
+    $value = get_option($option);
+
+    if (empty($value)) {
+        $value = false;
+    }
+
+    return $value;
+}

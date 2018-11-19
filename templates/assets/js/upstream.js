@@ -206,7 +206,20 @@ jQuery(document).ready(function ($) {
 
         $icon.toggleClass('fa-chevron-up fa-chevron-down');
 
-        console.log($icon.hasClass('fa-chevron-up'));
+        var state = $icon.hasClass('fa-chevron-up') ? 'opened' : 'closed',
+            section = $boxPanel.data('section');
+
+        // Store the current slider state.
+        $.ajax({
+            url: ajaxurl,
+            type: 'post',
+            data: {
+                action: 'upstream_collapse_update',
+                nonce: upstream.security,
+                section: section,
+                state: state
+            }
+        });
     });
 
     $('.close-link').click(function () {

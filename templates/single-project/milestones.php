@@ -10,6 +10,12 @@ if ( ! upstream_are_milestones_disabled()
     $collapseBox = isset($pluginOptions['collapse_project_milestones'])
                    && (bool)$pluginOptions['collapse_project_milestones'] === true;
 
+    $collapseBoxState = \UpStream\Frontend\getSectionCollapseState('milestones');
+
+    if ( ! is_null($collapseBoxState)) {
+        $collapseBox = $collapseBoxState === 'closed';
+    }
+
     $itemType      = 'milestone';
     $currentUserId = get_current_user_id();
     $users         = upstream_admin_get_all_project_users();
@@ -41,7 +47,7 @@ if ( ! upstream_are_milestones_disabled()
     $columnsSchema = \UpStream\Frontend\getMilestonesFields();
     ?>
     <div class="col-md-12 col-sm-12 col-xs-12">
-        <div class="x_panel">
+        <div class="x_panel" data-section="milestones">
             <div class="x_title">
                 <h2>
                     <i class="fa fa-flag"></i> <?php echo upstream_milestone_label_plural(); ?>

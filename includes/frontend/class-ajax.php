@@ -13,29 +13,29 @@ class UpStream_Ajax
 {
     use Singleton;
 
+    /**
+     * UpStream_Ajax constructor.
+     */
     public function __construct()
     {
         $this->setHooks();
     }
 
+    /**
+     * Set the hooks.
+     */
     public function setHooks()
     {
         add_action('wp_ajax_upstream_ordering_update', [$this, 'orderingUpdate']);
+        add_action('wp_ajax_upstream_collapse_update', [$this, 'collapseUpdate']);
     }
 
+    /**
+     * Update ordering state.
+     */
     public function orderingUpdate()
     {
-        if ( ! isset($_POST['nonce'])) {
-            $this->output('security_error');
-
-            return;
-        }
-
-        if ( ! wp_verify_nonce($_POST['nonce'], 'upstream-nonce')) {
-            $this->output('security_error');
-
-            return;
-        }
+        $this->verifyNonce();
 
         if ( ! isset($_POST['column'])) {
             $this->output('column_not_found');
@@ -71,7 +71,60 @@ class UpStream_Ajax
         $this->output('success');
     }
 
-    public function output($return)
+    /**
+     * Update the collapse state.
+     */
+    public function collapseUpdate()
+    {
+        $this->verifyNonce();
+
+        if ( ! isset($_POST['section'])) {
+            $this->output('invalid_section');
+
+            return;
+        }
+
+        if ( ! isset($_POST['state']) || ! in_array($_POST['state'], ['opened', 'closed'])) {
+            $this->output('invalid_state');
+
+            return;
+        }
+
+        $state = $_POST['state'];
+
+        // Sanitize data.
+        $section = sanitize_text_field($_POST['section']);
+
+        if (empty($state) || empty($section)) {
+            $this->output('error');
+
+            return;
+        }
+
+        \UpStream\Frontend\updateSectionCollapseState($section, $state);
+
+        $this->output('success');
+    }
+
+    protected function verifyNonce()
+    {
+        if ( ! isset($_POST['nonce'])) {
+            $this->output('security_error');
+
+            return;
+        }
+
+        if ( ! wp_verify_nonce($_POST['nonce'], 'upstream-nonce')) {
+            $this->output('security_error');
+
+            return;
+        }
+    }
+
+    /**
+     * @param $return
+     */
+    protected function output($return)
     {
         echo wp_json_encode($return);
         wp_die();
