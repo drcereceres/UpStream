@@ -843,7 +843,6 @@ jQuery(document).ready(function ($) {
             var order_dir = table.attr('data-order-dir') || 'DESC';
 
             if (order_by.length > 0) {
-                console.log(order_by, order_dir);
                 orderTable(order_by, order_dir, table);
             }
         });
