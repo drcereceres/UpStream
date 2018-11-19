@@ -1060,6 +1060,8 @@ function updateSectionCollapseState($section, $state)
 {
     $option = getSectionCollapseStateOption($section);
 
+    $state = sanitize_text_field($state);
+
     update_option($option, $state);
 }
 
@@ -1079,4 +1081,33 @@ function getSectionCollapseState($section)
     }
 
     return $value;
+}
+
+/**
+ * @param $rows
+ */
+function updatePanelOrder($rows)
+{
+    $option = 'upstream_panel_order';
+
+    $value = [];
+
+    foreach ($rows as $row) {
+        $row = sanitize_text_field($row);
+        $row = str_replace('project-section-', '', $row);
+
+        if ( ! empty($row)) {
+            $value[] = $row;
+        }
+    }
+
+    update_option($option, $value);
+}
+
+/**
+ * @return array
+ */
+function getPanelOrder()
+{
+    return get_option('upstream_panel_order');
 }

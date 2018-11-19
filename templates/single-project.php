@@ -95,6 +95,25 @@ $displayOverviewSection = ! isset($options['disable_project_overview']) || (bool
 $displayDetailsSection  = ! isset($options['disable_project_details']) || (bool)$options['disable_project_details'] === false;
 unset($options);
 
+/*
+ * Sections
+ */
+$sections = [
+    'details',
+    'milestones',
+    'tasks',
+    'bugs',
+    'files',
+    'discussion',
+];
+$sections = apply_filters('upstream_panel_sections', $sections);
+
+// Apply the order to the panels.
+$sectionsOrder = (array)\UpStream\Frontend\getPanelOrder();
+$sections      = array_merge($sectionsOrder, $sections);
+// Remove duplicates.
+$sections = array_unique($sections);
+
 while (have_posts()) : the_post(); ?>
 
     <!-- page content -->
@@ -103,77 +122,92 @@ while (have_posts()) : the_post(); ?>
         <?php do_action('upstream_frontend_projects_messages'); ?>
     </div>
 
-        <div class="">
-            <div class="row">
-                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-5">
-                    <h3 style="display: inline-block;"><?php echo get_the_title(get_the_ID()); ?></h3>
-                    <?php $status = upstream_project_status_color($id); ?>
-                    <?php if ( ! empty($status['status'])): ?>
-                        <span class="label up-o-label"
-                              style="background-color: <?php echo esc_attr($status['color']); ?>"><?php echo $status['status']; ?>
-                </span>
-                    <?php endif; ?>
-                </div>
+        <div id="project-dashboard" class="sortable">
+            <?php foreach ($sections as $section) : ?>
+                <?php switch ($section) :
+                    case 'details':
+                        ?>
+                        <div class="row" id="project-section-details">
+                            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-5">
+                                <h3 style="display: inline-block;"><?php echo get_the_title(get_the_ID()); ?></h3>
+                                <?php $status = upstream_project_status_color($id); ?>
+                                <?php if ( ! empty($status['status'])): ?>
+                                    <span class="label up-o-label"
+                                          style="background-color: <?php echo esc_attr($status['color']); ?>"><?php echo $status['status']; ?></span>
+                                <?php endif; ?>
+                            </div>
 
-                <?php if ($displayOverviewSection): ?>
-                    <?php include 'single-project/overview.php'; ?>
-                <?php endif; ?>
+                            <?php if ($displayOverviewSection): ?>
+                                <?php include 'single-project/overview.php'; ?>
+                            <?php endif; ?>
 
-                <?php if ($displayDetailsSection): ?>
-                    <?php do_action('upstream_single_project_before_details'); ?>
-                    <?php upstream_get_template_part('single-project/details.php'); ?>
-                <?php endif; ?>
-            </div>
+                            <?php if ($displayDetailsSection): ?>
+                                <?php do_action('upstream_single_project_before_details'); ?>
+                                <?php upstream_get_template_part('single-project/details.php'); ?>
+                            <?php endif; ?>
+                        </div>
+                        <?php
+                        break;
 
-            <div class="clearfix"></div>
+                    case 'milestones':
+                        if ( ! upstream_are_milestones_disabled() && ! upstream_disable_milestones()): ?>
+                            <div class="row" id="project-section-milestones">
+                            <?php do_action('upstream_single_project_before_milestones'); ?>
 
-            <?php
-            /**
-             * @deprecated upstream_single_project_sections
-             */
-            do_action('upstream:frontend.project.renderAfterDetails');
-            ?>
-            <?php do_action('upstream_single_project_sections'); ?>
+                            <?php upstream_get_template_part('single-project/milestones.php'); ?>
+                        </div>
+                        <?php endif;
+                        break;
 
-            <?php if ( ! upstream_are_milestones_disabled() && ! upstream_disable_milestones()): ?>
-                <div class="row">
-                <?php do_action('upstream_single_project_before_milestones'); ?>
+                    case 'tasks':
+                        if ( ! upstream_are_tasks_disabled() && ! upstream_disable_tasks()): ?>
+                            <div class="row" id="project-section-tasks">
+                            <?php do_action('upstream_single_project_before_tasks'); ?>
 
-                <?php upstream_get_template_part('single-project/milestones.php'); ?>
-            </div>
-            <?php endif; ?>
+                            <?php upstream_get_template_part('single-project/tasks.php'); ?>
+                        </div>
+                        <?php endif;
+                        break;
 
-            <?php if ( ! upstream_are_tasks_disabled() && ! upstream_disable_tasks()): ?>
-                <div class="row">
-                <?php do_action('upstream_single_project_before_tasks'); ?>
+                    case 'bugs':
+                        if ( ! upstream_disable_bugs() && ! upstream_are_bugs_disabled()): ?>
+                            <div class="row" id="project-section-bugs">
+                            <?php do_action('upstream_single_project_before_bugs'); ?>
 
-                <?php upstream_get_template_part('single-project/tasks.php'); ?>
-            </div>
-            <?php endif; ?>
+                            <?php upstream_get_template_part('single-project/bugs.php'); ?>
+                        </div>
+                        <?php endif;
+                        break;
 
-            <?php if ( ! upstream_disable_bugs() && ! upstream_are_bugs_disabled()): ?>
-                <div class="row">
-                <?php do_action('upstream_single_project_before_bugs'); ?>
+                    case 'files':
+                        if ( ! upstream_are_files_disabled() && ! upstream_disable_files()): ?>
+                            <div class="row" id="project-section-files">
+                            <?php do_action('upstream_single_project_before_files'); ?>
 
-                <?php upstream_get_template_part('single-project/bugs.php'); ?>
-            </div>
-            <?php endif; ?>
+                            <?php upstream_get_template_part('single-project/files.php'); ?>
+                        </div>
+                        <?php endif;
+                        break;
 
-            <?php if ( ! upstream_are_files_disabled() && ! upstream_disable_files()): ?>
-                <div class="row">
-                <?php do_action('upstream_single_project_before_files'); ?>
+                    case 'discussion':
+                        if (upstreamAreProjectCommentsEnabled()): ?>
+                            <div class="row" id="project-section-discussion">
+                            <?php do_action('upstream_single_project_before_discussion'); ?>
 
-                <?php upstream_get_template_part('single-project/files.php'); ?>
-            </div>
-            <?php endif; ?>
+                            <?php upstream_get_template_part('single-project/discussion.php'); ?>
+                        </div>
+                        <?php endif;
+                        break;
 
-            <?php if (upstreamAreProjectCommentsEnabled()): ?>
-                <div class="row">
-                <?php do_action('upstream_single_project_before_discussion'); ?>
+                    default:
+                        do_action('upstream_single_project_section_' . $section);
 
-                <?php upstream_get_template_part('single-project/discussion.php'); ?>
-            </div>
-            <?php endif; ?>
+                        break;
+
+                endswitch; ?>
+            <?php endforeach; ?>
+
+
         </div>
     </div>
     <input type="hidden" id="project_id" value="<?php echo upstream_post_id(); ?>">

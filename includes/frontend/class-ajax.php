@@ -28,6 +28,7 @@ class UpStream_Ajax
     {
         add_action('wp_ajax_upstream_ordering_update', [$this, 'orderingUpdate']);
         add_action('wp_ajax_upstream_collapse_update', [$this, 'collapseUpdate']);
+        add_action('wp_ajax_upstream_panel_order_update', [$this, 'panelOrderUpdate']);
     }
 
     /**
@@ -102,6 +103,32 @@ class UpStream_Ajax
         }
 
         \UpStream\Frontend\updateSectionCollapseState($section, $state);
+
+        $this->output('success');
+    }
+
+    /**
+     * Update the panel ordering.
+     */
+    public function panelOrderUpdate()
+    {
+        $this->verifyNonce();
+
+        if ( ! isset($_POST['rows'])) {
+            $this->output('invalid_rows');
+
+            return;
+        }
+
+        $rows = array_map('sanitize_text_field', $_POST['rows']);
+
+        if (empty($rows)) {
+            $this->output('error');
+
+            return;
+        }
+
+        \UpStream\Frontend\updatePanelOrder($rows);
 
         $this->output('success');
     }

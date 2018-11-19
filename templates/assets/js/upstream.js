@@ -227,6 +227,27 @@ jQuery(document).ready(function ($) {
 
         $boxPanel.remove();
     });
+
+    $('#project-dashboard.sortable').sortable({
+        placeholder: 'ui-state-highlight',
+        cancel: '.ui-state-disabled',
+        handle: '.x_title',
+        update: function (event, ui) {
+            var rows = $('#project-dashboard').sortable('toArray');
+
+            // Store the current panel order
+            $.ajax({
+                url: ajaxurl,
+                type: 'post',
+                data: {
+                    action: 'upstream_panel_order_update',
+                    nonce: upstream.security,
+                    rows: rows
+                }
+            });
+        }
+    });
+    $('#project-dashboard.sortable .x_title').disableSelection();
 });
 
 // Instantiate NProgress lib.
