@@ -641,9 +641,7 @@ jQuery(document).ready(function ($) {
                 var tBody = $('tbody', table);
 
                 if (tBody.children('[data-empty-row]').length === 0) {
-                    setTimeout(function () {
-                        tBody.append(tr);
-                    }, 300);
+                    tBody.append(tr);
                 }
             } else {
                 $('tbody tr[data-id]:visible', table).addClass('is-filtered');
