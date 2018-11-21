@@ -129,6 +129,7 @@ if ( ! class_exists('UpStream')) :
             add_filter('teeny_mce_before_init', 'upstream_tinymce_before_init_setup_toolbar');
             add_filter('comments_clauses', [$this, 'filterCommentsOnDashboard'], 10, 2);
             add_filter('views_dashboard', ['UpStream_Admin', 'commentStatusLinks'], 10, 1);
+            add_action('plugins_loaded', [$this, 'load_plugin_textdomain']);
 
             if (is_admin()) {
                 add_action('admin_init', [$this->container['reviews'], 'init']);
@@ -272,6 +273,7 @@ if ( ! class_exists('UpStream')) :
             $this->define('UPSTREAM_PLUGIN_DIR', plugin_dir_path(__FILE__));
             $this->define('UPSTREAM_PLUGIN_URL', plugin_dir_url(__FILE__));
             $this->define('UPSTREAM_PLUGIN_BASENAME', plugin_basename(__FILE__));
+            $this->define('UPSTREAM_PLUGIN_RELATIVE_PATH', 'upstream');
 
             include_once __DIR__ . '/includes.php';
         }
@@ -409,7 +411,7 @@ if ( ! class_exists('UpStream')) :
             // Before init action.
             do_action('before_upstream_init');
             // Set up localisation.
-            $this->load_plugin_textdomain();
+
             // Load class instances.
             $this->project          = new UpStream_Project();
             $this->project_activity = new UpStream_Project_Activity();
@@ -463,19 +465,10 @@ if ( ! class_exists('UpStream')) :
 
         /**
          * Load Localisation files.
-         *
-         * Note: the first-loaded translation file overrides any following ones if the same translation is present.
-         *
-         * Locales found in:
-         *      - WP_LANG_DIR/upstream/upstream-LOCALE.mo
-         *      - WP_LANG_DIR/plugins/upstream-LOCALE.mo
          */
         public function load_plugin_textdomain()
         {
-            $locale = apply_filters('plugin_locale', get_locale(), 'upstream');
-
-            load_textdomain('upstream', WP_LANG_DIR . '/upstream/upstream-' . $locale . '.mo');
-            load_plugin_textdomain('upstream', false, plugin_basename(dirname(__FILE__)) . '/languages');
+            load_plugin_textdomain( 'upstream', false, UPSTREAM_PLUGIN_RELATIVE_PATH . '/languages/' );
         }
 
 
