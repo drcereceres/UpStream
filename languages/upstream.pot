@@ -39,7 +39,7 @@ msgstr ""
 #: includes/admin/metaboxes/class-up-metaboxes-projects.php:686
 #: includes/admin/metaboxes/class-up-metaboxes-projects.php:1249
 #: includes/frontend/up-table-functions.php:332
-#: templates/single-project/bugs.php:67
+#: templates/single-project/bugs.php:73
 msgid "Due Date"
 msgstr ""
 
@@ -54,9 +54,9 @@ msgstr ""
 #: includes/frontend/up-table-functions.php:300
 #: includes/frontend/up-table-functions.php:433
 #: templates/archive-project.php:41 templates/single-project.php:73
-#: templates/single-project/bugs.php:239 templates/single-project/bugs.php:243
-#: templates/single-project/tasks.php:259
-#: templates/single-project/tasks.php:262
+#: templates/single-project/bugs.php:245 templates/single-project/bugs.php:249
+#: templates/single-project/tasks.php:265
+#: templates/single-project/tasks.php:268
 msgid "Status"
 msgstr ""
 
@@ -64,7 +64,7 @@ msgstr ""
 #: includes/admin/metaboxes/class-up-metaboxes-projects.php:1223
 #: includes/admin/options/class-up-options-bugs.php:163
 #: includes/frontend/up-table-functions.php:269
-#: templates/single-project/bugs.php:221 templates/single-project/bugs.php:224
+#: templates/single-project/bugs.php:227 templates/single-project/bugs.php:230
 msgid "Severity"
 msgstr ""
 
@@ -127,12 +127,12 @@ msgstr ""
 #: includes/frontend/up-template-functions.php:56
 #: includes/frontend/up-template-functions.php:74
 #: templates/archive-project.php:46 templates/single-project.php:78
-#: templates/single-project/bugs.php:60 templates/single-project/details.php:66
-#: templates/single-project/details.php:80
-#: templates/single-project/details.php:92
-#: templates/single-project/files.php:39
-#: templates/single-project/milestones.php:26
-#: templates/single-project/tasks.php:89
+#: templates/single-project/bugs.php:66 templates/single-project/details.php:71
+#: templates/single-project/details.php:85
+#: templates/single-project/details.php:97
+#: templates/single-project/files.php:45
+#: templates/single-project/milestones.php:32
+#: templates/single-project/tasks.php:95
 msgid "none"
 msgstr ""
 
@@ -168,10 +168,10 @@ msgstr ""
 #: includes/admin/metaboxes/class-up-metaboxes-projects.php:545
 #: includes/admin/metaboxes/class-up-metaboxes-projects.php:642
 #: includes/admin/metaboxes/class-up-metaboxes-projects.php:729
-#: templates/single-project/bugs.php:203 templates/single-project/files.php:175
-#: templates/single-project/files.php:200
-#: templates/single-project/milestones.php:160
-#: templates/single-project/tasks.php:241
+#: templates/single-project/bugs.php:209 templates/single-project/files.php:181
+#: templates/single-project/files.php:206
+#: templates/single-project/milestones.php:166
+#: templates/single-project/tasks.php:247
 msgid "Users"
 msgstr ""
 
@@ -272,7 +272,7 @@ msgstr ""
 
 #: includes/admin/class-up-admin-pointers.php:183
 #: includes/admin/metaboxes/class-up-metaboxes-projects.php:1395
-#: templates/archive-project.php:368 templates/single-project/details.php:88
+#: templates/archive-project.php:377 templates/single-project/details.php:93
 #, php-format
 msgid "%s Users"
 msgstr ""
@@ -320,7 +320,7 @@ msgstr ""
 #: includes/admin/class-up-admin-project-columns.php:128
 #: includes/admin/metaboxes/class-up-metaboxes-projects.php:1368
 #: includes/frontend/up-table-functions.php:465
-#: templates/single-project/details.php:78
+#: templates/single-project/details.php:83
 msgid "Owner"
 msgstr ""
 
@@ -345,7 +345,7 @@ msgstr ""
 #: includes/frontend/up-table-functions.php:64
 #: includes/frontend/up-table-functions.php:155
 #: templates/archive-project.php:44 templates/single-project.php:76
-#: templates/single-project/details.php:73
+#: templates/single-project/details.php:78
 msgid "Progress"
 msgstr ""
 
@@ -358,9 +358,9 @@ msgstr ""
 #: includes/frontend/up-table-functions.php:223
 #: includes/frontend/up-table-functions.php:346
 #: includes/frontend/up-table-functions.php:400
-#: templates/single-project/bugs.php:62 templates/single-project/files.php:41
-#: templates/single-project/milestones.php:29
-#: templates/single-project/tasks.php:91
+#: templates/single-project/bugs.php:68 templates/single-project/files.php:47
+#: templates/single-project/milestones.php:35
+#: templates/single-project/tasks.php:97
 msgid "Comments"
 msgstr ""
 
@@ -664,8 +664,8 @@ msgstr ""
 #: includes/admin/metaboxes/class-up-metaboxes-projects.php:918
 #: includes/frontend/up-table-functions.php:79
 #: includes/frontend/up-table-functions.php:218
-#: templates/single-project/milestones.php:28
-#: templates/single-project/tasks.php:90
+#: templates/single-project/milestones.php:34
+#: templates/single-project/tasks.php:96
 msgid "Notes"
 msgstr ""
 
@@ -676,9 +676,9 @@ msgstr ""
 #: includes/admin/metaboxes/class-up-metaboxes-projects.php:461
 #: includes/admin/metaboxes/class-up-metaboxes-projects.php:537
 #: includes/admin/metaboxes/class-up-metaboxes-projects.php:634
-#: templates/single-project/bugs.php:196 templates/single-project/files.php:193
-#: templates/single-project/milestones.php:153
-#: templates/single-project/tasks.php:234
+#: templates/single-project/bugs.php:202 templates/single-project/files.php:199
+#: templates/single-project/milestones.php:159
+#: templates/single-project/tasks.php:240
 msgid "Assignee"
 msgstr ""
 
@@ -686,10 +686,10 @@ msgstr ""
 #: includes/admin/metaboxes/class-up-metaboxes-projects.php:543
 #: includes/admin/metaboxes/class-up-metaboxes-projects.php:640
 #: includes/admin/metaboxes/class-up-metaboxes-projects.php:727
-#: templates/single-project/bugs.php:200 templates/single-project/files.php:172
-#: templates/single-project/files.php:197
-#: templates/single-project/milestones.php:157
-#: templates/single-project/tasks.php:238
+#: templates/single-project/bugs.php:206 templates/single-project/files.php:178
+#: templates/single-project/files.php:203
+#: templates/single-project/milestones.php:163
+#: templates/single-project/tasks.php:244
 msgid "Me"
 msgstr ""
 
@@ -697,9 +697,9 @@ msgstr ""
 #: includes/admin/metaboxes/class-up-metaboxes-projects.php:544
 #: includes/admin/metaboxes/class-up-metaboxes-projects.php:641
 #: includes/admin/metaboxes/class-up-metaboxes-projects.php:728
-#: templates/single-project/bugs.php:198 templates/single-project/files.php:195
-#: templates/single-project/milestones.php:155
-#: templates/single-project/tasks.php:236
+#: templates/single-project/bugs.php:204 templates/single-project/files.php:201
+#: templates/single-project/milestones.php:161
+#: templates/single-project/tasks.php:242
 msgid "Nobody"
 msgstr ""
 
@@ -715,8 +715,8 @@ msgstr ""
 #: includes/frontend/up-table-functions.php:369
 #: includes/frontend/up-table-functions.php:429
 #: templates/archive-project.php:33 templates/single-project.php:66
-#: templates/single-project/bugs.php:59 templates/single-project/files.php:38
-#: templates/single-project/tasks.php:88
+#: templates/single-project/bugs.php:65 templates/single-project/files.php:44
+#: templates/single-project/tasks.php:94
 msgid "Title"
 msgstr ""
 
@@ -725,11 +725,11 @@ msgstr ""
 #: includes/admin/metaboxes/class-up-metaboxes-projects.php:660
 #: includes/admin/metaboxes/class-up-metaboxes-projects.php:677
 #: includes/admin/metaboxes/class-up-metaboxes-projects.php:2009
-#: includes/frontend/up-table-functions.php:958
+#: includes/frontend/up-table-functions.php:971
 #: templates/archive-project.php:45 templates/single-project.php:77
-#: templates/single-project/bugs.php:223 templates/single-project/bugs.php:241
-#: templates/single-project/tasks.php:260
-#: templates/single-project/tasks.php:287
+#: templates/single-project/bugs.php:229 templates/single-project/bugs.php:247
+#: templates/single-project/tasks.php:266
+#: templates/single-project/tasks.php:293
 msgid "None"
 msgstr ""
 
@@ -766,9 +766,9 @@ msgstr ""
 #: includes/frontend/up-table-functions.php:341
 #: includes/frontend/up-table-functions.php:395
 #: includes/frontend/up-table-functions.php:516
-#: templates/single-project/bugs.php:61
-#: templates/single-project/details.php:106
-#: templates/single-project/files.php:40
+#: templates/single-project/bugs.php:67
+#: templates/single-project/details.php:111
+#: templates/single-project/files.php:46
 msgid "Description"
 msgstr ""
 
@@ -781,7 +781,7 @@ msgid "Disable Bugs for this project"
 msgstr ""
 
 #: includes/admin/metaboxes/class-up-metaboxes-projects.php:1343
-#: templates/single-project/details.php:40
+#: templates/single-project/details.php:45
 #, php-format
 msgid "%s Details"
 msgstr ""
@@ -1045,6 +1045,14 @@ msgstr ""
 
 #: includes/admin/options/class-up-options-extensions.php:201
 msgid "This extension allows you to add more information to Project, Milestone, Tasks and Bugs."
+msgstr ""
+
+#: includes/admin/options/class-up-options-extensions.php:209
+msgid "Reports"
+msgstr ""
+
+#: includes/admin/options/class-up-options-extensions.php:211
+msgid "Allow users to see or print reports"
 msgstr ""
 
 #: includes/admin/options/class-up-options-general.php:61
@@ -1457,7 +1465,7 @@ msgid "UpStream Manager"
 msgstr ""
 
 #: includes/admin/options/class-up-options-general.php:651
-#: includes/class-up-roles.php:73 upstream.php:576
+#: includes/class-up-roles.php:73 upstream.php:574
 msgid "UpStream User"
 msgstr ""
 
@@ -1823,13 +1831,13 @@ msgid "Copy"
 msgstr ""
 
 #: includes/frontend/up-enqueues.php:133 templates/archive-project.php:38
-#: templates/single-project.php:70 templates/single-project/bugs.php:137
-#: templates/single-project/bugs.php:170 templates/single-project/files.php:110
-#: templates/single-project/files.php:143
-#: templates/single-project/milestones.php:94
-#: templates/single-project/milestones.php:127
-#: templates/single-project/tasks.php:175
-#: templates/single-project/tasks.php:208
+#: templates/single-project.php:70 templates/single-project/bugs.php:143
+#: templates/single-project/bugs.php:176 templates/single-project/files.php:116
+#: templates/single-project/files.php:149
+#: templates/single-project/milestones.php:100
+#: templates/single-project/milestones.php:133
+#: templates/single-project/tasks.php:181
+#: templates/single-project/tasks.php:214
 msgid "CSV"
 msgstr ""
 
@@ -2049,12 +2057,12 @@ msgstr ""
 
 #: includes/frontend/up-table-functions.php:337
 #: includes/frontend/up-table-functions.php:391 includes/up-labels.php:59
-#: templates/single-project/files.php:42
+#: templates/single-project/files.php:48
 msgid "File"
 msgstr ""
 
 #: includes/frontend/up-table-functions.php:380
-#: templates/single-project/files.php:43
+#: templates/single-project/files.php:49
 msgid "Upload Date"
 msgstr ""
 
@@ -2482,33 +2490,34 @@ msgid "Ends at"
 msgstr ""
 
 #: templates/archive-project.php:34 templates/single-project.php:67
-#: templates/single-project/bugs.php:118 templates/single-project/bugs.php:150
-#: templates/single-project/files.php:91 templates/single-project/files.php:123
-#: templates/single-project/milestones.php:75
-#: templates/single-project/milestones.php:107
-#: templates/single-project/tasks.php:156
-#: templates/single-project/tasks.php:188
+#: templates/single-project/bugs.php:124 templates/single-project/bugs.php:156
+#: templates/single-project/files.php:97 templates/single-project/files.php:129
+#: templates/single-project/milestones.php:81
+#: templates/single-project/milestones.php:113
+#: templates/single-project/tasks.php:162
+#: templates/single-project/tasks.php:194
 msgid "Toggle Filters"
 msgstr ""
 
 #: templates/archive-project.php:35 templates/single-project.php:68
-#: templates/single-project/bugs.php:122 templates/single-project/bugs.php:155
-#: templates/single-project/files.php:95 templates/single-project/files.php:128
-#: templates/single-project/milestones.php:79
-#: templates/single-project/milestones.php:112
-#: templates/single-project/tasks.php:160
-#: templates/single-project/tasks.php:193
+#: templates/single-project/bugs.php:128 templates/single-project/bugs.php:161
+#: templates/single-project/files.php:101
+#: templates/single-project/files.php:134
+#: templates/single-project/milestones.php:85
+#: templates/single-project/milestones.php:118
+#: templates/single-project/tasks.php:166
+#: templates/single-project/tasks.php:199
 msgid "Export"
 msgstr ""
 
 #: templates/archive-project.php:36 templates/archive-project.php:37
-#: templates/single-project.php:69 templates/single-project/bugs.php:129
-#: templates/single-project/bugs.php:162 templates/single-project/files.php:102
-#: templates/single-project/files.php:135
-#: templates/single-project/milestones.php:86
-#: templates/single-project/milestones.php:119
-#: templates/single-project/tasks.php:167
-#: templates/single-project/tasks.php:200
+#: templates/single-project.php:69 templates/single-project/bugs.php:135
+#: templates/single-project/bugs.php:168 templates/single-project/files.php:108
+#: templates/single-project/files.php:141
+#: templates/single-project/milestones.php:92
+#: templates/single-project/milestones.php:125
+#: templates/single-project/tasks.php:173
+#: templates/single-project/tasks.php:206
 msgid "Plain Text"
 msgstr ""
 
@@ -2517,12 +2526,12 @@ msgstr ""
 msgid "%s Complete"
 msgstr ""
 
-#: templates/archive-project.php:372
+#: templates/archive-project.php:381
 #, php-format
 msgid "%s Members"
 msgstr ""
 
-#: templates/archive-project.php:533
+#: templates/archive-project.php:542
 msgid "It seems that you're not participating in any project right now."
 msgstr ""
 
@@ -2555,49 +2564,49 @@ msgstr ""
 msgid "Sign In"
 msgstr ""
 
-#: templates/single-project/bugs.php:64 templates/single-project/tasks.php:93
-#: templates/single-project/tasks.php:102
+#: templates/single-project/bugs.php:70 templates/single-project/tasks.php:99
+#: templates/single-project/tasks.php:108
 #, php-format
 msgctxt "%s: column name. Error message when data reference is not found"
 msgid "invalid %s"
 msgstr ""
 
-#: templates/single-project/bugs.php:65 templates/single-project/tasks.php:94
+#: templates/single-project/bugs.php:71 templates/single-project/tasks.php:100
 msgid "User"
 msgstr ""
 
-#: templates/single-project/details.php:57
+#: templates/single-project/details.php:62
 msgid "Timeframe"
 msgstr ""
 
-#: templates/single-project/details.php:74
+#: templates/single-project/details.php:79
 msgid "complete"
 msgstr ""
 
-#: templates/single-project/details.php:98
+#: templates/single-project/details.php:103
 msgid "Members"
 msgstr ""
 
-#: templates/single-project/files.php:169
+#: templates/single-project/files.php:175
 msgid "Uploader"
 msgstr ""
 
-#: templates/single-project/milestones.php:24
-#: templates/single-project/tasks.php:97
+#: templates/single-project/milestones.php:30
+#: templates/single-project/tasks.php:103
 msgid "Starting after"
 msgstr ""
 
-#: templates/single-project/milestones.php:25
-#: templates/single-project/tasks.php:98
+#: templates/single-project/milestones.php:31
+#: templates/single-project/tasks.php:104
 msgid "Ending before"
 msgstr ""
 
-#: templates/single-project/milestones.php:27
+#: templates/single-project/milestones.php:33
 msgctxt "Task status"
 msgid "Open"
 msgstr ""
 
-#: templates/single-project/milestones.php:30
+#: templates/single-project/milestones.php:36
 msgid "invalid user"
 msgstr ""
 
@@ -2623,39 +2632,39 @@ msgstr ""
 msgid "Overview"
 msgstr ""
 
-#: templates/single-project/tasks.php:96
+#: templates/single-project/tasks.php:102
 msgid "invalid milestone"
 msgstr ""
 
-#: upstream.php:490
+#: upstream.php:488
 msgid "View Documentation"
 msgstr ""
 
-#: upstream.php:492
+#: upstream.php:490
 msgid "Docs"
 msgstr ""
 
-#: upstream.php:494
+#: upstream.php:492
 msgid "View Quick Start Guide"
 msgstr ""
 
-#: upstream.php:496
+#: upstream.php:494
 msgid "Quick Start Guide"
 msgstr ""
 
-#: upstream.php:520
+#: upstream.php:518
 msgid "Open Settings Page"
 msgstr ""
 
-#: upstream.php:521
+#: upstream.php:519
 msgid "Settings"
 msgstr ""
 
-#: upstream.php:563
+#: upstream.php:561
 msgid "Update notice:"
 msgstr ""
 
-#: upstream.php:570
+#: upstream.php:568
 #, php-format
 msgctxt "1st %s: plugin version, 2nd %s: capability name, 3rd: UpStream User role"
 msgid "Starting from <strong>%s</strong> <code>%s</code> capability was removed from <code>%s</code> users role."
