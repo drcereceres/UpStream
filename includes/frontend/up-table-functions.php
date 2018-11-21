@@ -966,10 +966,10 @@ function renderTableFilter($filterType, $columnName, $args = [], $renderFormGrou
         }
 
         $hasIcon = isset($args['icon']) && ! empty($args['icon']);
-        if ($hasIcon): ?>
+            if ($hasIcon): ?>
             <div class="input-group">
             <div class="input-group-addon">
-                <i class="fa fa-user"></i>
+                <i class="fa fa-filter"></i>
             </div>
         <?php endif; ?>
 
