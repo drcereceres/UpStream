@@ -362,10 +362,6 @@ td .btn {
     margin-top: 10px;
 }
 
-.o-data-table > thead > tr > th {
-    min-width: 110px;
-}
-
 .c-data-table .c-data-table__filters > .visible-xs > div {
     display: flex;
     flex-direction: row;
