@@ -553,18 +553,21 @@ function renderTableHeaderColumn($identifier, $data)
     <?php
 }
 
-function renderTableHeader($columns = [])
+
+function renderTableHeader($columns = [], $itemType)
 {
     ob_start(); ?>
     <thead>
-    <?php if ( ! empty($columns)): ?>
-        <tr scope="row">
-            <?php
-            foreach ($columns as $columnIdentifier => $column) {
-                echo renderTableHeaderColumn($columnIdentifier, $column);
-            } ?>
-        </tr>
-    <?php endif; ?>
+        <?php if ( ! empty($columns)): ?>
+            <tr scope="row">
+                <?php
+                foreach ($columns as $columnIdentifier => $column) {
+                    echo renderTableHeaderColumn($columnIdentifier, $column);
+                } ?>
+
+                <?php do_action('upstream_table_columns_header', ['type' => $itemType], $columns); ?>
+            </tr>
+        <?php endif; ?>
     </thead>
     <?php
     $html = ob_get_contents();
@@ -765,7 +768,7 @@ function renderTableColumnValue($columnName, $columnValue, $column, $row, $rowTy
     echo $html;
 }
 
-function renderTableBody($data, $visibleColumnsSchema, $hiddenColumnsSchema, $rowType, $projectId)
+function renderTableBody($data, $visibleColumnsSchema, $hiddenColumnsSchema, $rowType, $projectId, $tableSettings = [])
 {
     $visibleColumnsSchemaCount = count($visibleColumnsSchema);
     ob_start(); ?>
@@ -817,8 +820,12 @@ function renderTableBody($data, $visibleColumnsSchema, $hiddenColumnsSchema, $ro
 
                     <?php renderTableColumnValue($columnName, $columnValue, $column, $row, $rowType, $projectId); ?>
                 </td>
+
+
                 <?php $isFirst = false; ?>
             <?php endforeach; ?>
+
+            <?php do_action('upstream_table_columns_data', $tableSettings, $visibleColumnsSchema, $projectId); ?>
         </tr>
 
         <?php if ( ! empty($hiddenColumnsSchema)): ?>
@@ -904,8 +911,8 @@ function renderTable($tableAttrs = [], $columnsSchema = [], $data = [], $itemTyp
 
     $tableAttrs['class'] = implode(' ', $tableAttrs['class']); ?>
     <table <?php echo arrayToAttrs($tableAttrs); ?>>
-        <?php renderTableHeader($visibleColumnsSchema); ?>
-        <?php renderTableBody($data, $visibleColumnsSchema, $hiddenColumnsSchema, $itemType, $projectId); ?>
+        <?php renderTableHeader($visibleColumnsSchema, $itemType); ?>
+        <?php renderTableBody($data, $visibleColumnsSchema, $hiddenColumnsSchema, $itemType, $projectId, $tableAttrs); ?>
     </table>
     <?php
 }
