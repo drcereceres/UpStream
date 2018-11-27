@@ -155,6 +155,8 @@ while (have_posts()) : the_post(); ?>
                             <?php do_action('upstream_single_project_before_milestones'); ?>
 
                             <?php upstream_get_template_part('single-project/milestones.php'); ?>
+
+                            <?php do_action('upstream_single_project_after_milestones'); ?>
                         </div>
                         <?php endif;
                         break;
@@ -165,6 +167,8 @@ while (have_posts()) : the_post(); ?>
                             <?php do_action('upstream_single_project_before_tasks'); ?>
 
                             <?php upstream_get_template_part('single-project/tasks.php'); ?>
+
+                            <?php do_action('upstream_single_project_after_tasks'); ?>
                         </div>
                         <?php endif;
                         break;
@@ -175,6 +179,8 @@ while (have_posts()) : the_post(); ?>
                             <?php do_action('upstream_single_project_before_bugs'); ?>
 
                             <?php upstream_get_template_part('single-project/bugs.php'); ?>
+
+                            <?php do_action('upstream_single_project_after_bugs'); ?>
                         </div>
                         <?php endif;
                         break;
@@ -185,6 +191,8 @@ while (have_posts()) : the_post(); ?>
                             <?php do_action('upstream_single_project_before_files'); ?>
 
                             <?php upstream_get_template_part('single-project/files.php'); ?>
+
+                            <?php do_action('upstream_single_project_after_files'); ?>
                         </div>
                         <?php endif;
                         break;
@@ -195,6 +203,8 @@ while (have_posts()) : the_post(); ?>
                             <?php do_action('upstream_single_project_before_discussion'); ?>
 
                             <?php upstream_get_template_part('single-project/discussion.php'); ?>
+
+                            <?php do_action('upstream_single_project_after_discussion'); ?>
                         </div>
                         <?php endif;
                         break;
