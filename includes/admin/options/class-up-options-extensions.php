@@ -208,7 +208,7 @@ if ( ! class_exists('UpStream_Options_Extensions')) :
                     'slug'        => 'upstream-reports',
                     'title'       => __('Reports', 'upstream'),
                     'description' => __(
-                        'Allow users to see or print reports',
+                        'Allow users to see or print reports.',
                         'upstream'
                     ),
                     'icon_class'  => 'fa fa-file-text',
