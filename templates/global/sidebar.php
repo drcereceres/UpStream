@@ -171,6 +171,8 @@ if ($isSingle) {
                                 <?php do_action('upstream_sidebar_after_single_menu'); ?>
                             </ul>
                         </li>
+
+                        <?php do_action('upstream_sidebar_menu'); ?>
                     </ul>
                 </div>
             <?php endif; ?>
