@@ -553,21 +553,24 @@ function renderTableHeaderColumn($identifier, $data)
     <?php
 }
 
-
-function renderTableHeader($columns = [], $itemType)
+function renderTableHeader($columns = [], $itemType = null)
 {
+    if (is_null($itemType)) {
+        return;
+    }
+
     ob_start(); ?>
     <thead>
-        <?php if ( ! empty($columns)): ?>
-            <tr scope="row">
-                <?php
-                foreach ($columns as $columnIdentifier => $column) {
-                    echo renderTableHeaderColumn($columnIdentifier, $column);
-                } ?>
+    <?php if ( ! empty($columns)): ?>
+        <tr scope="row">
+            <?php
+            foreach ($columns as $columnIdentifier => $column) {
+                echo renderTableHeaderColumn($columnIdentifier, $column);
+            } ?>
 
-                <?php do_action('upstream_table_columns_header', ['type' => $itemType], $columns); ?>
-            </tr>
-        <?php endif; ?>
+            <?php do_action('upstream_table_columns_header', ['type' => $itemType], $columns); ?>
+        </tr>
+    <?php endif; ?>
     </thead>
     <?php
     $html = ob_get_contents();
@@ -912,7 +915,8 @@ function renderTable($tableAttrs = [], $columnsSchema = [], $data = [], $itemTyp
     $tableAttrs['class'] = implode(' ', $tableAttrs['class']); ?>
     <table <?php echo arrayToAttrs($tableAttrs); ?>>
         <?php renderTableHeader($visibleColumnsSchema, $itemType); ?>
-        <?php renderTableBody($data, $visibleColumnsSchema, $hiddenColumnsSchema, $itemType, $projectId, $tableAttrs); ?>
+        <?php renderTableBody($data, $visibleColumnsSchema, $hiddenColumnsSchema, $itemType, $projectId,
+            $tableAttrs); ?>
     </table>
     <?php
 }
@@ -966,7 +970,7 @@ function renderTableFilter($filterType, $columnName, $args = [], $renderFormGrou
         }
 
         $hasIcon = isset($args['icon']) && ! empty($args['icon']);
-            if ($hasIcon): ?>
+        if ($hasIcon): ?>
             <div class="input-group">
             <div class="input-group-addon">
                 <i class="fa fa-filter"></i>
