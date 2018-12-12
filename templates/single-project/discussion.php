@@ -20,6 +20,7 @@ if ( ! defined('ABSPATH')) {
         <div class="x_panel" data-section="discussion">
             <div class="x_title" id="discussion">
                 <h2>
+                    <i class="fa fa-bars sortable_handler"></i>
                     <i class="fa fa-comments"></i> <?php echo upstream_discussion_label(); ?>
                 </h2>
                 <ul class="nav navbar-right panel_toolbox">

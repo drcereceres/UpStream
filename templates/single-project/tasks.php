@@ -129,6 +129,7 @@ if ( ! upstream_are_tasks_disabled()
         <div class="x_panel" data-section="tasks">
             <div class="x_title">
                 <h2>
+                    <i class="fa fa-bars sortable_handler"></i>
                     <i class="fa fa-wrench"></i> <?php echo upstream_task_label_plural(); ?>
                 </h2>
                 <ul class="nav navbar-right panel_toolbox">

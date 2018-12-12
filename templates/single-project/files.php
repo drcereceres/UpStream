@@ -64,6 +64,7 @@ if ( ! upstream_are_files_disabled()
         <div class="x_panel" data-section="files">
             <div class="x_title">
                 <h2>
+                    <i class="fa fa-bars sortable_handler"></i>
                     <i class="fa fa-file"></i> <?php echo upstream_file_label_plural(); ?>
                 </h2>
                 <ul class="nav navbar-right panel_toolbox">

@@ -50,6 +50,7 @@ if ( ! upstream_are_milestones_disabled()
         <div class="x_panel" data-section="milestones">
             <div class="x_title">
                 <h2>
+                    <i class="fa fa-bars sortable_handler"></i>
                     <i class="fa fa-flag"></i> <?php echo upstream_milestone_label_plural(); ?>
                 </h2>
                 <ul class="nav navbar-right panel_toolbox">

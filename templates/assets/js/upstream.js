@@ -230,8 +230,8 @@ jQuery(document).ready(function ($) {
 
     $('#project-dashboard.sortable').sortable({
         placeholder: 'ui-state-highlight',
-        cancel: '.ui-state-disabled',
-        handle: '.x_title',
+        cancel: 'input,textarea,button,select,option,.ui-state-disabled,.navbar-right',
+        handle: '.x_title i.sortable_handler',
         update: function (event, ui) {
             var rows = $('#project-dashboard').sortable('toArray');
 

@@ -91,6 +91,7 @@ if ( ! upstream_are_bugs_disabled()
         <div class="x_panel" data-section="bugs">
             <div class="x_title">
                 <h2>
+                    <i class="fa fa-bars sortable_handler"></i>
                     <i class="fa fa-bug"></i> <?php echo upstream_bug_label_plural(); ?>
                 </h2>
                 <ul class="nav navbar-right panel_toolbox">
