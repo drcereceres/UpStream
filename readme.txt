@@ -142,15 +142,33 @@ If you were having date issues within Projects, please clear your cache and re-s
 The format is based on [Keep a Changelog](http://keepachangelog.com)
 and this project adheres to [Semantic Versioning](http://semver.org).
 
-= [1.22.3] - 2018-11-08 =
+= [1.23.0] - 2018-12-12 =
 
-* Added additional information to the debug page: PHP version, OS, WordPress version and list of plugins and their activation status;
 * Added a new button to the maintenance section to refresh the count of tasks and list of members in all projects;
+* Added additional information to the debug page: PHP version, OS, WordPress version and list of plugins and their activation status;
+* Added new action to the front-end sidebar menu: upstream_sidebar_menu;
+* Added new actions after project's panels: upstream_single_project_after_milestones, upstream_single_project_after_tasks, upstream_single_project_after_bugs, upstream_single_project_after_files, upstream_single_project_after_discussion;
+* Added persistence state for collapsable box in the project's front-end;
+* Added sortable behavior for the project's panels in the front-end;
+* Added tag IDs to the menu items in the front-end: nav-projects, nav-milestones, etc;
+* Deprecated action "upstream:frontend.project.renderAfterDetails". Use the new action "upstream_single_project_sections";
+* Fixed code style on PHP files;
+* Fixed columns of data coming from custom fields in the front-end;
 * Fixed date localization in UpStream, using the date_i18n function;
-* Fixed the counter of open tasks on milestones;
-* Fixed the write method in the UpStream_Debug class adding a conditional to do nothing if debug is disabled;
+* Fixed duplicated message for "not found" items in the front-end table when filtering data;
+* Fixed icons for filters for custom fields;
+* Fixed JS error regarding undefined "ajaxurl" variable;
 * Fixed sorting projects by status in the front-end;
+* Fixed the counter of open tasks on milestones;
+* Fixed the HTML header we print in the front-end;
+* Fixed the persistence of sorted columns in front-end tables;
+* Fixed the persistence of sorted columns in front-end tables;
+* Fixed the way we load the plugin's text domain;
+* Fixed the write method in the UpStream_Debug class adding a conditional to do nothing if debug is disabled;
+* Optimized the methods to get project's comments;
+* Removed minimum width for the columns in the project list to fit columns from custom fields;
 * Updated file references in the POT file, and added terms for date translation in the front-end;
+
 
 = [1.22.2] - 2018-10-24 =
 
