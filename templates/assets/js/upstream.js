@@ -211,7 +211,7 @@ jQuery(document).ready(function ($) {
 
         // Store the current slider state.
         $.ajax({
-            url: ajaxurl,
+            url: upstream.ajaxurl,
             type: 'post',
             data: {
                 action: 'upstream_collapse_update',
@@ -237,7 +237,7 @@ jQuery(document).ready(function ($) {
 
             // Store the current panel order
             $.ajax({
-                url: ajaxurl,
+                url: upstream.ajaxurl,
                 type: 'post',
                 data: {
                     action: 'upstream_panel_order_update',
@@ -492,7 +492,7 @@ jQuery(document).ready(function ($) {
 
             // Store the current ordering data to persist after page load.
             $.ajax({
-                url: ajaxurl,
+                url: upstream.ajaxurl,
                 type: 'post',
                 data: {
                     action: 'upstream_ordering_update',
