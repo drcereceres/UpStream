@@ -50,7 +50,7 @@ if ($isSingle) {
                             <?php echo esc_html($i18n['LB_PROJECTS']); ?>
                         </a>
                         <ul class="nav child_menu">
-                            <li>
+                            <li id="nav-projects">
                                 <a href="<?php echo esc_attr($projectsListUrl); ?>">
                                     <i class="fa fa-columns"></i> <?php printf(__('All %s', 'upstream'),
                                         $i18n['LB_PROJECTS']); ?>
@@ -78,7 +78,7 @@ if ($isSingle) {
                                 <?php do_action('upstream_sidebar_before_single_menu'); ?>
 
                                 <?php if ( ! $areMilestonesDisabledForThisProject && ! $areMilestonesDisabledAtAll): ?>
-                                    <li>
+                                    <li id="nav-milestones">
                                         <a href="#milestones">
                                             <i class="fa fa-flag"></i> <?php echo upstream_milestone_label_plural(); ?>
                                             <?php
@@ -102,7 +102,7 @@ if ($isSingle) {
                                 <?php endif; ?>
 
                                 <?php if ( ! $areTasksDisabledForThisProject && ! $areTasksDisabledAtAll): ?>
-                                    <li>
+                                    <li id="nav-tasks">
                                         <a href="#tasks">
                                             <i class="fa fa-wrench"></i> <?php echo $i18n['LB_TASKS']; ?>
                                             <?php
@@ -127,7 +127,7 @@ if ($isSingle) {
                                 <?php endif; ?>
 
                                 <?php if ( ! $areBugsDisabledAtAll && ! $areBugsDisabledForThisProject): ?>
-                                    <li>
+                                    <li id="nav-bugs">
                                         <a href="#bugs">
                                             <i class="fa fa-bug"></i> <?php echo $i18n['LB_BUGS']; ?>
                                             <?php
@@ -152,7 +152,7 @@ if ($isSingle) {
                                 <?php endif; ?>
 
                                 <?php if ( ! $areFilesDisabledForThisProject && ! upstream_disable_files()): ?>
-                                    <li>
+                                    <li id="nav-files">
                                         <a href="#files">
                                             <i class="fa fa-file"></i> <?php echo upstream_file_label_plural(); ?>
                                         </a>
@@ -160,7 +160,7 @@ if ($isSingle) {
                                 <?php endif; ?>
 
                                 <?php if ( ! $areCommentsDisabled): ?>
-                                    <li>
+                                    <li id="nav-discussion">
                                         <a href="#discussion">
                                             <i class="fa fa-comments"></i>
                                             <?php echo upstream_discussion_label(); ?>
@@ -171,6 +171,8 @@ if ($isSingle) {
                                 <?php do_action('upstream_sidebar_after_single_menu'); ?>
                             </ul>
                         </li>
+
+                        <?php do_action('upstream_sidebar_menu'); ?>
                     </ul>
                 </div>
             <?php endif; ?>

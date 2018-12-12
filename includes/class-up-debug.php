@@ -31,6 +31,10 @@ class UpStream_Debug
      */
     public static function write($message, $id = null)
     {
+        if ( ! static::is_enabled()) {
+            return;
+        }
+
         if ( ! static::$initialized) {
             static::init();
         }
@@ -117,20 +121,32 @@ class UpStream_Debug
     {
         static::handle_actions();
 
+        global $wp_version;
+
         $is_log_found = file_exists(static::$path);
-        $content      = '';
+
+        // Get all the plugins and versions
+        $plugins     = get_plugins();
+        $pluginsData = [];
+        foreach ($plugins as $plugin => $data) {
+            $pluginsData[$plugin] = (is_plugin_active($plugin) ? 'ACTIVATED' : 'deactivated') . ' [' . $data['Version'] . ']';
+        }
 
         $debug_data = [
             'php'       => [
+                'version'                   => PHP_VERSION,
+                'os'                        => PHP_OS,
                 'date_default_timezone_get' => date_default_timezone_get(),
                 'date(e)'                   => date('e'),
                 'date(T)'                   => date('T'),
             ],
             'wordpress' => [
+                'version'         => $wp_version,
                 'date_format'     => get_option('date_format'),
                 'time_format'     => get_option('time_format'),
                 'timezone_string' => get_option('timezone_string'),
                 'gmt_offset'      => get_option('gmt_offset'),
+                'plugins'         => $pluginsData,
             ],
         ];
 

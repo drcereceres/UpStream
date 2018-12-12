@@ -553,8 +553,12 @@ function renderTableHeaderColumn($identifier, $data)
     <?php
 }
 
-function renderTableHeader($columns = [])
+function renderTableHeader($columns = [], $itemType = null)
 {
+    if (is_null($itemType)) {
+        return;
+    }
+
     ob_start(); ?>
     <thead>
     <?php if ( ! empty($columns)): ?>
@@ -563,6 +567,8 @@ function renderTableHeader($columns = [])
             foreach ($columns as $columnIdentifier => $column) {
                 echo renderTableHeaderColumn($columnIdentifier, $column);
             } ?>
+
+            <?php do_action('upstream_table_columns_header', ['type' => $itemType], $columns); ?>
         </tr>
     <?php endif; ?>
     </thead>
@@ -765,7 +771,7 @@ function renderTableColumnValue($columnName, $columnValue, $column, $row, $rowTy
     echo $html;
 }
 
-function renderTableBody($data, $visibleColumnsSchema, $hiddenColumnsSchema, $rowType, $projectId)
+function renderTableBody($data, $visibleColumnsSchema, $hiddenColumnsSchema, $rowType, $projectId, $tableSettings = [])
 {
     $visibleColumnsSchemaCount = count($visibleColumnsSchema);
     ob_start(); ?>
@@ -817,8 +823,12 @@ function renderTableBody($data, $visibleColumnsSchema, $hiddenColumnsSchema, $ro
 
                     <?php renderTableColumnValue($columnName, $columnValue, $column, $row, $rowType, $projectId); ?>
                 </td>
+
+
                 <?php $isFirst = false; ?>
             <?php endforeach; ?>
+
+            <?php do_action('upstream_table_columns_data', $tableSettings, $visibleColumnsSchema, $projectId); ?>
         </tr>
 
         <?php if ( ! empty($hiddenColumnsSchema)): ?>
@@ -878,6 +888,7 @@ function renderTable($tableAttrs = [], $columnsSchema = [], $data = [], $itemTyp
     $tableAttrs['cellspacing'] = 0;
     $tableAttrs['width']       = '100%';
 
+
     $visibleColumnsSchema = [];
     $hiddenColumnsSchema  = [];
 
@@ -889,10 +900,23 @@ function renderTable($tableAttrs = [], $columnsSchema = [], $data = [], $itemTyp
         }
     }
 
+    // Get the table ordering, if set.
+    $tableId = array_key_exists('id', $tableAttrs) ? $tableAttrs['id'] : '';
+
+    if ( ! empty($tableId)) {
+        $ordering = getTableOrder($tableId);
+
+        if ( ! empty($ordering)) {
+            $tableAttrs['data-ordered-by'] = $ordering['column'];
+            $tableAttrs['data-order-dir']  = $ordering['orderDir'];
+        }
+    }
+
     $tableAttrs['class'] = implode(' ', $tableAttrs['class']); ?>
     <table <?php echo arrayToAttrs($tableAttrs); ?>>
-        <?php renderTableHeader($visibleColumnsSchema); ?>
-        <?php renderTableBody($data, $visibleColumnsSchema, $hiddenColumnsSchema, $itemType, $projectId); ?>
+        <?php renderTableHeader($visibleColumnsSchema, $itemType); ?>
+        <?php renderTableBody($data, $visibleColumnsSchema, $hiddenColumnsSchema, $itemType, $projectId,
+            $tableAttrs); ?>
     </table>
     <?php
 }
@@ -949,7 +973,7 @@ function renderTableFilter($filterType, $columnName, $args = [], $renderFormGrou
         if ($hasIcon): ?>
             <div class="input-group">
             <div class="input-group-addon">
-                <i class="fa fa-user"></i>
+                <i class="fa fa-filter"></i>
             </div>
         <?php endif; ?>
 
@@ -977,4 +1001,124 @@ function renderTableFilter($filterType, $columnName, $args = [], $renderFormGrou
     ob_end_clean();
 
     echo $filterHtml;
+}
+
+/**
+ * @param $tableId
+ *
+ * @return string
+ */
+function getTableOrderOption($tableId)
+{
+    $userId = get_current_user_id();
+
+    return 'upstream_ordering_' . $userId . '_' . $tableId;
+}
+
+/**
+ * @param $tableId
+ * @param $column
+ * @param $dir
+ */
+function updateTableOrder($tableId, $column, $dir)
+{
+    // Update the ordering data for the table.
+    $data = maybe_serialize([
+        'column'   => $column,
+        'orderDir' => $dir,
+    ]);
+
+    $option = getTableOrderOption($tableId);
+
+    update_option($option, $data);
+}
+
+/**
+ * @param $tableId
+ *
+ * @return array
+ */
+function getTableOrder($tableId)
+{
+    $option = getTableOrderOption($tableId);
+
+    $value = maybe_unserialize(get_option($option));
+
+    if ( ! is_array($value) || ! array_key_exists('column', $value) || ! array_key_exists('orderDir', $value)) {
+        $value = false;
+    }
+
+    return $value;
+}
+
+/**
+ * @param $section
+ *
+ * @return string
+ */
+function getSectionCollapseStateOption($section)
+{
+    $userId = get_current_user_id();
+
+    return 'upstream_collapse_state_' . $userId . '_' . $section;
+}
+
+/**
+ * @param $section
+ * @param $state
+ */
+function updateSectionCollapseState($section, $state)
+{
+    $option = getSectionCollapseStateOption($section);
+
+    $state = sanitize_text_field($state);
+
+    update_option($option, $state);
+}
+
+/**
+ * @param $section
+ *
+ * @return array
+ */
+function getSectionCollapseState($section)
+{
+    $option = getSectionCollapseStateOption($section);
+
+    $value = get_option($option);
+
+    if (empty($value)) {
+        $value = false;
+    }
+
+    return $value;
+}
+
+/**
+ * @param $rows
+ */
+function updatePanelOrder($rows)
+{
+    $option = 'upstream_panel_order';
+
+    $value = [];
+
+    foreach ($rows as $row) {
+        $row = sanitize_text_field($row);
+        $row = str_replace('project-section-', '', $row);
+
+        if ( ! empty($row)) {
+            $value[] = $row;
+        }
+    }
+
+    update_option($option, $value);
+}
+
+/**
+ * @return array
+ */
+function getPanelOrder()
+{
+    return get_option('upstream_panel_order');
 }

@@ -37,6 +37,69 @@
 
 // Sidebar
 jQuery(document).ready(function ($) {
+    $.fn.datepicker.dates['en'] = {
+        days: [
+            upstream.langs.LB_SUNDAY,
+            upstream.langs.LB_MONDAY,
+            upstream.langs.LB_TUESDAY,
+            upstream.langs.LB_WEDNESDAY,
+            upstream.langs.LB_THURSDAY,
+            upstream.langs.LB_FRIDAY,
+            upstream.langs.LB_SATURDAY
+        ],
+        daysShort: [
+            upstream.langs.LB_SUN,
+            upstream.langs.LB_MON,
+            upstream.langs.LB_TUE,
+            upstream.langs.LB_WED,
+            upstream.langs.LB_THU,
+            upstream.langs.LB_FRI,
+            upstream.langs.LB_SAT
+        ],
+        daysMin: [
+            upstream.langs.LB_SU,
+            upstream.langs.LB_MO,
+            upstream.langs.LB_TU,
+            upstream.langs.LB_WE,
+            upstream.langs.LB_TH,
+            upstream.langs.LB_FR,
+            upstream.langs.LB_SA
+        ],
+        months: [
+            upstream.langs.LB_JANUARY,
+            upstream.langs.LB_FEBRUARY,
+            upstream.langs.LB_MARCH,
+            upstream.langs.LB_APRIL,
+            upstream.langs.LB_MAY,
+            upstream.langs.LB_JUNE,
+            upstream.langs.LB_JULY,
+            upstream.langs.LB_AUGUST,
+            upstream.langs.LB_SEPTEMBER,
+            upstream.langs.LB_OCTOBER,
+            upstream.langs.LB_NOVEMBER,
+            upstream.langs.LB_DECEMBER
+        ],
+        monthsShort: [
+            upstream.langs.LB_JAN,
+            upstream.langs.LB_FEB,
+            upstream.langs.LB_MAR,
+            upstream.langs.LB_APR,
+            upstream.langs.LB_MAY,
+            upstream.langs.LB_JUN,
+            upstream.langs.LB_JUL,
+            upstream.langs.LB_AUG,
+            upstream.langs.LB_SEP,
+            upstream.langs.LB_OCT,
+            upstream.langs.LB_NOV,
+            upstream.langs.LB_DEC
+        ],
+        today: upstream.langs.LB_TODAY,
+        clear: upstream.langs.LB_CLEAR,
+        format: 'mm/dd/yyyy',
+        titleFormat: 'MM yyyy', /* Leverages same syntax as 'format' */
+        weekStart: 0
+    };
+
     $('[data-toggle="tooltip"]').tooltip();
 
     // TODO: This is some kind of easy fix, maybe we can improve this
@@ -127,28 +190,64 @@ jQuery(document).ready(function ($) {
 // Panel toolbox
 jQuery(document).ready(function ($) {
     $('.collapse-link').on('click', function () {
-        var $BOX_PANEL = $(this).closest('.x_panel'),
-            $ICON = $(this).find('i'),
-            $BOX_CONTENT = $BOX_PANEL.find('.x_content');
+        var $boxPanel = $(this).closest('.x_panel'),
+            $icon = $(this).find('i'),
+            $boxContent = $boxPanel.find('.x_content');
 
         // fix for some div with hardcoded fix class
-        if ($BOX_PANEL.attr('style')) {
-            $BOX_CONTENT.slideToggle(200, function () {
-                $BOX_PANEL.removeAttr('style');
+        if ($boxPanel.attr('style')) {
+            $boxContent.slideToggle(200, function () {
+                $boxPanel.removeAttr('style');
             });
         } else {
-            $BOX_CONTENT.slideToggle(200);
-            $BOX_PANEL.css('height', 'auto');
+            $boxContent.slideToggle(200);
+            $boxPanel.css('height', 'auto');
         }
 
-        $ICON.toggleClass('fa-chevron-up fa-chevron-down');
+        $icon.toggleClass('fa-chevron-up fa-chevron-down');
+
+        var state = $icon.hasClass('fa-chevron-up') ? 'opened' : 'closed',
+            section = $boxPanel.data('section');
+
+        // Store the current slider state.
+        $.ajax({
+            url: upstream.ajaxurl,
+            type: 'post',
+            data: {
+                action: 'upstream_collapse_update',
+                nonce: upstream.security,
+                section: section,
+                state: state
+            }
+        });
     });
 
     $('.close-link').click(function () {
-        var $BOX_PANEL = $(this).closest('.x_panel');
+        var $boxPanel = $(this).closest('.x_panel');
 
-        $BOX_PANEL.remove();
+        $boxPanel.remove();
     });
+
+    $('#project-dashboard.sortable').sortable({
+        placeholder: 'ui-state-highlight',
+        cancel: 'input,textarea,button,select,option,.ui-state-disabled,.navbar-right',
+        handle: '.x_title i.sortable_handler',
+        update: function (event, ui) {
+            var rows = $('#project-dashboard').sortable('toArray');
+
+            // Store the current panel order
+            $.ajax({
+                url: upstream.ajaxurl,
+                type: 'post',
+                data: {
+                    action: 'upstream_panel_order_update',
+                    nonce: upstream.security,
+                    rows: rows
+                }
+            });
+        }
+    });
+    $('#project-dashboard.sortable .x_title').disableSelection();
 });
 
 // Instantiate NProgress lib.
@@ -368,6 +467,8 @@ jQuery(document).ready(function ($) {
 
             var self = $(this);
             var wrapper = $(self.parent());
+            var table = wrapper.parents('table');
+            var column = self.attr('data-column');
 
             $('.o-order-direction', wrapper).remove();
             $('th.is-orderable[role="button"]', wrapper).append(createOrderDirectionEl(null));
@@ -387,7 +488,20 @@ jQuery(document).ready(function ($) {
             self.append(createOrderDirectionEl(newOrderDir));
             self.addClass('is-ordered');
 
-            orderTable(self.attr('data-column'), newOrderDir, $(self.parents('table.o-data-table')));
+            orderTable(column, newOrderDir, $(self.parents('table.o-data-table')));
+
+            // Store the current ordering data to persist after page load.
+            $.ajax({
+                url: upstream.ajaxurl,
+                type: 'post',
+                data: {
+                    action: 'upstream_ordering_update',
+                    nonce: upstream.security,
+                    column: column,
+                    orderDir: newOrderDir,
+                    tableId: table.attr('id')
+                }
+            });
         });
 
         function sortTable (columnName, columnValue, filtersWrapper) {
@@ -527,9 +641,7 @@ jQuery(document).ready(function ($) {
                 var tBody = $('tbody', table);
 
                 if (tBody.children('[data-empty-row]').length === 0) {
-                    setTimeout(function () {
-                        tBody.append(tr);
-                    }, 300);
+                    tBody.append(tr);
                 }
             } else {
                 $('tbody tr[data-id]:visible', table).addClass('is-filtered');
@@ -761,8 +873,8 @@ jQuery(document).ready(function ($) {
             var self = $(this);
 
             var table = $('.o-data-table', self);
-            var order_dir = table.attr('data-order-dir') || 'DESC';
             var order_by = table.attr('data-ordered-by') || '';
+            var order_dir = table.attr('data-order-dir') || 'DESC';
 
             if (order_by.length > 0) {
                 orderTable(order_by, order_dir, table);

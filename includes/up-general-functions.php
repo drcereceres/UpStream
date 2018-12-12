@@ -527,10 +527,7 @@ function upstream_format_date($timestamp, $dateFormat = null)
     if ( ! $timestamp) {
         $date = null;
     } else {
-        $datetime = new \DateTime();
-        $datetime->setTimestamp($timestamp);
-
-        $date = $datetime->format($dateFormat);
+        $date = date_i18n($dateFormat, $timestamp);
     }
 
     return apply_filters('upstream_format_date', $date, $timestamp);
@@ -864,6 +861,10 @@ function upstream_tinymce_quicktags_settings($tinyMCE)
 
 function upstream_tinymce_before_init_setup_toolbar($tinyMCE)
 {
+    if ( ! isset($tinyMCE['selector'])) {
+        return $tinyMCE;
+    }
+
     if (preg_match('/_upstream_project_|#description|#notes|#new_message|#upstream/i', $tinyMCE['selector'])) {
         $tinyMCE['toolbar1'] = 'bold,italic,underline,strikethrough,bullist,numlist,link';
         $tinyMCE['toolbar2'] = '';
@@ -876,6 +877,10 @@ function upstream_tinymce_before_init_setup_toolbar($tinyMCE)
 
 function upstream_tinymce_before_init($tinyMCE)
 {
+    if ( ! isset($tinyMCE['selector'])) {
+        return $tinyMCE;
+    }
+
     if (preg_match('/_upstream_project_|#description|#notes|#new_message|#upstream/i', $tinyMCE['selector'])) {
         if (isset($tinyMCE['plugins'])) {
             $pluginsToBeAdded = [

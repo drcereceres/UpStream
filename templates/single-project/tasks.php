@@ -10,6 +10,12 @@ if ( ! upstream_are_tasks_disabled()
     $collapseBox = isset($pluginOptions['collapse_project_tasks'])
                    && (bool)$pluginOptions['collapse_project_tasks'] === true;
 
+    $collapseBoxState = \UpStream\Frontend\getSectionCollapseState('tasks');
+
+    if ( ! is_null($collapseBoxState)) {
+        $collapseBox = $collapseBoxState === 'closed';
+    }
+
     $archiveClosedItems = upstream_archive_closed_items();
 
     $tasksStatuses = get_option('upstream_tasks');
@@ -120,9 +126,10 @@ if ( ! upstream_are_tasks_disabled()
     $filter_closed_items = upstream_filter_closed_items();
     ?>
     <div class="col-md-12 col-sm-12 col-xs-12">
-        <div class="x_panel">
+        <div class="x_panel" data-section="tasks">
             <div class="x_title">
                 <h2>
+                    <i class="fa fa-bars sortable_handler"></i>
                     <i class="fa fa-wrench"></i> <?php echo upstream_task_label_plural(); ?>
                 </h2>
                 <ul class="nav navbar-right panel_toolbox">

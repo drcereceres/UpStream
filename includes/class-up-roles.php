@@ -34,61 +34,51 @@ class UpStream_Roles
      */
     public function add_roles()
     {
-        add_role('upstream_manager', __('UpStream Manager', 'upstream'), [
-            'read'                   => true,
-            'edit_posts'             => true,
-            'delete_posts'           => true,
-            'unfiltered_html'        => true,
-            'upload_files'           => true,
-            'export'                 => true,
-            'import'                 => true,
-            'delete_others_pages'    => true,
-            'delete_others_posts'    => true,
-            'delete_pages'           => true,
-            'delete_private_pages'   => true,
-            'delete_private_posts'   => true,
-            'delete_published_pages' => true,
-            'delete_published_posts' => true,
-            'edit_others_pages'      => true,
-            'edit_others_posts'      => true,
-            'edit_pages'             => true,
-            'edit_private_pages'     => true,
-            'edit_private_posts'     => true,
-            'edit_published_pages'   => true,
-            'edit_published_posts'   => true,
-            'manage_categories'      => true,
-            'manage_links'           => true,
-            'moderate_comments'      => true,
-            'publish_pages'          => true,
-            'publish_posts'          => true,
-            'read_private_pages'     => true,
-            'read_private_posts'     => true,
-        ]);
-        add_role('upstream_user', __('UpStream User', 'upstream'), [
-            'read'         => true,
-            'edit_posts'   => true,
-            'upload_files' => true,
-        ]);
-
-        self::addClientUsersRole();
-    }
-
-    /**
-     * Method responsible for creating the 'upstream_client_user' role if it doesn't exist yet.
-     *
-     * @since   1.11.0
-     * @static
-     *
-     * @global  $wp_roles
-     */
-    public static function addClientUsersRole()
-    {
         global $wp_roles;
 
-        $theRoleIndetifier = 'upstream_client_user';
+        if ( ! $wp_roles->is_role('upstream_manager')) {
+            add_role('upstream_manager', __('UpStream Manager', 'upstream'), [
+                'read'                   => true,
+                'edit_posts'             => true,
+                'delete_posts'           => true,
+                'unfiltered_html'        => true,
+                'upload_files'           => true,
+                'export'                 => true,
+                'import'                 => true,
+                'delete_others_pages'    => true,
+                'delete_others_posts'    => true,
+                'delete_pages'           => true,
+                'delete_private_pages'   => true,
+                'delete_private_posts'   => true,
+                'delete_published_pages' => true,
+                'delete_published_posts' => true,
+                'edit_others_pages'      => true,
+                'edit_others_posts'      => true,
+                'edit_pages'             => true,
+                'edit_private_pages'     => true,
+                'edit_private_posts'     => true,
+                'edit_published_pages'   => true,
+                'edit_published_posts'   => true,
+                'manage_categories'      => true,
+                'manage_links'           => true,
+                'moderate_comments'      => true,
+                'publish_pages'          => true,
+                'publish_posts'          => true,
+                'read_private_pages'     => true,
+                'read_private_posts'     => true,
+            ]);
+        }
 
-        if ( ! $wp_roles->is_role($theRoleIndetifier)) {
-            add_role($theRoleIndetifier, __('UpStream Client User', 'upstream'), [
+        if ( ! $wp_roles->is_role('upstream_user')) {
+            add_role('upstream_user', __('UpStream User', 'upstream'), [
+                'read'         => true,
+                'edit_posts'   => true,
+                'upload_files' => true,
+            ]);
+        }
+
+        if ( ! $wp_roles->is_role('upstream_client_user')) {
+            add_role('upstream_client_user', __('UpStream Client User', 'upstream'), [
                 'read'         => true,
                 'upload_files' => true,
             ]);
@@ -96,15 +86,16 @@ class UpStream_Roles
     }
 
     /**
-     * Add new UpStream specific capabilities
-     * Called during installation
+     * Add default UpStream capabilities
+     *
+     * @param string    $role
      *
      * @access public
      * @since  1.0.0
      * @global WP_Roles $wp_roles
      * @return void
      */
-    public function add_caps()
+    public function add_default_caps($role = null)
     {
         global $wp_roles;
 
@@ -116,20 +107,62 @@ class UpStream_Roles
 
         if (is_object($wp_roles)) {
 
-            // Add the main post type capabilities
-            $capabilities = $this->get_upstream_manager_caps();
-            foreach ($capabilities as $cap_group) {
-                foreach ($cap_group as $cap) {
-                    $wp_roles->add_cap('upstream_manager', $cap);
-                    $wp_roles->add_cap('administrator', $cap);
-                }
+            if (is_null($role)) {
+                $rolesName = [
+                    'administrator',
+                    'upstream_manager',
+                    'upstream_user',
+                    'upstream_client_user',
+                ];
+            } else {
+                $rolesName = [$role];
             }
 
-            // Add the main post type capabilities
-            $capabilities = $this->get_upstream_user_caps();
-            foreach ($capabilities as $cap_group) {
-                foreach ($cap_group as $cap) {
-                    $wp_roles->add_cap('upstream_user', $cap);
+            foreach ($rolesName as $roleName) {
+                switch ($roleName) {
+                    case 'administrator':
+                        // Add the main post type capabilities
+                        $capabilities = $this->get_upstream_manager_caps();
+                        foreach ($capabilities as $cap_group) {
+                            foreach ($cap_group as $cap) {
+                                $wp_roles->add_cap($roleName, $cap);
+                            }
+                        }
+
+                        break;
+
+                    case 'upstream_manager':
+                        // Add the main post type capabilities
+                        $capabilities = $this->get_upstream_manager_caps();
+                        foreach ($capabilities as $cap_group) {
+                            foreach ($cap_group as $cap) {
+                                $wp_roles->add_cap($roleName, $cap);
+                            }
+                        }
+
+                        break;
+
+                    case 'upstream_user':
+                        // Add the main post type capabilities
+                        $capabilities = $this->get_upstream_user_caps();
+                        foreach ($capabilities as $cap_group) {
+                            foreach ($cap_group as $cap) {
+                                $wp_roles->add_cap($roleName, $cap);
+                            }
+                        }
+
+                        break;
+
+                    case 'upstream_client_user':
+                        // Add the main post type capabilities
+                        $capabilities = $this->get_upstream_user_caps();
+                        foreach ($capabilities as $cap_group) {
+                            foreach ($cap_group as $cap) {
+                                $wp_roles->add_cap($roleName, $cap);
+                            }
+                        }
+
+                        break;
                 }
             }
 
@@ -193,7 +226,7 @@ class UpStream_Roles
                 "project_users_field",
                 "project_start_date_field",
                 "project_end_date_field",
-//                "project_description_field",
+                //                "project_description_field",
                 "publish_project_milestones",
                 "publish_project_bugs",
                 "publish_project_discussion",
@@ -216,7 +249,7 @@ class UpStream_Roles
                 "bug_status_field",
                 "bug_due_date_field",
                 "bug_description_field",
-                "bug_file_field",
+                "bug_files_field",
 
                 "milestone_milestone_field",
                 "milestone_assigned_to_field",
@@ -260,41 +293,42 @@ class UpStream_Roles
              * but only the fields added to their capabilities.
              * And this will only work in the WP admin.
              */
-            //'project_title_field',
-            //'project_status_field',
-            //'project_owner_field',
-            //'project_client_field',
-            //'project_users_field',
-            //'project_start_date_field',
-            //'project_end_date_field',
-            //"project_description_field",
+            'project_title_field',
+            'project_status_field',
+            'project_owner_field',
+            'project_client_field',
+            'project_users_field',
+            'project_start_date_field',
+            'project_end_date_field',
+            // "project_description_field",
 
             // individual milestone fields
-            //'milestone_milestone_field',
-            //'milestone_assigned_to_field',
-            //'milestone_start_date_field',
-            //'milestone_end_date_field',
-            //'milestone_notes_field',
+            'milestone_milestone_field',
+            'milestone_assigned_to_field',
+            'milestone_start_date_field',
+            'milestone_end_date_field',
+            'milestone_notes_field',
 
             // individual task fields
-            //'task_title_field',
-            //'task_assigned_to_field',
-            //'task_status_field',
-            //'task_progress_field',
-            //'task_start_date_field',
-            //'task_end_date_field',
-            //'task_notes_field',
-            //'task_milestone_field',
+            'task_title_field',
+            'task_assigned_to_field',
+            'task_status_field',
+            'task_progress_field',
+            'task_start_date_field',
+            'task_end_date_field',
+            'task_notes_field',
+            'task_milestone_field',
 
             // individual bug fields
-            // 'bug_title_field',
-            // 'bug_assigned_to_field',
-            // 'bug_description_field',
-            // 'bug_status_field',
-            // 'bug_severity_field',
-            // 'bug_files_field',
-            // 'bug_due_date_field',
+            'bug_title_field',
+            'bug_assigned_to_field',
+            'bug_description_field',
+            'bug_status_field',
+            'bug_severity_field',
+            'bug_files_field',
+            'bug_due_date_field',
 
+            // Publish project items
             'publish_project_milestones', // enables the 'Add Milestone' button within project
             'publish_project_tasks', // enables the 'Add Task' button within project
             'publish_project_bugs', // enables the 'Add Bug' button within project

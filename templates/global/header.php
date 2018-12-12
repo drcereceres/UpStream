@@ -2,24 +2,24 @@
 if ( ! defined('ABSPATH')) {
     exit;
 }
-
-global $doctype;
 ?>
 
 <!DOCTYPE html>
-<html <?php language_attributes($doctype); ?>>
+<html <?php language_attributes(); ?>>
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <meta charset="utf-8">
+    <meta charset="<?php bloginfo('charset'); ?>">
+    <meta http-equiv="Content-Type" content="text/html; charset=<?php bloginfo('charset'); ?>">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="robots" content="noindex, nofollow">
 
     <title><?php wp_title('|', true, 'right') . bloginfo('name'); ?></title>
 
+    <link rel="profile" href="http://gmpg.org/xfn/11">
+
     <?php wp_head(); ?>
     <?php do_action('upstream_head'); ?>
 </head>
-<body class="nav-md upstream-front-end <?php echo join( ' ', get_body_class() ); ?>">
+<body <?php body_class(['nav-md', 'upstream-front-end']); ?>">
 <div class="container body">
     <div class="main_container">

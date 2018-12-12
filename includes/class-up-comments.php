@@ -744,6 +744,7 @@ class Comments
 
             // Prepare data to verify nonce.
             $commentTargetItemType = strtolower($_GET['item_type']);
+            $item_id               = nulll;
             if ($commentTargetItemType !== 'project') {
                 if (
                     ! isset($_GET['item_id'])
@@ -771,132 +772,19 @@ class Comments
 
             $useAdminLayout = ! isset($_GET['teeny']) ? true : (bool)$_GET['teeny'] === false;
 
-            $usersCache  = [];
-            $usersRowset = get_users([
-                'fields' => [
-                    'ID',
-                    'display_name',
-                ],
-            ]);
-            foreach ($usersRowset as $userRow) {
-                $userRow->ID *= 1;
+            $commentsCache = static::getComments($project_id, $commentTargetItemType, $item_id);
 
-                $usersCache[$userRow->ID] = (object)[
-                    'id'     => $userRow->ID,
-                    'name'   => $userRow->display_name,
-                    'avatar' => getUserAvatarURL($userRow->ID),
-                ];
-            }
-            unset($userRow, $usersRowset);
-
-            $dateFormat        = get_option('date_format');
-            $timeFormat        = get_option('time_format');
-            $theDateTimeFormat = $dateFormat . ' ' . $timeFormat;
-            $currentTimestamp  = time();
-
-            $user                     = wp_get_current_user();
-            $userHasAdminCapabilities = isUserEitherManagerOrAdmin($user);
-            $userCanReply             = ! $userHasAdminCapabilities ? user_can(
-                $user,
-                'publish_project_discussion'
-            ) : true;
-            $userCanModerate          = ! $userHasAdminCapabilities ? user_can($user, 'moderate_comments') : true;
-            $userCanDelete            = ! $userHasAdminCapabilities ? $userCanModerate || user_can(
-                    $user,
-                    'delete_project_discussion'
-                ) : true;
-
-            $commentsStatuses = ['approve'];
-            if ($userHasAdminCapabilities || $userCanModerate) {
-                $commentsStatuses[] = 'hold';
-            }
-
-            $itemsRowset = (array)get_post_meta(
-                $project_id,
-                '_upstream_project_' . $commentTargetItemType . 's',
-                true
-            );
-            if (count($itemsRowset) > 0) {
-                foreach ($itemsRowset as $row) {
-                    if (isset($item_id)) {
-                        if ($item_id != $row['id']) {
-                            continue;
-                        }
+            foreach ($commentsCache as $comment) {
+                if ($comment->parent_id === 0) {
+                    ob_start();
+                    if ($useAdminLayout) {
+                        upstream_admin_display_message_item($comment, []);
+                    } else {
+                        upstream_display_message_item($comment, []);
                     }
 
-                    $comments = (array)get_comments([
-                        'post_id'    => $project_id,
-                        'status'     => $commentsStatuses,
-                        'meta_query' => [
-                            'relation' => 'AND',
-                            [
-                                'key'   => 'type',
-                                'value' => $commentTargetItemType,
-                            ],
-                            [
-                                'key'   => 'id',
-                                'value' => $row['id'],
-                            ],
-                        ],
-                    ]);
-
-                    if (count($comments) > 0) {
-                        $commentsCache = [];
-                        foreach ($comments as $comment) {
-                            $author = $usersCache[(int)$comment->user_id];
-
-                            $date = \DateTime::createFromFormat('Y-m-d H:i:s', $comment->comment_date_gmt);
-
-                            $commentData = json_decode(json_encode([
-                                'id'             => (int)$comment->comment_ID,
-                                'parent_id'      => (int)$comment->comment_parent,
-                                'content'        => $comment->comment_content,
-                                'state'          => $comment->comment_approved,
-                                'created_by'     => $author,
-                                'created_at'     => [
-                                    'localized' => "",
-                                    'humanized' => sprintf(
-                                        _x('%s ago', '%s = human-readable time difference', 'upstream'),
-                                        human_time_diff($date->getTimestamp(), $currentTimestamp)
-                                    ),
-                                ],
-                                'currentUserCap' => [
-                                    'can_reply'    => $userCanReply,
-                                    'can_moderate' => $userCanModerate,
-                                    'can_delete'   => $userCanDelete || $author->id === $user->ID,
-                                ],
-                                'replies'        => [],
-                            ]));
-
-                            $commentData->created_at->localized = $date->format($theDateTimeFormat);
-
-                            $commentsCache[$commentData->id] = $commentData;
-                        }
-
-                        foreach ($commentsCache as $comment) {
-                            if ($comment->parent_id > 0) {
-                                if (isset($commentsCache[$comment->parent_id])) {
-                                    $commentsCache[$comment->parent_id]->replies[] = $comment;
-                                } else {
-                                    unset($commentsCache[$comment->id]);
-                                }
-                            }
-                        }
-
-                        foreach ($commentsCache as $comment) {
-                            if ($comment->parent_id === 0) {
-                                ob_start();
-                                if ($useAdminLayout) {
-                                    upstream_admin_display_message_item($comment, []);
-                                } else {
-                                    upstream_display_message_item($comment, []);
-                                }
-
-                                $response['data'][] = trim(ob_get_contents());
-                                ob_end_clean();
-                            }
-                        }
-                    }
+                    $response['data'][] = trim(ob_get_contents());
+                    ob_end_clean();
                 }
             }
 
@@ -906,6 +794,139 @@ class Comments
         }
 
         wp_send_json($response);
+    }
+
+    /**
+     * @param int    $projectId
+     * @param string $itemType
+     * @param int    $itemId
+     *
+     * @return array
+     */
+    public static function getComments($projectId, $itemType, $itemId = null)
+    {
+        $commentsCache = [];
+
+        $usersCache  = [];
+        $usersRowset = get_users([
+            'fields' => [
+                'ID',
+                'display_name',
+            ],
+        ]);
+        foreach ($usersRowset as $userRow) {
+            $userRow->ID *= 1;
+
+            $usersCache[$userRow->ID] = (object)[
+                'id'     => $userRow->ID,
+                'name'   => $userRow->display_name,
+                'avatar' => getUserAvatarURL($userRow->ID),
+            ];
+        }
+        unset($userRow, $usersRowset);
+
+        $dateFormat        = get_option('date_format');
+        $timeFormat        = get_option('time_format');
+        $theDateTimeFormat = $dateFormat . ' ' . $timeFormat;
+        $currentTimestamp  = time();
+
+        $user                     = wp_get_current_user();
+        $userHasAdminCapabilities = isUserEitherManagerOrAdmin($user);
+        $userCanReply             = ! $userHasAdminCapabilities ? user_can(
+            $user,
+            'publish_project_discussion'
+        ) : true;
+        $userCanModerate          = ! $userHasAdminCapabilities ? user_can($user, 'moderate_comments') : true;
+        $userCanDelete            = ! $userHasAdminCapabilities ? $userCanModerate || user_can(
+                $user,
+                'delete_project_discussion'
+            ) : true;
+
+        $commentsStatuses = ['approve'];
+        if ($userHasAdminCapabilities || $userCanModerate) {
+            $commentsStatuses[] = 'hold';
+        }
+
+        $itemsRowset = (array)get_post_meta(
+            $projectId,
+            '_upstream_project_' . $itemType . 's',
+            true
+        );
+
+        if (count($itemsRowset) > 0) {
+            foreach ($itemsRowset as $row) {
+                if (empty($row)) {
+                    continue;
+                }
+
+                if ( ! empty($itemId)) {
+                    if ($itemId != $row['id']) {
+                        continue;
+                    }
+                }
+
+                $comments = (array)get_comments([
+                    'post_id'    => $projectId,
+                    'status'     => $commentsStatuses,
+                    'meta_query' => [
+                        'relation' => 'AND',
+                        [
+                            'key'   => 'type',
+                            'value' => $itemType,
+                        ],
+                        [
+                            'key'   => 'id',
+                            'value' => $row['id'],
+                        ],
+                    ],
+                ]);
+
+                if (count($comments) > 0) {
+                    foreach ($comments as $comment) {
+                        $author = $usersCache[(int)$comment->user_id];
+
+                        $date = \DateTime::createFromFormat('Y-m-d H:i:s', $comment->comment_date_gmt);
+
+                        $commentData = json_decode(json_encode([
+                            'id'             => (int)$comment->comment_ID,
+                            'parent_id'      => (int)$comment->comment_parent,
+                            'content'        => $comment->comment_content,
+                            'state'          => $comment->comment_approved,
+                            'created_by'     => $author,
+                            'created_at'     => [
+                                'localized' => "",
+                                'humanized' => sprintf(
+                                    _x('%s ago', '%s = human-readable time difference', 'upstream'),
+                                    human_time_diff($date->getTimestamp(), $currentTimestamp)
+                                ),
+                            ],
+                            'currentUserCap' => [
+                                'can_reply'    => $userCanReply,
+                                'can_moderate' => $userCanModerate,
+                                'can_delete'   => $userCanDelete || $author->id === $user->ID,
+                            ],
+                            'replies'        => [],
+                        ]));
+
+                        $commentData->created_at->localized = $date->format($theDateTimeFormat);
+
+                        $commentsCache[$commentData->id] = $commentData;
+                    }
+
+                    foreach ($commentsCache as $comment) {
+                        if ($comment->parent_id > 0) {
+                            if (isset($commentsCache[$comment->parent_id])) {
+                                $commentsCache[$comment->parent_id]->replies[] = $comment;
+                            } else {
+                                unset($commentsCache[$comment->id]);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        return $commentsCache;
     }
 
     /**

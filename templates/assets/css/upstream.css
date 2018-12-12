@@ -33,7 +33,7 @@ table thead, .x_title h2, .profile_info h2, .details-panel p.title, .fn-label, a
 
 /* Backgrounds */
 body, .left_col, .nav_title, .sidebar-footer a:hover {
-    background: #EDEDED; /* light */
+    background: #e2e2e2; /* light */
 }
 
 .nav.side-menu > li.active > a, .sidebar-footer a, .nav-md ul.nav.child_menu li::before, .pagination > .active > a, .pagination > .active > a:focus, .pagination > .active > a:hover, .pagination > .active > span, .pagination > .active > span:focus, .pagination > .active > span:hover, .top_nav .nav .open > a, .top_nav .nav .open > a:focus, .top_nav .nav .open > a:hover, .top_nav .nav > li > a:focus, .top_nav .nav > li > a:hover {
@@ -362,10 +362,6 @@ td .btn {
     margin-top: 10px;
 }
 
-.o-data-table > thead > tr > th {
-    min-width: 110px;
-}
-
 .c-data-table .c-data-table__filters > .visible-xs > div {
     display: flex;
     flex-direction: row;
@@ -433,4 +429,29 @@ td .btn {
 
 .upstream-front-end table {
     font-size: 13px;
+}
+
+/* sortable */
+#project-dashboard.sortable .ui-state-disabled .x_title {
+    cursor: default;
+}
+
+#project-dashboard.sortable .ui-state-highlight {
+    background: #f9f9f9 !important;
+    display: block;
+    width: 100%;
+    height: 70px;
+    margin-bottom: 10px;
+    border: 3px dashed #dde4ec;
+}
+
+#project-dashboard.sortable .ui-sortable-helper * {
+    background: rgba(255,255,255,0.5) !important;
+}
+
+.x_title h2 .sortable_handler {
+    color: #bababa;
+    margin-right: 10px;
+    cursor: move;
+    font-size: 14px;
 }

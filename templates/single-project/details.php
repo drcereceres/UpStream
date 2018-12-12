@@ -26,16 +26,22 @@ if ($projectDateStartIsNotEmpty || $projectDateEndIsNotEmpty) {
     }
 }
 
-$pluginOptions   = get_option('upstream_general');
-$collapseDetails = isset($pluginOptions['collapse_project_details']) && (bool)$pluginOptions['collapse_project_details'] === true;
+$pluginOptions        = get_option('upstream_general');
+$collapseDetails      = isset($pluginOptions['collapse_project_details']) && (bool)$pluginOptions['collapse_project_details'] === true;
+$collapseDetailsState = \UpStream\Frontend\getSectionCollapseState('details');
+
+if ( ! is_null($collapseDetailsState)) {
+    $collapseDetails = $collapseDetailsState === 'closed';
+}
 
 $isClientsDisabled = is_clients_disabled();
 ?>
 
 <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-    <div class="x_panel details-panel">
+    <div class="x_panel details-panel" data-section="details">
         <div class="x_title">
             <h2>
+                <i class="fa fa-bars sortable_handler"></i>
                 <?php printf(
                     '<i class="fa fa-info-circle"></i> ' . __('%s Details', 'upstream'),
                     upstream_project_label()
@@ -44,8 +50,9 @@ $isClientsDisabled = is_clients_disabled();
             </h2>
             <ul class="nav navbar-right panel_toolbox">
                 <li>
-                    <a class="collapse-link"><i
-                                class="fa fa-chevron-<?php echo $collapseDetails ? 'down' : 'up'; ?>"></i></a>
+                    <a class="collapse-link">
+                        <i class="fa fa-chevron-<?php echo $collapseDetails ? 'down' : 'up'; ?>"></i>
+                    </a>
                 </li>
             </ul>
             <div class="clearfix"></div>
