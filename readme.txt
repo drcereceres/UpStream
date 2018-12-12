@@ -148,7 +148,7 @@ and this project adheres to [Semantic Versioning](http://semver.org).
 * Added additional information to the debug page: PHP version, OS, WordPress version and list of plugins and their activation status;
 * Added new action to the front-end sidebar menu: upstream_sidebar_menu;
 * Added new actions after project's panels: upstream_single_project_after_milestones, upstream_single_project_after_tasks, upstream_single_project_after_bugs, upstream_single_project_after_files, upstream_single_project_after_discussion;
-* Added persistence state for collapsable box in the project's front-end;
+* Added persistence state for collapsible box in the project's front-end;
 * Added sortable behavior for the project's panels in the front-end;
 * Added tag IDs to the menu items in the front-end: nav-projects, nav-milestones, etc;
 * Deprecated action "upstream:frontend.project.renderAfterDetails". Use the new action "upstream_single_project_sections";
