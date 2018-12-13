@@ -665,12 +665,12 @@ if ( ! class_exists('UpStream_Options_General')) :
                             'nonce'   => wp_create_nonce('upstream_reset_capabilities'),
                         ],
                         [
-                            'name'    => __('Refresh Projects Meta Data', 'upstream'),
+                            'name'    => __('Update Project Data', 'upstream'),
                             'id'      => 'refresh_projects_meta',
                             'type'    => 'button',
-                            'label'   => __('Refresh', 'upstream'),
+                            'label'   => __('Update', 'upstream'),
                             'desc'    => __(
-                                'Clicking this button will recalculate the meta data for all the projects, including: project members, milestones\' tasks statuses, created time, project author. This can\'t be undone and can take some time if you have many projects.',
+                                'Clicking this button will recalculate the data for all the projects, including: project members, milestones\' tasks statuses, created time, project author. This can\'t be undone and can take some time if you have many projects.',
                                 'upstream'
                             ),
                             'onclick' => 'upstream_refresh_projects_meta(event);',

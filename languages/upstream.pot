@@ -1474,15 +1474,15 @@ msgid "Clicking this button will reset all the capabilities to the default set f
 msgstr ""
 
 #: includes/admin/options/class-up-options-general.php:668
-msgid "Refresh Projects Meta Data"
+msgid "Update Project Data"
 msgstr ""
 
 #: includes/admin/options/class-up-options-general.php:671
-msgid "Refresh"
+msgid "Update"
 msgstr ""
 
 #: includes/admin/options/class-up-options-general.php:673
-msgid "Clicking this button will recalculate the meta data for all the projects, including: project members, milestones' tasks statuses, created time, project author. This can't be undone and can take some time if you have many projects."
+msgid "Clicking this button will recalculate the data for all the projects, including: project members, milestones' tasks statuses, created time, project author. This can't be undone and can take some time if you have many projects."
 msgstr ""
 
 #: includes/admin/options/class-up-options-general.php:680
