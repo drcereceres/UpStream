@@ -10,7 +10,10 @@ if ( ! defined('ABSPATH')) {
  * This template can be overridden by copying it to wp-content/themes/yourtheme/upstream/archive-project.php.
  */
 
-set_time_limit(120);
+// Some hosts disable this function, so let's make sure it is enabled before call it.
+if (function_exists('set_time_limit')) {
+    set_time_limit(120);
+}
 
 $pluginOptions     = get_option('upstream_general');
 $pageTitle         = get_bloginfo('name');
