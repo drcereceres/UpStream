@@ -64,6 +64,7 @@ if ( ! class_exists('UpStream_Options_General')) :
 
             add_action('wp_ajax_upstream_admin_reset_capabilities', [$this, 'reset_capabilities']);
             add_action('wp_ajax_upstream_admin_refresh_projects_meta', [$this, 'refresh_projects_meta']);
+            add_action('wp_ajax_upstream_admin_cleanup_update_cache', [$this, 'cleanup_update_cache']);
         }
 
         /**
@@ -677,6 +678,18 @@ if ( ! class_exists('UpStream_Options_General')) :
                             'nonce'   => wp_create_nonce('upstream_refresh_projects_meta'),
                         ],
                         [
+                            'name'    => __('Cleanup Plugin\'s Update Cache', 'upstream'),
+                            'id'      => 'cleanup_update_cache',
+                            'type'    => 'button',
+                            'label'   => __('Cleanup', 'upstream'),
+                            'desc'    => __(
+                                'Clicking this button will remove cached data about plugin\'s updates helping to fix issues with updates.',
+                                'upstream'
+                            ),
+                            'onclick' => 'upstream_cleanup_update_cache(event);',
+                            'nonce'   => wp_create_nonce('upstream_cleanup_update_cache'),
+                        ],
+                        [
                             'name'              => __('Debug', 'upstream'),
                             'id'                => 'debug',
                             'type'              => 'multicheck',
@@ -780,6 +793,37 @@ if ( ! class_exists('UpStream_Options_General')) :
                         $projectObject->update_project_meta();
                     }
                 }
+
+                $return = 'success';
+            }
+
+            echo wp_json_encode($return);
+            wp_die();
+        }
+
+        public function cleanup_update_cache()
+        {
+            $return = '';
+            $abort  = false;
+
+            if ( ! isset($_POST['nonce'])) {
+                $return = 'error';
+                $abort  = true;
+            }
+
+            if ( ! wp_verify_nonce($_POST['nonce'], 'upstream_cleanup_update_cache')) {
+                $return = 'error';
+                $abort  = true;
+            }
+
+            if ( ! $abort) {
+                $addons = apply_filters('allex_addons', [], 'upstream');
+
+                foreach ($addons as $extension) {
+                    $extension = str_replace('upstream-', '', $extension['slug']);
+                    delete_transient('upstream.' . $extension . ':plugin_latest_version');
+                }
+                delete_site_transient('update_plugins');
 
                 $return = 'success';
             }
