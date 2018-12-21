@@ -683,7 +683,7 @@ if ( ! class_exists('UpStream_Options_General')) :
                             'type'    => 'button',
                             'label'   => __('Cleanup', 'upstream'),
                             'desc'    => __(
-                                'Clicking this button will remove cached data about plugin\'s updates helping to fix issues with updates.',
+                                'If you’re having problems seeing UpStream extension updates, click this button and you see any new plugin releases.',
                                 'upstream'
                             ),
                             'onclick' => 'upstream_cleanup_update_cache(event);',
