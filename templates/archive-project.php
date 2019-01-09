@@ -499,7 +499,7 @@ if ( ! empty($ordering)) {
                                                 </td>
 
                                                 <?php do_action('upstream:project.columns.data', $tableSettings,
-                                                    $columnsSchema, $project->id); ?>
+                                                    $columnsSchema, $project->id, $project); ?>
                                             </tr>
 
                                             <?php if ( ! empty($hiddenColumnsSchema)): ?>

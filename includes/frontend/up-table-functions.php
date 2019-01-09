@@ -828,7 +828,7 @@ function renderTableBody($data, $visibleColumnsSchema, $hiddenColumnsSchema, $ro
                 <?php $isFirst = false; ?>
             <?php endforeach; ?>
 
-            <?php do_action('upstream_table_columns_data', $tableSettings, $visibleColumnsSchema, $projectId); ?>
+            <?php do_action('upstream_table_columns_data', $tableSettings, $visibleColumnsSchema, $projectId, $row); ?>
         </tr>
 
         <?php if ( ! empty($hiddenColumnsSchema)): ?>
