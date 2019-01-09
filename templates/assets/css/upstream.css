@@ -455,3 +455,11 @@ td .btn {
     cursor: move;
     font-size: 14px;
 }
+
+.nav.child_menu>li {
+    padding-left: 30px;
+}
+
+.nav.child_menu>li>a {
+    padding: 9px 0;
+}
