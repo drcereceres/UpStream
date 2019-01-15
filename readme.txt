@@ -142,6 +142,17 @@ If you were having date issues within Projects, please clear your cache and re-s
 The format is based on [Keep a Changelog](http://keepachangelog.com)
 and this project adheres to [Semantic Versioning](http://semver.org).
 
+= [1.23.1] - 2019-01-15 =
+
+* Fixed PHP error when set_time_limit function is disabled;
+* Fixed JS error when datepicker.dates is not defined;
+* Added button to cleanup plugin's update data cache;
+* Updated the description for the maintenance button;
+* Added minor improvement to style of menu items in the frontend;
+* Added missed dependency jquery-ui-sortable for the upstream script;
+* Removed reference to the .css.map file;
+* Added a new optional parameter to the function upstream_date_unixtime;
+
 = [1.23.0] - 2018-12-12 =
 
 * Added a new button to the maintenance section to refresh the count of tasks and list of members in all projects;
