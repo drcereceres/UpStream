@@ -37,6 +37,10 @@
 
 // Sidebar
 jQuery(document).ready(function ($) {
+    if (typeof $.fn.datepicker.dates === 'undefined') {
+        $.fn.datepicker.dates = {'en': []};
+    }
+
     $.fn.datepicker.dates['en'] = {
         days: [
             upstream.langs.LB_SUNDAY,

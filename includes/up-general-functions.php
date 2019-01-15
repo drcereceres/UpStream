@@ -538,7 +538,7 @@ function upstream_format_date($timestamp, $dateFormat = null)
  *
  * @return mixed
  */
-function upstream_date_unixtime($timestamp)
+function upstream_date_unixtime($timestamp, $dateFormat = null)
 {
     // Return empty string if timestamp is empty.
     if (is_string($timestamp)) {
@@ -549,7 +549,9 @@ function upstream_date_unixtime($timestamp)
         return '';
     }
 
-    $dateFormat = get_option('date_format', 'Y-m-d');
+    if (is_null($dateFormat)) {
+        $dateFormat = get_option('date_format', 'Y-m-d');
+    }
 
     $date = \DateTime::createFromFormat($dateFormat, $timestamp);
     $date = $date->format('U');

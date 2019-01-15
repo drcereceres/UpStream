@@ -17,7 +17,10 @@ if ( ! upstream_user_can_access_project(get_current_user_id(), upstream_post_id(
     exit;
 }
 
-set_time_limit(120);
+// Some hosts disable this function, so let's make sure it is enabled before call it.
+if (function_exists('set_time_limit')) {
+    set_time_limit(120);
+}
 
 $pluginOptions     = get_option('upstream_general');
 $pageTitle         = get_bloginfo('name');

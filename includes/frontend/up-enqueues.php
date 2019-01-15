@@ -110,7 +110,7 @@ function upstream_enqueue_styles_scripts()
     wp_enqueue_script(
         'upstream',
         $up_url . $js_dir . 'upstream.js',
-        ['jquery', 'up-modal', 'admin-bar'],
+        ['jquery', 'jquery-ui-sortable', 'up-modal', 'admin-bar'],
         $up_ver,
         true
     );
