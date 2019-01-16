@@ -204,7 +204,7 @@ if ( ! class_exists('UpStream_Options_Extensions')) :
                     'icon_class'  => 'fa fa-plus-square',
                     'edd_id'      => 8409,
                 ],
-                'upstream-reports'       => [
+                'upstream-reports'             => [
                     'slug'        => 'upstream-reports',
                     'title'       => __('Reports', 'upstream'),
                     'description' => __(
@@ -303,9 +303,12 @@ if ( ! class_exists('UpStream_Options_Extensions')) :
          */
         public function filter_allex_upgrade_mailchimp_config($mailchimp_config, $plugin_name)
         {
-            $mailchimp_config['code']     = 'b_a42978bc16dd60d0ce3cac4d4_bb6f51185b';
-            $mailchimp_config['id']       = '132405';
-            $mailchimp_config['group_id'] = '2';
+            if ($plugin_name === 'upstream') {
+                $mailchimp_config['action_url'] = 'https://ostraining.us1.list-manage.com/subscribe/post?u=c4fe34ed80790dd773846d4e1&amp;id=da81b9d9e3';
+                $mailchimp_config['code']       = 'b_c4fe34ed80790dd773846d4e1_da81b9d9e3';
+                $mailchimp_config['id']         = '169';
+                $mailchimp_config['group_id']   = '2';
+            }
 
             return $mailchimp_config;
         }
